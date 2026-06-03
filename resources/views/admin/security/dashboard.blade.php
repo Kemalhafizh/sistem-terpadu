@@ -36,7 +36,7 @@
             @if(!empty($stats['brute_force_alerts']))
                 <div id="brute-force-alert-panel" class="bg-rose-950/40 backdrop-blur-xl border border-rose-500/50 rounded-2xl p-6 shadow-2xl shadow-rose-950/20 animate-pulse">
                     <div class="flex items-start">
-                        <div class="flex-shrink-0 bg-rose-500/20 p-3 rounded-xl border border-rose-500/30">
+                        <div class="shrink-0 bg-rose-500/20 p-3 rounded-xl border border-rose-500/30">
                             <i class="fa-solid fa-radiation text-rose-400 text-2xl"></i>
                         </div>
                         <div class="ml-5 flex-1">
@@ -66,7 +66,7 @@
                 <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
                     <div class="p-6">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+                            <div class="shrink-0 bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
                                 <i class="fa-solid fa-fingerprint text-blue-400 text-2xl"></i>
                             </div>
                             <div class="ml-5 w-0 flex-1">
@@ -85,7 +85,7 @@
                 <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
                     <div class="p-6">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
+                            <div class="shrink-0 bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
                                 <i class="fa-solid fa-circle-check text-emerald-400 text-2xl"></i>
                             </div>
                             <div class="ml-5 w-0 flex-1">
@@ -104,7 +104,7 @@
                 <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
                     <div class="p-6">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-rose-500/10 p-4 rounded-xl border border-rose-500/20">
+                            <div class="shrink-0 bg-rose-500/10 p-4 rounded-xl border border-rose-500/20">
                                 <i class="fa-solid fa-circle-xmark text-rose-400 text-2xl"></i>
                             </div>
                             <div class="ml-5 w-0 flex-1">
@@ -123,7 +123,7 @@
                 <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
                     <div class="p-6">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 bg-indigo-500/10 p-4 rounded-xl border border-indigo-500/20">
+                            <div class="shrink-0 bg-indigo-500/10 p-4 rounded-xl border border-indigo-500/20">
                                 <i class="fa-solid fa-users-viewfinder text-indigo-400 text-2xl"></i>
                             </div>
                             <div class="ml-5 w-0 flex-1">

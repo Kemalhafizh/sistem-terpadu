@@ -73,7 +73,11 @@
         <div class="xl:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
             <h4 class="text-sm font-black text-gray-800 mb-6 uppercase tracking-widest">{{ __('dashboard.registration_trend_7_days') }}</h4>
             <div class="h-64">
-                <canvas id="spmbTrendChart"></canvas>
+                <canvas id="spmbTrendChart"
+                        data-series="{{ json_encode(isset($spmb_trend) ? $spmb_trend->pluck('total')->toArray() : []) }}"
+                        data-series-name="{{ __('dashboard.new_applicants') }}"
+                        data-has-data="{{ isset($spmb_trend) ? 'true' : 'false' }}">
+                </canvas>
             </div>
         </div>
 

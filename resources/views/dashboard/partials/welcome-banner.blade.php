@@ -1,4 +1,4 @@
-<div class="bg-gradient-to-r from-primary-800 to-primary-600 rounded-[2rem] p-8 shadow-xl shadow-primary-900/20 text-white relative overflow-hidden">
+<div class="bg-linear-to-r from-primary-800 to-primary-600 rounded-4xl p-8 shadow-xl shadow-primary-900/20 text-white relative overflow-hidden">
     <!-- Abstract Shape -->
     <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
     

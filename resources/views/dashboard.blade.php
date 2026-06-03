@@ -34,9 +34,9 @@
                 @endphp
 
                 @if($dashActiveCount > 0)
-                    <div class="bg-gradient-to-r from-indigo-900/90 to-slate-900/90 backdrop-blur-md border border-indigo-500/20 text-white rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
+                    <div class="bg-linear-to-r from-indigo-900/90 to-slate-900/90 backdrop-blur-md border border-indigo-500/20 text-white rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
                         <div class="flex items-center space-x-4">
-                            <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-2xl relative shadow-lg shadow-indigo-500/10 flex-shrink-0">
+                            <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-2xl relative shadow-lg shadow-indigo-500/10 shrink-0">
                                 🧠
                                 @if($dashCriticalCount > 0)
                                     <span class="absolute -top-1 -right-1 flex h-3 w-3">
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <a href="{{ route('smart-alerts.index') }}" 
-                           class="w-full md:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 active:scale-95 shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 flex-shrink-0">
+                           class="w-full md:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 active:scale-95 shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 shrink-0">
                             <span>{{ __('dashboard.open_predictive_dashboard') }}</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </a>
@@ -74,12 +74,12 @@
                             @endif
                             
                             @if($announcement->image_path)
-                                <div class="flex-shrink-0">
+                                <div class="shrink-0">
                                     <img src="{{ Storage::url($announcement->image_path) }}" alt="Poster" class="w-full md:w-48 h-auto object-cover rounded-xl border {{ $announcement->priority == 'urgent' ? 'border-red-200' : 'border-gray-200' }}">
                                 </div>
                             @endif
                             
-                            <div class="flex-grow">
+                            <div class="grow">
                                 <h4 class="text-lg font-black {{ $announcement->priority == 'urgent' ? 'text-red-800' : 'text-gray-900' }} mb-2">{{ $announcement->title }}</h4>
                                 <p class="text-sm {{ $announcement->priority == 'urgent' ? 'text-red-700' : 'text-gray-600' }} leading-relaxed whitespace-pre-line">{{ $announcement->content }}</p>
                                 
@@ -204,7 +204,7 @@
                             @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin'))
                                 <div x-show="isWidgetVisible('quick_access')"
                                      :style="'order: ' + getWidgetOrder('quick_access')"
-                                     class="bg-gray-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-xl w-full transition-all duration-300"
+                                     class="bg-gray-900 rounded-4xl p-8 text-white relative overflow-hidden shadow-xl w-full transition-all duration-300"
                                      style="display: none;">
                                     <div class="relative z-10">
                                         <h4 class="text-lg font-black mb-4 flex items-center text-amber-400">
@@ -239,7 +239,7 @@
                                 <div x-show="isWidgetVisible('financial_trend')"
                                      :style="'order: ' + getWidgetOrder('financial_trend')"
                                      :class="isWidgetVisible('live_feed') ? 'xl:col-span-2' : 'xl:col-span-3'"
-                                     class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group transition-all duration-300"
+                                     class="bg-white dark:bg-gray-800 rounded-5xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group transition-all duration-300"
                                      style="display: none;">
                                     <div class="flex justify-between items-center mb-8">
                                         <div>
@@ -264,14 +264,23 @@
                                     </div>
 
                                     <!-- ApexChart Container -->
-                                    <div x-show="!isLoadingCharts" id="financialTrendChart" class="w-full h-80 -ml-4" style="display: none;"></div>
+                                    <div x-show="!isLoadingCharts" 
+                                         id="financialTrendChart" 
+                                         class="w-full h-80 -ml-4" 
+                                         style="display: none;"
+                                         data-has-data="{{ (isset($payment_trend) && $payment_trend->count() > 0) ? 'true' : 'false' }}"
+                                         data-series="{{ json_encode(isset($payment_trend) ? $payment_trend->pluck('total')->toArray() : []) }}"
+                                         data-categories="{{ json_encode(isset($payment_trend) ? $payment_trend->pluck('date')->map(function($date) { return \Carbon\Carbon::parse($date)->format('d M'); })->toArray() : []) }}"
+                                         data-series-name="{{ __('dashboard.financial_income_trend') }} (Rp)"
+                                         data-no-data-msg="{{ __('dashboard.no_income_data') }}"
+                                     ></div>
                                 </div>
 
                                 <!-- Sub-Widget: Live Activity Feed (1/3) -->
                                 <div x-show="isWidgetVisible('live_feed')"
                                      :style="'order: ' + getWidgetOrder('live_feed')"
                                      :class="isWidgetVisible('financial_trend') ? 'xl:col-span-1' : 'xl:col-span-3'"
-                                     class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col transition-all duration-300"
+                                     class="bg-white dark:bg-gray-800 rounded-5xl p-8 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col transition-all duration-300"
                                      style="display: none;">
                                     <div class="flex justify-between items-center mb-8">
                                         <div>
@@ -350,7 +359,7 @@
                         </div>
 
                         <!-- Sliding Settings Drawer (Panel Kustomisasi Glassmorphic) -->
-                        <div x-show="showDrawer" class="fixed inset-0 z-[400] overflow-hidden" style="display: none;">
+                        <div x-show="showDrawer" class="fixed inset-0 z-400 overflow-hidden" style="display: none;">
                             <div class="absolute inset-0 overflow-hidden">
                                 <!-- Background overlay -->
                                 <div x-show="showDrawer" x-transition:enter="ease-in-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-500" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" @click="showDrawer = false"></div>
@@ -391,7 +400,7 @@
                                                                 </div>
                                                                 
                                                                 <!-- Visibility Switch Toggle -->
-                                                                <button @click="widget.visible = !widget.visible" :class="widget.visible ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none">
+                                                                <button @click="widget.visible = !widget.visible" :class="widget.visible ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none">
                                                                     <span :class="widget.visible ? 'translate-x-5' : 'translate-x-0'" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
                                                                 </button>
                                                             </div>
@@ -425,10 +434,10 @@
                              x-transition:leave="transition ease-in duration-200 transform"
                              x-transition:leave-start="translate-y-0 opacity-100 scale-100"
                              x-transition:leave-end="translate-y-10 opacity-0 scale-95"
-                             class="fixed bottom-6 left-6 z-[350] rounded-2xl p-4 shadow-2xl flex items-center space-x-3 text-white max-w-sm"
+                             class="fixed bottom-6 left-6 z-350 rounded-2xl p-4 shadow-2xl flex items-center space-x-3 text-white max-w-sm"
                              :class="toastType === 'success' ? 'bg-emerald-950/90 border border-emerald-800' : 'bg-red-950/90 border border-red-800'"
                              style="display: none;">
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0">
                                 <svg x-show="toastType === 'success'" class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <svg x-show="toastType !== 'success'" class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
@@ -451,7 +460,7 @@
                 @if(auth()->user()->hasRole('student'))
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                         <!-- Points Card -->
-                        <div class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <div class="bg-white rounded-4xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
                             <p class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">{{ __('dashboard.my_discipline_points') }}</p>
                             <div class="w-32 h-32 rounded-full border-8 {{ $total_points > 50 ? 'border-red-100' : 'border-primary-100' }} flex items-center justify-center mb-6">
                                 <span class="text-5xl font-black {{ $total_points > 50 ? 'text-red-500' : 'text-primary-600' }}">{{ $total_points }}</span>
@@ -461,7 +470,7 @@
                         </div>
 
                         <!-- Finance Card -->
-                        <div class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                        <div class="bg-white rounded-4xl p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center relative overflow-hidden">
                             @if($unpaid_billings_count > 0)
                                 <div class="absolute top-4 right-4 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
                             @endif
@@ -478,7 +487,7 @@
                         </div>
 
                         <!-- Academic Card (New) -->
-                        <div class="bg-primary-900 rounded-[2rem] p-6 sm:p-8 shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden text-white">
+                        <div class="bg-primary-900 rounded-4xl p-6 sm:p-8 shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden text-white">
                             <div class="absolute top-0 right-0 p-4 opacity-10">
                                 <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                             </div>
@@ -494,7 +503,7 @@
                         </div>
 
                         <!-- Recent Logs -->
-                        <div class="md:col-span-2 xl:col-span-2 bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100">
+                        <div class="md:col-span-2 xl:col-span-2 bg-white rounded-5xl p-6 sm:p-8 shadow-sm border border-gray-100">
                             <h4 class="text-lg font-black text-gray-800 mb-6 flex items-center">
                                 <span class="w-2 h-6 bg-primary-600 rounded-full mr-3"></span>
                                 {{ __('dashboard.recent_notes') }}
@@ -530,10 +539,10 @@
 
                         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
                             @foreach($children ?? [] as $child)
-                                <div class="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 relative overflow-hidden group">
+                                <div class="bg-white rounded-5xl p-6 sm:p-8 shadow-sm border border-gray-100 relative overflow-hidden group">
                                     <div class="flex items-start justify-between mb-8">
                                         <div class="flex items-center">
-                                            <div class="w-16 h-16 bg-primary-100 text-primary-700 rounded-[1.5rem] flex items-center justify-center font-black text-2xl mr-5">
+                                            <div class="w-16 h-16 bg-primary-100 text-primary-700 rounded-3xl flex items-center justify-center font-black text-2xl mr-5">
                                                 {{ substr($child['profile']?->user?->name, 0, 1) }}
                                             </div>
                                             <div>
@@ -595,7 +604,7 @@
                 {{-- View Guru (Teacher Portal) --}}
                 @if(auth()->user()->hasRole('guru'))
                     <div class="space-y-8">
-                        <div class="bg-primary-600 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-lg shadow-primary-900/20">
+                        <div class="bg-primary-600 rounded-4xl p-8 text-white relative overflow-hidden shadow-lg shadow-primary-900/20">
                             <div class="relative z-10">
                                 <h3 class="text-2xl font-black mb-2">{{ __('dashboard.teacher_welcome') }}</h3>
                                 <p class="text-primary-100 font-medium">{{ __('dashboard.teacher_welcome_desc') }}</p>
@@ -666,7 +675,7 @@
 
                 {{-- Feedback for other roles as placeholder --}}
                 @if(!auth()->user()->hasRole('kepala_sekolah') && !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('waka_kurikulum') && !auth()->user()->hasRole('student') && !auth()->user()->hasRole('parent') && !auth()->user()->hasRole('guru'))
-                    <div class="bg-white rounded-[2rem] p-12 text-center border-2 border-dashed border-gray-100">
+                    <div class="bg-white rounded-4xl p-12 text-center border-2 border-dashed border-gray-100">
                         <div class="w-20 h-20 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center mx-auto mb-6">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         </div>
@@ -685,118 +694,131 @@
         document.addEventListener("DOMContentLoaded", function() {
             
             // 1. Financial Trend Chart (Revenue)
-            @if(isset($payment_trend) && $payment_trend->count() > 0)
-            const financialOptions = {
-                series: [{
-                    name: '{{ __('dashboard.financial_income_trend') }} (Rp)',
-                    data: {!! json_encode($payment_trend->pluck('total')) !!}
-                }],
-                chart: {
-                    type: 'area',
-                    height: 320,
-                    fontFamily: 'Inter, sans-serif',
-                    toolbar: { show: false },
-                    zoom: { enabled: false }
-                },
-                colors: ['#10b981'],
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.4,
-                        opacityTo: 0.05,
-                        stops: [0, 90, 100]
-                    }
-                },
-                dataLabels: { enabled: false },
-                stroke: { curve: 'smooth', width: 3 },
-                xaxis: {
-                    categories: {!! json_encode($payment_trend->pluck('date')->map(function($date) { return \Carbon\Carbon::parse($date)->format('d M'); })) !!},
-                    axisBorder: { show: false },
-                    axisTicks: { show: false },
-                    labels: { style: { colors: '#9ca3af', fontSize: '12px', fontWeight: 600 } }
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (value) {
-                            return "Rp " + (value / 1000000).toFixed(1) + "M";
-                        },
-                        style: { colors: '#9ca3af', fontSize: '12px', fontWeight: 600 }
-                    }
-                },
-                grid: {
-                    borderColor: '#f3f4f6',
-                    strokeDashArray: 4,
-                    yaxis: { lines: { show: true } }
-                },
-                tooltip: {
-                    y: {
-                        formatter: function(value) {
-                            return "Rp " + value.toLocaleString('id-ID');
-                        }
-                    }
-                }
-            };
+            const financialEl = document.querySelector("#financialTrendChart");
+            if (financialEl) {
+                const hasData = financialEl.getAttribute('data-has-data') === 'true';
+                if (hasData) {
+                    const seriesData = JSON.parse(financialEl.getAttribute('data-series') || '[]');
+                    const categoriesData = JSON.parse(financialEl.getAttribute('data-categories') || '[]');
+                    const seriesName = financialEl.getAttribute('data-series-name') || '';
 
-            const financialChart = new ApexCharts(document.querySelector("#financialTrendChart"), financialOptions);
-            financialChart.render();
-            @else
-                document.querySelector("#financialTrendChart").innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 font-bold text-sm">{{ __('dashboard.no_income_data') }}</div>';
-            @endif
+                    const financialOptions = {
+                        series: [{
+                            name: seriesName,
+                            data: seriesData
+                        }],
+                        chart: {
+                            type: 'area',
+                            height: 320,
+                            fontFamily: 'Inter, sans-serif',
+                            toolbar: { show: false },
+                            zoom: { enabled: false }
+                        },
+                        colors: ['#10b981'],
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.4,
+                                opacityTo: 0.05,
+                                stops: [0, 90, 100]
+                            }
+                        },
+                        dataLabels: { enabled: false },
+                        stroke: { curve: 'smooth', width: 3 },
+                        xaxis: {
+                            categories: categoriesData,
+                            axisBorder: { show: false },
+                            axisTicks: { show: false },
+                            labels: { style: { colors: '#9ca3af', fontSize: '12px', fontWeight: 600 } }
+                        },
+                        yaxis: {
+                            labels: {
+                                formatter: function (value) {
+                                    return "Rp " + (value / 1000000).toFixed(1) + "M";
+                                },
+                                style: { colors: '#9ca3af', fontSize: '12px', fontWeight: 600 }
+                            }
+                        },
+                        grid: {
+                            borderColor: '#f3f4f6',
+                            strokeDashArray: 4,
+                            yaxis: { lines: { show: true } }
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function(value) {
+                                    return "Rp " + value.toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    };
+
+                    const financialChart = new ApexCharts(financialEl, financialOptions);
+                    financialChart.render();
+                } else {
+                    const noDataMsg = financialEl.getAttribute('data-no-data-msg') || 'Tidak ada data';
+                    financialEl.innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 font-bold text-sm">' + noDataMsg + '</div>';
+                }
+            }
 
             // 2. SPMB Trend Chart (Replace old Chart.js in spmb-analytics)
-            @if(isset($spmb_trend))
-            const spmbOptions = {
-                series: [{
-                    name: '{{ __('dashboard.new_applicants') }}',
-                    data: {!! json_encode($spmb_trend->pluck('total')) !!}
-                }],
-                chart: {
-                    type: 'area',
-                    height: '100%',
-                    parentHeightOffset: 0,
-                    fontFamily: 'Inter, sans-serif',
-                    toolbar: { show: false },
-                    sparkline: { enabled: true } // Makes it fit perfectly in small cards
-                },
-                colors: ['#1e1b4b'],
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.2,
-                        opacityTo: 0,
-                        stops: [0, 100]
-                    }
-                },
-                stroke: { curve: 'smooth', width: 2 },
-                tooltip: {
-                    fixed: { enabled: false },
-                    x: { show: false },
-                    y: { title: { formatter: function (seriesName) { return '{{ __('dashboard.registrants') }}:' } } },
-                    marker: { show: false }
+            const spmbEl = document.querySelector("#spmbTrendChart");
+            if (spmbEl) {
+                const hasSpmbData = spmbEl.getAttribute('data-has-data') === 'true';
+                if (hasSpmbData) {
+                    const seriesData = JSON.parse(spmbEl.getAttribute('data-series') || '[]');
+                    const seriesName = spmbEl.getAttribute('data-series-name') || '';
+
+                    const spmbOptions = {
+                        series: [{
+                            name: seriesName,
+                            data: seriesData
+                        }],
+                        chart: {
+                            type: 'area',
+                            height: '100%',
+                            parentHeightOffset: 0,
+                            fontFamily: 'Inter, sans-serif',
+                            toolbar: { show: false },
+                            sparkline: { enabled: true }
+                        },
+                        colors: ['#1e1b4b'],
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.2,
+                                opacityTo: 0,
+                                stops: [0, 100]
+                            }
+                        },
+                        stroke: { curve: 'smooth', width: 2 },
+                        tooltip: {
+                            fixed: { enabled: false },
+                            x: { show: false },
+                            y: { title: { formatter: function (seriesName) { return 'Pendaftar:'; } } },
+                            marker: { show: false }
+                        }
+                    };
+
+                    // Wait a bit to ensure the spmb container is loaded if it's an include
+                    setTimeout(() => {
+                        // Because we replaced Chart.js with ApexCharts, we change canvas to div if it exists
+                        if (spmbEl.tagName.toLowerCase() === 'canvas') {
+                            const newDiv = document.createElement('div');
+                            newDiv.id = 'spmbTrendChart';
+                            newDiv.className = 'w-full h-full';
+                            spmbEl.parentNode.replaceChild(newDiv, spmbEl);
+                            const spmbChart = new ApexCharts(newDiv, spmbOptions);
+                            spmbChart.render();
+                        } else {
+                            const spmbChart = new ApexCharts(spmbEl, spmbOptions);
+                            spmbChart.render();
+                        }
+                    }, 100);
                 }
-            };
-            
-            // Wait a bit to ensure the spmb container is loaded if it's an include
-            setTimeout(() => {
-                const spmbEl = document.querySelector("#spmbTrendChart");
-                if(spmbEl) {
-                    // Because we replaced Chart.js with ApexCharts, we change canvas to div if it exists
-                    if(spmbEl.tagName.toLowerCase() === 'canvas') {
-                        const newDiv = document.createElement('div');
-                        newDiv.id = 'spmbTrendChart';
-                        newDiv.className = 'w-full h-full';
-                        spmbEl.parentNode.replaceChild(newDiv, spmbEl);
-                        const spmbChart = new ApexCharts(newDiv, spmbOptions);
-                        spmbChart.render();
-                    } else {
-                        const spmbChart = new ApexCharts(spmbEl, spmbOptions);
-                        spmbChart.render();
-                    }
-                }
-            }, 100);
-            @endif
+            }
 
         });
     </script>
