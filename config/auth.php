@@ -114,4 +114,22 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Password Rules Policy (SMA ISA 1 Specific)
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define password validation settings for the users of the school portal.
+    |
+    */
+
+    'password_rules' => [
+        'min_length' => env('PASSWORD_MIN_LENGTH', 8),
+        'require_uppercase' => env('PASSWORD_REQUIRE_UPPERCASE', true),
+        'require_number' => env('PASSWORD_REQUIRE_NUMBER', true),
+        'require_special_char' => env('PASSWORD_REQUIRE_SPECIAL_CHAR', false),
+        'max_age_days' => env('PASSWORD_MAX_AGE_DAYS', 180),
+        'prevent_reuse' => env('PASSWORD_PREVENT_REUSE', 3),
+    ],
+
 ];

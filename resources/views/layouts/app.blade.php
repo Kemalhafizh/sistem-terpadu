@@ -93,6 +93,9 @@
             });
         }
     </script>
+    
+    <!-- Offline Queue & Sync Manager -->
+    <script src="/offline-queue.js" defer></script>
 </head>
 <body class="font-sans antialiased text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 flex h-screen overflow-hidden flex-col" 
     x-data="{ 
@@ -280,6 +283,11 @@
         </div>
         <!-- Chatbot Floating Widget -->
         <x-chatbot-widget />
+        
+        <!-- UAT Feedback Floating Widget -->
+        @if(config('app.uat_mode'))
+            @include('admin.uat.feedback-form')
+        @endif
     </div>
 </body>
 </html>

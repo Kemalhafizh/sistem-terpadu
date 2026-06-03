@@ -262,5 +262,78 @@ class AppServiceProvider extends ServiceProvider
         view()->composer(['layouts.app', 'layouts.guest', 'layouts.public', 'components.sidebar'], function ($view) {
             $view->with('appearance', app(\App\Services\AppearanceService::class)->getSettings());
         });
+
+        // =========================================================
+        // 📊 OBSERVABILITY - SYSTEM ERROR LOG EVENT LISTENER
+        // =========================================================
+        Event::listen(\Illuminate\Log\Events\MessageLogged::class, function (\Illuminate\Log\Events\MessageLogged $event) {
+            if (in_array($event->level, ['error', 'critical', 'alert', 'emergency'])) {
+                try {
+                    $logPath = storage_path('logs/observability.json');
+                    
+                    // Filter context to prevent recursion or huge serialization
+                    $contextData = [];
+                    $exception = $event->context['exception'] ?? null;
+                    if ($exception instanceof \Throwable) {
+                        $contextData = [
+                            'class' => get_class($exception),
+                            'file' => $exception->getFile(),
+                            'line' => $exception->getLine(),
+                            'trace' => substr($exception->getTraceAsString(), 0, 1000),
+                        ];
+                    } else {
+                        foreach ($event->context as $key => $value) {
+                            if (is_scalar($value)) {
+                                $contextData[$key] = $value;
+                            } elseif (is_array($value)) {
+                                $contextData[$key] = array_slice($value, 0, 10);
+                            }
+                        }
+                    }
+
+                    $logEntry = [
+                        'timestamp' => now()->toIso8601String(),
+                        'type' => 'error',
+                        'level' => $event->level,
+                        'message' => $event->message,
+                        'context' => $contextData,
+                        'url' => request()->fullUrl(),
+                        'user_id' => auth()->id(),
+                    ];
+
+                    file_put_contents($logPath, json_encode($logEntry) . "\n", FILE_APPEND | LOCK_EX);
+
+                    // Trim log file to prevent infinite growth
+                    if (file_exists($logPath) && filesize($logPath) > 5 * 1024 * 1024) {
+                        $lines = file($logPath);
+                        if (count($lines) > 1000) {
+                            $trimmed = array_slice($lines, -1000);
+                            file_put_contents($logPath, implode('', $trimmed), LOCK_EX);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    // Fail silently
+                }
+            }
+        });
+
+        // Register default Password Rules policy from config/auth.php
+        \Illuminate\Validation\Rules\Password::defaults(function () {
+            $rules = \Illuminate\Validation\Rules\Password::min(config('auth.password_rules.min_length', 8));
+            
+            if (config('auth.password_rules.require_uppercase', true)) {
+                $rules->mixedCase();
+            }
+            
+            if (config('auth.password_rules.require_number', true)) {
+                $rules->numbers();
+            }
+            
+            if (config('auth.password_rules.require_special_char', false)) {
+                $rules->symbols();
+            }
+            
+            return $rules;
+        });
     }
 }

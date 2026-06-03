@@ -28,7 +28,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('teaching-journals.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form id="teaching-journal-form" action="{{ route('teaching-journals.store') }}" method="POST" enctype="multipart/form-data" data-offline-sync="true" data-type-name="Jurnal Mengajar" class="space-y-6">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

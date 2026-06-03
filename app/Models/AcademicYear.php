@@ -31,7 +31,9 @@ class AcademicYear extends Model
      */
     public static function current(): ?self
     {
-        return self::where('is_active', true)->first();
+        return \Illuminate\Support\Facades\Cache::rememberForever('academic_year_current', function () {
+            return self::where('is_active', true)->first();
+        });
     }
 
     /**
@@ -41,6 +43,8 @@ class AcademicYear extends Model
     {
         self::query()->update(['is_active' => false]);
         $this->update(['is_active' => true]);
+        
+        \Illuminate\Support\Facades\Cache::forget('academic_year_current');
     }
 
     /**

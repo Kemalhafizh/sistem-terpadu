@@ -145,3 +145,75 @@ test('webhook simulator handles expire status correctly', function () {
     expect($billing->payment_url)->toBeNull();
     expect($billing->status)->toBe('unpaid');
 });
+
+test('webhook verification rejects invalid signatures when non-simulation', function () {
+    $billing = Billing::factory()->create([
+        'student_id' => $this->student->id,
+        'payment_category_id' => $this->category->id,
+        'academic_year_id' => $this->academicYear->id,
+        'amount' => 500000,
+        'remaining_balance' => 500000,
+        'status' => 'unpaid',
+    ]);
+
+    Config::set('services.midtrans.server_key', 'SB-Mid-server-DUMMYKEY');
+
+    $payload = [
+        'order_id' => 'BILL-'.$billing->id.'-RANDOM',
+        'status_code' => '200',
+        'gross_amount' => '500000.00',
+        'transaction_status' => 'settlement',
+        'payment_type' => 'qris',
+        'signature_key' => 'wrong-signature-key-value',
+    ];
+
+    $response = $this->postJson(route('api.midtrans.webhook'), $payload);
+
+    $response->assertStatus(403)
+        ->assertJson([
+            'message' => 'Invalid Signature',
+        ]);
+});
+
+test('webhook verification accepts valid signature and confirms payment when non-simulation', function () {
+    $billing = Billing::factory()->create([
+        'student_id' => $this->student->id,
+        'payment_category_id' => $this->category->id,
+        'academic_year_id' => $this->academicYear->id,
+        'amount' => 500000,
+        'remaining_balance' => 500000,
+        'status' => 'unpaid',
+    ]);
+
+    $serverKey = 'SB-Mid-server-DUMMYKEY';
+    Config::set('services.midtrans.server_key', $serverKey);
+
+    $orderId = 'BILL-'.$billing->id.'-RANDOM';
+    $statusCode = '200';
+    $grossAmount = '500000.00';
+    
+    // Correct signature key calculation
+    $validSignature = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
+
+    $payload = [
+        'order_id' => $orderId,
+        'status_code' => $statusCode,
+        'gross_amount' => $grossAmount,
+        'transaction_status' => 'settlement',
+        'payment_type' => 'qris',
+        'signature_key' => $validSignature,
+    ];
+
+    $response = $this->postJson(route('api.midtrans.webhook'), $payload);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'status' => 'success',
+            'processed' => true,
+        ]);
+
+    $billing->refresh();
+    expect($billing->status)->toBe('paid');
+    expect($billing->remaining_balance)->toEqual(0);
+});
+

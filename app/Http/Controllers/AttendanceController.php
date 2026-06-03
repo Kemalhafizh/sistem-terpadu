@@ -108,7 +108,7 @@ class AttendanceController extends Controller
     {
         $request->validate([
             'classroom_id' => 'required|exists:classrooms,id',
-            'date' => 'required|date',
+            'date' => 'required|date|before_or_equal:today',
             'attendances' => 'required|array',
         ]);
 

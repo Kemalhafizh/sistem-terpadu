@@ -579,6 +579,7 @@ Route::middleware('auth')->group(function () {
         // Security Monitoring & Audit Trail (SIEM)
         Route::middleware('role:admin,superadmin')->prefix('admin/security')->name('admin.security.')->group(function () {
             Route::get('/dashboard', [SecurityController::class, 'dashboard'])->name('dashboard');
+            Route::get('/audit', [SecurityController::class, 'audit'])->name('audit');
             Route::get('/sessions', [SecurityController::class, 'sessions'])->name('sessions');
             Route::delete('/sessions/{session}', [SecurityController::class, 'terminateSession'])->name('sessions.terminate');
         });
@@ -867,6 +868,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/reset', [\App\Http\Controllers\Admin\AppearanceController::class, 'reset'])->name('reset');
     });
 
+    // =========================================================
+    // 🧪 UAT FEEDBACK SYSTEM (MODUL 12.2)
+    // =========================================================
+    Route::post('admin/uat/feedback', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'store'])->name('uat.feedback.store');
+    Route::middleware('role:admin,superadmin')->prefix('admin/uat')->name('admin.uat.')->group(function () {
+        Route::get('feedback-dashboard', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'dashboard'])->name('feedback.dashboard');
+        Route::post('feedback/{id}/status', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'updateStatus'])->name('feedback.update-status');
+        Route::get('feedback-report', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'report'])->name('feedback.report');
+    });
+
 });
 
 // Force Change Password (for users with default/temporary password)
@@ -901,6 +912,14 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/chatbot')->n
     Route::post('faqs', [ChatbotController::class, 'storeFaq'])->name('faqs.store');
     Route::put('faqs/{faq}', [ChatbotController::class, 'updateFaq'])->name('faqs.update');
     Route::delete('faqs/{faq}', [ChatbotController::class, 'destroyFaq'])->name('faqs.destroy');
+});
+
+// --- Advanced Logging & Observability (Modul 9) ---
+Route::middleware(['auth', 'role:superadmin'])->prefix('admin/observability')->name('admin.observability.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Admin\ObservabilityController::class, 'dashboard'])->name('dashboard');
+    Route::get('/metrics', [\App\Http\Controllers\Admin\ObservabilityController::class, 'metrics'])->name('metrics');
+    Route::post('/clear-logs', [\App\Http\Controllers\Admin\ObservabilityController::class, 'clearLogs'])->name('clear-logs');
+    Route::post('/simulate', [\App\Http\Controllers\Admin\ObservabilityController::class, 'simulate'])->name('simulate');
 });
 
 // =========================================================

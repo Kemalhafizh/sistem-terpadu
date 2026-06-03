@@ -13,26 +13,28 @@ class AppearanceService
      */
     public function getSettings(): AppearanceSetting
     {
-        $settings = AppearanceSetting::first();
+        return \Illuminate\Support\Facades\Cache::rememberForever('appearance_settings', function () {
+            $settings = AppearanceSetting::first();
 
-        if (!$settings) {
-            $settings = AppearanceSetting::create([
-                'app_name' => 'Sistem Terpadu SMA ISA 1',
-                'logo_path' => null,
-                'logo_dark_path' => null,
-                'favicon_path' => null,
-                'primary_color' => '#3b82f6',
-                'secondary_color' => '#8b5cf6',
-                'accent_color' => '#06b6d4',
-                'sidebar_color' => '#0f172a',
-                'font_family' => 'Inter',
-                'custom_css' => null,
-                'login_background_path' => null,
-                'footer_text' => '© 2026 SMA Islam Sultan Agung 1 Semarang',
-            ]);
-        }
+            if (!$settings) {
+                $settings = AppearanceSetting::create([
+                    'app_name' => 'Sistem Terpadu SMA ISA 1',
+                    'logo_path' => null,
+                    'logo_dark_path' => null,
+                    'favicon_path' => null,
+                    'primary_color' => '#3b82f6',
+                    'secondary_color' => '#8b5cf6',
+                    'accent_color' => '#06b6d4',
+                    'sidebar_color' => '#0f172a',
+                    'font_family' => 'Inter',
+                    'custom_css' => null,
+                    'login_background_path' => null,
+                    'footer_text' => '© 2026 SMA Islam Sultan Agung 1 Semarang',
+                ]);
+            }
 
-        return $settings;
+            return $settings;
+        });
     }
 
     /**
@@ -116,6 +118,8 @@ class AppearanceService
         }
 
         $settings->update($updateData);
+        \Illuminate\Support\Facades\Cache::forget('appearance_settings');
+        \Illuminate\Support\Facades\Cache::forget('appearance_css_variables');
     }
 
     /**
@@ -133,6 +137,9 @@ class AppearanceService
             }
             $settings->delete();
         }
+
+        \Illuminate\Support\Facades\Cache::forget('appearance_settings');
+        \Illuminate\Support\Facades\Cache::forget('appearance_css_variables');
 
         // Re-initialize with defaults
         $this->getSettings();

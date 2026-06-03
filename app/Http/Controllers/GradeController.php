@@ -114,6 +114,10 @@ class GradeController extends Controller
             'classroom_id' => 'required|exists:classrooms,id',
             'subject_id' => 'required|exists:subjects,id',
             'grades' => 'required|array',
+            'grades.*.tugas' => 'nullable|numeric|min:0|max:100',
+            'grades.*.uh' => 'nullable|numeric|min:0|max:100',
+            'grades.*.pts' => 'nullable|numeric|min:0|max:100',
+            'grades.*.pas' => 'nullable|numeric|min:0|max:100',
         ]);
 
         try {

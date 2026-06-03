@@ -374,3 +374,17 @@ test('pengguna umum dapat mengambil data kalender akademik', function () {
         ->assertJsonPath('success', true)
         ->assertJsonStructure(['data' => [['uuid', 'title', 'event_type']]]);
 });
+
+test('api endpoints are throttled when rate limit is exceeded', function () {
+    Sanctum::actingAs($this->studentUser);
+
+    // Make 60 requests to check global throttle limit
+    for ($i = 0; $i < 60; $i++) {
+        $response = $this->getJson('/api/v1/student/profile');
+        $response->assertStatus(200);
+    }
+
+    // The 61st request must be rate limited (429)
+    $response = $this->getJson('/api/v1/student/profile');
+    $response->assertStatus(429);
+});

@@ -8,8 +8,7 @@ const STATIC_ASSETS = [
     OFFLINE_URL,
     '/images/logo-kotak.png',
     '/favicon.ico',
-    // We can also allow CSS and JS files, but since they are managed by Vite and change dynamically,
-    // we cache them on the fly (Dynamic Caching) to prevent caching outdated built assets.
+    '/offline-queue.js',
 ];
 
 // 1. INSTALL EVENT: Pre-cache core offline assets

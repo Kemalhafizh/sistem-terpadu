@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             CheckTwoFactor::class,
             \App\Http\Middleware\UpdateActiveSession::class,
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\PerformanceLogger::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

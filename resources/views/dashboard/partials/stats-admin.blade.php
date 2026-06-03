@@ -6,7 +6,7 @@
             <svg class="w-8 h-8 text-primary-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
         </div>
         <div class="relative z-10">
-            <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest mb-1">Pendaftar Baru</p>
+            <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest mb-1">{{ __('dashboard.new_applicants') }}</p>
             <p class="text-3xl font-black tracking-tight">{{ $pending_registrations ?? 0 }}</p>
         </div>
         @if(($pending_registrations ?? 0) > 0)
@@ -24,7 +24,7 @@
             <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </div>
         <div class="relative z-10">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Siswa</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('dashboard.total_students') }}</p>
             <p class="text-3xl font-black text-gray-900 tracking-tight">{{ $total_students }}</p>
         </div>
     </div>
@@ -36,7 +36,7 @@
             <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
         </div>
         <div class="relative z-10">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Guru Aktif</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('dashboard.active_teachers') }}</p>
             <p class="text-3xl font-black text-gray-900 tracking-tight">{{ $total_teachers }}</p>
         </div>
     </div>
@@ -48,7 +48,7 @@
             <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
         </div>
         <div class="relative z-10">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Kelas</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('dashboard.total_classrooms') }}</p>
             <p class="text-3xl font-black text-gray-900 tracking-tight">{{ $total_classes }}</p>
         </div>
     </div>
@@ -60,10 +60,10 @@
             <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
         </div>
         <div class="relative z-10">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Periode Aktif</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{{ __('dashboard.active_period') }}</p>
             <p class="text-lg font-black text-gray-900 tracking-tight leading-tight">
                 {{ $active_year ? $active_year->year : 'N/A' }}
-                <span class="block text-[10px] font-bold text-emerald-600 mt-0.5">{{ $active_year ? $active_year->semester : 'Belum Set' }}</span>
+                <span class="block text-[10px] font-bold text-emerald-600 mt-0.5">{{ $active_year ? $active_year->semester : __('dashboard.not_set') }}</span>
             </p>
         </div>
     </div>

@@ -5,6 +5,9 @@
                 <i class="fa-solid fa-shield-halved text-indigo-400 mr-2"></i> {{ __('Dashboard Keamanan & SIEM') }}
             </h2>
             <div class="flex space-x-2">
+                <a href="{{ route('admin.security.audit') }}" id="btn-security-audit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-lg shadow-emerald-500/20 flex items-center">
+                    <i class="fa-solid fa-shield-virus mr-2"></i> Audit Kepatuhan Keamanan
+                </a>
                 <a href="{{ route('admin.security.sessions') }}" id="btn-active-sessions" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-lg shadow-indigo-500/20 flex items-center">
                     <i class="fa-solid fa-desktop mr-2"></i> Monitor Sesi Aktif
                 </a>

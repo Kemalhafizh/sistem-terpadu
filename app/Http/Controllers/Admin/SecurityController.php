@@ -55,4 +55,11 @@ class SecurityController extends Controller
             return back()->with('error', "Gagal menerminasi sesi: " . $e->getMessage());
         }
     }
+
+    public function audit(\App\Services\SecurityAuditService $auditService)
+    {
+        $report = $auditService->runFullAudit();
+        return view('admin.security.audit', compact('report'));
+    }
 }
+

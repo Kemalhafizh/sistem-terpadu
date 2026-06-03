@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-bold text-2xl text-gray-800 leading-tight tracking-tight">
-            {{ __('Dashboard Utama') }}
+            {{ __('dashboard.dashboard_title') }}
         </h2>
     </x-slot>
 
@@ -46,15 +46,15 @@
                                 @endif
                             </div>
                             <div class="space-y-1">
-                                <h4 class="text-lg font-black tracking-tight text-indigo-300">🧠 Smart Alerts Engine Terdeteksi</h4>
+                                <h4 class="text-lg font-black tracking-tight text-indigo-300">{{ __('dashboard.smart_alerts_detected') }}</h4>
                                 <p class="text-xs text-gray-300 font-medium leading-relaxed max-w-xl">
-                                    Sistem kecerdasan analitik mendeteksi <strong class="text-white">{{ $dashActiveCount }} anomali/alert aktif</strong> (termasuk {{ $dashCriticalCount }} tindakan kritis) yang membutuhkan peninjauan dan solusi segera di lapangan.
+                                    {!! __('dashboard.smart_alerts_desc', ['count' => '<strong class="text-white">'.$dashActiveCount.'</strong>', 'critical' => '<strong class="text-white">'.$dashCriticalCount.'</strong>']) !!}
                                 </p>
                             </div>
                         </div>
                         <a href="{{ route('smart-alerts.index') }}" 
                            class="w-full md:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 active:scale-95 shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 flex-shrink-0">
-                            <span>Buka Dasbor Prediktif</span>
+                            <span>{{ __('dashboard.open_predictive_dashboard') }}</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </a>
                     </div>
@@ -69,7 +69,7 @@
                             @if($announcement->priority == 'urgent')
                                 <div class="absolute top-0 right-0 px-3 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg flex items-center animate-pulse">
                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                    Mendesak
+                                    {{ __('dashboard.urgent') }}
                                 </div>
                             @endif
                             
@@ -85,7 +85,7 @@
                                 
                                 <div class="mt-4 flex items-center text-xs font-bold text-gray-400">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                    Dari: {{ $announcement?->creator?->name }}
+                                    {{ __('dashboard.from') }}: {{ $announcement?->creator?->name }}
                                     <span class="mx-2">•</span>
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     {{ $announcement->created_at?->diffForHumans() }}
@@ -181,11 +181,11 @@
                                 <span class="w-8 h-8 bg-primary-100 dark:bg-primary-950 text-primary-600 dark:text-primary-400 rounded-lg flex items-center justify-center mr-3">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                                 </span>
-                                Ikhtisar Sekolah & Dasbor Cerdas
+                                {{ __('dashboard.school_overview_dashboard') }}
                             </h3>
                             <button @click="showDrawer = true" class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm">
                                 <svg class="w-4 h-4 mr-2 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                                🔧 Kustomisasi Dasbor
+                                {{ __('dashboard.customize_dashboard') }}
                             </button>
                         </div>
 
@@ -209,27 +209,27 @@
                                     <div class="relative z-10">
                                         <h4 class="text-lg font-black mb-4 flex items-center text-amber-400">
                                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                            Akses Cepat Superadmin
+                                            {{ __('dashboard.superadmin_quick_access') }}
                                         </h4>
                                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                             <a href="{{ route('mutabaah.index') }}" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-2xl transition-all border border-gray-700 hover:border-emerald-500">
-                                                <p class="text-sm font-bold">Modul Tahfidz & Keislaman</p>
+                                                <p class="text-sm font-bold">{{ __('dashboard.islamic_tahfidz_module') }}</p>
                                             </a>
                                             <a href="{{ route('points.index') }}" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-2xl transition-all border border-gray-700 hover:border-red-500">
-                                                <p class="text-sm font-bold">Modul BK & Kedisiplinan</p>
+                                                <p class="text-sm font-bold">{{ __('dashboard.bk_discipline_module') }}</p>
                                             </a>
                                             <a href="{{ route('finance.billings.index') }}" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-2xl transition-all border border-gray-700 hover:border-blue-500">
-                                                <p class="text-sm font-bold">Modul Keuangan (SPP)</p>
+                                                <p class="text-sm font-bold">{{ __('dashboard.finance_spp_module') }}</p>
                                             </a>
                                             <a href="{{ route('users.index') }}" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-2xl transition-all border border-gray-700 hover:border-purple-500">
-                                                <p class="text-sm font-bold">Manajemen User & Guru</p>
+                                                <p class="text-sm font-bold">{{ __('dashboard.user_teacher_management') }}</p>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                             @endif
 
-                            <!-- Widget: Analytics Area (Tren Keuangan & Live Feed) -->
+                            <!-- Widget: Analytics Area (Tren Keuangan & {{ __('dashboard.live_feed') }}) -->
                             <div x-show="isWidgetVisible('financial_trend') || isWidgetVisible('live_feed')"
                                  :style="'order: ' + Math.min(getWidgetOrder('financial_trend'), getWidgetOrder('live_feed'))"
                                  class="grid grid-cols-1 xl:grid-cols-3 gap-8 transition-all duration-300"
@@ -243,8 +243,8 @@
                                      style="display: none;">
                                     <div class="flex justify-between items-center mb-8">
                                         <div>
-                                            <h4 class="text-xl font-black text-gray-900 dark:text-white tracking-tight">Tren Pemasukan Keuangan</h4>
-                                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">7 Hari Terakhir</p>
+                                            <h4 class="text-xl font-black text-gray-900 dark:text-white tracking-tight">{{ __('dashboard.financial_income_trend') }}</h4>
+                                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{{ __('dashboard.last_7_days') }}</p>
                                         </div>
                                         <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -275,8 +275,8 @@
                                      style="display: none;">
                                     <div class="flex justify-between items-center mb-8">
                                         <div>
-                                            <h4 class="text-lg font-black text-gray-900 dark:text-white">Live Feed</h4>
-                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Pembayaran Terbaru</p>
+                                            <h4 class="text-lg font-black text-gray-900 dark:text-white">{{ __('dashboard.live_feed') }}</h4>
+                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{{ __('dashboard.recent_payments') }}</p>
                                         </div>
                                         <div class="flex space-x-1">
                                             <div class="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
@@ -318,10 +318,10 @@
                                                 </div>
                                                 <div class="ml-4 flex-1">
                                                     <div class="flex justify-between items-start">
-                                                        <p class="text-sm font-bold text-gray-900 dark:text-gray-100 leading-tight">{{ $recentPayment->billing?->student?->user?->name ?? 'Siswa' }}</p>
+                                                        <p class="text-sm font-bold text-gray-900 dark:text-gray-100 leading-tight">{{ $recentPayment->billing?->student?->user?->name ?? __('navigation.students') }}</p>
                                                         <span class="text-[10px] font-bold text-gray-400 whitespace-nowrap ml-2">{{ $recentPayment->created_at?->diffForHumans() ?? '-' }}</span>
                                                     </div>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $recentPayment->billing?->category?->name ?? 'Iuran' }}</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $recentPayment->billing?->category?->name ?? __('dashboard.billing_details') }}</p>
                                                     <div class="mt-2 inline-flex items-center px-2 py-1 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rounded text-[10px] font-black uppercase tracking-widest">
                                                         + Rp {{ number_format($recentPayment->amount_paid ?? 0, 0, ',', '.') }}
                                                     </div>
@@ -330,7 +330,7 @@
                                         @empty
                                             <div class="flex flex-col items-center justify-center h-full text-center opacity-50 py-10">
                                                 <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                                                <p class="text-xs font-bold text-gray-500">Belum ada transaksi</p>
+                                                <p class="text-xs font-bold text-gray-500">{{ __('dashboard.no_transactions') }}</p>
                                             </div>
                                         @endforelse
                                     </div>
@@ -362,8 +362,8 @@
                                             <!-- Drawer Header -->
                                             <div class="px-6 py-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
                                                 <div>
-                                                    <h3 class="text-lg font-black text-gray-900 dark:text-white tracking-tight">Kustomisasi Dasbor</h3>
-                                                    <p class="text-xs font-semibold text-gray-400 mt-0.5">Atur tata letak & visibilitas widget</p>
+                                                    <h3 class="text-lg font-black text-gray-900 dark:text-white tracking-tight">{{ __('dashboard.drawer_title') }}</h3>
+                                                    <p class="text-xs font-semibold text-gray-400 mt-0.5">{{ __('dashboard.drawer_subtitle') }}</p>
                                                 </div>
                                                 <button @click="showDrawer = false" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 transition-all">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -373,7 +373,7 @@
                                             <!-- Drawer Body (List of Widgets with Drag & Drop) -->
                                             <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6">
                                                 <div class="space-y-4">
-                                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Seret untuk Mengurutkan & Toggle Aktif</p>
+                                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.drag_to_sort') }}</p>
                                                     
                                                     <div class="space-y-3">
                                                         <template x-for="(widget, idx) in layout" :key="widget.id">
@@ -403,11 +403,11 @@
                                             <!-- Drawer Footer -->
                                             <div class="px-6 py-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 flex space-x-3">
                                                 <button @click="resetLayout()" class="flex-1 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
-                                                    Reset
+                                                    {{ __('dashboard.reset') }}
                                                 </button>
                                                 <button @click="saveLayout()" :disabled="isSaving" class="flex-1 py-3 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-lg shadow-primary-900/10 flex items-center justify-center space-x-2">
                                                     <svg x-show="isSaving" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                                    <span x-text="isSaving ? 'Menyimpan...' : 'Simpan Layout'"></span>
+                                                    <span x-text="isSaving ? '{{ __('dashboard.saving') }}' : '{{ __('dashboard.save_layout') }}'"></span>
                                                 </button>
                                             </div>
 
@@ -443,7 +443,7 @@
                         <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mr-3">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                         </span>
-                        Wadah Akademik & Kurikulum
+                        {{ __('dashboard.academic_curriculum_hub') }}
                     </h3>
                     @include('dashboard.partials.stats-kurikulum')
                 @endif
@@ -452,12 +452,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                         <!-- Points Card -->
                         <div class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
-                            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">Poin Kedisiplinan Saya</p>
+                            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">{{ __('dashboard.my_discipline_points') }}</p>
                             <div class="w-32 h-32 rounded-full border-8 {{ $total_points > 50 ? 'border-red-100' : 'border-primary-100' }} flex items-center justify-center mb-6">
                                 <span class="text-5xl font-black {{ $total_points > 50 ? 'text-red-500' : 'text-primary-600' }}">{{ $total_points }}</span>
                             </div>
-                            <p class="text-sm font-bold text-gray-600 mb-2">Status: {{ $total_points > 50 ? 'Perlu Pembinaan' : 'Baik' }}</p>
-                            <a href="{{ route('points.show', $student_profile->id ?? 0) }}" class="text-xs font-bold text-primary-600 hover:underline">Lihat Detail Riwayat →</a>
+                            <p class="text-sm font-bold text-gray-600 mb-2">{{ __('dashboard.payment_status') }}: {{ $total_points > 50 ? __('dashboard.status_need_guidance') : __('dashboard.status_good') }}</p>
+                            <a href="{{ route('points.show', $student_profile->id ?? 0) }}" class="text-xs font-bold text-primary-600 hover:underline">{{ __('dashboard.development_details') }} →</a>
                         </div>
 
                         <!-- Finance Card -->
@@ -465,15 +465,15 @@
                             @if($unpaid_billings_count > 0)
                                 <div class="absolute top-4 right-4 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
                             @endif
-                            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">Tunggakan Administrasi</p>
+                            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">{{ __('dashboard.spp_arrears') }}</p>
                             <div class="text-3xl font-black {{ $unpaid_billings_count > 0 ? 'text-red-500' : 'text-emerald-500' }} mb-2">
                                 Rp {{ number_format($total_unpaid_amount, 0, ',', '.') }}
                             </div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">{{ $unpaid_billings_count }} Tagihan Belum Lunas</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">{{ $unpaid_billings_count }} {{ __('dashboard.payment_status') }}</p>
                             
                             <div class="w-full flex space-x-2">
-                                <a href="{{ route('finance.student.index') }}" class="flex-1 py-3 bg-gray-50 text-gray-700 rounded-xl text-xs font-bold border border-gray-100">Detail Iuran</a>
-                                <a href="{{ route('finance.student.index') }}" class="flex-1 py-3 bg-primary-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-primary-900/10">Bayar Sekarang</a>
+                                <a href="{{ route('finance.student.index') }}" class="flex-1 py-3 bg-gray-50 text-gray-700 rounded-xl text-xs font-bold border border-gray-100">{{ __('dashboard.billing_details') }}</a>
+                                <a href="{{ route('finance.student.index') }}" class="flex-1 py-3 bg-primary-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-primary-900/10">{{ __('dashboard.pay_now') }}</a>
                             </div>
                         </div>
 
@@ -482,14 +482,14 @@
                             <div class="absolute top-0 right-0 p-4 opacity-10">
                                 <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                             </div>
-                            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-primary-300 mb-4 relative z-10">Akademik & E-Rapor</p>
+                            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-primary-300 mb-4 relative z-10">{{ __('dashboard.academic_ereport') }}</p>
                             <div class="text-4xl font-black mb-2 relative z-10">
                                 {{ $total_points > 0 ? 'Aktif' : 'Ready' }}
                             </div>
-                            <p class="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-6 relative z-10">Pantau Nilai & Download Rapor</p>
+                            <p class="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-6 relative z-10">{{ __('dashboard.monitor_grades_download_report') }}</p>
                             
                             <a href="{{ route('student.academic') }}" class="w-full py-4 bg-white text-primary-900 rounded-2xl text-sm font-black shadow-lg hover:bg-primary-50 transition-all relative z-10">
-                                LIHAT NILAI SAYA
+                                {{ __('dashboard.view_my_grades') }}
                             </a>
                         </div>
 
@@ -497,7 +497,7 @@
                         <div class="md:col-span-2 xl:col-span-2 bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100">
                             <h4 class="text-lg font-black text-gray-800 mb-6 flex items-center">
                                 <span class="w-2 h-6 bg-primary-600 rounded-full mr-3"></span>
-                                Catatan Terakhir
+                                {{ __('dashboard.recent_notes') }}
                             </h4>
                             <div class="space-y-4">
                                 @forelse($recent_logs ?? [] as $log) @php /** @var \App\Models\StudentPointLog $log */ @endphp
@@ -508,12 +508,12 @@
                                             </div>
                                             <div>
                                                 <p class="text-sm font-bold text-gray-800">{{ $log->description }}</p>
-                                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">{{ $log->created_at?->diffForHumans() }} • Oleh {{ $log?->creator?->name }}</p>
+                                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">{{ $log->created_at?->diffForHumans() }} • {{ __('dashboard.from') }} {{ $log?->creator?->name }}</p>
                                             </div>
                                         </div>
                                     </div>
                                 @empty
-                                    <p class="text-center py-10 text-gray-400 italic">Belum ada catatan perilaku.</p>
+                                    <p class="text-center py-10 text-gray-400 italic">{{ __('dashboard.no_behavior_notes') }}</p>
                                 @endforelse
                             </div>
                         </div>
@@ -524,8 +524,8 @@
                 @if(auth()->user()->hasRole('parent'))
                     <div class="space-y-10">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-black text-gray-800">Monitoring Anak</h3>
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ count($children) }} Anak Terdaftar</span>
+                            <h3 class="text-xl font-black text-gray-800">{{ __('dashboard.child_monitoring') }}</h3>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ __('dashboard.children_registered', ['count' => count($children)]) }}</span>
                         </div>
 
                         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -545,17 +545,17 @@
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                                         <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Poin Kedisiplinan</p>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('dashboard.my_discipline_points') }}</p>
                                             <p class="text-2xl font-black {{ $child['total_points'] > 50 ? 'text-red-500' : 'text-primary-600' }}">{{ $child['total_points'] }}</p>
                                         </div>
                                         <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tunggakan Iuran</p>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{{ __('dashboard.spp_arrears') }}</p>
                                             <p class="text-2xl font-black {{ $child['total_unpaid_amount'] > 0 ? 'text-red-500' : 'text-emerald-600' }}">Rp {{ number_format($child['total_unpaid_amount'], 0, ',', '.') }}</p>
                                         </div>
                                     </div>
 
                                     <div class="space-y-4">
-                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Catatan Terakhir</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.recent_notes') }}</p>
                                         @forelse($child['recent_logs'] ?? [] as $log)
                                             <div class="flex items-center text-sm">
                                                 <div class="w-2 h-2 rounded-full {{ $log->points > 0 ? 'bg-red-500' : 'bg-emerald-500' }} mr-3"></div>
@@ -563,26 +563,26 @@
                                                 <span class="text-[10px] font-bold text-gray-400 ml-2">{{ $log->created_at?->diffForHumans() }}</span>
                                             </div>
                                         @empty
-                                            <p class="text-xs text-gray-300 italic">Belum ada catatan.</p>
+                                            <p class="text-xs text-gray-300 italic">{{ __('dashboard.no_activities') }}</p>
                                         @endforelse
                                     </div>
 
                                     <div class="mt-8 pt-6 border-t border-gray-50 flex flex-col gap-3">
                                         <a href="{{ route('parent-portal.dashboard', ['child_id' => $child['profile']->id]) }}" class="w-full text-center py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-primary-900/10 transition-all">
-                                            🌟 Buka Portal Premium
+                                            🌟 {{ __('dashboard.open_predictive_dashboard') }}
                                         </a>
                                         <div class="grid grid-cols-2 gap-2">
                                             <a href="{{ route('parent-portal.report-card', $child['profile']->id) }}" class="text-center py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all border border-gray-100">
-                                                📝 Rapor Nilai
+                                                📝 {{ __('dashboard.view_report_card') }}
                                             </a>
                                             <a href="{{ route('parent-portal.schedule', $child['profile']->id) }}" class="text-center py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all border border-gray-100">
-                                                📅 Jadwal Kelas
+                                                📅 {{ __('navigation.schedules') }}
                                             </a>
                                             <a href="{{ route('parent-portal.attendance', $child['profile']->id) }}" class="text-center py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all border border-gray-100">
-                                                ⏰ Presensi Log
+                                                ⏰ {{ __('dashboard.view_attendance') }}
                                             </a>
                                             <a href="{{ route('parent-portal.billings', $child['profile']->id) }}" class="text-center py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all border border-gray-100">
-                                                💰 Tagihan SPP
+                                                💰 {{ __('navigation.billings') }}
                                             </a>
                                         </div>
                                     </div>
@@ -597,8 +597,8 @@
                     <div class="space-y-8">
                         <div class="bg-primary-600 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-lg shadow-primary-900/20">
                             <div class="relative z-10">
-                                <h3 class="text-2xl font-black mb-2">Selamat Bertugas, Pahlawan Pendidikan!</h3>
-                                <p class="text-primary-100 font-medium">Dashboard ini disesuaikan dengan mata pelajaran dan tugas tambahan Anda.</p>
+                                <h3 class="text-2xl font-black mb-2">{{ __('dashboard.teacher_welcome') }}</h3>
+                                <p class="text-primary-100 font-medium">{{ __('dashboard.teacher_welcome_desc') }}</p>
                             </div>
                             <div class="absolute -right-10 -bottom-10 opacity-20">
                                 <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
@@ -614,8 +614,8 @@
                                     <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                     </div>
-                                    <h4 class="text-lg font-black text-gray-800 mb-2">Modul Keislaman</h4>
-                                    <p class="text-sm text-gray-500">Kelola Tahfidz & Mutaba'ah Yaumiyah siswa.</p>
+                                    <h4 class="text-lg font-black text-gray-800 mb-2">{{ __('dashboard.islamic_tahfidz_module') }}</h4>
+                                    <p class="text-sm text-gray-500">{{ __('dashboard.manage_tahfidz_desc') }}</p>
                                 </a>
                             @endif
 
@@ -625,8 +625,8 @@
                                     <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                     </div>
-                                    <h4 class="text-lg font-black text-gray-800 mb-2">Kedisiplinan & BK</h4>
-                                    <p class="text-sm text-gray-500">Catat pelanggaran dan riwayat konseling siswa.</p>
+                                    <h4 class="text-lg font-black text-gray-800 mb-2">{{ __('dashboard.bk_discipline_module') }}</h4>
+                                    <p class="text-sm text-gray-500">{{ __('dashboard.manage_discipline_desc') }}</p>
                                 </a>
                             @endif
 
@@ -636,14 +636,14 @@
                                     <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                     </div>
-                                    <h4 class="text-lg font-black text-gray-800 mb-2">Perwalian Kelas</h4>
-                                    <p class="text-sm text-gray-500 mb-4">Anda adalah wali kelas dari:</p>
+                                    <h4 class="text-lg font-black text-gray-800 mb-2">{{ __('dashboard.classroom_advisory') }}</h4>
+                                    <p class="text-sm text-gray-500 mb-4">{{ __('dashboard.classroom_advisory_desc') }}</p>
                                     @if(isset($my_classrooms))
                                         <div class="space-y-2">
                                             @foreach($my_classrooms ?? [] as $kelas)
                                                 <div class="px-4 py-2 bg-gray-50 rounded-lg text-sm font-bold text-gray-700 flex justify-between">
                                                     <span>{{ $kelas->name }}</span>
-                                                    <span class="text-primary-600">{{ $kelas->students_count }} Siswa</span>
+                                                    <span class="text-primary-600">{{ __('dashboard.student_count', ['count' => $kelas->students_count]) }}</span>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -656,8 +656,8 @@
                                 <div class="w-14 h-14 bg-gray-100 text-gray-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 </div>
-                                <h4 class="text-lg font-black text-gray-800 mb-2">Jadwal & Absensi</h4>
-                                <p class="text-sm text-gray-500">Lihat jadwal mengajar dan isi presensi harian.</p>
+                                <h4 class="text-lg font-black text-gray-800 mb-2">{{ __('dashboard.schedule_attendance') }}</h4>
+                                <p class="text-sm text-gray-500">{{ __('dashboard.schedule_attendance_desc') }}</p>
                             </a>
 
                         </div>
@@ -670,8 +670,8 @@
                         <div class="w-20 h-20 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center mx-auto mb-6">
                             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Modul Sedang Disiapkan</h3>
-                        <p class="text-gray-500 max-w-sm mx-auto">Kami sedang merakit wadah digital khusus untuk peran <strong>{{ auth()->user()->role }}</strong>. Dashboard personal Anda akan segera hadir.</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">{{ __('dashboard.module_preparing') }}</h3>
+                        <p class="text-gray-500 max-w-sm mx-auto">{!! __('dashboard.module_preparing_desc', ['role' => auth()->user()->role]) !!}</p>
                     </div>
                 @endif
             </div>
@@ -688,7 +688,7 @@
             @if(isset($payment_trend) && $payment_trend->count() > 0)
             const financialOptions = {
                 series: [{
-                    name: 'Pemasukan (Rp)',
+                    name: '{{ __('dashboard.financial_income_trend') }} (Rp)',
                     data: {!! json_encode($payment_trend->pluck('total')) !!}
                 }],
                 chart: {
@@ -741,14 +741,14 @@
             const financialChart = new ApexCharts(document.querySelector("#financialTrendChart"), financialOptions);
             financialChart.render();
             @else
-                document.querySelector("#financialTrendChart").innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 font-bold text-sm">Belum ada data pemasukan 7 hari terakhir.</div>';
+                document.querySelector("#financialTrendChart").innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 font-bold text-sm">{{ __('dashboard.no_income_data') }}</div>';
             @endif
 
             // 2. SPMB Trend Chart (Replace old Chart.js in spmb-analytics)
             @if(isset($spmb_trend))
             const spmbOptions = {
                 series: [{
-                    name: 'Pendaftar Baru',
+                    name: '{{ __('dashboard.new_applicants') }}',
                     data: {!! json_encode($spmb_trend->pluck('total')) !!}
                 }],
                 chart: {
@@ -773,7 +773,7 @@
                 tooltip: {
                     fixed: { enabled: false },
                     x: { show: false },
-                    y: { title: { formatter: function (seriesName) { return 'Pendaftar:' } } },
+                    y: { title: { formatter: function (seriesName) { return '{{ __('dashboard.registrants') }}:' } } },
                     marker: { show: false }
                 }
             };

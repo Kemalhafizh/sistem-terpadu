@@ -45,7 +45,7 @@
             <!-- Attendance Table -->
             @if($selectedClassroomId)
                 <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-200">
-                    <form method="POST" action="{{ route('attendances.store') }}">
+                    <form id="attendance-form" method="POST" action="{{ route('attendances.store') }}" data-offline-sync="true" data-type-name="Presensi">
                         @csrf
                         <input type="hidden" name="classroom_id" value="{{ $selectedClassroomId }}">
                         <input type="hidden" name="date" value="{{ $date }}">

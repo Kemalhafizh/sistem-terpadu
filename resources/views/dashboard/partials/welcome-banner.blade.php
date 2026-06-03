@@ -4,22 +4,22 @@
     
     <div class="relative z-10">
         <div class="inline-flex items-center px-3 py-1 bg-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 backdrop-blur-md">
-            Informasi Sistem • {{ now()->format('d F Y') }}
+            {{ __('dashboard.system_info') }} • {{ now()->format('d F Y') }}
         </div>
-        <h3 class="text-3xl font-extrabold mb-3 leading-tight tracking-tight">Selamat Datang,<br>{{ Auth::user()->name }}!</h3>
+        <h3 class="text-3xl font-extrabold mb-3 leading-tight tracking-tight">{{ __('dashboard.welcome') }},<br>{{ Auth::user()->name }}!</h3>
         <p class="text-primary-100 opacity-90 max-w-xl font-medium leading-relaxed">
             @switch(Auth::user()->role)
                 @case('kepala_sekolah')
-                    Pantau kesehatan akademik dan kedisiplinan SMA Islam Sultan Agung 1 dalam satu dasbor eksekutif.
+                    {{ __('dashboard.welcome_desc_kepala_sekolah') }}
                     @break
                 @case('waka_kurikulum')
-                    Kelola dinamika kurikulum, jadwal, dan progres akademik siswa secara mandiri dan fleksibel.
+                    {{ __('dashboard.welcome_desc_waka_kurikulum') }}
                     @break
                 @case('waka_kesiswaan')
-                    Monitor kedisiplinan dan pembinaan karakter siswa untuk mewujudkan generasi Khaira Ummah.
+                    {{ __('dashboard.welcome_desc_waka_kesiswaan') }}
                     @break
                 @default
-                    Sistem Terpadu Sultan Agung 1 siap membantu aktivitas pelayanan pendidikan Anda hari ini.
+                    {{ __('dashboard.welcome_desc_default') }}
             @endswitch
         </p>
     </div>
