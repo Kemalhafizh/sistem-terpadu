@@ -1,0 +1,279 @@
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <a href="{{ url()->previous() ?? route('workflows.my-requests') }}" class="text-xs font-black uppercase tracking-wider text-indigo-500 hover:text-indigo-600 transition flex items-center space-x-1">
+                        <span>&larr; Kembali</span>
+                    </a>
+                </div>
+                <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2 mt-1">
+                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">🔍</span>
+                    <span>Detail Pelacakan & Audit Trail</span>
+                </h2>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    UUID: {{ $request->uuid }} • Diajukan oleh {{ $request->requester->name }}
+                </p>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                @if($request->status === 'approved')
+                    <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        ✓ Disetujui Penuh
+                    </span>
+                @elseif($request->status === 'rejected')
+                    <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                        ✗ Ditolak
+                    </span>
+                @elseif($request->status === 'cancelled')
+                    <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        Batal
+                    </span>
+                @else
+                    <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800 animate-pulse">
+                        ⏳ Sedang Ditinjau
+                    </span>
+                @endif
+            </div>
+        </div>
+    </x-slot>
+
+    <div class="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {{-- Success & Error Alerts --}}
+        @if(session('success'))
+            <div class="mb-6 p-4 bg-emerald-50/80 dark:bg-emerald-950/30 backdrop-blur-sm border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center space-x-3">
+                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-sm font-bold">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="mb-6 p-4 bg-rose-50/80 dark:bg-rose-950/30 backdrop-blur-sm border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 rounded-2xl flex flex-col space-y-1">
+                @foreach($errors->all() as $error)
+                    <div class="flex items-center space-x-2 text-sm font-bold">
+                        <svg class="w-4 h-4 flex-shrink-0 text-rose-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>{{ $error }}</span>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {{-- Column 1 & 2: Polymorphic Document Details --}}
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-3xl p-6 md:p-8 shadow-sm">
+                    <div class="border-b border-gray-100 dark:border-slate-800 pb-5 mb-6 flex items-center justify-between">
+                        <div>
+                            <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest block">Dokumen Pengajuan</span>
+                            <h3 class="text-xl font-black text-gray-900 dark:text-gray-100 mt-1">
+                                {{ $request->definition->name }}
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-[10px] font-black text-gray-400 uppercase tracking-wider rounded-xl border border-gray-100 dark:border-slate-800">
+                            Tipe: {{ class_basename($request->requestable_type) }}
+                        </span>
+                    </div>
+
+                    {{-- Dinamis Polymorphic Fields View --}}
+                    @if(class_basename($request->requestable_type) === 'LeaveRequest')
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <div class="sm:col-span-2 p-4 bg-indigo-50/30 dark:bg-indigo-950/10 rounded-2xl border border-indigo-100/50 dark:border-indigo-950/30 flex items-center space-x-3">
+                                <span class="text-2xl">👤</span>
+                                <div>
+                                    <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Pengaju / Guru</span>
+                                    <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requester->name }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Tipe / Alasan Cuti</span>
+                                <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requestable->leave_type ?? 'Cuti Umum' }}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Durasi Tanggal</span>
+                                <span class="text-base font-black text-slate-800 dark:text-slate-100">
+                                    {{ $request->requestable->start_date ? \Carbon\Carbon::parse($request->requestable->start_date)->format('d M Y') : '-' }} s/d 
+                                    {{ $request->requestable->end_date ? \Carbon\Carbon::parse($request->requestable->end_date)->format('d M Y') : '-' }}
+                                </span>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Alasan & Keperluan Lengkap</span>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-800 mt-1 font-medium italic leading-relaxed">
+                                    "{{ $request->requestable->reason ?? '-' }}"
+                                </p>
+                            </div>
+                        </div>
+                    @elseif(class_basename($request->requestable_type) === 'Letter')
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">
+                            <div class="sm:col-span-2 p-4 bg-indigo-50/30 dark:bg-indigo-950/10 rounded-2xl border border-indigo-100/50 dark:border-indigo-950/30 flex items-center space-x-3">
+                                <span class="text-2xl">✉️</span>
+                                <div>
+                                    <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Perihal Surat</span>
+                                    <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requestable->subject ?? '-' }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Nomor Surat</span>
+                                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $request->requestable->letter_number ?? 'Belum Diatur' }}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Penerima / Tujuan</span>
+                                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $request->requestable->recipient ?? '-' }}</span>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Uploader Surat</span>
+                                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $request->requester->name }}</span>
+                            </div>
+                        </div>
+                    @else
+                        {{-- Generic view if no specific class matched --}}
+                        <div class="p-4 bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 text-xs font-semibold text-gray-600 dark:text-gray-400 leading-relaxed">
+                            <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400 mb-2">Atribut Model Induk</span>
+                            <pre class="bg-gray-100 dark:bg-slate-900 p-4 rounded-xl font-mono text-[10px] overflow-auto max-h-96">
+{{ json_encode($request->requestable ? $request->requestable->toArray() : [], JSON_PRETTY_PRINT) }}
+                            </pre>
+                        </div>
+                    @endif
+
+                    @if($request->notes)
+                        <div class="mt-6 pt-6 border-t border-gray-100 dark:border-slate-800">
+                            <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Catatan Awal Pengaju:</span>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 font-medium italic mt-1 leading-relaxed">
+                                "{{ $request->notes }}"
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Column 3: Detailed Audit Trail & Action Form --}}
+            <div class="space-y-6">
+                
+                {{-- Audit Trail Timeline --}}
+                <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm">
+                    <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest block mb-4">Audit Trail Logs</span>
+                    
+                    <div class="relative pl-6 border-l-2 border-gray-200 dark:border-slate-800 space-y-6">
+                        @foreach($request->approvals as $approval)
+                            @php
+                                $isCompleted = $approval->decision === 'approved';
+                                $isRejected = $approval->decision === 'rejected';
+                                $isActive = ($request->status !== 'approved' && $request->status !== 'rejected' && $request->status !== 'cancelled' && $request->current_step === $approval->step_order);
+                                $isLocked = (!$isCompleted && !$isActive && !$isRejected);
+                            @endphp
+
+                            <div class="relative">
+                                {{-- Timeline Icon node --}}
+                                <div class="absolute -left-[35px] w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow transition-all duration-300
+                                     {{ $isCompleted ? 'bg-emerald-500 text-white ring-4 ring-emerald-50 dark:ring-emerald-950/20' : '' }}
+                                     {{ $isRejected ? 'bg-rose-500 text-white ring-4 ring-rose-50 dark:ring-rose-950/20' : '' }}
+                                     {{ $isActive ? 'bg-blue-500 text-white ring-4 ring-blue-50 dark:ring-blue-950/20 animate-pulse' : '' }}
+                                     {{ $isLocked ? 'bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-600' : '' }}">
+                                    @if($isCompleted)
+                                        ✓
+                                    @elseif($isRejected)
+                                        ✗
+                                    @else
+                                        {{ $approval->step_order }}
+                                    @endif
+                                </div>
+
+                                {{-- Details --}}
+                                <div class="space-y-1">
+                                    <h4 class="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                                        Step {{ $approval->step_order }}: {{ str_replace('_', ' ', $approval->role) }}
+                                    </h4>
+                                    
+                                    @if($isCompleted)
+                                        <div class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex flex-col">
+                                            <span>✓ Disetujui</span>
+                                            <span class="text-gray-500 dark:text-gray-400 mt-0.5">Penilai: {{ $approval->approver->name ?? 'Sistem' }}</span>
+                                            <span class="text-[9px] text-gray-400 dark:text-gray-500">{{ $approval->decided_at ? $approval->decided_at->format('d-m-Y H:i') : '' }}</span>
+                                        </div>
+                                        @if($approval->remarks)
+                                            <p class="text-[11px] italic font-medium text-gray-600 dark:text-gray-400 mt-1 bg-gray-50 dark:bg-slate-800 p-2 rounded-xl border border-gray-100 dark:border-slate-800 leading-relaxed">
+                                                "{{ $approval->remarks }}"
+                                            </p>
+                                        @endif
+                                    @elseif($isRejected)
+                                        <div class="text-[11px] font-semibold text-rose-600 dark:text-rose-400 flex flex-col">
+                                            <span>✗ Ditolak & Dihentikan</span>
+                                            <span class="text-gray-500 dark:text-gray-400 mt-0.5">Penilai: {{ $approval->approver->name ?? 'Sistem' }}</span>
+                                            <span class="text-[9px] text-gray-400 dark:text-gray-500">{{ $approval->decided_at ? $approval->decided_at->format('d-m-Y H:i') : '' }}</span>
+                                        </div>
+                                        @if($approval->remarks)
+                                            <p class="text-[11px] italic font-medium text-rose-800 dark:text-rose-300 mt-1 bg-rose-50/50 dark:bg-rose-950/20 p-2 rounded-xl border border-rose-100 dark:border-rose-900/30 leading-relaxed">
+                                                "{{ $approval->remarks }}"
+                                            </p>
+                                        @endif
+                                    @elseif($isActive)
+                                        <span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 block animate-pulse">
+                                            ⏳ Menunggu Review Saat Ini
+                                        </span>
+                                        <span class="text-[9px] text-gray-400 dark:text-gray-500">
+                                            Menunggu tindakan dari role: {{ str_replace('_', ' ', $approval->role) }}
+                                        </span>
+                                    @else
+                                        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-600 block">
+                                            🔒 Dikunci
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Action Panel Form (If pending for the current user) --}}
+                @if($request->status !== 'approved' && $request->status !== 'rejected' && $request->status !== 'cancelled' && $request->currentApproval && $request->currentApproval->role === auth()->user()->role)
+                    <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-indigo-100 dark:border-indigo-950/50 rounded-3xl p-6 shadow-xl relative overflow-hidden"
+                         x-data="{ activeAction: 'approve', remarks: '' }">
+                        
+                        <div class="absolute -right-10 -top-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+                        <span class="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest block mb-1">Tinjauan Anda Diperlukan</span>
+                        <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-4">Ulas & Berikan Keputusan</h4>
+
+                        <div class="flex items-center space-x-2 bg-gray-50 dark:bg-slate-800 p-1.5 rounded-2xl mb-4 border border-gray-100 dark:border-slate-800">
+                            <button type="button" @click="activeAction = 'approve'"
+                                    :class="activeAction === 'approve' ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-500/10' : 'text-gray-600 dark:text-gray-400 font-semibold'"
+                                    class="flex-1 py-2 text-xs rounded-xl transition-all">
+                                ✅ Setujui
+                            </button>
+                            <button type="button" @click="activeAction = 'reject'"
+                                    :class="activeAction === 'reject' ? 'bg-rose-600 text-white font-bold shadow-md shadow-rose-500/10' : 'text-gray-600 dark:text-gray-400 font-semibold'"
+                                    class="flex-1 py-2 text-xs rounded-xl transition-all">
+                                ❌ Tolak
+                            </button>
+                        </div>
+
+                        <form :action="'/workflows/{{ $request->id }}/' + activeAction" method="POST" class="space-y-4">
+                            @csrf
+                            <div class="space-y-1.5">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                    Catatan / Alasan Penilaian <span x-show="activeAction === 'reject'" class="text-rose-500">*</span>
+                                </label>
+                                <textarea name="remarks" :required="activeAction === 'reject'" rows="3" x-model="remarks"
+                                          :placeholder="activeAction === 'approve' ? 'Tambahkan catatan opsional jika diperlukan...' : 'Tuliskan alasan penolakan secara jelas (wajib, minimal 5 karakter)...'"
+                                          class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-1 transition-all"
+                                          :class="activeAction === 'approve' ? 'focus:border-emerald-500 focus:ring-emerald-500' : 'focus:border-rose-500 focus:ring-rose-500'"></textarea>
+                            </div>
+
+                            <button type="submit"
+                                    :disabled="activeAction === 'reject' && remarks.trim().length < 5"
+                                    :class="activeAction === 'approve' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'"
+                                    class="w-full py-2.5 disabled:opacity-50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg active:scale-95">
+                                <span x-text="activeAction === 'approve' ? 'Kirim Persetujuan' : 'Kirim Penolakan'"></span>
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</x-app-layout>

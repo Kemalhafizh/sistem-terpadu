@@ -1,0 +1,38 @@
+{
+    "name": "Sistem Terpadu SMA Islam Sultan Agung 1",
+    "short_name": "SISTA",
+    "description": "Platform Layanan & Informasi Sekolah Terpadu SMA Islam Sultan Agung 1",
+    "start_url": "/dashboard",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#3b82f6",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/images/logo-kotak.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/images/logo-kotak.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Absensi",
+            "url": "/attendances"
+        },
+        {
+            "name": "Jadwal",
+            "url": "/schedules/grid"
+        },
+        {
+            "name": "Kalender",
+            "url": "/calendar"
+        }
+    ]
+}

@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-300: #6ee7b7;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
+  --color-primary-950: #022c22;
+  
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Custom Scrollbar for modern look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 hover:bg-gray-600;
+}
+
+/* ==========================================
+   Premium Dark Mode Palette & Overrides
+   ========================================== */
+.dark {
+  /* Core Backgrounds */
+  .bg-white {
+    background-color: #1e293b !important; /* bg-slate-800 */
+  }
+  
+  .bg-gray-50,
+  .bg-gray-50\/50,
+  .bg-gray-100 {
+    background-color: #0f172a !important; /* bg-slate-900 */
+  }
+
+  /* Table Specifics */
+  thead.bg-gray-50,
+  tr.bg-gray-50,
+  th.bg-gray-50 {
+    background-color: #1e293b !important;
+  }
+
+  /* Borders */
+  .border-gray-50,
+  .border-gray-100,
+  .border-gray-200,
+  .border-gray-300,
+  .border-gray-400 {
+    border-color: #334155 !important; /* border-slate-700 */
+  }
+
+  /* Typography Contrast Correction */
+  .text-gray-900 {
+    color: #f8fafc !important; /* slate-50 */
+  }
+  
+  .text-gray-800 {
+    color: #f1f5f9 !important; /* slate-100 */
+  }
+  
+  .text-gray-700 {
+    color: #e2e8f0 !important; /* slate-200 */
+  }
+  
+  .text-gray-600 {
+    color: #cbd5e1 !important; /* slate-300 */
+  }
+  
+  .text-gray-500 {
+    color: #94a3b8 !important; /* slate-400 */
+  }
+  
+  .text-gray-400 {
+    color: #64748b !important; /* slate-500 */
+  }
+
+  /* Hovers & Interactive States */
+  .hover\:bg-gray-50:hover {
+    background-color: #334155 !important;
+  }
+
+  /* Form Element Corrections */
+  input, 
+  select, 
+  textarea {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+  }
+}
+

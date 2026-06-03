@@ -1,0 +1,59 @@
+name: Authentication
+description: |-
+
+  API endpoint untuk manajemen otentikasi pengguna aplikasi mobile (Siswa/Orang Tua).
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/profile
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: |-
+
+        API endpoint untuk manajemen otentikasi pengguna aplikasi mobile (Siswa/Orang Tua).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Profile'
+      description: 'Mendapatkan profil pengguna yang sedang login beserta data siswa (jika role = student).'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

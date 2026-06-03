@@ -1,0 +1,505 @@
+name: 'Teacher Scoped Data v1'
+description: |-
+
+  API endpoint khusus untuk peran Guru guna melihat jadwal mengajar, menginput absensi kelas, dan membuat jurnal mengajar.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/teacher/schedule
+    metadata:
+      custom: []
+      groupName: 'Teacher Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Guru guna melihat jadwal mengajar, menginput absensi kelas, dan membuat jurnal mengajar.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Teacher Schedule'
+      description: 'Mengambil jadwal mengajar guru pada tahun akademik saat ini.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/teacher/classes
+    metadata:
+      custom: []
+      groupName: 'Teacher Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Guru guna melihat jadwal mengajar, menginput absensi kelas, dan membuat jurnal mengajar.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Taught Classrooms'
+      description: 'Mengambil daftar seluruh kelas yang diajar oleh guru tersebut.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/teacher/attendance
+    metadata:
+      custom: []
+      groupName: 'Teacher Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Guru guna melihat jadwal mengajar, menginput absensi kelas, dan membuat jurnal mengajar.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store Bulk Attendance'
+      description: 'Menginput absensi kehadiran siswa secara massal untuk kelas tertentu.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      classroom_id:
+        custom: []
+        name: classroom_id
+        description: 'ID Kelas.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      date:
+        custom: []
+        name: date
+        description: 'Tanggal absensi (YYYY-MM-DD).'
+        required: true
+        example: '2026-05-27'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      schedule_id:
+        custom: []
+        name: schedule_id
+        description: 'optional ID Jadwal terkait.'
+        required: false
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      students:
+        custom: []
+        name: students
+        description: 'List data absensi per siswa.'
+        required: true
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'students[].student_id':
+        custom: []
+        name: 'students[].student_id'
+        description: 'The <code>id</code> of an existing record in the students table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'students[].status':
+        custom: []
+        name: 'students[].status'
+        description: ''
+        required: true
+        example: I
+        type: string
+        enumValues:
+          - H
+          - S
+          - I
+          - A
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'students[].notes':
+        custom: []
+        name: 'students[].notes'
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'students.*.student_id':
+        custom: []
+        name: 'students.*.student_id'
+        description: 'ID Siswa.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'students.*.status':
+        custom: []
+        name: 'students.*.status'
+        description: 'Status absensi (H, S, I, A).'
+        required: true
+        example: H
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'students.*.notes':
+        custom: []
+        name: 'students.*.notes'
+        description: 'optional Catatan tambahan absensi.'
+        required: false
+        example: 'Sakit flu ringan'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      classroom_id: 2
+      date: '2026-05-27'
+      schedule_id: 4
+      students:
+        - architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/teacher/journals
+    metadata:
+      custom: []
+      groupName: 'Teacher Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Guru guna melihat jadwal mengajar, menginput absensi kelas, dan membuat jurnal mengajar.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Teaching Journals'
+      description: 'Mengambil riwayat pengisian jurnal mengajar guru.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/teacher/journals
+    metadata:
+      custom: []
+      groupName: 'Teacher Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Guru guna melihat jadwal mengajar, menginput absensi kelas, dan membuat jurnal mengajar.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store Teaching Journal'
+      description: 'Membuat entri baru jurnal mengajar digital beserta lampiran pendukung.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      subject_id:
+        custom: []
+        name: subject_id
+        description: 'ID Mata Pelajaran.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      classroom_id:
+        custom: []
+        name: classroom_id
+        description: 'ID Kelas.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      teaching_date:
+        custom: []
+        name: teaching_date
+        description: 'Tanggal mengajar (YYYY-MM-DD).'
+        required: true
+        example: '2026-05-27'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      jam_ke:
+        custom: []
+        name: jam_ke
+        description: 'Jam keberapa pengajaran.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      topic:
+        custom: []
+        name: topic
+        description: 'Topik atau materi pelajaran.'
+        required: true
+        example: 'Aljabar Linier'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      learning_activity:
+        custom: []
+        name: learning_activity
+        description: 'Aktivitas KBM berlangsung.'
+        required: true
+        example: 'Ceramah dan tanya jawab'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      learning_method:
+        custom: []
+        name: learning_method
+        description: 'Metode KBM.'
+        required: true
+        example: 'Diskusi Kelompok'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      obstacles:
+        custom: []
+        name: obstacles
+        description: 'optional Hambatan KBM jika ada.'
+        required: false
+        example: 'Beberapa proyektor mati'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: 'optional Catatan guru.'
+        required: false
+        example: 'Perlu review materi aljabar'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      students_present:
+        custom: []
+        name: students_present
+        description: 'Jumlah siswa hadir.'
+        required: true
+        example: 32
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      students_absent:
+        custom: []
+        name: students_absent
+        description: 'Jumlah siswa tidak hadir.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      attachment:
+        custom: []
+        name: attachment
+        description: 'optional File PDF/Gambar lampiran jurnal (max 10MB).'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      subject_id: 3
+      classroom_id: 2
+      teaching_date: '2026-05-27'
+      jam_ke: 1
+      topic: 'Aljabar Linier'
+      learning_activity: 'Ceramah dan tanya jawab'
+      learning_method: 'Diskusi Kelompok'
+      obstacles: 'Beberapa proyektor mati'
+      notes: 'Perlu review materi aljabar'
+      students_present: 32
+      students_absent: 2
+    fileParameters:
+      attachment: null
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

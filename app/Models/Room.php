@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Room extends Model
+{
+    protected $fillable = ['name', 'location'];
+
+    public function assets()
+    {
+        return $this->hasMany(Asset::class, 'room_id');
+    }
+}

@@ -1,0 +1,518 @@
+name: 'Parent Scoped Data v1'
+description: |-
+
+  API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/parent/children
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Children List'
+      description: 'Mengambil daftar seluruh anak yang terdaftar untuk orang tua yang aktif.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/parent/child/{student}/summary'
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Child Summary'
+      description: 'Mengambil rangkuman dasbor indikator akademik, absensi, keuangan, dan poin BK untuk anak tertentu.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      student:
+        custom: []
+        name: student
+        description: 'UUID siswa (anak).'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      student: 123e4567-e89b-12d3-a456-426614174000
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/parent/child/{student}/grades'
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Child Grades'
+      description: 'Mengambil riwayat nilai akademik anak.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      student:
+        custom: []
+        name: student
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      student: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/parent/child/{student}/attendance'
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Child Attendance'
+      description: 'Mengambil 30 absensi harian terakhir anak.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      student:
+        custom: []
+        name: student
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      student: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/parent/child/{student}/billings'
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Child Billings'
+      description: 'Mengambil daftar tagihan keuangan anak.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      student:
+        custom: []
+        name: student
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      student: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/parent/child/{student}/points'
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Child BK Points'
+      description: 'Mengambil catatan log poin BK anak.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      student:
+        custom: []
+        name: student
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      student: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/parent/messages
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Messages Chat History'
+      description: 'Mengambil daftar obrolan pesan antara Orang Tua dan Guru terkait anak-anak mereka.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+              "message": ""
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/parent/messages
+    metadata:
+      custom: []
+      groupName: 'Parent Scoped Data v1'
+      groupDescription: |-
+
+        API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Send Message to Teacher'
+      description: |-
+        Mengirim pesan konsultasi baru ke guru tertentu.
+        Memicu pengiriman WebSocket real-time `ChatMessageSent` secara internal.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      recipient_id:
+        custom: []
+        name: recipient_id
+        description: 'ID Guru (User ID).'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      student_id:
+        custom: []
+        name: student_id
+        description: 'ID Siswa (Anak).'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      message:
+        custom: []
+        name: message
+        description: 'Isi teks pesan obrolan.'
+        required: true
+        example: "Assalamu'alaikum wr. wb."
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      recipient_id: 5
+      student_id: 3
+      message: "Assalamu'alaikum wr. wb."
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

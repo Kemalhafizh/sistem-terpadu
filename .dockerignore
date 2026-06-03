@@ -1,0 +1,54 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+.cursor
+.zed
+.nova
+.phpactor.json
+
+# Dependencies (will be installed in Docker)
+/node_modules
+/vendor
+
+# Build output
+/public/build
+/public/hot
+/public/storage
+
+# Environment files
+.env
+.env.backup
+.env.production
+
+# Storage (ephemeral)
+/storage/*.key
+/storage/pail
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# Testing
+/.phpunit.cache
+.phpunit.result.cache
+/tests
+
+# Documentation
+*.md
+LICENSE
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (prevent recursive copy)
+docker-compose*.yml
+Dockerfile*
+
+# CI/CD
+.github

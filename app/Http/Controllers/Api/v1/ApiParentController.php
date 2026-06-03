@@ -1,0 +1,269 @@
+<?php
+
+namespace App\Http\Controllers\Api\v1;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\AttendanceResource;
+use App\Http\Resources\BillingResource;
+use App\Http\Resources\GradeResource;
+use App\Http\Resources\ParentMessageResource;
+use App\Http\Resources\PointLogResource;
+use App\Http\Resources\StudentResource;
+use App\Models\Grade;
+use App\Models\ParentMessage;
+use App\Models\Student;
+use App\Models\User;
+use App\Events\ChatMessageSent;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
+
+/**
+ * @group Parent Scoped Data v1
+ *
+ * API endpoint khusus untuk peran Orang Tua guna memantau data anak-anak mereka dan berkomunikasi dengan guru.
+ */
+class ApiParentController extends Controller
+{
+    use ApiResponseTrait;
+
+    /**
+     * Get Children List
+     *
+     * Mengambil daftar seluruh anak yang terdaftar untuk orang tua yang aktif.
+     *
+     * @authenticated
+     */
+    public function children(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->role !== 'parent') {
+            return $this->errorResponse('Unauthorized access', 403);
+        }
+
+        $children = $user->children()->with(['classroom', 'user'])->get();
+
+        return $this->successResponse(StudentResource::collection($children), 'Daftar anak berhasil diambil');
+    }
+
+    /**
+     * Get Child Summary
+     *
+     * Mengambil rangkuman dasbor indikator akademik, absensi, keuangan, dan poin BK untuk anak tertentu.
+     *
+     * @authenticated
+     *
+     * @urlParam student string required UUID siswa (anak). Example: 123e4567-e89b-12d3-a456-426614174000
+     */
+    public function childSummary(Request $request, $studentUuid)
+    {
+        $student = $this->verifyChildRelation($request->user(), $studentUuid);
+        if ($student instanceof \Illuminate\Http\JsonResponse) {
+            return $student;
+        }
+
+        // 1. Rata-rata Nilai
+        $gradesAvg = round(Grade::where('student_id', $student->id)->avg('score') ?? 0, 2);
+
+        // 2. Kehadiran Rate (%)
+        $totalDays = $student->attendances()->count();
+        $presentDays = $student->attendances()->where('status', 'H')->count();
+        $attendanceRate = $totalDays > 0 ? round(($presentDays / $totalDays) * 100, 2) : 100.00;
+
+        // 3. Jumlah Tagihan Belum Lunas
+        $unpaidBillings = $student->billings()->where('status', '!=', 'paid')->count();
+
+        // 4. Total Poin Pelanggaran BK
+        $totalPoints = (int) $student->pointLogs()->sum('points');
+
+        return $this->successResponse([
+            'student' => [
+                'uuid' => $student->uuid,
+                'name' => $student->user->name ?? 'N/A',
+                'classroom' => $student->classroom->name ?? 'N/A',
+                'grade_level' => $student->classroom->grade_level ?? 'N/A',
+            ],
+            'statistics' => [
+                'average_grade' => $gradesAvg,
+                'attendance_rate' => $attendanceRate,
+                'unpaid_billings_count' => $unpaidBillings,
+                'total_bk_points' => $totalPoints,
+            ]
+        ], 'Rangkuman data anak berhasil dihitung');
+    }
+
+    /**
+     * Get Child Grades
+     *
+     * Mengambil riwayat nilai akademik anak.
+     *
+     * @authenticated
+     */
+    public function childGrades(Request $request, $studentUuid)
+    {
+        $student = $this->verifyChildRelation($request->user(), $studentUuid);
+        if ($student instanceof \Illuminate\Http\JsonResponse) {
+            return $student;
+        }
+
+        $grades = Grade::where('student_id', $student->id)
+            ->with('subject')
+            ->latest()
+            ->get();
+
+        return $this->successResponse(GradeResource::collection($grades), 'Data nilai anak berhasil diambil');
+    }
+
+    /**
+     * Get Child Attendance
+     *
+     * Mengambil 30 absensi harian terakhir anak.
+     *
+     * @authenticated
+     */
+    public function childAttendance(Request $request, $studentUuid)
+    {
+        $student = $this->verifyChildRelation($request->user(), $studentUuid);
+        if ($student instanceof \Illuminate\Http\JsonResponse) {
+            return $student;
+        }
+
+        $attendances = $student->attendances()
+            ->latest()
+            ->take(30)
+            ->get();
+
+        return $this->successResponse(AttendanceResource::collection($attendances), 'Data absensi anak berhasil diambil');
+    }
+
+    /**
+     * Get Child Billings
+     *
+     * Mengambil daftar tagihan keuangan anak.
+     *
+     * @authenticated
+     */
+    public function childBillings(Request $request, $studentUuid)
+    {
+        $student = $this->verifyChildRelation($request->user(), $studentUuid);
+        if ($student instanceof \Illuminate\Http\JsonResponse) {
+            return $student;
+        }
+
+        $billings = $student->billings()
+            ->with('category')
+            ->latest()
+            ->get();
+
+        return $this->successResponse(BillingResource::collection($billings), 'Data tagihan keuangan anak berhasil diambil');
+    }
+
+    /**
+     * Get Child BK Points
+     *
+     * Mengambil catatan log poin BK anak.
+     *
+     * @authenticated
+     */
+    public function childPoints(Request $request, $studentUuid)
+    {
+        $student = $this->verifyChildRelation($request->user(), $studentUuid);
+        if ($student instanceof \Illuminate\Http\JsonResponse) {
+            return $student;
+        }
+
+        $points = $student->pointLogs()
+            ->with('category')
+            ->latest()
+            ->get();
+
+        return $this->successResponse(PointLogResource::collection($points), 'Log poin BK anak berhasil diambil');
+    }
+
+    /**
+     * Get Messages Chat History
+     *
+     * Mengambil daftar obrolan pesan antara Orang Tua dan Guru terkait anak-anak mereka.
+     *
+     * @authenticated
+     */
+    public function messages(Request $request)
+    {
+        $user = $request->user();
+
+        $messages = ParentMessage::where('sender_id', $user->id)
+            ->orWhere('recipient_id', $user->id)
+            ->with(['sender', 'recipient', 'student.user'])
+            ->latest()
+            ->take(100)
+            ->get();
+
+        return $this->successResponse(ParentMessageResource::collection($messages), 'Riwayat pesan berhasil diambil');
+    }
+
+    /**
+     * Send Message to Teacher
+     *
+     * Mengirim pesan konsultasi baru ke guru tertentu.
+     * Memicu pengiriman WebSocket real-time `ChatMessageSent` secara internal.
+     *
+     * @authenticated
+     *
+     * @bodyParam recipient_id integer required ID Guru (User ID). Example: 5
+     * @bodyParam student_id integer required ID Siswa (Anak). Example: 3
+     * @bodyParam message string required Isi teks pesan obrolan. Example: Assalamu'alaikum wr. wb.
+     */
+    public function sendMessage(Request $request)
+    {
+        $request->validate([
+            'recipient_id' => 'required|exists:users,id',
+            'student_id' => 'required|exists:students,id',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        $user = $request->user();
+
+        // 1. Verifikasi guru ada
+        $teacher = User::findOrFail($request->recipient_id);
+        if (!in_array($teacher->role, ['guru', 'bk'])) {
+            return $this->errorResponse('Tujuan pengiriman bukan akun guru/BK', 400);
+        }
+
+        // 2. Verifikasi relasi anak
+        $student = Student::findOrFail($request->student_id);
+        if ($student->parent_id !== $user->id) {
+            return $this->errorResponse('Anda tidak memiliki akses otorisasi untuk siswa ini', 403);
+        }
+
+        // 3. Buat dan simpan pesan
+        $message = ParentMessage::create([
+            'sender_id' => $user->id,
+            'recipient_id' => $teacher->id,
+            'student_id' => $student->id,
+            'message' => $request->message,
+            'is_read' => false,
+        ]);
+
+        // 4. Memicu WebSocket Broadcast Real-time
+        event(new ChatMessageSent($message));
+
+        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 210);
+    }
+
+    /**
+     * Relational child check helper.
+     */
+    private function verifyChildRelation($user, $studentUuid)
+    {
+        $student = Student::where('uuid', $studentUuid)->first();
+        if (!$student) {
+            return $this->errorResponse('Siswa tidak ditemukan', 404);
+        }
+
+        if ($student->parent_id !== $user->id) {
+            return $this->errorResponse('Otorisasi ditolak. Siswa bukan anak terdaftar Anda.', 403);
+        }
+
+        return $student;
+    }
+}
