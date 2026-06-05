@@ -54,139 +54,131 @@
         {!! $appearance->custom_css !!}
     </style>
 </head>
-<body class="font-sans text-slate-800 antialiased h-full overflow-hidden bg-slate-50">
+<body class="font-sans text-slate-800 antialiased min-h-screen bg-slate-50/40 flex items-center justify-center p-4 sm:p-6 md:p-8 relative">
     
-    <!-- Outer Container -->
-    <div class="min-h-screen flex h-full">
+    <!-- Background Islamic pattern overlay -->
+    <div class="absolute inset-0 islamic-pattern opacity-[0.06] pointer-events-none"></div>
+
+    <!-- Soft glowing background orbs -->
+    <div class="absolute top-[-10%] left-[-10%] w-[450px] h-[450px] bg-emerald-100/40 rounded-full blur-[130px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-teal-100/30 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <!-- Main Centered Floating Container Card -->
+    <div class="relative z-10 w-full max-w-5xl bg-white shadow-2xl rounded-[2rem] overflow-hidden flex flex-col lg:flex-row min-h-[620px] border border-slate-100/80">
         
-        <!-- Left Side: Bright Emerald Brand Showcase (Hidden on Mobile) -->
-        <div class="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-emerald-50 via-emerald-100/70 to-teal-50/50 relative overflow-hidden items-center justify-center p-12 select-none border-r border-slate-200/50 {{ $appearance->login_background_path ? 'login-bg-custom' : '' }}">
-            <!-- Decorative Islamic Geometric Pattern Overlay -->
-            @if(!$appearance->login_background_path)
-            <div class="absolute inset-0 islamic-pattern"></div>
-            @endif
+        <!-- Left Side: Image Panel (Hidden on Mobile) -->
+        <div class="hidden lg:flex lg:w-[48%] relative overflow-hidden flex-col justify-between p-10 select-none bg-slate-900">
+            <!-- Full bleed background hero image -->
+            <div class="absolute inset-0 bg-cover bg-center opacity-85" style="background-image: url('{{ asset('images/login-hero.png') }}');"></div>
             
-            <!-- Soft Floating Lighting Orb (Left Pane) -->
-            <div class="absolute top-10 left-10 w-[250px] h-[250px] bg-emerald-300/10 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-10 right-10 w-[200px] h-[200px] bg-amber-400/10 rounded-full blur-[90px]"></div>
- 
-            <div class="relative z-10 w-full max-w-md space-y-8 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md p-6 rounded-3xl border border-white/20">
+            <!-- Dark gradient overlay to ensure text readability -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/30 to-slate-950/45"></div>
+
+            <!-- Content overlay -->
+            <div class="relative z-10 h-full flex flex-col justify-between">
                 
                 <!-- Floating Glass Brand Badge -->
-                <div class="inline-flex items-center gap-4 p-3 bg-white/90 backdrop-blur-md rounded-2xl border border-emerald-100 shadow-md">
-                    <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-10 h-10 object-contain" alt="Logo SISTA">
-                    <div class="flex flex-col pr-2">
-                        <span class="text-[9px] font-black uppercase tracking-widest text-emerald-700 leading-none mb-0.5">Portal Akademik</span>
-                        <span class="text-xs font-black text-slate-900 leading-none">{{ $appearance->app_name }}</span>
+                <div class="self-start inline-flex items-center gap-3 p-2 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-white/[0.08] shadow-md">
+                    <div class="p-1 bg-white/10 rounded-xl">
+                        <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-8 h-8 object-contain" alt="Logo SISTA">
+                    </div>
+                    <div class="flex flex-col pr-3">
+                        <span class="text-[9px] font-black uppercase tracking-widest text-emerald-400 leading-none mb-1">Portal Akademik</span>
+                        <span class="text-xs font-bold text-white leading-none">{{ $appearance->app_name }}</span>
                     </div>
                 </div>
-                
-                <!-- Headline -->
-                <div class="space-y-4">
-                    <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-emerald-600/10 text-emerald-700 border border-emerald-500/20">
-                        Enterprise Portal Gate
-                    </span>
-                    <h1 class="text-4xl lg:text-5xl font-black text-slate-900 leading-[1.15] tracking-tight">
-                        Sistem Terpadu <br> 
-                        <span class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">{{ $appearance->app_name }}</span>
-                    </h1>
-                    <p class="text-sm font-inter text-slate-650 leading-relaxed">
-                        Gerbang administrasi digital sekolah berstandar enterprise. Efisiensi, akuntabilitas, dan transparansi pelayanan kependidikan dalam satu platform terintegrasi.
-                    </p>
-                </div>
- 
-                <!-- Point of Value Checkmarks -->
-                <div class="space-y-3 font-inter">
-                    <div class="flex items-center gap-3 text-slate-700">
-                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-600/10 flex items-center justify-center text-emerald-600">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
-                        </div>
-                        <span class="text-xs font-semibold">Smart Academic System (Real-time & Akurat)</span>
+
+                <!-- Headline & Value Points -->
+                <div class="space-y-6">
+                    <div class="space-y-3">
+                        <span class="inline-flex px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest bg-emerald-500/20 text-emerald-350 border border-emerald-500/30">
+                            Enterprise Portal Gate
+                        </span>
+                        <h1 class="text-3xl font-extrabold text-white leading-[1.25] tracking-tight">
+                            @if(str_starts_with(strtolower($appearance->app_name), 'sistem terpadu'))
+                                Sistem Terpadu <br> 
+                                <span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">{{ trim(substr($appearance->app_name, strlen('sistem terpadu'))) }}</span>
+                            @else
+                                Sistem Terpadu <br> 
+                                <span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">{{ $appearance->app_name }}</span>
+                            @endif
+                        </h1>
+                        <p class="text-xs font-inter text-slate-300 leading-relaxed max-w-sm">
+                            Gerbang administrasi digital sekolah berstandar enterprise. Efisiensi, akuntabilitas, dan transparansi pelayanan kependidikan dalam satu platform terintegrasi.
+                        </p>
                     </div>
-                    <div class="flex items-center gap-3 text-slate-700">
-                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-600/10 flex items-center justify-center text-emerald-600">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+
+                    <!-- Point of Value Checkmarks -->
+                    <div class="space-y-3 font-inter">
+                        <div class="flex items-center gap-3 text-white/90">
+                            <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 border border-emerald-500/30">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                            </div>
+                            <span class="text-xs font-medium tracking-wide">Smart Academic System (Real-time & Akurat)</span>
                         </div>
-                        <span class="text-xs font-semibold">Otomatisasi & Rekonsiliasi Transaksi SPP/Keuangan</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-slate-700">
-                        <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-600/10 flex items-center justify-center text-emerald-600">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                        <div class="flex items-center gap-3 text-white/90">
+                            <div class="flex-shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 border border-emerald-500/30">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                            </div>
+                            <span class="text-xs font-medium tracking-wide">Otomatisasi & Rekonsiliasi Transaksi SPP</span>
                         </div>
-                        <span class="text-xs font-semibold">Platform Terenkripsi & Akuntabel Berstandar Akreditasi</span>
-                    </div>
-                </div>
- 
-                <!-- Hero Image Holder with Premium Frame -->
-                @if(!$appearance->login_background_path)
-                <div class="relative bg-white p-3.5 rounded-[2.5rem] shadow-xl border border-slate-150/80 group">
-                    <div class="relative rounded-[2rem] overflow-hidden aspect-[4/3] bg-slate-100 shadow-inner">
-                        <img src="{{ asset('images/login-hero.png') }}" alt="School Building" class="w-full h-full object-cover transform group-hover:scale-[1.03] transition-transform duration-1000 opacity-95">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
-                    </div>
-                    
-                    <!-- Frosted Tag Box inside the image -->
-                    <div class="absolute bottom-7 left-7 right-7 bg-white/95 backdrop-blur-md border border-slate-150 rounded-2xl p-4 flex justify-between items-center shadow-lg">
-                        <div>
-                            <p class="text-[9px] font-black text-slate-800 uppercase tracking-widest leading-none mb-1">Kampus Utama</p>
-                            <p class="text-[11px] font-black text-emerald-600 leading-none">Building Excellence Since 1970</p>
-                        </div>
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Semarang</span>
                     </div>
                 </div>
-                @endif
-                
-            </div>
-            
-            <!-- Bottom school brand -->
-            <div class="absolute bottom-8 left-12 right-12 flex justify-between text-[9px] font-black text-slate-450 uppercase tracking-widest">
-                <span>{{ $appearance->app_name }}</span>
-                <span>v2.1</span>
+
+                <!-- Footer Tag Box -->
+                <div class="flex justify-between items-center text-[8px] font-black text-slate-400 uppercase tracking-widest gap-4">
+                    <span>{{ $appearance->app_name }}</span>
+                    <span>v2.1</span>
+                </div>
+
             </div>
         </div>
  
         <!-- Right Side: Clean White SaaS Login Gate -->
-        <div class="w-full lg:w-[55%] flex items-center justify-center p-6 sm:p-12 md:p-20 bg-gradient-to-br from-white via-slate-50 to-emerald-50/10 relative">
+        <div class="w-full lg:w-[52%] flex flex-col justify-between p-8 sm:p-12 md:p-14 bg-white relative">
             
-            <!-- Ambient Glow Orbs in the background -->
-            <div class="absolute top-0 right-0 w-[350px] h-[350px] bg-emerald-500/5 rounded-full blur-[120px] -mr-20 -mt-20"></div>
-            <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-amber-400/5 rounded-full blur-[100px] -ml-20 -mb-20"></div>
- 
-            <div class="w-full max-w-md relative z-10">
-                
-                <!-- Mobile Logo Header (Hidden on Desktop) -->
-                <div class="lg:hidden mb-8 flex flex-col items-center text-center">
-                    <div class="inline-flex p-3 bg-white border border-emerald-100 rounded-2xl shadow-md mb-3">
-                        <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-12 h-12 object-contain" alt="Logo SISTA">
-                    </div>
-                    <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none mb-1">Sistem Terpadu</h2>
-                    <p class="text-xs font-black text-emerald-600 uppercase tracking-widest">{{ $appearance->app_name }}</p>
+            <!-- Mobile Logo Header (Hidden on Desktop) -->
+            <div class="lg:hidden mb-8 flex flex-col items-center text-center">
+                <div class="inline-flex p-3 bg-slate-50 border border-slate-100 rounded-2xl shadow-sm mb-4">
+                    <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-12 h-12 object-contain" alt="Logo SISTA">
                 </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-none mb-1.5">Sistem Terpadu</h2>
+                <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                    @if(str_starts_with(strtolower($appearance->app_name), 'sistem terpadu'))
+                        {{ trim(substr($appearance->app_name, strlen('sistem terpadu'))) }}
+                    @else
+                        {{ $appearance->app_name }}
+                    @endif
+                </p>
+            </div>
  
+            <!-- Form content area -->
+            <div class="my-auto space-y-6">
                 <!-- Greeting Header (Desktop) -->
-                <div class="hidden lg:block mb-8 text-left">
-                    <h2 class="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">Selamat Datang</h2>
-                    <p class="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest">Silakan Masuk Untuk Mengakses Layanan</p>
+                <div class="hidden lg:block text-left mb-6">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Selamat Datang</h2>
+                    <p class="text-xs text-slate-400 font-medium leading-none">Silakan masuk untuk mengakses layanan portal akademik.</p>
                 </div>
  
-                <!-- Main Login Card with Clean styling -->
-                <div class="bg-white border border-slate-100 shadow-2xl p-6 sm:p-10 rounded-[2.5rem] relative overflow-hidden">
-                    <!-- Subtle top decorative brand stripe -->
-                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
-                    
+                <!-- Slot containing the login form -->
+                <div class="relative">
                     {{ $slot }}
                 </div>
+            </div>
  
-                <!-- Footer Copyright -->
-                <div class="mt-10 text-center">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+            <!-- Footer Copyright -->
+            <div class="mt-8 text-center lg:text-left">
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                    @if(str_contains($appearance->footer_text, '©') || str_contains($appearance->footer_text, '&copy;') || preg_match('/\b\d{4}\b/', $appearance->footer_text))
+                        {{ $appearance->footer_text }}
+                    @else
                         &copy; {{ date('Y') }} {{ $appearance->footer_text }}
-                    </p>
-                </div>
+                    @endif
+                </p>
             </div>
         </div>
-
+ 
     </div>
 </body>
-</html>
+</html>>
 
