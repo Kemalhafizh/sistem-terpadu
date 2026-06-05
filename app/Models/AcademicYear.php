@@ -31,9 +31,22 @@ class AcademicYear extends Model
      */
     public static function current(): ?self
     {
-        return \Illuminate\Support\Facades\Cache::rememberForever('academic_year_current', function () {
-            return self::where('is_active', true)->first();
-        });
+        if (\Illuminate\Support\Facades\Cache::has('academic_year_current')) {
+            $year = \Illuminate\Support\Facades\Cache::get('academic_year_current');
+
+            if ($year instanceof self || is_null($year)) {
+                return $year;
+            }
+
+            // Cache is corrupt (e.g. __PHP_Incomplete_Class)
+            \Illuminate\Support\Facades\Cache::forget('academic_year_current');
+        }
+
+        $year = self::where('is_active', true)->first();
+
+        \Illuminate\Support\Facades\Cache::forever('academic_year_current', $year);
+
+        return $year;
     }
 
     /**
