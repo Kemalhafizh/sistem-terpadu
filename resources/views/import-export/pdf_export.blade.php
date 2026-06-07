@@ -87,7 +87,7 @@
     <!-- School Header / Kop Surat -->
     <div class="header">
         <h1 class="school-name">SMA Islam Sultan Agung 1 Semarang</h1>
-        <p class="school-subtitle">Sistem Informasi Sekolah Terpadu & SaaS Platform SISTA</p>
+        <p class="school-subtitle">Sistem Informasi Sekolah Terpadu SISTA</p>
     </div>
 
     <!-- Document Title -->

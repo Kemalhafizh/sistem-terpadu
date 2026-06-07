@@ -1,6 +1,6 @@
 # 🛡️ Kebijakan Keamanan & SIEM SISTA
 
-Keamanan data adalah prioritas utama di **SISTA**. Dokumen ini merangkum lapisan proteksi enkripsi, otentikasi multi-faktor, kebijakan isolasi multi-tenant, serta sistem deteksi dini keamanan terintegrasi (SIEM).
+Keamanan data adalah prioritas utama di **SISTA**. Dokumen ini merangkum lapisan proteksi enkripsi, otentikasi multi-faktor, kebijakan isolasi data, serta sistem deteksi dini keamanan terintegrasi (SIEM).
 
 ---
 

@@ -46,7 +46,6 @@ class DeveloperPortalController extends Controller
             'Arsitektur & Sistem' => [
                 ['label' => 'Overview & Portal Hub', 'route' => route('developer.portal')],
                 ['label' => 'Arsitektur Sistem & Desain', 'route' => route('developer.page', ['category' => 'ARCHITECTURE'])],
-                ['label' => 'Multi-Tenancy Setup', 'route' => route('developer.page', ['category' => 'MULTI_TENANCY'])],
                 ['label' => 'Keamanan & SIEM SIgnals', 'route' => route('developer.page', ['category' => 'SECURITY'])],
             ],
             'Panduan Developer' => [
@@ -60,7 +59,6 @@ class DeveloperPortalController extends Controller
             'Architecture Decisions (ADR)' => [
                 ['label' => 'ADR 001: Service Pattern', 'route' => route('developer.subpage', ['category' => 'adr', 'page' => '001-service-pattern'])],
                 ['label' => 'ADR 002: Laravel Reverb', 'route' => route('developer.subpage', ['category' => 'adr', 'page' => '002-websocket-reverb'])],
-                ['label' => 'ADR 003: SQLite Multi-DB', 'route' => route('developer.subpage', ['category' => 'adr', 'page' => '003-multi-tenancy-approach'])],
             ],
             'Dokumentasi Modul Bisnis' => [
                 ['label' => 'Modul 1: Akademik & Rapor', 'route' => route('developer.subpage', ['category' => 'modules', 'page' => 'academic'])],

@@ -23,7 +23,7 @@ test('developer portal can render top-level documentation guides', function () {
     $response->assertStatus(200);
     $response->assertSee('Arsitektur & Pola Desain Sistem SISTA', false);
     $response->assertSee('Service Pattern');
-    $response->assertSee('Sequence Diagram');
+    $response->assertSee('Workflow Engine');
 });
 
 test('developer portal can render adr sub-folder guides', function () {

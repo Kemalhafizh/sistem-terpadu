@@ -27,35 +27,7 @@ Approval engine menggunakan relasi polimorfik Eloquent (`MorphTo`) agar tabel `w
 
 ---
 
-## 🏢 2. Arsitektur Multi-Tenancy (Multi-Database SQLite)
-
-SISTA menggunakan arsitektur **Multi-Database per Tenant (Sekolah)** untuk menjamin isolasi data mutlak. Setiap tenant yang terdaftar melalui Onboarding Wizard memiliki berkas database fisik SQLite mandiri.
-
-### Diagram Alur Pendaftaran & Deploy Tenant (Sequence Diagram)
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Pengguna as Pengunjung Portal (sista.test)
-    participant SaaS as Onboarding Controller
-    participant DB_L as Database Landlord (Central)
-    participant Package as Tenancy Engine (stancl/tenancy)
-    participant DB_T as Database Tenant (SQLite)
-
-    Pengguna->>SaaS: Mengisi Wizard & Klik Deploy Subdomain (e.g. sma1)
-    SaaS->>SaaS: Validasi input & Cek Duplikasi Subdomain
-    SaaS->>DB_L: Simpan record Tenant & Domain (sma1.sistem-terpadu.test)
-    SaaS->>Package: Memicu Pembuatan Tenant Database
-    Package->>DB_T: Membuat berkas database/tenants/tenant_sma1.sqlite
-    Package->>DB_T: Menjalankan Migrasi Otomatis (81 Tabel Tenant)
-    Package->>DB_T: Menjalankan Seeder Otomatis (TenantSystemSeeder)
-    Package->>DB_T: Menjalankan Context Tenant Run Callback (Buat Admin & Tahun Ajaran Pertama)
-    SaaS->>Pengguna: Mengembalikan Kredensial & Tautan Sukses (sma1.sistem-terpadu.test/login)
-```
-
----
-
-## 📋 3. Diagram Alur Digital Approval Workflow Engine
+## 📋 2. Diagram Alur Digital Approval Workflow Engine
 
 Approval engine memproses pengajuan dokumen berjenjang secara berurutan berdasarkan *role-path* yang dinamis:
 
@@ -77,7 +49,7 @@ graph TD
 
 ---
 
-## 🛠️ 4. Komunikasi Real-Time (Laravel Reverb WebSocket)
+## 🛠️ 3. Komunikasi Real-Time (Laravel Reverb WebSocket)
 
 SISTA menggunakan WebSocket server bawaan **Laravel Reverb** untuk mentransmisikan sinyal secara instan dari server ke client tanpa pooling HTTP berkala:
 *   **Echo Client:** resource frontend mengimpor `laravel-echo` dan `pusher-js` untuk mendengarkan (*listen*) channel WebSocket.

@@ -134,7 +134,7 @@
             </div>
         </div>
  
-        <!-- Right Side: Clean White SaaS Login Gate -->
+        <!-- Right Side: Clean White Login Gate -->
         <div class="w-full lg:w-[52%] flex flex-col justify-between p-8 sm:p-12 md:p-14 bg-white relative">
             
             <!-- Mobile Logo Header (Hidden on Desktop) -->

@@ -142,7 +142,7 @@
     <footer class="w-full border-t border-white/5 py-6 bg-[#060a12]/80 backdrop-blur z-20">
         <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
             <p>&copy; 2026 SISTA Smart School Platform. All Rights Reserved.</p>
-            <p class="font-mono">Developer Portal v2.0.0 (SaaS Edition)</p>
+            <p class="font-mono">Developer Portal v2.0.0</p>
         </div>
     </footer>
 
