@@ -11,23 +11,40 @@ class DatabaseSeeder extends Seeder
      *
      * Run: php artisan migrate:fresh --seed
      *
-     * Creates ~860 demo records across 21 tables for a fully functional
-     * SMA Islam Sultan Agung 1 Semarang school management demo.
+     * Creates 3000+ demo records across SISTA modules for a fully functional,
+     * highly realistic, and contextually rich school management demo
+     * dedicated exclusively to SMA Islam Sultan Agung 1 Semarang.
      */
     public function run(): void
     {
         $this->call([
-            UserSeeder::class,      // 20 users (all roles)
-            AcademicSeeder::class,  // 2 academic years, 6 classrooms, 12 subjects, 36 students
-            FinanceSeeder::class,   // 3 payment categories, ~220 billings, ~100 payments
-            ActivitySeeder::class,  // ~180 attendances, ~288 grades, 8 point categories, ~20 point logs
-            ExtrasSeeder::class,    // tahfidz, mutabaah, announcements, SPMB, employees, library
-            WorkflowDefinitionSeeder::class, // Modul 5 Workflow Engine Definitions
-            PortfolioBadgeSeeder::class,    // Modul 8 Portfolio Badges
-            SettingSeeder::class,   // System Settings
-            AccountingSeeder::class, // Accounting data
-            AchievementDefinitionSeeder::class, // Gamification achievements definitions
-            ChatbotFaqSeeder::class, // AI Chatbot FAQs
+            // Core Identity and Academics
+            UserSeeder::class,                  // ~80 users (staff, teachers, students, parents)
+            AcademicSeeder::class,              // 120 students (20 per class, 6 classrooms)
+            FinanceSeeder::class,               // ~760 billings and payments
+            ActivitySeeder::class,              // ~2640 daily attendances, 960 academic grades, and point logs
+            ExtrasSeeder::class,                // employees, announcements, registrations, library categories/books, calendar events
+
+            // System Configurations
+            WorkflowDefinitionSeeder::class,    // Workflow definitions
+            PortfolioBadgeSeeder::class,        // Portfolio badges
+            SettingSeeder::class,               // Settings
+            AccountingSeeder::class,            // Accounts and journals
+            AchievementDefinitionSeeder::class, // Gamification achievements
+            ChatbotFaqSeeder::class,            // AI FAQs
+
+            // Advanced Modular Seeders (New)
+            DailyAssessmentSeeder::class,       // 60+ daily assessments & 1200+ scores
+            TahfidzDetailSeeder::class,         // ~300 ziyadah & muraja'ah setoran logs
+            MutabaahDetailSeeder::class,        // ~4500 daily mutaba'ah logs for 30 days
+            ForumSeeder::class,                 // 20 threads, ~100 replies, and morph reactions
+            ElearningSeeder::class,             // 5 classes, 20 materials, 10 assignments, 60 submissions
+            CbtSeeder::class,                   // 3 CBT exams, 90 questions, 120 attempts with violation logs
+            CounselingSeeder::class,            // 10 counseling sessions with encrypted reasons/notes
+            LetterSeeder::class,                // 3 letter templates, 15 official letters
+            TicketSeeder::class,                // 10 support tickets with comments and assignee timelines
+            SurveySeeder::class,                // 2 surveys, questions, and 55 responses
+            LibraryLoanSeeder::class,           // 35 library book loans (active, returned, overdue)
         ]);
     }
 }

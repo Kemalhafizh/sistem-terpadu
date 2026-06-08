@@ -27,7 +27,7 @@ class FinanceSeeder extends Seeder
         $receiptCounter = 1;
 
         foreach ($students as $student) {
-            // SPP for 6 months
+            // SPP for 6 months (720 billings total)
             foreach ($months as $monthIdx => $month) {
                 $billing = Billing::create([
                     'student_id' => $student->id,
@@ -35,6 +35,7 @@ class FinanceSeeder extends Seeder
                     'academic_year_id' => $activeYear->id,
                     'month' => $month,
                     'amount' => 750000,
+                    'remaining_balance' => 750000,
                     'due_date' => now()->startOfYear()->addMonths($monthIdx)->endOfMonth()->format('Y-m-d'),
                     'status' => 'unpaid',
                 ]);
@@ -42,39 +43,48 @@ class FinanceSeeder extends Seeder
                 // Simulate payments: older months more likely paid
                 $chance = max(0, 95 - ($monthIdx * 18)); // Jan=95%, Jun=5%
                 if (rand(1, 100) <= $chance) {
-                    $paymentDate = now()->subDays(rand(0, 13))->format('Y-m-d');
+                    $paymentDate = now()->subDays(rand(0, 130))->format('Y-m-d');
                     Payment::create([
                         'billing_id' => $billing->id,
                         'created_by' => $stafTu->id,
                         'amount_paid' => 750000,
                         'payment_date' => $paymentDate,
                         'payment_method' => ['cash', 'transfer'][rand(0, 1)],
-                        'receipt_number' => 'KW-'.date('Ym').'-'.str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
-                        'note' => 'Pembayaran SPP '.$month,
+                        'receipt_number' => 'KW-' . date('Ym') . '-' . str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
+                        'note' => 'Pembayaran SPP ' . $month,
                     ]);
-                    $billing->update(['status' => 'paid']);
+                    $billing->update([
+                        'remaining_balance' => 0,
+                        'status' => 'paid'
+                    ]);
                 }
             }
 
-            // Uang Pangkal for Kelas X students only
+            // Uang Pangkal for Kelas X students only (40 billings total)
             if ($student->classroom && $student->classroom->grade_level === 'X') {
                 $billing = Billing::create([
                     'student_id' => $student->id,
                     'payment_category_id' => $pangkal->id,
                     'academic_year_id' => $activeYear->id,
                     'amount' => 5000000,
+                    'remaining_balance' => 5000000,
                     'due_date' => '2026-02-28',
-                    'status' => rand(1, 100) <= 70 ? 'paid' : 'unpaid',
+                    'status' => 'unpaid',
                 ]);
-                if ($billing->status === 'paid') {
+
+                if (rand(1, 100) <= 70) {
                     Payment::create([
                         'billing_id' => $billing->id,
                         'created_by' => $stafTu->id,
                         'amount_paid' => 5000000,
                         'payment_date' => now()->subDays(rand(5, 30))->format('Y-m-d'),
                         'payment_method' => 'transfer',
-                        'receipt_number' => 'KW-'.date('Ym').'-'.str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
+                        'receipt_number' => 'KW-' . date('Ym') . '-' . str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
                         'note' => 'Pelunasan Uang Pangkal',
+                    ]);
+                    $billing->update([
+                        'remaining_balance' => 0,
+                        'status' => 'paid'
                     ]);
                 }
             }

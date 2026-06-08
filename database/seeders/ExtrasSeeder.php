@@ -9,11 +9,8 @@ use App\Models\Classroom;
 use App\Models\Employee;
 use App\Models\LibraryBook;
 use App\Models\LibraryCategory;
-use App\Models\MutabaahItem;
-use App\Models\MutabaahLog;
 use App\Models\Registration;
 use App\Models\Student;
-use App\Models\TahfidzLog;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -24,58 +21,9 @@ class ExtrasSeeder extends Seeder
     {
         $activeYear = AcademicYear::where('is_active', true)->first();
         $admin = User::where('role', 'admin')->first();
-        $guruTahfidz = User::where('email', 'guru.tahfidz@sultanagung1.sch.id')->first();
-        $students = Student::all();
-
-        // --- Tahfidz Logs ---
-        $surahs = [
-            [78, 'An-Naba', 40], [79, 'An-Naziat', 46], [80, 'Abasa', 42],
-            [81, 'At-Takwir', 29], [82, 'Al-Infitar', 19], [83, 'Al-Mutaffifin', 36],
-        ];
-        foreach ($students->take(10) as $idx => $student) {
-            $surah = $surahs[$idx % count($surahs)];
-            TahfidzLog::create([
-                'student_id' => $student->id,
-                'teacher_id' => $guruTahfidz->id,
-                'surah_number' => $surah[0],
-                'surah_name' => $surah[1],
-                'from_ayat' => 1,
-                'to_ayat' => min(rand(5, 20), $surah[2]),
-                'type' => rand(0, 1) ? 'ziyadah' : 'murajaah',
-                'grade' => ['A', 'B', 'B', 'C'][rand(0, 3)],
-                'date' => now()->subDays(rand(0, 7))->format('Y-m-d'),
-            ]);
-        }
-
-        // --- Mutabaah Items ---
-        $items = [
-            ['name' => 'Shalat Subuh Berjamaah', 'category' => 'wajib'],
-            ['name' => 'Shalat Dhuha', 'category' => 'sunnah'],
-            ['name' => 'Tilawah 1 Halaman', 'category' => 'wajib'],
-            ['name' => 'Puasa Sunnah', 'category' => 'sunnah'],
-            ['name' => 'Sedekah Harian', 'category' => 'akhlak'],
-            ['name' => 'Dzikir Pagi & Petang', 'category' => 'sunnah'],
-        ];
-        foreach ($items as $item) {
-            MutabaahItem::create($item);
-        }
-
-        // --- Mutabaah Logs (7 days × 8 students × 3 random items) ---
-        $mutabaahItems = MutabaahItem::all();
-        foreach ($students->take(8) as $student) {
-            for ($d = 0; $d < 7; $d++) {
-                foreach ($mutabaahItems->random(3) as $item) {
-                    MutabaahLog::create([
-                        'student_id' => $student->id,
-                        'mutabaah_item_id' => $item->id,
-                        'is_completed' => rand(0, 1),
-                        'date' => now()->subDays($d)->format('Y-m-d'),
-                    ]);
-                }
-            }
-        }
 
         // --- Announcements ---
+        Announcement::truncate();
         Announcement::create([
             'title' => 'Jadwal Ujian Akhir Semester Genap 2026',
             'content' => "Assalamu'alaikum Wr. Wb.\n\nDiberitahukan kepada seluruh siswa/i bahwa Ujian Akhir Semester (UAS) Genap TA 2025/2026 akan dilaksanakan pada:\n\nTanggal: 2-13 Juni 2026\nWaktu: 07.30-11.00 WIB\n\nHarap mempersiapkan diri dengan baik. Jadwal per-mata pelajaran akan diumumkan melalui wali kelas masing-masing.\n\nWassalamu'alaikum Wr. Wb.",
@@ -100,8 +48,9 @@ class ExtrasSeeder extends Seeder
             'created_by' => $admin->id,
         ]);
 
-        // --- Registrations (SPMB) ---
-        $pendaftar = [
+        // --- Registrations (SPMB) - 20 registrations ---
+        Registration::truncate();
+        $pendaftaran = [
             ['full_name' => 'Ahmad Dzikri Ramadhan', 'nisn' => '3012345601', 'previous_school' => 'SMP N 1 Semarang', 'parent_phone' => '081234567890', 'status' => 'pending'],
             ['full_name' => 'Aisyah Putri Nabila', 'nisn' => '3012345602', 'previous_school' => 'SMP Islam Hidayatullah', 'parent_phone' => '081234567891', 'status' => 'reviewing'],
             ['full_name' => 'Fajar Sidiq Prabowo', 'nisn' => '3012345603', 'previous_school' => 'MTs Al-Irsyad Semarang', 'parent_phone' => '081234567892', 'status' => 'accepted'],
@@ -110,40 +59,75 @@ class ExtrasSeeder extends Seeder
             ['full_name' => 'Muhammad Haikal', 'nisn' => '3012345606', 'previous_school' => 'MTs N 1 Semarang', 'parent_phone' => '081234567895', 'status' => 'reviewing'],
             ['full_name' => 'Naura Syifa Azzahra', 'nisn' => '3012345607', 'previous_school' => 'SMP Sultan Agung 3', 'parent_phone' => '081234567896', 'status' => 'accepted'],
             ['full_name' => 'Daffa Raditya Putra', 'nisn' => '3012345608', 'previous_school' => 'SMP N 13 Semarang', 'parent_phone' => '081234567897', 'status' => 'pending'],
+            ['full_name' => 'Luthfi Hakim', 'nisn' => '3012345609', 'previous_school' => 'SMP N 2 Semarang', 'parent_phone' => '081234567898', 'status' => 'pending'],
+            ['full_name' => 'Farah Nabila', 'nisn' => '3012345610', 'previous_school' => 'MTs N 2 Semarang', 'parent_phone' => '081234567899', 'status' => 'accepted'],
+            ['full_name' => 'Zulfikar Ali', 'nisn' => '3012345611', 'previous_school' => 'SMP IT PAPB Semarang', 'parent_phone' => '081234567810', 'status' => 'reviewing'],
+            ['full_name' => 'Safira Azzahra', 'nisn' => '3012345612', 'previous_school' => 'SMP N 15 Semarang', 'parent_phone' => '081234567811', 'status' => 'accepted'],
+            ['full_name' => 'Rangga Wijaya', 'nisn' => '3012345613', 'previous_school' => 'SMP Hasanudin Semarang', 'parent_phone' => '081234567812', 'status' => 'rejected'],
+            ['full_name' => 'Anisa Rahmawati', 'nisn' => '3012345614', 'previous_school' => 'SMP Islam Sultan Agung 4', 'parent_phone' => '081234567813', 'status' => 'pending'],
+            ['full_name' => 'Gading Marten', 'nisn' => '3012345615', 'previous_school' => 'SMP N 3 Semarang', 'parent_phone' => '081234567814', 'status' => 'reviewing'],
+            ['full_name' => 'Gisella Anastasia', 'nisn' => '3012345616', 'previous_school' => 'SMP Karangturi Semarang', 'parent_phone' => '081234567815', 'status' => 'accepted'],
+            ['full_name' => 'Ferry Irawan', 'nisn' => '3012345617', 'previous_school' => 'SMP N 12 Semarang', 'parent_phone' => '081234567816', 'status' => 'pending'],
+            ['full_name' => 'Venna Melinda', 'nisn' => '3012345618', 'previous_school' => 'SMP N 9 Semarang', 'parent_phone' => '081234567817', 'status' => 'accepted'],
+            ['full_name' => 'Raffi Ahmad Malik', 'nisn' => '3012345619', 'previous_school' => 'SMP Pasundan Bandung', 'parent_phone' => '081234567818', 'status' => 'pending'],
+            ['full_name' => 'Nagita Slavina', 'nisn' => '3012345620', 'previous_school' => 'SMP Al-Azhar Jakarta', 'parent_phone' => '081234567819', 'status' => 'accepted'],
         ];
-        foreach ($pendaftar as $idx => $p) {
+        foreach ($pendaftaran as $idx => $p) {
             Registration::create(array_merge($p, [
-                'registration_number' => 'SPMB-2026-'.str_pad($idx + 1, 4, '0', STR_PAD_LEFT),
+                'registration_number' => 'SPMB-2026-' . str_pad($idx + 1, 4, '0', STR_PAD_LEFT),
                 'academic_year_id' => $activeYear->id,
                 'created_at' => now()->subDays(rand(1, 14)),
             ]));
         }
 
-        // --- Employees ---
-        $employeeData = [
-            ['email' => 'guru.tahfidz@sultanagung1.sch.id', 'number' => 'NIY-001', 'position' => 'Guru Tahfidz & PAI', 'status' => 'gty', 'salary' => 4500000],
-            ['email' => 'guru.matematika@sultanagung1.sch.id', 'number' => 'NIY-002', 'position' => 'Guru Matematika', 'status' => 'gty', 'salary' => 4500000],
-            ['email' => 'guru.bk@sultanagung1.sch.id', 'number' => 'NIY-003', 'position' => 'Guru BK / Konselor', 'status' => 'gtt', 'salary' => 2800000],
-            ['email' => 'guru.fisika@sultanagung1.sch.id', 'number' => 'NIY-004', 'position' => 'Guru Fisika & Kimia', 'status' => 'gty', 'salary' => 4500000],
-            ['email' => 'guru.bahasa@sultanagung1.sch.id', 'number' => 'NIY-005', 'position' => 'Guru B.Inggris & B.Indo', 'status' => 'gtt', 'salary' => 2800000],
-            ['email' => 'staf.tu@sultanagung1.sch.id', 'number' => 'NIY-006', 'position' => 'Staf Tata Usaha', 'status' => 'staf_tetap', 'salary' => 3200000],
-        ];
-        foreach ($employeeData as $e) {
-            $user = User::where('email', $e['email'])->first();
+        // --- Employees (all teachers and staff_tu users) ---
+        Employee::truncate();
+        $staffAndTeachers = User::whereIn('role', ['guru', 'staf_tu'])->get();
+        foreach ($staffAndTeachers as $idx => $user) {
+            $position = match ($user->email) {
+                'guru.tahfidz@sultanagung1.sch.id' => 'Guru Tahfidz & PAI',
+                'guru.matematika@sultanagung1.sch.id' => 'Guru Matematika',
+                'guru.bk@sultanagung1.sch.id' => 'Guru BK / Konselor',
+                'guru.fisika@sultanagung1.sch.id' => 'Guru Fisika',
+                'guru.bahasa@sultanagung1.sch.id' => 'Guru Bahasa Inggris & Bahasa Indonesia',
+                'guru.pai@sultanagung1.sch.id' => 'Guru Pendidikan Agama Islam',
+                'guru.kimia@sultanagung1.sch.id' => 'Guru Kimia',
+                'guru.biologi@sultanagung1.sch.id' => 'Guru Biologi',
+                'guru.sejarah@sultanagung1.sch.id' => 'Guru Sejarah',
+                'guru.ekonomi@sultanagung1.sch.id' => 'Guru Ekonomi',
+                'guru.informatika@sultanagung1.sch.id' => 'Guru Informatika',
+                'guru.akuntansi@sultanagung1.sch.id' => 'Guru Akuntansi',
+                'guru.penjas@sultanagung1.sch.id' => 'Guru Penjasorkes',
+                'guru.seni@sultanagung1.sch.id' => 'Guru Seni Budaya',
+                'guru.pkn@sultanagung1.sch.id' => 'Guru Pendidikan Kewarganegaraan',
+                'guru.geografi@sultanagung1.sch.id' => 'Guru Geografi',
+                'guru.sosiologi@sultanagung1.sch.id' => 'Guru Sosiologi',
+                'guru.jawa@sultanagung1.sch.id' => 'Guru Bahasa Jawa',
+                'staf.tu@sultanagung1.sch.id' => 'Kepala Tata Usaha',
+                'pustakawan@sultanagung1.sch.id' => 'Staf Perpustakaan',
+                'uks@sultanagung1.sch.id' => 'Staf UKS / Perawat',
+                default => 'Staff Kependidikan',
+            };
+
+            $isGTT = in_array($user->email, ['guru.bk@sultanagung1.sch.id', 'guru.bahasa@sultanagung1.sch.id', 'guru.jawa@sultanagung1.sch.id']);
+            $salary = $user->role === 'staf_tu' ? 3200000 : ($isGTT ? 2800000 : 4500000);
+
             Employee::create([
                 'user_id' => $user->id,
-                'employee_number' => $e['number'],
-                'position' => $e['position'],
-                'employment_status' => $e['status'],
+                'employee_number' => 'NIY-' . str_pad($idx + 1, 3, '0', STR_PAD_LEFT),
+                'position' => $position,
+                'employment_status' => $user->role === 'staf_tu' ? 'staf_tetap' : ($isGTT ? 'gtt' : 'gty'),
                 'hire_date' => now()->subYears(rand(1, 8))->format('Y-m-d'),
-                'base_salary' => $e['salary'],
-                'hourly_rate' => $e['status'] === 'gtt' ? 75000 : 0,
+                'base_salary' => $salary,
+                'hourly_rate' => $isGTT ? 75000 : 0,
                 'bank_name' => ['BRI', 'BNI', 'BSI', 'Mandiri'][rand(0, 3)],
-                'bank_account' => '00'.rand(10000000, 99999999),
+                'bank_account' => '00' . rand(10000000, 99999999),
             ]);
         }
 
-        // --- Library ---
+        // --- Library Categories & Books ---
+        LibraryCategory::truncate();
+        LibraryBook::truncate();
         $cat1 = LibraryCategory::create(['name' => 'Buku Pelajaran']);
         $cat2 = LibraryCategory::create(['name' => 'Kitab Islam']);
         $cat3 = LibraryCategory::create(['name' => 'Novel / Fiksi']);
@@ -152,23 +136,36 @@ class ExtrasSeeder extends Seeder
         $books = [
             ['title' => 'Matematika Wajib Kelas X', 'author' => 'Kemendikbud', 'category_id' => $cat1->id, 'type' => 'physical'],
             ['title' => 'Fisika untuk SMA/MA', 'author' => 'Marthen Kanginan', 'category_id' => $cat1->id, 'type' => 'physical'],
+            ['title' => 'Kimia Kelas XI', 'author' => 'Unggul Sudarmo', 'category_id' => $cat1->id, 'type' => 'physical'],
+            ['title' => 'Biologi SMA Kelas XII', 'author' => 'Irnaningtyas', 'category_id' => $cat1->id, 'type' => 'physical'],
+            ['title' => 'Bahasa Inggris: Life Today Kelas X', 'author' => 'Kemendikbud', 'category_id' => $cat1->id, 'type' => 'physical'],
             ['title' => 'Tafsir Ibnu Katsir Jilid 1', 'author' => 'Ibnu Katsir', 'category_id' => $cat2->id, 'type' => 'digital'],
             ['title' => 'Riyadhus Shalihin', 'author' => 'Imam An-Nawawi', 'category_id' => $cat2->id, 'type' => 'digital'],
+            ['title' => 'Hadits Arbain Nawawiyah', 'author' => 'Imam An-Nawawi', 'category_id' => $cat2->id, 'type' => 'digital'],
+            ['title' => 'Tafsir Al-Azhar Jilid 1', 'author' => 'Buya Hamka', 'category_id' => $cat2->id, 'type' => 'physical'],
+            ['title' => 'Ringkasan Shahih Bukhari', 'author' => 'Imam Bukhari', 'category_id' => $cat2->id, 'type' => 'digital'],
             ['title' => 'Laskar Pelangi', 'author' => 'Andrea Hirata', 'category_id' => $cat3->id, 'type' => 'physical'],
             ['title' => 'Bumi Manusia', 'author' => 'Pramoedya Ananta Toer', 'category_id' => $cat3->id, 'type' => 'physical'],
+            ['title' => 'Negeri 5 Menara', 'author' => 'A. Fuadi', 'category_id' => $cat3->id, 'type' => 'physical'],
+            ['title' => 'Hafalan Shalat Delisa', 'author' => 'Tere Liye', 'category_id' => $cat3->id, 'type' => 'physical'],
+            ['title' => 'Ronggeng Dukuh Paruk', 'author' => 'Ahmad Tohari', 'category_id' => $cat3->id, 'type' => 'physical'],
             ['title' => 'Kamus Besar Bahasa Indonesia', 'author' => 'KBBI', 'category_id' => $cat4->id, 'type' => 'digital'],
             ['title' => 'Oxford Advanced Learner Dictionary', 'author' => 'Oxford Press', 'category_id' => $cat4->id, 'type' => 'digital'],
+            ['title' => 'Ensiklopedia Islam', 'author' => 'Dewan Redaksi', 'category_id' => $cat4->id, 'type' => 'physical'],
+            ['title' => 'Sejarah Kebudayaan Islam', 'author' => 'Badri Yatim', 'category_id' => $cat4->id, 'type' => 'digital'],
+            ['title' => 'Sistem Informasi Sekolah Modern', 'author' => 'Kemal Hafizh', 'category_id' => $cat4->id, 'type' => 'digital'],
         ];
         foreach ($books as $b) {
             LibraryBook::create(array_merge($b, [
                 'uuid' => (string) Str::uuid(),
                 'created_by' => $admin->id,
                 'download_count' => rand(0, 50),
-                'description' => 'Buku referensi untuk koleksi perpustakaan digital SMA Islam Sultan Agung 1.',
+                'description' => 'Buku referensi untuk koleksi perpustakaan digital SMA Islam Sultan Agung 1 Semarang.',
             ]));
         }
 
         // --- Academic Calendar Events ---
+        AcademicEvent::truncate();
         $classroomXIIA = Classroom::where('name', 'XII-A')->first();
         $classroomXIIB = Classroom::where('name', 'XII-B')->first();
 
@@ -202,7 +199,7 @@ class ExtrasSeeder extends Seeder
                 'description' => 'Libur nasional memperingati Hari Raya Idul Adha 1447 H. Kegiatan belajar mengajar diliburkan.',
                 'event_type' => 'holiday',
                 'start_date' => '2026-05-27 00:00:00',
-                'end_date' => '2026-05-29 00:00:00', // Exclusive end date for all day event
+                'end_date' => '2026-05-29 00:00:00',
                 'is_all_day' => true,
                 'color' => '#10b981',
                 'target_role' => null,
@@ -262,7 +259,7 @@ class ExtrasSeeder extends Seeder
                 'description' => 'Pelaksanaan Penilaian Akhir Semester (PAS) Genap Tahun Ajaran 2025/2026 untuk seluruh jenjang kelas.',
                 'event_type' => 'exam',
                 'start_date' => '2026-06-02 00:00:00',
-                'end_date' => '2026-06-14 00:00:00', // Exclusive end date for all day event
+                'end_date' => '2026-06-14 00:00:00',
                 'is_all_day' => true,
                 'color' => '#ef4444',
                 'target_role' => null,
