@@ -113,4 +113,36 @@ return [
     'total_classrooms' => 'Total Classrooms',
     'active_period' => 'Active Period',
     'not_set' => 'Not Set',
+
+    // Role-specific Widgets
+    'widget_teacher_schedule_today' => 'Today\'s Schedule',
+    'widget_teacher_pending_attendance' => 'Pending Attendance Input',
+    'widget_teacher_journal_today' => 'Today\'s Journal',
+    'widget_teacher_ungraded_assignments' => 'Ungraded Tasks',
+    'widget_teacher_tahfidz_progress' => 'Class Tahfidz Progress',
+    'widget_teacher_recent_notifications' => 'Recent Notifications',
+
+    'widget_student_schedule_today' => 'Today\'s Lesson Schedule',
+    'widget_student_pending_assignments' => 'Pending Assignments',
+    'widget_student_gamification' => 'Gamification Quick View',
+    'widget_student_recent_scores' => 'Recent Scores',
+    'widget_student_mutabaah_today' => 'Today\'s Mutaba\'ah',
+    'widget_student_library_loans' => 'Borrowed Books',
+    'widget_student_recent_forum' => 'New Forum Threads',
+
+    'widget_parent_child_attendance' => 'Child\'s Attendance Today',
+    'widget_parent_child_scores' => 'Child\'s Recent Grades',
+    'widget_parent_child_mutabaah' => 'Child\'s Weekly Mutaba\'ah',
+    'widget_parent_upcoming_events' => 'Upcoming School Events',
+    'widget_parent_report_progress' => 'Child\'s Progress Report',
+    'widget_parent_homeroom_messages' => 'Homeroom Teacher Messages',
+
+    'widget_attendance_today' => 'Today\'s Attendance Rate',
+    'widget_financial_status_month' => 'Monthly Financial Status',
+    'widget_teaching_journal_today' => 'Today\'s Teaching Journal',
+    'widget_average_grades_semester' => 'Semester Average Grades',
+    'widget_smart_alerts_latest' => 'Latest Smart Alerts',
+    'widget_approval_pending' => 'Pending Approvals',
+    'widget_top_xp_students' => 'Top 5 Students XP',
+    'widget_weekly_mutabaah_recap' => 'Weekly Mutaba\'ah Recap',
 ];

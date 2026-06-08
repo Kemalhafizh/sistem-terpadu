@@ -113,4 +113,36 @@ return [
     'total_classrooms' => 'إجمالي الفصول',
     'active_period' => 'الفترة النشطة',
     'not_set' => 'غير محدد',
+
+    // Role-specific Widgets
+    'widget_teacher_schedule_today' => 'جدول اليوم',
+    'widget_teacher_pending_attendance' => 'الحضور لم يتم إدخاله',
+    'widget_teacher_journal_today' => 'دفتر اليومية اليوم',
+    'widget_teacher_ungraded_assignments' => 'الواجبات غير المصححة',
+    'widget_teacher_tahfidz_progress' => 'تقدم تحفيظ الفصل',
+    'widget_teacher_recent_notifications' => 'أحدث الإخطارات',
+
+    'widget_student_schedule_today' => 'جدول الحصص اليوم',
+    'widget_student_pending_assignments' => 'الواجبات المعلقة',
+    'widget_student_gamification' => 'نظرة سريعة على التلعيب',
+    'widget_student_recent_scores' => 'الدرجات الأخيرة',
+    'widget_student_mutabaah_today' => 'المتابعة اليوم',
+    'widget_student_library_loans' => 'الكتب المستعارة',
+    'widget_student_recent_forum' => 'المواضيع الجديدة في المنتدى',
+
+    'widget_parent_child_attendance' => 'حضور الأبناء اليوم',
+    'widget_parent_child_scores' => 'آخر درجات الابن',
+    'widget_parent_child_mutabaah' => 'متابعة الابن هذا الأسبوع',
+    'widget_parent_upcoming_events' => 'أجندة المدرسة القادمة',
+    'widget_parent_report_progress' => 'تقرير تقدم الابن',
+    'widget_parent_homeroom_messages' => 'رسائل رائد الفصل',
+
+    'widget_attendance_today' => 'معدل الحضور اليوم',
+    'widget_financial_status_month' => 'الوضع المالي هذا الشهر',
+    'widget_teaching_journal_today' => 'دفتر التدريس اليوم',
+    'widget_average_grades_semester' => 'متوسط درجات الفصل الدراسي',
+    'widget_smart_alerts_latest' => 'أحدث التنبيهات الذكية',
+    'widget_approval_pending' => 'الموافقات المعلقة',
+    'widget_top_xp_students' => 'أفضل 5 طلاب نقاط الخبرة',
+    'widget_weekly_mutabaah_recap' => 'ملخص المتابعة الأسبوعي',
 ];

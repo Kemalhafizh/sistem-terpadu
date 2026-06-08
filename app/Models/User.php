@@ -153,12 +153,57 @@ class User extends Authenticatable
      */
     public function getDefaultDashboardLayout(): array
     {
-        return [
-            ['id' => 'general_stats', 'name' => 'Statistik Utama', 'visible' => true],
-            ['id' => 'quick_access', 'name' => 'Akses Cepat', 'visible' => true],
-            ['id' => 'financial_trend', 'name' => 'Tren Keuangan', 'visible' => true],
-            ['id' => 'live_feed', 'name' => 'Aktivitas Terbaru', 'visible' => true],
-            ['id' => 'spmb_analytics', 'name' => 'Analisis SPMB', 'visible' => true],
-        ];
+        switch ($this->role) {
+            case 'guru':
+                return [
+                    ['id' => 'teacher_schedule_today', 'name' => 'Jadwal Hari Ini', 'visible' => true],
+                    ['id' => 'teacher_pending_attendance', 'name' => 'Absensi Belum Diinput', 'visible' => true],
+                    ['id' => 'teacher_journal_today', 'name' => 'Jurnal Hari Ini', 'visible' => true],
+                    ['id' => 'teacher_ungraded_assignments', 'name' => 'Tugas Belum Dinilai', 'visible' => true],
+                    ['id' => 'teacher_tahfidz_progress', 'name' => 'Progress Tahfidz Kelas', 'visible' => true],
+                    ['id' => 'teacher_recent_notifications', 'name' => 'Notifikasi Terbaru', 'visible' => true],
+                ];
+
+            case 'student':
+                return [
+                    ['id' => 'student_schedule_today', 'name' => 'Jadwal Pelajaran Hari Ini', 'visible' => true],
+                    ['id' => 'student_pending_assignments', 'name' => 'Tugas Tertunda', 'visible' => true],
+                    ['id' => 'student_gamification', 'name' => 'Gamifikasi Quick View', 'visible' => true],
+                    ['id' => 'student_recent_scores', 'name' => 'Nilai Terbaru', 'visible' => true],
+                    ['id' => 'student_mutabaah_today', 'name' => 'Mutaba\'ah Hari Ini', 'visible' => true],
+                    ['id' => 'student_library_loans', 'name' => 'Buku yang Dipinjam', 'visible' => true],
+                    ['id' => 'student_recent_forum', 'name' => 'Thread Forum Terbaru', 'visible' => true],
+                ];
+
+            case 'parent':
+                return [
+                    ['id' => 'parent_child_attendance', 'name' => 'Kehadiran Anak Hari Ini', 'visible' => true],
+                    ['id' => 'parent_child_scores', 'name' => 'Nilai Terbaru Anak', 'visible' => true],
+                    ['id' => 'parent_child_mutabaah', 'name' => 'Mutaba\'ah Anak Minggu Ini', 'visible' => true],
+                    ['id' => 'parent_upcoming_events', 'name' => 'Agenda Sekolah Mendatang', 'visible' => true],
+                    ['id' => 'parent_report_progress', 'name' => 'Rapor Progress Anak', 'visible' => true],
+                    ['id' => 'parent_homeroom_messages', 'name' => 'Pesan dari Wali Kelas', 'visible' => true],
+                ];
+
+            case 'admin':
+            case 'superadmin':
+            case 'kepala_sekolah':
+            default:
+                return [
+                    ['id' => 'general_stats', 'name' => 'Statistik Utama', 'visible' => true],
+                    ['id' => 'quick_access', 'name' => 'Akses Cepat', 'visible' => true],
+                    ['id' => 'attendance_today', 'name' => 'Tingkat Kehadiran Hari Ini', 'visible' => true],
+                    ['id' => 'financial_status_month', 'name' => 'Status Keuangan Bulan Ini', 'visible' => true],
+                    ['id' => 'teaching_journal_today', 'name' => 'Jurnal Mengajar Hari Ini', 'visible' => true],
+                    ['id' => 'average_grades_semester', 'name' => 'Rata-rata Nilai Semester', 'visible' => true],
+                    ['id' => 'smart_alerts_latest', 'name' => 'Smart Alerts Terbaru', 'visible' => true],
+                    ['id' => 'approval_pending', 'name' => 'Persetujuan Tertunda', 'visible' => true],
+                    ['id' => 'top_xp_students', 'name' => 'Top 5 Siswa XP', 'visible' => true],
+                    ['id' => 'weekly_mutabaah_recap', 'name' => 'Rekap Mutaba\'ah Minggu Ini', 'visible' => true],
+                    ['id' => 'financial_trend', 'name' => 'Tren Keuangan', 'visible' => true],
+                    ['id' => 'live_feed', 'name' => 'Aktivitas Terbaru', 'visible' => true],
+                    ['id' => 'spmb_analytics', 'name' => 'Analisis SPMB', 'visible' => true],
+                ];
+        }
     }
 }

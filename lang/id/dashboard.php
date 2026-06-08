@@ -113,4 +113,36 @@ return [
     'total_classrooms' => 'Total Kelas',
     'active_period' => 'Periode Aktif',
     'not_set' => 'Belum Set',
+
+    // Role-specific Widgets
+    'widget_teacher_schedule_today' => 'Jadwal Hari Ini',
+    'widget_teacher_pending_attendance' => 'Absensi Belum Diinput',
+    'widget_teacher_journal_today' => 'Jurnal Hari Ini',
+    'widget_teacher_ungraded_assignments' => 'Tugas Belum Dinilai',
+    'widget_teacher_tahfidz_progress' => 'Progress Tahfidz Kelas',
+    'widget_teacher_recent_notifications' => 'Notifikasi Terbaru',
+
+    'widget_student_schedule_today' => 'Jadwal Pelajaran Hari Ini',
+    'widget_student_pending_assignments' => 'Tugas Tertunda',
+    'widget_student_gamification' => 'Gamifikasi Quick View',
+    'widget_student_recent_scores' => 'Nilai Terbaru',
+    'widget_student_mutabaah_today' => 'Mutaba\'ah Hari Ini',
+    'widget_student_library_loans' => 'Buku yang Dipinjam',
+    'widget_student_recent_forum' => 'Thread Forum Terbaru',
+
+    'widget_parent_child_attendance' => 'Kehadiran Anak Hari Ini',
+    'widget_parent_child_scores' => 'Nilai Terbaru Anak',
+    'widget_parent_child_mutabaah' => 'Mutaba\'ah Anak Minggu Ini',
+    'widget_parent_upcoming_events' => 'Agenda Sekolah Mendatang',
+    'widget_parent_report_progress' => 'Rapor Progress Anak',
+    'widget_parent_homeroom_messages' => 'Pesan dari Wali Kelas',
+
+    'widget_attendance_today' => 'Tingkat Kehadiran Hari Ini',
+    'widget_financial_status_month' => 'Status Keuangan Bulan Ini',
+    'widget_teaching_journal_today' => 'Jurnal Mengajar Hari Ini',
+    'widget_average_grades_semester' => 'Rata-rata Nilai Semester',
+    'widget_smart_alerts_latest' => 'Smart Alerts Terbaru',
+    'widget_approval_pending' => 'Persetujuan Tertunda',
+    'widget_top_xp_students' => 'Top 5 Siswa XP',
+    'widget_weekly_mutabaah_recap' => 'Rekap Mutaba\'ah Minggu Ini',
 ];
