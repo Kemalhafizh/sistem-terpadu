@@ -210,7 +210,7 @@ resources/views/mutabaah/
 
 ---
 
-### 📝 Modul 11.3: Sistem Penilaian Harian & Remedial
+### 📝 Modul 11.3: Sistem Penilaian Harian & Remedial (Selesai ✅)
 
 **Status Saat Ini:** Ada model `Grade` dan `GradeController` untuk input/view nilai. Tapi hanya mendukung nilai akhir semester (Tugas, UTS, UAS). Belum ada penilaian harian (ulangan harian, kuis), dan belum ada sistem remedial.
 
@@ -221,7 +221,7 @@ Kurikulum Merdeka mengharuskan **penilaian formatif berkelanjutan** — bukan ha
 
 #### Rencana Implementasi
 
-##### [NEW] Migration: `create_daily_assessments_table`
+##### [NEW] Migration: `create_daily_assessments_table` (Selesai ✅)
 ```php
 Schema::create('daily_assessments', function (Blueprint $table) {
     $table->id();
@@ -253,7 +253,7 @@ Schema::create('daily_assessment_scores', function (Blueprint $table) {
 });
 ```
 
-##### [NEW] `app/Http/Controllers/DailyAssessmentController.php`
+##### [NEW] `app/Http/Controllers/DailyAssessmentController.php` (Selesai ✅)
 ```php
 class DailyAssessmentController extends Controller
 {
@@ -271,7 +271,7 @@ class DailyAssessmentController extends Controller
 }
 ```
 
-##### [NEW] `resources/views/daily-assessments/`
+##### [NEW] `resources/views/daily-assessments/` (Selesai ✅)
 ```
 resources/views/daily-assessments/
 ├── index.blade.php                 # DataTable: list penilaian, filter per mapel/kelas/tipe
@@ -283,7 +283,7 @@ resources/views/daily-assessments/
 └── analytics.blade.php             # Chart: distribusi nilai (histogram), rata-rata per assessment, tren
 ```
 
-##### [NEW] `app/Services/DailyAssessmentService.php`
+##### [NEW] `app/Services/DailyAssessmentService.php` (Selesai ✅)
 ```php
 class DailyAssessmentService
 {
@@ -1140,6 +1140,6 @@ Tidak ada dependencies baru yang diperlukan — semua fitur bisa dibangun dengan
 
 > [!TIP]
 > **Mulai dari P0 (Prioritas Tertinggi):**
-> 1. Modul 11.3 (Penilaian Harian) — karena ini fitur akademik inti yang belum ada
+> 1. Modul 11.3 (Penilaian Harian) (Selesai ✅) — karena ini fitur akademik inti yang belum ada
 > 2. Modul 12.1 (Dashboard Enhancement) — karena dashboard adalah halaman pertama yang dilihat user
 > 3. Modul 13.1 (Mega Seeder) — karena data demo yang rich membuat semua fitur terlihat hidup
