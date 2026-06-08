@@ -466,7 +466,7 @@ resources/views/event-attendance/
 
 ---
 
-### 🔧 Modul 12.1: Penguatan Dashboard per Role
+### 🔧 Modul 12.1: Penguatan Dashboard per Role (Selesai ✅)
 
 **Status Saat Ini:** Dashboard sudah ada (68KB `dashboard.blade.php`!) dengan widget drag-drop. Tapi data yang ditampilkan per role masih basic.
 
@@ -1078,8 +1078,8 @@ php artisan serve
 
 | Prioritas | Modul | Estimasi | Status |
 | :---: | :--- | :--- | :---: |
-| 🔴 **P0** | 11.3: Penilaian Harian & Remedial | 3-4 hari | ⬜ TODO |
-| 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ⬜ TODO |
+| 🔴 **P0** | 11.3: Penilaian Harian & Remedial | 3-4 hari | ✅ Selesai |
+| 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ✅ Selesai |
 | 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ⬜ TODO |
 | 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ⬜ TODO |
 | 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ⬜ TODO |
