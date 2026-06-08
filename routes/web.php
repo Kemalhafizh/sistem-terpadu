@@ -77,6 +77,7 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GamificationController;
+use App\Http\Controllers\DailyAssessmentController;
 
 
 
@@ -197,6 +198,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:student')->group(function () {
         Route::get('my-billings', [StudentFinanceController::class, 'index'])->name('finance.student.index');
         Route::get('my-academic', [StudentAcademicController::class, 'index'])->name('student.academic');
+        Route::get('my-daily-assessments', [StudentAcademicController::class, 'dailyAssessments'])->name('student.daily-assessments');
         Route::get('my-billings/{billing}/checkout', [StudentFinanceController::class, 'checkout'])->name('finance.student.checkout');
         Route::get('gateway/{billing}/mock', [StudentFinanceController::class, 'mockGateway'])->name('finance.mock-gateway');
         Route::post('gateway/{billing}/callback', [StudentFinanceController::class, 'callback'])->name('finance.mock-callback');
@@ -215,6 +217,7 @@ Route::middleware('auth')->group(function () {
         Route::get('child/{student}/schedule', [ParentPortalController::class, 'viewSchedule'])->name('schedule');
         Route::get('child/{student}/attendance', [ParentPortalController::class, 'viewAttendanceHistory'])->name('attendance');
         Route::get('child/{student}/billings', [ParentPortalController::class, 'viewBillings'])->name('billings');
+        Route::get('child/{student}/daily-assessments', [ParentPortalController::class, 'viewDailyAssessments'])->name('daily-assessments');
 
         // Fitur Pembayaran / Billings
         Route::get('billing/{billing}/checkout', [ParentPortalController::class, 'checkout'])->name('billings.checkout');
@@ -251,6 +254,19 @@ Route::middleware('auth')->group(function () {
 
         // Tahfidz (store — guru input setoran)
         Route::post('tahfidz', [TahfidzController::class, 'store'])->name('tahfidz.store');
+
+        // Penilaian Harian & Remedial
+        Route::get('daily-assessments', [DailyAssessmentController::class, 'index'])->name('daily-assessments.index');
+        Route::get('daily-assessments/create', [DailyAssessmentController::class, 'create'])->name('daily-assessments.create');
+        Route::post('daily-assessments', [DailyAssessmentController::class, 'store'])->name('daily-assessments.store');
+        Route::get('daily-assessments/remedial', [DailyAssessmentController::class, 'remedialList'])->name('daily-assessments.remedial');
+        Route::get('daily-assessments/remedial/{score}/input', [DailyAssessmentController::class, 'inputRemedialScore'])->name('daily-assessments.input-remedial');
+        Route::post('daily-assessments/remedial/{score}/store', [DailyAssessmentController::class, 'storeRemedialScore'])->name('daily-assessments.store-remedial');
+        Route::get('daily-assessments/classroom/{classroom}/analytics', [DailyAssessmentController::class, 'analytics'])->name('daily-assessments.analytics');
+        Route::get('daily-assessments/{daily_assessment}', [DailyAssessmentController::class, 'show'])->name('daily-assessments.show');
+        Route::get('daily-assessments/{daily_assessment}/input-scores', [DailyAssessmentController::class, 'inputScores'])->name('daily-assessments.input-scores');
+        Route::post('daily-assessments/{daily_assessment}/store-scores', [DailyAssessmentController::class, 'storeScores'])->name('daily-assessments.store-scores');
+        Route::get('daily-assessments/{daily_assessment}/export-pdf', [DailyAssessmentController::class, 'exportPdf'])->name('daily-assessments.pdf');
     });
 
     // =========================================================

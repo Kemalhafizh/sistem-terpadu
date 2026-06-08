@@ -76,4 +76,6 @@ return [
     'library' => 'Smart Library',
     'forum' => 'Forum Diskusi',
     'surveys' => 'Survei Digital',
+    'daily_assessments' => 'Penilaian Harian',
+    'remedial_list' => 'Daftar Remedial',
 ];

@@ -516,4 +516,26 @@ class ParentPortalController extends Controller
             abort(403, 'Akses Ditolak. Siswa ini bukan anak Anda.');
         }
     }
+
+    /**
+     * View child's daily assessments.
+     */
+    public function viewDailyAssessments(Student $student)
+    {
+        $this->validateChild($student);
+
+        $activeYear = AcademicYear::current();
+
+        $dailyScores = \App\Models\DailyAssessmentScore::where('student_id', $student->id)
+            ->whereHas('dailyAssessment', function ($q) use ($activeYear) {
+                if ($activeYear) {
+                    $q->where('academic_year_id', $activeYear->id);
+                }
+            })
+            ->with(['dailyAssessment.subject', 'dailyAssessment.teacher'])
+            ->latest()
+            ->get();
+
+        return view('daily-assessments.parent-index', compact('student', 'dailyScores', 'activeYear'));
+    }
 }

@@ -596,6 +596,20 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.grade_recap') }}</div>
         </a>
+        <a href="{{ route('daily-assessments.index') }}" class="{{ $linkClass }} {{ request()->routeIs('daily-assessments.*') && !request()->routeIs('daily-assessments.remedial') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.daily_assessments') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.daily_assessments') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.daily_assessments') }}</div>
+        </a>
+        <a href="{{ route('daily-assessments.remedial') }}" class="{{ $linkClass }} {{ request()->routeIs('daily-assessments.remedial') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.remedial_list') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.remedial_list') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.remedial_list') }}</div>
+        </a>
         <a href="{{ route('report-cards.index') }}" class="{{ $linkClass }} {{ request()->routeIs('report-cards.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.ledger_report') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 19 7.5 19s3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 19 16.5 19c-1.746 0-3.332-.477-4.5-1.253"></path></svg>

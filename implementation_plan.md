@@ -1,1454 +1,1145 @@
-# 🚀 Rencana Pengembangan Lanjutan — Sistem Terpadu SMA Islam Sultan Agung 1 Semarang (Fase 11–14)
+# 🚀 Rencana Pengembangan Localhost — Sistem Terpadu SMA Islam Sultan Agung 1 Semarang
 
-> **Konteks Proyek:** Platform **Sistem Terpadu** ini dikembangkan **khusus dan eksklusif untuk SMA Islam Sultan Agung 1 Semarang** — bukan produk SaaS generik. Seluruh fitur, terminologi, alur kerja, dan integrasi dirancang spesifik untuk kebutuhan operasional dan keagamaan SMA Islam Sultan Agung 1 Semarang (selanjutnya disebut **SMA ISA 1**), yang berada di bawah naungan **Yayasan Badan Wakaf Sultan Agung (YBWSA)** Semarang.
+> **Konteks Proyek:** Platform **Sistem Terpadu (SISTA)** ini dikembangkan **khusus dan eksklusif untuk SMA Islam Sultan Agung 1 Semarang** — sekolah Islam di bawah naungan **Yayasan Badan Wakaf Sultan Agung (YBWSA)** Semarang. Seluruh fitur, terminologi, alur kerja, dan integrasi keislaman dirancang spesifik untuk kebutuhan operasional SMA ISA 1.
 
-> **Status:** Seluruh fitur dari **Fase 1 sampai Fase 10** telah **SELESAI 100%** (✅ DONE). Platform saat ini sudah **feature-complete** dengan **~170+ fitur** dan siap memasuki tahap pematangan untuk go-live.
-
----
-
-## 📊 Ringkasan Pencapaian Fase 1–10 (SEMUA SELESAI ✅)
-
-### Statistik Codebase Final Fase 10
-
-| Metrik | Jumlah | Detail |
-| :--- | :---: | :--- |
-| **Model Eloquent** | 97 | Mencakup seluruh entitas akademik, keuangan, HRD, gamifikasi, integrasi, dsb. |
-| **Controller** | ~48 | Termasuk sub-controller per modul (Finance, ELearning, Admin, API, dll.) |
-| **Service Class** | ~19 | Pattern service layer konsisten di seluruh modul |
-| **Migration** | 81 | Database schema lengkap dari user management hingga observability |
-| **View Directory** | 54+ | Blade template terorganisir per modul |
-| **Broadcast Events** | 5 | Real-time WebSocket via Laravel Reverb |
-| **Test Files** | 27 | 26 Feature + 1 Unit test |
-| **Bahasa (i18n)** | 3 | Bahasa Indonesia 🇮🇩, English 🇬🇧, العربية 🇸🇦 |
-| **Dokumentasi** | 15+ | README, Architecture, API, Deployment, Testing, Security, modul docs |
-| **Total File `/app`** | 302+ | Keseluruhan codebase di direktori app |
-
-### Fitur yang Sudah Terbangun (Per Fase)
-
-| Fase | Cakupan Utama | ~Fitur |
-| :---: | :--- | :---: |
-| **1** | Keamanan (2FA, Enkripsi, Audit, RBAC), Arsitektur (Service Pattern), DB Optimization, Testing (140+ Pest), Docker, API Docs | ~20 |
-| **1** | UI/UX (DataTables, Ctrl+K, Skeleton, Dashboard Drag-Drop), E-Rapor, Billing, Auto-Backup, SPMB, Library, E-Learning, HRD/Payroll, Accounting, Alumni, Career | ~25 |
-| **2** | WhatsApp Gateway (Fonnte + Sandbox), In-App Alert Center, Auto-Notif (Absensi/BK/SPP) | ~8 |
-| **3–4** | Kalender Akademik, Jurnal Mengajar, Analitik Eksekutif, Surat Digital, Keamanan Lanjutan, UKS, Konseling BK, PWA | ~30 |
-| **5–6** | Forum Diskusi, Survei Digital, Inventaris Aset+Peminjaman, Ekskul & OSIS, EDS, Portal Ortu, Kurikulum/Silabus, Helpdesk, Compliance, CMS Landing Page | ~35 |
-| **7–8** | Real-Time WebSocket (Reverb), REST API v1, Smart Alerts, CBT/Ujian Online, Workflow Engine, Report Builder, e-Portfolio, Security Monitor, CI/CD | ~30 |
-| **9** | AI Chatbot Sekolah, Integrasi Dapodik & EMIS, Payment Gateway Midtrans, i18n & Aksesibilitas, Gamifikasi & Engagement Islami | ~25 |
-| **10** | Branding Kustomisasi, Import/Export Hub, Scheduled Reporting, Advanced Observability, Dokumentasi Teknis Lengkap | ~20 |
-| | **TOTAL FITUR** | **~193** |
-
-### Arsitektur Teknis Saat Ini
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Frontend (Blade + AlpineJS)                  │
-│  PWA ─ DataTables ─ Chart.js ─ Ctrl+K Search ─ Chatbot Widget  │
-├─────────────────────────────────────────────────────────────────┤
-│                   Laravel 12.x Application                      │
-│  ┌──────────┐ ┌───────────┐ ┌───────────┐ ┌──────────────────┐ │
-│  │Controller│→│  Service  │→│   Model   │→│    Database      │ │
-│  │  Layer   │ │  Layer    │ │  (Eloquent│ │  (MySQL/SQLite)  │ │
-│  └──────────┘ └───────────┘ └───────────┘ └──────────────────┘ │
-│  ┌──────────┐ ┌───────────┐ ┌───────────┐ ┌──────────────────┐ │
-│  │ Reverb   │ │ Sanctum   │ │  Queues   │ │  Midtrans API    │ │
-│  │WebSocket │ │ API Auth  │ │ (Jobs)    │ │  Fonnte WhatsApp │ │
-│  └──────────┘ └───────────┘ └───────────┘ └──────────────────┘ │
-├─────────────────────────────────────────────────────────────────┤
-│  Docker ─ GitHub Actions CI/CD ─ Auto-Backup ─ Monitoring      │
-└─────────────────────────────────────────────────────────────────┘
-```
+> **Fokus Dokumen:** Seluruh pengembangan di bawah ini dikerjakan **full di localhost** — tanpa deployment, tanpa mobile app, tanpa UAT dengan user nyata. Tujuannya: **menambah fitur baru yang bermakna, memperbaiki fitur yang sudah ada, memperluas data demo, dan memoles UI/UX** agar platform benar-benar lengkap dan siap dipamerkan sebagai portofolio.
 
 ---
 
-## 🗺️ Peta Jalan Pengembangan Fase 11–14
+## 📊 Statistik Codebase Saat Ini (Baseline)
 
-### Filosofi Pengembangan Lanjutan
-
-Platform sudah **feature-complete**. Fase 11–14 bukan tentang menambah fitur baru secara masif, melainkan:
-
-1. **🔒 Fase 11 — Hardening & Performance** → Pastikan platform stabil, cepat, dan aman untuk 800+ pengguna concurrent (seluruh civitas SMA ISA 1).
-2. **🧪 Fase 12 — Testing Menyeluruh & UAT** → Testing end-to-end, UAT dengan pengguna nyata SMA ISA 1, dan perbaikan bug.
-3. **🚀 Fase 13 — Go-Live Deployment & Pelatihan** → Deploy ke server produksi sekolah, migrasi data nyata, dan pelatihan seluruh pengguna.
-4. **📱 Fase 14 — Mobile App & Ecosystem** → Aplikasi mobile (Flutter) yang mengonsumsi REST API v1 untuk akses on-the-go.
+| Metrik | Jumlah |
+| :--- | :---: |
+| **Model Eloquent** | 107 |
+| **Controller** | 68 (root) + 32 (subdirectories) = **~100** |
+| **Service Class** | 31 + 2 (Integration/) = **33** |
+| **Migration** | 89 |
+| **View Directory** | 57 |
+| **Blade Templates** | ~289+ |
+| **Test Files** | ~78 |
+| **Seeder Files** | 18 |
+| **Factory Files** | 11 |
+| **Policies** | 23 |
+| **API Resources** | 13 |
+| **Middleware** | 9 |
+| **Events (Broadcast)** | 5 |
+| **Bahasa (i18n)** | 3 (ID, EN, AR) — masing-masing 6 file |
+| **Dokumentasi** | 27 file di `docs/` |
+| **Registered Routes** | ~300+ |
+| **Demo Records (Seeder)** | ~860 records across 21 tables |
 
 ---
 
-## 📦 FASE 11: Hardening, Performance & Security Audit
+## 🗺️ Peta Jalan Pengembangan (Semua di Localhost)
 
-**Durasi Estimasi:** 2–3 minggu
-**Tujuan:** Memastikan platform siap menangani beban produksi seluruh civitas SMA ISA 1 Semarang (~800–1200 pengguna: 60+ guru/karyawan, 700+ siswa, 500+ orang tua) dengan performa optimal, keamanan berlapis, dan stabilitas tinggi.
+### Filosofi
+
+Platform ini sudah sangat besar (~100 controller, 107 model, 300+ routes). Pengembangan selanjutnya berfokus pada:
+
+1. **🆕 Fitur Baru yang Bermakna** → Menambah modul-modul baru yang benar-benar dibutuhkan SMA ISA 1 tapi belum ada.
+2. **🔧 Perbaikan & Penguatan Fitur Existing** → Menambah depth pada fitur yang sudah ada tapi masih dangkal.
+3. **🎨 UI/UX Polish & Konsistensi** → Memastikan seluruh halaman konsisten, responsif, dan cantik.
+4. **📦 Data Demo Realistis** → Memperluas seeder agar demo terasa seperti sekolah nyata (bukan data placeholder).
+5. **🧪 Testing & Kualitas Kode** → Menambah test coverage dan memperbaiki kode yang kurang solid.
 
 ---
 
-### 🏋️ Modul 11.1: Load Testing & Performance Optimization (✅ SELESAI)
+## 📦 FASE 11: Fitur Baru — Modul Keislaman & Akademik Lanjutan
 
-**Tujuan:** Simulasikan beban realistis SMA ISA 1 dan optimalkan bottleneck yang ditemukan.
+**Fokus:** Menambah modul-modul baru yang sangat relevan untuk SMA Islam Sultan Agung 1 — terutama yang berkaitan dengan identitas keislaman sekolah dan kebutuhan akademik yang belum ter-cover.
+
+---
+
+### 🕌 Modul 11.1: Sistem Tahfidz Al-Qur'an Komprehensif
+
+**Status Saat Ini:** Sudah ada model `TahfidzLog`, controller `TahfidzController`, view `tahfidz/`, dan seeder dasar. Tapi fiturnya masih sangat basic — hanya input/view setoran hafalan.
+
+**Apa yang Perlu Ditambah:**
 
 #### Mengapa Penting untuk SMA ISA 1?
-Pada jam-jam puncak, platform akan diakses bersamaan oleh:
-- **07:00–07:30** → 30+ guru input absensi + 700 siswa buka dashboard
-- **Awal bulan** → 500+ orang tua cek tagihan SPP & bayar online
-- **Saat ujian CBT** → 200+ siswa mengerjakan ujian bersamaan
-- **Pembagian rapor** → 700 siswa + 500 orang tua akses e-rapor secara bersamaan
-
-Tanpa load testing, platform bisa crash pada momen-momen krusial ini.
+SMA Islam Sultan Agung 1 memiliki **program unggulan tahfidz** dengan kelas khusus (X/XI/XII-Tahfidz). Program ini membutuhkan tracking yang detail per juz, per halaman, per ayat — bukan hanya log sederhana. Guru tahfidz perlu dashboard khusus untuk memantau progress seluruh siswa tahfidz.
 
 #### Rencana Implementasi
 
-##### [NEW] `tests/Load/` — Load Test Scripts (k6/Artillery)
-```
-tests/Load/
-├── scenarios/
-│   ├── morning_rush.js          # Simulasi 07:00-07:30: 30 guru input absensi + 700 siswa login
-│   ├── spp_payment_day.js       # Simulasi awal bulan: 500 ortu bayar SPP bersamaan
-│   ├── cbt_exam.js              # Simulasi ujian CBT: 200 siswa submit jawaban bersamaan
-│   ├── rapor_day.js             # Simulasi pembagian rapor: 1200 user akses bersamaan
-│   └── daily_normal.js          # Simulasi beban normal: 100-200 concurrent users
-├── config.yml                   # Konfigurasi target URL, thresholds, environment
-└── README.md                    # Panduan menjalankan load test
-```
-
-**Target Performance SMA ISA 1:**
-
-| Skenario | Concurrent Users | Target Response Time (p95) | Target Error Rate |
-| :--- | :---: | :---: | :---: |
-| Beban normal (harian) | 200 | < 500ms | < 0.1% |
-| Pagi (absensi + login) | 730 | < 1.5s | < 0.5% |
-| Ujian CBT | 200 | < 2s | 0% (zero tolerance) |
-| Pembayaran SPP | 500 | < 3s | 0% |
-| Pembagian rapor | 1200 | < 3s | < 1% |
-
-##### [MODIFY] Database — Query Optimization
-```
-Analisis & optimasi yang akan dilakukan:
-├── Index Audit
-│   ├── Review semua 81 migration → pastikan index ada di kolom yang sering di-WHERE/JOIN
-│   ├── Composite index untuk query yang sering dilakukan (misal: attendances.date + student_id)
-│   └── Remove unused indexes yang membebani write performance
-├── Query Optimization
-│   ├── N+1 Query Detection → Gunakan Laravel Debugbar + `preventLazyLoading()` di AppServiceProvider
-│   ├── Eager Loading Audit → Pastikan semua relasi di-eager load di controller
-│   ├── Raw Query Review → Ganti raw query dengan Eloquent yang ter-index
-│   └── Pagination → Pastikan semua list view menggunakan cursor/keyset pagination untuk data besar
-├── Caching Strategy
-│   ├── Redis/File cache untuk data yang jarang berubah (jadwal, profil sekolah, settings)
-│   ├── Query cache untuk dashboard analytics (TTL: 5 menit)
-│   ├── Route cache → `php artisan route:cache`
-│   ├── View cache → `php artisan view:cache`
-│   ├── Config cache → `php artisan config:cache`
-│   └── Event cache → `php artisan event:cache`
-```
-
-##### [MODIFY] `config/database.php` — Connection Pooling
+##### [NEW] Migration: `create_tahfidz_targets_table`
 ```php
-// Konfigurasi optimal untuk beban SMA ISA 1
-'mysql' => [
-    'pool' => [
-        'min_connections' => 10,
-        'max_connections' => 50,        // Handle 1200 concurrent users
-        'max_idle_time' => 60,
-    ],
-    'options' => [
-        PDO::ATTR_PERSISTENT => true,   // Persistent connections
-    ],
-],
-```
-
-##### [MODIFY] `config/queue.php` — Queue Optimization
-```php
-// Pastikan job-job berat diproses async:
-// - Email/WhatsApp notifications → queue
-// - PDF generation (rapor, surat) → queue
-// - Import/Export data → queue
-// - Midtrans payment check → queue
-// - Digest/scheduled reports → queue
-```
-
-##### [NEW] `app/Console/Commands/WarmupCache.php`
-```php
-class WarmupCache extends Command
-{
-    protected $signature = 'cache:warmup';
-    protected $description = 'Pre-cache data yang sering diakses untuk performa optimal';
-
-    public function handle()
-    {
-        // Cache profil sekolah
-        // Cache jadwal aktif semester ini
-        // Cache daftar kelas dan wali kelas
-        // Cache menu navigasi per role
-        // Cache appearance settings
-        // Cache translation strings
-    }
-}
-```
-
----
-
-### 🔐 Modul 11.2: Security Hardening & Penetration Testing (✅ SELESAI)
-
-**Tujuan:** Audit keamanan menyeluruh karena platform akan menyimpan data sensitif siswa, guru, dan keuangan SMA ISA 1.
-
-#### Mengapa Kritis untuk SMA ISA 1?
-Platform menyimpan:
-- **Data pribadi 700+ siswa** (nama, alamat, NIK, foto — dilindungi UU PDP)
-- **Data keuangan** (tagihan SPP, transaksi Midtrans, rekening bank)
-- **Data kepegawaian 60+ guru/karyawan** (gaji, slip payroll, data keluarga)
-- **Data akademik** (nilai, rapor, konseling BK — sangat rahasia)
-- **Kredensial integrasi** (API key Dapodik, Midtrans, Fonnte)
-
-Kebocoran data bisa berakibat fatal: pelanggaran UU PDP, kerugian finansial, dan reputasi sekolah.
-
-#### Rencana Implementasi
-
-##### [MODIFY] `app/Http/Middleware/SecurityHeaders.php` — Header Hardening
-```php
-// Headers keamanan yang akan ditambahkan/diperketat:
-'Content-Security-Policy' => "default-src 'self'; script-src 'self' 'nonce-{nonce}' https://app.midtrans.com; ...",
-'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains; preload',
-'X-Content-Type-Options' => 'nosniff',
-'X-Frame-Options' => 'DENY',
-'Referrer-Policy' => 'strict-origin-when-cross-origin',
-'Permissions-Policy' => 'camera=(), microphone=(), geolocation=()',
-'X-XSS-Protection' => '1; mode=block',
-```
-
-##### [NEW] `app/Services/SecurityAuditService.php`
-```php
-class SecurityAuditService
-{
-    /**
-     * Jalankan full security audit dan return laporan.
-     */
-    public function runFullAudit(): array;
-
-    /**
-     * Cek semua environment variable sensitif sudah di-encrypt/hidden.
-     */
-    public function auditEnvironmentSecurity(): array;
-
-    /**
-     * Cek semua file upload handler — pastikan tidak bisa upload executable.
-     */
-    public function auditFileUploadSecurity(): array;
-
-    /**
-     * Cek semua route — pastikan middleware auth/permission terpasang.
-     */
-    public function auditRouteSecurity(): array;
-
-    /**
-     * Cek semua form — pastikan CSRF token ada.
-     */
-    public function auditCsrfProtection(): array;
-
-    /**
-     * Cek SQL injection vulnerability (parameterized queries).
-     */
-    public function auditSqlInjection(): array;
-
-    /**
-     * Cek XSS vulnerability (Blade escaping).
-     */
-    public function auditXssProtection(): array;
-
-    /**
-     * Cek mass assignment vulnerability (fillable/guarded).
-     */
-    public function auditMassAssignment(): array;
-
-    /**
-     * Cek keamanan session (timeout, regeneration, secure cookie).
-     */
-    public function auditSessionSecurity(): array;
-
-    /**
-     * Rate limiting audit — pastikan endpoint sensitif (login, API, payment) di-rate limit.
-     */
-    public function auditRateLimiting(): array;
-}
-```
-
-##### [MODIFY] `config/session.php` — Session Hardening
-```php
-'lifetime' => 120,                    // 2 jam (untuk guru yang mengajar)
-'expire_on_close' => false,
-'encrypt' => true,
-'secure' => true,                     // HTTPS only
-'http_only' => true,
-'same_site' => 'lax',
-```
-
-##### [MODIFY] `config/auth.php` — Password Policy
-```php
-// Kebijakan password untuk seluruh pengguna SMA ISA 1:
-'password_rules' => [
-    'min_length' => 8,
-    'require_uppercase' => true,
-    'require_number' => true,
-    'require_special_char' => false,     // Tidak wajib karena banyak ortu kurang familiar
-    'max_age_days' => 180,               // Wajib ganti password setiap 6 bulan
-    'prevent_reuse' => 3,                // Tidak boleh menggunakan 3 password terakhir
-],
-```
-
-##### [NEW] Penetration Testing Checklist
-
-```markdown
-Checklist Penetration Testing:
-☑ OWASP Top 10 2021 — semua item dicek
-☑ SQL Injection test pada semua form input
-☑ XSS (Stored & Reflected) pada semua form dan URL parameter
-☑ CSRF bypass attempt
-☑ Authentication bypass (brute force, credential stuffing)
-☑ Authorization bypass (IDOR — akses data siswa lain)
-☑ File upload bypass (upload .php, .exe, polyglot files)
-☑ API abuse (rate limiting, token stealing)
-☑ Session fixation & hijacking
-☑ Insecure Direct Object Reference (ubah ID di URL)
-☑ Midtrans webhook signature bypass
-☑ WhatsApp gateway injection
-```
-
----
-
-### 📱 Modul 11.3: PWA Enhancement & Offline Capability (✅ SELESAI)
-
-**Tujuan:** Meningkatkan kapabilitas PWA agar guru dan siswa SMA ISA 1 bisa mengakses fitur dasar saat koneksi internet tidak stabil (area sekolah yang WiFi-nya kurang kuat).
-
-#### Mengapa Penting untuk SMA ISA 1?
-- Beberapa area gedung sekolah memiliki sinyal WiFi lemah
-- Guru sering perlu input absensi di kelas yang jauh dari access point
-- Siswa perlu cek jadwal dan tugas tanpa harus selalu online
-
-#### Rencana Implementasi
-
-##### [MODIFY] `public/service-worker.js` — Offline Strategy
-```javascript
-// Cache-first strategy untuk:
-// - Asset statis (CSS, JS, font, gambar)
-// - Jadwal pelajaran (di-cache saat online, serve offline)
-// - Data profil user
-// - Halaman dashboard (shell)
-
-// Network-first strategy untuk:
-// - Input absensi (queue & sync saat online)
-// - Notifikasi
-// - Data real-time (chat, alert)
-
-// Background Sync untuk:
-// - Absensi yang di-input offline → auto-sync saat online
-// - Jurnal mengajar yang ditulis offline → auto-sync
-```
-
-##### [NEW] `resources/js/offline-queue.js`
-```javascript
-// IndexedDB-based offline queue
-// Saat offline: simpan request ke IndexedDB
-// Saat online kembali: replay semua queued requests
-// Use case utama: guru input absensi di kelas tanpa WiFi
-```
-
-##### [MODIFY] `resources/views/layouts/app.blade.php`
-```html
-<!-- Offline indicator bar -->
-<div id="offline-bar" class="offline-indicator" style="display:none">
-    ⚠️ Anda sedang offline. Data akan disinkronkan saat koneksi kembali.
-</div>
-```
-
----
-
-## 📦 FASE 12: Testing Menyeluruh & User Acceptance Testing (UAT)
-
-**Durasi Estimasi:** 3–4 minggu
-**Tujuan:** Testing end-to-end yang komprehensif dan UAT langsung dengan pengguna nyata SMA ISA 1 (guru, siswa, orang tua, staf TU, kepala sekolah, waka).
-
----
-
-### 🧪 Modul 12.1: Automated Testing Expansion (✅ SELESAI)
-
-**Tujuan:** Meningkatkan test coverage dari ~27 test files menjadi target **90%+ coverage** pada critical path.
-
-#### Rencana Implementasi
-
-##### [MODIFY] `tests/Feature/` — Expand Test Suite
-
-**Target Test Files Baru/Update:**
-
-| Test File | Skenario Kritis yang Diuji |
-| :--- | :--- |
-| `AuthenticationTest.php` | Login semua role (admin, guru, siswa, ortu, staf_tu, kepsek, waka), 2FA flow, password reset, session timeout, brute force protection |
-| `AttendanceFlowTest.php` | Input absensi per kelas, rekap harian/bulanan, auto-notif ortu jika alpa, integrasi gamifikasi (streak XP), export Dapodik |
-| `BillingPaymentTest.php` | Buat tagihan SPP, checkout Midtrans (VA, QRIS, e-wallet), webhook callback, auto-update status, kirim notif WhatsApp, reconciliation |
-| `CbtExamTest.php` | Buat soal, buat ujian, siswa mengerjakan, auto-grading, timer, anti-cheat (tab switch detection), hasil & analisis |
-| `GradeRaportTest.php` | Input nilai per mapel, hitung rata-rata, generate e-rapor PDF, download per siswa, akses ortu via portal |
-| `GamificationTest.php` | XP award on attendance, achievement auto-check, streak tracking, leaderboard ranking, tahfidz/mutabaah special achievements |
-| `ImportExportTest.php` | Upload Excel siswa, column mapping, validation, execute import, verify data, rollback, re-verify |
-| `IntegrationDapodikTest.php` | Export data siswa format Dapodik, export PTK, validasi kelengkapan field, generate Excel |
-| `PaymentGatewayTest.php` | Full flow: create transaction → webhook notification → settlement → auto-update billing → WhatsApp notif |
-| `ChatbotTest.php` | FAQ search, navigate intent, data query, conversation log, feedback (helpful/not) |
-| `WorkflowTest.php` | Multi-step approval: guru → waka → kepsek, approval/rejection, notifikasi setiap step |
-| `ScheduledReportTest.php` | Generate digest harian/mingguan, cron matching, email rendering, PDF attachment |
-| `ApiV1Test.php` | Semua endpoint API v1: auth, CRUD siswa/guru/nilai, pagination, error handling, rate limiting |
-| `SecurityTest.php` | CSRF protection, XSS prevention, SQL injection prevention, IDOR protection, rate limiting |
-| `WhatsappNotifTest.php` | Template message rendering, send via Fonnte, delivery tracking, auto-notif trigger |
-
-##### [NEW] `tests/Browser/` — Browser Tests (Laravel Dusk)
-```
-tests/Browser/
-├── LoginFlowTest.php              # Login → dashboard → navigasi menu
-├── AttendanceInputTest.php        # Guru: buka kelas → centang hadir/alpa → simpan → verifikasi
-├── SppPaymentTest.php             # Ortu: lihat tagihan → pilih metode → checkout
-├── CbtExamTakingTest.php          # Siswa: mulai ujian → jawab soal → submit → lihat hasil
-├── AdminDashboardTest.php         # Admin: dashboard analytics → drill-down → filter
-├── ChatbotInteractionTest.php     # Buka chatbot → tanya FAQ → navigasi → feedback
-├── MobileResponsiveTest.php       # Semua halaman utama responsive di viewport 375px (mobile)
-└── AccessibilityTest.php          # Keyboard navigation, screen reader, focus management
-```
-
-##### [NEW] `tests/Integration/` — Integration Tests
-```
-tests/Integration/
-├── MidtransWebhookTest.php        # Simulasi callback Midtrans dengan signature valid/invalid
-├── FonnteGatewayTest.php          # Simulasi kirim WhatsApp via Fonnte API (sandbox)
-├── ReverbWebSocketTest.php        # Test event broadcasting via Reverb
-└── QueueProcessingTest.php        # Pastikan semua job di-queue dan diproses dengan benar
-```
-
----
-
-### 👥 Modul 12.2: User Acceptance Testing (UAT) dengan Civitas SMA ISA 1 (✅ SELESAI)
-
-**Tujuan:** Melibatkan pengguna nyata SMA ISA 1 untuk menguji platform secara langsung dan memberikan feedback dengan widget UAT floating di setiap halaman, dashboard penanganan feedback untuk admin, dan laporan status UAT.
-
-#### User Review Required
-> [!IMPORTANT]
-> - Tombol feedback akan ditambahkan ke layout utama (`layouts/app.blade.php`) dan akan muncul untuk semua pengguna yang terautentikasi (Guru, Siswa, Orang Tua, Staf TU, dll.) saat mode UAT diaktifkan via `.env` (`UAT_MODE=true`).
-> - Menggunakan library `html2canvas` dari CDN untuk mengambil tangkapan layar otomatis (screenshot) halaman saat pengguna mengirimkan feedback, sehingga developer dapat mereproduksi bug dengan informasi visual langsung dari viewport pengguna.
-> - Halaman Dashboard Feedback & Report UAT hanya dapat diakses oleh peran `admin` dan `superadmin`.
-
-#### Open Questions
-> [!NOTE]
-> - Apakah screenshot otomatis menggunakan html2canvas harus diaktifkan secara opsional bagi pengguna (misal checkbox "Lampirkan screenshot halaman saat ini") untuk melindungi privasi data pribadi di viewport, atau secara otomatis selalu dilampirkan?
-> - *Rekomendasi:* Gunakan checkbox opsional "Lampirkan tangkapan layar otomatis" yang tercentang secara default untuk mematuhi aspek privasi dan UU PDP.
-
-#### Proposed Changes
-
-##### Database Layer
-###### [NEW] [create_uat_feedback_table.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/database/migrations/2026_06_16_000000_create_uat_feedback_table.php)
-Migrasi untuk membuat tabel `uat_feedback` dengan struktur:
-- `id` (bigint, auto-increment)
-- `user_id` (foreignId ke users)
-- `page_url` (string)
-- `rating` (tinyInteger, 1-5)
-- `category` (enum: bug, ui_suggestion, unclear_feature, slow, other)
-- `description` (text)
-- `screenshot_path` (string, nullable, menyimpan path file screenshot)
-- `device_info` (json, nullable, browser, os, viewport size, role)
-- `status` (enum: open, in_progress, fixed, verified, wont_fix, default: open)
-- `priority` (enum: critical, high, medium, low, default: medium)
-- `developer_notes` (text, nullable)
-- `timestamps`
-
-###### [NEW] [UatFeedback.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Models/UatFeedback.php)
-Model Eloquent untuk tabel `uat_feedback`.
-
-##### Controller & Routing Layer
-###### [NEW] [UatFeedbackController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Admin/UatFeedbackController.php)
-Controller untuk menangani:
-- Penyimpanan feedback dari pengguna (termasuk penyimpanan file screenshot hasil capture html2canvas).
-- Menampilkan dashboard UAT feedback (list feedback dengan status tracking & priority filter).
-- Mengupdate status, prioritas, dan developer notes feedback (akses admin/superadmin).
-- Menampilkan laporan statistik feedback (report view untuk manajemen sekolah).
-
-###### [MODIFY] [web.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/routes/web.php)
-Menambahkan rute-rute berikut:
-- `POST /admin/uat/feedback` -> `store` (semua user yang login)
-- `GET /admin/uat/feedback-dashboard` -> `dashboard` (admin, superadmin)
-- `POST /admin/uat/feedback/{id}/status` -> `updateStatus` (admin, superadmin)
-- `GET /admin/uat/feedback-report` -> `report` (admin, superadmin)
-
-##### View Layer
-###### [NEW] [feedback-form.blade.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/resources/views/admin/uat/feedback-form.blade.php)
-Floating widget dengan CSS glassmorphism, ditempelkan di sudut kanan bawah layar. Berisi form interaktif:
-- Input rating (skala bintang 1-5 dengan transisi hover).
-- Dropdown kategori.
-- Textarea deskripsi.
-- Checkbox opsi screenshot halaman (html2canvas) & preview thumbnail screenshot.
-- Tombol kirim feedback dengan state loading yang responsif.
-
-###### [MODIFY] [app.blade.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/resources/views/layouts/app.blade.php)
-Menyertakan `@if(config('app.uat_mode')) @include('admin.uat.feedback-form') @endif` sebelum tag penutup body.
-
-###### [NEW] [feedback-dashboard.blade.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/resources/views/admin/uat/feedback-dashboard.blade.php)
-Dashboard manajemen UAT feedback dengan desain premium (dark glassmorphism/sleek design) yang memiliki filter berdasarkan status, prioritas, kategori, dan pencarian teks. Menampilkan list feedback secara interaktif, detail device pengguna, link halaman terkait, screenshot preview (dengan modal lightbox), serta panel detail untuk memperbarui status/prioritas dan menambahkan catatan developer.
-
-###### [NEW] [feedback-report.blade.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/resources/views/admin/uat/feedback-report.blade.php)
-Halaman visualisasi laporan UAT (menggunakan Chart/diagram sederhana atau grid statistik) yang menyajikan:
-- Skor kepuasan rata-rata (average rating).
-- Grafik breakdown feedback berdasarkan kategori (Bug, UI, Slow, dsb).
-- Status penanganan (Berapa persen Open, In Progress, Fixed, Verified).
-- Halaman-halaman dengan laporan bug terbanyak untuk prioritas perbaikan cepat.
-
-##### Testing Layer
-###### [NEW] [UatFeedbackTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Admin/UatFeedbackTest.php)
-Pest feature test untuk memverifikasi:
-- Kirim feedback berhasil dari semua peran pengguna.
-- File upload & screenshot disimpan di storage dengan benar.
-- Akses dashboard UAT dibatasi hanya untuk peran `admin` & `superadmin`.
-- Update status, prioritas, dan developer notes UAT feedback hanya bisa dilakukan oleh admin/superadmin.
-- Halaman laporan UAT mengembalikan respons sukses dan data agregat yang benar.
-
-#### Verification Plan
-
-##### Automated Tests
-- Menjalankan feature test menggunakan Pest:
-  ```bash
-  php artisan test tests/Feature/Admin/UatFeedbackTest.php
-  ```
-- Menjalankan seluruh test suite untuk memastikan zero-regression:
-  ```bash
-  php artisan test
-  ```
-
-##### Manual Verification
-- Login sebagai Guru, Siswa, atau Orang Tua, dan pastikan tombol feedback melayang muncul di sudut kanan bawah.
-- Coba kirim feedback dengan checkbox screenshot tercentang. Pastikan feedback tersimpan di database dan file screenshot terbuat di direktori `storage/app/public/uat_screenshots`.
-- Login sebagai Admin, akses menu `/admin/uat/feedback-dashboard`, filter berdasarkan status/prioritas, perbarui salah satu feedback ke 'in_progress' atau 'fixed', tambahkan catatan pengembang, lalu verifikasi perubahannya.
-- Buka halaman `/admin/uat/feedback-report` dan periksa statistik agregat tampil dengan benar.
-
----
-
-### 📋 Modul 12.3: Data Validation & Integrity Check (✅ SELESAI)
-
-**Tujuan:** Validasi data migrasi agar bersih dari kesalahan format, duplikasi, data yatim (orphaned), dan tidak konsisten, serta memfasilitasi migrasi data dari sistem lama SMA ISA 1 melalui file CSV terstruktur secara aman (transactional).
-
-#### User Review Required
-> [!IMPORTANT]
-> - Default password untuk semua pengguna baru (Siswa, Guru, Orang Tua, Staf TU) yang diimpor dari sistem lama diatur secara aman ke `SistemTerpadu123` dan atribut `must_change_password` diset ke `true`, memaksa pengguna langsung mengubah password saat login pertama kali.
-> - Migrasi akan dilakukan secara transaksional (DB transactions) untuk mencegah impor parsial jika terjadi kegagalan di baris tertentu.
-
-#### Open Questions
-> [!NOTE]
-> - Apakah jika nama kelas (`classroom_name`) di file CSV siswa tidak ditemukan di sistem, program harus menghentikan proses impor (strict) atau otomatis membuat kelas baru?
-> - *Rekomendasi:* Hentikan impor dengan detail error (strict) agar kelas didefinisikan secara resmi terlebih dahulu oleh admin sekolah demi menjaga konsistensi kurikulum.
-
-#### Proposed Changes
-
-##### Console & Command Layer
-###### [NEW] [ValidateDataIntegrity.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Console/Commands/ValidateDataIntegrity.php)
-Command Artisan `php artisan data:validate` untuk melakukan pemeriksaan integritas database secara berkala:
-- Cek integritas relasi foreign key yang rusak/yatim (misal: `students.parent_id` tidak ada di tabel `users`).
-- Cek duplikat data pada kolom unik: `nis` & `nisn` (Siswa), `nip` & `nuptk` (Guru/Karyawan), `email` (Pengguna).
-- Cek data kosong (null/empty) pada kolom yang wajib diisi.
-- Cek validitas format email dan nomor telepon.
-- Cek kepatuhan batas nilai (`grades` 0-100) dan kode kehadiran (`attendances` H, I, S, A).
-- Output: Menampilkan ringkasan status dalam format tabel CLI dan daftar detail eror.
-
-###### [NEW] [MigrateFromLegacy.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Console/Commands/MigrateFromLegacy.php)
-Command Artisan `php artisan data:migrate-legacy {--source=c:/path/to/csv}` untuk mengimpor data CSV dari sistem lama secara aman:
-- Membaca file CSV (`students.csv`, `employees.csv`, `grades.csv`, `billings.csv`, `assets.csv`).
-- Melakukan pemetaan kolom secara fleksibel dengan validasi tipe data sebelum penyimpanan dilakukan.
-- Melakukan transaksi database (DB transaction) yang akan di-rollback otomatis jika terjadi eror integritas pada data impor.
-- Menampilkan preview jumlah baris sebelum memproses, dan menanyakan konfirmasi eksekusi dari admin.
-
-##### Testing Layer
-###### [NEW] [DataValidationAndIntegrityTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Admin/DataValidationAndIntegrityTest.php)
-Pest feature test untuk memverifikasi:
-- Jalannya command `php artisan data:validate` ketika database dalam kondisi bersih maupun ketika diinjeksi data tidak konsisten (yatim/duplikat).
-- Jalannya command `php artisan data:migrate-legacy` untuk membaca dan mengimpor file CSV contoh (mock CSV) dengan memverifikasi data pengguna terbuat, password dienkripsi, dan relasi terbentuk dengan benar.
-- Verifikasi proteksi rollback transaksi saat impor data rusak.
-
-#### Verification Plan
-
-##### Automated Tests
-- Menjalankan feature test menggunakan Pest:
-  ```bash
-  php artisan test tests/Feature/Admin/DataValidationAndIntegrityTest.php
-  ```
-
-##### Manual Verification
-- Buat contoh file CSV tiruan untuk siswa dan guru di direktori storage.
-- Jalankan perintah:
-  ```bash
-  php artisan data:migrate-legacy --source=storage/app/legacy/students.csv
-  ```
-- Periksa database atau login ke platform menggunakan akun siswa yang diimpor, dan pastikan diarahkan ke halaman ubah password.
-- Masukkan data tidak valid secara manual ke database (misal ganti nilai menjadi `150`), lalu jalankan `php artisan data:validate` untuk memverifikasi pendeteksian isu.
-
----
-
----
-
-## 📦 FASE 13: Go-Live Deployment & Pelatihan Pengguna
-
-**Durasi Estimasi:** 2–3 minggu
-**Tujuan:** Deploy platform ke server produksi, migrasi data nyata SMA ISA 1, dan pelatihan seluruh civitas akademika.
-
----
-
-### 🖥️ Modul 13.1: Infrastructure & Server Setup
-
-**Tujuan:** Setup server produksi yang stabil, aman, dan cost-effective untuk SMA ISA 1.
-
-#### Rekomendasi Server untuk SMA ISA 1
-
-| Opsi | Spesifikasi | Biaya/Bulan | Kelebihan | Kekurangan |
-| :--- | :--- | :---: | :--- | :--- |
-| **VPS (Rekomendasi)** | 4 vCPU, 8GB RAM, 100GB SSD (Contabo/DigitalOcean) | Rp 200-500rb | Full control, scalable, performa baik | Perlu maintenance sendiri |
-| **Shared Hosting** | cPanel hosting premium | Rp 100-300rb | Mudah, murah | Terbatas, performa rendah untuk 800+ user |
-| **Cloud (AWS/GCP)** | t3.medium atau e2-medium | Rp 500rb-1jt | Enterprise-grade, auto-scaling | Mahal, overkill untuk 1 sekolah |
-
-#### Rencana Implementasi
-
-##### [NEW] `docker/production/` — Production Docker Setup
-```
-docker/production/
-├── docker-compose.prod.yml        # PHP-FPM + Nginx + MySQL 8 + Redis + Reverb + Queue Worker
-├── nginx/
-│   └── default.conf               # Nginx config: SSL, gzip, static caching, proxy pass
-├── php/
-│   └── php.ini                    # Production PHP config: OPcache, memory limit, upload max
-├── mysql/
-│   └── my.cnf                     # MySQL tuning: buffer pool, query cache, max connections
-├── redis/
-│   └── redis.conf                 # Redis config: maxmemory, eviction policy
-├── cron/
-│   └── laravel-scheduler          # Cron entry untuk Laravel scheduler
-├── supervisor/
-│   └── laravel-worker.conf        # Queue worker + Reverb server
-└── ssl/
-    └── README.md                  # Instruksi setup SSL (Let's Encrypt/Certbot)
-```
-
-##### [MODIFY] `.env.production` — Production Environment
-```env
-APP_NAME="Sistem Terpadu SMA ISA 1"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://sistem.smaisa1-smg.sch.id    # Domain sekolah
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_DATABASE=sistem_terpadu_smaisa1
-DB_USERNAME=smaisa1_db
-
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailgun.org                     # Atau Amazon SES
-MAIL_FROM_ADDRESS=noreply@smaisa1-smg.sch.id
-MAIL_FROM_NAME="Sistem Terpadu SMA ISA 1"
-
-MIDTRANS_SERVER_KEY=                            # Server key produksi
-MIDTRANS_CLIENT_KEY=                            # Client key produksi
-MIDTRANS_IS_PRODUCTION=true
-
-FONNTE_API_KEY=                                 # API key Fonnte produksi
-FONNTE_DEVICE=                                  # Nomor WhatsApp resmi sekolah
-
-REVERB_APP_ID=smaisa1
-REVERB_HOST=sistem.smaisa1-smg.sch.id
-```
-
-##### [NEW] `scripts/deploy.sh` — Deployment Script
-```bash
-#!/bin/bash
-# Script deployment otomatis SMA ISA 1
-
-echo "🚀 Deploying Sistem Terpadu SMA ISA 1..."
-
-# 1. Pull latest code
-git pull origin main
-
-# 2. Install dependencies
-composer install --no-dev --optimize-autoloader
-npm ci && npm run build
-
-# 3. Cache optimization
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
-php artisan icons:cache
-
-# 4. Database migration
-php artisan migrate --force
-
-# 5. Warmup cache
-php artisan cache:warmup
-
-# 6. Restart services
-php artisan queue:restart
-php artisan reverb:restart
-
-# 7. Clear old cache
-php artisan optimize
-
-echo "✅ Deployment selesai!"
-```
-
-##### [MODIFY] `.github/workflows/deploy.yml` — CI/CD Pipeline
-```yaml
-name: Deploy to Production
-on:
-  push:
-    branches: [main]
-    tags: ['v*']
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-      - name: Install Dependencies
-        run: composer install --prefer-dist
-      - name: Run Tests
-        run: php artisan test --parallel
-      - name: Run Security Audit
-        run: composer audit
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/sistem-terpadu
-            bash scripts/deploy.sh
-```
-
----
-
-### 📚 Modul 13.2: Data Migration dari Sistem Lama
-
-**Tujuan:** Migrasi data nyata SMA ISA 1 dari sistem lama (Excel/spreadsheet/database lama) ke platform baru.
-
-#### Data yang Perlu Dimigrasikan
-
-| Kategori Data | Sumber | Jumlah Estimasi | Prioritas |
-| :--- | :--- | :---: | :---: |
-| **Data Siswa Aktif** | Excel Tata Usaha / Dapodik | ~700 siswa | 🔴 P0 |
-| **Data Guru & Karyawan** | Excel HRD / Dapodik | ~60 orang | 🔴 P0 |
-| **Kelas & Rombel** | Data TU | ~20 kelas (X, XI, XII x jurusan) | 🔴 P0 |
-| **Mata Pelajaran** | Kurikulum SMA ISA 1 | ~30 mapel (termasuk muatan lokal keislaman) | 🔴 P0 |
-| **Jadwal Pelajaran** | Jadwal semester berjalan | ~200 slot | 🟠 P1 |
-| **Data Orang Tua** | Buku induk / data siswa | ~500 akun | 🟠 P1 |
-| **Riwayat Nilai** | Leger/Excel guru | Semester terakhir | 🟡 P2 |
-| **Riwayat SPP** | Buku besar keuangan | Tahun ajaran berjalan | 🟡 P2 |
-| **Inventaris Aset** | Buku inventaris | ~200 aset | 🟢 P3 |
-| **Buku Perpustakaan** | Katalog perpustakaan | ~1000 buku | 🟢 P3 |
-
-#### Mata Pelajaran Khusus SMA ISA 1 (Muatan Lokal Keislaman)
-
-```
-Selain mapel nasional (Matematika, Bahasa Indonesia, dll), SMA ISA 1 memiliki:
-├── Al-Qur'an & Hadits
-├── Aqidah Akhlak
-├── Fiqih
-├── Sejarah Kebudayaan Islam (SKI)
-├── Bahasa Arab
-├── Tahfidz Al-Qur'an              → Terintegrasi dengan gamifikasi (XP & achievement)
-├── Mutaba'ah Ibadah                → Tracking sholat, dzikir, puasa → gamifikasi
-└── Ke-Sultan Agung-an             → Muatan lokal khusus yayasan YBWSA
-```
-
-#### Rencana Implementasi
-
-##### [NEW] `app/Console/Commands/SeedSmaIsa1Data.php`
-```php
-class SeedSmaIsa1Data extends Command
-{
-    protected $signature = 'seed:smaisa1 {--fresh}';
-    protected $description = 'Seed data awal khusus SMA Islam Sultan Agung 1 Semarang';
-
-    public function handle()
-    {
-        // 1. Profil Sekolah
-        SchoolProfile::updateOrCreate(['id' => 1], [
-            'name' => 'SMA Islam Sultan Agung 1 Semarang',
-            'npsn' => '20328912',                              // NPSN resmi
-            'address' => 'Jl. Mataram No. 657, Mugassari, Semarang Selatan',
-            'city' => 'Kota Semarang',
-            'province' => 'Jawa Tengah',
-            'postal_code' => '50249',
-            'phone' => '(024) 8316532',
-            'email' => 'info@smaisa1-smg.sch.id',
-            'website' => 'https://smaisa1-smg.sch.id',
-            'foundation' => 'Yayasan Badan Wakaf Sultan Agung (YBWSA)',
-            'accreditation' => 'A',
-            'curriculum' => 'Kurikulum Merdeka + Muatan Keislaman YBWSA',
-            'principal_name' => '',                             // Diisi saat deployment
-            'logo_path' => 'images/logo-smaisa1.png',
-        ]);
-
-        // 2. Roles khusus SMA ISA 1
-        $roles = [
-            'superadmin'      => 'Super Administrator',
-            'admin'           => 'Administrator',
-            'kepala_sekolah'  => 'Kepala Sekolah',
-            'waka_kurikulum'  => 'Wakil Kepala Bidang Kurikulum',
-            'waka_kesiswaan'  => 'Wakil Kepala Bidang Kesiswaan',
-            'waka_humas'      => 'Wakil Kepala Bidang Humas & Dakwah',
-            'waka_sarpras'    => 'Wakil Kepala Bidang Sarana Prasarana',
-            'guru'            => 'Guru',
-            'wali_kelas'      => 'Wali Kelas',
-            'guru_bk'         => 'Guru Bimbingan Konseling',
-            'guru_tahfidz'    => 'Guru Tahfidz',
-            'staf_tu'         => 'Staf Tata Usaha',
-            'bendahara'       => 'Bendahara',
-            'pustakawan'      => 'Pustakawan',
-            'petugas_uks'     => 'Petugas UKS',
-            'siswa'           => 'Siswa',
-            'orang_tua'       => 'Orang Tua / Wali',
-            'alumni'          => 'Alumni',
-        ];
-
-        // 3. Mata pelajaran (Kurikulum Merdeka + Muatan Keislaman)
-        $subjects = [
-            // Kelompok A (Umum)
-            ['name' => 'Pendidikan Agama Islam', 'code' => 'PAI', 'group' => 'A'],
-            ['name' => 'Pendidikan Pancasila', 'code' => 'PPKn', 'group' => 'A'],
-            ['name' => 'Bahasa Indonesia', 'code' => 'BIND', 'group' => 'A'],
-            ['name' => 'Matematika', 'code' => 'MTK', 'group' => 'A'],
-            ['name' => 'Bahasa Inggris', 'code' => 'BING', 'group' => 'A'],
-            ['name' => 'Sejarah', 'code' => 'SEJ', 'group' => 'A'],
-
-            // Kelompok B (Pilihan — tergantung jurusan/peminatan)
-            ['name' => 'Informatika', 'code' => 'INF', 'group' => 'B'],
-            ['name' => 'Fisika', 'code' => 'FIS', 'group' => 'B'],
-            ['name' => 'Kimia', 'code' => 'KIM', 'group' => 'B'],
-            ['name' => 'Biologi', 'code' => 'BIO', 'group' => 'B'],
-            ['name' => 'Ekonomi', 'code' => 'EKO', 'group' => 'B'],
-            ['name' => 'Sosiologi', 'code' => 'SOS', 'group' => 'B'],
-            ['name' => 'Geografi', 'code' => 'GEO', 'group' => 'B'],
-            ['name' => 'Seni Budaya', 'code' => 'SBK', 'group' => 'B'],
-            ['name' => 'PJOK', 'code' => 'PJOK', 'group' => 'B'],
-
-            // Kelompok C (Muatan Lokal Keislaman — Khusus SMA ISA 1)
-            ['name' => 'Al-Qur\'an & Hadits', 'code' => 'QH', 'group' => 'C'],
-            ['name' => 'Aqidah Akhlak', 'code' => 'AA', 'group' => 'C'],
-            ['name' => 'Fiqih', 'code' => 'FQH', 'group' => 'C'],
-            ['name' => 'Sejarah Kebudayaan Islam', 'code' => 'SKI', 'group' => 'C'],
-            ['name' => 'Bahasa Arab', 'code' => 'BAR', 'group' => 'C'],
-            ['name' => 'Tahfidz Al-Qur\'an', 'code' => 'THF', 'group' => 'C'],
-            ['name' => 'Mutaba\'ah Ibadah', 'code' => 'MTB', 'group' => 'C'],
-            ['name' => 'Ke-Sultan Agung-an', 'code' => 'KSA', 'group' => 'C'],
-        ];
-
-        // 4. Kelas (SMA: X, XI, XII x jurusan)
-        $classrooms = [
-            // Kelas X
-            'X-IPA-1', 'X-IPA-2', 'X-IPA-3',
-            'X-IPS-1', 'X-IPS-2',
-            'X-Tahfidz',                    // Kelas khusus program tahfidz
-
-            // Kelas XI
-            'XI-IPA-1', 'XI-IPA-2', 'XI-IPA-3',
-            'XI-IPS-1', 'XI-IPS-2',
-            'XI-Tahfidz',
-
-            // Kelas XII
-            'XII-IPA-1', 'XII-IPA-2', 'XII-IPA-3',
-            'XII-IPS-1', 'XII-IPS-2',
-            'XII-Tahfidz',
-        ];
-
-        // 5. Tahun Ajaran
-        $academicYear = '2026/2027';
-        $semester = 'Ganjil';
-
-        // 6. Achievement Definitions (Gamifikasi Islami SMA ISA 1)
-        // → Sudah di-seed via SeedChatbotFaqs + data gamifikasi dari Fase 9
-
-        // 7. Chatbot FAQ khusus SMA ISA 1
-        // → FAQ: "Jam berapa sekolah mulai?", "Kapan UTS?", "Berapa SPP per bulan?", dll.
-    }
-}
-```
-
----
-
-### 🎓 Modul 13.3: Pelatihan Pengguna (Training)
-
-**Tujuan:** Melatih seluruh civitas akademika SMA ISA 1 agar bisa menggunakan platform secara mandiri.
-
-#### Jadwal Pelatihan
-
-| Sesi | Peserta | Durasi | Materi |
-| :--- | :--- | :---: | :--- |
-| **Sesi 1** | Admin IT + Staf TU (3 orang) | 1 hari (6 jam) | User management, settings, backup, monitoring, import data, integrasi Dapodik, troubleshooting |
-| **Sesi 2** | Kepala Sekolah + Waka (4 orang) | 3 jam | Dashboard eksekutif, approval workflow, laporan analytics, surat digital, EDS |
-| **Sesi 3** | Bendahara + Staf Keuangan (2 orang) | 4 jam | SPP/billing, Midtrans payment, accounting, payroll, laporan keuangan, reconciliation |
-| **Sesi 4** | Seluruh Guru (60 orang) | 4 jam | Input absensi, input nilai, jurnal mengajar, e-learning, CBT, forum, jadwal, rapor, chatbot |
-| **Sesi 5** | Guru BK + Petugas UKS + Pustakawan (3 orang) | 3 jam | Konseling, poin BK, UKS, perpustakaan — modul masing-masing |
-| **Sesi 6** | Perwakilan Orang Tua (per kelas) | 2 jam | Portal ortu, bayar SPP online, pantau absensi/nilai, terima notif WhatsApp, install PWA |
-| **Sesi 7** | Perwakilan Siswa (per kelas) | 2 jam | Dashboard siswa, lihat jadwal, kerjakan tugas, ujian CBT, forum, gamifikasi, chatbot, install PWA |
-
-#### Materi Pendukung Pelatihan
-
-##### [NEW] `docs/user-guides/` — Panduan Pengguna
-```
-docs/user-guides/
-├── admin/
-│   ├── panduan-admin-lengkap.md       # Panduan admin IT: setup, backup, monitoring
-│   └── panduan-import-data.md         # Cara import data siswa/guru dari Excel
-├── guru/
-│   ├── panduan-guru.md                # Input absensi, nilai, jurnal, e-learning
-│   ├── panduan-cbt.md                 # Cara membuat & mengelola ujian CBT
-│   └── panduan-rapor.md               # Cara generate e-rapor
-├── keuangan/
-│   └── panduan-bendahara.md           # SPP, billing, Midtrans, accounting
-├── orangtua/
-│   └── panduan-orangtua.md            # Bayar SPP, pantau anak, install PWA di HP
-├── siswa/
-│   └── panduan-siswa.md               # Dashboard, tugas, ujian, forum, gamifikasi
-└── umum/
-    ├── panduan-login-2fa.md           # Cara login dengan 2FA
-    ├── panduan-install-pwa.md         # Cara install PWA di Android/iOS
-    └── faq.md                         # Pertanyaan umum yang sering ditanyakan
-```
-
-##### [NEW] `resources/views/help/` — In-App Help System
-```php
-// Contextual help: tombol "?" di setiap halaman → slide-out panel berisi panduan kontekstual.
-// Contoh: di halaman Input Absensi, tombol "?" menampilkan:
-// - Langkah-langkah input absensi
-// - Penjelasan kode kehadiran (H/I/S/A)
-// - FAQ terkait
-// - Video tutorial (jika tersedia)
-```
-
----
-
-### 🔄 Modul 13.4: Soft Launch & Gradual Rollout
-
-**Tujuan:** Peluncuran bertahap untuk meminimalkan risiko.
-
-#### Strategi Rollout
-
-```
-Minggu 1: Soft Launch (Admin + Guru saja)
-├── Admin IT setup data awal (siswa, guru, kelas, mapel)
-├── Guru mulai input absensi & jurnal harian
-├── Monitoring performa & error intensif
-└── Feedback langsung dari guru → perbaikan harian
-
-Minggu 2: Expand ke Siswa + Orang Tua
-├── Siswa mulai akses dashboard, lihat jadwal, forum
-├── Orang tua mulai terima notif WhatsApp absensi
-├── Orang tua mulai bayar SPP via Midtrans
-├── CBT ujian harian dimulai (1-2 mapel dulu)
-└── Monitoring & feedback
-
-Minggu 3: Full Operation
-├── Semua fitur aktif untuk semua pengguna
-├── E-rapor & analitik aktif
-├── Gamifikasi & leaderboard aktif
-├── Integrasi Dapodik dijalankan
-└── Platform resmi menggantikan sistem lama
-```
-
----
-
-## 📦 FASE 14: Mobile App & Ecosystem Expansion
-
-**Durasi Estimasi:** 6–8 minggu
-**Tujuan:** Membangun aplikasi mobile native (Flutter) yang mengonsumsi REST API v1 yang sudah tersedia, dan memperluas ekosistem platform.
-
----
-
-### 📱 Modul 14.1: Mobile App (Flutter)
-
-**Tujuan:** Aplikasi mobile untuk siswa, orang tua, dan guru SMA ISA 1 agar bisa mengakses platform dari HP dengan UX native yang optimal.
-
-#### Mengapa Mobile App?
-- **72% orang tua SMA ISA 1** kemungkinan mengakses dari HP (bukan laptop/PC)
-- PWA sudah bagus, tapi native app memberikan: push notification yang lebih reliable, offline support lebih baik, akses kamera untuk scan QR absensi, dan UX native
-- Guru bisa input absensi langsung dari HP saat di kelas
-
-#### Arsitektur Mobile App
-
-```
-┌──────────────────────────────────────────┐
-│          Flutter Mobile App              │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ │
-│  │  Screens  │ │  Widgets │ │  State   │ │
-│  │  (Pages)  │ │  (UI)    │ │ (Riverpod│ │
-│  └────┬─────┘ └──────────┘ └────┬─────┘ │
-│       │                         │        │
-│  ┌────┴─────────────────────────┴─────┐  │
-│  │         Repository Layer           │  │
-│  │  (API calls via Dio/Retrofit)      │  │
-│  └────────────────┬───────────────────┘  │
-│                   │                      │
-│  ┌────────────────┴───────────────────┐  │
-│  │      Local Storage (Hive/Isar)     │  │
-│  │  (Offline cache, user preferences)  │  │
-│  └────────────────────────────────────┘  │
-├──────────────────────────────────────────┤
-│              REST API v1                 │
-│    https://sistem.smaisa1-smg.sch.id/api │
-│         (Sanctum Token Auth)             │
-└──────────────────────────────────────────┘
-```
-
-#### Fitur Mobile App per Role
-
-##### Fitur untuk Siswa 🎒
-```
-├── 📊 Dashboard
-│   ├── Ringkasan hari ini: jadwal, tugas pending, streak counter 🔥
-│   ├── XP & level progress bar
-│   └── Notifikasi terbaru
-├── 📅 Jadwal Pelajaran
-│   ├── View harian/mingguan
-│   └── Info ruangan & guru pengajar
-├── 📝 Tugas & Assignment
-│   ├── Daftar tugas pending (deadline countdown)
-│   ├── Upload tugas (kamera/file picker)
-│   └── Lihat nilai tugas
-├── 📖 E-Learning
-│   ├── Materi pelajaran per mapel
-│   ├── Video/PDF viewer
-│   └── Download untuk offline
-├── 🧪 Ujian CBT
-│   ├── Kerjakan ujian dari HP
-│   ├── Timer & auto-submit
-│   └── Lihat hasil
-├── 🏆 Gamifikasi
-│   ├── My Progress (XP, level, streak)
-│   ├── Achievements gallery
-│   └── Leaderboard kelas/sekolah
-├── 💬 Forum Diskusi
-│   ├── Thread per mapel
-│   └── Reply & react
-├── 🕌 Mutaba'ah Ibadah
-│   ├── Input harian (sholat, dzikir, puasa)
-│   └── Streak & progress
-├── 📚 Perpustakaan
-│   ├── Cari buku
-│   └── Status peminjaman
-├── 📋 Rapor Digital
-│   └── Lihat & download e-rapor
-├── 🤖 Chatbot
-│   └── Tanya apa saja tentang sekolah
-└── ⚙️ Settings
-    ├── Profil
-    ├── Bahasa (ID/EN/AR)
-    ├── Dark mode
-    └── Notifikasi preferences
-```
-
-##### Fitur untuk Orang Tua 👨‍👩‍👧
-```
-├── 📊 Dashboard Anak
-│   ├── Ringkasan per anak (bisa punya >1 anak di SMA ISA 1)
-│   ├── Status kehadiran hari ini
-│   ├── Nilai terbaru
-│   └── Poin BK (jika ada)
-├── 📋 Kehadiran
-│   ├── Rekap kehadiran bulanan
-│   ├── Detail per hari (H/I/S/A)
-│   └── Notifikasi real-time jika anak alpa
-├── 📝 Nilai & Rapor
-│   ├── Nilai per mapel
-│   ├── Ranking kelas
-│   └── Download e-rapor
-├── 💰 Pembayaran SPP
-│   ├── Status tagihan (lunas/belum)
-│   ├── Bayar online (Midtrans: VA, QRIS, e-wallet)
-│   ├── Riwayat pembayaran
-│   └── Download bukti bayar
-├── 📬 Notifikasi
-│   ├── Push notification (absensi, nilai, SPP, pengumuman)
-│   └── Riwayat notifikasi
-├── 📅 Kalender Sekolah
-│   └── Event, libur, jadwal ujian
-├── 📩 Surat Digital
-│   └── Surat izin anak (ajukan dari HP)
-├── 🤖 Chatbot
-│   └── Tanya info sekolah
-└── ⚙️ Settings
-    ├── Profil
-    ├── Data anak
-    └── Notifikasi preferences
-```
-
-##### Fitur untuk Guru 👨‍🏫
-```
-├── 📊 Dashboard
-│   ├── Jadwal hari ini
-│   ├── Kelas yang harus diabsensi
-│   └── Tugas yang perlu dinilai
-├── ✅ Input Absensi
-│   ├── Pilih kelas → centang kehadiran
-│   ├── QR Code scan (siswa scan QR untuk absensi mandiri)
-│   └── Offline mode (sync saat online)
-├── 📝 Input Nilai
-│   ├── Input per mapel per kelas
-│   ├── Hitung otomatis rata-rata
-│   └── Sync langsung ke server
-├── 📓 Jurnal Mengajar
-│   ├── Input jurnal harian
-│   ├── Materi yang diajarkan
-│   └── Catatan khusus
-├── 📚 E-Learning
-│   ├── Upload materi
-│   └── Buat assignment
-├── 🧪 CBT
-│   ├── Monitor ujian berlangsung
-│   └── Lihat hasil & analisis
-├── 📬 Notifikasi
-│   └── Alert: siswa alpa, tugas belum dinilai, approval request
-└── ⚙️ Settings
-```
-
-#### Implementasi Mobile App
-
-##### [NEW] `mobile/` — Flutter Project Structure
-```
-mobile/
-├── lib/
-│   ├── main.dart
-│   ├── app/
-│   │   ├── app.dart                    # MaterialApp, routing, theming
-│   │   ├── routes.dart                 # GoRouter routes
-│   │   └── theme/
-│   │       ├── app_theme.dart          # Warna SMA ISA 1 (hijau Islam + biru Sultan Agung)
-│   │       ├── dark_theme.dart
-│   │       └── typography.dart
-│   ├── core/
-│   │   ├── api/
-│   │   │   ├── api_client.dart         # Dio HTTP client + interceptors
-│   │   │   ├── api_endpoints.dart      # Semua endpoint REST API v1
-│   │   │   └── api_exceptions.dart     # Error handling
-│   │   ├── auth/
-│   │   │   ├── auth_provider.dart      # Sanctum token management
-│   │   │   └── auth_repository.dart    # Login, logout, 2FA
-│   │   ├── storage/
-│   │   │   ├── local_storage.dart      # Hive/SharedPreferences
-│   │   │   └── secure_storage.dart     # Flutter Secure Storage (token)
-│   │   └── utils/
-│   │       ├── date_formatter.dart     # Format tanggal Indonesia
-│   │       ├── currency_formatter.dart # Format Rupiah
-│   │       └── connectivity.dart       # Network status checker
-│   ├── features/
-│   │   ├── auth/                       # Login, 2FA, forgot password
-│   │   ├── dashboard/                  # Dashboard per role
-│   │   ├── attendance/                 # Input/view absensi
-│   │   ├── grades/                     # Input/view nilai
-│   │   ├── schedule/                   # Jadwal pelajaran
-│   │   ├── assignments/               # Tugas & submission
-│   │   ├── cbt/                       # Ujian CBT
-│   │   ├── billing/                   # SPP & pembayaran
-│   │   ├── gamification/              # XP, achievement, leaderboard
-│   │   ├── forum/                     # Diskusi
-│   │   ├── notifications/            # Push notif
-│   │   ├── chatbot/                   # AI chatbot
-│   │   ├── mutabaah/                  # Mutaba'ah ibadah (khusus SMA ISA 1)
-│   │   ├── rapor/                     # E-rapor viewer
-│   │   └── settings/                  # Profil, bahasa, theme
-│   ├── shared/
-│   │   ├── widgets/                   # Reusable widgets
-│   │   └── models/                    # Data models (fromJson/toJson)
-│   └── l10n/
-│       ├── app_id.arb                 # Bahasa Indonesia
-│       ├── app_en.arb                 # English
-│       └── app_ar.arb                 # العربية
-├── assets/
-│   ├── images/
-│   │   └── logo_smaisa1.png          # Logo sekolah
-│   ├── icons/                        # Custom icons
-│   └── fonts/                        # Inter font
-├── android/
-│   └── app/
-│       └── src/main/
-│           └── AndroidManifest.xml   # Permissions, deep links
-├── ios/
-│   └── Runner/
-│       └── Info.plist                # iOS config
-├── pubspec.yaml                      # Dependencies
-└── README.md                         # Setup & development guide
-```
-
-##### API Endpoint yang Dibutuhkan Mobile App
-
-Semua endpoint di bawah ini **sudah tersedia** dari REST API v1 (Fase 7). Jika ada yang kurang, akan ditambahkan:
-
-```
-[Existing ✅] POST   /api/v1/auth/login
-[Existing ✅] POST   /api/v1/auth/logout
-[Existing ✅] GET    /api/v1/students
-[Existing ✅] GET    /api/v1/students/{id}
-[Existing ✅] GET    /api/v1/attendances
-[Existing ✅] POST   /api/v1/attendances
-[Existing ✅] GET    /api/v1/grades
-[Existing ✅] POST   /api/v1/grades
-[Existing ✅] GET    /api/v1/schedules
-[Existing ✅] GET    /api/v1/billings
-[Existing ✅] GET    /api/v1/notifications
-
-[NEW — perlu ditambah]
-POST   /api/v1/auth/2fa/verify           # 2FA verification
-GET    /api/v1/dashboard/student          # Dashboard data per role
-GET    /api/v1/dashboard/parent
-GET    /api/v1/dashboard/teacher
-GET    /api/v1/gamification/my-progress   # XP, level, achievements
-GET    /api/v1/gamification/leaderboard   # Leaderboard
-POST   /api/v1/chatbot/send              # Chatbot message
-GET    /api/v1/assignments                # Tugas per siswa
-POST   /api/v1/assignments/{id}/submit   # Submit tugas
-GET    /api/v1/cbt/exams                  # Ujian tersedia
-POST   /api/v1/cbt/exams/{id}/start      # Mulai ujian
-POST   /api/v1/cbt/exams/{id}/submit     # Submit ujian
-GET    /api/v1/mutabaah                   # Data mutaba'ah
-POST   /api/v1/mutabaah                   # Input mutaba'ah harian
-GET    /api/v1/rapor/{student_id}         # Data rapor
-GET    /api/v1/rapor/{student_id}/pdf     # Download PDF rapor
-POST   /api/v1/billing/{id}/pay           # Initiate payment
-GET    /api/v1/calendar                   # Kalender akademik
-POST   /api/v1/letters                    # Ajukan surat
-```
-
-##### [MODIFY] `app/Http/Controllers/Api/V1Controller.php`
-```php
-// Tambahkan endpoint baru yang dibutuhkan mobile app:
-// - Dashboard per role
-// - Gamification
-// - Chatbot
-// - Assignments
-// - CBT
-// - Mutaba'ah
-// - Rapor
-// - Calendar
-// - Letters
-```
-
----
-
-### 🔔 Modul 14.2: Push Notification Service (Firebase Cloud Messaging)
-
-**Tujuan:** Push notification native untuk mobile app agar orang tua dan guru langsung menerima alert penting.
-
-#### Notifikasi yang Dikirim
-
-| Event | Penerima | Pesan Contoh |
-| :--- | :--- | :--- |
-| Siswa alpa | Orang tua | "⚠️ [Nama Anak] tidak hadir hari ini (Selasa, 3 Juni 2026)." |
-| Nilai baru diinput | Orang tua + Siswa | "📝 Nilai Matematika semester ini: 85." |
-| SPP jatuh tempo | Orang tua | "💰 Tagihan SPP bulan Juni sebesar Rp 850.000 jatuh tempo 3 hari lagi." |
-| Pembayaran berhasil | Orang tua | "✅ Pembayaran SPP bulan Juni untuk [Nama Anak] berhasil diterima." |
-| Tugas baru | Siswa | "📚 Tugas baru: Bahasa Inggris — Deadline: Jumat, 6 Juni." |
-| Pengumuman sekolah | Semua | "📢 Libur Hari Raya Idul Adha: 7-12 Juni 2026." |
-| Poin BK | Orang tua | "⚠️ [Nama Anak] mendapat poin pelanggaran: Terlambat masuk (5 poin)." |
-| Achievement earned | Siswa | "🏆 Selamat! Kamu mendapatkan achievement: Minggu Sempurna ⭐ (+15 XP)" |
-| Approval request | Guru/Waka/Kepsek | "📋 Surat izin baru dari [Nama Siswa] menunggu persetujuan Anda." |
-
-#### Implementasi
-
-##### [NEW] `app/Services/PushNotificationService.php`
-```php
-class PushNotificationService
-{
-    public function sendToUser(User $user, string $title, string $body, array $data = []): void;
-    public function sendToRole(string $role, string $title, string $body): void;
-    public function sendToAll(string $title, string $body): void;
-    public function registerDeviceToken(User $user, string $token, string $platform): void;
-    public function unregisterDeviceToken(User $user, string $token): void;
-}
-```
-
-##### [NEW] Migration: `create_device_tokens_table`
-```php
-Schema::create('device_tokens', function (Blueprint $table) {
+Schema::create('tahfidz_targets', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-    $table->string('token');                           // FCM token
-    $table->enum('platform', ['android', 'ios', 'web']);
-    $table->timestamp('last_used_at')->nullable();
+    $table->foreignId('student_id')->constrained('students');
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->integer('target_juz');                          // Target hafalan juz per semester
+    $table->integer('target_pages')->nullable();            // Target dalam halaman
+    $table->integer('achieved_juz')->default(0);            // Pencapaian actual
+    $table->integer('achieved_pages')->default(0);
+    $table->enum('status', ['on_track', 'behind', 'exceeded', 'completed'])->default('on_track');
+    $table->text('notes')->nullable();                      // Catatan guru tahfidz
     $table->timestamps();
 
-    $table->unique(['user_id', 'token']);
+    $table->unique(['student_id', 'academic_year_id']);
 });
 ```
 
----
-
-### 🌐 Modul 14.3: QR Code Attendance System
-
-**Tujuan:** Sistem absensi berbasis QR code agar siswa bisa absensi mandiri dengan scan QR dari HP (mobile app).
-
-#### Alur Kerja
-
-```
-1. Guru buka halaman "Generate QR Absensi" di mobile app atau web
-2. Sistem generate QR code unik (berlaku 5 menit, satu kali pakai per kelas per hari)
-3. QR ditampilkan di layar HP guru atau diproyeksikan ke layar
-4. Siswa buka mobile app → scan QR → otomatis tercatat hadir
-5. Data absensi langsung masuk ke sistem + trigger gamifikasi (streak XP)
-6. Guru bisa override manual jika siswa tidak bawa HP
-```
-
-#### Implementasi
-
-##### [NEW] `app/Services/QrAttendanceService.php`
+##### [MODIFY] `app/Http/Controllers/TahfidzController.php`
 ```php
-class QrAttendanceService
+// Tambahkan method baru:
+public function dashboard()              // Dashboard guru tahfidz: ringkasan per kelas, target vs actual
+public function progressChart($student)  // Chart progress hafalan siswa: juz by month (line chart)
+public function setTarget(Request $r)    // Set target semester per siswa
+public function bulkInput()              // Input setoran hafalan massal (per kelas sekaligus)
+public function exportReport()           // Export laporan tahfidz per kelas (PDF)
+public function leaderboard()            // Ranking siswa tahfidz: siapa paling banyak hafalan
+```
+
+##### [MODIFY] `resources/views/tahfidz/`
+```
+resources/views/tahfidz/
+├── dashboard.blade.php                 # [NEW] Dashboard guru tahfidz: cards per kelas, chart progress
+├── show.blade.php                      # [EXISTING] Detail setoran per siswa → tambah progress bar juz
+├── bulk-input.blade.php                # [NEW] Form input setoran massal per kelas
+├── leaderboard.blade.php               # [NEW] Ranking siswa tahfidz (integrasi gamifikasi)
+├── report.blade.php                    # [NEW] Laporan tahfidz per semester (preview sebelum PDF)
+└── target-setting.blade.php            # [NEW] Form set target per siswa per semester
+```
+
+##### [NEW] `app/Services/TahfidzService.php`
+```php
+class TahfidzService
 {
-    public function generateQrToken(Classroom $classroom, User $teacher): string;
-    public function validateAndRecord(string $token, Student $student): array;
-    public function getActiveToken(Classroom $classroom): ?string;
-    public function expireToken(string $token): void;
+    public function getClassProgress(int $classroomId): Collection;     // Progress per kelas
+    public function getStudentJuzBreakdown(int $studentId): array;      // Detail per juz (1-30)
+    public function calculateCompletionPercentage(int $studentId): float;
+    public function checkAndUpdateTargetStatus(int $studentId): void;   // Update status: on_track/behind/exceeded
+    public function generateSemesterReport(int $classroomId): array;    // Data untuk PDF laporan
 }
 ```
 
-##### [NEW] Migration: `create_qr_attendance_tokens_table`
+##### Demo Data (Seeder)
 ```php
-Schema::create('qr_attendance_tokens', function (Blueprint $table) {
+// Untuk 6 siswa kelas Tahfidz:
+// - 2 siswa: sudah hafal 5 juz (on_track)
+// - 2 siswa: sudah hafal 3 juz (behind target 5)
+// - 1 siswa: sudah hafal 7 juz (exceeded!)
+// - 1 siswa: baru mulai, 1 juz (behind)
+// Masing-masing dengan ~10-20 log setoran selama 1 semester
+```
+
+---
+
+### 🌙 Modul 11.2: Sistem Mutaba'ah Ibadah Lengkap
+
+**Status Saat Ini:** Sudah ada model `MutabaahItem`, `MutabaahLog`, controller `MutabaahController`, view `mutabaah/`. Tapi fiturnya masih basic — hanya toggle harian.
+
+**Apa yang Perlu Ditambah:**
+
+#### Mengapa Penting untuk SMA ISA 1?
+Mutaba'ah ibadah adalah **program harian wajib** di SMA ISA 1. Setiap siswa harus melaporkan ibadah harian: sholat 5 waktu, sholat dhuha, tadarus, puasa sunnah, sedekah, dll. Saat ini tracking-nya terlalu sederhana. Dibutuhkan: laporan mingguan/bulanan, statistik kelas, ranking istiqomah, dan notifikasi ke orang tua.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `add_mutabaah_enhancements`
+```php
+// Tambah kolom ke mutabaah_logs:
+$table->tinyInteger('sholat_subuh')->default(0);       // 0=tidak, 1=ya, 2=berjamaah
+$table->tinyInteger('sholat_dzuhur')->default(0);
+$table->tinyInteger('sholat_ashar')->default(0);
+$table->tinyInteger('sholat_maghrib')->default(0);
+$table->tinyInteger('sholat_isya')->default(0);
+$table->tinyInteger('sholat_dhuha')->default(0);
+$table->tinyInteger('sholat_tahajud')->default(0);
+$table->tinyInteger('tadarus_pages')->default(0);      // Jumlah halaman Al-Qur'an yang dibaca
+$table->boolean('puasa_sunnah')->default(false);
+$table->boolean('sedekah')->default(false);
+$table->boolean('dzikir_pagi')->default(false);
+$table->boolean('dzikir_sore')->default(false);
+$table->text('catatan_harian')->nullable();             // Refleksi hari ini
+$table->integer('score')->default(0);                   // Auto-calculated score (0-100)
+
+// Tabel baru untuk rangkuman mingguan
+Schema::create('mutabaah_weekly_summaries', function (Blueprint $table) {
     $table->id();
-    $table->string('token')->unique();
+    $table->foreignId('student_id')->constrained('students');
+    $table->date('week_start');
+    $table->date('week_end');
+    $table->integer('total_score');
+    $table->integer('sholat_5_waktu_count');             // Berapa kali sholat 5 waktu lengkap
+    $table->integer('sholat_berjamaah_count');
+    $table->integer('tadarus_total_pages');
+    $table->enum('grade', ['A', 'B', 'C', 'D'])->nullable(); // A=istimewa, D=perlu pembinaan
+    $table->text('wali_kelas_comment')->nullable();
+    $table->boolean('parent_acknowledged')->default(false); // Ortu sudah melihat/konfirmasi
+    $table->timestamps();
+
+    $table->unique(['student_id', 'week_start']);
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/MutabaahController.php`
+```php
+// Tambahkan method baru:
+public function inputHarian()               // Form input mutaba'ah harian (lebih detail dari toggle)
+public function rekapMingguan()             // Rekap mingguan per siswa
+public function rekapKelas($classroomId)    // Rekap mutaba'ah per kelas (untuk wali kelas)
+public function statistik()                 // Statistik: rata-rata kelas, tren, distribusi grade
+public function exportPdf($classroomId)     // Export rekap mutaba'ah kelas ke PDF
+public function parentView($studentId)      // View khusus orang tua: rekap anak + acknowledge
+```
+
+##### [NEW] `resources/views/mutabaah/`
+```
+resources/views/mutabaah/
+├── index.blade.php                 # [EXISTING] → Revamp: calendar view + daily input
+├── input-harian.blade.php          # [NEW] Form detail: sholat 5 waktu (checkboxes), dhuha, tadarus, dll
+├── rekap-mingguan.blade.php        # [NEW] Tabel rekap per minggu + grade (A/B/C/D) + chart
+├── rekap-kelas.blade.php           # [NEW] Wali kelas: ranking siswa, rata-rata kelas, alert siswa grade D
+├── statistik.blade.php             # [NEW] Statistik: chart tren score, distribusi grade, top performers
+└── parent-view.blade.php           # [NEW] Portal ortu: lihat rekap anak + tombol "Sudah Dilihat"
+```
+
+##### Integrasi Gamifikasi
+```php
+// Trigger XP di GamificationService:
+// - Sholat 5 waktu lengkap 1 hari → +5 XP
+// - Sholat berjamaah (nilai 2) → +2 XP per sholat
+// - Sholat dhuha → +3 XP
+// - Tadarus ≥ 2 halaman → +5 XP
+// - Puasa sunnah → +10 XP
+// - Mutaba'ah score 100 (sempurna) → +20 XP
+// - Streak 7 hari berturut-turut score ≥ 80 → Achievement "Istiqomah Mingguan" (+30 XP)
+// - Streak 30 hari → Achievement "Istiqomah Bulanan" (+120 XP, Epic)
+```
+
+---
+
+### 📝 Modul 11.3: Sistem Penilaian Harian & Remedial
+
+**Status Saat Ini:** Ada model `Grade` dan `GradeController` untuk input/view nilai. Tapi hanya mendukung nilai akhir semester (Tugas, UTS, UAS). Belum ada penilaian harian (ulangan harian, kuis), dan belum ada sistem remedial.
+
+**Apa yang Perlu Ditambah:**
+
+#### Mengapa Penting untuk SMA ISA 1?
+Kurikulum Merdeka mengharuskan **penilaian formatif berkelanjutan** — bukan hanya sumatif (UTS/UAS). Guru SMA ISA 1 perlu input nilai ulangan harian, kuis, praktikum, project, dan presentasi. Siswa yang di bawah KKM harus menjalani remedial, dan sistem harus tracking ini otomatis.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_daily_assessments_table`
+```php
+Schema::create('daily_assessments', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('subject_id')->constrained('subjects');
     $table->foreignId('classroom_id')->constrained('classrooms');
     $table->foreignId('teacher_id')->constrained('users');
-    $table->date('attendance_date');
-    $table->timestamp('expires_at');
-    $table->boolean('is_used')->default(false);
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->string('title');                                // "Ulangan Harian BAB 3", "Kuis Trigonometri"
+    $table->enum('type', ['ulangan_harian', 'kuis', 'praktikum', 'project', 'presentasi', 'tugas']);
+    $table->date('assessment_date');
+    $table->decimal('max_score', 5, 2)->default(100);
+    $table->decimal('kkm', 5, 2)->nullable();               // Override KKM per assessment
+    $table->text('description')->nullable();
     $table->timestamps();
 });
+
+Schema::create('daily_assessment_scores', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('daily_assessment_id')->constrained('daily_assessments');
+    $table->foreignId('student_id')->constrained('students');
+    $table->decimal('score', 5, 2)->nullable();
+    $table->boolean('needs_remedial')->default(false);       // Auto-set jika score < KKM
+    $table->decimal('remedial_score', 5, 2)->nullable();     // Nilai setelah remedial
+    $table->enum('remedial_status', ['not_needed', 'pending', 'completed'])->default('not_needed');
+    $table->text('notes')->nullable();
+    $table->timestamps();
+
+    $table->unique(['daily_assessment_id', 'student_id']);
+});
+```
+
+##### [NEW] `app/Http/Controllers/DailyAssessmentController.php`
+```php
+class DailyAssessmentController extends Controller
+{
+    public function index()                    // List semua penilaian harian guru (per mapel per kelas)
+    public function create()                   // Form buat penilaian baru (pilih kelas, mapel, tipe, tanggal)
+    public function store(Request $request)     // Simpan penilaian + input nilai per siswa (batch)
+    public function show($id)                  // Detail: list siswa + score + status remedial
+    public function inputScores($id)           // Form input nilai per siswa (DataTable editable)
+    public function storeScores(Request $r)    // Simpan nilai batch + auto-detect remedial
+    public function remedialList()             // List semua siswa yang butuh remedial (cross-mapel)
+    public function inputRemedialScore($id)    // Form input nilai remedial
+    public function storeRemedialScore(Request $r)  // Simpan nilai remedial
+    public function analytics($classroomId)    // Analisis: distribusi nilai, rata-rata, trend
+    public function exportPdf($id)             // Export daftar nilai per assessment ke PDF
+}
+```
+
+##### [NEW] `resources/views/daily-assessments/`
+```
+resources/views/daily-assessments/
+├── index.blade.php                 # DataTable: list penilaian, filter per mapel/kelas/tipe
+├── create.blade.php                # Form wizard: pilih kelas → mapel → tipe → tanggal → simpan
+├── show.blade.php                  # Detail: tabel siswa + score + status remedial + chart distribusi
+├── input-scores.blade.php          # Input nilai massal: DataTable editable, auto-highlight < KKM (merah)
+├── remedial-list.blade.php         # Cross-mapel: semua siswa yang perlu remedial + status
+├── input-remedial.blade.php        # Input nilai remedial
+└── analytics.blade.php             # Chart: distribusi nilai (histogram), rata-rata per assessment, tren
+```
+
+##### [NEW] `app/Services/DailyAssessmentService.php`
+```php
+class DailyAssessmentService
+{
+    public function createAssessment(array $data): DailyAssessment;
+    public function batchStoreScores(int $assessmentId, array $scores): void;
+    public function autoDetectRemedial(int $assessmentId): int;      // Return jumlah siswa perlu remedial
+    public function getClassAnalytics(int $classroomId, int $subjectId): array;
+    public function getStudentTranscript(int $studentId): Collection; // Semua nilai harian siswa per mapel
+    public function calculateFinalGrade(int $studentId, int $subjectId): float; // Hitung rata-rata akhir dari penilaian harian + UTS + UAS
+}
 ```
 
 ---
 
-## 🧪 Rencana Verifikasi Menyeluruh (Fase 11–14)
+### 📊 Modul 11.4: Analisis Butir Soal (Item Analysis) untuk CBT
 
-### Pengujian Otomatis
+**Status Saat Ini:** CBT (Computer-Based Testing) sudah lengkap — buat soal, buat ujian, siswa mengerjakan, auto-grading, timer, anti-cheat. Tapi setelah ujian selesai, belum ada analisis kualitas soal.
 
-| Fase | Jenis Test | Target | Metrik Sukses |
-| :--- | :--- | :--- | :--- |
-| 11 | Load Test | Semua skenario beban (morning rush, CBT, SPP day) | p95 < target, 0% error pada CBT/SPP |
-| 11 | Security Test | OWASP Top 10 + penetration testing | 0 critical vulnerability |
-| 12 | Unit + Feature Test | 90%+ coverage pada critical path | Semua test pass |
-| 12 | Browser Test (Dusk) | 8 skenario utama | Semua test pass |
-| 12 | UAT | 34 tester dari SMA ISA 1 | >90% satisfaction, 0 critical bug |
-| 13 | Smoke Test | Post-deployment verification | Semua fitur utama berfungsi |
-| 13 | Data Migration Test | Import data nyata SMA ISA 1 | 100% data termigrasikan tanpa loss |
-| 14 | API Test | Semua endpoint baru untuk mobile | 100% endpoint functional |
-| 14 | Mobile App Test | Cross-platform (Android + iOS) | Semua fitur mobile berfungsi |
+**Apa yang Perlu Ditambah:**
 
-### Verifikasi Manual
+#### Mengapa Penting untuk SMA ISA 1?
+Guru SMA ISA 1 perlu tahu apakah soal yang mereka buat berkualitas. Analisis butir soal (item analysis) memberikan data:
+- **Tingkat Kesukaran (P)**: Soal terlalu mudah? Terlalu sulit?
+- **Daya Pembeda (D)**: Apakah soal bisa membedakan siswa pandai dan kurang?
+- **Efektifitas Pengecoh**: Apakah opsi jawaban salah (distraktor) berfungsi?
+- **Validitas & Reliabilitas**: Apakah ujian secara keseluruhan valid?
 
-| Fase | Item | Verifier |
-| :--- | :--- | :--- |
-| 12 | UAT oleh guru, siswa, orang tua | Civitas SMA ISA 1 |
-| 13 | Pelatihan berhasil (peserta bisa pakai mandiri) | Tim IT sekolah |
-| 13 | Data produksi akurat setelah migrasi | Staf TU + Admin |
-| 14 | Mobile app dipublish ke Play Store / App Store | Developer |
+Ini standar kebutuhan guru profesional dan akan membuat portofolio sangat kuat.
+
+#### Rencana Implementasi
+
+##### [NEW] `app/Services/ItemAnalysisService.php`
+```php
+class ItemAnalysisService
+{
+    /**
+     * Hitung tingkat kesukaran (P) per soal.
+     * P = jumlah yang benar / jumlah peserta.
+     * P < 0.3 = sulit, P 0.3-0.7 = sedang, P > 0.7 = mudah.
+     */
+    public function calculateDifficultyIndex(int $examId): Collection;
+
+    /**
+     * Hitung daya pembeda (D) per soal.
+     * D = (Ba/Ja) - (Bb/Jb) — kelompok atas vs bawah (27%).
+     * D < 0.2 = jelek, D 0.2-0.4 = cukup, D > 0.4 = baik.
+     */
+    public function calculateDiscriminationIndex(int $examId): Collection;
+
+    /**
+     * Analisis efektifitas pengecoh per soal.
+     * Setiap opsi salah harus dipilih oleh minimal 5% peserta.
+     */
+    public function analyzeDistractors(int $examId): Collection;
+
+    /**
+     * Hitung reliabilitas ujian menggunakan KR-20 (Kuder-Richardson).
+     */
+    public function calculateReliability(int $examId): float;
+
+    /**
+     * Rekomendasi otomatis: soal mana yang harus direvisi/dibuang/dipertahankan.
+     */
+    public function generateRecommendations(int $examId): Collection;
+
+    /**
+     * Rangkuman lengkap analisis per ujian.
+     */
+    public function getFullAnalysis(int $examId): array;
+}
+```
+
+##### [MODIFY] `app/Http/Controllers/ExamController.php`
+```php
+// Tambahkan method baru:
+public function itemAnalysis($exam)           // Halaman analisis butir soal per ujian
+public function exportAnalysisPdf($exam)      // Export analisis ke PDF
+```
+
+##### [NEW] `resources/views/cbt/item-analysis.blade.php`
+```
+Halaman analisis butir soal:
+├── Ringkasan Ujian
+│   ├── Rata-rata nilai, median, standar deviasi
+│   ├── Reliabilitas (KR-20): 0.xx — interpretasi (rendah/sedang/tinggi)
+│   └── Jumlah soal: total, mudah, sedang, sulit
+├── Tabel Analisis Per Soal
+│   ├── No. Soal | Pertanyaan | P (Kesukaran) | D (Daya Pembeda) | Rekomendasi
+│   ├── Warna baris: hijau (baik), kuning (revisi), merah (buang)
+│   └── Expand per soal: distribusi jawaban (bar chart: A, B, C, D, E)
+└── Chart Visualisasi
+    ├── Scatter plot: P vs D (quadrant analysis)
+    ├── Histogram distribusi nilai siswa
+    └── Box plot per kelas
+```
+
+---
+
+### 🎒 Modul 11.5: Presensi Kegiatan & Acara Sekolah
+
+**Status Saat Ini:** Absensi hanya untuk KBM (Kegiatan Belajar Mengajar) reguler di kelas. Belum ada sistem presensi untuk kegiatan lain.
+
+**Apa yang Perlu Ditambah:**
+
+#### Mengapa Penting untuk SMA ISA 1?
+SMA ISA 1 memiliki banyak kegiatan di luar KBM yang butuh presensi terpisah:
+- **Upacara bendera** (Senin)
+- **Sholat Dhuha berjamaah**
+- **Sholat Dzuhur berjamaah**
+- **Kultum / Ceramah Agama**
+- **Kegiatan PHBI** (Peringatan Hari Besar Islam): Maulid, Isra Miraj, dll.
+- **Rapat guru**
+- **Kegiatan OSIS & MPK**
+- **Class meeting**, dll.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_event_attendances_table`
+```php
+Schema::create('event_attendance_events', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');                                 // "Upacara Bendera 2 Juni 2026"
+    $table->enum('type', [
+        'upacara', 'sholat_dhuha', 'sholat_dzuhur', 'kultum',
+        'phbi', 'rapat_guru', 'osis', 'class_meeting', 'lainnya'
+    ]);
+    $table->date('event_date');
+    $table->time('start_time')->nullable();
+    $table->time('end_time')->nullable();
+    $table->enum('target', ['all_students', 'all_teachers', 'specific_class', 'specific_group']);
+    $table->json('target_ids')->nullable();                 // classroom_ids atau user_ids
+    $table->foreignId('created_by')->constrained('users');
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('event_attendance_records', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('event_id')->constrained('event_attendance_events')->onDelete('cascade');
+    $table->foreignId('user_id')->constrained('users');
+    $table->enum('status', ['hadir', 'izin', 'sakit', 'alpa', 'terlambat'])->default('alpa');
+    $table->time('check_in_time')->nullable();
+    $table->text('notes')->nullable();
+    $table->timestamps();
+
+    $table->unique(['event_id', 'user_id']);
+});
+```
+
+##### [NEW] `app/Http/Controllers/EventAttendanceController.php`
+```php
+class EventAttendanceController extends Controller
+{
+    public function index()                     // List semua kegiatan + rekapitulasi
+    public function create()                    // Form buat kegiatan baru
+    public function store(Request $request)      // Simpan kegiatan
+    public function inputAttendance($event)      // Form input presensi per kegiatan (DataTable checkbox)
+    public function storeAttendance(Request $r)  // Simpan presensi batch
+    public function show($event)                // Detail kegiatan + rekap hadir/izin/alpa
+    public function rekap()                     // Rekap kehadiran kegiatan per siswa (cross-event)
+    public function exportPdf($event)           // Export rekap presensi kegiatan ke PDF
+}
+```
+
+##### [NEW] `resources/views/event-attendance/`
+```
+resources/views/event-attendance/
+├── index.blade.php                 # DataTable: daftar kegiatan, filter per tipe/bulan
+├── create.blade.php                # Form: nama, tipe, tanggal, target (semua/kelas tertentu)
+├── input.blade.php                 # Input presensi: DataTable checkbox (hadir/izin/sakit/alpa)
+├── show.blade.php                  # Detail: ringkasan kehadiran, chart pie, list siswa
+├── rekap.blade.php                 # Rekap lintas kegiatan: berapa kali hadir upacara, sholat dhuha, dll
+```
+
+---
+
+## 📦 FASE 12: Penguatan Fitur Existing & Kelengkapan Data
+
+**Fokus:** Memperkuat fitur-fitur yang sudah ada tapi masih dangkal, menambah view/flow yang belum lengkap, dan menambah depth pada modul yang sudah terbangun.
+
+---
+
+### 🔧 Modul 12.1: Penguatan Dashboard per Role
+
+**Status Saat Ini:** Dashboard sudah ada (68KB `dashboard.blade.php`!) dengan widget drag-drop. Tapi data yang ditampilkan per role masih basic.
+
+**Apa yang Perlu Ditambah per Role:**
+
+#### Dashboard Kepala Sekolah & Admin
+```
+[EXISTING ✅] Total siswa, guru, kelas, mapel
+[EXISTING ✅] SPMB stats, payment trend, recent payments
+
+[BARU - PERLU DITAMBAH]
+├── 📊 Widget: Tingkat Kehadiran Hari Ini (%)
+│   └── Gauge chart: "93% siswa hadir hari ini" — merah jika < 85%
+├── 💰 Widget: Status Keuangan Bulan Ini
+│   └── Card: Total tagihan, sudah dibayar, belum dibayar, % collection rate
+├── 📝 Widget: Jurnal Mengajar Hari Ini
+│   └── Progress bar: "45/60 guru sudah mengisi jurnal" + list yang belum
+├── 🎓 Widget: Rata-rata Nilai Semester
+│   └── Bar chart per mapel: rata-rata kelas X, XI, XII
+├── 🔔 Widget: Smart Alerts Terbaru
+│   └── List 5 alert terbaru yang perlu perhatian
+├── 📋 Widget: Approval Pending
+│   └── Count workflow requests yang menunggu approval kepsek
+├── 🏆 Widget: Top 5 Siswa XP (Gamifikasi)
+│   └── Mini leaderboard
+└── 🕌 Widget: Rekap Mutaba'ah Minggu Ini
+    └── Rata-rata score kelas, persentase yang grade A
+```
+
+#### Dashboard Guru
+```
+[EXISTING ✅] Info wali kelas, my classrooms
+
+[BARU - PERLU DITAMBAH]
+├── 📅 Widget: Jadwal Hari Ini
+│   └── Timeline jadwal mengajar hari ini (jam, mapel, kelas, ruangan)
+├── ✅ Widget: Absensi yang Belum Diinput
+│   └── Alert: "Kelas XI-IPA-2 hari ini belum diabsensi" → link langsung
+├── 📝 Widget: Jurnal Hari Ini
+│   └── Status: sudah diisi / belum. Link ke form input jurnal
+├── 📊 Widget: Tugas Belum Dinilai
+│   └── Count submission e-learning yang pending grading
+├── 📖 Widget: Progress Tahfidz (jika guru tahfidz)
+│   └── Mini chart progress kelas tahfidz
+└── 🔔 Widget: Notifikasi Terbaru
+    └── 5 notifikasi terbaru (tiket, approval, dll)
+```
+
+#### Dashboard Siswa
+```
+[EXISTING ✅] Total poin, recent point logs, unpaid billings
+
+[BARU - PERLU DITAMBAH]
+├── 📅 Widget: Jadwal Hari Ini
+│   └── List pelajaran hari ini (jam, mapel, guru, ruangan)
+├── 📝 Widget: Tugas Pending
+│   └── List tugas yang deadline-nya mendekat + countdown
+├── 🏆 Widget: Gamifikasi Quick View
+│   └── XP bar, level, streak 🔥, achievement terbaru
+├── 📊 Widget: Nilai Terbaru
+│   └── 5 nilai terakhir (penilaian harian + UTS/UAS)
+├── 🕌 Widget: Mutaba'ah Hari Ini
+│   └── Quick toggle sholat + tadarus (tanpa pindah halaman)
+├── 📚 Widget: Buku yang Dipinjam
+│   └── List buku + tanggal harus kembali + alert jika lewat
+└── 💬 Widget: Thread Forum Terbaru
+    └── 3 thread terbaru di forum kelas/mapel
+```
+
+#### Dashboard Orang Tua
+```
+[EXISTING ✅] Children data, points, billing info
+
+[BARU - PERLU DITAMBAH]
+├── 📋 Widget: Kehadiran Anak Hari Ini
+│   └── Status per anak: "Hadir ✅" atau "Alpa ⚠️" — real-time feel
+├── 📝 Widget: Nilai Terbaru Anak
+│   └── 5 nilai terakhir per anak
+├── 🕌 Widget: Mutaba'ah Anak Minggu Ini
+│   └── Ringkasan grade mutaba'ah + tombol "Sudah Dilihat"
+├── 📅 Widget: Agenda Sekolah Mendatang
+│   └── 3 event terdekat dari kalender akademik
+├── 📊 Widget: Rapor Progress
+│   └── Mini chart: tren nilai anak semester ini vs semester lalu
+└── 💬 Widget: Pesan dari Wali Kelas
+    └── Pesan terbaru + notif belum dibaca
+```
+
+##### Implementasi
+```php
+// [MODIFY] app/Http/Controllers/DashboardController.php
+// - getAdminStats() → tambah data baru (kehadiran hari ini, jurnal, collection rate, smart alerts)
+// - getTeacherData() → tambah jadwal hari ini, absensi pending, tugas belum dinilai
+// - getStudentData() → tambah jadwal hari ini, tugas pending, gamifikasi, mutaba'ah
+// - getParentData() → tambah kehadiran hari ini, nilai terbaru, mutaba'ah
+
+// [MODIFY] resources/views/dashboard.blade.php
+// - Tambah widget baru per role (pakai sistem drag-drop yang sudah ada)
+// - Pastikan widget baru responsive dan memiliki animasi skeleton loading
+```
+
+---
+
+### 🔧 Modul 12.2: Penguatan Jadwal Pelajaran
+
+**Status Saat Ini:** Ada `ScheduleController` dengan preset, grid view, dan CRUD. Tapi belum ada: deteksi bentrok, view per guru, view per ruangan, dan print jadwal.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/ScheduleController.php`
+```php
+// Tambahkan method baru:
+public function teacherSchedule($userId)      // Jadwal per guru (filter by teacher)
+public function roomSchedule($roomId)         // Jadwal per ruangan
+public function detectConflicts()             // Deteksi bentrok: guru sama di 2 kelas, ruangan ganda
+public function printClassSchedule($classId)  // Print jadwal kelas (format PDF landscape)
+public function printTeacherSchedule($userId) // Print jadwal guru
+public function printMasterSchedule()         // Print jadwal master seluruh sekolah
+```
+
+##### [NEW] `resources/views/schedules/`
+```
+resources/views/schedules/
+├── grid.blade.php                  # [EXISTING] → Tambah: warna per mapel, tooltip guru+ruangan
+├── teacher-view.blade.php          # [NEW] Jadwal per guru: grid minggu ini, warna per kelas
+├── room-view.blade.php             # [NEW] Jadwal per ruangan: siapa pakai jam berapa
+├── conflicts.blade.php             # [NEW] List bentrok: guru ganda, ruangan ganda — dengan alert merah
+├── print-class.blade.php           # [NEW] Template print: jadwal kelas landscape (PDF)
+└── print-master.blade.php          # [NEW] Template print: jadwal master seluruh sekolah
+```
+
+---
+
+### 🔧 Modul 12.3: Penguatan E-Learning & Materi Pembelajaran
+
+**Status Saat Ini:** E-Learning sudah cukup lengkap (kelas, materi, assignment, submission, grading, secure mode). Tapi belum ada: diskusi per materi, announcement per kelas, progress tracking siswa.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/ElearningController.php`
+```php
+// Tambahkan method baru:
+public function classAnnouncement($classId, Request $r)    // Post pengumuman ke kelas e-learning
+public function studentProgress($classId, $studentId)      // Progress siswa: materi dibaca, tugas dikerjakan
+public function classProgress($classId)                    // Overview: % siswa yang sudah baca materi, submit tugas
+public function duplicateClass($classId)                   // Duplikat kelas (untuk semester baru)
+public function archiveClass($classId)                     // Arsipkan kelas semester lalu
+```
+
+##### [MODIFY] Views
+```
+resources/views/elearning/
+├── class.blade.php                 # [EXISTING] → Tambah: section announcement di atas
+│                                   #            → Tambah: progress bar per materi (sudah dibaca / belum)
+├── student-progress.blade.php      # [NEW] Detail per siswa: checklist materi dibaca, tugas submitted, nilai
+├── class-progress.blade.php        # [NEW] Overview kelas: chart % completion, list siswa + status
+```
+
+---
+
+### 🔧 Modul 12.4: Penguatan Modul Perpustakaan
+
+**Status Saat Ini:** Library cukup lengkap (katalog, CRUD, sirkulasi, peminjaman, pengembalian, denda). Tapi belum ada: rekomendasi buku, statistik baca, kartu anggota digital.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/LibraryController.php`
+```php
+// Tambahkan method baru:
+public function statistics()                // Statistik: buku paling sering dipinjam, jumlah peminjaman per bulan
+public function studentReadingHistory($s)   // Riwayat baca per siswa
+public function recommendations($studentId) // Rekomendasi buku berdasarkan riwayat peminjaman
+public function overdueReport()             // Laporan buku terlambat dikembalikan
+public function memberCard($studentId)      // Kartu anggota perpustakaan digital (PDF/gambar)
+```
+
+##### [NEW] Views
+```
+resources/views/library/
+├── statistics.blade.php            # [NEW] Dashboard perpustakaan: chart peminjaman, top books, trend
+├── reading-history.blade.php       # [NEW] Riwayat baca per siswa + buku favorit
+├── recommendations.blade.php       # [NEW] Rekomendasi: "Karena kamu suka Fisika, coba buku ini..."
+├── overdue-report.blade.php        # [NEW] DataTable: buku terlambat, siswa, berapa hari, denda
+└── member-card.blade.php           # [NEW] Template kartu anggota digital (bisa di-print)
+```
+
+---
+
+### 🔧 Modul 12.5: Penguatan Modul Keuangan (SPP & Billing)
+
+**Status Saat Ini:** Finance sudah lengkap (billing, payment, bulk generate, mock gateway, receipt, accounting). Tapi belum ada: laporan tunggakan per kelas, proyeksi pendapatan, surat tagihan otomatis.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/FinanceController.php`
+```php
+// Tambahkan method baru:
+public function tunggakanPerKelas()          // Laporan tunggakan per kelas: DataTable, total per kelas
+public function proyeksiPendapatan()         // Proyeksi pendapatan bulan depan berdasarkan data existing
+public function suratTagihan($billingId)     // Generate surat tagihan SPP otomatis (PDF)
+public function rekapBulanan($month, $year)  // Rekap keuangan bulanan (income, expense, profit)
+public function exportLaporanKeuangan()      // Export laporan keuangan lengkap (PDF/Excel)
+```
+
+##### [NEW] Views
+```
+resources/views/finance/
+├── tunggakan-kelas.blade.php       # [NEW] Tabel tunggakan per kelas: kelas, jumlah siswa belum bayar, total nominal
+├── proyeksi.blade.php              # [NEW] Proyeksi: chart line prediksi pendapatan
+├── surat-tagihan.blade.php         # [NEW] Template surat tagihan: kop sekolah, data siswa, rincian
+├── rekap-bulanan.blade.php         # [NEW] Rekap: income vs expense, chart, tabel detail
+```
+
+---
+
+## 📦 FASE 13: Data Demo Realistis & Seeder Komprehensif
+
+**Fokus:** Memperluas seeder agar demo terasa seperti sekolah nyata, bukan data placeholder generik. Saat ini hanya ~860 records — target: **3000+ records** dengan data yang contextually rich dan spesifik SMA ISA 1.
+
+---
+
+### 📦 Modul 13.1: Mega Seeder — Data Realistis SMA ISA 1
+
+#### [MODIFY] `database/seeders/DatabaseSeeder.php`
+```php
+// Target data demo setelah seeding:
+$this->call([
+    // EXISTING (diperluas):
+    UserSeeder::class,                  // 20 → 80 users (lebih banyak guru + orang tua)
+    AcademicSeeder::class,              // 36 → 120 siswa (20 per kelas, 6 kelas per angkatan)
+    FinanceSeeder::class,               // 220 → 600+ billings (semua siswa punya SPP 6 bulan)
+    ActivitySeeder::class,              // 180 → 2000+ attendances (1 bulan penuh, setiap hari)
+    ExtrasSeeder::class,                // Diperluas
+
+    // NEW:
+    DailyAssessmentSeeder::class,       // 50+ penilaian harian, 600+ scores, beberapa dengan remedial
+    TahfidzDetailSeeder::class,         // Progress tahfidz per siswa kelas Tahfidz (target + logs)
+    MutabaahDetailSeeder::class,        // 30 hari mutaba'ah per siswa, weekly summaries
+    EventAttendanceSeeder::class,       // 10 kegiatan + presensi (upacara, sholat dhuha, PHBI)
+    ForumSeeder::class,                 // 20 threads, 100 replies, reactions
+    ElearningSeeder::class,             // 5 kelas, 20 materi, 10 assignments, 50 submissions
+    CbtSeeder::class,                   // 3 ujian CBT, 30 soal per ujian, 100+ attempts
+    CounselingSeeder::class,            // 10 sesi konseling (berbagai status)
+    LetterSeeder::class,                // 15 surat (izin, keterangan, tugas, undangan)
+    TicketSeeder::class,                // 10 tiket helpdesk (berbagai status + komentar)
+    SurveySeeder::class,               // 2 survei + 50 responses + questions
+    LibraryLoanSeeder::class,           // 30 peminjaman buku (aktif + selesai + overdue)
+]);
+```
+
+#### Detail Seed Data Baru
+
+##### [NEW] `database/seeders/DailyAssessmentSeeder.php`
+```php
+// Data penilaian harian yang realistis:
+// Matematika:
+//   - "Ulangan Harian BAB 1: Eksponen & Logaritma" (10 Juni, kelas X-IPA-1)
+//   - "Kuis Trigonometri" (15 Juni, kelas XI-IPA-2)
+//   - "Ulangan Harian BAB 3: Statistika" (20 Juni, kelas XII-IPA-1)
+// Bahasa Indonesia:
+//   - "Tugas Menulis Teks Eksposisi" (12 Juni)
+//   - "Presentasi Resensi Novel" (18 Juni)
+// Tahfidz:
+//   - "Setoran Juz 30" (setiap hari, per siswa)
+// Distribusi nilai: normal distribution sekitar 70-85, beberapa di bawah KKM (perlu remedial)
+```
+
+##### [NEW] `database/seeders/ForumSeeder.php`
+```php
+// Thread diskusi realistis SMA ISA 1:
+// - "Tips persiapan UTBK 2026 — share pengalaman kakak kelas" (by siswa XII)
+// - "Adakah yang punya rangkuman BAB 3 Kimia?" (by siswa XI)
+// - "Pengumuman: Jadwal class meeting semester genap" (by Waka Kesiswaan, pinned)
+// - "Tanya: Cara bayar SPP lewat QRIS?" (by orang tua)
+// - "Diskusi: Persiapan Maulid Nabi 2026" (by guru PAI)
+// Masing-masing thread punya 3-10 replies + reactions
+```
+
+##### [NEW] `database/seeders/CbtSeeder.php`
+```php
+// 3 ujian CBT dengan soal realistis:
+// 1. "Ulangan Tengah Semester Matematika Kelas X" — 30 soal PG, 90 menit
+//    → 20 siswa sudah mengerjakan, 10 belum
+// 2. "Kuis Biologi BAB 5: Ekosistem" — 15 soal, 30 menit
+//    → Semua sudah mengerjakan
+// 3. "Ujian Akhir PAI Kelas XII" — 40 soal, 120 menit
+//    → Belum dimulai (status: draft)
+```
+
+---
+
+## 📦 FASE 14: UI/UX Polish, Konsistensi & Kualitas Kode
+
+**Fokus:** Memoles tampilan, memastikan konsistensi di seluruh halaman, menambah animasi, dan meningkatkan kualitas kode.
+
+---
+
+### 🎨 Modul 14.1: UI/UX Consistency Audit & Fix
+
+#### Checklist UI yang Harus Konsisten di Seluruh Halaman
+
+```
+□ Header halaman: semua halaman punya breadcrumb + judul + deskripsi
+□ DataTable: semua tabel pakai style yang sama (pagination, search, export button)
+□ Form: semua form pakai layout yang sama (label, input, helper text, error message)
+□ Button: semua tombol pakai warna/ukuran yang konsisten per aksi
+  ├── Primary (biru): Simpan, Submit
+  ├── Success (hijau): Approve, Terima
+  ├── Danger (merah): Hapus, Tolak
+  ├── Warning (kuning): Edit, Revisi
+  └── Secondary (abu): Batal, Kembali
+□ Modal: semua modal pakai template yang sama (header, body, footer, close)
+□ Alert/Flash Message: semua pakai komponen yang sama (success, error, warning, info)
+□ Empty State: semua halaman list yang kosong punya empty state illustration + CTA
+□ Loading State: semua halaman punya skeleton loading saat data belum ready
+□ Responsive: semua halaman berfungsi di mobile (375px) — sidebar collapse, table scroll
+□ Dark Mode: semua halaman support dark mode dengan benar
+□ Print: halaman-halaman yang perlu di-print punya @media print styling
+□ Favicon: favicon sekolah terpasang
+□ Page Title: setiap halaman punya <title> yang descriptive
+```
+
+#### Implementasi
+
+##### [MODIFY] `resources/views/components/`
+```
+resources/views/components/
+├── page-header.blade.php           # [NEW/IMPROVE] Komponen header halaman reusable
+├── data-table.blade.php            # [NEW] Wrapper DataTable dengan style konsisten
+├── empty-state.blade.php           # [NEW] Empty state component: icon + message + CTA
+├── stat-card.blade.php             # [NEW] Stat card dashboard: icon, angka, label, trend arrow
+├── confirm-modal.blade.php         # [NEW] Modal konfirmasi reusable (hapus, approve, dll)
+├── form-group.blade.php            # [NEW] Form group: label + input + error + helper text
+├── status-badge.blade.php          # [NEW] Badge status: aktif/nonaktif, lunas/belum, hadir/alpa
+└── breadcrumb.blade.php            # [NEW] Breadcrumb reusable
+```
+
+---
+
+### 🎨 Modul 14.2: Animasi & Micro-Interactions
+
+#### Rencana Implementasi
+
+##### [MODIFY] `resources/css/app.css` (atau Tailwind config)
+```css
+/* Animasi yang akan ditambahkan: */
+
+/* 1. Page transition: fade-in saat pindah halaman */
+.page-enter { animation: fadeIn 0.3s ease-in-out; }
+
+/* 2. Card hover: sedikit naik + shadow lebih besar */
+.card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+/* 3. Button click: scale down sedikit */
+.btn-click:active { transform: scale(0.97); }
+
+/* 4. Skeleton loading: shimmer effect */
+.skeleton { animation: shimmer 1.5s infinite linear; }
+
+/* 5. Counter animation: angka naik perlahan saat pertama load */
+.counter-animate { animation: countUp 1s ease-out; }
+
+/* 6. Notification bell: shake saat ada notif baru */
+.notif-shake { animation: shake 0.5s ease-in-out; }
+
+/* 7. Success feedback: checkmark muncul setelah form submit */
+.success-check { animation: scaleIn 0.3s ease-in-out; }
+
+/* 8. Toast notification: slide in dari kanan */
+.toast-enter { animation: slideInRight 0.4s ease-out; }
+
+/* 9. Modal: scale + fade in */
+.modal-enter { animation: modalIn 0.25s ease-out; }
+
+/* 10. Sidebar menu item: indent animation saat hover */
+.sidebar-item:hover { padding-left: 1.25rem; transition: padding-left 0.2s; }
+```
+
+---
+
+### 🎨 Modul 14.3: Halaman Error & Empty State yang Cantik
+
+##### [MODIFY] `resources/views/errors/`
+```
+resources/views/errors/
+├── 403.blade.php    # "Akses Ditolak" — ilustrasi gembok + pesan ramah + tombol kembali
+├── 404.blade.php    # "Halaman Tidak Ditemukan" — ilustrasi + search suggestion + tombol ke dashboard
+├── 419.blade.php    # "Sesi Kadaluarsa" — pesan + tombol refresh
+├── 429.blade.php    # "Terlalu Banyak Request" — pesan + countdown timer
+├── 500.blade.php    # "Server Error" — pesan + tombol lapor ke helpdesk
+└── 503.blade.php    # "Maintenance Mode" — ilustrasi + estimasi waktu kembali
+```
+
+---
+
+### 🧪 Modul 14.4: Penambahan Factory & Test untuk Fitur Baru
+
+#### [NEW] Factories untuk Model Baru
+```
+database/factories/
+├── DailyAssessmentFactory.php
+├── DailyAssessmentScoreFactory.php
+├── EventAttendanceEventFactory.php
+├── EventAttendanceRecordFactory.php
+├── TahfidzTargetFactory.php
+├── MutabaahWeeklySummaryFactory.php
+├── ForumThreadFactory.php
+├── ForumReplyFactory.php
+├── CounselingSessionFactory.php
+├── LetterFactory.php
+├── TicketFactory.php
+├── LibraryLoanFactory.php
+└── ExamFactory.php
+```
+
+#### [NEW] Test Files
+```
+tests/Feature/
+├── DailyAssessmentTest.php          # CRUD penilaian harian, input score batch, auto-detect remedial
+├── TahfidzComprehensiveTest.php     # Target setting, progress tracking, bulk input, export
+├── MutabaahComprehensiveTest.php    # Input harian detail, rekap mingguan, statistik, gamifikasi trigger
+├── EventAttendanceTest.php          # CRUD kegiatan, input presensi, rekap, export
+├── ItemAnalysisTest.php             # Perhitungan P, D, distractor analysis, reliability
+├── ScheduleConflictTest.php         # Deteksi bentrok guru/ruangan
+├── DashboardWidgetTest.php          # Data widget baru per role load correctly
+├── FinanceReportTest.php            # Tunggakan per kelas, proyeksi, rekap bulanan
+└── LibraryStatisticsTest.php        # Statistik perpustakaan, recommendations, overdue report
+```
+
+---
+
+## 📦 FASE 15: Fitur Tambahan — Productivity & Communication
+
+**Fokus:** Fitur-fitur tambahan yang meningkatkan produktivitas dan komunikasi civitas SMA ISA 1.
+
+---
+
+### 📋 Modul 15.1: Memo & Notulensi Rapat Digital
+
+**Tujuan:** Sistem untuk mendokumentasikan rapat guru, rapat OSIS, rapat yayasan. Bisa diakses kembali, di-share, dan di-print.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_meeting_notes_table`
+```php
+Schema::create('meeting_notes', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');                                // "Rapat Koordinasi Semester Genap 2026/2027"
+    $table->enum('type', ['rapat_guru', 'rapat_osis', 'rapat_wali_murid', 'rapat_yayasan', 'rapat_panitia', 'lainnya']);
+    $table->date('meeting_date');
+    $table->time('start_time');
+    $table->time('end_time')->nullable();
+    $table->string('location')->nullable();                 // "Aula Utama" / "Ruang Guru"
+    $table->foreignId('created_by')->constrained('users');
+    $table->text('agenda')->nullable();                     // Agenda rapat (markdown)
+    $table->text('discussion')->nullable();                 // Pembahasan (markdown)
+    $table->text('decisions')->nullable();                  // Keputusan rapat (markdown)
+    $table->text('action_items')->nullable();               // Tindak lanjut: JSON [{task, pic, deadline}]
+    $table->json('attendees')->nullable();                  // [user_id, user_id, ...]
+    $table->enum('status', ['draft', 'finalized'])->default('draft');
+    $table->timestamps();
+});
+```
+
+##### [NEW] `app/Http/Controllers/MeetingNoteController.php`
+```php
+class MeetingNoteController extends Controller
+{
+    public function index()                     // List semua notulensi rapat
+    public function create()                    // Form buat notulensi
+    public function store(Request $request)      // Simpan notulensi
+    public function show($id)                   // Detail notulensi: agenda, pembahasan, keputusan, action items
+    public function edit($id)                   // Edit notulensi (hanya status draft)
+    public function update($id, Request $r)     // Update
+    public function finalize($id)               // Finalisasi: tidak bisa diedit lagi
+    public function exportPdf($id)              // Export notulensi ke PDF (kop sekolah, format resmi)
+    public function actionItemTracker()         // Tracking action items: apa sudah dikerjakan? Siapa PIC?
+}
+```
+
+##### [NEW] `resources/views/meeting-notes/`
+```
+resources/views/meeting-notes/
+├── index.blade.php                 # DataTable: daftar notulensi, filter per tipe/bulan
+├── create.blade.php                # Form: wizard step 1 (info umum) → step 2 (agenda) → step 3 (keputusan)
+├── show.blade.php                  # Detail: formatted markdown, daftar hadir, action items
+├── edit.blade.php                  # Edit form (same as create)
+├── action-tracker.blade.php        # DataTable: action items lintas rapat, PIC, deadline, status ✅/⏳
+└── pdf.blade.php                   # Template PDF: kop SMA ISA 1, format notulensi resmi
+```
+
+---
+
+### 📢 Modul 15.2: Sistem Pengumuman yang Lebih Rich
+
+**Status Saat Ini:** Pengumuman sudah ada tapi sangat basic (judul, konten, target role/kelas). Belum ada: kategori, lampiran, pin ke dashboard, priority level.
+
+#### Rencana Implementasi
+
+##### [MODIFY] Migration: `enhance_announcements_table`
+```php
+// Tambah kolom:
+$table->enum('priority', ['normal', 'important', 'urgent'])->default('normal');
+$table->enum('category', ['akademik', 'keuangan', 'kegiatan', 'keislaman', 'umum'])->default('umum');
+$table->string('attachment_path')->nullable();          // File lampiran (PDF/DOC/gambar)
+$table->boolean('is_pinned')->default(false);           // Pin ke atas dashboard
+$table->boolean('require_acknowledgement')->default(false); // Ortu/siswa harus klik "Sudah Dibaca"
+$table->integer('read_count')->default(0);
+```
+
+##### [NEW] `app/Models/AnnouncementRead.php`
+```php
+// Track siapa yang sudah membaca pengumuman
+Schema::create('announcement_reads', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('announcement_id')->constrained()->onDelete('cascade');
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->timestamp('read_at');
+
+    $table->unique(['announcement_id', 'user_id']);
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/AnnouncementController.php`
+```php
+// Tambah method:
+public function pin($announcement)              // Pin/unpin pengumuman
+public function readReceipt($announcement)       // Siapa saja yang sudah baca
+public function acknowledge($announcement)       // User klik "Sudah Dibaca"
+```
+
+---
+
+### 📅 Modul 15.3: Agenda & Todo List Guru
+
+**Tujuan:** Fitur personal productivity untuk guru — todo list, reminder, dan catatan pribadi yang terintegrasi dengan kalender akademik.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_teacher_todos_table`
+```php
+Schema::create('teacher_todos', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users');
+    $table->string('title');                                // "Siapkan soal UTS Matematika"
+    $table->text('description')->nullable();
+    $table->date('due_date')->nullable();
+    $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
+    $table->enum('category', ['mengajar', 'administrasi', 'rapat', 'penilaian', 'lainnya'])->default('mengajar');
+    $table->boolean('is_completed')->default(false);
+    $table->timestamp('completed_at')->nullable();
+    $table->timestamps();
+
+    $table->index(['user_id', 'is_completed', 'due_date']);
+});
+```
+
+##### [NEW] `app/Http/Controllers/TeacherTodoController.php`
+```php
+class TeacherTodoController extends Controller
+{
+    public function index()                     // List todo: filter completed/pending, sort by deadline
+    public function store(Request $request)      // Quick add todo (bisa dari dashboard widget)
+    public function toggle($id)                 // Toggle complete/incomplete (AJAX)
+    public function update($id, Request $r)     // Edit todo
+    public function destroy($id)                // Hapus todo
+    public function todayTasks()                // API: todo yang deadline-nya hari ini (untuk dashboard widget)
+}
+```
+
+##### [NEW] `resources/views/todos/`
+```
+resources/views/todos/
+├── index.blade.php                 # Full page: list todo, filter, sort, CRUD inline
+└── widget.blade.php                # Dashboard widget: quick add + list 5 teratas
+```
+
+---
+
+## 🧪 Rencana Verifikasi (Semua di Localhost)
+
+### Verifikasi Per Fase
+
+| Fase | Metode Verifikasi |
+| :--- | :--- |
+| **11 (Fitur Baru)** | `php artisan test` — semua test pass, `php artisan migrate:fresh --seed` — 0 error, buka setiap halaman baru di browser — tidak ada error |
+| **12 (Penguatan)** | Dashboard setiap role menampilkan data yang benar, jadwal mendeteksi bentrok, semua view baru accessible |
+| **13 (Data Demo)** | `php artisan migrate:fresh --seed` menghasilkan data realistis, setiap halaman punya data untuk ditampilkan (bukan kosong) |
+| **14 (UI/UX)** | Visual check seluruh halaman: konsisten, responsive (375px), dark mode, animasi smooth |
+| **15 (Productivity)** | Notulensi bisa dibuat + export PDF, pengumuman rich berfungsi, todo list bisa CRUD + toggle |
+
+### Command Verifikasi Cepat
+```bash
+# 1. Reset database + seed data demo
+php artisan migrate:fresh --seed
+
+# 2. Jalankan semua test
+php artisan test --parallel
+
+# 3. Buka di browser
+php artisan serve
+# → Login sebagai setiap role (superadmin, guru, siswa, orang tua)
+# → Verifikasi dashboard, navigasi, semua halaman baru
+```
 
 ---
 
 ## 📋 Urutan Prioritas Implementasi
 
-| Prioritas | Modul | Estimasi | Dependensi | Status |
-| :---: | :--- | :--- | :--- | :---: |
-| 🔴 **P0** | Modul 11.1: Load Testing & Performance Optimization | 1 minggu | Tidak ada | ✅ **SELESAI** |
-| 🔴 **P0** | Modul 11.2: Security Hardening & Penetration Testing | 1 minggu | Tidak ada | ✅ **SELESAI** |
-| 🟠 **P1** | Modul 11.3: PWA Enhancement & Offline | 3–5 hari | Modul 11.1 | ✅ **SELESAI** |
-| 🔴 **P0** | Modul 12.1: Automated Testing Expansion | 1–2 minggu | Modul 11 selesai | ✅ **SELESAI** |
-| 🔴 **P0** | Modul 12.2: UAT dengan SMA ISA 1 | 2 minggu | Modul 12.1 | ✅ **SELESAI** |
-| 🟠 **P1** | Modul 12.3: Data Validation & Integrity | 3–5 hari | Modul 12.1 | ⬜ TODO |
-| 🔴 **P0** | Modul 13.1: Infrastructure & Server Setup | 3–5 hari | Modul 12 selesai | ⬜ TODO |
-| 🔴 **P0** | Modul 13.2: Data Migration dari Sistem Lama | 1 minggu | Modul 13.1 | ⬜ TODO |
-| 🟠 **P1** | Modul 13.3: Pelatihan Pengguna | 2 minggu | Modul 13.2 | ⬜ TODO |
-| 🟠 **P1** | Modul 13.4: Soft Launch & Rollout | 3 minggu | Modul 13.3 | ⬜ TODO |
-| 🟡 **P2** | Modul 14.1: Mobile App (Flutter) | 6–8 minggu | Modul 13 selesai | ⬜ TODO |
-| 🟡 **P2** | Modul 14.2: Push Notification (FCM) | 3–5 hari | Modul 14.1 | ⬜ TODO |
-| 🟢 **P3** | Modul 14.3: QR Code Attendance | 3–5 hari | Modul 14.1 | ⬜ TODO |
+| Prioritas | Modul | Estimasi | Status |
+| :---: | :--- | :--- | :---: |
+| 🔴 **P0** | 11.3: Penilaian Harian & Remedial | 3-4 hari | ⬜ TODO |
+| 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ⬜ TODO |
+| 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ⬜ TODO |
+| 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ⬜ TODO |
+| 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ⬜ TODO |
+| 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ⬜ TODO |
+| 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ⬜ TODO |
+| 🟡 **P2** | 11.4: Item Analysis CBT | 2-3 hari | ⬜ TODO |
+| 🟡 **P2** | 12.3: Penguatan E-Learning | 2 hari | ⬜ TODO |
+| 🟡 **P2** | 12.4: Penguatan Perpustakaan | 2 hari | ⬜ TODO |
+| 🟡 **P2** | 12.5: Penguatan Keuangan | 2 hari | ⬜ TODO |
+| 🟡 **P2** | 15.1: Notulensi Rapat | 2-3 hari | ⬜ TODO |
+| 🟢 **P3** | 15.2: Pengumuman Rich | 1-2 hari | ⬜ TODO |
+| 🟢 **P3** | 15.3: Todo List Guru | 1-2 hari | ⬜ TODO |
+| 🟢 **P3** | 14.1: UI Consistency Audit | 3-4 hari | ⬜ TODO |
+| 🟢 **P3** | 14.2: Animasi & Micro-Interactions | 2 hari | ⬜ TODO |
+| 🟢 **P3** | 14.3: Error & Empty State Pages | 1-2 hari | ⬜ TODO |
+| 🟢 **P3** | 14.4: Factory & Test Expansion | 3-4 hari | ⬜ TODO |
 
-**Total Estimasi:** ~15–20 minggu (4–5 bulan)
-
----
-
-## 🛠️ Dependencies Baru
-
-### Composer (Backend)
-```json
-{
-    "kreait/firebase-php": "^7.x",           // Firebase Admin SDK (push notification)
-    "chillerlan/php-qrcode": "^5.x",         // QR code generation
-    "laravel/dusk": "^8.x"                   // Browser testing
-}
-```
-
-### Flutter (Mobile App)
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  dio: ^5.x                                  # HTTP client
-  riverpod: ^2.x                             # State management
-  go_router: ^14.x                           # Routing
-  hive: ^4.x                                 # Local storage
-  flutter_secure_storage: ^9.x               # Secure token storage
-  firebase_messaging: ^15.x                  # Push notifications
-  mobile_scanner: ^5.x                       # QR code scanner
-  flutter_local_notifications: ^17.x         # Local notifications
-  connectivity_plus: ^6.x                    # Network status
-  intl: ^0.19.x                             # Internationalization
-  cached_network_image: ^3.x                 # Image caching
-  shimmer: ^3.x                             # Skeleton loading
-  fl_chart: ^0.x                             # Charts
-  pdf_render: ^1.x                           # PDF viewer
-  url_launcher: ^6.x                        # Open links
-  share_plus: ^9.x                           # Share content
-```
-
-### Infrastructure
-```
-├── VPS Server (4 vCPU, 8GB RAM, 100GB SSD)
-│   └── Provider: Contabo / DigitalOcean / IDCloudHost
-├── Domain & SSL
-│   └── sistem.smaisa1-smg.sch.id + Let's Encrypt SSL
-├── Firebase Project
-│   └── Untuk FCM push notification
-├── Play Store Developer Account
-│   └── Rp 375.000 (sekali bayar seumur hidup)
-├── Apple Developer Account (opsional)
-│   └── $99/tahun (jika ingin publish ke App Store)
-└── Monitoring
-    └── UptimeRobot (gratis) atau Better Stack
-```
+**Total Estimasi:** ~38-50 hari kerja (8-10 minggu)
 
 ---
 
-## 🎯 Definisi "Selesai" (Definition of Done)
+## 🛠️ Tech Stack & Dependencies
 
-Platform dianggap **100% siap operasional** untuk SMA Islam Sultan Agung 1 Semarang jika:
+Tidak ada dependencies baru yang diperlukan — semua fitur bisa dibangun dengan stack yang sudah ada:
 
-- [x] ✅ Semua 193+ fitur berfungsi tanpa bug critical
-- [x] ✅ Load test passed: 1200 concurrent users tanpa crash
-- [x] ✅ Security audit: 0 critical vulnerability
-- [x] ✅ UAT: >90% satisfaction dari 34 tester SMA ISA 1
-- [ ] ✅ Data nyata SMA ISA 1 berhasil dimigrasikan (700 siswa, 60 guru, dll.)
-- [ ] ✅ Seluruh pengguna sudah dilatih dan bisa menggunakan mandiri
-- [ ] ✅ Server produksi stabil selama 2 minggu soft launch tanpa downtime
-- [ ] ✅ Backup otomatis berjalan (harian + mingguan)
-- [ ] ✅ Monitoring aktif (CPU, RAM, error rate, uptime)
-- [ ] ✅ Dokumentasi user guide lengkap untuk setiap role
-- [ ] ✅ Mobile app (opsional) tersedia di Play Store
+| Layer | Teknologi |
+| :--- | :--- |
+| **Backend** | Laravel 13, PHP 8.3+, Eloquent ORM |
+| **Frontend** | Blade Templates, Tailwind CSS v4, Alpine.js |
+| **Charts** | ApexCharts.js (sudah terinstall) |
+| **PDF Export** | DomPDF (sudah terinstall) |
+| **Excel** | Maatwebsite Excel (sudah terinstall) |
+| **Real-Time** | Laravel Reverb (sudah terinstall) |
+| **Testing** | Pest PHP (sudah terinstall) |
+| **Database** | SQLite (development) |
+
+---
+
+## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target)
+
+| Metrik | Sekarang | Target |
+| :--- | :---: | :---: |
+| **Model Eloquent** | 107 | ~120 |
+| **Controller** | ~100 | ~112 |
+| **Service Class** | 33 | ~40 |
+| **Migration** | 89 | ~100 |
+| **View Directory** | 57 | ~65 |
+| **Blade Templates** | ~289 | ~340 |
+| **Test Files** | ~78 | ~90 |
+| **Seeder Files** | 18 | ~30 |
+| **Factory Files** | 11 | ~24 |
+| **Demo Records** | ~860 | ~3000+ |
 
 ---
 
 > [!IMPORTANT]
-> Platform ini dirancang **100% eksklusif untuk SMA Islam Sultan Agung 1 Semarang**. Seluruh fitur, terminologi, workflow, integrasi keislaman (tahfidz, mutaba'ah, gamifikasi islami), struktur kelas (X-IPA/IPS/Tahfidz), muatan lokal (Ke-Sultan Agung-an), dan integrasi pemerintah (Dapodik/EMIS) disesuaikan khusus untuk kebutuhan sekolah ini di bawah naungan Yayasan Badan Wakaf Sultan Agung (YBWSA) Semarang.
+> Seluruh pengembangan di atas dijalankan **100% di localhost** menggunakan `php artisan serve` + SQLite. Tidak membutuhkan server, domain, atau layanan pihak ketiga. Semua fitur bisa dibangun, ditest, dan di-demo langsung dari laptop developer.
 
 > [!TIP]
-> **Prioritas tertinggi** saat ini adalah **Fase 11 (Hardening)** dan **Fase 12 (UAT)** — karena platform sudah feature-complete tetapi belum teruji dengan beban dan pengguna nyata. Go-live (Fase 13) bergantung pada keberhasilan UAT. Mobile app (Fase 14) bisa dikerjakan paralel setelah Fase 13 dimulai.
+> **Mulai dari P0 (Prioritas Tertinggi):**
+> 1. Modul 11.3 (Penilaian Harian) — karena ini fitur akademik inti yang belum ada
+> 2. Modul 12.1 (Dashboard Enhancement) — karena dashboard adalah halaman pertama yang dilihat user
+> 3. Modul 13.1 (Mega Seeder) — karena data demo yang rich membuat semua fitur terlihat hidup

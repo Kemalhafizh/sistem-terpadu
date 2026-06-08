@@ -76,4 +76,6 @@ return [
     'library' => 'Smart Library',
     'forum' => 'Discussion Forum',
     'surveys' => 'Digital Surveys',
+    'daily_assessments' => 'Daily Assessments',
+    'remedial_list' => 'Remedial List',
 ];

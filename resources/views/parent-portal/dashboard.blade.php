@@ -68,6 +68,9 @@
                         <a href="{{ route('parent-portal.report-card', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
                             📝 Rapor Akademik
                         </a>
+                        <a href="{{ route('parent-portal.daily-assessments', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+                            📊 Nilai Harian
+                        </a>
                         <a href="{{ route('parent-portal.schedule', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
                             📅 Jadwal Mingguan
                         </a>
@@ -115,9 +118,14 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="mt-6">
+                            <div class="mt-6 flex flex-wrap gap-4 items-center">
                                 <a href="{{ route('parent-portal.report-card', $student->id) }}" class="text-xs font-black uppercase text-indigo-600 hover:text-indigo-700 tracking-wider flex items-center gap-1">
                                     Lihat Rapor Detail
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                                <span class="text-gray-300">|</span>
+                                <a href="{{ route('parent-portal.daily-assessments', $student->id) }}" class="text-xs font-black uppercase text-indigo-600 hover:text-indigo-700 tracking-wider flex items-center gap-1">
+                                    Nilai Harian & Remedial
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                 </a>
                             </div>
