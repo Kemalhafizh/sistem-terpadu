@@ -46,18 +46,27 @@ Platform ini sudah sangat besar (~100 controller, 107 model, 300+ routes). Penge
 
 ## 📦 FASE 11: Fitur Baru — Modul Keislaman & Akademik Lanjutan
 
-**Fokus:** Menambah modul-modul baru yang sangat relevan untuk SMA Islam Sultan Agung 1 — terutama yang berkaitan dengan identitas keislaman sekolah dan kebutuhan akademik yang belum ter-cover.
+**Fokus:** Menambah modul-modul baru yang sangat relevan untuk SMA Islam Sultan Agung 1 — terutama yang berkaitan dengan identitas keislaman sekolah d### 🕌 Modul 11.1: Sistem Tahfidz Al-Qur'an Komprehensif (Sedang Dikerjakan 🚧)
 
----
+**Status Saat Ini:** Sudah ada model `TahfidzLog`, controller `TahfidzController`, view `tahfidz/show.blade.php`, dan seeder dasar. Namun, fiturnya masih sangat dasar (hanya input & daftar setoran hafalan).
 
-### 🕌 Modul 11.1: Sistem Tahfidz Al-Qur'an Komprehensif
+#### User Review Required
 
-**Status Saat Ini:** Sudah ada model `TahfidzLog`, controller `TahfidzController`, view `tahfidz/`, dan seeder dasar. Tapi fiturnya masih sangat basic — hanya input/view setoran hafalan.
+> [!IMPORTANT]
+> **Otomatisasi Status Capaian Hafalan (on_track/behind/exceeded):**
+> Kami mengusulkan status pencapaian target hafalan siswa diperbarui secara otomatis setiap kali guru menyimpan log setoran `ziyadah` baru:
+> - **exceeded**: Jika `achieved_juz` > `target_juz`
+> - **completed**: Jika `achieved_juz` == `target_juz` dan `achieved_pages` >= `target_pages`
+> - **on_track**: Jika pencapaian proporsional terhadap waktu berjalannya semester (misal: target 5 juz, saat ini minggu ke-8 dari 16 minggu, siswa sudah mencapai 2.5 juz atau lebih).
+> - **behind**: Jika pencapaian di bawah batas proporsional waktu semester.
+> Apakah Anda menyetujui model kalkulasi status otomatis ini atau lebih menyukai status yang sepenuhnya ditentukan manual oleh guru?
 
-**Apa yang Perlu Ditambah:**
+#### Open Questions
 
-#### Mengapa Penting untuk SMA ISA 1?
-SMA Islam Sultan Agung 1 memiliki **program unggulan tahfidz** dengan kelas khusus (X/XI/XII-Tahfidz). Program ini membutuhkan tracking yang detail per juz, per halaman, per ayat — bukan hanya log sederhana. Guru tahfidz perlu dashboard khusus untuk memantau progress seluruh siswa tahfidz.
+> [!NOTE]
+> **Penentuan Juz untuk Setiap Surah/Ayat:**
+> Al-Qur'an terdiri dari 30 Juz dengan pembagian surah/ayat yang spesifik. Untuk menghitung `achieved_juz` secara dinamis, apakah sistem perlu menyimpan tabel pemetaan ayat Al-Qur'an ke Juz (Juz 1-30) untuk menghitung capaian juz secara presisi, atau cukup dengan memasukkan input field `juz` secara eksplisit saat guru mencatat setoran hafalan?
+> **Usulan Kami:** Kami mengusulkan agar pada model `TahfidzLog` ditambahkan kolom `juz` (1-30) dan `pages_count` (jumlah halaman yang disetor) sebagai input opsional saat guru mencatat setoran baru. Dengan cara ini, guru dapat langsung menentukan juz & jumlah halaman yang disetor tanpa perlu sistem melakukan parsing teks ayat yang rumit. Apakah ini disetujui?
 
 #### Rencana Implementasi
 
@@ -65,12 +74,12 @@ SMA Islam Sultan Agung 1 memiliki **program unggulan tahfidz** dengan kelas khus
 ```php
 Schema::create('tahfidz_targets', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('student_id')->constrained('students');
-    $table->foreignId('academic_year_id')->constrained('academic_years');
-    $table->integer('target_juz');                          // Target hafalan juz per semester
-    $table->integer('target_pages')->nullable();            // Target dalam halaman
-    $table->integer('achieved_juz')->default(0);            // Pencapaian actual
-    $table->integer('achieved_pages')->default(0);
+    $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+    $table->foreignId('academic_year_id')->constrained('academic_years')->cascadeOnDelete(); // Represents semester
+    $table->integer('target_juz');                          // Target hafalan juz per semester (misal: 2)
+    $table->integer('target_pages')->default(0);            // Target halaman tambahan
+    $table->integer('achieved_juz')->default(0);            // Pencapaian juz riil
+    $table->integer('achieved_pages')->default(0);          // Pencapaian halaman riil
     $table->enum('status', ['on_track', 'behind', 'exceeded', 'completed'])->default('on_track');
     $table->text('notes')->nullable();                      // Catatan guru tahfidz
     $table->timestamps();
@@ -81,47 +90,62 @@ Schema::create('tahfidz_targets', function (Blueprint $table) {
 
 ##### [MODIFY] `app/Http/Controllers/TahfidzController.php`
 ```php
-// Tambahkan method baru:
-public function dashboard()              // Dashboard guru tahfidz: ringkasan per kelas, target vs actual
-public function progressChart($student)  // Chart progress hafalan siswa: juz by month (line chart)
-public function setTarget(Request $r)    // Set target semester per siswa
-public function bulkInput()              // Input setoran hafalan massal (per kelas sekaligus)
-public function exportReport()           // Export laporan tahfidz per kelas (PDF)
-public function leaderboard()            // Ranking siswa tahfidz: siapa paling banyak hafalan
-```
-
-##### [MODIFY] `resources/views/tahfidz/`
-```
-resources/views/tahfidz/
-├── dashboard.blade.php                 # [NEW] Dashboard guru tahfidz: cards per kelas, chart progress
-├── show.blade.php                      # [EXISTING] Detail setoran per siswa → tambah progress bar juz
-├── bulk-input.blade.php                # [NEW] Form input setoran massal per kelas
-├── leaderboard.blade.php               # [NEW] Ranking siswa tahfidz (integrasi gamifikasi)
-├── report.blade.php                    # [NEW] Laporan tahfidz per semester (preview sebelum PDF)
-└── target-setting.blade.php            # [NEW] Form set target per siswa per semester
+// Method baru:
+public function dashboard(Request $r);          // Dashboard guru tahfidz: melihat progress per kelas, target vs aktual
+public function bulkInputForm(Request $r);      // Form input setoran massal per kelas
+public function storeBulk(Request $r);          // Simpan setoran massal per kelas
+public function targetSettingForm($classroom); // Halaman set target semester siswa di kelas
+public function storeTargets(Request $r);       // Simpan target semester massal
+public function leaderboard();                 // Ranking/leaderboard siswa tahfidz teraktif & hafalan terbanyak
+public function exportPdf($classroom);          // Export PDF laporan progress kelas
 ```
 
 ##### [NEW] `app/Services/TahfidzService.php`
 ```php
 class TahfidzService
 {
-    public function getClassProgress(int $classroomId): Collection;     // Progress per kelas
-    public function getStudentJuzBreakdown(int $studentId): array;      // Detail per juz (1-30)
-    public function calculateCompletionPercentage(int $studentId): float;
-    public function checkAndUpdateTargetStatus(int $studentId): void;   // Update status: on_track/behind/exceeded
-    public function generateSemesterReport(int $classroomId): array;    // Data untuk PDF laporan
+    public function getStudentProgress(Student $student, int $academicYearId): ?TahfidzTarget;
+    public function submitSetoran(Student $student, array $data): TahfidzLog;
+    public function updateTargetAchievement(int $studentId, int $academicYearId): void;
+    public function getClassProgressSummary(int $classroomId, int $academicYearId): Collection;
+    public function getLeaderboard(int $limit = 10): Collection;
 }
 ```
 
+##### [NEW] Views di `resources/views/tahfidz/`
+* `dashboard.blade.php`: Ringkasan pencapaian kelas, widget persentase target, ringkasan status target (on_track/behind/exceeded).
+* `bulk-input.blade.php`: Grid input tabel berisi nama siswa, input nama surah, ayat, tipe (ziyadah/murajaah), nilai (grade), juz, pages, dan catatan.
+* `target-setting.blade.php`: Formulir input target juz & halaman untuk seluruh siswa kelas tahfidz.
+* `leaderboard.blade.php`: Papan peringkat tahfidz siswa se-sekolah.
+* `report.blade.php`: Halaman laporan per kelas (preview sebelum PDF).
+* `pdf_export.blade.php`: Kerangka cetak PDF laporan progress.
+
+##### [MODIFY] `resources/views/tahfidz/show.blade.php`
+* Menambahkan visualisasi progress bar pencapaian target semester (Target vs Aktual) dan widget informasi status pencapaian.
+
+##### Integrasi Gamifikasi (XP Awards)
+* Setoran Ziyadah Baru: `Grade A` (+15 XP), `Grade B` (+10 XP), `Grade C` (+5 XP).
+* Setoran Muraja'ah: `Grade A` (+8 XP), `Grade B` (+5 XP).
+* Pencapaian Target Semester (exceeded/completed): Bonus +50 XP.
+
 ##### Demo Data (Seeder)
-```php
-// Untuk 6 siswa kelas Tahfidz:
-// - 2 siswa: sudah hafal 5 juz (on_track)
-// - 2 siswa: sudah hafal 3 juz (behind target 5)
-// - 1 siswa: sudah hafal 7 juz (exceeded!)
-// - 1 siswa: baru mulai, 1 juz (behind)
-// Masing-masing dengan ~10-20 log setoran selama 1 semester
-```
+* Menambahkan target tahfidz semester aktif dan log setoran 30 hari untuk 10 siswa di kelas tahfidz, disimulasikan 4 siswa on_track, 2 siswa behind, 2 siswa exceeded, dan 2 siswa completed.
+
+#### Verification Plan
+
+##### Automated Tests
+* Membuat file unit/feature test `tests/Feature/Islamic/TahfidzTest.php` untuk memvalidasi:
+  * Guru dapat menetapkan target semester.
+  * Guru dapat menginput setoran ziyadah/muraja'ah secara massal.
+  * System menghitung achieved_juz/achieved_pages secara otomatis dan memperbarui status target.
+  * XP gamifikasi berhasil diberikan secara proporsional.
+  * Siswa & orang tua dapat mengakses data progress tahfidz.
+  * PDF report dapat diunduh.
+
+##### Manual Verification
+* Akses menu Tahfidz sebagai Guru, verifikasi form bulk-input dan target setting.
+* Akses sebagai Siswa, verifikasi progress bar di halaman show.
+* Ekspor laporan kelas ke PDF dan periksa tata letaknya.
 
 ---
 
@@ -1101,7 +1125,7 @@ php artisan serve
 | 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ✅ Selesai |
 | 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ✅ Selesai |
 | 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ✅ Selesai |
-| 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ⬜ TODO |
+| 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | 🚧 In Progress |
 | 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ⬜ TODO |
 | 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ⬜ TODO |
 | 🟡 **P2** | 11.4: Item Analysis CBT | 2-3 hari | ⬜ TODO |
