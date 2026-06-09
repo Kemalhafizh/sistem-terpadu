@@ -138,7 +138,17 @@ Route::middleware('auth')->group(function () {
     Route::get('career-portal', [CareerOpportunityController::class, 'index'])->name('career-portal.index');
 
     // Keislaman — baca data tahfidz & mutaba'ah (semua user)
-    Route::get('tahfidz/{student}', [TahfidzController::class, 'show'])->name('tahfidz.show');
+    Route::prefix('tahfidz')->name('tahfidz.')->group(function () {
+        Route::get('/dashboard', [TahfidzController::class, 'dashboard'])->name('dashboard');
+        Route::get('/leaderboard', [TahfidzController::class, 'leaderboard'])->name('leaderboard');
+        Route::get('/bulk-input', [TahfidzController::class, 'bulkInputForm'])->name('bulk-input');
+        Route::post('/bulk-input', [TahfidzController::class, 'storeBulk'])->name('store-bulk');
+        Route::get('/target-setting', [TahfidzController::class, 'targetSettingForm'])->name('target-setting');
+        Route::post('/target-setting', [TahfidzController::class, 'storeTargets'])->name('store-targets');
+        Route::get('/export-pdf/{student}', [TahfidzController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/{student}', [TahfidzController::class, 'show'])->name('show');
+    });
+
     Route::prefix('mutabaah')->name('mutabaah.')->group(function () {
         Route::get('/', [MutabaahController::class, 'index'])->name('index');
         Route::get('/input-harian', [MutabaahController::class, 'inputHarian'])->name('input-harian');

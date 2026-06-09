@@ -22,7 +22,9 @@ class EmisService
 
         $mapped = [];
         foreach ($students as $student) {
-            $totalJuz = $student->tahfidzLogs()->sum('juz_count') ?? 0;
+            $activeYear = \App\Models\AcademicYear::where('is_active', true)->first();
+            $target = $activeYear ? $student->tahfidzTargets()->where('academic_year_id', $activeYear->id)->first() : null;
+            $totalJuz = $target ? $target->achieved_juz : ($student->tahfidzLogs()->whereNotNull('juz')->max('juz') ?? 0);
 
             $mapped[] = [
                 'nisn' => $student->nisn ?? '',

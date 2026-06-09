@@ -37,6 +37,11 @@ class Student extends Model
         return $this->hasMany(TahfidzLog::class);
     }
 
+    public function tahfidzTargets()
+    {
+        return $this->hasMany(TahfidzTarget::class);
+    }
+
     public function mutabaahLogs()
     {
         return $this->hasMany(MutabaahLog::class);

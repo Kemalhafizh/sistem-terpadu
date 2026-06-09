@@ -17,10 +17,14 @@ class TahfidzLog extends Model
         'grade',
         'notes',
         'date',
+        'juz',
+        'pages_count',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'juz' => 'integer',
+        'pages_count' => 'integer',
     ];
 
     public function student()

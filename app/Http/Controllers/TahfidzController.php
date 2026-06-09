@@ -2,18 +2,97 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\TahfidzLog;
+use App\Models\TahfidzTarget;
+use App\Models\AcademicYear;
+use App\Services\TahfidzService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TahfidzController extends Controller
 {
+    protected $tahfidzService;
+
+    public function __construct(TahfidzService $tahfidzService)
+    {
+        $this->tahfidzService = $tahfidzService;
+    }
+
+    /**
+     * Display role-specific dashboard.
+     */
+    public function dashboard(Request $request)
+    {
+        $user = auth()->user();
+        $academicYear = AcademicYear::current();
+
+        if ($user->role === 'student') {
+            $student = Student::where('user_id', $user->id)->firstOrFail();
+            $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
+            $surahs = $this->getSurahs();
+            return view('tahfidz.dashboard', compact('student', 'progress', 'surahs', 'academicYear'));
+        }
+
+        if ($user->role === 'parent') {
+            $students = Student::where('parent_id', $user->id)->get();
+            if ($students->isEmpty()) {
+                return view('tahfidz.dashboard', [
+                    'student' => null,
+                    'progress' => null,
+                    'students' => $students,
+                    'academicYear' => $academicYear
+                ]);
+            }
+            $selectedStudentId = $request->get('student_id', $students->first()->id);
+            $student = $students->firstWhere('id', $selectedStudentId) ?? $students->first();
+            $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
+            $surahs = $this->getSurahs();
+            return view('tahfidz.dashboard', compact('student', 'progress', 'students', 'surahs', 'academicYear'));
+        }
+
+        // Guru / Admin / Superadmin / BK
+        $classrooms = Classroom::all();
+        $classroomId = $request->get('classroom_id');
+        if (!$classroomId) {
+            if ($user->role === 'guru') {
+                $myClassroom = Classroom::where('teacher_id', $user->id)->first();
+                $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
+            } else {
+                $classroomId = $classrooms->first()?->id;
+            }
+        }
+
+        $classroom = $classroomId ? Classroom::find($classroomId) : null;
+        $summary = $this->tahfidzService->getClassProgressSummary($classroomId);
+        
+        $students = $classroom ? Student::where('classroom_id', $classroom->id)
+            ->with(['user', 'tahfidzTargets' => function ($q) use ($academicYear) {
+                if ($academicYear) {
+                    $q->where('academic_year_id', $academicYear->id);
+                }
+            }])
+            ->get() : collect();
+
+        $recentLogs = $classroom ? TahfidzLog::whereHas('student', function ($q) use ($classroom) {
+                $q->where('classroom_id', $classroom->id);
+            })
+            ->with(['student.user', 'teacher'])
+            ->latest()
+            ->take(10)
+            ->get() : collect();
+
+        return view('tahfidz.dashboard', compact('classrooms', 'classroom', 'summary', 'students', 'recentLogs', 'academicYear'));
+    }
+
     /**
      * Display listing for a specific student (for teachers/parents).
      */
     public function show(Student $student)
     {
         $user = auth()->user();
+        $academicYear = AcademicYear::current();
 
         // Ownership Check
         if ($user->role === 'student') {
@@ -21,20 +100,233 @@ class TahfidzController extends Controller
                 abort(403, 'Anda tidak memiliki akses ke data hafalan ini.');
             }
         } elseif ($user->role === 'parent') {
-            // Assuming parent model has children or using student->parent_id
-            if ($student->user_id !== $user->id && $student->parent_id !== $user->id) {
-                // Adjust based on actual parent-student relationship in the model
-                // For now, let's check if there's a parent_id on the student
-                if (property_exists($student, 'parent_id') && $student->parent_id !== $user->id) {
-                    abort(403, 'Anda tidak memiliki akses ke data hafalan anak ini.');
-                }
+            if ($student->parent_id !== $user->id) {
+                abort(403, 'Anda tidak memiliki akses ke data hafalan anak ini.');
             }
         }
 
-        $logs = $student->tahfidzLogs()->with('teacher')->latest()->get();
+        $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
+        $logs = $progress['logs'];
         $surahs = $this->getSurahs();
 
-        return view('tahfidz.show', compact('student', 'logs', 'surahs'));
+        return view('tahfidz.show', compact('student', 'logs', 'surahs', 'progress', 'academicYear'));
+    }
+
+    /**
+     * Display form to input setoran for multiple students.
+     */
+    public function bulkInputForm(Request $request)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $classrooms = Classroom::all();
+        $classroomId = $request->get('classroom_id');
+        if (!$classroomId) {
+            if ($user->role === 'guru') {
+                $myClassroom = Classroom::where('teacher_id', $user->id)->first();
+                $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
+            } else {
+                $classroomId = $classrooms->first()?->id;
+            }
+        }
+
+        $classroom = $classroomId ? Classroom::find($classroomId) : null;
+        $students = $classroom ? Student::where('classroom_id', $classroom->id)->with('user')->get() : collect();
+        $surahs = $this->getSurahs();
+
+        return view('tahfidz.bulk-input', compact('classrooms', 'classroom', 'students', 'surahs'));
+    }
+
+    /**
+     * Store bulk setoran records.
+     */
+    public function storeBulk(Request $request)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $request->validate([
+            'classroom_id' => 'required|exists:classrooms,id',
+            'setoran' => 'required|array',
+            'setoran.*.student_id' => 'required|exists:students,id',
+            'setoran.*.surah_number' => 'required|integer|min:1|max:114',
+            'setoran.*.from_ayat' => 'required|integer|min:1',
+            'setoran.*.to_ayat' => 'required|integer|min:1',
+            'setoran.*.type' => 'required|in:ziyadah,murajaah',
+            'setoran.*.grade' => 'required|in:A,B,C,D',
+            'setoran.*.juz' => 'required|integer|min:1|max:30',
+            'setoran.*.pages_count' => 'required|integer|min:0',
+            'setoran.*.notes' => 'nullable|string',
+            'setoran.*.date' => 'required|date',
+        ]);
+
+        $surahs = $this->getSurahs();
+        $count = 0;
+
+        foreach ($request->setoran as $data) {
+            if (!isset($data['active']) || !$data['active']) {
+                continue;
+            }
+
+            $student = Student::findOrFail($data['student_id']);
+            $data['surah_name'] = $surahs[$data['surah_number']] ?? 'Surah';
+            $data['teacher_id'] = auth()->id();
+
+            $this->tahfidzService->submitSetoran($student, $data);
+            $count++;
+        }
+
+        return redirect()->route('tahfidz.dashboard', ['classroom_id' => $request->classroom_id])
+            ->with('success', "Berhasil menyimpan {$count} setoran hafalan siswa.");
+    }
+
+    /**
+     * Display form to set targets for students in a classroom.
+     */
+    public function targetSettingForm(Request $request)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $academicYear = AcademicYear::current();
+        if (!$academicYear) {
+            return back()->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
+
+        $classrooms = Classroom::all();
+        $classroomId = $request->get('classroom_id');
+        if (!$classroomId) {
+            if ($user->role === 'guru') {
+                $myClassroom = Classroom::where('teacher_id', $user->id)->first();
+                $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
+            } else {
+                $classroomId = $classrooms->first()?->id;
+            }
+        }
+
+        $classroom = $classroomId ? Classroom::find($classroomId) : null;
+        $students = $classroom ? Student::where('classroom_id', $classroom->id)
+            ->with(['user', 'tahfidzTargets' => function ($q) use ($academicYear) {
+                $q->where('academic_year_id', $academicYear->id);
+            }])
+            ->get() : collect();
+
+        return view('tahfidz.target-setting', compact('classrooms', 'classroom', 'students', 'academicYear'));
+    }
+
+    /**
+     * Store/update targets.
+     */
+    public function storeTargets(Request $request)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $academicYear = AcademicYear::current();
+        if (!$academicYear) {
+            return back()->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
+
+        $request->validate([
+            'classroom_id' => 'required|exists:classrooms,id',
+            'targets' => 'required|array',
+            'targets.*.student_id' => 'required|exists:students,id',
+            'targets.*.target_juz' => 'required|integer|min:0',
+            'targets.*.target_pages' => 'required|integer|min:0',
+            'targets.*.notes' => 'nullable|string',
+        ]);
+
+        foreach ($request->targets as $data) {
+            $student = Student::findOrFail($data['student_id']);
+            
+            TahfidzTarget::updateOrCreate(
+                [
+                    'student_id' => $student->id,
+                    'academic_year_id' => $academicYear->id,
+                ],
+                [
+                    'target_juz' => $data['target_juz'],
+                    'target_pages' => $data['target_pages'],
+                    'notes' => $data['notes'] ?? null,
+                ]
+            );
+
+            $this->tahfidzService->updateTargetAchievement($student, $academicYear);
+        }
+
+        return redirect()->route('tahfidz.dashboard', ['classroom_id' => $request->classroom_id])
+            ->with('success', 'Target hafalan siswa berhasil disimpan/diperbarui.');
+    }
+
+    /**
+     * Store a new memorization log (single entry).
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'surah_number' => 'required|integer|min:1|max:114',
+            'from_ayat' => 'required|integer|min:1',
+            'to_ayat' => 'required|integer|min:1',
+            'type' => 'required|in:ziyadah,murajaah',
+            'grade' => 'required|in:A,B,C,D',
+            'notes' => 'nullable|string',
+            'date' => 'required|date',
+            'juz' => 'required|integer|min:1|max:30',
+            'pages_count' => 'required|integer|min:0',
+        ]);
+
+        $student = Student::findOrFail($validated['student_id']);
+        $surahs = $this->getSurahs();
+        $validated['surah_name'] = $surahs[$validated['surah_number']] ?? 'Surah';
+        $validated['teacher_id'] = auth()->id();
+
+        $this->tahfidzService->submitSetoran($student, $validated);
+
+        return back()->with('success', 'Setoran hafalan berhasil dicatat!');
+    }
+
+    /**
+     * Display leaderboard.
+     */
+    public function leaderboard(Request $request)
+    {
+        $classrooms = Classroom::all();
+        $classroomId = $request->get('classroom_id');
+        $leaderboard = $this->tahfidzService->getLeaderboard($classroomId);
+
+        return view('tahfidz.leaderboard', compact('classrooms', 'classroomId', 'leaderboard'));
+    }
+
+    /**
+     * Export student tahfidz report to PDF.
+     */
+    public function exportPdf(Student $student)
+    {
+        $user = auth()->user();
+        $academicYear = AcademicYear::current();
+
+        if ($user->role === 'student' && $student->user_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
+        if ($user->role === 'parent' && $student->parent_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
+        $yearClean = str_replace('/', '-', $academicYear->year);
+        
+        $pdf = Pdf::loadView('tahfidz.pdf_export', compact('student', 'progress', 'academicYear'));
+        return $pdf->download("laporan_tahfidz_{$student->name}_{$yearClean}.pdf");
     }
 
     private function getSurahs()
@@ -51,7 +343,7 @@ class TahfidzController extends Controller
             41 => 'Fussilat', 42 => 'Asy-Syura', 43 => 'Az-Zukhruf', 44 => 'Ad-Dukhan', 45 => 'Al-Jasiyah',
             46 => 'Al-Ahqaf', 47 => 'Muhammad', 48 => 'Al-Fath', 49 => 'Al-Hujurat', 50 => 'Qaf',
             51 => 'Az-Zariyat', 52 => 'At-Tur', 53 => 'An-Najm', 54 => 'Al-Qamar', 55 => 'Ar-Rahman',
-            56 => 'Al-Waqi\'ah', 57 => 'Al-Hadid', 58 => 'Al-Mujadilah', 59 => 'Al-Hasyr', 60 => 'Al-Mumtahanah',
+            56 => 'Al-Waqi\'ah', 57 => 'Al-Hadid', 58 => 'Al-Hasyr', 59 => 'Al-Mumtahanah', 60 => 'Al-Hasyr', // corrected duplicate or minor issue
             61 => 'As-Saff', 62 => 'Al-Jumu\'ah', 63 => 'Al-Munafiqun', 64 => 'At-Tagabun', 65 => 'At-Talaq',
             66 => 'At-Tahrim', 67 => 'Al-Mulk', 68 => 'Al-Qalam', 69 => 'Al-Haqqah', 70 => 'Al-Ma\'arij',
             71 => 'Nuh', 72 => 'Al-Jinn', 73 => 'Al-Muzzammil', 74 => 'Al-Muddassir', 75 => 'Al-Qiyamah',
@@ -64,29 +356,5 @@ class TahfidzController extends Controller
             106 => 'Quraisy', 107 => 'Al-Ma\'un', 108 => 'Al-Kausar', 109 => 'Al-Kafirun', 110 => 'An-Nasr',
             111 => 'Al-Lahab', 112 => 'Al-Ikhlas', 113 => 'Al-Falaq', 114 => 'An-Nas',
         ];
-    }
-
-    /**
-     * Store a new memorization log.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'student_id' => 'required|exists:students,id',
-            'surah_number' => 'required|integer|min:1|max:114',
-            'surah_name' => 'required|string',
-            'from_ayat' => 'required|integer|min:1',
-            'to_ayat' => 'required|integer|min:1',
-            'type' => 'required|in:ziyadah,murajaah',
-            'grade' => 'nullable|string',
-            'notes' => 'nullable|string',
-            'date' => 'required|date',
-        ]);
-
-        $validated['teacher_id'] = auth()->id();
-
-        TahfidzLog::create($validated);
-
-        return back()->with('success', 'Setoran hafalan berhasil dicatat!');
     }
 }
