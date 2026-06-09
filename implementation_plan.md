@@ -125,9 +125,28 @@ class TahfidzService
 
 ---
 
-### 🌙 Modul 11.2: Sistem Mutaba'ah Ibadah Lengkap
+### 🌙 Modul 11.2: Sistem Mutaba'ah Ibadah Lengkap (Selesai ✅)
 
-**Status Saat Ini:** Sudah ada model `MutabaahItem`, `MutabaahLog`, controller `MutabaahController`, view `mutabaah/`. Tapi fiturnya masih basic — hanya toggle harian.
+**Status Saat Ini:** Implementasi sistem pencatatan ibadah harian terperinci (5 sholat fardhu, sholat sunnah dhuha & tahajud, tadarus al-qur'an, puasa sunnah, sedekah, dzikir pagi & sore, catatan harian) lengkap dengan perhitungan skor otomatis (0-100), rekapitulasi mingguan berpredikat (Grade A-D), notifikasi/pembinaan wali kelas, portal orang tua untuk verifikasi dan tanda tangan laporan, statistik interaktif Chart.js, serta ekspor rekapitulasi PDF kelas.
+
+#### User Review Required
+
+> [!IMPORTANT]
+> **Arsitektur Mutaba'ah Logs:**
+> Kami merencanakan untuk menambahkan kolom ibadah harian terperinci ke tabel `mutabaah_logs` agar satu baris merepresentasikan satu hari penuh aktivitas siswa. Untuk menghindari kerusakan/eror pada endpoint API mobile (`MobileDataController`) dan tes bawaan yang merujuk pada `mutabaah_item_id`, kami akan mengatur kolom `mutabaah_item_id` menjadi **nullable**. Data harian baru akan di-save dengan `mutabaah_item_id = null`, sementara sistem lama tetap kompatibel.
+
+#### Open Questions
+
+> [!NOTE]
+> **Formula Perhitungan Skor Mutaba'ah Yaumiyah (0-100):**
+> Kami mengusulkan rumus perhitungan skor harian sebagai berikut:
+> - **Shalat 5 Waktu Wajib (Subuh, Dzuhur, Ashar, Maghrib, Isya):** 0 = Tidak shalat (0 poin), 1 = Sendiri/Munfarid (10 poin), 2 = Berjamaah (15 poin). Maksimal = 75 poin.
+> - **Shalat Sunnah (Dhuha & Tahajud):** 0 = Tidak (0 poin), 1 = Ya (5 poin). Maksimal = 10 poin.
+> - **Tadarus Al-Quran:** 0 = Tidak (0 poin), &ge; 1 halaman (10 poin). Maksimal = 10 poin.
+> - **Puasa Sunnah & Sedekah Harian:** Masing-masing bernilai 5 poin jika dikerjakan. Maksimal = 10 poin.
+> - **Dzikir Pagi & Sore:** Masing-masing bernilai 2.5 poin jika dikerjakan. Maksimal = 5 poin.
+> - **Total Poin Maksimal:** 110 poin (dibatasi/di-cap maksimal **100 poin**).
+> Apakah formula pembobotan skor ibadah harian di atas sudah sesuai untuk kebutuhan kurikulum keislaman SMA Islam Sultan Agung 1 Semarang?
 
 **Apa yang Perlu Ditambah:**
 
@@ -1081,7 +1100,7 @@ php artisan serve
 | 🔴 **P0** | 11.3: Penilaian Harian & Remedial | 3-4 hari | ✅ Selesai |
 | 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ✅ Selesai |
 | 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ✅ Selesai |
-| 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ⬜ TODO |
+| 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | 🚧 In Progress |
 | 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ⬜ TODO |
 | 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ⬜ TODO |
 | 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ⬜ TODO |

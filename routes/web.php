@@ -139,8 +139,20 @@ Route::middleware('auth')->group(function () {
 
     // Keislaman — baca data tahfidz & mutaba'ah (semua user)
     Route::get('tahfidz/{student}', [TahfidzController::class, 'show'])->name('tahfidz.show');
-    Route::get('mutabaah', [MutabaahController::class, 'index'])->name('mutabaah.index');
-    Route::post('mutabaah/toggle', [MutabaahController::class, 'toggle'])->name('mutabaah.toggle');
+    Route::prefix('mutabaah')->name('mutabaah.')->group(function () {
+        Route::get('/', [MutabaahController::class, 'index'])->name('index');
+        Route::get('/input-harian', [MutabaahController::class, 'inputHarian'])->name('input-harian');
+        Route::post('/daily-log', [MutabaahController::class, 'storeDailyLog'])->name('store-daily-log');
+        Route::get('/rekap-mingguan', [MutabaahController::class, 'rekapMingguan'])->name('rekap-mingguan');
+        Route::get('/rekap-kelas/{classroom}', [MutabaahController::class, 'rekapKelas'])->name('rekap-kelas');
+        Route::post('/weekly-comment/{summary}', [MutabaahController::class, 'storeWaliKelasComment'])->name('wali-kelas-comment');
+        Route::post('/weekly-acknowledge/{summary}', [MutabaahController::class, 'parentAcknowledge'])->name('parent-acknowledge');
+        Route::get('/parent-view/{student}', [MutabaahController::class, 'parentView'])->name('parent-view');
+        Route::get('/statistik', [MutabaahController::class, 'statistik'])->name('statistik');
+        Route::get('/export-pdf/{classroom}', [MutabaahController::class, 'exportPdf'])->name('export-pdf');
+        Route::post('/{student}/verify', [MutabaahController::class, 'verify'])->name('verify');
+        Route::post('/toggle', [MutabaahController::class, 'toggle'])->name('toggle');
+    });
 
     // Impersonate Leave (Accessible by any auth user who is currently impersonating)
     Route::get('admin/impersonate-leave', [ImpersonateController::class, 'leave'])->name('admin.impersonate.leave');
