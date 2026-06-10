@@ -109,7 +109,7 @@ test('parent is unauthorized to create thread', function () {
 
 // 3. Balasan Bersarang (Nested Replies)
 test('user can submit replies and nested replies, automatically updating thread stats', function () {
-    $thread = ForumThread::create([
+    $thread = ForumThread::factory()->create([
         'title' => 'Thread Diskusi',
         'body' => 'Isi diskusi',
         'user_id' => $this->guru->id,
@@ -148,7 +148,7 @@ test('user can submit replies and nested replies, automatically updating thread 
 });
 
 test('locked thread blocks student replies but allows teacher replies', function () {
-    $thread = ForumThread::create([
+    $thread = ForumThread::factory()->create([
         'title' => 'Diskusi Terkunci',
         'body' => 'Isi diskusi',
         'user_id' => $this->guru->id,
@@ -172,7 +172,7 @@ test('locked thread blocks student replies but allows teacher replies', function
 
 // 4. Sistem Reaksi Polymorphic (Polymorphic Reaction System)
 test('user can toggle reaction on thread or reply, parent is blocked', function () {
-    $thread = ForumThread::create([
+    $thread = ForumThread::factory()->create([
         'title' => 'Thread Reaksi',
         'body' => 'Isi diskusi',
         'user_id' => $this->guru->id,
@@ -180,7 +180,7 @@ test('user can toggle reaction on thread or reply, parent is blocked', function 
         'last_reply_at' => now(),
     ]);
 
-    $reply = ForumReply::create([
+    $reply = ForumReply::factory()->create([
         'thread_id' => $thread->id,
         'user_id' => $this->studentUser->id,
         'body' => 'Balasan pertama',
@@ -241,7 +241,7 @@ test('user can toggle reaction on thread or reply, parent is blocked', function 
 test('student and parent can only see threads within child/own classroom scope', function () {
     $otherClassroom = Classroom::factory()->create(['academic_year' => $this->academicYear->year]);
 
-    $schoolThread = ForumThread::create([
+    $schoolThread = ForumThread::factory()->create([
         'title' => 'Thread Sekolah',
         'body' => 'Pengumuman sekolah',
         'user_id' => $this->admin->id,
@@ -249,7 +249,7 @@ test('student and parent can only see threads within child/own classroom scope',
         'last_reply_at' => now(),
     ]);
 
-    $ownClassThread = ForumThread::create([
+    $ownClassThread = ForumThread::factory()->create([
         'title' => 'Thread Kelas Kita',
         'body' => 'Isi kelas kita',
         'user_id' => $this->guru->id,
@@ -258,7 +258,7 @@ test('student and parent can only see threads within child/own classroom scope',
         'last_reply_at' => now(),
     ]);
 
-    $otherClassThread = ForumThread::create([
+    $otherClassThread = ForumThread::factory()->create([
         'title' => 'Thread Kelas Lain',
         'body' => 'Isi kelas lain',
         'user_id' => $this->guru->id,
@@ -288,7 +288,7 @@ test('student and parent can only see threads within child/own classroom scope',
 });
 
 test('parent has read-only status and cannot reply or create threads', function () {
-    $thread = ForumThread::create([
+    $thread = ForumThread::factory()->create([
         'title' => 'Diskusi Kelas',
         'body' => 'Pengumuman kelas',
         'user_id' => $this->guru->id,
@@ -312,7 +312,7 @@ test('parent has read-only status and cannot reply or create threads', function 
 
 // 6. Tindakan Moderasi Guru/Admin (Guru/Admin Moderation Actions)
 test('teacher can pin and lock thread, and mark reply as best answer', function () {
-    $thread = ForumThread::create([
+    $thread = ForumThread::factory()->create([
         'title' => 'Thread Moderasi',
         'body' => 'Isi diskusi',
         'user_id' => $this->guru->id,
@@ -325,13 +325,13 @@ test('teacher can pin and lock thread, and mark reply as best answer', function 
     $this->classroom->teacher_id = $this->guru->id;
     $this->classroom->save();
 
-    $reply1 = ForumReply::create([
+    $reply1 = ForumReply::factory()->create([
         'thread_id' => $thread->id,
         'user_id' => $this->studentUser->id,
         'body' => 'Balasan Pertama',
     ]);
 
-    $reply2 = ForumReply::create([
+    $reply2 = ForumReply::factory()->create([
         'thread_id' => $thread->id,
         'user_id' => $this->studentUser->id,
         'body' => 'Balasan Kedua',
@@ -359,7 +359,7 @@ test('teacher can pin and lock thread, and mark reply as best answer', function 
 });
 
 test('authorized users can soft delete threads', function () {
-    $thread = ForumThread::create([
+    $thread = ForumThread::factory()->create([
         'title' => 'Thread Hapus',
         'body' => 'Isi diskusi',
         'user_id' => $this->guru->id,

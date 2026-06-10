@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LibraryLoan extends Model
 {
-    use \App\Traits\LogsActivity, HasUuid;
+    use \App\Traits\LogsActivity, HasFactory, HasUuid;
 
     protected $fillable = [
         'uuid',

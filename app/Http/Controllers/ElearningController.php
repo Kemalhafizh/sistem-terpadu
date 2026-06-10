@@ -49,7 +49,7 @@ class ElearningController extends Controller
         if ($user->role === 'student' && $user->student) {
             // Student: load classes for their classroom (students do not see archived classes unless specified)
             $classesQuery = ElearningClass::where('classroom_id', $user->student->classroom_id)
-                ->with(['subject', 'teacher']);
+                ->with(['subject', 'teacher', 'materials', 'assignments']);
             
             if ($showArchived) {
                 $classes = $classesQuery->where('is_archived', true)->get();
@@ -59,10 +59,10 @@ class ElearningController extends Controller
         } elseif (in_array($user->role, ['guru', 'staf_tu', 'admin', 'superadmin', 'kepala_sekolah'])) {
             // Teacher / Admin: load classes they teach or all classes
             if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
-                $classesQuery = ElearningClass::with(['subject', 'classroom', 'teacher']);
+                $classesQuery = ElearningClass::with(['subject', 'classroom', 'teacher', 'materials', 'assignments']);
             } else {
                 $classesQuery = ElearningClass::where('teacher_id', $user->id)
-                    ->with(['subject', 'classroom', 'teacher']);
+                    ->with(['subject', 'classroom', 'teacher', 'materials', 'assignments']);
             }
 
             if ($showArchived) {
@@ -414,6 +414,7 @@ class ElearningController extends Controller
             abort(403);
         }
 
+        $elearningClass->load(['materials', 'assignments']);
         $progressData = $this->elearningService->getClassProgressSummary($elearningClass->id);
 
         return view('elearning.class_progress', compact('elearningClass', 'progressData'));

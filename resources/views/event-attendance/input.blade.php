@@ -68,7 +68,7 @@
                             {{ $event->event_date?->format('d M Y') }}
                             @if($event->start_time)
                                 <span class="block text-[10px] opacity-75 font-normal mt-0.5">
-                                    🕒 {{ Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
+                                    🕒 {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . \Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
                                 </span>
                             @endif
                         </p>
@@ -128,7 +128,7 @@
                                 <tr x-show="searchQuery === '' || '{{ strtolower($record->user?->name) }}'.includes(searchQuery.toLowerCase())"
                                     x-data="{ 
                                         status: '{{ old("records.{$index}.status", $record->status) }}',
-                                        checkIn: '{{ old("records.{$index}.check_in_time", $record->check_in_time ? Carbon::parse($record->check_in_time)->format('H:i') : '') }}'
+                                        checkIn: '{{ old("records.{$index}.check_in_time", $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('H:i') : '') }}'
                                     }">
                                     
                                     {{-- Index Number --}}

@@ -12,7 +12,7 @@ use App\Models\StudentXpLog;
 use Tests\TestCase;
 
 beforeEach(function () {
-    $this->academicYear = AcademicYear::create([
+    $this->academicYear = AcademicYear::factory()->create([
         'year' => '2025/2026',
         'semester' => 'Genap',
         'is_active' => true,
@@ -23,7 +23,7 @@ beforeEach(function () {
     $this->guru = User::factory()->create(['role' => 'guru']);
     $this->admin = User::factory()->create(['role' => 'admin']);
     
-    $this->classroom = Classroom::create([
+    $this->classroom = Classroom::factory()->create([
         'name' => 'XII-A',
         'grade_level' => 'XII',
         'major' => 'IPA',
@@ -206,7 +206,7 @@ test('anyone can view tahfidz leaderboard', function () {
 
 test('submitting setoran awards grade-based XP and target updates', function () {
     // 1. Create Target
-    TahfidzTarget::create([
+    TahfidzTarget::factory()->create([
         'student_id' => $this->student->id,
         'academic_year_id' => $this->academicYear->id,
         'target_juz' => 1,
@@ -289,7 +289,7 @@ test('submitting setoran awards grade-based XP and target updates', function () 
 
 test('authorized users can export student progress to pdf', function () {
     // Set a target to prevent empty pdf issues
-    TahfidzTarget::create([
+    TahfidzTarget::factory()->create([
         'student_id' => $this->student->id,
         'academic_year_id' => $this->academicYear->id,
         'target_juz' => 1,

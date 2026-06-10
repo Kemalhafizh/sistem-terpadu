@@ -55,7 +55,7 @@
                             <span class="text-gray-400 block text-[9px] font-black uppercase tracking-widest">Waktu Acara</span>
                             <span class="text-gray-800 mt-0.5 block">
                                 @if($event->start_time)
-                                    {{ Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
+                                    {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . \Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
                                 @else
                                     Waktu Fleksibel
                                 @endif
@@ -195,7 +195,7 @@
                                     </span>
                                 </td>
                                 <td class="py-4 text-center text-gray-600">
-                                    {{ $record->check_in_time ? Carbon::parse($record->check_in_time)->format('H:i') . ' WIB' : '-' }}
+                                    {{ $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('H:i') . ' WIB' : '-' }}
                                 </td>
                                 <td class="py-4 text-gray-500 font-medium max-w-xs truncate" title="{{ $record->notes }}">
                                     {{ $record->notes ?? '-' }}

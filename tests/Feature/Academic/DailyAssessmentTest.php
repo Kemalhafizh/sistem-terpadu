@@ -26,7 +26,7 @@ beforeEach(function () {
     $this->parentUser = User::factory()->create(['role' => 'parent', 'must_change_password' => false]);
     $this->student->update(['parent_id' => $this->parentUser->id]);
 
-    $this->subject = Subject::create([
+    $this->subject = Subject::factory()->create([
         'name' => 'Matematika',
         'code' => 'MTK',
         'category' => 'Nasional',
@@ -71,7 +71,7 @@ test('guru can create daily assessment', function () {
 });
 
 test('guru can batch input student scores and auto detect remedial', function () {
-    $assessment = DailyAssessment::create([
+    $assessment = DailyAssessment::factory()->create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -106,7 +106,7 @@ test('guru can batch input student scores and auto detect remedial', function ()
 });
 
 test('remedial scores cap at KKM for final score calculation', function () {
-    $assessment = DailyAssessment::create([
+    $assessment = DailyAssessment::factory()->create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -118,7 +118,7 @@ test('remedial scores cap at KKM for final score calculation', function () {
         'kkm' => 75,
     ]);
 
-    $scoreRecord = DailyAssessmentScore::create([
+    $scoreRecord = DailyAssessmentScore::factory()->create([
         'daily_assessment_id' => $assessment->id,
         'student_id' => $this->student->id,
         'score' => 60,
@@ -144,7 +144,7 @@ test('remedial scores cap at KKM for final score calculation', function () {
 });
 
 test('student can view their daily assessments transcript', function () {
-    $assessment = DailyAssessment::create([
+    $assessment = DailyAssessment::factory()->create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -156,7 +156,7 @@ test('student can view their daily assessments transcript', function () {
         'kkm' => 75,
     ]);
 
-    DailyAssessmentScore::create([
+    DailyAssessmentScore::factory()->create([
         'daily_assessment_id' => $assessment->id,
         'student_id' => $this->student->id,
         'score' => 85,
@@ -171,7 +171,7 @@ test('student can view their daily assessments transcript', function () {
 });
 
 test('parent can view child daily assessments transcript', function () {
-    $assessment = DailyAssessment::create([
+    $assessment = DailyAssessment::factory()->create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -183,7 +183,7 @@ test('parent can view child daily assessments transcript', function () {
         'kkm' => 75,
     ]);
 
-    DailyAssessmentScore::create([
+    DailyAssessmentScore::factory()->create([
         'daily_assessment_id' => $assessment->id,
         'student_id' => $this->student->id,
         'score' => 92,
@@ -212,7 +212,7 @@ test('unauthorized users cannot view or create daily assessments', function () {
 });
 
 test('analytics is calculated and displays correctly', function () {
-    $assessment = DailyAssessment::create([
+    $assessment = DailyAssessment::factory()->create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -224,7 +224,7 @@ test('analytics is calculated and displays correctly', function () {
         'kkm' => 75,
     ]);
 
-    DailyAssessmentScore::create([
+    DailyAssessmentScore::factory()->create([
         'daily_assessment_id' => $assessment->id,
         'student_id' => $this->student->id,
         'score' => 88,
@@ -242,7 +242,7 @@ test('analytics is calculated and displays correctly', function () {
 });
 
 test('guru can export daily assessment scores to PDF', function () {
-    $assessment = DailyAssessment::create([
+    $assessment = DailyAssessment::factory()->create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -254,7 +254,7 @@ test('guru can export daily assessment scores to PDF', function () {
         'kkm' => 75,
     ]);
 
-    DailyAssessmentScore::create([
+    DailyAssessmentScore::factory()->create([
         'daily_assessment_id' => $assessment->id,
         'student_id' => $this->student->id,
         'score' => 90,

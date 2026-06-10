@@ -55,7 +55,7 @@ beforeEach(function () {
     ]);
 
     // 3. Create Letter Template
-    $this->template = LetterTemplate::create([
+    $this->template = LetterTemplate::factory()->create([
         'name' => 'Surat Keterangan Aktif Siswa',
         'code' => 'SKA',
         'body_template' => 'Yang bertanda tangan di bawah ini menerangkan bahwa siswa bernama {{nama_siswa}} dengan NIS {{nis}} / NISN {{nisn}} kelas {{kelas}} lahir pada {{tanggal_lahir}} adalah benar aktif belajar. Surat ini dibuat untuk keperluan {{keperluan}}.',
@@ -149,7 +149,7 @@ test('staf tu and admin can manage templates but guru and students cannot', func
 // ── PLACEHOLDER REPLACEMENTS & INTERACTIVE PREVIEWS ──────────────────────────
 
 test('letter body replaces placeholders correctly with student and custom values', function () {
-    $letter = Letter::create([
+    $letter = Letter::factory()->create([
         'template_id' => $this->template->id,
         'student_id' => $this->student1->id,
         'created_by' => $this->tu->id,
@@ -173,7 +173,7 @@ test('letter body replaces placeholders correctly with student and custom values
 
 test('issuing a draft letter generates correct sequential number and roman month', function () {
     // Letter 1 issued in May 2026
-    $letter1 = Letter::create([
+    $letter1 = Letter::factory()->create([
         'template_id' => $this->template->id,
         'student_id' => $this->student1->id,
         'created_by' => $this->tu->id,
@@ -192,7 +192,7 @@ test('issuing a draft letter generates correct sequential number and roman month
     expect($letter1->letter_number)->toBe('001/SKA/SMA-ISA/V/2026');
 
     // Letter 2 issued in May 2026 (same template)
-    $letter2 = Letter::create([
+    $letter2 = Letter::factory()->create([
         'template_id' => $this->template->id,
         'student_id' => $this->student2->id,
         'created_by' => $this->tu->id,
@@ -244,7 +244,7 @@ test('authorized users can download letter pdf with secure digital signature ima
     Storage::disk('local')->put($signatureFile, 'fake_png_data');
     $this->template->update(['signature_path' => $signatureFile]);
 
-    $letter = Letter::create([
+    $letter = Letter::factory()->create([
         'template_id' => $this->template->id,
         'student_id' => $this->student1->id,
         'created_by' => $this->tu->id,

@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ElearningClass extends Model
 {
-    use HasUuid;
+    use HasFactory, HasUuid;
 
     protected $fillable = ['uuid', 'subject_id', 'classroom_id', 'teacher_id', 'name', 'description', 'is_archived'];
 

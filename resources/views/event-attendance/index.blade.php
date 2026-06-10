@@ -119,8 +119,8 @@
                                 <td class="py-4">
                                     <p>{{ $event->event_date?->format('d M Y') }}</p>
                                     <p class="text-[9px] text-gray-400">
-                                        {{ $event->start_time ? Carbon::parse($event->start_time)->format('H:i') : '' }}
-                                        {{ $event->end_time ? ' - ' . Carbon::parse($event->end_time)->format('H:i') : '' }}
+                                        {{ $event->start_time ? \Carbon\Carbon::parse($event->start_time)->format('H:i') : '' }}
+                                        {{ $event->end_time ? ' - ' . \Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }}
                                     </p>
                                 </td>
                                 <td class="py-4 text-center">

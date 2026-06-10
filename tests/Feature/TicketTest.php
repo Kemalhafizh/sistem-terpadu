@@ -27,7 +27,7 @@ beforeEach(function () {
 
 test('authenticated users can access the helpdesk list page and see their scoped tickets', function () {
     // Create a ticket reported by guru
-    $ticket1 = Ticket::create([
+    $ticket1 = Ticket::factory()->create([
         'title' => 'Kerusakan LCD Proyektor',
         'description' => 'LCD Proyektor di kelas XII-B mati total.',
         'category' => 'sarpras',
@@ -37,7 +37,7 @@ test('authenticated users can access the helpdesk list page and see their scoped
     ]);
 
     // Create a ticket reported by other guru
-    $ticket2 = Ticket::create([
+    $ticket2 = Ticket::factory()->create([
         'title' => 'Akun LMS Terkunci',
         'description' => 'Tidak bisa login ke aplikasi LMS Sekolah.',
         'category' => 'it',
@@ -95,7 +95,7 @@ test('a user can create a support ticket with automated sequential numbering and
 
 test('users can only view their own tickets whereas staff can view all tickets', function () {
     // Guru ticket
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Keyboard Ruang Laboratorium Rusak',
         'description' => 'Beberapa tombol tidak berfungsi.',
         'category' => 'it',
@@ -116,7 +116,7 @@ test('users can only view their own tickets whereas staff can view all tickets',
 
 test('public comments are visible to everyone, but internal comments are concealed from reporters', function () {
     // Ticket
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Internet Lambat',
         'description' => 'Koneksi lemot sekali di area perpustakaan.',
         'category' => 'it',
@@ -154,7 +154,7 @@ test('public comments are visible to everyone, but internal comments are conceal
 
 test('non-staff users are blocked from posting internal comments', function () {
     // Ticket
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Kendala Kursi Patah',
         'description' => 'Kursi patah di barisan belakang.',
         'category' => 'sarpras',
@@ -176,7 +176,7 @@ test('staff can successfully assign technical assignee and ticket transitions to
     Notification::fake();
 
     // Ticket
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Atap Bocor Kelas XI',
         'description' => 'Genteng geser saat hujan angin kemarin.',
         'category' => 'sarpras',
@@ -208,7 +208,7 @@ test('staff can resolve ticket with resolution note and log resolution timing', 
     Notification::fake();
 
     // Ticket
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Kendala Printer TU',
         'description' => 'Kertas selalu tersangkut (paper jam).',
         'category' => 'it',
@@ -241,7 +241,7 @@ test('staff can resolve ticket with resolution note and log resolution timing', 
 
 test('staff can permanently close a resolved ticket', function () {
     // Ticket in resolved state
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Papan Tulis Rusak',
         'description' => 'Permukaannya mengelupas tidak bisa ditulis.',
         'category' => 'sarpras',
@@ -264,7 +264,7 @@ test('staff can permanently close a resolved ticket', function () {
 
 test('unauthorized users are blocked from executive administrative actions', function () {
     // Ticket
-    $ticket = Ticket::create([
+    $ticket = Ticket::factory()->create([
         'title' => 'Masalah Wastafel Kelas',
         'description' => 'Wastafel tersumbat tidak mengalir.',
         'category' => 'sarpras',

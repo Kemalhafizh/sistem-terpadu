@@ -56,9 +56,30 @@
     ];
 
     $style = $colorMap[$color] ?? $colorMap['primary'];
+
+    // Clean and parse numeric value for Alpine.js count-up animation
+    $numericValue = 0;
+    $isNumericOnly = false;
+    $hasPrefix = str_contains($value, 'Rp');
+    $hasPercent = str_contains($value, '%');
+    
+    $clean = preg_replace('/[^0-9.,]/', '', $value);
+    if (!empty($clean)) {
+        if (substr_count($clean, '.') > 1 || (substr_count($clean, '.') == 1 && strlen(substr($clean, strpos($clean, '.') + 1)) > 2)) {
+            $clean = str_replace('.', '', $clean);
+        }
+        if (substr_count($clean, ',') > 1) {
+            $clean = str_replace(',', '', $clean);
+        }
+        $clean = str_replace(',', '.', $clean);
+        if (is_numeric($clean)) {
+            $numericValue = (float)$clean;
+            $isNumericOnly = true;
+        }
+    }
 @endphp
 
-<div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700/80 rounded-2xl p-6 hover:shadow-lg dark:hover:shadow-slate-900/50 transition-all duration-300 transform hover:-translate-y-0.5 group">
+<div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700/80 rounded-2xl p-6 card-hover group">
     <div class="flex items-center justify-between">
         {{-- Icon (Left) --}}
         @if(isset($icon) || $slot->isNotEmpty())
@@ -94,7 +115,37 @@
             {{ $title }}
         </h3>
         <div class="flex items-baseline mt-1 gap-2">
-            <span class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+            <span class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white tracking-tight"
+                  @if($isNumericOnly)
+                  x-data="{ count: 0, target: {{ $numericValue }} }"
+                  x-init="
+                    let duration = 800;
+                    let startTimestamp = null;
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        count = progress * target;
+                        if (progress < 1) {
+                            window.requestAnimationFrame(step);
+                        } else {
+                            count = target;
+                        }
+                    };
+                    window.requestAnimationFrame(step);
+                  }"
+                  x-text="
+                    let display = count;
+                    @if($hasPrefix)
+                        display = 'Rp ' + Math.floor(display).toLocaleString('id-ID');
+                    @elseif($hasPercent)
+                        display = (Number.isInteger(display) ? display : display.toFixed(1)) + '%';
+                    @else
+                        display = Math.floor(display).toLocaleString('id-ID');
+                    @endif
+                    return display;
+                  "
+                  @endif
+            >
                 {{ $value }}
             </span>
             @if($trendText)

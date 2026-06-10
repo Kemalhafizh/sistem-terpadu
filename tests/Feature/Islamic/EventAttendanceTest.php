@@ -114,7 +114,7 @@ test('guru can create event targeting specific classrooms only', function () {
 });
 
 test('guru can input and save batch attendance for an event', function () {
-    $event = EventAttendanceEvent::create([
+    $event = EventAttendanceEvent::factory()->create([
         'name' => 'Upacara Bendera Hari Senin',
         'type' => 'upacara',
         'event_date' => now()->format('Y-m-d'),
@@ -123,12 +123,12 @@ test('guru can input and save batch attendance for an event', function () {
     ]);
 
     // Create initial drafts
-    EventAttendanceRecord::create([
+    EventAttendanceRecord::factory()->create([
         'event_id' => $event->id,
         'user_id' => $this->studentUserA->id,
         'status' => 'alpa',
     ]);
-    EventAttendanceRecord::create([
+    EventAttendanceRecord::factory()->create([
         'event_id' => $event->id,
         'user_id' => $this->studentUserB->id,
         'status' => 'alpa',
@@ -166,7 +166,7 @@ test('guru can input and save batch attendance for an event', function () {
 });
 
 test('student can view their own event attendance rekap but not other students', function () {
-    $event = EventAttendanceEvent::create([
+    $event = EventAttendanceEvent::factory()->create([
         'name' => 'Sholat Dhuha Berjamaah',
         'type' => 'sholat_dhuha',
         'event_date' => now()->format('Y-m-d'),
@@ -174,7 +174,7 @@ test('student can view their own event attendance rekap but not other students',
         'created_by' => $this->teacherUser->id,
     ]);
 
-    EventAttendanceRecord::create([
+    EventAttendanceRecord::factory()->create([
         'event_id' => $event->id,
         'user_id' => $this->studentUserA->id,
         'status' => 'hadir',
@@ -195,7 +195,7 @@ test('student can view their own event attendance rekap but not other students',
 });
 
 test('parent can view their child attendance rekap', function () {
-    $event = EventAttendanceEvent::create([
+    $event = EventAttendanceEvent::factory()->create([
         'name' => 'Sholat Dhuha Berjamaah',
         'type' => 'sholat_dhuha',
         'event_date' => now()->format('Y-m-d'),
@@ -203,7 +203,7 @@ test('parent can view their child attendance rekap', function () {
         'created_by' => $this->teacherUser->id,
     ]);
 
-    EventAttendanceRecord::create([
+    EventAttendanceRecord::factory()->create([
         'event_id' => $event->id,
         'user_id' => $this->studentUserA->id,
         'status' => 'hadir',
@@ -217,7 +217,7 @@ test('parent can view their child attendance rekap', function () {
 });
 
 test('teacher can export event attendance to pdf', function () {
-    $event = EventAttendanceEvent::create([
+    $event = EventAttendanceEvent::factory()->create([
         'name' => 'Kultum PAI Kelas XII-IPA-1',
         'type' => 'kultum',
         'event_date' => now()->format('Y-m-d'),
@@ -225,7 +225,7 @@ test('teacher can export event attendance to pdf', function () {
         'created_by' => $this->teacherUser->id,
     ]);
 
-    EventAttendanceRecord::create([
+    EventAttendanceRecord::factory()->create([
         'event_id' => $event->id,
         'user_id' => $this->studentUserA->id,
         'status' => 'hadir',

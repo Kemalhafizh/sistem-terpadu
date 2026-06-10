@@ -49,7 +49,7 @@ beforeEach(function () {
     ]);
 
     // 4. Create Exam
-    $this->exam = Exam::create([
+    $this->exam = Exam::factory()->create([
         'title' => 'Ujian Harian Matematika',
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,

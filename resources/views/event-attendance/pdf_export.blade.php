@@ -151,7 +151,7 @@
             <td class="font-bold">Waktu Pelaksanaan:</td>
             <td>
                 @if($event->start_time)
-                    {{ Carbon\Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
+                    {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . \Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
                 @else
                     Waktu Fleksibel
                 @endif
@@ -235,7 +235,7 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        {{ $record->check_in_time ? Carbon\Carbon::parse($record->check_in_time)->format('H:i') . ' WIB' : '-' }}
+                        {{ $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('H:i') . ' WIB' : '-' }}
                     </td>
                     <td>{{ $record->notes ?? '-' }}</td>
                 </tr>

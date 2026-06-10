@@ -258,8 +258,8 @@
                                     <td class="py-4 text-gray-600">
                                         <p>{{ $record->event?->event_date?->format('d M Y') }}</p>
                                         <p class="text-[9px] text-gray-400">
-                                            {{ $record->event?->start_time ? Carbon::parse($record->event->start_time)->format('H:i') : '' }}
-                                            {{ $record->event?->end_time ? ' - ' . Carbon::parse($record->event->end_time)->format('H:i') : '' }}
+                                            {{ $record->event?->start_time ? \Carbon\Carbon::parse($record->event->start_time)->format('H:i') : '' }}
+                                            {{ $record->event?->end_time ? ' - ' . \Carbon\Carbon::parse($record->event->end_time)->format('H:i') : '' }}
                                         </p>
                                     </td>
                                     <td class="py-4 text-center">
@@ -268,7 +268,7 @@
                                         </span>
                                     </td>
                                     <td class="py-4 text-center text-gray-600">
-                                        {{ $record->check_in_time ? Carbon::parse($record->check_in_time)->format('H:i') . ' WIB' : '-' }}
+                                        {{ $record->check_in_time ? \Carbon\Carbon::parse($record->check_in_time)->format('H:i') . ' WIB' : '-' }}
                                     </td>
                                     <td class="py-4 text-gray-500 font-medium max-w-xs truncate" title="{{ $record->notes }}">
                                         {{ $record->notes ?? '-' }}

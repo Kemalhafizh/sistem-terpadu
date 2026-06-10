@@ -26,13 +26,13 @@ beforeEach(function () {
     $this->student->update(['classroom_id' => $this->classroom->id]);
 
     // 3. Setup Payment Category & Billings
-    $this->category = PaymentCategory::create([
+    $this->category = PaymentCategory::factory()->create([
         'name' => 'SPP Bulanan',
         'default_amount' => 750000,
         'is_monthly' => true
     ]);
 
-    $this->billing = Billing::create([
+    $this->billing = Billing::factory()->create([
         'student_id' => $this->student->id,
         'payment_category_id' => $this->category->id,
         'academic_year_id' => $this->academicYear->id,

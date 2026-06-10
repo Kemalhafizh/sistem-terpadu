@@ -44,7 +44,7 @@
     >
         {{-- Helper component for links --}}
         @php
-            $linkClass = "block px-3 py-2.5 rounded-lg font-medium transition-colors relative group ";
+            $linkClass = "block px-3 py-2.5 rounded-lg font-medium transition-colors relative group sidebar-item ";
             $activeClass = "bg-primary-800 text-white shadow-sm border border-primary-700/50";
             $inactiveClass = "text-primary-100 hover:bg-primary-800/60 hover:text-white";
         @endphp

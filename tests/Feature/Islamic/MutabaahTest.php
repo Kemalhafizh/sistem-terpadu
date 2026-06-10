@@ -108,7 +108,7 @@ test('teacher can view class rekap and write comment on student weekly summary',
     $weekStart = now()->startOfWeek()->format('Y-m-d');
     
     // Seed a weekly summary
-    $summary = MutabaahWeeklySummary::create([
+    $summary = MutabaahWeeklySummary::factory()->create([
         'student_id' => $this->student->id,
         'week_start' => $weekStart,
         'week_end' => now()->endOfWeek()->format('Y-m-d'),
@@ -137,7 +137,7 @@ test('parent can view child mutabaah and acknowledge weekly report', function ()
     $weekStart = now()->startOfWeek()->format('Y-m-d');
     
     // Seed summary
-    $summary = MutabaahWeeklySummary::create([
+    $summary = MutabaahWeeklySummary::factory()->create([
         'student_id' => $this->student->id,
         'week_start' => $weekStart,
         'week_end' => now()->endOfWeek()->format('Y-m-d'),

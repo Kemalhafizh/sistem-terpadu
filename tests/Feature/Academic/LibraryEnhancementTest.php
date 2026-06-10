@@ -27,13 +27,13 @@ beforeEach(function () {
     $this->student->update(['classroom_id' => $this->classroom->id]);
 
     // 3. Create Library Category
-    $this->category = LibraryCategory::create([
+    $this->category = LibraryCategory::factory()->create([
         'name' => 'Fisika',
         'icon' => 'book'
     ]);
 
     // 4. Create Library Books
-    $this->bookPhysical = LibraryBook::create([
+    $this->bookPhysical = LibraryBook::factory()->create([
         'uuid' => (string) \Illuminate\Support\Str::uuid(),
         'title' => 'Fisika Dasar I',
         'author' => 'Halliday & Resnick',
@@ -43,7 +43,7 @@ beforeEach(function () {
         'created_by' => $this->guru->id,
     ]);
 
-    $this->bookDigital = LibraryBook::create([
+    $this->bookDigital = LibraryBook::factory()->create([
         'uuid' => (string) \Illuminate\Support\Str::uuid(),
         'title' => 'Pengenalan Quantum Physics',
         'author' => 'Stephen Hawking',
@@ -136,7 +136,7 @@ test('students cannot view overdue report', function () {
 
 test('authorized users can send overdue reminder via WhatsApp', function () {
     // Create an overdue loan
-    $loan = LibraryLoan::create([
+    $loan = LibraryLoan::factory()->create([
         'uuid' => (string) \Illuminate\Support\Str::uuid(),
         'student_id' => $this->student->id,
         'library_book_id' => $this->bookPhysical->id,

@@ -43,7 +43,7 @@ class SurveyAnalyticsService
      */
     public function getAggregatedResults(Survey $survey): array
     {
-        $survey->load('questions', 'responses');
+        $survey->load(['questions', 'responses', 'classroom']);
         $responses = $survey->responses;
         $totalResponses = $responses->count();
         $aggregates = [];
@@ -166,7 +166,7 @@ class SurveyAnalyticsService
      */
     public function exportResultsPdf(Survey $survey)
     {
-        $survey->load('questions', 'responses');
+        $survey->load(['questions', 'responses', 'classroom']);
         $analytics = $this->getAggregatedResults($survey);
         $responseRate = $this->getResponseRate($survey);
 

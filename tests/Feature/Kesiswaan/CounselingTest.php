@@ -143,7 +143,7 @@ test('student cannot request a counseling session for another student', function
 // ── 3. SCHEDULING, EXECUTION, AND ENCRYPTION ──────────────────────────────
 
 test('bk can schedule/confirm a session request and notify student and parent', function () {
-    $session = CounselingSession::create([
+    $session = CounselingSession::factory()->create([
         'student_id' => $this->student->id,
         'requested_by' => $this->student->user->id,
         'type' => 'individual',
@@ -175,7 +175,7 @@ test('bk can schedule/confirm a session request and notify student and parent', 
 });
 
 test('bk can start and complete a session, verifying database level encryption', function () {
-    $session = CounselingSession::create([
+    $session = CounselingSession::factory()->create([
         'student_id' => $this->student->id,
         'counselor_id' => $this->bk->id,
         'type' => 'individual',
@@ -288,7 +288,7 @@ test('exceeding 50 accumulated student points automatically triggers a mandatory
 // ── 5. OFFICIAL PDF EXPORT ───────────────────────────────────────────────
 
 test('bk, waka_kesiswaan can download completed session report PDF', function () {
-    $session = CounselingSession::create([
+    $session = CounselingSession::factory()->create([
         'student_id' => $this->student->id,
         'counselor_id' => $this->bk->id,
         'type' => 'individual',
@@ -308,7 +308,7 @@ test('bk, waka_kesiswaan can download completed session report PDF', function ()
 
 test('student cannot download session report PDF of someone else', function () {
     $otherStudent = Student::factory()->create();
-    $session = CounselingSession::create([
+    $session = CounselingSession::factory()->create([
         'student_id' => $otherStudent->id,
         'counselor_id' => $this->bk->id,
         'type' => 'individual',

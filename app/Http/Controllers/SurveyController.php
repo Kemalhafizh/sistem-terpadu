@@ -34,9 +34,9 @@ class SurveyController extends Controller
 
         if ($user->isAdmin()) {
             // Admins can see all surveys categorized by status
-            $draftSurveys = Survey::where('status', 'draft')->latest()->get();
-            $activeSurveys = Survey::where('status', 'active')->latest()->get();
-            $closedSurveys = Survey::whereIn('status', ['closed', 'archived'])->latest()->get();
+            $draftSurveys = Survey::with('classroom')->where('status', 'draft')->latest()->get();
+            $activeSurveys = Survey::with('classroom')->where('status', 'active')->latest()->get();
+            $closedSurveys = Survey::with('classroom')->whereIn('status', ['closed', 'archived'])->latest()->get();
 
             return view('surveys.index', compact('draftSurveys', 'activeSurveys', 'closedSurveys'));
         }
@@ -50,7 +50,7 @@ class SurveyController extends Controller
             $classroomId = $user->student->classroom_id;
         }
 
-        $surveys = Survey::active()
+        $surveys = Survey::with('classroom')->active()
             ->where(function ($query) use ($targetRole) {
                 $query->whereNull('target_role')
                       ->orWhere('target_role', $targetRole);
@@ -163,7 +163,7 @@ class SurveyController extends Controller
 
         // Admin sees the survey details/preview
         if ($user->isAdmin()) {
-            $survey->load('questions');
+            $survey->load(['questions', 'classroom']);
             return view('surveys.show_preview', compact('survey'));
         }
 
@@ -195,7 +195,7 @@ class SurveyController extends Controller
                 ->with('toast_error', 'Anda telah mengisi survei ini.');
         }
 
-        $survey->load('questions');
+        $survey->load(['questions', 'classroom']);
         return view('surveys.respond', compact('survey'));
     }
 
@@ -269,7 +269,7 @@ class SurveyController extends Controller
     {
         $this->authorizeAdmin();
 
-        $survey->load('questions');
+        $survey->load(['questions', 'classroom']);
         $analytics = $this->analyticsService->getAggregatedResults($survey);
         $responseRate = $this->analyticsService->getResponseRate($survey);
 

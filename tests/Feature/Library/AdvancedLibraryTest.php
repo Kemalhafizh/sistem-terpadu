@@ -29,13 +29,13 @@ beforeEach(function () {
     ]);
 
     // Buat kategori buku
-    $this->category = LibraryCategory::create([
+    $this->category = LibraryCategory::factory()->create([
         'name' => 'Sains & Teknologi',
         'icon' => 'academic-cap',
     ]);
 
     // Buat tahun ajaran aktif untuk pengujian Buku Paket Pelajaran
-    $this->academicYear = AcademicYear::create([
+    $this->academicYear = AcademicYear::factory()->create([
         'year' => '2026/2027',
         'semester' => 'Ganjil',
         'is_active' => true,
@@ -67,7 +67,7 @@ test('siswa dibatasi meminjam maksimal 3 buku fisik secara bersamaan', function 
     // 1. Buat 4 buku fisik yang tersedia
     $books = [];
     for ($i = 1; $i <= 4; $i++) {
-        $books[] = LibraryBook::create([
+        $books[] = LibraryBook::factory()->create([
             'uuid' => (string) Str::uuid(),
             'title' => "Buku Fisik Pengujian Ke-$i",
             'author' => 'Penulis Uji',
@@ -112,7 +112,7 @@ test('siswa dibatasi meminjam maksimal 3 buku fisik secara bersamaan', function 
 
 test('peminjaman dan pengembalian mengubah status ketersediaan buku fisik secara presisi', function () {
     // 1. Buat buku fisik baru
-    $book = LibraryBook::create([
+    $book = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(),
         'title' => 'Buku Fisik Ketersediaan',
         'author' => 'Penulis Ketersediaan',
@@ -158,13 +158,13 @@ test('peminjaman dan pengembalian mengubah status ketersediaan buku fisik secara
 
 test('sistem mendukung fleksibilitas jatuh tempo reguler, buku paket pelajaran, dan kustom', function () {
     // Buat 3 buku fisik terpisah
-    $bookReg = LibraryBook::create([
+    $bookReg = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(), 'title' => 'Buku Reguler', 'category_id' => $this->category->id, 'type' => 'physical', 'created_by' => $this->librarian->id,
     ]);
-    $bookPack = LibraryBook::create([
+    $bookPack = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(), 'title' => 'Buku Paket', 'category_id' => $this->category->id, 'type' => 'physical', 'created_by' => $this->librarian->id,
     ]);
-    $bookCust = LibraryBook::create([
+    $bookCust = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(), 'title' => 'Buku Kustom', 'category_id' => $this->category->id, 'type' => 'physical', 'created_by' => $this->librarian->id,
     ]);
 
@@ -204,7 +204,7 @@ test('perhitungan denda keterlambatan secara otomatis saat pengembalian terlamba
     Carbon::setTestNow($now);
 
     // 1. Buat buku fisik
-    $book = LibraryBook::create([
+    $book = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(),
         'title' => 'Buku Terlambat',
         'category_id' => $this->category->id,
@@ -217,7 +217,7 @@ test('perhitungan denda keterlambatan secara otomatis saat pengembalian terlamba
     $dueAt = $now->copy()->subDays(5);
     $borrowedAt = $now->copy()->subDays(12);
 
-    $loan = LibraryLoan::create([
+    $loan = LibraryLoan::factory()->create([
         'uuid' => (string) Str::uuid(),
         'student_id' => $this->student->id,
         'library_book_id' => $book->id,
@@ -249,7 +249,7 @@ test('perhitungan denda keterlambatan secara otomatis saat pengembalian terlamba
 });
 
 test('pelunasan denda mencatat kas masuk otomatis pada sistem akuntansi double-entry', function () {
-    $book = LibraryBook::create([
+    $book = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(),
         'title' => 'Buku Dengan Denda Lunas',
         'category_id' => $this->category->id,
@@ -258,7 +258,7 @@ test('pelunasan denda mencatat kas masuk otomatis pada sistem akuntansi double-e
     ]);
 
     // Buat pinjaman yang sudah dikembalikan tetapi memiliki denda belum dibayar
-    $loan = LibraryLoan::create([
+    $loan = LibraryLoan::factory()->create([
         'uuid' => (string) Str::uuid(),
         'student_id' => $this->student->id,
         'library_book_id' => $book->id,
@@ -306,7 +306,7 @@ test('pelunasan denda mencatat kas masuk otomatis pada sistem akuntansi double-e
 
 test('proteksi keamanan rute pembaca e-book terenkripsi dan pembatasan role sirkulasi perpustakaan', function () {
     // Buat materi e-book digital
-    $ebook = LibraryBook::create([
+    $ebook = LibraryBook::factory()->create([
         'uuid' => (string) Str::uuid(),
         'title' => 'E-Book Sains Terapan',
         'author' => 'Dr. Budi',
