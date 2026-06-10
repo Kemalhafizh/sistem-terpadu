@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
             LibraryLoanSeeder::class,           // 35 library book loans (active, returned, overdue)
             EventAttendanceSeeder::class,       // 10 events + presensi (upacara, sholat dhuha, PHBI)
             MeetingNoteSeeder::class,           // 3 meetings with attendees and action items (Modul 15.1)
+            TeacherTodoSeeder::class,           // ~40+ teacher todo items with various statuses (Modul 15.3)
         ]);
     }
 }

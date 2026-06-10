@@ -80,6 +80,7 @@ use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GamificationController;
 use App\Http\Controllers\DailyAssessmentController;
+use App\Http\Controllers\TeacherTodoController;
 
 
 
@@ -306,6 +307,14 @@ Route::middleware('auth')->group(function () {
         Route::get('daily-assessments/{daily_assessment}/input-scores', [DailyAssessmentController::class, 'inputScores'])->name('daily-assessments.input-scores');
         Route::post('daily-assessments/{daily_assessment}/store-scores', [DailyAssessmentController::class, 'storeScores'])->name('daily-assessments.store-scores');
         Route::get('daily-assessments/{daily_assessment}/export-pdf', [DailyAssessmentController::class, 'exportPdf'])->name('daily-assessments.pdf');
+
+        // Agenda & Todo List Guru
+        Route::get('todos', [TeacherTodoController::class, 'index'])->name('todos.index');
+        Route::post('todos', [TeacherTodoController::class, 'store'])->name('todos.store');
+        Route::patch('todos/{todo}/toggle', [TeacherTodoController::class, 'toggle'])->name('todos.toggle');
+        Route::put('todos/{todo}', [TeacherTodoController::class, 'update'])->name('todos.update');
+        Route::delete('todos/{todo}', [TeacherTodoController::class, 'destroy'])->name('todos.destroy');
+        Route::get('todos/today', [TeacherTodoController::class, 'todayTasks'])->name('todos.today');
     });
 
     // =========================================================

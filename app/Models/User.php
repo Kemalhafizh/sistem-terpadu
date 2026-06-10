@@ -161,6 +161,7 @@ class User extends Authenticatable
                     ['id' => 'teacher_journal_today', 'name' => 'Jurnal Hari Ini', 'visible' => true],
                     ['id' => 'teacher_ungraded_assignments', 'name' => 'Tugas Belum Dinilai', 'visible' => true],
                     ['id' => 'teacher_tahfidz_progress', 'name' => 'Progress Tahfidz Kelas', 'visible' => true],
+                    ['id' => 'teacher_todo_widget', 'name' => 'Todo List Saya', 'visible' => true],
                     ['id' => 'teacher_recent_notifications', 'name' => 'Notifikasi Terbaru', 'visible' => true],
                 ];
 

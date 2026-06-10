@@ -659,6 +659,13 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ledger_report') }}</div>
         </a>
+        <a href="{{ route('todos.index') }}" class="{{ $linkClass }} {{ request()->routeIs('todos.*') ? $activeClass : $inactiveClass }}" title="Agenda & Todo List">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Agenda & Todo</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Agenda & Todo</div>
+        </a>
         @endif
 
         {{-- Ekstrakurikuler --}}

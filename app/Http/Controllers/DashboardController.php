@@ -24,6 +24,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TahfidzLog;
 use App\Models\TeachingJournal;
+use App\Models\TeacherTodo;
 use App\Models\User;
 use App\Models\WorkflowRequest;
 use Carbon\Carbon;
@@ -442,6 +443,17 @@ class DashboardController extends Controller
             'tahfidzLogsCount' => $tahfidzLogsCount,
             'tahfidzTrend' => $tahfidzTrend,
             'recentNotifications' => collect($recentNotifications)->take(5),
+
+            // Todo widget data
+            'todoPending' => TeacherTodo::where('user_id', $user->id)->pending()
+                ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END")
+                ->orderByRaw('due_date IS NULL ASC')
+                ->orderBy('due_date')
+                ->limit(5)
+                ->get(),
+            'todoOverdueCount' => TeacherTodo::where('user_id', $user->id)->overdue()->count(),
+            'todoDueTodayCount' => TeacherTodo::where('user_id', $user->id)->dueToday()->count(),
+            'todoPendingCount' => TeacherTodo::where('user_id', $user->id)->pending()->count(),
         ];
     }
 

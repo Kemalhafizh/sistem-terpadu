@@ -1,174 +1,159 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight flex items-center">
-                <span class="w-8 h-8 bg-primary-100 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 rounded-lg flex items-center justify-center mr-3">
-                    📢
-                </span>
-                {{ __('Manajemen Pengumuman (Mading Digital)') }}
-            </h2>
-            <a href="{{ route('announcements.create') }}" class="inline-flex items-center px-5 py-2.5 bg-primary-600 border border-transparent rounded-xl font-black text-xs text-white uppercase tracking-wider hover:bg-primary-700 shadow-md shadow-primary-600/20 transition-all active:scale-95">
-                + Buat Pengumuman Baru
-            </a>
-        </div>
+        <x-page-header 
+            title="Manajemen Pengumuman (Mading Digital)" 
+            subtitle="Publikasikan pengumuman sekolah, jadwal kegiatan, dan edaran untuk siswa, guru, maupun wali murid."
+        >
+            <x-slot name="actions">
+                <a href="{{ route('announcements.create') }}" class="inline-flex items-center px-4 py-2.5 bg-primary-600 hover:bg-primary-700 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-wider transition-all shadow-xs">
+                    + Buat Pengumuman Baru
+                </a>
+            </x-slot>
+        </x-page-header>
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            @if(session('success'))
-                <div class="mb-6 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-5 py-4 rounded-2xl relative shadow-sm" role="alert">
-                    <span class="block sm:inline font-bold">{{ session('success') }}</span>
-                </div>
-            @endif
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <x-data-table 
+                :headers="[
+                    ['label' => 'Poster', 'width' => 'w-20'],
+                    ['label' => 'Kategori & Judul'],
+                    ['label' => 'Target Penerima'],
+                    ['label' => 'Pembaca'],
+                    ['label' => 'Status / Expired'],
+                    ['label' => 'Aksi', 'align' => 'right']
+                ]"
+                :items="$announcements"
+                emptyIcon="document"
+                emptyMessage="Belum ada pengumuman"
+                emptySubMessage="Publikasikan pengumuman pertama Anda untuk mengabarkan berita sekolah terbaru."
+                emptyActionUrl="{{ route('announcements.create') }}"
+                emptyActionText="Buat Pengumuman"
+            >
+                @foreach ($announcements as $announcement)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-750/30 transition-colors">
+                        <!-- Poster -->
+                        <td class="py-4 px-6 whitespace-nowrap">
+                            @if($announcement->image_path)
+                                <img src="{{ Storage::url($announcement->image_path) }}" alt="Poster" class="h-12 w-12 object-cover rounded-xl border border-gray-200 dark:border-slate-700 shadow-xs">
+                            @else
+                                <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-slate-900 flex items-center justify-center text-gray-400 dark:text-slate-650 border border-gray-150 dark:border-slate-700/50">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                            @endif
+                        </td>
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-3xl border border-gray-100 dark:border-gray-700">
-                <div class="p-0 overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-750">
-                            <tr>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Poster</th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Kategori & Judul</th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Target Penerima</th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Pembaca</th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Status / Expired</th>
-                                <th scope="col" class="px-6 py-4 text-right text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @forelse($announcements ?? [] as $announcement)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
-                                    <!-- Poster -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($announcement->image_path)
-                                            <img src="{{ Storage::url($announcement->image_path) }}" alt="Poster" class="h-14 w-14 object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                                        @else
-                                            <div class="h-14 w-14 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-650">
-                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <!-- Kategori & Judul -->
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center space-x-2 mb-1">
-                                            <!-- Pinned indicator -->
-                                            @if($announcement->is_pinned)
-                                                <span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-[9px] font-black uppercase tracking-wider flex items-center gap-0.5 shadow-sm border border-amber-200/20">
-                                                    📌 PINNED
-                                                </span>
-                                            @endif
-                                            <!-- Category Badge -->
-                                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider {{ 
-                                                $announcement->category === 'akademik' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' : (
-                                                $announcement->category === 'keuangan' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300' : (
-                                                $announcement->category === 'kegiatan' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' : (
-                                                $announcement->category === 'keislaman' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')))
-                                            }}">
-                                                📁 {{ $announcement->category ?? 'umum' }}
-                                            </span>
-                                            <!-- Priority level -->
-                                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider {{
-                                                $announcement->priority === 'urgent' ? 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 animate-pulse' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                                            }}">
-                                                {{ $announcement->priority }}
-                                            </span>
-                                        </div>
-                                        <div class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
-                                            {{ $announcement->title }}
-                                        </div>
-                                        <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5 line-clamp-1 w-64">
-                                            {{ $announcement->content }}
-                                        </div>
-                                    </td>
-                                    <!-- Target Penerima -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-100/30">
-                                            👥 {{ $announcement->target_role ? ucfirst($announcement->target_role) : 'Semua Orang' }}
-                                        </span>
-                                        @if($announcement->targetClassroom)
-                                            <div class="mt-1">
-                                                <span class="px-2.5 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border border-purple-100/30">
-                                                    🏫 {{ $announcement->targetClassroom->name }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                    </td>
-                                    <!-- Pembaca -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-black text-gray-800 dark:text-gray-200">
-                                            👁️ {{ $announcement->read_count }}
-                                        </div>
-                                        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">
-                                            Total Pembaca Unik
-                                        </div>
-                                    </td>
-                                    <!-- Status / Expired -->
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($announcement->expires_at && $announcement->expires_at->isPast())
-                                            <span class="px-2.5 py-1 inline-flex text-xs font-black rounded-full bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-400">
-                                                Expired
-                                            </span>
-                                        @else
-                                            <span class="px-2.5 py-1 inline-flex text-xs font-black rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400">
-                                                Tayang
-                                            </span>
-                                            @if($announcement->expires_at)
-                                                <div class="text-[10px] text-gray-450 dark:text-gray-500 mt-1">s.d {{ $announcement->expires_at->format('d M Y') }}</div>
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <!-- Aksi -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-black tracking-wider space-y-1">
-                                        <div class="flex items-center justify-end gap-2 flex-wrap">
-                                            <!-- Show Button -->
-                                            <a href="{{ route('announcements.show', $announcement) }}" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm">
-                                                Lihat
-                                            </a>
-                                            
-                                            <!-- Pin Toggle Form -->
-                                            <form action="{{ route('announcements.pin', $announcement) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="px-3 py-1.5 {{ $announcement->is_pinned ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 hover:bg-amber-200' }} rounded-lg transition-colors shadow-sm">
-                                                    {{ $announcement->is_pinned ? 'Unpin' : 'Pin' }}
-                                                </button>
-                                            </form>
+                        <!-- Kategori & Judul -->
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                                <!-- Pinned indicator -->
+                                @if($announcement->is_pinned)
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/45 dark:text-amber-300 text-[9px] font-extrabold uppercase tracking-wider border border-amber-250 dark:border-amber-900/30 shadow-xs">
+                                        📌 PINNED
+                                    </span>
+                                @endif
 
-                                            <!-- Read Receipts Log -->
-                                            <a href="{{ route('announcements.receipts', $announcement) }}" class="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors shadow-sm">
-                                                Penerima
-                                            </a>
+                                <!-- Category Badge -->
+                                <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider border {{ 
+                                    $announcement->category === 'akademik' ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-900/40' : (
+                                    $announcement->category === 'keuangan' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-250 dark:border-emerald-900/40' : (
+                                    $announcement->category === 'kegiatan' ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-250 dark:border-purple-900/40' : (
+                                    $announcement->category === 'keislaman' ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-250 dark:border-amber-900/40' : 'bg-slate-50 text-slate-755 dark:bg-slate-800/80 dark:text-slate-300 border-slate-200 dark:border-slate-700/60')))
+                                }}">
+                                    {{ $announcement->category ?? 'umum' }}
+                                </span>
 
-                                            <!-- Edit -->
-                                            <a href="{{ route('announcements.edit', $announcement) }}" class="px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-450 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/55 transition-colors shadow-sm">
-                                                Edit
-                                            </a>
+                                <!-- Priority level -->
+                                @if($announcement->priority === 'urgent')
+                                    <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-red-50 text-red-700 dark:bg-red-950/45 dark:text-red-300 border border-red-250 dark:border-red-900/40 uppercase tracking-wider animate-pulse">
+                                        🚨 URGENT
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
+                                {{ $announcement->title }}
+                            </div>
+                            <div class="text-xs text-gray-400 dark:text-slate-400 mt-0.5 line-clamp-1 max-w-xs md:max-w-md">
+                                {{ $announcement->content }}
+                            </div>
+                        </td>
 
-                                            <!-- Delete -->
-                                            <form action="{{ route('announcements.destroy', $announcement->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengumuman ini beserta lampirannya?');" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="px-3 py-1.5 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-450 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/55 transition-colors shadow-sm">
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-10 text-center text-gray-550 dark:text-gray-500 text-sm">
-                                        Belum ada pengumuman yang disebarkan.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-                @if($announcements->hasPages())
-                    <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-750">
-                        {{ $announcements->links() }}
-                    </div>
-                @endif
-            </div>
+                        <!-- Target Penerima -->
+                        <td class="py-4 px-6 whitespace-nowrap">
+                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-750 dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
+                                👥 {{ $announcement->target_role ? ucfirst($announcement->target_role) : 'Semua Orang' }}
+                            </span>
+                            @if($announcement->targetClassroom)
+                                <div class="mt-1.5">
+                                    <span class="px-2.5 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-750 dark:text-purple-400 border border-purple-200 dark:border-purple-900/40">
+                                        🏫 {{ $announcement->targetClassroom->name }}
+                                    </span>
+                                </div>
+                            @endif
+                        </td>
+
+                        <!-- Pembaca -->
+                        <td class="py-4 px-6 whitespace-nowrap">
+                            <div class="text-sm font-black text-gray-800 dark:text-slate-200">
+                                👁️ {{ $announcement->read_count }}
+                            </div>
+                            <div class="text-[10px] text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                Pembaca Unik
+                            </div>
+                        </td>
+
+                        <!-- Status / Expired -->
+                        <td class="py-4 px-6 whitespace-nowrap">
+                            @if($announcement->expires_at && $announcement->expires_at->isPast())
+                                <x-status-badge status="expired" />
+                            @else
+                                <x-status-badge status="aktif" />
+                                @if($announcement->expires_at)
+                                    <div class="text-[10px] text-gray-400 dark:text-slate-500 mt-1">s.d {{ $announcement->expires_at->format('d M Y') }}</div>
+                                @endif
+                            @endif
+                        </td>
+
+                        <!-- Aksi -->
+                        <td class="py-4 px-6 whitespace-nowrap text-right text-xs font-bold tracking-wider">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('announcements.show', $announcement) }}" class="px-2.5 py-1.5 bg-gray-100 dark:bg-slate-700 text-gray-750 dark:text-slate-300 rounded-lg hover:bg-gray-250 dark:hover:bg-slate-655 transition-colors shadow-xs">
+                                    Lihat
+                                </a>
+                                
+                                <form action="{{ route('announcements.pin', $announcement) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="px-2.5 py-1.5 {{ $announcement->is_pinned ? 'bg-amber-500 text-gray-950 hover:bg-amber-600' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 hover:bg-amber-200' }} rounded-lg transition-colors shadow-xs font-bold">
+                                        {{ $announcement->is_pinned ? 'Unpin' : 'Pin' }}
+                                    </button>
+                                </form>
+
+                                <a href="{{ route('announcements.receipts', $announcement) }}" class="px-2.5 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors shadow-xs">
+                                    Penerima
+                                </a>
+
+                                <a href="{{ route('announcements.edit', $announcement) }}" class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-450 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors shadow-xs">
+                                    Edit
+                                </a>
+
+                                <button type="button" x-data x-on:click="$dispatch('open-modal', 'confirm-delete-{{ $announcement->id }}')" class="px-2.5 py-1.5 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors shadow-xs">
+                                    Hapus
+                                </button>
+                                <x-confirm-modal 
+                                    name="confirm-delete-{{ $announcement->id }}" 
+                                    title="Hapus Pengumuman?" 
+                                    type="danger" 
+                                    :action="route('announcements.destroy', $announcement->id)" 
+                                    method="DELETE"
+                                    submitText="Ya, Hapus"
+                                >
+                                    Apakah Anda yakin ingin menghapus pengumuman <strong>{{ $announcement->title }}</strong> beserta semua lampirannya secara permanen?
+                                </x-confirm-modal>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </x-data-table>
         </div>
     </div>
 </x-app-layout>
