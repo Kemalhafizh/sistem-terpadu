@@ -63,9 +63,13 @@
             @if(isset($announcements) && $announcements->count() > 0)
                 <div class="space-y-4">
                     @foreach($announcements ?? [] as $announcement)
-                        <div class="rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-6 relative overflow-hidden {{ $announcement->priority == 'urgent' ? 'bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30' : 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700' }}">
-                            @if($announcement->priority == 'urgent')
-                                <div class="absolute top-0 right-0 px-3 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg flex items-center animate-pulse">
+                        <div class="rounded-3xl p-6 shadow-md flex flex-col md:flex-row gap-6 relative overflow-hidden transition-all duration-300 hover:shadow-lg border {{ $announcement->is_pinned ? 'bg-amber-50/20 dark:bg-amber-950/10 border-amber-300/40' : ($announcement->priority == 'urgent' ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/30' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700') }}">
+                            @if($announcement->is_pinned)
+                                <div class="absolute top-0 right-0 px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg flex items-center z-10">
+                                    📌 {{ __('dashboard.pinned') ?? 'DISEMATKAN' }}
+                                </div>
+                            @elseif($announcement->priority == 'urgent')
+                                <div class="absolute top-0 right-0 px-3 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg flex items-center animate-pulse z-10">
                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                     {{ __('dashboard.urgent') }}
                                 </div>
@@ -73,20 +77,59 @@
                             
                             @if($announcement->image_path)
                                 <div class="shrink-0">
-                                    <img src="{{ Storage::url($announcement->image_path) }}" alt="Poster" class="w-full md:w-48 h-auto object-cover rounded-xl border {{ $announcement->priority == 'urgent' ? 'border-red-200 dark:border-red-950' : 'border-gray-200 dark:border-gray-700' }}">
+                                    <img src="{{ Storage::url($announcement->image_path) }}" alt="Poster" class="w-full md:w-48 h-32 object-cover rounded-2xl border {{ $announcement->priority == 'urgent' ? 'border-red-200 dark:border-red-950' : 'border-gray-200 dark:border-gray-700' }}">
                                 </div>
                             @endif
                             
-                            <div class="grow">
-                                <h4 class="text-lg font-black {{ $announcement->priority == 'urgent' ? 'text-red-800 dark:text-red-300' : 'text-gray-900 dark:text-white' }} mb-2">{{ $announcement->title }}</h4>
-                                <p class="text-sm {{ $announcement->priority == 'urgent' ? 'text-red-700 dark:text-red-400' : 'text-gray-600 dark:text-gray-300' }} leading-relaxed whitespace-pre-line">{{ $announcement->content }}</p>
+                            <div class="grow flex flex-col justify-between">
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider {{ 
+                                            $announcement->category === 'akademik' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' : (
+                                            $announcement->category === 'keuangan' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300' : (
+                                            $announcement->category === 'kegiatan' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' : (
+                                            $announcement->category === 'keislaman' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')))
+                                        }}">
+                                            📁 {{ $announcement->category ?? 'umum' }}
+                                        </span>
+                                        @if($announcement->require_acknowledgement)
+                                            @if($announcement->isAcknowledgedBy(auth()->id()))
+                                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 flex items-center gap-1">
+                                                    ✓ {{ __('dashboard.acknowledged') ?? 'TERKONFIRMASI' }}
+                                                </span>
+                                            @else
+                                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300 animate-pulse flex items-center gap-1">
+                                                    ⚠️ {{ __('dashboard.needs_acknowledgement') ?? 'PERLU KONFIRMASI' }}
+                                                </span>
+                                            @endif
+                                        @endif
+                                    </div>
+                                    <h4 class="text-lg font-black {{ $announcement->priority == 'urgent' ? 'text-red-800 dark:text-red-300' : 'text-gray-900 dark:text-white' }} mb-2">
+                                        {{ $announcement->title }}
+                                    </h4>
+                                    <p class="text-sm {{ $announcement->priority == 'urgent' ? 'text-red-700/95 dark:text-red-400' : 'text-gray-600 dark:text-gray-300' }} leading-relaxed line-clamp-2">
+                                        {{ Str::limit($announcement->content, 180) }}
+                                    </p>
+                                </div>
                                 
-                                <div class="mt-4 flex items-center text-xs font-bold text-gray-400 dark:text-gray-500">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                    {{ __('dashboard.from') }}: {{ $announcement?->creator?->name }}
-                                    <span class="mx-2">•</span>
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    {{ $announcement->created_at?->diffForHumans() }}
+                                <div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-gray-100/50 dark:border-gray-700/50">
+                                    <div class="flex items-center text-xs font-bold text-gray-400 dark:text-gray-500">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                        {{ __('dashboard.from') }}: {{ $announcement?->creator?->name }}
+                                        <span class="mx-2">•</span>
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        {{ $announcement->created_at?->diffForHumans() }}
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'waka_humas']) || $announcement->created_by === auth()->id())
+                                            <a href="{{ route('announcements.receipts', $announcement) }}" class="inline-flex items-center justify-center px-4 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+                                                📊 {{ __('dashboard.read_receipts') ?? 'Penerima' }}
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('announcements.show', $announcement) }}" class="inline-flex items-center justify-center px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-primary-600/10">
+                                            {{ __('dashboard.view_details') ?? 'Lihat Selengkapnya' }} →
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

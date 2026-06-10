@@ -83,4 +83,18 @@ class LibraryLoan extends Model
 
         return ceil($daysLate) * $finePerDay;
     }
+
+    /**
+     * Get the number of days the loan is overdue.
+     */
+    public function daysOverdue(): int
+    {
+        $endDate = $this->returned_at ?? now();
+        if ($endDate <= $this->due_at) {
+            return 0;
+        }
+
+        $daysLate = $this->due_at->diffInDays($endDate, false);
+        return $daysLate > 0 ? (int) ceil($daysLate) : 0;
+    }
 }

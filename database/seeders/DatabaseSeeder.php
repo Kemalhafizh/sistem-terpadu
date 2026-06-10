@@ -45,6 +45,8 @@ class DatabaseSeeder extends Seeder
             TicketSeeder::class,                // 10 support tickets with comments and assignee timelines
             SurveySeeder::class,                // 2 surveys, questions, and 55 responses
             LibraryLoanSeeder::class,           // 35 library book loans (active, returned, overdue)
+            EventAttendanceSeeder::class,       // 10 events + presensi (upacara, sholat dhuha, PHBI)
+            MeetingNoteSeeder::class,           // 3 meetings with attendees and action items (Modul 15.1)
         ]);
     }
 }

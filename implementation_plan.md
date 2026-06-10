@@ -341,9 +341,9 @@ class DailyAssessmentService
 
 ---
 
-### 📊 Modul 11.4: Analisis Butir Soal (Item Analysis) untuk CBT
+### 📊 Modul 11.4: Analisis Butir Soal (Item Analysis) untuk CBT (Selesai ✅)
 
-**Status Saat Ini:** CBT (Computer-Based Testing) sudah lengkap — buat soal, buat ujian, siswa mengerjakan, auto-grading, timer, anti-cheat. Tapi setelah ujian selesai, belum ada analisis kualitas soal.
+**Status Saat Ini:** Selesai diimplementasikan secara komprehensif. Menambahkan perhitungan tingkat kesukaran, daya pembeda kelompok atas/bawah 27%, efektivitas distractor pengecoh, nilai reliabilitas KR-20, ekspor PDF landscape, serta visualisasi analitik interaktif.
 
 **Apa yang Perlu Ditambah:**
 
@@ -425,9 +425,9 @@ Halaman analisis butir soal:
 
 ---
 
-### 🎒 Modul 11.5: Presensi Kegiatan & Acara Sekolah
+### 🎒 Modul 11.5: Presensi Kegiatan & Acara Sekolah (Selesai ✅)
 
-**Status Saat Ini:** Absensi hanya untuk KBM (Kegiatan Belajar Mengajar) reguler di kelas. Belum ada sistem presensi untuk kegiatan lain.
+**Status Saat Ini:** Selesai diimplementasikan secara komprehensif. Menambahkan sistem presensi kegiatan non-KBM (Upacara, Sholat Jamaah, PHBI, OSIS, dll) lengkap dengan dynamic targeting, batch input, charts, rekap dashboard, dan export PDF.
 
 **Apa yang Perlu Ditambah:**
 
@@ -613,64 +613,250 @@ resources/views/event-attendance/
 
 ---
 
-### 🔧 Modul 12.2: Penguatan Jadwal Pelajaran
+### 🔧 Modul 12.2: Penguatan Jadwal Pelajaran (Selesai ✅)
 
-**Status Saat Ini:** Ada `ScheduleController` dengan preset, grid view, dan CRUD. Tapi belum ada: deteksi bentrok, view per guru, view per ruangan, dan print jadwal.
+**Status Saat Ini:** Selesai diimplementasikan secara komprehensif. Menambahkan validasi bentrok tiga arah (Guru, Kelas, Ruangan), visualisasi grid per guru & per ruangan, dasbor audit bentrok, serta cetak PDF landscape untuk jadwal kelas, guru, dan master.
+
+#### User Review Required
+
+> [!IMPORTANT]
+> **Skema Room-ID & Deteksi Bentrok Tiga Arah (Teacher, Classroom, Room):**
+> Kami mengusulkan untuk menambahkan kolom `room_id` (foreign key ke tabel `rooms`, nullable) pada tabel `schedules`. Hal ini penting karena jadwal tidak hanya mengikat guru dan kelas, tetapi juga ruangan fisik tempat KBM berlangsung.
+> Dengan adanya `room_id`, sistem akan memvalidasi **3 jenis bentrok** secara otomatis saat menyimpan jadwal baru:
+> 1. **Bentrok Guru:** Guru tidak boleh mengajar di dua kelas/ruang berbeda pada jam sesi yang sama.
+> 2. **Bentrok Kelas:** Suatu kelas tidak boleh menerima mata pelajaran berbeda pada jam sesi yang sama.
+> 3. **Bentrok Ruangan:** Dua kelas berbeda tidak boleh menggunakan ruangan fisik yang sama pada jam sesi yang sama (misal: Lab Komputer terisi ganda).
+> Apakah Anda setuju dengan skema database dan validasi tiga arah ini?
 
 #### Rencana Implementasi
 
-##### [MODIFY] `app/Http/Controllers/ScheduleController.php`
+##### [NEW] Migration: `add_room_id_to_schedules_table`
 ```php
-// Tambahkan method baru:
-public function teacherSchedule($userId)      // Jadwal per guru (filter by teacher)
-public function roomSchedule($roomId)         // Jadwal per ruangan
-public function detectConflicts()             // Deteksi bentrok: guru sama di 2 kelas, ruangan ganda
-public function printClassSchedule($classId)  // Print jadwal kelas (format PDF landscape)
-public function printTeacherSchedule($userId) // Print jadwal guru
-public function printMasterSchedule()         // Print jadwal master seluruh sekolah
+Schema::table('schedules', function (Blueprint $table) {
+    $table->foreignId('room_id')->nullable()->after('teacher_id')->constrained('rooms')->nullOnDelete();
+});
 ```
 
-##### [NEW] `resources/views/schedules/`
+##### [MODIFY] `app/Models/Schedule.php`
+* Menambahkan `room_id` ke array `$fillable`.
+* Menambahkan relasi `room()`:
+```php
+public function room() {
+    return $this->belongsTo(Room::class);
+}
 ```
-resources/views/schedules/
-├── grid.blade.php                  # [EXISTING] → Tambah: warna per mapel, tooltip guru+ruangan
-├── teacher-view.blade.php          # [NEW] Jadwal per guru: grid minggu ini, warna per kelas
-├── room-view.blade.php             # [NEW] Jadwal per ruangan: siapa pakai jam berapa
-├── conflicts.blade.php             # [NEW] List bentrok: guru ganda, ruangan ganda — dengan alert merah
-├── print-class.blade.php           # [NEW] Template print: jadwal kelas landscape (PDF)
-└── print-master.blade.php          # [NEW] Template print: jadwal master seluruh sekolah
+
+##### [MODIFY] `app/Http/Controllers/ScheduleController.php`
+Menambahkan/memodifikasi method berikut:
+* `showGrid(Request $r)`: Diperbarui agar memuat daftar ruangan (`Room::all()`) dan mengirimkannya ke view.
+* `store(Request $r)`: Menambahkan validasi `room_id` (opsional) dan melakukan 3 validasi bentrok (guru, kelas, ruangan).
+* `teacherSchedule(Request $r)`: Menampilkan grid jadwal per guru dengan dropdown pilihan guru.
+* `roomSchedule(Request $r)`: Menampilkan grid jadwal per ruangan dengan dropdown pilihan ruangan.
+* `detectConflicts()`: Memvalidasi seluruh data jadwal aktif di database secara cross-check dan menampilkan semua bentrok yang ada.
+* `printClassSchedule(Classroom $classroom)`: Ekspor/Print jadwal per kelas format landscape PDF.
+* `printTeacherSchedule(User $teacher)`: Ekspor/Print jadwal per guru format landscape PDF.
+* `printMasterSchedule()`: Ekspor/Print master jadwal seluruh sekolah.
+
+##### [MODIFY] `routes/web.php`
+Mendaftarkan rute-rute baru di dalam grup kurikulum:
+```php
+Route::get('schedules/teacher', [ScheduleController::class, 'teacherSchedule'])->name('schedules.teacher');
+Route::get('schedules/room', [ScheduleController::class, 'roomSchedule'])->name('schedules.room');
+Route::get('schedules/conflicts', [ScheduleController::class, 'detectConflicts'])->name('schedules.conflicts');
+Route::get('schedules/print/class/{classroom}', [ScheduleController::class, 'printClassSchedule'])->name('schedules.print.class');
+Route::get('schedules/print/teacher/{teacher}', [ScheduleController::class, 'printTeacherSchedule'])->name('schedules.print.teacher');
+Route::get('schedules/print/master', [ScheduleController::class, 'printMasterSchedule'])->name('schedules.print.master');
 ```
+
+##### [NEW] Views di `resources/views/schedules/`
+* `teacher-view.blade.php`: Halaman grid visual jadwal dari sudut pandang guru.
+* `room-view.blade.php`: Halaman grid visual jadwal dari sudut pandang ruangan.
+* `conflicts.blade.php`: Dasbor audit bentrok jadwal yang menampilkan semua bentrok guru/ruang/kelas dengan badge merah menyala dan tombol aksi cepat untuk menghapus/mengedit jadwal bentrok.
+* `print-class.blade.php`, `print-teacher.blade.php`, `print-master.blade.php`: Template cetak (landscape) dengan style minimalis bersih dioptimalkan untuk PDF.
+
+##### [MODIFY] `resources/views/schedules/grid.blade.php`
+* Menambahkan pilihan Ruangan (`room_id`) pada modal plot mata pelajaran.
+* Menampilkan nama ruangan pada kartu jadwal jika ruangan dipilih.
+* Menambahkan tombol pintasan navigasi ke: *Jadwal Guru, Jadwal Ruangan, Deteksi Bentrok, dan Cetak PDF*.
+
+##### [MODIFY] `resources/views/components/sidebar.blade.php`
+* Menambahkan menu navigasi baru di bawah Fitur Penjadwalan:
+  * "Jadwal Guru" (link ke `schedules.teacher`)
+  * "Jadwal Ruangan" (link ke `schedules.room`)
+  * "Audit Bentrok" (link ke `schedules.conflicts`)
+
+#### Verification Plan
+
+##### Automated Tests
+Membuat file test baru `tests/Feature/Academic/ScheduleTest.php` untuk memvalidasi:
+* Otorisasi pengakses rute (hanya kurikulum/admin).
+* Validasi input & konflik (deteksi bentrok guru, kelas, dan ruangan bekerja dengan benar).
+* Halaman grid per guru dan ruangan memuat data yang benar.
+* Pencetakan PDF (Class, Teacher, Master) terproses dengan status 200.
+
+##### Manual Verification
+* Menambahkan plotting jadwal baru melalui modal, verifikasi penginputan ruangan.
+* Memaksa terjadinya bentrok (membuat jadwal guru di tempat berbeda pada jam sama), pastikan muncul pesan eror.
+* Membuka halaman Audit Bentrok, verifikasi tampilan list bentrok.
+* Membuka halaman cetak PDF, pastikan tata letak cetak rapi.
+
 
 ---
 
-### 🔧 Modul 12.3: Penguatan E-Learning & Materi Pembelajaran
+### 🔧 Modul 12.3: Penguatan E-Learning & Materi Pembelajaran (Selesai ✅)
 
 **Status Saat Ini:** E-Learning sudah cukup lengkap (kelas, materi, assignment, submission, grading, secure mode). Tapi belum ada: diskusi per materi, announcement per kelas, progress tracking siswa.
 
+#### User Review Required
+
+> [!IMPORTANT]
+> **Skema Pengarsipan & Duplikasi Kelas Virtual:**
+> - **Pengarsipan:** Ketika kelas diarsipkan (`is_archived = true`), kelas tersebut tidak akan muncul di dashboard utama siswa/guru secara default. Hal ini mencegah dashboard dipenuhi oleh kelas semester lalu, namun riwayat belajar tetap tersimpan. Akses ke kelas arsip dapat dibuka kembali melalui tab "Arsip Kelas".
+> - **Duplikasi:** Menduplikasi kelas virtual akan menyalin data dasar kelas (nama, deskripsi, subjek, kelas fisik) serta menduplikasi seluruh materi dan penugasan (tanpa menyalin data interaksi siswa seperti pengumpulan tugas, nilai, komentar diskusi, dan riwayat baca materi). Batas waktu tugas yang diduplikasi akan diset secara otomatis ke 7 hari ke depan (dapat diubah kembali oleh guru).
+> Apakah alur pengarsipan dan duplikasi kelas virtual di atas disetujui?
+
+#### Open Questions
+
+> [!NOTE]
+> **Logika Deteksi Progress Membaca Materi:**
+> Kami mengusulkan pembuatan halaman detail materi baru (`/elearning/material/{material}`) yang akan dikunjungi oleh siswa untuk membaca deskripsi lengkap, mendownload lampiran file, menonton video, dan berdiskusi.
+> - Setiap kunjungan pertama siswa ke halaman detail materi ini akan mencatat log di tabel `elearning_material_views`.
+> - Kunjungan ini dianggap sebagai indikasi bahwa siswa telah membaca/mengakses materi tersebut.
+> - Progress persentase siswa di kelas virtual dihitung dari rasio jumlah materi yang sudah dibaca ditambah tugas yang sudah dikerjakan dibagi dengan total materi dan tugas yang ada di kelas tersebut.
+> Apakah mekanisme penghitungan progress ini sudah sesuai dengan kebutuhan guru?
+
 #### Rencana Implementasi
 
-##### [MODIFY] `app/Http/Controllers/ElearningController.php`
+##### [NEW] Migration: `create_elearning_enhancements_tables`
 ```php
-// Tambahkan method baru:
-public function classAnnouncement($classId, Request $r)    // Post pengumuman ke kelas e-learning
-public function studentProgress($classId, $studentId)      // Progress siswa: materi dibaca, tugas dikerjakan
-public function classProgress($classId)                    // Overview: % siswa yang sudah baca materi, submit tugas
-public function duplicateClass($classId)                   // Duplikat kelas (untuk semester baru)
-public function archiveClass($classId)                     // Arsipkan kelas semester lalu
+Schema::table('elearning_classes', function (Blueprint $table) {
+    $table->boolean('is_archived')->default(false)->after('description');
+});
+
+Schema::create('elearning_announcements', function (Blueprint $table) {
+    $table->id();
+    $table->uuid('uuid')->unique();
+    $table->foreignId('elearning_class_id')->constrained('elearning_classes')->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete(); // Creator (teacher)
+    $table->text('content');
+    $table->timestamps();
+});
+
+Schema::create('elearning_material_views', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+    $table->foreignId('elearning_material_id')->constrained('elearning_materials')->cascadeOnDelete();
+    $table->timestamp('viewed_at');
+    $table->timestamps();
+
+    $table->unique(['student_id', 'elearning_material_id']);
+});
+
+Schema::create('elearning_material_comments', function (Blueprint $table) {
+    $table->id();
+    $table->uuid('uuid')->unique();
+    $table->foreignId('elearning_material_id')->constrained('elearning_materials')->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete(); // Commenter (student/teacher)
+    $table->text('content');
+    $table->timestamps();
+});
 ```
 
-##### [MODIFY] Views
+##### [NEW] Models
+* `ElearningAnnouncement.php`: Relasi ke `ElearningClass` dan `User` (creator).
+* `ElearningMaterialView.php`: Relasi ke `Student` dan `ElearningMaterial`.
+* `ElearningMaterialComment.php`: Relasi ke `User` (author) dan `ElearningMaterial`.
+* Update `ElearningClass.php` dan `ElearningMaterial.php` untuk mendefinisikan relasi timbal balik.
+
+##### [NEW] `app/Services/ElearningService.php`
+```php
+class ElearningService
+{
+    public function duplicateClass(int $classId, int $teacherId): ElearningClass;
+    public function toggleArchive(int $classId): void;
+    public function logMaterialView(int $studentId, int $materialId): void;
+    public function getStudentProgress(int $classId, int $studentId): array;
+    public function getClassProgressSummary(int $classId): array;
+}
 ```
-resources/views/elearning/
-├── class.blade.php                 # [EXISTING] → Tambah: section announcement di atas
-│                                   #            → Tambah: progress bar per materi (sudah dibaca / belum)
-├── student-progress.blade.php      # [NEW] Detail per siswa: checklist materi dibaca, tugas submitted, nilai
-├── class-progress.blade.php        # [NEW] Overview kelas: chart % completion, list siswa + status
+
+##### [MODIFY] `app/Http/Controllers/ElearningController.php`
+Menambahkan/memodifikasi method berikut:
+* `showClass(ElearningClass $elearningClass)`: Memuat pengumuman kelas (`announcements`) dan menghitung progress bar untuk siswa yang masuk.
+* `storeAnnouncement(Request $r, ElearningClass $elearningClass)`: Guru memposting pengumuman.
+* `deleteAnnouncement(ElearningClass $elearningClass, ElearningAnnouncement $announcement)`: Guru menghapus pengumuman.
+* `showMaterial(ElearningClass $elearningClass, ElearningMaterial $material)`: Halaman detail materi, mencatat riwayat baca siswa, menampilkan daftar komentar, dan form input komentar.
+* `storeComment(Request $r, ElearningMaterial $material)`: Siswa/Guru mengirim komentar ke materi.
+* `deleteComment(ElearningMaterial $material, ElearningMaterialComment $comment)`: Menghapus komentar jika pemilik atau pengajar kelas.
+* `classProgress(ElearningClass $elearningClass)`: Dashboard progres kelas (Wali kelas/Guru dapat melihat status ketuntasan siswa).
+* `studentProgress(ElearningClass $elearningClass, Student $student)`: Halaman detail progress individu siswa (materi dibaca & tugas selesai).
+* `duplicateClass(ElearningClass $elearningClass)`: Guru menduplikasi kelas.
+* `archiveClass(ElearningClass $elearningClass)`: Guru mengarsipkan kelas.
+* `unarchiveClass(ElearningClass $elearningClass)`: Guru memulihkan kelas dari arsip.
+
+##### [MODIFY] `routes/web.php`
+Mendaftarkan rute baru:
+```php
+// Virtual Class Management
+Route::post('elearning/class/{elearningClass}/archive', [ElearningController::class, 'archiveClass'])->name('elearning.class.archive');
+Route::post('elearning/class/{elearningClass}/unarchive', [ElearningController::class, 'unarchiveClass'])->name('elearning.class.unarchive');
+Route::post('elearning/class/{elearningClass}/duplicate', [ElearningController::class, 'duplicateClass'])->name('elearning.class.duplicate');
+
+// Announcements
+Route::post('elearning/class/{elearningClass}/announcement', [ElearningController::class, 'storeAnnouncement'])->name('elearning.announcement.store');
+Route::delete('elearning/class/{elearningClass}/announcement/{announcement}', [ElearningController::class, 'deleteAnnouncement'])->name('elearning.announcement.destroy');
+
+// Materials & Discussions
+Route::get('elearning/class/{elearningClass}/material/{material}', [ElearningController::class, 'showMaterial'])->name('elearning.material.show');
+Route::post('elearning/material/{material}/comment', [ElearningController::class, 'storeComment'])->name('elearning.comment.store');
+Route::delete('elearning/material/{material}/comment/{comment}', [ElearningController::class, 'deleteComment'])->name('elearning.comment.destroy');
+
+// Progress Tracking
+Route::get('elearning/class/{elearningClass}/progress', [ElearningController::class, 'classProgress'])->name('elearning.class.progress');
+Route::get('elearning/class/{elearningClass}/progress/student/{student}', [ElearningController::class, 'studentProgress'])->name('elearning.class.student-progress');
 ```
+
+##### [NEW & MODIFY] Views di `resources/views/elearning/`
+* `show_class.blade.php` [MODIFY]:
+  * Menampilkan widget pengumuman kelas di atas timeline.
+  * Menambahkan section/modal posting pengumuman untuk Guru.
+  * Menambahkan tombol pintasan "Progress Kelas", "Duplikat Kelas", "Arsipkan Kelas" untuk Guru.
+  * Menambahkan progress bar keterbacaan materi & penugasan untuk Siswa.
+* `show_material.blade.php` [NEW]:
+  * Halaman detail materi untuk membaca penjelasan lengkap, unduh file, tonton video.
+  * Form & daftar komentar diskusi di bawah materi (bergaya chat / thread modern).
+* `class_progress.blade.php` [NEW]:
+  * Halaman progres kelas bagi guru: chart rata-rata tuntas, daftar siswa dengan persentase keterbacaan materi, pengumpulan tugas, dan nilai rata-rata.
+* `student_progress.blade.php` [NEW]:
+  * Halaman checklist detail tuntas siswa (materi apa saja yang sudah dibaca ✅, tugas apa yang sudah dikumpulkan ✅ beserta nilainya).
+
+##### Demo Data (Seeder)
+* Menambahkan status `is_archived = true` pada 1 kelas demo lama.
+* Menambahkan 5 pengumuman pada kelas aktif.
+* Menambahkan log riwayat baca materi dan komentar diskusi pada materi untuk menyimulasikan kelas interaktif yang aktif.
+
+#### Verification Plan
+
+##### Automated Tests
+* Membuat file unit/feature test `tests/Feature/Academic/ElearningEnhancementTest.php` untuk memvalidasi:
+  * Pengumuman kelas dapat dibuat, dibaca, dan dihapus dengan otorisasi yang benar.
+  * Membuka detail materi secara otomatis mencatat riwayat baca siswa (`elearning_material_views`).
+  * Diskusi komentar materi berjalan (post komentar dan hapus komentar terotorisasi).
+  * Guru dapat mengakses data progres kelas dan detail progress per siswa.
+  * Guru dapat menduplikasi kelas virtual (materi & tugas tersalin dengan benar).
+  * Guru dapat mengarsipkan & memulihkan kelas virtual.
+
+##### Manual Verification
+* Login sebagai Guru, posting pengumuman baru, buka halaman diskusi materi dan kirim komentar.
+* Login sebagai Siswa, verifikasi progress bar di halaman kelas virtual, klik materi, pastikan riwayat baca tercatat, dan balas diskusi.
+* Login kembali sebagai Guru, buka halaman "Progress Kelas" dan verifikasi grafik persentase serta checklist siswa.
+* Lakukan duplikasi dan pengarsipan kelas virtual, verifikasi status kelas di dashboard.
 
 ---
 
-### 🔧 Modul 12.4: Penguatan Modul Perpustakaan
+---
+
+### 🔧 Modul 12.4: Penguatan Modul Perpustakaan (Selesai ✅)
 
 **Status Saat Ini:** Library cukup lengkap (katalog, CRUD, sirkulasi, peminjaman, pengembalian, denda). Tapi belum ada: rekomendasi buku, statistik baca, kartu anggota digital.
 
@@ -700,7 +886,7 @@ resources/views/library/
 
 ### 🔧 Modul 12.5: Penguatan Modul Keuangan (SPP & Billing)
 
-**Status Saat Ini:** Finance sudah lengkap (billing, payment, bulk generate, mock gateway, receipt, accounting). Tapi belum ada: laporan tunggakan per kelas, proyeksi pendapatan, surat tagihan otomatis.
+**Status Saat Ini:** Selesai ✅ (Laporan tunggakan per kelas, proyeksi pendapatan, surat tagihan otomatis, rekapitulasi bulanan, ekspor laporan keuangan excel/pdf, dan automated tests telah diimplementasikan dengan lengkap).
 
 #### Rencana Implementasi
 
@@ -949,6 +1135,8 @@ tests/Feature/
 
 ### 📋 Modul 15.1: Memo & Notulensi Rapat Digital
 
+**Status:** Selesai ✅ (Sistem notulensi rapat, daftar hadir, action items tracker interaktif, cetak PDF resmi kop sekolah, dan pengujian otomatis telah diselesaikan secara penuh).
+
 **Tujuan:** Sistem untuk mendokumentasikan rapat guru, rapat OSIS, rapat yayasan. Bisa diakses kembali, di-share, dan di-print.
 
 #### Rencana Implementasi
@@ -1126,14 +1314,14 @@ php artisan serve
 | 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ✅ Selesai |
 | 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ✅ Selesai |
 | 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ✅ Selesai |
-| 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ⬜ TODO |
-| 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ⬜ TODO |
-| 🟡 **P2** | 11.4: Item Analysis CBT | 2-3 hari | ⬜ TODO |
-| 🟡 **P2** | 12.3: Penguatan E-Learning | 2 hari | ⬜ TODO |
-| 🟡 **P2** | 12.4: Penguatan Perpustakaan | 2 hari | ⬜ TODO |
-| 🟡 **P2** | 12.5: Penguatan Keuangan | 2 hari | ⬜ TODO |
-| 🟡 **P2** | 15.1: Notulensi Rapat | 2-3 hari | ⬜ TODO |
-| 🟢 **P3** | 15.2: Pengumuman Rich | 1-2 hari | ⬜ TODO |
+| 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ✅ Selesai |
+| 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 11.4: Item Analysis CBT | 2-3 hari | ✅ Selesai |
+| 🟡 **P2** | 12.3: Penguatan E-Learning | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 12.4: Penguatan Perpustakaan | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 12.5: Penguatan Keuangan | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 15.1: Notulensi Rapat | 2-3 hari | ✅ Selesai |
+| 🟢 **P3** | 15.2: Pengumuman Rich | 1-2 hari | ✅ Selesai |
 | 🟢 **P3** | 15.3: Todo List Guru | 1-2 hari | ⬜ TODO |
 | 🟢 **P3** | 14.1: UI Consistency Audit | 3-4 hari | ⬜ TODO |
 | 🟢 **P3** | 14.2: Animasi & Micro-Interactions | 2 hari | ⬜ TODO |
@@ -1187,3 +1375,9 @@ Tidak ada dependencies baru yang diperlukan — semua fitur bisa dibangun dengan
 > 2. Modul 12.1 (Dashboard Enhancement) (Selesai ✅) — karena dashboard adalah halaman pertama yang dilihat user
 > 3. Modul 13.1 (Mega Seeder) (Selesai ✅) — karena data demo yang rich membuat semua fitur terlihat hidup
 > 4. Modul 11.2 (Mutaba'ah Ibadah Lengkap) (Selesai ✅) — karena tracking ibadah adalah program unggulan keagamaan
+> 5. Modul 11.5 (Presensi Kegiatan Sekolah) (Selesai ✅) — karena tracking kehadiran kegiatan non-KBM melengkapi modul keislaman sekolah
+> 6. Modul 12.2 (Penguatan Jadwal Pelajaran) (Selesai ✅) — karena melengkapi modul penjadwalan dengan deteksi bentrok ruangan & print PDF.
+> 7. Modul 12.3 (Penguatan E-Learning & Materi Pembelajaran) (Selesai ✅) — karena menambahkan interaktif dan monitoring progress belajar siswa.
+> 8. Modul 12.4 (Penguatan Modul Perpustakaan) (Selesai ✅) — karena melengkapi perpustakaan dengan kartu anggota digital, statistik visual, rekomendasi buku cerdas, laporan overdue, dan pengingat WhatsApp.
+
+

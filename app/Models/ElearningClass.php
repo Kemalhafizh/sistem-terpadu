@@ -9,7 +9,11 @@ class ElearningClass extends Model
 {
     use HasUuid;
 
-    protected $fillable = ['uuid', 'subject_id', 'classroom_id', 'teacher_id', 'name', 'description'];
+    protected $fillable = ['uuid', 'subject_id', 'classroom_id', 'teacher_id', 'name', 'description', 'is_archived'];
+
+    protected $casts = [
+        'is_archived' => 'boolean',
+    ];
 
     public function subject()
     {
@@ -34,5 +38,10 @@ class ElearningClass extends Model
     public function assignments()
     {
         return $this->hasMany(ElearningAssignment::class);
+    }
+
+    public function announcements()
+    {
+        return $this->hasMany(ElearningAnnouncement::class);
     }
 }

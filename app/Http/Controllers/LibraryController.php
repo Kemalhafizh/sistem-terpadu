@@ -8,6 +8,9 @@ use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Student;
+use App\Models\LibraryLoan;
+use App\Services\LibraryService;
 
 class LibraryController extends Controller
 {
@@ -182,5 +185,94 @@ class LibraryController extends Controller
         }
 
         return view('library.student_card', compact('student'));
+    }
+
+    /**
+     * Show library statistics dashboard.
+     */
+    public function statistics()
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $stats = app(LibraryService::class)->getLibraryStatistics();
+
+        return view('library.statistics', compact('stats'));
+    }
+
+    /**
+     * Show student reading history.
+     */
+    public function studentReadingHistory(?Student $student = null)
+    {
+        $user = auth()->user();
+
+        if (is_null($student)) {
+            if ($user->role === 'student' && $user->student) {
+                $student = $user->student;
+            } else {
+                abort(400, 'Parameter Siswa diperlukan.');
+            }
+        }
+
+        // Security check: Students can only view their own history
+        if ($user->role === 'student' && $user->student?->id !== $student->id) {
+            abort(403, 'Anda tidak diizinkan mengakses riwayat baca siswa lain.');
+        }
+
+        $readingStats = app(LibraryService::class)->getStudentReadingStats($student);
+
+        return view('library.reading_history', compact('student', 'readingStats'));
+    }
+
+    /**
+     * Show customized book recommendations for student.
+     */
+    public function recommendations()
+    {
+        $user = auth()->user();
+        if ($user->role !== 'student' || !$user->student) {
+            abort(403, 'Hanya siswa yang dapat mengakses rekomendasi buku.');
+        }
+
+        $student = $user->student;
+        $recommendedBooks = app(LibraryService::class)->getBookRecommendations($student);
+
+        return view('library.recommendations', compact('student', 'recommendedBooks'));
+    }
+
+    /**
+     * Show library overdue report.
+     */
+    public function overdueReport()
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $overdueLoans = app(LibraryService::class)->getOverdueLoansSummary();
+
+        return view('library.overdue_report', compact('overdueLoans'));
+    }
+
+    /**
+     * Send WhatsApp alert notification to student's parent for overdue book.
+     */
+    public function sendOverdueReminder(LibraryLoan $loan)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        try {
+            app(LibraryService::class)->sendOverdueWhatsAppReminder($loan->id);
+            return back()->with('success', 'Notifikasi denda keterlambatan WhatsApp berhasil dikirim.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

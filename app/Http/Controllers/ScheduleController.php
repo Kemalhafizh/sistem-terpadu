@@ -9,7 +9,9 @@ use App\Models\SchedulePreset;
 use App\Models\ScheduleTime;
 use App\Models\Subject;
 use App\Models\User;
+use App\Models\Room;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ScheduleController extends Controller
 {
@@ -29,16 +31,19 @@ class ScheduleController extends Controller
     public function showGrid(Request $request)
     {
         $classrooms = Classroom::all();
+        $rooms = Room::all();
         $selectedClassroom = null;
         $schedules = [];
         $activePreset = SchedulePreset::where('is_active', true)->with('times')->first();
 
         if ($request->has('classroom_id')) {
-            $selectedClassroom = Classroom::findOrFail($request->classroom_id);
-            $schedules = Schedule::where('classroom_id', $selectedClassroom->id)
-                ->where('academic_year_id', AcademicYear::current()?->id)
-                ->with(['subject', 'teacher'])
-                ->get();
+            $selectedClassroom = Classroom::find($request->classroom_id);
+            if ($selectedClassroom) {
+                $schedules = Schedule::where('classroom_id', $selectedClassroom->id)
+                    ->where('academic_year_id', AcademicYear::current()?->id)
+                    ->with(['subject', 'teacher', 'room'])
+                    ->get();
+            }
         }
 
         $subjects = Subject::all();
@@ -46,13 +51,13 @@ class ScheduleController extends Controller
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 
         return view('schedules.grid', compact(
-            'classrooms', 'selectedClassroom', 'schedules',
+            'classrooms', 'rooms', 'selectedClassroom', 'schedules',
             'activePreset', 'subjects', 'teachers', 'days'
         ));
     }
 
     /**
-     * Store a new schedule slot with conflict check.
+     * Store a new schedule slot with three-way conflict checking.
      */
     public function store(Request $request)
     {
@@ -60,32 +65,60 @@ class ScheduleController extends Controller
             'classroom_id' => 'required|exists:classrooms,id',
             'subject_id' => 'required|exists:subjects,id',
             'teacher_id' => 'required|exists:users,id',
+            'room_id' => 'nullable|exists:rooms,id',
             'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat',
             'session_start' => 'required|integer|min:1|max:11',
             'session_end' => 'required|integer|min:1|max:11|gte:session_start',
         ]);
 
         $activeYear = AcademicYear::current();
-        if (! $activeYear) {
+        if (!$activeYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
-        // Conflict Check: Is Teacher busy at this time?
-        $conflict = Schedule::where('academic_year_id', $activeYear->id)
-            ->where('day', $validated['day'])
+        // Helper to check time overlaps
+        $overlapCheck = function ($query) use ($validated) {
+            $query->where('day', $validated['day'])
+                ->where(function ($q) use ($validated) {
+                    $q->whereBetween('session_start', [$validated['session_start'], $validated['session_end']])
+                      ->orWhereBetween('session_end', [$validated['session_start'], $validated['session_end']])
+                      ->orWhere(function ($sub) use ($validated) {
+                          $sub->where('session_start', '<=', $validated['session_start'])
+                              ->where('session_end', '>=', $validated['session_end']);
+                      });
+                });
+        };
+
+        // 1. Teacher Conflict Check
+        $teacherConflict = Schedule::where('academic_year_id', $activeYear->id)
             ->where('teacher_id', $validated['teacher_id'])
-            ->where(function ($query) use ($validated) {
-                $query->whereBetween('session_start', [$validated['session_start'], $validated['session_end']])
-                    ->orWhereBetween('session_end', [$validated['session_start'], $validated['session_end']])
-                    ->orWhere(function ($q) use ($validated) {
-                        $q->where('session_start', '<=', $validated['session_start'])
-                            ->where('session_end', '>=', $validated['session_end']);
-                    });
-            })
+            ->where($overlapCheck)
             ->first();
 
-        if ($conflict) {
-            return back()->with('error', "Konflik Jadwal! Guru tersebut sudah mengajar di kelas {$conflict->classroom->name} pada jam tersebut.");
+        if ($teacherConflict) {
+            return back()->with('error', "Konflik Guru! Guru tersebut sudah mengajar di kelas {$teacherConflict->classroom->name} pada jam tersebut.");
+        }
+
+        // 2. Classroom Conflict Check
+        $classConflict = Schedule::where('academic_year_id', $activeYear->id)
+            ->where('classroom_id', $validated['classroom_id'])
+            ->where($overlapCheck)
+            ->first();
+
+        if ($classConflict) {
+            return back()->with('error', "Konflik Kelas! Kelas {$classConflict->classroom->name} sudah memiliki jadwal untuk mata pelajaran {$classConflict->subject->name} pada jam tersebut.");
+        }
+
+        // 3. Room Conflict Check (if room is assigned)
+        if (!empty($validated['room_id'])) {
+            $roomConflict = Schedule::where('academic_year_id', $activeYear->id)
+                ->where('room_id', $validated['room_id'])
+                ->where($overlapCheck)
+                ->first();
+
+            if ($roomConflict) {
+                return back()->with('error', "Konflik Ruangan! Ruangan {$roomConflict->room->name} sudah digunakan oleh kelas {$roomConflict->classroom->name} pada jam tersebut.");
+            }
         }
 
         Schedule::create(array_merge($validated, ['academic_year_id' => $activeYear->id]));
@@ -136,5 +169,168 @@ class ScheduleController extends Controller
         );
 
         return back()->with('success', 'Waktu sesi berhasil disimpan.');
+    }
+
+    /**
+     * Show schedules from a teacher's perspective.
+     */
+    public function teacherSchedule(Request $request)
+    {
+        $teachers = User::where('role', 'guru')->get();
+        $selectedTeacher = null;
+        $schedules = [];
+        $activePreset = SchedulePreset::where('is_active', true)->with('times')->first();
+
+        // If user is a teacher, default to themselves if no specific selection
+        $currentUser = auth()->user();
+        if ($currentUser->role === 'guru' && !$request->has('teacher_id')) {
+            $selectedTeacher = $currentUser;
+        } elseif ($request->filled('teacher_id')) {
+            $selectedTeacher = User::findOrFail($request->teacher_id);
+        }
+
+        if ($selectedTeacher) {
+            $schedules = Schedule::where('teacher_id', $selectedTeacher->id)
+                ->where('academic_year_id', AcademicYear::current()?->id)
+                ->with(['subject', 'classroom', 'room'])
+                ->get();
+        }
+
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+        return view('schedules.teacher-view', compact('teachers', 'selectedTeacher', 'schedules', 'activePreset', 'days'));
+    }
+
+    /**
+     * Show schedules from a room's perspective.
+     */
+    public function roomSchedule(Request $request)
+    {
+        $rooms = Room::all();
+        $selectedRoom = null;
+        $schedules = [];
+        $activePreset = SchedulePreset::where('is_active', true)->with('times')->first();
+
+        if ($request->filled('room_id')) {
+            $selectedRoom = Room::findOrFail($request->room_id);
+            $schedules = Schedule::where('room_id', $selectedRoom->id)
+                ->where('academic_year_id', AcademicYear::current()?->id)
+                ->with(['subject', 'classroom', 'teacher'])
+                ->get();
+        }
+
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+        return view('schedules.room-view', compact('rooms', 'selectedRoom', 'schedules', 'activePreset', 'days'));
+    }
+
+    /**
+     * Audit and detect all current schedule conflicts in the database.
+     */
+    public function detectConflicts()
+    {
+        $activeYear = AcademicYear::current();
+        $schedules = $activeYear ? Schedule::where('academic_year_id', $activeYear->id)
+            ->with(['classroom', 'subject', 'teacher', 'room'])
+            ->get() : collect();
+
+        $conflicts = [];
+
+        foreach ($schedules as $s1) {
+            foreach ($schedules as $s2) {
+                if ($s1->id >= $s2->id) continue;
+                if ($s1->day !== $s2->day) continue;
+
+                // Check overlap
+                $overlap = max($s1->session_start, $s2->session_start) <= min($s1->session_end, $s2->session_end);
+                if (!$overlap) continue;
+
+                // 1. Teacher conflict
+                if ($s1->teacher_id === $s2->teacher_id) {
+                    $conflicts[] = [
+                        'type' => 'Guru',
+                        'description' => "Guru {$s1->teacher->name} terdaftar mengajar di Kelas {$s1->classroom->name} ({$s1->subject->name}) dan Kelas {$s2->classroom->name} ({$s2->subject->name}) pada jam sesi yang bertabrakan.",
+                        'schedule_1' => $s1,
+                        'schedule_2' => $s2,
+                    ];
+                }
+
+                // 2. Classroom conflict
+                if ($s1->classroom_id === $s2->classroom_id) {
+                    $conflicts[] = [
+                        'type' => 'Kelas',
+                        'description' => "Kelas {$s1->classroom->name} memiliki jam pelajaran ganda antara {$s1->subject->name} (Guru {$s1->teacher->name}) dan {$s2->subject->name} (Guru {$s2->teacher->name}) pada jam sesi yang bertabrakan.",
+                        'schedule_1' => $s1,
+                        'schedule_2' => $s2,
+                    ];
+                }
+
+                // 3. Room conflict
+                if ($s1->room_id && $s2->room_id && $s1->room_id === $s2->room_id) {
+                    $conflicts[] = [
+                        'type' => 'Ruangan',
+                        'description' => "Ruangan {$s1->room->name} digunakan secara bersamaan oleh Kelas {$s1->classroom->name} ({$s1->subject->name}) dan Kelas {$s2->classroom->name} ({$s2->subject->name}) pada jam sesi yang bertabrakan.",
+                        'schedule_1' => $s1,
+                        'schedule_2' => $s2,
+                    ];
+                }
+            }
+        }
+
+        return view('schedules.conflicts', compact('conflicts'));
+    }
+
+    /**
+     * Print schedule for a specific classroom to PDF.
+     */
+    public function printClassSchedule(Classroom $classroom)
+    {
+        $activePreset = SchedulePreset::where('is_active', true)->with('times')->first();
+        $schedules = Schedule::where('classroom_id', $classroom->id)
+            ->where('academic_year_id', AcademicYear::current()?->id)
+            ->with(['subject', 'teacher', 'room'])
+            ->get();
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+        $pdf = Pdf::loadView('schedules.print-class', compact('classroom', 'schedules', 'activePreset', 'days'))->setPaper('a4', 'landscape');
+        $fileName = str_replace(' ', '_', strtolower($classroom->name));
+        return $pdf->download("jadwal_kelas_{$fileName}.pdf");
+    }
+
+    /**
+     * Print schedule for a specific teacher to PDF.
+     */
+    public function printTeacherSchedule(User $teacher)
+    {
+        if ($teacher->role !== 'guru') {
+            abort(404, 'User bukan berstatus guru.');
+        }
+
+        $activePreset = SchedulePreset::where('is_active', true)->with('times')->first();
+        $schedules = Schedule::where('teacher_id', $teacher->id)
+            ->where('academic_year_id', AcademicYear::current()?->id)
+            ->with(['subject', 'classroom', 'room'])
+            ->get();
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+        $pdf = Pdf::loadView('schedules.print-teacher', compact('teacher', 'schedules', 'activePreset', 'days'))->setPaper('a4', 'landscape');
+        $fileName = str_replace(' ', '_', strtolower($teacher->name));
+        return $pdf->download("jadwal_guru_{$fileName}.pdf");
+    }
+
+    /**
+     * Print master schedule for the entire school.
+     */
+    public function printMasterSchedule()
+    {
+        $activePreset = SchedulePreset::where('is_active', true)->with('times')->first();
+        $classrooms = Classroom::with('teacher')->get();
+        $schedules = Schedule::where('academic_year_id', AcademicYear::current()?->id)
+            ->with(['subject', 'teacher', 'room', 'classroom'])
+            ->get();
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+        $pdf = Pdf::loadView('schedules.print-master', compact('classrooms', 'schedules', 'activePreset', 'days'))->setPaper('a4', 'landscape');
+        return $pdf->download("jadwal_master_sekolah.pdf");
     }
 }

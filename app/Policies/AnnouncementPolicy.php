@@ -27,6 +27,18 @@ class AnnouncementPolicy
     }
 
     /**
+     * Determine whether the user can update the announcement.
+     */
+    public function update(User $user, Announcement $announcement): bool
+    {
+        if (in_array($user->role, ['admin', 'superadmin'])) {
+            return true;
+        }
+
+        return $announcement->created_by === $user->id;
+    }
+
+    /**
      * Determine whether the user can delete the announcement.
      * Only the creator or admin can delete.
      */

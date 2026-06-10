@@ -37,6 +37,7 @@ use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\LetterController;
 use App\Http\Controllers\LibraryCirculationController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\MeetingNoteController;
 use App\Http\Controllers\MutabaahController;
 use App\Http\Controllers\MutationController;
 use App\Http\Controllers\NotificationController;
@@ -54,6 +55,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFinanceController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TahfidzController;
+use App\Http\Controllers\EventAttendanceController;
 use App\Http\Controllers\TeachingJournalController;
 use App\Http\Controllers\TracerStudyController;
 use App\Http\Controllers\UksController;
@@ -133,6 +135,9 @@ Route::middleware('auth')->group(function () {
     Route::get('library/{libraryBook}/download', [LibraryController::class, 'download'])->name('library.download');
     Route::get('library/{libraryBook}/read', [LibraryController::class, 'readBook'])->name('library.read');
     Route::get('library/student-card/{student}', [LibraryController::class, 'studentCard'])->name('library.student-card');
+    Route::get('library/reading-history', [LibraryController::class, 'studentReadingHistory'])->name('library.reading-history');
+    Route::get('library/recommendations', [LibraryController::class, 'recommendations'])->name('library.recommendations');
+
 
     // Career & Scholarship Portal (read-only untuk semua)
     Route::get('career-portal', [CareerOpportunityController::class, 'index'])->name('career-portal.index');
@@ -162,6 +167,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/export-pdf/{classroom}', [MutabaahController::class, 'exportPdf'])->name('export-pdf');
         Route::post('/{student}/verify', [MutabaahController::class, 'verify'])->name('verify');
         Route::post('/toggle', [MutabaahController::class, 'toggle'])->name('toggle');
+    });
+
+    // Presensi Kegiatan Sekolah
+    Route::prefix('event-attendance')->name('event-attendance.')->group(function () {
+        Route::get('/', [EventAttendanceController::class, 'index'])->name('index');
+        Route::get('/create', [EventAttendanceController::class, 'create'])->name('create');
+        Route::post('/', [EventAttendanceController::class, 'store'])->name('store');
+        Route::get('/rekap', [EventAttendanceController::class, 'rekap'])->name('rekap');
+        Route::get('/{event}', [EventAttendanceController::class, 'show'])->name('show');
+        Route::get('/{event}/input', [EventAttendanceController::class, 'inputAttendance'])->name('input');
+        Route::post('/{event}/input', [EventAttendanceController::class, 'storeAttendance'])->name('store-attendance');
+        Route::get('/{event}/export-pdf', [EventAttendanceController::class, 'exportPdf'])->name('export-pdf');
     });
 
     // Impersonate Leave (Accessible by any auth user who is currently impersonating)
@@ -327,11 +344,16 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // EXECUTIVE — Laporan Keuangan (Kepsek & Admin)
     // =========================================================
-    Route::middleware('role:kepala_sekolah,admin,superadmin')->group(function () {
+    Route::middleware('role:staf_tu,kepala_sekolah,admin,superadmin')->group(function () {
         Route::get('finance/reports/executive', [FinancialReportController::class, 'index'])->name('finance.reports.executive');
         Route::get('finance/reports/income-statement', [FinancialReportController::class, 'incomeStatement'])->name('finance.reports.income');
         Route::get('finance/reports/balance-sheet', [FinancialReportController::class, 'balanceSheet'])->name('finance.reports.balance');
         Route::get('finance/reports/general-ledger', [FinancialReportController::class, 'generalLedger'])->name('finance.reports.ledger');
+        Route::get('finance/reports/arrears', [FinancialReportController::class, 'arrearsReport'])->name('finance.reports.arrears');
+        Route::get('finance/reports/projection', [FinancialReportController::class, 'revenueProjection'])->name('finance.reports.projection');
+        Route::get('finance/reports/monthly', [FinancialReportController::class, 'monthlySummary'])->name('finance.reports.monthly');
+        Route::get('finance/reports/export', [FinancialReportController::class, 'exportReport'])->name('finance.reports.export');
+        Route::get('finance/billings/{billing}/invoice', [FinancialReportController::class, 'generateInvoice'])->name('finance.billings.invoice');
 
         // Advanced Executive Analytics
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
@@ -439,6 +461,12 @@ Route::middleware('auth')->group(function () {
         Route::post('schedules/presets', [ScheduleController::class, 'storePreset'])->name('schedules.presets.store');
         Route::post('schedules/presets/{preset}/activate', [ScheduleController::class, 'activatePreset'])->name('schedules.presets.activate');
         Route::post('schedules/presets/{preset}/times', [ScheduleController::class, 'storeTime'])->name('schedules.presets.times.store');
+        Route::get('schedules/teacher', [ScheduleController::class, 'teacherSchedule'])->name('schedules.teacher');
+        Route::get('schedules/room', [ScheduleController::class, 'roomSchedule'])->name('schedules.room');
+        Route::get('schedules/conflicts', [ScheduleController::class, 'detectConflicts'])->name('schedules.conflicts');
+        Route::get('schedules/print/class/{classroom}', [ScheduleController::class, 'printClassSchedule'])->name('schedules.print.class');
+        Route::get('schedules/print/teacher/{teacher}', [ScheduleController::class, 'printTeacherSchedule'])->name('schedules.print.teacher');
+        Route::get('schedules/print/master', [ScheduleController::class, 'printMasterSchedule'])->name('schedules.print.master');
         Route::get('schedules/grid', [ScheduleController::class, 'showGrid'])->name('schedules.grid');
         Route::post('schedules', [ScheduleController::class, 'store'])->name('schedules.store');
         Route::delete('schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
@@ -484,6 +512,8 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware('role:waka_humas,admin,superadmin,kepala_sekolah')->group(function () {
         Route::resource('announcements', AnnouncementController::class)->except(['show']);
+        Route::post('announcements/{announcement}/pin', [AnnouncementController::class, 'pin'])->name('announcements.pin');
+        Route::get('announcements/{announcement}/receipts', [AnnouncementController::class, 'receipts'])->name('announcements.receipts');
 
         // Tracer Study Analytics
         Route::get('alumni/tracer-study/analytics', [TracerStudyController::class, 'analytics'])->name('alumni.tracer-study.analytics');
@@ -496,6 +526,11 @@ Route::middleware('auth')->group(function () {
         Route::put('career-portal/{opportunity}', [CareerOpportunityController::class, 'update'])->name('career-portal.update');
         Route::delete('career-portal/{opportunity}', [CareerOpportunityController::class, 'destroy'])->name('career-portal.destroy');
     });
+
+    // Announcements (Universal access, placed after resource registration to prevent conflict with /create)
+    Route::get('announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
+    Route::post('announcements/{announcement}/acknowledge', [AnnouncementController::class, 'acknowledge'])->name('announcements.acknowledge');
+
 
     // =========================================================
     // HUMAS — Content Management System (CMS)
@@ -581,6 +616,13 @@ Route::middleware('auth')->group(function () {
         Route::post('library/circulation/borrow', [LibraryCirculationController::class, 'borrow'])->name('library.circulation.borrow');
         Route::post('library/circulation/return/{loan}', [LibraryCirculationController::class, 'returnBook'])->name('library.circulation.return');
         Route::post('library/circulation/pay-fine/{loan}', [LibraryCirculationController::class, 'payFine'])->name('library.circulation.pay-fine');
+
+        // Statistik, Overdue & WhatsApp Reminders
+        Route::get('library/statistics', [LibraryController::class, 'statistics'])->name('library.statistics');
+        Route::get('library/overdue-report', [LibraryController::class, 'overdueReport'])->name('library.overdue-report');
+        Route::post('library/loans/{loan}/remind', [LibraryController::class, 'sendOverdueReminder'])->name('library.loans.remind');
+        Route::get('library/reading-history/{student}', [LibraryController::class, 'studentReadingHistory'])->name('library.reading-history.detail');
+
     });
 
     // =========================================================
@@ -659,6 +701,9 @@ Route::middleware('auth')->group(function () {
     Route::get('elearning/install', [ElearningController::class, 'install'])->name('elearning.install');
     Route::get('elearning', [ElearningController::class, 'index'])->name('elearning.index');
     Route::get('elearning/class/{elearningClass}', [ElearningController::class, 'showClass'])->name('elearning.class.show');
+    Route::get('elearning/class/{elearningClass}/material/{material}', [ElearningController::class, 'showMaterial'])->name('elearning.material.show');
+    Route::post('elearning/material/{material}/comment', [ElearningController::class, 'storeComment'])->name('elearning.comment.store');
+    Route::delete('elearning/material/{material}/comment/{comment}', [ElearningController::class, 'deleteComment'])->name('elearning.comment.destroy');
 
     // Student Actions
     Route::middleware('role:student')->group(function () {
@@ -675,6 +720,19 @@ Route::middleware('auth')->group(function () {
         Route::post('elearning/class/{elearningClass}/assignment', [ElearningController::class, 'storeAssignment'])->name('elearning.assignment.store');
         Route::get('elearning/assignment/{elearningAssignment}/submissions', [ElearningController::class, 'viewSubmissions'])->name('elearning.assignment.submissions');
         Route::post('elearning/submission/{elearningSubmission}/grade', [ElearningController::class, 'gradeSubmission'])->name('elearning.submission.grade');
+
+        // Virtual Class Management (Archive, Duplicate)
+        Route::post('elearning/class/{elearningClass}/archive', [ElearningController::class, 'archiveClass'])->name('elearning.class.archive');
+        Route::post('elearning/class/{elearningClass}/unarchive', [ElearningController::class, 'unarchiveClass'])->name('elearning.class.unarchive');
+        Route::post('elearning/class/{elearningClass}/duplicate', [ElearningController::class, 'duplicateClass'])->name('elearning.class.duplicate');
+
+        // Announcements
+        Route::post('elearning/class/{elearningClass}/announcement', [ElearningController::class, 'storeAnnouncement'])->name('elearning.announcement.store');
+        Route::delete('elearning/class/{elearningClass}/announcement/{announcement}', [ElearningController::class, 'deleteAnnouncement'])->name('elearning.announcement.destroy');
+
+        // Progress Tracking
+        Route::get('elearning/class/{elearningClass}/progress', [ElearningController::class, 'classProgress'])->name('elearning.class.progress');
+        Route::get('elearning/class/{elearningClass}/progress/student/{student}', [ElearningController::class, 'studentProgress'])->name('elearning.class.student-progress');
     });
 
     // =========================================================
@@ -796,6 +854,8 @@ Route::middleware('auth')->group(function () {
         // Proctor Monitor & Results — Guru & Admin
         Route::get('exams/{exam}/monitor', [ExamController::class, 'monitor'])->name('exams.monitor');
         Route::get('exams/{exam}/results', [ExamController::class, 'results'])->name('exams.results');
+        Route::get('exams/{exam}/analysis', [ExamController::class, 'itemAnalysis'])->name('exams.analysis');
+        Route::get('exams/{exam}/analysis/pdf', [ExamController::class, 'exportAnalysisPdf'])->name('exams.analysis.pdf');
     });
 
     // =========================================================
@@ -914,6 +974,22 @@ Route::middleware('auth')->group(function () {
         Route::get('feedback-dashboard', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'dashboard'])->name('feedback.dashboard');
         Route::post('feedback/{id}/status', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'updateStatus'])->name('feedback.update-status');
         Route::get('feedback-report', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'report'])->name('feedback.report');
+    });
+
+    // =========================================================
+    // 📋 MEMO & NOTULENSI RAPAT DIGITAL (MODUL 15.1)
+    // =========================================================
+    Route::middleware('role:admin,superadmin,staf_tu,kepala_sekolah,guru')->group(function () {
+        Route::get('meeting-notes', [MeetingNoteController::class, 'index'])->name('meeting-notes.index');
+        Route::get('meeting-notes/create', [MeetingNoteController::class, 'create'])->name('meeting-notes.create');
+        Route::post('meeting-notes', [MeetingNoteController::class, 'store'])->name('meeting-notes.store');
+        Route::get('meeting-notes-tracker', [MeetingNoteController::class, 'actionItemTracker'])->name('meeting-notes.tracker');
+        Route::get('meeting-notes/{meeting_note}', [MeetingNoteController::class, 'show'])->name('meeting-notes.show');
+        Route::get('meeting-notes/{meeting_note}/edit', [MeetingNoteController::class, 'edit'])->name('meeting-notes.edit');
+        Route::put('meeting-notes/{meeting_note}', [MeetingNoteController::class, 'update'])->name('meeting-notes.update');
+        Route::post('meeting-notes/{meeting_note}/finalize', [MeetingNoteController::class, 'finalize'])->name('meeting-notes.finalize');
+        Route::get('meeting-notes/{meeting_note}/pdf', [MeetingNoteController::class, 'exportPdf'])->name('meeting-notes.pdf');
+        Route::post('meeting-notes/action-items/{meeting_note}/{itemId}/toggle', [MeetingNoteController::class, 'toggleActionItem'])->name('meeting-notes.action-items.toggle');
     });
 
 });

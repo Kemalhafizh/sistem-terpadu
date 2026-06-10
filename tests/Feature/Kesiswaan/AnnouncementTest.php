@@ -32,6 +32,7 @@ test('admin can create a new announcement', function () {
         'content' => 'Sekolah libur pada tanggal 1 Juni 2026.',
         'target_role' => null,
         'priority' => 'normal',
+        'category' => 'umum',
     ]);
 
     $response->assertRedirect(route('announcements.index'));
@@ -51,6 +52,7 @@ test('admin can create targeted announcement', function () {
         'content' => 'Rapat guru hari Jumat.',
         'target_role' => 'guru',
         'priority' => 'urgent',
+        'category' => 'akademik',
     ]);
 
     $response->assertRedirect(route('announcements.index'));
@@ -65,7 +67,7 @@ test('admin can create targeted announcement', function () {
 test('announcement store validates required fields', function () {
     $response = $this->actingAs($this->admin)->post(route('announcements.store'), []);
 
-    $response->assertSessionHasErrors(['title', 'content', 'priority']);
+    $response->assertSessionHasErrors(['title', 'content', 'priority', 'category']);
 });
 
 test('announcement store validates priority enum', function () {
@@ -73,6 +75,7 @@ test('announcement store validates priority enum', function () {
         'title' => 'Test',
         'content' => 'Test content',
         'priority' => 'invalid_priority',
+        'category' => 'umum',
     ]);
 
     $response->assertSessionHasErrors('priority');
@@ -90,6 +93,7 @@ test('admin can update an announcement', function () {
         'title' => 'Updated Title',
         'content' => 'Updated content.',
         'priority' => 'urgent',
+        'category' => 'akademik',
     ]);
 
     $response->assertRedirect(route('announcements.index'));

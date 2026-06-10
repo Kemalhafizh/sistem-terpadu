@@ -7,13 +7,24 @@ use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
 use App\Models\ElearningSubmission;
+use App\Models\ElearningAnnouncement;
+use App\Models\ElearningMaterialComment;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Services\ElearningService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
 
 class ElearningController extends Controller
 {
+    protected $elearningService;
+
+    public function __construct(ElearningService $elearningService)
+    {
+        $this->elearningService = $elearningService;
+    }
+
     /**
      * PWA Install landing page with App Store / Google Play visuals.
      */
@@ -25,32 +36,47 @@ class ElearningController extends Controller
     /**
      * LMS main dashboard.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $classes = collect();
+        $archivedClasses = collect();
         $classrooms = collect();
         $subjects = collect();
 
+        $showArchived = $request->boolean('show_archived', false);
+
         if ($user->role === 'student' && $user->student) {
-            // Student: load classes for their classroom
-            $classes = ElearningClass::where('classroom_id', $user->student->classroom_id)
-                ->with(['subject', 'teacher'])
-                ->get();
+            // Student: load classes for their classroom (students do not see archived classes unless specified)
+            $classesQuery = ElearningClass::where('classroom_id', $user->student->classroom_id)
+                ->with(['subject', 'teacher']);
+            
+            if ($showArchived) {
+                $classes = $classesQuery->where('is_archived', true)->get();
+            } else {
+                $classes = $classesQuery->where('is_archived', false)->get();
+            }
         } elseif (in_array($user->role, ['guru', 'staf_tu', 'admin', 'superadmin', 'kepala_sekolah'])) {
             // Teacher / Admin: load classes they teach or all classes
             if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
-                $classes = ElearningClass::with(['subject', 'classroom', 'teacher'])->get();
+                $classesQuery = ElearningClass::with(['subject', 'classroom', 'teacher']);
             } else {
-                $classes = ElearningClass::where('teacher_id', $user->id)
-                    ->with(['subject', 'classroom', 'teacher'])
-                    ->get();
+                $classesQuery = ElearningClass::where('teacher_id', $user->id)
+                    ->with(['subject', 'classroom', 'teacher']);
             }
+
+            if ($showArchived) {
+                $classes = (clone $classesQuery)->where('is_archived', true)->get();
+            } else {
+                $classes = (clone $classesQuery)->where('is_archived', false)->get();
+                $archivedClasses = (clone $classesQuery)->where('is_archived', true)->get();
+            }
+
             $classrooms = Classroom::all();
             $subjects = Subject::all();
         }
 
-        return view('elearning.index', compact('classes', 'classrooms', 'subjects'));
+        return view('elearning.index', compact('classes', 'archivedClasses', 'classrooms', 'subjects', 'showArchived'));
     }
 
     /**
@@ -72,6 +98,7 @@ class ElearningController extends Controller
             'teacher_id' => auth()->id(),
             'name' => $validated['name'],
             'description' => $validated['description'],
+            'is_archived' => false,
         ]);
 
         return back()->with('success', 'Kelas virtual berhasil dibuat.');
@@ -91,8 +118,15 @@ class ElearningController extends Controller
 
         $materials = $elearningClass->materials()->latest()->get();
         $assignments = $elearningClass->assignments()->latest()->get();
+        $announcements = $elearningClass->announcements()->with('user')->latest()->get();
 
-        return view('elearning.show_class', compact('elearningClass', 'materials', 'assignments'));
+        // Calculate progress if student
+        $studentProgress = null;
+        if ($user->role === 'student' && $user->student) {
+            $studentProgress = $this->elearningService->getStudentProgress($elearningClass->id, $user->student->id);
+        }
+
+        return view('elearning.show_class', compact('elearningClass', 'materials', 'assignments', 'announcements', 'studentProgress'));
     }
 
     /**
@@ -259,5 +293,200 @@ class ElearningController extends Controller
         ]);
 
         return back()->with('success', 'Nilai dan masukan siswa berhasil disimpan.');
+    }
+
+    // =========================================================
+    // NEW METHODS FOR MODUL 12.3 ENHANCEMENTS
+    // =========================================================
+
+    /**
+     * Store a new class announcement (Guru/Admin only).
+     */
+    public function storeAnnouncement(Request $request, ElearningClass $elearningClass)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        ElearningAnnouncement::create([
+            'uuid' => (string) Str::uuid(),
+            'elearning_class_id' => $elearningClass->id,
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+        ]);
+
+        return back()->with('success', 'Pengumuman kelas berhasil dipublikasikan.');
+    }
+
+    /**
+     * Delete a class announcement (Guru/Admin only).
+     */
+    public function deleteAnnouncement(ElearningClass $elearningClass, ElearningAnnouncement $announcement)
+    {
+        // Security check
+        if ($announcement->elearning_class_id !== $elearningClass->id) {
+            abort(400);
+        }
+
+        if (auth()->id() !== $announcement->user_id && !in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+            abort(403);
+        }
+
+        $announcement->delete();
+
+        return back()->with('success', 'Pengumuman kelas berhasil dihapus.');
+    }
+
+    /**
+     * Show a learning material detail and log the view (with comments/discussion).
+     */
+    public function showMaterial(ElearningClass $elearningClass, ElearningMaterial $material)
+    {
+        $user = auth()->user();
+
+        // Security check
+        if ($material->elearning_class_id !== $elearningClass->id) {
+            abort(404);
+        }
+        if ($user->role === 'student' && $user->student->classroom_id !== $elearningClass->classroom_id) {
+            abort(403);
+        }
+
+        // Log view if student
+        if ($user->role === 'student' && $user->student) {
+            $this->elearningService->logMaterialView($user->student->id, $material->id);
+        }
+
+        $comments = $material->comments()->with('user')->oldest()->get();
+
+        return view('elearning.show_material', compact('elearningClass', 'material', 'comments'));
+    }
+
+    /**
+     * Store comment/reply in material discussion.
+     */
+    public function storeComment(Request $request, ElearningMaterial $material)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        ElearningMaterialComment::create([
+            'uuid' => (string) Str::uuid(),
+            'elearning_material_id' => $material->id,
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+        ]);
+
+        return back()->with('success', 'Komentar berhasil dikirim.');
+    }
+
+    /**
+     * Delete a comment in material discussion.
+     */
+    public function deleteComment(ElearningMaterial $material, ElearningMaterialComment $comment)
+    {
+        if ($comment->elearning_material_id !== $material->id) {
+            abort(400);
+        }
+
+        $isTeacher = in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']) && auth()->id() === $material->elearningClass->teacher_id;
+        $isAdmin = in_array(auth()->user()->role, ['admin', 'superadmin']);
+
+        if (auth()->id() !== $comment->user_id && !$isTeacher && !$isAdmin) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $comment->delete();
+
+        return back()->with('success', 'Komentar diskusi berhasil dihapus.');
+    }
+
+    /**
+     * View virtual classroom overall student progress dashboard (Guru/Admin only).
+     */
+    public function classProgress(ElearningClass $elearningClass)
+    {
+        $user = auth()->user();
+
+        // Security check
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403);
+        }
+
+        $progressData = $this->elearningService->getClassProgressSummary($elearningClass->id);
+
+        return view('elearning.class_progress', compact('elearningClass', 'progressData'));
+    }
+
+    /**
+     * View detailed learning progress checklist for a specific student (Guru/Admin only).
+     */
+    public function studentProgress(ElearningClass $elearningClass, Student $student)
+    {
+        $user = auth()->user();
+
+        // Security check
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403);
+        }
+        if ($student->classroom_id !== $elearningClass->classroom_id) {
+            abort(400);
+        }
+
+        $progressData = $this->elearningService->getStudentProgress($elearningClass->id, $student->id);
+
+        return view('elearning.student_progress', compact('elearningClass', 'student', 'progressData'));
+    }
+
+    /**
+     * Duplicate a virtual classroom.
+     */
+    public function duplicateClass(ElearningClass $elearningClass)
+    {
+        $user = auth()->user();
+
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403);
+        }
+
+        $duplicated = $this->elearningService->duplicateClass($elearningClass->id, auth()->id());
+
+        return redirect()->route('elearning.class.show', $duplicated->uuid)
+            ->with('success', 'Kelas virtual berhasil diduplikasi ke kelas baru.');
+    }
+
+    /**
+     * Archive a virtual classroom.
+     */
+    public function archiveClass(ElearningClass $elearningClass)
+    {
+        $user = auth()->user();
+
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403);
+        }
+
+        $this->elearningService->toggleArchive($elearningClass->id);
+
+        return redirect()->route('elearning.index')
+            ->with('success', 'Kelas virtual berhasil diarsipkan.');
+    }
+
+    /**
+     * Unarchive/Restore a virtual classroom.
+     */
+    public function unarchiveClass(ElearningClass $elearningClass)
+    {
+        $user = auth()->user();
+
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403);
+        }
+
+        $this->elearningService->toggleArchive($elearningClass->id);
+
+        return redirect()->route('elearning.class.show', $elearningClass->uuid)
+            ->with('success', 'Kelas virtual berhasil dipulihkan dari arsip.');
     }
 }

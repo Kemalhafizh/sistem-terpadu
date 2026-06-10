@@ -5,6 +5,8 @@
                 {{ __('Sirkulasi Perpustakaan') }}
             </h2>
             <div class="flex items-center gap-2">
+                <a href="{{ route('library.statistics') }}" class="px-4 py-2 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-xl font-bold text-xs hover:bg-emerald-600 hover:text-white transition-all">Statistik</a>
+                <a href="{{ route('library.overdue-report') }}" class="px-4 py-2 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold text-xs hover:bg-red-600 hover:text-white transition-all">Buku Overdue</a>
                 <a href="{{ route('library.manage') }}" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-xl font-bold text-xs hover:bg-gray-200 transition-all">Manajemen Buku</a>
                 <a href="{{ route('library.index') }}" class="px-4 py-2 bg-gray-900 text-white rounded-xl font-bold text-xs hover:bg-black transition-all">Katalog Perpus</a>
             </div>

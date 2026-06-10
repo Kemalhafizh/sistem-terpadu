@@ -13,6 +13,9 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\LibraryCategory;
+use App\Services\WhatsappService;
+
 
 class LibraryService
 {
@@ -160,5 +163,206 @@ class LibraryService
 
             return $overdueLoans->count();
         });
+    }
+
+    /**
+     * Get visual and numeric library statistics summary.
+     */
+    public function getLibraryStatistics(): array
+    {
+        $totalPhysical = LibraryBook::where('type', 'physical')->count();
+        $totalDigital = LibraryBook::where('type', 'digital')->count();
+
+        $activeLoans = LibraryLoan::whereNull('returned_at')->count();
+        $returnedLoans = LibraryLoan::whereNotNull('returned_at')->count();
+        $overdueLoans = LibraryLoan::whereNull('returned_at')->where('due_at', '<', now())->count();
+
+        // Top 5 popular books based on total borrows/loans
+        $topBooks = LibraryBook::select('library_books.*', DB::raw('count(library_loans.id) as loans_count'))
+            ->leftJoin('library_loans', 'library_books.id', '=', 'library_loans.library_book_id')
+            ->groupBy('library_books.id')
+            ->orderByDesc('loans_count')
+            ->limit(5)
+            ->with('category')
+            ->get();
+
+        // 6 months borrowing trend
+        $trendLabels = [];
+        $trendData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+            $count = LibraryLoan::whereMonth('borrowed_at', $month->month)
+                ->whereYear('borrowed_at', $month->year)
+                ->count();
+            $trendLabels[] = $month->translatedFormat('F Y');
+            $trendData[] = $count;
+        }
+
+        // Category distribution
+        $categoryDistribution = LibraryCategory::select('library_categories.name', DB::raw('count(library_books.id) as books_count'))
+            ->leftJoin('library_books', 'library_categories.id', '=', 'library_books.category_id')
+            ->groupBy('library_categories.id', 'library_categories.name')
+            ->get();
+
+        return [
+            'total_physical' => $totalPhysical,
+            'total_digital' => $totalDigital,
+            'active_loans' => $activeLoans,
+            'returned_loans' => $returnedLoans,
+            'overdue_loans' => $overdueLoans,
+            'top_books' => $topBooks,
+            'trend' => [
+                'labels' => $trendLabels,
+                'data' => $trendData,
+            ],
+            'categories' => $categoryDistribution,
+        ];
+    }
+
+    /**
+     * Get book recommendations based on student's favorite category or global popularity.
+     */
+    public function getBookRecommendations(Student $student, int $limit = 6): \Illuminate\Support\Collection
+    {
+        $borrowedBookIds = LibraryLoan::where('student_id', $student->id)->pluck('library_book_id')->toArray();
+
+        // Find favorite category based on student's borrow history
+        $favoriteCategory = LibraryLoan::join('library_books', 'library_loans.library_book_id', '=', 'library_books.id')
+            ->where('library_loans.student_id', $student->id)
+            ->select('library_books.category_id', DB::raw('count(library_loans.id) as count'))
+            ->groupBy('library_books.category_id')
+            ->orderByDesc('count')
+            ->first();
+
+        if ($favoriteCategory) {
+            // Suggest books from favorite category that haven't been borrowed yet
+            $books = LibraryBook::where('category_id', $favoriteCategory->category_id)
+                ->whereNotIn('id', $borrowedBookIds)
+                ->with('category')
+                ->limit($limit)
+                ->get();
+
+            // If not enough books, fill the rest with globally popular books
+            if ($books->count() < $limit) {
+                $backfillLimit = $limit - $books->count();
+                $popularBooks = LibraryBook::select('library_books.*', DB::raw('count(library_loans.id) as loans_count'))
+                    ->leftJoin('library_loans', 'library_books.id', '=', 'library_loans.library_book_id')
+                    ->whereNotIn('library_books.id', array_merge($borrowedBookIds, $books->pluck('id')->toArray()))
+                    ->groupBy('library_books.id')
+                    ->orderByDesc('loans_count')
+                    ->limit($backfillLimit)
+                    ->with('category')
+                    ->get();
+                $books = $books->merge($popularBooks);
+            }
+        } else {
+            // Suggest globally popular books
+            $books = LibraryBook::select('library_books.*', DB::raw('count(library_loans.id) as loans_count'))
+                ->leftJoin('library_loans', 'library_books.id', '=', 'library_loans.library_book_id')
+                ->whereNotIn('library_books.id', $borrowedBookIds)
+                ->groupBy('library_books.id')
+                ->orderByDesc('loans_count')
+                ->limit($limit)
+                ->with('category')
+                ->get();
+        }
+
+        return $books;
+    }
+
+    /**
+     * Get student reading history and statistic summary.
+     */
+    public function getStudentReadingStats(Student $student): array
+    {
+        $totalBorrowed = LibraryLoan::where('student_id', $student->id)->count();
+
+        $physicalCount = LibraryLoan::where('student_id', $student->id)
+            ->whereHas('book', fn($q) => $q->where('type', 'physical'))
+            ->count();
+
+        $digitalCount = LibraryLoan::where('student_id', $student->id)
+            ->whereHas('book', fn($q) => $q->where('type', 'digital'))
+            ->count();
+
+        // Favorite category
+        $fav = LibraryLoan::join('library_books', 'library_loans.library_book_id', '=', 'library_books.id')
+            ->join('library_categories', 'library_books.category_id', '=', 'library_categories.id')
+            ->where('library_loans.student_id', $student->id)
+            ->select('library_categories.name', DB::raw('count(library_loans.id) as count'))
+            ->groupBy('library_categories.id', 'library_categories.name')
+            ->orderByDesc('count')
+            ->first();
+
+        $favoriteCategory = $fav ? $fav->name : 'Belum Ada';
+
+        $totalFinePaid = (float) LibraryLoan::where('student_id', $student->id)
+            ->whereNotNull('fine_paid_at')
+            ->sum('fine_amount');
+
+        $activeLoans = LibraryLoan::with('book.category')
+            ->where('student_id', $student->id)
+            ->whereNull('returned_at')
+            ->latest()
+            ->get();
+
+        $historyLoans = LibraryLoan::with('book.category')
+            ->where('student_id', $student->id)
+            ->whereNotNull('returned_at')
+            ->latest()
+            ->get();
+
+        return [
+            'total_borrowed' => $totalBorrowed,
+            'physical_count' => $physicalCount,
+            'digital_count' => $digitalCount,
+            'favorite_category' => $favoriteCategory,
+            'total_fine_paid' => $totalFinePaid,
+            'active_loans' => $activeLoans,
+            'history_loans' => $historyLoans,
+        ];
+    }
+
+    /**
+     * Get all currently overdue loans.
+     */
+    public function getOverdueLoansSummary(): \Illuminate\Support\Collection
+    {
+        return LibraryLoan::with(['student.user', 'student.classroom', 'book'])
+            ->overdue()
+            ->latest()
+            ->get();
+    }
+
+    /**
+     * Send WhatsApp alert notification to student's parent/student for overdue book.
+     */
+    public function sendOverdueWhatsAppReminder(int $loanId): \App\Models\WhatsappLog
+    {
+        $loan = LibraryLoan::with(['student.user', 'student.parent', 'book'])->findOrFail($loanId);
+
+        // Prioritize parent number, fallback to student number
+        $recipient = $loan->student->parent->phone_number ?? $loan->student->user->phone_number;
+
+        if (!$recipient) {
+            throw new \Exception('Nomor telepon siswa maupun orang tua tidak terdaftar di sistem.');
+        }
+
+        $studentName = $loan->student->user->name;
+        $bookTitle = $loan->book->title;
+        $dueDate = $loan->due_at->format('d-m-Y');
+        $daysLate = $loan->daysOverdue();
+        $fine = number_format($loan->calculateFine(), 0, ',', '.');
+
+        $message = "Yth. Orang Tua/Wali Murid dari {$studentName},\n\n";
+        $message .= "Kami menginformasikan bahwa peminjaman buku perpustakaan berikut telah melewati batas waktu pengembalian:\n";
+        $message .= "- Judul Buku: {$bookTitle}\n";
+        $message .= "- Batas Waktu: {$dueDate}\n";
+        $message .= "- Terlambat: {$daysLate} hari\n";
+        $message .= "- Akumulasi Denda: Rp {$fine}\n\n";
+        $message .= "Mohon untuk segera mengingatkan anak Anda agar mengembalikan buku tersebut ke perpustakaan sekolah.\n\n";
+        $message .= "Salam,\nPerpustakaan SMA Islam Sultan Agung 1 Semarang";
+
+        return app(WhatsappService::class)->sendMessage($recipient, $message, 'library_overdue_reminder');
     }
 }

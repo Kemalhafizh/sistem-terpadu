@@ -23,16 +23,25 @@
             
             <!-- Tab Navigasi Premium -->
             <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex flex-wrap gap-2">
-                <a href="{{ route('finance.reports.executive') }}" class="px-5 py-3 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                <a href="{{ route('finance.reports.executive') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
                     📈 Ringkasan Eksekutif
                 </a>
-                <a href="{{ route('finance.reports.income') }}" class="px-5 py-3 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                <a href="{{ route('finance.reports.arrears') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                    💸 Laporan Tunggakan
+                </a>
+                <a href="{{ route('finance.reports.projection') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                    🔮 Proyeksi Pendapatan
+                </a>
+                <a href="{{ route('finance.reports.monthly') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                    📅 Rekap Bulanan
+                </a>
+                <a href="{{ route('finance.reports.income') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
                     📊 Laporan Laba Rugi
                 </a>
-                <a href="{{ route('finance.reports.balance') }}" class="px-5 py-3 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
+                <a href="{{ route('finance.reports.balance') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:text-gray-900 hover:bg-gray-50">
                     ⚖️ Neraca Keuangan
                 </a>
-                <a href="{{ route('finance.reports.ledger') }}" class="px-5 py-3 rounded-xl text-xs font-black transition-all bg-emerald-50 text-emerald-700 shadow-sm">
+                <a href="{{ route('finance.reports.ledger') }}" class="px-4 py-2.5 rounded-xl text-xs font-black transition-all bg-emerald-50 text-emerald-700 shadow-sm">
                     📖 Log Jurnal Umum
                 </a>
             </div>

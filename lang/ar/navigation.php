@@ -56,6 +56,9 @@ return [
     'alumni' => 'قاعدة بيانات الخريجين',
     'schedule_plotting' => 'تخطيط الجدول',
     'schedule_presets' => 'الإعدادات المسبقة للوقت',
+    'schedule_teacher' => 'جدول المعلمين',
+    'schedule_room' => 'جدول القاعات',
+    'schedule_conflicts' => 'تدقيق التعارض',
     'points' => 'النقاط والانضباط',
     'point_categories' => 'فئات النقاط الرئيسية',
     'uks' => 'العيادة المدرسية الرقمية',
@@ -78,4 +81,6 @@ return [
     'surveys' => 'الاستطلاعات الرقمية',
     'daily_assessments' => 'التقييمات اليومية',
     'remedial_list' => 'قائمة الاستدراك',
+    'event_attendance' => 'حضور الفعاليات',
+    'meeting_notes' => 'محاضر الاجتماعات',
 ];

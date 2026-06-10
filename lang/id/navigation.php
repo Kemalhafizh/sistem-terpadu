@@ -56,6 +56,9 @@ return [
     'alumni' => 'Database Alumni',
     'schedule_plotting' => 'Plotting Jadwal',
     'schedule_presets' => 'Preset Waktu',
+    'schedule_teacher' => 'Jadwal Guru',
+    'schedule_room' => 'Jadwal Ruangan',
+    'schedule_conflicts' => 'Audit Bentrok',
     'points' => 'Poin & Kedisiplinan',
     'point_categories' => 'Master Kategori Poin',
     'uks' => 'UKS Digital',
@@ -78,4 +81,6 @@ return [
     'surveys' => 'Survei Digital',
     'daily_assessments' => 'Penilaian Harian',
     'remedial_list' => 'Daftar Remedial',
+    'event_attendance' => 'Presensi Kegiatan',
+    'meeting_notes' => 'Notulensi Rapat',
 ];

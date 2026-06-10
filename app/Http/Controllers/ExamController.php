@@ -489,4 +489,30 @@ class ExamController extends Controller
 
         return view('cbt.exams.results', compact('exam', 'attempts', 'stats'));
     }
+
+    /**
+     * Show the item analysis dashboard for the specified exam.
+     */
+    public function itemAnalysis(Exam $exam, \App\Services\ItemAnalysisService $analysisService)
+    {
+        Gate::authorize('monitor', $exam);
+
+        $analysis = $analysisService->getFullAnalysis($exam->id);
+
+        return view('cbt.exams.item-analysis', compact('exam', 'analysis'));
+    }
+
+    /**
+     * Export the item analysis report for the specified exam to PDF.
+     */
+    public function exportAnalysisPdf(Exam $exam, \App\Services\ItemAnalysisService $analysisService)
+    {
+        Gate::authorize('monitor', $exam);
+
+        $analysis = $analysisService->getFullAnalysis($exam->id);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cbt.exams.print-analysis', compact('exam', 'analysis'))->setPaper('a4', 'landscape');
+        $fileName = str_replace(' ', '_', strtolower($exam->title));
+        return $pdf->download("analisis_butir_soal_{$fileName}.pdf");
+    }
 }

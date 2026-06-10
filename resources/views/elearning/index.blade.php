@@ -80,12 +80,28 @@
 
             <!-- Enrolled / Taught Classes Grid -->
             <div class="space-y-4">
-                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white flex items-center">
-                    <span class="w-8 h-8 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center mr-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
-                    </span>
-                    Daftar Kelas Virtual
-                </h3>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <h3 class="text-xl font-extrabold text-gray-900 dark:text-white flex items-center">
+                        <span class="w-8 h-8 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+                        </span>
+                        {{ $showArchived ? 'Daftar Arsip Kelas Virtual' : 'Daftar Kelas Virtual Aktif' }}
+                    </h3>
+                    @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin', 'siswa']))
+                        <div class="flex gap-2">
+                            @if($showArchived)
+                                <a href="{{ route('elearning.index', ['show_archived' => 0]) }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
+                                    Lihat Kelas Aktif
+                                </a>
+                            @else
+                                <a href="{{ route('elearning.index', ['show_archived' => 1]) }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
+                                    <svg class="w-4.5 h-4.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                                    <span>Lihat Arsip Kelas</span>
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+                </div>
 
                 @if($classes->isEmpty())
                     <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-12 text-center max-w-xl mx-auto space-y-4">

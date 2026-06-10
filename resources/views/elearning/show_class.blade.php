@@ -14,12 +14,19 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
 
             <!-- Class Cover Banner -->
-            <div class="bg-gradient-to-r from-emerald-800 to-emerald-950 text-white rounded-[2rem] p-6 sm:p-10 shadow-lg relative overflow-hidden">
+            <div class="bg-gradient-to-r {{ $elearningClass->is_archived ? 'from-slate-700 to-slate-900' : 'from-emerald-800 to-emerald-950' }} text-white rounded-[2rem] p-6 sm:p-10 shadow-lg relative overflow-hidden">
                 <div class="absolute -right-16 -top-16 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl"></div>
                 <div class="relative z-10 space-y-3">
-                    <span class="inline-flex px-2.5 py-1 bg-emerald-600/30 text-emerald-300 rounded text-[10px] font-black uppercase tracking-wider">
-                        {{ $elearningClass->subject?->name }}
-                    </span>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex px-2.5 py-1 bg-emerald-600/30 text-emerald-300 rounded text-[10px] font-black uppercase tracking-wider">
+                            {{ $elearningClass->subject?->name }}
+                        </span>
+                        @if($elearningClass->is_archived)
+                            <span class="inline-flex px-2.5 py-1 bg-red-600/30 text-red-300 rounded text-[10px] font-black uppercase tracking-wider">
+                                Diarsipkan
+                            </span>
+                        @endif
+                    </div>
                     <h3 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight">{{ $elearningClass->name }}</h3>
                     <p class="text-xs sm:text-sm text-emerald-200">
                         Kelas Fisik: <strong class="text-white">{{ $elearningClass->classroom?->name }}</strong>
@@ -57,14 +64,71 @@
                             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-4">
                                 <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Aksi Pengajar</h4>
                                 <div class="grid grid-cols-1 gap-2">
-                                    <button @click="activeTab = 'materials'" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
+                                    <button @click="activeTab = 'materials'" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                         <span>Bagikan Materi</span>
                                     </button>
-                                    <button @click="activeTab = 'assignments'" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
+                                    <button @click="activeTab = 'assignments'" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                         <span>Terbitkan Tugas/Ujian</span>
                                     </button>
+                                    
+                                    <a href="{{ route('elearning.class.progress', $elearningClass->uuid) }}" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2 shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                                        <span>Progress Kelas</span>
+                                    </a>
+
+                                    <form action="{{ route('elearning.class.duplicate', $elearningClass->uuid) }}" method="POST" onsubmit="return confirm('Duplikat kelas virtual ini beserta materi & tugasnya?')">
+                                        @csrf
+                                        <button type="submit" class="w-full px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2 border border-slate-200 dark:border-slate-800">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                                            <span>Duplikat Kelas</span>
+                                        </button>
+                                    </form>
+
+                                    @if($elearningClass->is_archived)
+                                        <form action="{{ route('elearning.class.unarchive', $elearningClass->uuid) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="w-full px-4 py-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path></svg>
+                                                <span>Puluhkan Kelas</span>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('elearning.class.archive', $elearningClass->uuid) }}" method="POST" onsubmit="return confirm('Arsipkan kelas virtual ini?')">
+                                            @csrf
+                                            <button type="submit" class="w-full px-4 py-2.5 bg-red-100 hover:bg-red-200 text-red-800 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                                                <span>Arsipkan Kelas</span>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        @if(auth()->user()->role === 'student' && $studentProgress)
+                            <!-- Student Progress Card -->
+                            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-4">
+                                <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Progres Belajar Anda</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-bold text-gray-700 dark:text-slate-300">
+                                        <span>Ketuntasan Kelas</span>
+                                        <span class="text-emerald-600 dark:text-emerald-400 font-extrabold">{{ $studentProgress['completion_percentage'] }}%</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-gray-100 dark:bg-slate-900 rounded-full overflow-hidden">
+                                        <div class="h-full bg-emerald-500 rounded-full" style="width: {{ $studentProgress['completion_percentage'] }}%"></div>
+                                    </div>
+                                    <div class="pt-2 text-[10px] text-gray-400 space-y-1 font-semibold">
+                                        <p class="flex justify-between">
+                                            <span>Materi Dibaca:</span>
+                                            <span class="text-gray-700 dark:text-slate-300 font-bold">{{ $studentProgress['read_materials'] }} / {{ $studentProgress['total_materials'] }}</span>
+                                        </p>
+                                        <p class="flex justify-between">
+                                            <span>Tugas Dikumpulkan:</span>
+                                            <span class="text-gray-700 dark:text-slate-300 font-bold">{{ $studentProgress['submitted_assignments'] }} / {{ $studentProgress['total_assignments'] }}</span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         @endif
@@ -84,103 +148,159 @@
                     </div>
 
                     <!-- Stream timeline -->
-                    <div class="lg:col-span-2 space-y-6">
-                        <h4 class="text-base font-extrabold text-gray-900 dark:text-white">Aliran Aktivitas Terbaru</h4>
+                    <div class="lg:col-span-2 space-y-8">
 
-                        @php
-                            $stream = collect()
-                                ->concat($materials->map(function($m) { $m->type = 'material'; return $m; }))
-                                ->concat($assignments->map(function($a) { $a->type = 'assignment'; return $a; }))
-                                ->sortByDesc('created_at');
-                        @endphp
-
-                        @if($stream->isEmpty())
-                            <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-10 text-center text-gray-500">
-                                <p class="text-xs font-bold">Belum ada aktivitas di kelas virtual ini.</p>
-                            </div>
-                        @else
-                            @foreach($stream as $item)
-                                @if($item->type === 'material')
-                                    <!-- Material Stream Card -->
-                                    <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-gray-100 dark:border-slate-700 shadow-sm space-y-4">
-                                        <div class="flex items-start justify-between">
-                                            <div class="flex items-center space-x-3">
-                                                <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                                </div>
-                                                <div>
-                                                    <h5 class="text-sm font-extrabold text-gray-900 dark:text-white leading-tight">Materi Baru Diterbitkan</h5>
-                                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $item->created_at->diffForHumans() }}</p>
-                                                </div>
-                                            </div>
-                                            <span class="inline-flex px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 rounded text-[9px] font-black uppercase tracking-wider">Materi</span>
-                                        </div>
-                                        <div class="space-y-2">
-                                            <h6 class="text-base font-bold text-gray-900 dark:text-white">{{ $item->title }}</h6>
-                                            <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{{ $item->description }}</p>
-                                        </div>
-                                        
-                                        @if($item->file_path || $item->video_url)
-                                            <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100 dark:border-slate-700">
-                                                @if($item->file_path)
-                                                    <a href="{{ asset($item->file_path) }}" download class="inline-flex items-center px-3 py-1.5 bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-bold border border-gray-100 dark:border-slate-800 hover:text-emerald-600">
-                                                        <svg class="w-4 h-4 mr-1 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                                        Unduh PDF Materi
-                                                    </a>
-                                                @endif
-                                                @if($item->video_url)
-                                                    <a href="{{ $item->video_url }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 rounded-xl text-xs font-bold border border-red-100 dark:border-red-900/30 hover:underline">
-                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                        Tonton Video Pembelajaran
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        @endif
+                        <!-- Announcements Section -->
+                        <div class="space-y-4">
+                            <h4 class="text-base font-extrabold text-gray-900 dark:text-white">Pengumuman Kelas</h4>
+                            @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']))
+                                <form action="{{ route('elearning.announcement.store', $elearningClass->uuid) }}" method="POST" class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-4 shadow-sm flex gap-3 items-end">
+                                    @csrf
+                                    <div class="flex-1 space-y-1">
+                                        <textarea name="content" required rows="2" placeholder="Tulis pengumuman baru untuk kelas..." class="w-full rounded-xl border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-xs px-4 py-3"></textarea>
                                     </div>
-                                @else
-                                    <!-- Assignment Stream Card -->
-                                    <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-gray-100 dark:border-slate-700 shadow-sm space-y-4">
-                                        <div class="flex items-start justify-between">
-                                            <div class="flex items-center space-x-3">
-                                                <div class="w-10 h-10 bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                    <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shrink-0 shadow-md transition-all">
+                                        Kirim
+                                    </button>
+                                </form>
+                            @endif
+
+                            @if($announcements->isEmpty())
+                                <div class="bg-white/50 dark:bg-slate-800/50 border border-dashed border-gray-200 dark:border-slate-700 rounded-3xl p-6 text-center text-gray-400">
+                                    <p class="text-[11px] font-bold">Belum ada pengumuman kelas.</p>
+                                </div>
+                            @else
+                                <div class="space-y-3">
+                                    @foreach($announcements as $ann)
+                                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-gray-100 dark:border-slate-700 shadow-sm relative group">
+                                            <div class="flex justify-between items-start gap-4">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 flex items-center justify-center font-bold text-xs uppercase">
+                                                        {{ substr($ann->user?->name ?? 'G', 0, 1) }}
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs font-black text-gray-800 dark:text-white">{{ $ann->user?->name }}</p>
+                                                        <p class="text-[9px] font-bold text-gray-400">{{ $ann->created_at->diffForHumans() }}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h5 class="text-sm font-extrabold text-gray-900 dark:text-white leading-tight">Tugas / Ujian Baru Diterbitkan</h5>
-                                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $item->created_at->diffForHumans() }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="flex space-x-1">
-                                                @if($item->is_secure_mode)
-                                                    <span class="inline-flex px-2 py-0.5 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 rounded text-[9px] font-black uppercase tracking-wider">Aman</span>
+                                                @if(auth()->id() === $ann->user_id || in_array(auth()->user()->role, ['admin', 'superadmin']))
+                                                    <form action="{{ route('elearning.announcement.destroy', [$elearningClass->uuid, $ann->uuid]) }}" method="POST" onsubmit="return confirm('Hapus pengumuman ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                        </button>
+                                                    </form>
                                                 @endif
-                                                <span class="inline-flex px-2 py-0.5 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 rounded text-[9px] font-black uppercase tracking-wider">Tugas</span>
                                             </div>
+                                            <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed mt-3 whitespace-pre-line">{{ $ann->content }}</p>
                                         </div>
-                                        <div class="space-y-2">
-                                            <h6 class="text-base font-bold text-gray-900 dark:text-white">{{ $item->title }}</h6>
-                                            <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed line-clamp-3 whitespace-pre-line">{{ $item->description }}</p>
-                                        </div>
-                                        
-                                        <div class="flex justify-between items-center pt-4 border-t border-gray-100 dark:border-slate-700 text-xs font-bold">
-                                            <span class="text-gray-400">
-                                                Batas Waktu: <strong class="text-gray-600 dark:text-slate-300">{{ \Carbon\Carbon::parse($item->due_at)->format('d M Y, H:i') }}</strong>
-                                            </span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Main Activity Timeline -->
+                        <div class="space-y-4">
+                            <h4 class="text-base font-extrabold text-gray-900 dark:text-white">Aliran Aktivitas Terbaru</h4>
+
+                            @php
+                                $stream = collect()
+                                    ->concat($materials->map(function($m) { $m->type = 'material'; return $m; }))
+                                    ->concat($assignments->map(function($a) { $a->type = 'assignment'; return $a; }))
+                                    ->sortByDesc('created_at');
+                            @endphp
+
+                            @if($stream->isEmpty())
+                                <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-10 text-center text-gray-500">
+                                    <p class="text-xs font-bold">Belum ada aktivitas di kelas virtual ini.</p>
+                                </div>
+                            @else
+                                @foreach($stream as $item)
+                                    @if($item->type === 'material')
+                                        <!-- Material Stream Card -->
+                                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-gray-100 dark:border-slate-700 shadow-sm space-y-4">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="text-sm font-extrabold text-gray-900 dark:text-white leading-tight">Materi Baru Diterbitkan</h5>
+                                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $item->created_at->diffForHumans() }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center gap-1.5">
+                                                    @if(auth()->user()->role === 'student' && auth()->user()->student)
+                                                        @php $isViewed = $item->isViewedBy(auth()->user()->student); @endphp
+                                                        @if($isViewed)
+                                                            <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20">Dibaca ✅</span>
+                                                        @else
+                                                            <span class="px-2 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[9px] font-black uppercase border border-amber-500/20">Belum Dibaca</span>
+                                                        @endif
+                                                    @endif
+                                                    <span class="inline-flex px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 rounded text-[9px] font-black uppercase tracking-wider">Materi</span>
+                                                </div>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <h6 class="text-base font-bold text-gray-900 dark:text-white">{{ $item->title }}</h6>
+                                                <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed line-clamp-3 whitespace-pre-line">{{ $item->description }}</p>
+                                            </div>
                                             
-                                            @if(auth()->user()->role === 'student')
-                                                <a href="{{ route('elearning.assignment.show', $item->uuid) }}" class="inline-flex px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md">
-                                                    Buka Tugas
+                                            <div class="flex justify-between items-center pt-4 border-t border-gray-100 dark:border-slate-700">
+                                                <span class="text-[10px] font-bold text-gray-400">
+                                                    Total Diskusi: <strong class="text-gray-700 dark:text-slate-300">{{ $item->comments->count() }} komentar</strong>
+                                                </span>
+                                                <a href="{{ route('elearning.material.show', [$elearningClass->uuid, $item->uuid]) }}" class="inline-flex px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md">
+                                                    Buka Materi & Diskusi
                                                 </a>
-                                            @else
-                                                <a href="{{ route('elearning.assignment.submissions', $item->uuid) }}" class="inline-flex px-4 py-2 bg-gray-100 hover:bg-gray-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-slate-800">
-                                                    Nilai Siswa ({{ $item->submissions->count() }})
-                                                </a>
-                                            @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @endif
+                                    @else
+                                        <!-- Assignment Stream Card -->
+                                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-gray-100 dark:border-slate-700 shadow-sm space-y-4">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-10 h-10 bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="text-sm font-extrabold text-gray-900 dark:text-white leading-tight">Tugas / Ujian Baru Diterbitkan</h5>
+                                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $item->created_at->diffForHumans() }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex space-x-1">
+                                                    @if($item->is_secure_mode)
+                                                        <span class="inline-flex px-2 py-0.5 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 rounded text-[9px] font-black uppercase tracking-wider">Aman</span>
+                                                    @endif
+                                                    <span class="inline-flex px-2 py-0.5 bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 rounded text-[9px] font-black uppercase tracking-wider">Tugas</span>
+                                                </div>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <h6 class="text-base font-bold text-gray-900 dark:text-white">{{ $item->title }}</h6>
+                                                <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed line-clamp-3 whitespace-pre-line">{{ $item->description }}</p>
+                                            </div>
+                                            
+                                            <div class="flex justify-between items-center pt-4 border-t border-gray-100 dark:border-slate-700 text-xs font-bold">
+                                                <span class="text-gray-400 font-semibold text-[10px]">
+                                                    Batas Waktu: <strong class="text-gray-600 dark:text-slate-300">{{ \Carbon\Carbon::parse($item->due_at)->format('d M Y, H:i') }}</strong>
+                                                </span>
+                                                
+                                                @if(auth()->user()->role === 'student')
+                                                    <a href="{{ route('elearning.assignment.show', $item->uuid) }}" class="inline-flex px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md">
+                                                        Kerjakan Tugas
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('elearning.assignment.submissions', $item->uuid) }}" class="inline-flex px-4 py-2 bg-gray-100 hover:bg-gray-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-slate-800">
+                                                        Nilai Siswa ({{ $item->submissions->count() }})
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -230,38 +350,40 @@
                     @else
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @foreach($materials as $material)
-                                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-gray-100 dark:border-slate-700 shadow-sm space-y-4 hover:shadow-md transition-shadow">
-                                    <div class="flex items-start justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-gray-100 dark:border-slate-700 shadow-sm space-y-4 hover:shadow-md transition-shadow flex flex-col justify-between">
+                                    <div class="space-y-4">
+                                        <div class="flex items-start justify-between gap-4">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center shrink-0 animate-pulse-slow">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                                </div>
+                                                <div>
+                                                    <h5 class="text-sm font-extrabold text-gray-900 dark:text-white leading-tight line-clamp-1">{{ $material->title }}</h5>
+                                                    <p class="text-[10px] font-bold text-gray-400">Dibuat {{ $material->created_at->diffForHumans() }}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h5 class="text-sm font-extrabold text-gray-900 dark:text-white leading-tight">{{ $material->title }}</h5>
-                                                <p class="text-[10px] font-bold text-gray-400">Dibuat {{ $material->created_at->diffForHumans() }}</p>
-                                            </div>
+                                            @if(auth()->user()->role === 'student' && auth()->user()->student)
+                                                @php $isViewed = $material->isViewedBy(auth()->user()->student); @endphp
+                                                @if($isViewed)
+                                                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20 shrink-0">Dibaca ✅</span>
+                                                @else
+                                                    <span class="px-2 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[9px] font-black uppercase border border-amber-500/20 shrink-0">Baru</span>
+                                                @endif
+                                            @endif
                                         </div>
+                                        @if($material->description)
+                                            <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed line-clamp-3 whitespace-pre-line">{{ $material->description }}</p>
+                                        @endif
                                     </div>
-                                    @if($material->description)
-                                        <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{{ $material->description }}</p>
-                                    @endif
                                     
-                                    @if($material->file_path || $material->video_url)
-                                        <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-100 dark:border-slate-700">
-                                            @if($material->file_path)
-                                                <a href="{{ asset($material->file_path) }}" download class="inline-flex items-center px-3 py-1.5 bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-bold border border-gray-100 dark:border-slate-800 hover:text-emerald-600">
-                                                    <svg class="w-4 h-4 mr-1 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                                    Unduh PDF
-                                                </a>
-                                            @endif
-                                            @if($material->video_url)
-                                                <a href="{{ $material->video_url }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 rounded-xl text-xs font-bold border border-red-100 dark:border-red-900/30 hover:underline">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
-                                                    Tonton Video
-                                                </a>
-                                            @endif
-                                        </div>
-                                    @endif
+                                    <div class="pt-4 border-t border-gray-100 dark:border-slate-700 flex justify-between items-center">
+                                        <span class="text-[10px] font-bold text-gray-400">
+                                            Total Diskusi: <strong class="text-gray-700 dark:text-slate-300">{{ $material->comments->count() }} komentar</strong>
+                                        </span>
+                                        <a href="{{ route('elearning.material.show', [$elearningClass->uuid, $material->uuid]) }}" class="inline-flex px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md">
+                                            Buka Materi & Diskusi
+                                        </a>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>

@@ -85,6 +85,16 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.journal') }}</div>
         </a>
+
+        <a href="{{ route('meeting-notes.index') }}" class="{{ $linkClass }} {{ request()->routeIs('meeting-notes.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.meeting_notes') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.meeting_notes') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.meeting_notes') }}</div>
+        </a>
         @endif
 
         @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']))
@@ -203,6 +213,14 @@
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.mutabaah') }}</span>
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.mutabaah') }}</div>
+        </a>
+
+        <a href="{{ route('event-attendance.index') }}" class="{{ $linkClass }} {{ request()->routeIs('event-attendance.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.event_attendance') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.event_attendance') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.event_attendance') }}</div>
         </a>
 
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
@@ -353,6 +371,30 @@
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.schedule_presets') }}</span>
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_presets') }}</div>
+        </a>
+
+        <a href="{{ route('schedules.teacher') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.teacher') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_teacher') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.schedule_teacher') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_teacher') }}</div>
+        </a>
+
+        <a href="{{ route('schedules.room') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.room') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_room') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.schedule_room') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_room') }}</div>
+        </a>
+
+        <a href="{{ route('schedules.conflicts') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.conflicts') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_conflicts') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.schedule_conflicts') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_conflicts') }}</div>
         </a>
         @endif
 
@@ -650,6 +692,15 @@
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.e_learning') }}</span>
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.e_learning') }}</div>
+        </a>
+
+        {{-- Ujian Online CBT --}}
+        <a href="{{ route('cbt.exams.index') }}" class="{{ $linkClass }} {{ request()->routeIs('cbt.exams.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.cbt') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.cbt') }}</span>
+            </div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.cbt') }}</div>
         </a>
 
         {{-- Forum Diskusi --}}

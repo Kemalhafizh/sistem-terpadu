@@ -153,6 +153,7 @@
                                             <a href="{{ route('cbt.exams.monitor', $exam) }}" class="inline-block px-3 py-1.5 bg-amber-500/10 hover:bg-amber-600 text-amber-600 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border border-amber-500/20 hover:border-amber-600">Monitor</a>
                                         @endif
                                         <a href="{{ route('cbt.exams.results', $exam) }}" class="inline-block px-3 py-1.5 bg-blue-500/10 hover:bg-blue-600 text-blue-600 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border border-blue-500/20 hover:border-blue-600">Hasil</a>
+                                        <a href="{{ route('cbt.exams.analysis', $exam) }}" class="inline-block px-3 py-1.5 bg-purple-500/10 hover:bg-purple-600 text-purple-600 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border border-purple-500/20 hover:border-purple-600">Analisis</a>
                                     @endif
                                 </td>
                             </tr>

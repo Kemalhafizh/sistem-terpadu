@@ -1,82 +1,138 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
             {{ __('Buat Pengumuman Baru') }}
         </h2>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-4xl mx-auto bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
-            <div class="p-8 bg-white border-b border-gray-200">
-                <form method="POST" action="{{ route('announcements.store') }}" enctype="multipart/form-data" x-data="{ targetRole: '' }">
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <form method="POST" action="{{ route('announcements.store') }}" enctype="multipart/form-data" x-data="{ targetRole: '' }" class="p-10 space-y-8">
                     @csrf
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="md:col-span-2">
-                            <label for="title" class="block font-medium text-sm text-gray-700 mb-1">Judul Pengumuman</label>
-                            <input id="title" class="block w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50" type="text" name="title" value="{{ old('title') }}" required autofocus placeholder="Contoh: Rapat Wali Murid Semester Ganjil" />
-                        </div>
+                    <!-- Judul -->
+                    <div>
+                        <label for="title" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Judul Pengumuman</label>
+                        <input id="title" class="w-full rounded-2xl border-gray-250 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4" type="text" name="title" value="{{ old('title') }}" required autofocus placeholder="Contoh: Rapat Wali Murid Semester Ganjil" />
+                    </div>
 
-                        <div class="md:col-span-2">
-                            <label for="content" class="block font-medium text-sm text-gray-700 mb-1">Isi Pesan</label>
-                            <textarea id="content" name="content" rows="4" class="block w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50" required placeholder="Tuliskan isi pengumuman secara detail...">{{ old('content') }}</textarea>
-                        </div>
+                    <!-- Isi Konten -->
+                    <div>
+                        <label for="content" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Isi Pesan</label>
+                        <textarea id="content" name="content" rows="6" class="w-full rounded-2xl border-gray-250 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4" required placeholder="Tuliskan isi pengumuman secara detail...">{{ old('content') }}</textarea>
+                    </div>
 
-                        <div class="md:col-span-2">
-                            <label for="image" class="block font-medium text-sm text-gray-700 mb-1">Upload Poster / Foto (Opsional)</label>
-                            <input id="image" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 border border-gray-300 rounded-md shadow-sm cursor-pointer" type="file" name="image" accept="image/*" />
-                            <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, GIF. Maksimal ukuran: 2MB.</p>
-                        </div>
-
+                    <!-- Uploads Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Poster Image -->
                         <div>
-                            <label for="priority" class="block font-medium text-sm text-gray-700 mb-1">Prioritas</label>
-                            <select id="priority" name="priority" class="block w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
-                                <option value="low">Rendah (Low)</option>
-                                <option value="normal" selected>Normal</option>
-                                <option value="urgent">Mendesak (Urgent) - Warna Merah</option>
+                            <label for="image" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Poster / Foto (Opsional)</label>
+                            <input id="image" class="w-full rounded-2xl border border-gray-200 dark:border-gray-700 dark:bg-gray-750 dark:text-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-3 text-sm" type="file" name="image" accept="image/*" />
+                            <p class="mt-2 text-xs text-gray-400 dark:text-gray-500 font-bold">Format: JPG, PNG, GIF. Maksimal ukuran: 2MB.</p>
+                        </div>
+
+                        <!-- Attachment -->
+                        <div>
+                            <label for="attachment" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Dokumen Lampiran (Opsional)</label>
+                            <input id="attachment" class="w-full rounded-2xl border border-gray-200 dark:border-gray-700 dark:bg-gray-750 dark:text-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-3 text-sm" type="file" name="attachment" />
+                            <p class="mt-2 text-xs text-gray-400 dark:text-gray-500 font-bold">Format: PDF, DOC, XLS, ZIP, dll. Maksimal ukuran: 5MB.</p>
+                        </div>
+                    </div>
+
+                    <!-- Meta Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Kategori -->
+                        <div>
+                            <label for="category" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Kategori</label>
+                            <select id="category" name="category" required class="w-full rounded-2xl border-gray-100 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4">
+                                <option value="umum" selected>Umum</option>
+                                <option value="akademik">Akademik</option>
+                                <option value="keuangan">Keuangan</option>
+                                <option value="kegiatan">Kegiatan</option>
+                                <option value="keislaman">Keislaman</option>
                             </select>
                         </div>
 
+                        <!-- Prioritas -->
                         <div>
-                            <label for="expires_at" class="block font-medium text-sm text-gray-700 mb-1">Tanggal Kedaluwarsa (Opsional)</label>
-                            <input id="expires_at" class="block w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50" type="datetime-local" name="expires_at" value="{{ old('expires_at') }}" />
-                            <p class="mt-1 text-xs text-gray-400">Pengumuman akan otomatis hilang setelah tanggal ini.</p>
+                            <label for="priority" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Prioritas</label>
+                            <select id="priority" name="priority" required class="w-full rounded-2xl border-gray-100 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4">
+                                <option value="low">Rendah (Low)</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="urgent">Mendesak (Urgent)</option>
+                            </select>
                         </div>
 
-                        <div class="md:col-span-2 pt-4 border-t border-gray-100 mt-2">
-                            <h3 class="text-sm font-bold text-gray-800 mb-4">Penargetan (Siapa yang akan melihat ini?)</h3>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label for="target_role" class="block font-medium text-sm text-gray-700 mb-1">Target Peran (Role)</label>
-                                    <select id="target_role" name="target_role" x-model="targetRole" class="block w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
-                                        <option value="">Semua Orang (Publik Sekolah)</option>
-                                        <option value="student">Hanya Siswa</option>
-                                        <option value="parent">Hanya Wali Murid</option>
-                                        <option value="guru">Hanya Guru & Staf</option>
-                                    </select>
-                                </div>
+                        <!-- Kedaluwarsa -->
+                        <div>
+                            <label for="expires_at" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Kedaluwarsa (Opsional)</label>
+                            <input id="expires_at" class="w-full rounded-2xl border-gray-150 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4" type="datetime-local" name="expires_at" value="{{ old('expires_at') }}" />
+                        </div>
+                    </div>
 
-                                <div x-show="['student', 'parent'].includes(targetRole)" style="display: none;" x-transition>
-                                    <label for="target_classroom_id" class="block font-medium text-sm text-gray-700 mb-1">Spesifik Kelas (Opsional)</label>
-                                    <select id="target_classroom_id" name="target_classroom_id" class="block w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
-                                        <option value="">Semua Kelas</option>
-                                        @foreach($classrooms ?? [] as $classroom)
-                                            <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <p class="mt-1 text-xs text-gray-400">Jika dikosongkan, berarti dikirim ke semua kelas.</p>
+                    <!-- Target Penerima Section -->
+                    <div class="pt-8 border-t border-gray-100 dark:border-gray-700 space-y-6">
+                        <h3 class="text-base font-black text-gray-900 dark:text-white uppercase tracking-widest">Penargetan & Distribusi</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Target Role -->
+                            <div>
+                                <label for="target_role" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Target Peran (Role)</label>
+                                <select id="target_role" name="target_role" x-model="targetRole" class="w-full rounded-2xl border-gray-100 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4">
+                                    <option value="">Semua Orang (Publik Sekolah)</option>
+                                    <option value="student">Hanya Siswa</option>
+                                    <option value="parent">Hanya Wali Murid</option>
+                                    <option value="guru">Hanya Guru & Staf</option>
+                                </select>
+                            </div>
+
+                            <!-- Target Classroom -->
+                            <div x-show="['student', 'parent'].includes(targetRole)" x-transition class="transition-all">
+                                <label for="target_classroom_id" class="block text-sm font-black text-gray-700 dark:text-gray-250 uppercase tracking-widest mb-3">Spesifik Kelas (Opsional)</label>
+                                <select id="target_classroom_id" name="target_classroom_id" class="w-full rounded-2xl border-gray-100 dark:border-gray-700 dark:bg-gray-750 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 transition-all p-4">
+                                    <option value="">Semua Kelas</option>
+                                    @foreach($classrooms ?? [] as $classroom)
+                                        <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="mt-2 text-xs text-gray-400 dark:text-gray-500 font-bold">Jika dikosongkan, berarti ditujukan ke semua kelas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pengaturan Tambahan Section -->
+                    <div class="pt-8 border-t border-gray-100 dark:border-gray-700 space-y-6">
+                        <h3 class="text-base font-black text-gray-900 dark:text-white uppercase tracking-widest">Fitur & Pengaturan Lanjutan</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Pin Toggle -->
+                            <div class="flex items-start space-x-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-750">
+                                <input id="is_pinned" type="checkbox" name="is_pinned" value="1" class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 mt-0.5" {{ old('is_pinned') ? 'checked' : '' }}>
+                                <div class="ml-2">
+                                    <label for="is_pinned" class="text-sm font-bold text-gray-900 dark:text-white">Sematkan Pengumuman (Pin to Dashboard)</label>
+                                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-relaxed">Pengumuman ini akan diposisikan paling atas di halaman dasbor pengguna target.</p>
+                                </div>
+                            </div>
+
+                            <!-- Require Acknowledgement -->
+                            <div class="flex items-start space-x-3 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-750">
+                                <input id="require_acknowledgement" type="checkbox" name="require_acknowledgement" value="1" class="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 mt-0.5" {{ old('require_acknowledgement') ? 'checked' : '' }}>
+                                <div class="ml-2">
+                                    <label for="require_acknowledgement" class="text-sm font-bold text-gray-900 dark:text-white">Wajib Konfirmasi Pembacaan</label>
+                                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-relaxed">Penerima wajib mengonfirmasi secara resmi (klik tombol) bahwa mereka telah membaca dan memahami isi pesan ini.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-end mt-6 pt-4 border-t border-gray-100">
-                        <a href="{{ route('announcements.index') }}" class="text-sm text-gray-600 hover:text-gray-900 mr-4">
+                    <!-- Form Actions -->
+                    <div class="pt-8 border-t border-gray-100 dark:border-gray-700 flex items-center justify-end space-x-4">
+                        <a href="{{ route('announcements.index') }}" class="text-sm font-bold text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                             Batal
                         </a>
-                        <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-primary-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:ring ring-primary-300 shadow-sm transition-all">
-                            Sebarkan Pengumuman
+                        <button type="submit" class="px-10 py-4 bg-primary-600 text-white rounded-[1.5rem] font-black text-sm shadow-xl shadow-primary-600/10 hover:bg-primary-700 hover:-translate-y-0.5 transition-all">
+                            SEBARKAN PENGUMUMAN
                         </button>
                     </div>
                 </form>

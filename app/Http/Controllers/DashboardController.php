@@ -97,6 +97,7 @@ class DashboardController extends Controller
                 }
             })
             ->with('creator')
+            ->orderByDesc('is_pinned')
             ->latest()
             ->take(5)
             ->get();

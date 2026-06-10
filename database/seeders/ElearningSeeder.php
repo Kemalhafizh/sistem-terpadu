@@ -7,6 +7,9 @@ use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
 use App\Models\ElearningSubmission;
+use App\Models\ElearningAnnouncement;
+use App\Models\ElearningMaterialComment;
+use App\Models\ElearningMaterialView;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -17,6 +20,9 @@ class ElearningSeeder extends Seeder
     public function run(): void
     {
         // Truncate tables
+        ElearningMaterialComment::truncate();
+        ElearningMaterialView::truncate();
+        ElearningAnnouncement::truncate();
         ElearningSubmission::truncate();
         ElearningAssignment::truncate();
         ElearningMaterial::truncate();
@@ -41,7 +47,7 @@ class ElearningSeeder extends Seeder
         $guruPai = User::where('email', 'guru.pai@sultanagung1.sch.id')->first();
         $guruSejarah = User::where('email', 'guru.sejarah@sultanagung1.sch.id')->first();
 
-        // Define 5 classes
+        // Define 5 active classes
         $classesData = [
             [
                 'subject_id' => $mtk->id,
@@ -58,6 +64,10 @@ class ElearningSeeder extends Seeder
                 'assignments' => [
                     ['title' => 'Tugas 1: Latihan Eksponen', 'desc' => 'Kerjakan soal halaman 12-15 di buku paket.'],
                     ['title' => 'Kuis 1: Persamaan Kuadrat', 'desc' => 'Kuis online 5 soal esai singkat.'],
+                ],
+                'announcements' => [
+                    'Selamat datang di kelas Matematika Aljabar. Silakan download materi eksponen pertama.',
+                    'Pengingat: Tugas Latihan Eksponen dikumpulkan paling lambat besok malam ya.',
                 ]
             ],
             [
@@ -75,6 +85,9 @@ class ElearningSeeder extends Seeder
                 'assignments' => [
                     ['title' => 'Assignment 1: Write a Personal Experience', 'desc' => 'Write a recount text about your last holiday (min 150 words).'],
                     ['title' => 'Assignment 2: Reading Comprehension', 'desc' => 'Answer the questions based on the text provided.'],
+                ],
+                'announcements' => [
+                    'Please read the past tense grammar summary before writing your personal experience recount text.',
                 ]
             ],
             [
@@ -92,6 +105,9 @@ class ElearningSeeder extends Seeder
                 'assignments' => [
                     ['title' => 'Tugas Mandiri: Soal Momen Inersia', 'desc' => 'Selesaikan 5 soal hitungan berikut jalan penyelesaiannya.'],
                     ['title' => 'Laporan Praktikum: Hukum Hooke', 'desc' => 'Unggah laporan praktikum elastisitas pegas format PDF.'],
+                ],
+                'announcements' => [
+                    'Praktikum Hukum Hooke dikerjakan secara individu menggunakan simulator lab virtual PHET.',
                 ]
             ],
             [
@@ -109,6 +125,9 @@ class ElearningSeeder extends Seeder
                 'assignments' => [
                     ['title' => 'Tugas Mawaris: Simulasi Kasus Waris', 'desc' => 'Hitunglah bagian masing-masing ahli waris dari studi kasus terlampir.'],
                     ['title' => 'Review Ceramah Munakahat', 'desc' => 'Tulis rangkuman esai hikmah pernikahan.'],
+                ],
+                'announcements' => [
+                    'Ujian Sumatif Bab Mawaris akan diadakan minggu depan. Persiapkan diri dengan membaca modul warisan.',
                 ]
             ],
             [
@@ -126,6 +145,9 @@ class ElearningSeeder extends Seeder
                 'assignments' => [
                     ['title' => 'Analisis Krisis Moneter 1998', 'desc' => 'Buat esai analisis penyebab krisis moneter 1997-1998.'],
                     ['title' => 'Tugas Mandiri: Tokoh Reformasi', 'desc' => 'Tulis biografi singkat salah satu tokoh pelopor reformasi.'],
+                ],
+                'announcements' => [
+                    'Silakan tonton dokumenter reformasi 1998 yang saya sematkan di materi log.',
                 ]
             ],
         ];
@@ -138,11 +160,23 @@ class ElearningSeeder extends Seeder
                 'teacher_id' => $classInfo['teacher_id'],
                 'name' => $classInfo['name'],
                 'description' => $classInfo['description'],
+                'is_archived' => false,
             ]);
 
+            // Seed Announcements
+            foreach ($classInfo['announcements'] as $annContent) {
+                ElearningAnnouncement::create([
+                    'uuid' => (string) Str::uuid(),
+                    'elearning_class_id' => $eclass->id,
+                    'user_id' => $classInfo['teacher_id'],
+                    'content' => $annContent,
+                ]);
+            }
+
             // Seed Materials (20 materials total)
+            $createdMaterials = [];
             foreach ($classInfo['materials'] as $mat) {
-                ElearningMaterial::create([
+                $material = ElearningMaterial::create([
                     'uuid' => (string) Str::uuid(),
                     'elearning_class_id' => $eclass->id,
                     'title' => $mat['title'],
@@ -150,6 +184,7 @@ class ElearningSeeder extends Seeder
                     'file_path' => 'materials/sample_pdf.pdf',
                     'video_url' => rand(0, 1) ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : null,
                 ]);
+                $createdMaterials[] = $material;
             }
 
             // Seed Assignments (10 assignments total)
@@ -199,6 +234,52 @@ class ElearningSeeder extends Seeder
                     ]);
                 }
             }
+
+            // Seed Material Views & Comments for students in this class (OUTSIDE assignments loop)
+            $classroomStudents = Classroom::find($classInfo['classroom_id'])->students;
+            foreach ($classroomStudents as $student) {
+                // Seed views for 70% of materials
+                foreach ($createdMaterials as $material) {
+                    if (rand(0, 10) < 7) {
+                        ElearningMaterialView::create([
+                            'student_id' => $student->id,
+                            'elearning_material_id' => $material->id,
+                            'viewed_at' => now()->subDays(rand(1, 4)),
+                        ]);
+
+                        // Seed discussion comments (15% chance per viewed material)
+                        if (rand(0, 100) < 15) {
+                            ElearningMaterialComment::create([
+                                'uuid' => (string) Str::uuid(),
+                                'elearning_material_id' => $material->id,
+                                'user_id' => $student->user_id,
+                                'content' => ['Saya kurang paham rumus ini.', 'Izin menanyakan pdf halaman 3 pak.', 'Sangat jelas penjelasannya bu.', 'Apakah materi ini keluar di UTS nanti?'][rand(0, 3)],
+                            ]);
+
+                            // Guru replies
+                            if (rand(0, 1) === 1) {
+                                ElearningMaterialComment::create([
+                                    'uuid' => (string) Str::uuid(),
+                                    'elearning_material_id' => $material->id,
+                                    'user_id' => $classInfo['teacher_id'],
+                                    'content' => ['Ya, pelajari baik-baik.', 'Benar sekali.', 'Bisa dibaca ulang di modul pendukung ya.', 'Ya, materi ini masuk kisi-kisi UTS.'][rand(0, 3)],
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
         }
+
+        // Seed 1 Archived class from previous semester
+        ElearningClass::create([
+            'uuid' => (string) Str::uuid(),
+            'subject_id' => $mtk->id,
+            'classroom_id' => $classXA->id,
+            'teacher_id' => $guruMtk->id,
+            'name' => '[Arsip] Matematika Dasar Semester Ganjil',
+            'description' => 'Kelas matematika dasar tahun ajaran lalu.',
+            'is_archived' => true,
+        ]);
     }
 }

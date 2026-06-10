@@ -56,6 +56,9 @@ return [
     'alumni' => 'Alumni Database',
     'schedule_plotting' => 'Schedule Plotting',
     'schedule_presets' => 'Time Presets',
+    'schedule_teacher' => 'Teacher Schedule',
+    'schedule_room' => 'Room Schedule',
+    'schedule_conflicts' => 'Audit Conflicts',
     'points' => 'Points & Discipline',
     'point_categories' => 'Point Categories Master',
     'uks' => 'Digital UKS',
@@ -78,4 +81,6 @@ return [
     'surveys' => 'Digital Surveys',
     'daily_assessments' => 'Daily Assessments',
     'remedial_list' => 'Remedial List',
+    'event_attendance' => 'Event Attendance',
+    'meeting_notes' => 'Meeting Notes',
 ];

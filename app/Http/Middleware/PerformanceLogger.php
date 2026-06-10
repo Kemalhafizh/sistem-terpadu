@@ -38,7 +38,7 @@ class PerformanceLogger
 
         // Threshold slow request: > 1000ms OR peak memory > 128MB OR has slow queries
         $isSlowRequest = $durationMs >= 1000;
-        $isHighMemory = $peakMemory >= (128 * 1024 * 1024); // 128MB
+        $isHighMemory = !app()->environment('testing') && $peakMemory >= (128 * 1024 * 1024); // 128MB
 
         if ($isSlowRequest || $isHighMemory || !empty($slowQueries)) {
             $this->logPerformance($request, $durationMs, $peakMemory, array_values($slowQueries));
