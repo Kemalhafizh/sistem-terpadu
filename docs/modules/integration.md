@@ -23,7 +23,7 @@ graph TD
 
 ## 🗃️ 2. Skema Tabel Database
 
-Modul ini memperkenalkan tiga tabel baru pada skema database tenant sekolah:
+Modul ini memperkenalkan tiga tabel baru pada database SISTA:
 
 ### `integration_configs`
 Menyimpan konfigurasi kredensial dan pengaturan kustom per provider integrasi.

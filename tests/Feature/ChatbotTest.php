@@ -9,8 +9,7 @@ use App\Models\ChatbotConversation;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
-    // Run chatbot migration specifically for testing if needed
-    // Note: Since we are using standard tenant testing bridge, migrations are auto-loaded.
+    //
 });
 
 test('unauthenticated users are blocked from sending chatbot messages', function () {

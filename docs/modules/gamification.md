@@ -6,7 +6,7 @@ Modul Gamifikasi & Engagement System Siswa dirancang khusus untuk meningkatkan m
 
 ## 📊 Skema Database & Relasi
 
-Sistem ini didukung oleh tiga tabel utama yang terisolasi secara aman di dalam skema database tenant sekolah masing-masing:
+Sistem ini didukung oleh tiga tabel utama yang tersimpan di dalam database SISTA SMA ISA 1:
 
 ### 1. `achievement_definitions`
 Menyimpan definisi master lencana pencapaian (badges) yang didukung sistem.

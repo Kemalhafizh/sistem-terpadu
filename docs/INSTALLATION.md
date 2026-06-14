@@ -66,8 +66,8 @@ VITE_REVERB_SCHEME="${REVERB_SCHEME}"
 php artisan key:generate
 ```
 
-### Langkah 5: Persiapan Berkas Database Pusat
-Buat berkas database SQLite kosong untuk landlord:
+### Langkah 5: Persiapan Berkas Database
+Buat berkas database SQLite kosong:
 ```bash
 # Windows PowerShell
 New-Item -ItemType File -Path database\database.sqlite -Force
@@ -76,12 +76,12 @@ New-Item -ItemType File -Path database\database.sqlite -Force
 touch database/database.sqlite
 ```
 
-### Langkah 6: Jalankan Migrasi Database Pusat (Landlord)
-Jalankan migrasi tabel central untuk SaaS:
+### Langkah 6: Jalankan Migrasi & Seeding Database
+Jalankan seluruh migrasi tabel dan isi data demo SMA ISA 1:
 ```bash
-php artisan migrate
+php artisan migrate:fresh --seed
 ```
-*(Ini akan membuat tabel `tenants` dan `domains` di dalam `database.sqlite`)*
+*(Ini akan membuat seluruh tabel sistem dan mengisi ~860 record data demo)*
 
 ### Langkah 7: Instal Dependensi Frontend (NPM)
 Instal seluruh package javascript dan build asetnya:
@@ -107,20 +107,3 @@ Secara default, skrip `dev` di `package.json` telah dikonfigurasi untuk mengekse
 4.  **Vite Bundler:** `npm run dev`
 
 ---
-
-## 🖧 Konfigurasi Local Virtual Hosts (Domain Mapping)
-
-SaaS SISTA mendeteksi tenant berdasarkan subdomain. Silakan daftarkan domain-domain lokal berikut pada berkas hosts sistem operasi Anda:
-
-*   **Berkas Linux/macOS:** `/etc/hosts`
-*   **Berkas Windows (Notepad Admin):** `C:\Windows\System32\drivers\etc\hosts`
-
-Tambahkan baris:
-```text
-127.0.0.1 sistem-terpadu.test
-127.0.0.1 sista.test
-127.0.0.1 sma1.sistem-terpadu.test
-127.0.0.1 smp2.sistem-terpadu.test
-```
-
-Buka **`http://sistem-terpadu.test:8000/onboard`** di browser Anda untuk mulai menguji onboarding wizard digital SISTA!

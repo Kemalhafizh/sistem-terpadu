@@ -22,12 +22,12 @@ sudo chmod -R 775 /var/www/sistem-terpadu/storage
 sudo chmod -R 775 /var/www/sistem-terpadu/bootstrap/cache
 ```
 
-### 3. Konfigurasi Nginx Server Block (Support Subdomain Wildcard)
+### 3. Konfigurasi Nginx Server Block
 Buat file konfigurasi Nginx baru di `/etc/nginx/sites-available/sista`:
 ```nginx
 server {
     listen 80;
-    server_name sista.test *.sista.test; # Ubah ke domain produksi Anda
+    server_name sista.sultanagung1.sch.id;
     root /var/www/sistem-terpadu/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
@@ -112,7 +112,7 @@ services:
       - "80:80"
       - "8080:8080" # Untuk port websocket Reverb
     volumes:
-      - ./database/tenants:/var/www/html/database/tenants
+      - ./database:/var/www/html/database
       - ./storage:/var/www/html/storage
     environment:
       - APP_ENV=production

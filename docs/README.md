@@ -1,8 +1,8 @@
-# 🚀 SISTA Developer Portal & Documentation Hub
+# 🚀 SISTA SMA Islam Sultan Agung 1 Semarang — Developer Portal
 
-Selamat datang di Portal Pengembang **SISTA (Sistem Informasi Sekolah Terpadu)**. Dokumen ini adalah panduan teknis komprehensif bagi developer, administrator sistem, dan kontributor yang ingin memahami, menjalankan, serta mengembangkan platform SISTA.
+Selamat datang di Portal Pengembang **SISTA (Sistem Terpadu SMA Islam Sultan Agung 1 Semarang)**. Dokumen ini adalah panduan teknis komprehensif bagi developer, administrator sistem, dan kontributor yang ingin memahami, menjalankan, serta mengembangkan platform SISTA.
 
-SISTA dirancang sebagai platform manajemen sekolah komersial skala **Enterprise-Grade** dengan dukungan WebSocket real-time, kecerdasan buatan prediktif, API mobile-ready, dan sistem pengawasan ujian online berkinerja tinggi.
+SISTA dirancang sebagai platform manajemen digital **eksklusif SMA Islam Sultan Agung 1 Semarang** dengan dukungan WebSocket real-time, kecerdasan buatan prediktif, API mobile-ready, dan sistem pengawasan ujian online berkinerja tinggi.
 
 ---
 
@@ -12,7 +12,7 @@ Gunakan menu berikut untuk menelusuri dokumentasi teknis secara menyeluruh:
 
 ### 🏗️ Arsitektur & Infrastruktur
 *   [**ARCHITECTURE.md**](ARCHITECTURE.md): Struktur arsitektur sistem, desain database, dan diagram sequence alur workflows.
-*   [**adr/**](adr/) (Architecture Decision Records): Catatan keputusan arsitektural utama (Service Pattern, Reverb, SQLite Isolation).
+*   [**adr/**](adr/) (Architecture Decision Records): Catatan keputusan arsitektural utama (Service Pattern, Reverb).
 
 ### 💻 Panduan Developer & Operasional
 *   [**INSTALLATION.md**](INSTALLATION.md): Langkah-langkah instalasi lokal lengkap (PHP 8.4, Composer, NPM, SQLite).
@@ -55,4 +55,4 @@ SISTA bertransformasi menjadi platform premium dengan 9 modul mutakhir:
 
 ---
 
-*Hak Cipta © 2026 SISTA Integrated Smart School Platform. Seluruh Hak Cipta Dilindungi.*
+*Hak Cipta © 2026 SISTA — SMA Islam Sultan Agung 1 Semarang. Seluruh Hak Cipta Dilindungi.*

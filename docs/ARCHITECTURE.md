@@ -1,6 +1,6 @@
 # 🏗️ Arsitektur & Pola Desain Sistem SISTA
 
-Dokumen ini menjelaskan struktur arsitektural kelas dunia yang diimplementasikan pada **SISTA** untuk memastikan performa tinggi, skalabilitas SaaS, serta isolasi data mutlak.
+Dokumen ini menjelaskan struktur arsitektural kelas dunia yang diimplementasikan pada **SISTA** untuk memastikan performa tinggi, skalabilitas, serta keamanan data mutlak.
 
 ---
 

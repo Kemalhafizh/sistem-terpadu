@@ -7,7 +7,7 @@
 [![Style](https://img.shields.io/badge/Code%20Style-Laravel%20Pint-lightgrey.svg?style=flat-square)](https://laravel.com/docs/11.x/pint)
 [![Tailwind](https://img.shields.io/badge/TailwindCSS-v4.0-38bdf8.svg?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
 
-**Sistem Terpadu SMA Islam Sultan Agung 1 (SISTA)** adalah platform Sistem Informasi Sekolah (*School Management System*) berskala enterprise yang dirancang khusus untuk mendigitalisasi, menyatukan, dan mengoptimalkan seluruh roda operasional sekolah. Mengusung arsitektur modern berkinerja tinggi, sistem ini menjamin keamanan data sensitif, keandalan luring (*offline resilience*), serta integrasi analitik eksekutif secara *real-time*.
+**Sistem Terpadu SMA Islam Sultan Agung 1 (SISTA)** adalah platform manajemen digital yang dirancang **khusus dan eksklusif untuk SMA Islam Sultan Agung 1 Semarang** — sekolah Islam di bawah naungan **Yayasan Badan Wakaf Sultan Agung (YBWSA)**. Platform ini mendigitalisasi, menyatukan, dan mengoptimalkan seluruh roda operasional sekolah dalam satu sistem terintegrasi. Mengusung arsitektur modern berkinerja tinggi, sistem ini menjamin keamanan data sensitif, keandalan luring (*offline resilience*), serta integrasi analitik eksekutif secara *real-time*.
 
 Platform ini dirancang dengan antarmuka **Premium Glassmorphism** yang adaptif di berbagai ukuran perangkat, mendukung mode gelap/terang secara mulus, dan kaya akan mikro-animasi interaktif menggunakan TailwindCSS v4 & Alpine.js.
 

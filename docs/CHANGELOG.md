@@ -1,4 +1,4 @@
-# 📜 Catatan Perubahan (Changelog) SISTA
+# 📜 Catatan Perubahan (Changelog) SISTA — SMA Islam Sultan Agung 1 Semarang
 
 Seluruh pembaruan penting pada basis kode **SISTA** dicatat di dokumen ini berdasarkan versi rilis.
 
