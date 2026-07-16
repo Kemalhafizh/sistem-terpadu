@@ -1,3 +1,4 @@
+<x-mail::message>
 # Selamat, Anda Telah Diterima!
 
 Halo {{ $user->name }},

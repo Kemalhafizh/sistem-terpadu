@@ -57,7 +57,8 @@ class Employee extends Model
      */
     public function getNameAttribute()
     {
-        return $this->user?->name;
+        $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+        return $user?->name;
     }
 
     /**
@@ -65,6 +66,22 @@ class Employee extends Model
      */
     public function getEmailAttribute()
     {
-        return $this->user?->email;
+        $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+        return $user?->email;
+    }
+
+    public function performanceEvaluations()
+    {
+        return $this->hasMany(PerformanceEvaluation::class);
+    }
+
+    public function trainings()
+    {
+        return $this->hasMany(EmployeeTraining::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(EmployeeDocument::class);
     }
 }

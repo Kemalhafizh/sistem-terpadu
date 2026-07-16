@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pendaftaran Berhasil | Sultan Agung 1 Semarang</title>
+    <title>{{ __('spmb.success_header') }} | Sultan Agung 1 Semarang</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo-kotak.png') }}">
@@ -62,35 +62,35 @@
                 <div class="mx-auto w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-2 mb-4 shadow-lg">
                     <img src="{{ asset('images/logo-kotak.png') }}" alt="Sultan Agung 1" class="h-full object-contain">
                 </div>
-                <h2 class="text-xl font-black tracking-tight uppercase leading-none">Pendaftaran Berhasil!</h2>
-                <p class="text-emerald-100 mt-1.5 text-xs font-semibold leading-none">Voucher Tanda Terima SPMB Digital</p>
+                <h2 class="text-xl font-black tracking-tight uppercase leading-none">{{ __('spmb.success_header') }}</h2>
+                <p class="text-emerald-100 mt-1.5 text-xs font-semibold leading-none">{{ __('spmb.success_voucher') }}</p>
             </div>
         </div>
 
         <!-- Body Struk -->
         <div class="p-8 space-y-6">
             <div class="text-center">
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Nomor Pendaftaran Anda</p>
+                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">{{ __('spmb.label_reg_number_your') }}</p>
                 <div class="bg-slate-50 border-2 border-dashed border-slate-350 rounded-2xl py-5">
                     <span class="text-3xl font-black text-slate-900 tracking-tighter">{{ session('registration_number') }}</span>
                 </div>
                 <p class="mt-2 text-[10px] text-red-500 font-bold bg-red-50 py-1.5 px-3 rounded-lg inline-block uppercase tracking-wider no-print">
-                    ⚠️ Harap screenshot / simpan nomor ini!
+                    {{ __('spmb.warning_save_number') }}
                 </p>
             </div>
 
             <!-- Candidate summary info -->
             @if(isset($candidate) && $candidate)
             <div class="border-t border-b border-slate-100 py-4 space-y-2 text-xs">
-                <div class="flex justify-between">
-                    <span class="text-slate-400 font-medium">Nama Pendaftar:</span>
+                <div class="flex justify-between rtl:flex-row-reverse">
+                    <span class="text-slate-400 font-medium">{{ __('spmb.label_full_name') }}</span>
                     <strong class="text-slate-800 text-right">{{ $candidate->full_name }}</strong>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400 font-medium">Asal Sekolah:</span>
+                <div class="flex justify-between rtl:flex-row-reverse">
+                    <span class="text-slate-400 font-medium">{{ __('spmb.label_previous_school') }}</span>
                     <strong class="text-slate-800 text-right">{{ $candidate->previous_school }}</strong>
                 </div>
-                <div class="flex justify-between">
+                <div class="flex justify-between rtl:flex-row-reverse">
                     <span class="text-slate-400 font-medium">NISN:</span>
                     <strong class="text-slate-800 text-right">{{ $candidate->nisn ?: '-' }}</strong>
                 </div>
@@ -98,12 +98,12 @@
             @endif
 
             <!-- Steps Next -->
-            <div class="text-xs text-blue-900 leading-relaxed bg-blue-50/60 p-5 rounded-2xl border border-blue-200/50 text-left font-inter font-medium">
-                <h4 class="font-bold text-blue-900 mb-2 uppercase tracking-wide text-[10px]">Langkah Selanjutnya:</h4>
+            <div class="text-xs text-blue-900 leading-relaxed bg-blue-50/60 p-5 rounded-2xl border border-blue-200/50 text-left rtl:text-right font-inter font-medium">
+                <h4 class="font-bold text-blue-900 mb-2 uppercase tracking-wide text-[10px]">{{ __('spmb.next_steps_header') }}</h4>
                 <ul class="list-decimal list-inside space-y-1.5 text-blue-850">
-                    <li>Panitia SPMB akan meninjau dan melakukan verifikasi berkas secara manual.</li>
-                    <li>Status berkas kelulusan dapat dipantau di portal cek status.</li>
-                    <li>Jika berkas diterima, sistem otomatis menerbitkan data akun siswa baru.</li>
+                    <li>{{ __('spmb.next_steps_1') }}</li>
+                    <li>{{ __('spmb.next_steps_2') }}</li>
+                    <li>{{ __('spmb.next_steps_3') }}</li>
                 </ul>
             </div>
 
@@ -113,14 +113,14 @@
                     onclick="window.print()"
                     class="w-full flex justify-center py-3.5 px-4 bg-slate-900 hover:bg-black text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg hover:shadow-black/25 transition-all transform hover:-translate-y-0.5"
                 >
-                    🖨️ Cetak Tanda Terima
+                    {{ __('spmb.btn_print_receipt') }}
                 </button>
                 
                 <a 
                     href="{{ route('spmb.welcome') }}" 
                     class="block text-center text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors pt-2"
                 >
-                    &larr; Kembali ke Portal Utama
+                    &larr; {{ __('spmb.btn_back_portal') }}
                 </a>
             </div>
         </div>

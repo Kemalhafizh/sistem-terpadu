@@ -58,4 +58,9 @@ class Extracurricular extends Model
         }
         return max(0, $this->max_members - $this->activeMembers()->count());
     }
+
+    public function achievements()
+    {
+        return $this->hasMany(ExtracurricularAchievement::class);
+    }
 }

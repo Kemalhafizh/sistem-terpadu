@@ -23,6 +23,35 @@ class Registration extends Model
         'status',
         'academic_year_id',
         'user_id',
+        'spmb_wave_id',
+        'spmb_track_id',
+        'gender',
+        'birth_date',
+        'birth_place',
+        'address',
+        'parent_name',
+        'photo_path',
+        'document_skhun_path',
+        'document_akta_path',
+        'rapor_scores',
+        'achievement_data',
+        'tahfidz_data',
+        'entrance_test_score',
+        'total_score',
+        'rank',
+        'document_status',
+        'admin_notes',
+        'has_paid_registration',
+        'has_reregistered',
+    ];
+
+    protected $casts = [
+        'rapor_scores' => 'array',
+        'achievement_data' => 'array',
+        'tahfidz_data' => 'array',
+        'birth_date' => 'date',
+        'has_paid_registration' => 'boolean',
+        'has_reregistered' => 'boolean',
     ];
 
     public function academicYear()
@@ -33,6 +62,21 @@ class Registration extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function spmbWave()
+    {
+        return $this->belongsTo(SpmbWave::class, 'spmb_wave_id');
+    }
+
+    public function spmbTrack()
+    {
+        return $this->belongsTo(SpmbTrack::class, 'spmb_track_id');
+    }
+
+    public function spmbDocuments()
+    {
+        return $this->hasMany(SpmbDocument::class, 'registration_id');
     }
 
     // Generator Nomor Pendaftaran Otomatis

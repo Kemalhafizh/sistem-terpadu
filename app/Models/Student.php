@@ -86,7 +86,8 @@ class Student extends Model
      */
     public function getNameAttribute()
     {
-        return $this->user?->name;
+        $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+        return $user?->name;
     }
 
     /**
@@ -94,7 +95,8 @@ class Student extends Model
      */
     public function getEmailAttribute()
     {
-        return $this->user?->email;
+        $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+        return $user?->email;
     }
 
     public function libraryLoans()

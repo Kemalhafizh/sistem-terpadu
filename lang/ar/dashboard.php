@@ -145,4 +145,14 @@ return [
     'widget_approval_pending' => 'الموافقات المعلقة',
     'widget_top_xp_students' => 'أفضل 5 طلاب نقاط الخبرة',
     'widget_weekly_mutabaah_recap' => 'ملخص المتابعة الأسبوعي',
+
+    // Dynamic Categories & Statuses
+    'category_akademik' => 'أكاديمي',
+    'category_keuangan' => 'مالي',
+    'category_kegiatan' => 'أنشطة',
+    'category_keislaman' => 'الشؤون الإسلامية',
+    'category_umum' => 'عام',
+    'pinned_fallback' => 'مثبت',
+    'acknowledged_fallback' => 'مؤكد',
+    'needs_acknowledgement' => 'يتطلب تأكيد',
 ];

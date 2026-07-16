@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -76,25 +76,61 @@
                 </a>
             </div>
 
-            <div class="flex items-center space-x-4 md:space-x-8">
-                <div class="hidden lg:flex items-center space-x-6">
-                    <a href="{{ route('home') }}#fitur" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">Fitur</a>
-                    <a href="{{ route('public.posts') }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">Berita</a>
-                    <a href="{{ route('public.gallery') }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">Galeri</a>
-                    <a href="{{ route('home') }}#spmb" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">SPMB</a>
+            <div class="flex items-center space-x-4 md:space-x-8 rtl:space-x-reverse">
+                <div class="hidden lg:flex items-center space-x-6 rtl:space-x-reverse">
+                    <a href="{{ route('home') }}#fitur" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_features') }}</a>
+                    <a href="{{ route('public.posts') }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_news') }}</a>
+                    <a href="{{ route('public.gallery') }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_gallery') }}</a>
+                    <a href="{{ route('home') }}#spmb" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_spmb') }}</a>
                     @if(isset($navPages))
                         @foreach($navPages as $navPage)
                             <a href="{{ route('public.page', $navPage->slug) }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ $navPage->title }}</a>
                         @endforeach
                     @endif
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('login') }}" class="px-4 py-2 text-slate-700 hover:text-primary-600 font-black text-xs uppercase tracking-widest transition-colors">Sign In</a>
+                <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <!-- Language Selector Dropdown -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white/40 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800/50 hover:bg-white/80 transition-all text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                            <span>{{ app()->getLocale() === 'id' ? '🇮🇩 ID' : (app()->getLocale() === 'en' ? '🇺🇸 EN' : '🇸🇦 AR') }}</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open" @click.away="open = false" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-36 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 z-50 overflow-hidden" 
+                             style="display:none">
+                            <div class="p-1.5 space-y-1">
+                                <form action="{{ route('preferences.locale', 'id') }}" method="POST" class="block">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left rtl:text-right px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-between {{ app()->getLocale() === 'id' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50' }}">
+                                        <span>🇮🇩 Indonesia</span>
+                                    </button>
+                                </form>
+                                <form action="{{ route('preferences.locale', 'en') }}" method="POST" class="block">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left rtl:text-right px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-between {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50' }}">
+                                        <span>🇺🇸 English</span>
+                                    </button>
+                                </form>
+                                <form action="{{ route('preferences.locale', 'ar') }}" method="POST" class="block">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left rtl:text-right px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50' }}">
+                                        <span>🇸🇦 العربية</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ route('login') }}" class="px-4 py-2 text-slate-700 hover:text-primary-600 font-black text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_signin') }}</a>
                     <a href="{{ route('login') }}" class="px-6 py-3 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-[0.1em] shadow-xl hover:bg-primary-600 hover:-translate-y-0.5 transition-all active:scale-95">
-                        Akses Portal
+                        {{ __('public.nav_portal') }}
                     </a>
                 </div>
-            </div>
         </div>
     </nav>
 
@@ -121,29 +157,29 @@
                         <span class="ml-3 font-black text-slate-900 text-sm tracking-tight uppercase">Sultan Agung 1</span>
                     </div>
                     <p class="text-slate-400 text-base leading-relaxed font-medium">
-                        Mencetak generasi unggul yang cerdas dalam Iptek dan kokoh dalam Imtaq. Institusi pendidikan Islam terpercaya sejak dekade.
+                        {{ __('public.footer_tagline') }}
                     </p>
                 </div>
 
                 <!-- Links 1 -->
-                <div class="lg:pl-8">
+                <div class="lg:pl-8 rtl:pr-8 rtl:pl-0">
                     <h5 class="text-white font-black mb-8 uppercase text-xs tracking-[0.2em] flex items-center">
-                        <span class="w-8 h-px bg-primary-600 mr-3"></span>
-                        Akses Portal
+                        <span class="w-8 h-px bg-primary-600 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        {{ __('public.footer_header_portal') }}
                     </h5>
                     <ul class="space-y-4">
-                        <li><a href="{{ route('login') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">Dashboard Portal</a></li>
-                        <li><a href="{{ route('public.posts') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">Berita Sekolah</a></li>
-                        <li><a href="{{ route('public.gallery') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">Galeri Potret</a></li>
-                        <li><a href="{{ route('spmb.welcome') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">Pendaftaran SPMB</a></li>
+                        <li><a href="{{ route('login') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_portal') }}</a></li>
+                        <li><a href="{{ route('public.posts') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_news') }}</a></li>
+                        <li><a href="{{ route('public.gallery') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_gallery') }}</a></li>
+                        <li><a href="{{ route('spmb.welcome') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('spmb.spmb_title') }}</a></li>
                     </ul>
                 </div>
 
                 <!-- Links 2 -->
-                <div class="lg:pl-8">
+                <div class="lg:pl-8 rtl:pr-8 rtl:pl-0">
                     <h5 class="text-white font-black mb-8 uppercase text-xs tracking-[0.2em] flex items-center">
-                        <span class="w-8 h-px bg-primary-600 mr-3"></span>
-                        Halaman Sekolah
+                        <span class="w-8 h-px bg-primary-600 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        {{ __('public.footer_header_pages') }}
                     </h5>
                     <ul class="space-y-4">
                         @if(isset($navPages))
@@ -155,17 +191,17 @@
                 </div>
 
                 <!-- Contact -->
-                <div class="lg:pl-8">
+                <div class="lg:pl-8 rtl:pr-8 rtl:pl-0">
                     <h5 class="text-white font-black mb-8 uppercase text-xs tracking-[0.2em] flex items-center">
-                        <span class="w-8 h-px bg-primary-600 mr-3"></span>
-                        Hubungi
+                        <span class="w-8 h-px bg-primary-600 mr-3 rtl:ml-3 rtl:mr-0"></span>
+                        {{ __('public.footer_header_contact') }}
                     </h5>
                     <ul class="space-y-6">
                         <li class="flex items-start">
                             <div class="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center shrink-0 border border-slate-800 mr-4">
                                 <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
                             </div>
-                            <span class="text-slate-400 text-sm leading-relaxed font-medium pt-1">Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242</span>
+                            <span class="text-slate-400 text-sm leading-relaxed font-medium pt-1">{{ __('public.footer_address') }}</span>
                         </li>
                         <li class="flex items-center">
                             <div class="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center shrink-0 border border-slate-800 mr-4">
@@ -179,7 +215,7 @@
 
             <div class="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
                 <p class="text-slate-500 text-sm font-medium">
-                    &copy; {{ date('Y') }} SMA Islam Sultan Agung 1 Semarang. Built with Integrity.
+                    &copy; {{ date('Y') }} {{ __('public.footer_copyright') }}
                 </p>
                 <div class="flex space-x-8">
                     <a href="#" class="text-slate-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors">Privacy Policy</a>

@@ -6,27 +6,28 @@
 
 ---
 
-## 📊 Statistik Codebase Saat Ini (Baseline)
+## 📊 Statistik Codebase Saat Ini (Baseline — Updated Juli 2026)
 
 | Metrik | Jumlah |
 | :--- | :---: |
-| **Model Eloquent** | 107 |
-| **Controller** | 68 (root) + 32 (subdirectories) = **~100** |
-| **Service Class** | 31 + 2 (Integration/) = **33** |
-| **Migration** | 89 |
-| **View Directory** | 57 |
-| **Blade Templates** | ~289+ |
-| **Test Files** | ~78 |
-| **Seeder Files** | 18 |
-| **Factory Files** | 11 |
+| **Model Eloquent** | 119 |
+| **Controller** | 72 (root) + 5 subdirectories = **~77** |
+| **Service Class** | 37 + 2 (Integration/) = **39** |
+| **Migration** | 99 |
+| **View Directory** | 61 |
+| **Blade Templates** | ~350+ |
+| **Test Files** | ~90+ |
+| **Seeder Files** | 30 |
+| **Factory Files** | 29 |
 | **Policies** | 23 |
 | **API Resources** | 13 |
 | **Middleware** | 9 |
 | **Events (Broadcast)** | 5 |
 | **Bahasa (i18n)** | 3 (ID, EN, AR) — masing-masing 6 file |
 | **Dokumentasi** | 27 file di `docs/` |
-| **Registered Routes** | ~300+ |
-| **Demo Records (Seeder)** | ~860 records across 21 tables |
+| **Registered Routes** | ~350+ |
+| **Demo Records (Seeder)** | ~3000+ records across 30+ tables |
+| **User Roles** | 12 (superadmin, admin, kepala_sekolah, guru, bk, waka_kurikulum, waka_kesiswaan, waka_humas, waka_sarpras, staf_tu, student, parent) |
 
 ---
 
@@ -1354,23 +1355,1168 @@ Tidak ada dependencies baru yang diperlukan — semua fitur bisa dibangun dengan
 | **Real-Time** | Laravel Reverb (sudah terinstall) |
 | **Testing** | Pest PHP (sudah terinstall) |
 | **Database** | SQLite (development) |
+| **WhatsApp API** | Fonnte (sudah terinstall) |
+| **Maps** | Leaflet.js (untuk alumni network map) — **baru** |
+
+> 13. Modul 14.1 (UI Consistency Audit) (Selesai ✅) — karena mendefinisikan standar UI premium lewat komponen page-header, data-table, empty-state, stat-card, confirm-modal, form-group, status-badge, dan merefaktorkan modul inti.
+
+---
+---
+
+## 📦 FASE 16: Fitur Baru — Modul Kritis yang Belum Ada
+
+**Fokus:** Mengimplementasikan modul-modul besar yang belum ada sama sekali atau sangat dangkal, sehingga platform benar-benar lengkap sebagai Sistem Terpadu sekolah.
 
 ---
 
-## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target)
+### 🎓 Modul 16.1: Sistem SPMB Online Komprehensif (Selesai ✅)
 
-| Metrik | Sekarang | Target |
-| :--- | :---: | :---: |
-| **Model Eloquent** | 107 | ~120 |
-| **Controller** | ~100 | ~112 |
-| **Service Class** | 33 | ~40 |
-| **Migration** | 89 | ~100 |
-| **View Directory** | 57 | ~65 |
-| **Blade Templates** | ~289 | ~340 |
-| **Test Files** | ~78 | ~90 |
-| **Seeder Files** | 18 | ~30 |
-| **Factory Files** | 11 | ~24 |
-| **Demo Records** | ~860 | ~3000+ |
+**Status Saat Ini:** Direktori `app/Http/Controllers/PPDB/` dan `resources/views/ppdb/` **kosong total** — belum ada controller, view, maupun route PPDB. Hanya ada model `Registration.php` dan `SpmbController.php` di root controller untuk SPMB (yang hanya menangani pendaftaran sederhana). Ini adalah **celah fitur paling kritis** di platform karena PPDB adalah proses tahunan wajib sekolah.
+
+#### Mengapa Penting untuk SMA ISA 1?
+PPDB Online adalah **kebutuhan utama sekolah modern**. SMA ISA 1 harus bisa menerima pendaftaran calon siswa baru secara online, mengelola seleksi, dan mengumumkan hasil. Tanpa ini, platform tidak layak disebut "Sistem Terpadu".
+
+#### User Review Required
+
+> [!IMPORTANT]
+> **Alur PPDB Online yang Diusulkan:**
+> Kami mengusulkan alur PPDB 6 tahap:
+> 1. **Pendaftaran Online** — Calon siswa mengisi formulir lengkap + upload dokumen (KK, Ijazah/SKHUN, Foto, Akta) via halaman publik.
+> 2. **Verifikasi Berkas** — Admin/Panitia PPDB memverifikasi kelengkapan & keaslian berkas.
+> 3. **Tes Seleksi** — Integrasi opsional dengan modul CBT untuk ujian masuk online.
+> 4. **Penilaian & Scoring** — Sistem skor otomatis berdasarkan bobot: Nilai UN/rapor (40%), Tes masuk (30%), Prestasi (15%), Tahfidz (15%).
+> 5. **Pengumuman** — Halaman publik pengumuman kelulusan + notifikasi WhatsApp ke calon siswa.
+> 6. **Daftar Ulang** — Pendaftar yang diterima melakukan daftar ulang + pembayaran biaya masuk.
+> Apakah Anda setuju dengan alur 6 tahap ini?
+
+#### Open Questions
+
+> [!NOTE]
+> **Gelombang Pendaftaran:**
+> SMA ISA 1 biasanya membuka PPDB dalam beberapa gelombang (Gelombang 1, 2, 3). Apakah sistem perlu mendukung multi-gelombang dengan kuota terpisah per gelombang? Kami mengusulkan iya — setiap gelombang memiliki tanggal buka/tutup, kuota, dan biaya yang bisa berbeda.
+
+> [!NOTE]
+> **Jalur Pendaftaran:**
+> Apakah SMA ISA 1 menggunakan jalur prestasi/jalur reguler/jalur tahfidz? Kami mengusulkan 3 jalur: Reguler, Prestasi (akademik/non-akademik), dan Tahfidz — masing-masing dengan kriteria dan kuota berbeda.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_ppdb_system_tables`
+```php
+Schema::create('ppdb_periods', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->string('name');                                  // "PPDB 2026/2027"
+    $table->integer('total_quota');                           // Total kuota diterima
+    $table->enum('status', ['draft', 'open', 'closed', 'announced'])->default('draft');
+    $table->timestamps();
+});
+
+Schema::create('ppdb_waves', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('ppdb_period_id')->constrained('ppdb_periods')->cascadeOnDelete();
+    $table->string('name');                                  // "Gelombang 1"
+    $table->date('registration_start');
+    $table->date('registration_end');
+    $table->date('announcement_date')->nullable();
+    $table->integer('quota');
+    $table->decimal('registration_fee', 12, 2)->default(0);
+    $table->enum('status', ['upcoming', 'open', 'closed', 'announced'])->default('upcoming');
+    $table->timestamps();
+});
+
+Schema::create('ppdb_tracks', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('ppdb_period_id')->constrained('ppdb_periods')->cascadeOnDelete();
+    $table->string('name');                                  // "Reguler" / "Prestasi" / "Tahfidz"
+    $table->integer('quota');
+    $table->json('scoring_weights')->nullable();             // {"rapor": 40, "tes": 30, "prestasi": 15, "tahfidz": 15}
+    $table->text('requirements')->nullable();                // Persyaratan khusus jalur
+    $table->timestamps();
+});
+
+Schema::create('ppdb_applicants', function (Blueprint $table) {
+    $table->id();
+    $table->uuid('uuid')->unique();
+    $table->string('registration_number')->unique();         // Auto: PPDB-2026-0001
+    $table->foreignId('ppdb_wave_id')->constrained('ppdb_waves');
+    $table->foreignId('ppdb_track_id')->constrained('ppdb_tracks');
+    $table->string('full_name');
+    $table->string('nisn')->nullable();
+    $table->enum('gender', ['L', 'P']);
+    $table->date('birth_date');
+    $table->string('birth_place');
+    $table->text('address');
+    $table->string('previous_school');
+    $table->string('parent_name');
+    $table->string('parent_phone');
+    $table->string('parent_email')->nullable();
+    $table->string('photo_path')->nullable();
+    $table->string('document_kk_path')->nullable();
+    $table->string('document_ijazah_path')->nullable();
+    $table->string('document_skhun_path')->nullable();
+    $table->string('document_akta_path')->nullable();
+    $table->json('rapor_scores')->nullable();                // {"semester_1": 85, "semester_2": 87, ...}
+    $table->json('achievement_data')->nullable();            // [{"title": "Juara 1 MTQ", "level": "kota", "year": 2026}]
+    $table->json('tahfidz_data')->nullable();                // {"juz_count": 5, "certificate_path": "..."}
+    $table->decimal('entrance_test_score', 5, 2)->nullable();
+    $table->decimal('total_score', 5, 2)->nullable();        // Skor akhir (auto-calculated)
+    $table->integer('rank')->nullable();                     // Peringkat di jalur
+    $table->enum('document_status', ['incomplete', 'submitted', 'verified', 'rejected'])->default('incomplete');
+    $table->enum('selection_status', ['pending', 'passed', 'failed', 'waitlist', 'accepted', 'enrolled'])->default('pending');
+    $table->text('admin_notes')->nullable();
+    $table->boolean('has_paid_registration')->default(false);
+    $table->boolean('has_reregistered')->default(false);
+    $table->timestamps();
+});
+
+Schema::create('ppdb_documents', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('ppdb_applicant_id')->constrained('ppdb_applicants')->cascadeOnDelete();
+    $table->string('document_type');                         // "kk", "ijazah", "skhun", "akta", "foto", "sertifikat"
+    $table->string('file_path');
+    $table->enum('verification_status', ['pending', 'verified', 'rejected'])->default('pending');
+    $table->string('rejection_reason')->nullable();
+    $table->foreignId('verified_by')->nullable()->constrained('users');
+    $table->timestamp('verified_at')->nullable();
+    $table->timestamps();
+});
+```
+
+##### [NEW] Models
+```
+app/Models/
+├── PpdbPeriod.php        → hasMany(PpdbWave, PpdbTrack), belongsTo(AcademicYear)
+├── PpdbWave.php          → belongsTo(PpdbPeriod), hasMany(PpdbApplicant)
+├── PpdbTrack.php         → belongsTo(PpdbPeriod), hasMany(PpdbApplicant)
+├── PpdbApplicant.php     → belongsTo(PpdbWave, PpdbTrack), hasMany(PpdbDocument), HasUuid
+└── PpdbDocument.php      → belongsTo(PpdbApplicant, User verified_by)
+```
+
+##### [NEW] `app/Http/Controllers/PPDB/PpdbController.php`
+```php
+class PpdbController extends Controller
+{
+    // === Halaman Publik (tanpa login) ===
+    public function publicLanding()                         // Landing page PPDB: info, jadwal, syarat, alur
+    public function publicRegistrationForm($waveId)         // Form pendaftaran online multi-step
+    public function publicStore(Request $r)                 // Submit pendaftaran + upload dokumen
+    public function publicCheckStatus()                     // Cek status pendaftaran via nomor registrasi + tanggal lahir
+    public function publicAnnouncement($periodId)           // Halaman pengumuman kelulusan publik
+
+    // === Panel Admin PPDB ===
+    public function dashboard()                             // Dashboard PPDB: statistik pendaftar, kuota, funnel chart
+    public function periods()                               // Kelola periode PPDB
+    public function storePeriod(Request $r)                 // Buat periode PPDB baru
+    public function waves($periodId)                        // Kelola gelombang pendaftaran
+    public function storeWave(Request $r)                   // Buat gelombang baru
+    public function tracks($periodId)                       // Kelola jalur pendaftaran
+    public function storeTrack(Request $r)                  // Buat jalur baru
+    public function applicants($waveId)                     // Daftar pendaftar per gelombang + filter jalur
+    public function showApplicant($id)                      // Detail pendaftar lengkap
+    public function verifyDocument($documentId)             // Verifikasi dokumen (accept/reject)
+    public function bulkVerify(Request $r)                  // Verifikasi dokumen massal
+    public function scoring($waveId)                        // Halaman scoring: input nilai tes + auto-calculate
+    public function runSelection($waveId)                   // Eksekusi seleksi: hitung skor akhir, ranking, tentukan status
+    public function publishResults($waveId)                 // Publikasikan hasil seleksi
+    public function reregistration($waveId)                 // Kelola daftar ulang
+    public function markReregistered($applicantId)          // Tandai sudah daftar ulang
+    public function convertToStudent($applicantId)          // Konversi pendaftar diterima menjadi Student + User
+    public function exportApplicants($waveId)               // Export data pendaftar ke Excel
+    public function printCard($applicantId)                 // Cetak kartu peserta PPDB (PDF)
+    public function statistics()                            // Statistik PPDB: tren per tahun, demografi, conversion rate
+}
+```
+
+##### [NEW] `app/Services/PpdbService.php`
+```php
+class PpdbService
+{
+    public function generateRegistrationNumber(int $periodId): string;
+    public function calculateApplicantScore(PpdbApplicant $applicant): float;
+    public function runBulkSelection(int $waveId): array;   // Return summary: passed, failed, waitlist counts
+    public function convertApplicantToStudent(PpdbApplicant $applicant): Student;
+    public function getStatistics(int $periodId): array;
+    public function getPpdbFunnel(int $periodId): array;     // Funnel: registered → verified → tested → passed → enrolled
+    public function sendResultNotification(PpdbApplicant $applicant): void; // WhatsApp result
+}
+```
+
+##### [NEW] Views di `resources/views/ppdb/`
+```
+resources/views/ppdb/
+├── public/
+│   ├── landing.blade.php           # Landing page: hero, alur, jadwal, syarat, FAQ, CTA daftar
+│   ├── register.blade.php          # Form pendaftaran multi-step wizard (data diri → ortu → dokumen → konfirmasi)
+│   ├── check-status.blade.php      # Cek status: input nomor registrasi + tanggal lahir
+│   ├── announcement.blade.php      # Pengumuman kelulusan: search by name/nomor, status result
+│   └── print-card.blade.php        # Kartu peserta PPDB (PDF template)
+├── admin/
+│   ├── dashboard.blade.php         # Dashboard: stat cards, funnel chart, kuota progress bar
+│   ├── periods.blade.php           # Kelola periode PPDB
+│   ├── waves.blade.php             # Kelola gelombang per periode
+│   ├── tracks.blade.php            # Kelola jalur pendaftaran per periode
+│   ├── applicants.blade.php        # DataTable pendaftar: filter jalur/status, bulk actions
+│   ├── applicant-detail.blade.php  # Detail pendaftar: data lengkap + preview dokumen + timeline status
+│   ├── verification.blade.php      # Panel verifikasi dokumen: side-by-side preview + approve/reject
+│   ├── scoring.blade.php           # Input skor tes + auto-rank
+│   ├── selection.blade.php         # Halaman eksekusi seleksi: preview ranking → confirm → publish
+│   ├── reregistration.blade.php    # Tracking daftar ulang
+│   └── statistics.blade.php        # Statistik PPDB multi-tahun: chart tren, demografi, conversion
+```
+
+##### Demo Data (Seeder)
+```php
+// PpdbSeeder.php:
+// - 1 Periode PPDB aktif "PPDB 2026/2027"
+// - 2 Gelombang: Gel 1 (closed, 80 kuota), Gel 2 (open, 40 kuota)
+// - 3 Jalur: Reguler (60 kuota), Prestasi (30 kuota), Tahfidz (30 kuota)
+// - 50 pendaftar Gel 1: 35 diterima, 10 gagal, 5 waitlist
+// - 20 pendaftar Gel 2: status pending
+// - Dokumen upload simulasi, skor tes acak, ranking otomatis
+```
+
+##### Integrasi Gamifikasi
+* Siswa baru yang mendaftar via PPDB online dan diterima: +50 XP "Selamat Datang"
+
+#### Verification Plan
+
+##### Automated Tests
+```
+tests/Feature/PPDB/PpdbTest.php:
+- Calon siswa dapat mengakses landing page dan form pendaftaran
+- Calon siswa dapat submit pendaftaran + upload dokumen
+- Calon siswa dapat cek status pendaftaran
+- Admin dapat memverifikasi dokumen (accept/reject)
+- Sistem menghitung skor akhir dengan benar sesuai bobot jalur
+- Seleksi menghasilkan ranking dan status yang benar
+- Konversi pendaftar → siswa berfungsi (User + Student + Classroom)
+- Pengumuman publik menampilkan hasil yang benar
+- Export Excel dan cetak kartu PDF berfungsi
+```
+
+##### Manual Verification
+* Buka halaman landing PPDB publik, isi form pendaftaran lengkap.
+* Login sebagai Admin, verifikasi dokumen, input skor tes, jalankan seleksi.
+* Buka halaman pengumuman publik, cari nama pendaftar, pastikan status muncul.
+* Konversi pendaftar diterima menjadi siswa aktif, pastikan muncul di daftar siswa.
+
+---
+
+### 🎓 Modul 16.2: Overhaul Modul Alumni & Tracer Study (Selesai ✅)
+
+**Status Saat Ini:** Controller `AlumniController` hanya punya 3 method (`index`, `create`, `store`) — sangat dangkal. Tidak ada show, edit, delete, statistik, export, bulk import. `TracerStudyController` juga hanya 3 method tanpa export atau perbandingan multi-tahun.
+
+#### Mengapa Penting untuk SMA ISA 1?
+Alumni adalah **aset jangka panjang** SMA ISA 1. Jaringan alumni yang terdokumentasi baik membantu branding sekolah, mentoring siswa aktif, donasi, dan akreditasi (bukti luaran pendidikan).
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/AlumniController.php`
+```php
+// Refaktor total — dari 3 method menjadi 12+ method:
+class AlumniController extends Controller
+{
+    public function index()                         // Directory alumni: search, filter tahun/universitas/pekerjaan
+    public function show($id)                       // Profil alumni lengkap: riwayat di sekolah + karier
+    public function create()                        // Form tambah alumni manual
+    public function store(Request $r)               // Simpan alumni baru
+    public function edit($id)                       // Edit data alumni
+    public function update($id, Request $r)         // Update alumni
+    public function destroy($id)                    // Hapus data alumni
+    public function bulkGraduate(Request $r)        // Kelulusan massal: pilih kelas XII → tandai lulus → generate data alumni
+    public function dashboard()                     // Dashboard alumni: stat cards, distribusi universitas, distribusi pekerjaan, peta sebaran
+    public function exportExcel()                   // Export data alumni ke Excel
+    public function exportPdf()                     // Export buku alumni per angkatan ke PDF
+    public function directory()                     // Direktori alumni interaktif: card grid, search, filter
+    public function alumniNetworkMap()              // Peta sebaran alumni (kota/provinsi/negara)
+}
+```
+
+##### [MODIFY] `app/Http/Controllers/TracerStudyController.php`
+```php
+// Perkuat TracerStudy — dari 3 method menjadi 8 method:
+class TracerStudyController extends Controller
+{
+    public function form()                          // Form tracer study (publik untuk alumni)
+    public function store(Request $r)               // Submit tracer study
+    public function editResponse($id)               // Alumni edit respons sebelumnya
+    public function analytics()                     // Dashboard analytics: chart karier, gaji, kepuasan
+    public function comparison()                    // Perbandingan antar-angkatan
+    public function exportExcel()                   // Export hasil tracer study ke Excel
+    public function exportPdf()                     // Export laporan tracer study ke PDF (format akreditasi)
+    public function sendInvitation(Request $r)      // Kirim undangan isi tracer study ke alumni via WhatsApp/email
+}
+```
+
+##### [NEW] `app/Services/AlumniEnhancedService.php`
+```php
+class AlumniEnhancedService
+{
+    public function bulkGraduateStudents(array $studentIds, int $graduationYear): int;
+    public function getAlumniDistribution(): array;           // Per universitas, per pekerjaan, per kota
+    public function getAlumniGeography(): array;              // Data untuk peta sebaran
+    public function getTracerStudyComparison(array $years): array;
+    public function generateAlumniBookPdf(int $year): string; // Path ke PDF buku alumni
+    public function getResponseRate(int $year): float;
+}
+```
+
+##### [NEW & MODIFY] Views
+```
+resources/views/alumni/
+├── index.blade.php          # [MODIFY] Revamp: DataTable + advanced search/filter
+├── show.blade.php           # [NEW] Profil alumni: foto, riwayat sekolah, karier, kontak
+├── create.blade.php         # [MODIFY] Form ditambah: data karier, kontak, foto
+├── edit.blade.php           # [NEW] Form edit alumni
+├── dashboard.blade.php      # [NEW] Dashboard: stat cards, chart distribusi, donut chart
+├── directory.blade.php      # [NEW] Card grid: foto, nama, angkatan, pekerjaan — searchable
+├── bulk-graduate.blade.php  # [NEW] Multi-step: pilih kelas → preview siswa → konfirmasi lulus
+├── network-map.blade.php    # [NEW] Peta Indonesia + dunia: pin lokasi alumni
+├── tracer/
+│   ├── analytics.blade.php  # [MODIFY] Revamp: chart ApexCharts, filter per angkatan
+│   ├── comparison.blade.php # [NEW] Side-by-side comparison: angkatan A vs B
+│   └── invitation.blade.php # [NEW] Form kirim undangan: pilih angkatan, preview pesan
+```
+
+---
+
+### 👨‍💼 Modul 16.3: Penguatan Modul HRD & Kepegawaian (Selesai ✅)
+
+**Status Saat Ini:** HRD sudah punya CRUD pegawai, presensi GPS, cuti, dan payroll. Tapi belum ada: evaluasi kinerja, tracking sertifikasi/pelatihan, manajemen kontrak, dan org chart.
+
+#### Mengapa Penting untuk SMA ISA 1?
+Sebagai sekolah di bawah YBWSA, SMA ISA 1 memiliki **60+ pegawai** (guru + staf). Evaluasi kinerja tahunan, tracking sertifikasi guru, dan manajemen kontrak adalah kebutuhan operasional HRD yang penting.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_hrd_enhancements_tables`
+```php
+Schema::create('performance_evaluations', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+    $table->foreignId('evaluator_id')->constrained('users');    // Kepsek / Atasan langsung
+    $table->string('period');                                    // "Semester Genap 2025/2026"
+    $table->json('criteria_scores');                             // {"pedagogik": 85, "profesional": 90, "sosial": 80, "kepribadian": 88}
+    $table->decimal('total_score', 5, 2);
+    $table->enum('grade', ['A', 'B', 'C', 'D', 'E']);
+    $table->text('strengths')->nullable();
+    $table->text('improvements')->nullable();
+    $table->text('goals')->nullable();                           // Target semester depan
+    $table->enum('status', ['draft', 'submitted', 'acknowledged'])->default('draft');
+    $table->timestamps();
+});
+
+Schema::create('employee_trainings', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+    $table->string('title');                                     // "Workshop Kurikulum Merdeka"
+    $table->enum('type', ['workshop', 'seminar', 'sertifikasi', 'diklat', 'webinar', 'lainnya']);
+    $table->string('organizer');                                 // "Kemendikbud" / "YBWSA"
+    $table->date('start_date');
+    $table->date('end_date')->nullable();
+    $table->integer('hours')->nullable();                        // Durasi dalam jam (untuk JP/JPL)
+    $table->string('certificate_path')->nullable();
+    $table->string('certificate_number')->nullable();
+    $table->date('certificate_expiry')->nullable();
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('employee_documents', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+    $table->string('title');                                     // "SK Pengangkatan", "Sertifikat Guru"
+    $table->enum('type', ['sk', 'kontrak', 'sertifikasi', 'ijazah', 'ktp', 'npwp', 'bpjs', 'lainnya']);
+    $table->string('file_path');
+    $table->date('issue_date')->nullable();
+    $table->date('expiry_date')->nullable();
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/HRD/EmployeeController.php`
+```php
+// Tambahkan method baru:
+public function dashboard()                     // Dashboard HRD: statistik pegawai, chart jabatan, umur, gender
+public function documents($employeeId)          // Kelola dokumen pegawai
+public function storeDocument(Request $r)       // Upload dokumen
+public function deleteDocument($id)             // Hapus dokumen
+public function trainings($employeeId)          // Riwayat pelatihan per pegawai
+public function storeTraining(Request $r)       // Tambah pelatihan
+public function evaluation($employeeId)         // Halaman evaluasi kinerja
+public function storeEvaluation(Request $r)     // Simpan evaluasi
+public function evaluationReport()              // Rekap evaluasi kinerja seluruh pegawai
+public function certificationTracker()          // Tracking sertifikasi: siapa yang akan expired
+public function orgChart()                      // Bagan organisasi sekolah (tree view)
+public function exportEmployeeCard($id)         // Cetak kartu pegawai (ID card PDF)
+public function attendanceReport()              // Laporan kehadiran pegawai bulanan
+```
+
+##### [NEW] Views
+```
+resources/views/hrd/
+├── dashboard.blade.php          # [NEW] Dashboard HRD: chart distribusi, stat cards
+├── documents/
+│   └── index.blade.php          # [NEW] Kelola dokumen pegawai + upload
+├── trainings/
+│   ├── index.blade.php          # [NEW] Riwayat pelatihan pegawai
+│   └── tracker.blade.php        # [NEW] Tracking sertifikasi: expiry alert, renewal reminder
+├── evaluations/
+│   ├── form.blade.php           # [NEW] Form evaluasi kinerja: slider per kriteria
+│   ├── report.blade.php         # [NEW] Rekap evaluasi: DataTable + chart radar per pegawai
+│   └── show.blade.php           # [NEW] Detail evaluasi individual
+├── org-chart.blade.php          # [NEW] Org chart interaktif (tree/hierarchy view)
+├── attendance-report.blade.php  # [NEW] Rekap kehadiran bulanan: DataTable + export
+└── employee-card.blade.php      # [NEW] Template kartu pegawai PDF
+```
+
+---
+
+### 🏫 Modul 16.4: Penguatan Ekskul & Kegiatan Kesiswaan (Selesai ✅)
+
+**Status Saat Ini:** Ekskul sudah punya list, registrasi (max 2), presensi, dan activity logging. Tapi belum ada: CRUD ekskul oleh admin, achievement/lomba tracking, laporan semester, jadwal kalender, dan penilaian ekskul untuk rapor.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_extracurricular_enhancements`
+```php
+Schema::create('extracurricular_achievements', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('extracurricular_id')->constrained('extracurriculars')->cascadeOnDelete();
+    $table->string('title');                                 // "Juara 1 Lomba Debat Bahasa Inggris"
+    $table->enum('level', ['sekolah', 'kecamatan', 'kota', 'provinsi', 'nasional', 'internasional']);
+    $table->date('event_date');
+    $table->string('organizer');
+    $table->json('participants')->nullable();                // [student_id, student_id, ...]
+    $table->string('certificate_path')->nullable();
+    $table->string('photo_path')->nullable();
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('extracurricular_grades', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('extracurricular_member_id')->constrained('extracurricular_members')->cascadeOnDelete();
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->enum('grade', ['A', 'B', 'C', 'D'])->nullable();    // Predikat untuk rapor
+    $table->text('description')->nullable();                      // Deskripsi capaian
+    $table->timestamps();
+
+    $table->unique(['extracurricular_member_id', 'academic_year_id']);
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/ExtracurricularController.php`
+```php
+// Tambahkan method baru:
+public function create()                        // Form buat ekskul baru (admin)
+public function store(Request $r)               // [MODIFY] Simpan ekskul + validasi
+public function edit($id)                       // Form edit ekskul
+public function update($id, Request $r)         // Update ekskul
+public function destroy($id)                    // Hapus ekskul
+public function unregister($memberId)           // Siswa keluar dari ekskul
+public function achievements($id)               // Daftar prestasi/lomba ekskul
+public function storeAchievement(Request $r)    // Tambah prestasi
+public function grading($id)                    // Form penilaian ekskul per semester (untuk rapor)
+public function storeGrades(Request $r)         // Simpan nilai ekskul batch
+public function attendanceReport($id)           // Laporan presensi per ekskul
+public function semesterReport($id)             // Laporan semester ekskul: kegiatan, prestasi, presensi, nilai
+public function schedule()                      // Kalender jadwal seluruh ekskul
+public function exportPdf($id)                  // Export laporan ekskul ke PDF
+```
+
+##### [NEW] Views
+```
+resources/views/extracurricular/
+├── create.blade.php             # [NEW] Form buat ekskul baru
+├── edit.blade.php               # [NEW] Form edit ekskul
+├── achievements.blade.php       # [NEW] Daftar prestasi/lomba: DataTable + upload sertifikat
+├── grading.blade.php            # [NEW] Form penilaian batch: DataTable per anggota, pilih grade A-D
+├── attendance-report.blade.php  # [NEW] Rekap presensi per ekskul: chart + DataTable
+├── semester-report.blade.php    # [NEW] Laporan semester lengkap: kegiatan, prestasi, kehadiran, nilai
+├── schedule.blade.php           # [NEW] Kalender jadwal ekskul (calendar view)
+└── pdf-report.blade.php         # [NEW] Template cetak laporan ekskul
+```
+
+---
+
+### 🕌 Modul 16.5: Penguatan OSIS & MPK (Organisasi Siswa) (Selesai ✅)
+
+**Status Saat Ini:** OSIS hanya punya kas (income/expense) + dashboard. MPK sudah lebih lengkap (audit, LPJ, aspirasi). Belum ada: kepengurusan, pemilihan/voting, program kerja, dan proposal kegiatan.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_osis_mpk_enhancements`
+```php
+Schema::create('osis_members', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('students');
+    $table->string('position');                              // "Ketua Umum", "Sekretaris", "Sekbid 1"
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->enum('status', ['active', 'inactive'])->default('active');
+    $table->timestamps();
+});
+
+Schema::create('osis_work_programs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->string('title');                                 // "Bakti Sosial Ramadhan 2026"
+    $table->string('sekbid');                                // "Sekbid 1: Keimanan & Ketaqwaan"
+    $table->text('description');
+    $table->decimal('budget_plan', 12, 2)->default(0);
+    $table->decimal('budget_actual', 12, 2)->default(0);
+    $table->date('planned_date')->nullable();
+    $table->date('actual_date')->nullable();
+    $table->enum('status', ['planned', 'in_progress', 'completed', 'cancelled'])->default('planned');
+    $table->text('report')->nullable();                      // Laporan pelaksanaan
+    $table->json('photo_paths')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('osis_elections', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->string('title');                                 // "Pemilihan Ketua OSIS 2026/2027"
+    $table->date('voting_start');
+    $table->date('voting_end');
+    $table->enum('status', ['upcoming', 'active', 'closed', 'announced'])->default('upcoming');
+    $table->timestamps();
+});
+
+Schema::create('osis_candidates', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('election_id')->constrained('osis_elections')->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('students');
+    $table->integer('candidate_number');
+    $table->text('vision')->nullable();                      // Visi
+    $table->text('mission')->nullable();                     // Misi
+    $table->string('photo_path')->nullable();
+    $table->integer('vote_count')->default(0);
+    $table->timestamps();
+});
+
+Schema::create('osis_votes', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('election_id')->constrained('osis_elections')->cascadeOnDelete();
+    $table->foreignId('voter_id')->constrained('students');
+    $table->foreignId('candidate_id')->constrained('osis_candidates');
+    $table->timestamps();
+
+    $table->unique(['election_id', 'voter_id']); // 1 siswa 1 suara
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/OsisController.php`
+```php
+// Perkuat OSIS — dari 5 method menjadi 15+ method:
+public function dashboard()                         // Dashboard OSIS: kas, program kerja, statistik
+public function members()                           // Kelola kepengurusan OSIS
+public function storeMember(Request $r)             // Tambah pengurus
+public function updateMember($id, Request $r)       // Edit jabatan
+public function removeMember($id)                   // Hapus pengurus
+public function workPrograms()                      // Daftar program kerja
+public function storeWorkProgram(Request $r)        // Tambah proker
+public function updateWorkProgram($id, Request $r)  // Update proker + upload laporan/foto
+public function transactions()                      // [EXISTING] Kas OSIS
+public function storeTransaction(Request $r)        // [EXISTING] Tambah transaksi
+public function editTransaction($id)                // [NEW] Edit transaksi
+public function deleteTransaction($id)              // [NEW] Hapus transaksi
+public function elections()                         // Kelola pemilihan OSIS
+public function storeElection(Request $r)           // Buat pemilihan baru
+public function candidates($electionId)             // Kelola kandidat
+public function storeCandidate(Request $r)          // Daftarkan kandidat
+public function votingPage($electionId)             // Halaman voting untuk siswa (secure, anonymous)
+public function castVote(Request $r)                // Submit suara
+public function electionResults($electionId)        // Hasil pemilihan: chart, tabel, pemenang
+public function exportReport()                      // [EXISTING] Export PDF + ditambah proker
+```
+
+##### [NEW] Views
+```
+resources/views/extracurricular/osis/
+├── dashboard.blade.php         # [MODIFY] Revamp: tambah proker stats, kepengurusan mini
+├── members.blade.php           # [NEW] Struktur kepengurusan: org chart + DataTable
+├── work-programs.blade.php     # [NEW] Daftar proker: status, budget plan vs actual, timeline
+├── election/
+│   ├── index.blade.php         # [NEW] Daftar pemilihan + status
+│   ├── candidates.blade.php    # [NEW] Kelola kandidat: foto, visi/misi
+│   ├── voting.blade.php        # [NEW] Halaman voting siswa: card kandidat + tombol pilih
+│   └── results.blade.php       # [NEW] Hasil: chart pie, tabel suara, pemenang announced
+```
+
+---
+
+## 📦 FASE 17: Penguatan Modul Existing — Depth & Polish Level 2
+
+**Fokus:** Memperdalam fitur-fitur yang sudah ada tapi masih perlu depth tambahan, terutama di area analytics, chatbot, UKS, dan CMS.
+
+---
+
+### 📊 Modul 17.1: Penguatan Analytics & Predictive Intelligence (Selesai ✅)
+
+**Status Saat Ini:** `AnalyticsController` hanya 1 method (`index`) — semua logic ada di `AnalyticsService` (15.7KB). Belum ada drill-down, date range filter, custom report builder UI, export, atau year-over-year comparison.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/AnalyticsController.php`
+```php
+// Perkuat dari 1 method menjadi 10+ method:
+public function index()                         // [EXISTING] Dashboard utama analytics
+public function attendance(Request $r)          // Drill-down kehadiran: per kelas, per bulan, tren
+public function academic(Request $r)            // Drill-down akademik: rata-rata per mapel, distribusi nilai
+public function financial(Request $r)           // Drill-down keuangan: collection rate, aging analysis
+public function islamic(Request $r)             // Drill-down keislaman: mutaba'ah, tahfidz, event kehadiran
+public function studentRisk()                   // Prediksi siswa at-risk: kombinasi kehadiran rendah + nilai rendah + mutaba'ah rendah
+public function comparison(Request $r)          // Perbandingan year-over-year / semester-over-semester
+public function exportReport(Request $r)        // Export laporan analytics ke PDF/Excel
+public function customReport()                  // Custom report builder: pilih metrik, filter, group by
+public function saveCustomReport(Request $r)    // Simpan custom report sebagai template
+public function scheduledReports()              // Kelola laporan terjadwal
+public function heatmap()                       // Heatmap: kehadiran per hari per kelas (matrix view)
+```
+
+##### [NEW] `app/Services/PredictiveAnalyticsService.php`
+```php
+class PredictiveAnalyticsService
+{
+    public function identifyAtRiskStudents(): Collection;      // Siswa dengan skor risiko tinggi
+    public function calculateRiskScore(Student $student): array; // Detail skor risiko: kehadiran, nilai, mutaba'ah, poin
+    public function generateTrendForecast(string $metric, int $months): array; // Prediksi tren ke depan
+    public function getCorrelationAnalysis(): array;           // Korelasi antara kehadiran ↔ nilai, mutaba'ah ↔ poin, dll
+    public function getStudentPerformanceRadar(int $studentId): array; // Data radar chart: 6 dimensi kinerja siswa
+}
+```
+
+##### [NEW] Views
+```
+resources/views/analytics/
+├── index.blade.php              # [MODIFY] Revamp: tambah date range, filter, navigation cards
+├── attendance.blade.php         # [NEW] Drill-down kehadiran: line chart, heatmap, DataTable
+├── academic.blade.php           # [NEW] Drill-down akademik: histogram, scatter plot, box plot
+├── financial.blade.php          # [NEW] Drill-down keuangan: aging analysis, trend, projection
+├── islamic.blade.php            # [NEW] Drill-down keislaman: radar chart, ranking, tren
+├── student-risk.blade.php       # [NEW] Prediksi at-risk: card per siswa, skor risiko, rekomendasi intervensi
+├── comparison.blade.php         # [NEW] Side-by-side comparison: pilih 2 periode → chart overlay
+├── custom-report.blade.php      # [NEW] Report builder: drag-drop metrik, filter builder
+└── heatmap.blade.php            # [NEW] Heatmap matrix: baris=kelas, kolom=hari, warna=% kehadiran
+```
+
+---
+
+### 🤖 Modul 17.2: Penguatan AI Chatbot & Knowledge Base
+
+**Status Saat Ini:** Chatbot sudah punya FAQ CRUD dan chat interface. Tapi belum ada: admin conversation history, analytics dashboard, eskalasi ke helpdesk, dan context-aware responses.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/ChatbotController.php`
+```php
+// Tambahkan method baru:
+public function adminDashboard()                // Dashboard chatbot admin: stat cards, popular questions, helpfulness rate
+public function conversationHistory()           // Riwayat percakapan semua user (admin view)
+public function showConversation($id)           // Detail percakapan individual
+public function escalateToTicket($conversationId) // Eskalasi percakapan → tiket helpdesk
+public function analytics()                     // Analytics: most asked, helpfulness rate, response time, topic distribution
+public function importFaqs(Request $r)          // Import FAQ dari Excel
+public function exportFaqs()                    // Export FAQ ke Excel
+public function trainSuggestions()              // Saran pelatihan: pertanyaan yang sering gagal dijawab
+```
+
+##### [MODIFY] `app/Services/ChatbotService.php`
+```php
+// Tambahkan:
+public function getContextualResponse(User $user, string $message): string;
+// → Chatbot aware konteks user:
+//   - Siswa bertanya "kapan ujian?" → cek jadwal CBT yang upcoming
+//   - Ortu bertanya "berapa tunggakan?" → cek billing anak
+//   - Guru bertanya "siapa yang belum absen?" → cek attendance hari ini
+public function getAnalytics(): array;           // Popular questions, failure rate, topic clustering
+public function getTrainingSuggestions(): array;  // Pertanyaan yang sering gagal dijawab → suggest FAQ baru
+```
+
+##### [NEW] Views
+```
+resources/views/admin/chatbot/
+├── dashboard.blade.php          # [NEW] Dashboard: stat cards (total chats, success rate, avg rating)
+├── conversations.blade.php      # [NEW] DataTable percakapan: user, tanggal, rating, status
+├── conversation-detail.blade.php # [NEW] Detail: bubble chat view, feedback, escalate button
+├── analytics.blade.php          # [NEW] Analytics: word cloud, top questions, trend chart
+├── import.blade.php             # [NEW] Import FAQ dari Excel
+└── train-suggestions.blade.php  # [NEW] Saran pertanyaan baru untuk FAQ
+```
+
+---
+
+### 🏥 Modul 17.3: Penguatan UKS & Rekam Medis Siswa
+
+**Status Saat Ini:** UKS sudah lengkap dengan visit CRUD, medicine inventory, statistics, dan PDF report. Tapi belum ada: rekam medis permanen siswa (penyakit kronis, alergi, golongan darah), jadwal health screening, notifikasi ortu, dan edit visit.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_uks_enhancements`
+```php
+Schema::create('student_health_records', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+    $table->enum('blood_type', ['A', 'B', 'AB', 'O', 'unknown'])->default('unknown');
+    $table->json('allergies')->nullable();                   // ["Debu", "Kacang", "Udang"]
+    $table->json('chronic_conditions')->nullable();          // ["Asma", "Diabetes"]
+    $table->json('medications')->nullable();                 // Obat rutin yang dikonsumsi
+    $table->text('medical_notes')->nullable();               // Catatan medis khusus
+    $table->string('emergency_contact_name')->nullable();
+    $table->string('emergency_contact_phone')->nullable();
+    $table->string('insurance_number')->nullable();          // No. BPJS / asuransi
+    $table->decimal('height_cm', 5, 1)->nullable();
+    $table->decimal('weight_kg', 5, 1)->nullable();
+    $table->enum('vision_status', ['normal', 'minus', 'plus', 'silinder', 'unknown'])->default('unknown');
+    $table->timestamps();
+
+    $table->unique('student_id');
+});
+
+Schema::create('health_screenings', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');                                 // "Screening Kesehatan Semester 1"
+    $table->date('screening_date');
+    $table->foreignId('academic_year_id')->constrained('academic_years');
+    $table->json('target_classrooms')->nullable();           // [classroom_id, ...]
+    $table->enum('status', ['planned', 'in_progress', 'completed'])->default('planned');
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('health_screening_results', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('screening_id')->constrained('health_screenings')->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('students');
+    $table->decimal('height_cm', 5, 1)->nullable();
+    $table->decimal('weight_kg', 5, 1)->nullable();
+    $table->string('vision_left')->nullable();               // "6/6", "6/12"
+    $table->string('vision_right')->nullable();
+    $table->string('dental_status')->nullable();
+    $table->text('findings')->nullable();
+    $table->text('recommendations')->nullable();
+    $table->timestamps();
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/UksController.php`
+```php
+// Tambahkan method baru:
+public function editVisit($id)                  // Form edit kunjungan UKS
+public function updateVisit($id, Request $r)    // Update kunjungan
+public function healthRecords()                 // Kelola rekam medis siswa
+public function showHealthRecord($studentId)    // Detail rekam medis individual
+public function updateHealthRecord(Request $r)  // Update rekam medis
+public function screeningIndex()                // Daftar health screening
+public function storeScreening(Request $r)      // Buat screening baru
+public function inputScreeningResults($id)      // Form input hasil screening per siswa
+public function storeScreeningResults(Request $r) // Simpan hasil screening batch
+public function screeningReport($id)            // Laporan hasil screening (chart + DataTable)
+public function exportScreeningPdf($id)         // Export laporan screening ke PDF
+public function medicineDispenseLog()           // Log pemberian obat: siapa, kapan, obat apa
+public function restockLog()                    // Log pembelian/restock obat
+```
+
+---
+
+### 🌐 Modul 17.4: Penguatan CMS & Website Publik
+
+**Status Saat Ini:** CMS sudah lengkap (pages, posts, gallery, testimonials) tapi belum ada rendering frontend publik yang cantik, scheduled publishing, tag management, dan comments.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/PublicSiteController.php`
+```php
+// Perkuat halaman publik:
+public function home()                          // [EXISTING] Homepage sekolah
+public function about()                         // Profil sekolah + visi misi + sejarah
+public function news()                          // Daftar berita/artikel (paginated, search, category filter)
+public function newsDetail($slug)               // Detail berita: full content, related posts, share buttons
+public function gallery()                       // Galeri foto/video sekolah (lightbox gallery)
+public function contact()                       // Halaman kontak + Google Maps embed + form inquiry
+public function page($slug)                     // Dynamic CMS page rendering
+public function facilities()                    // Fasilitas sekolah: foto + deskripsi per ruangan
+public function achievements()                  // Prestasi siswa & sekolah: timeline + filter
+public function staffDirectory()                // Direktori guru & staff (foto, nama, jabatan, mapel)
+public function ppdbInfo()                       // Info PPDB → redirect ke modul PPDB jika aktif
+public function virtualTour()                   // Virtual tour sekolah (embedded 360° photos)
+```
+
+##### [MODIFY] `app/Http/Controllers/CmsController.php`
+```php
+// Tambahkan:
+public function schedulePost($id, Request $r)   // Jadwalkan publikasi post
+public function tagManagement()                 // Kelola tag/kategori
+public function mediaLibrary()                  // Perpustakaan media: upload, browse, delete gambar/file
+public function seoSettings()                   // Pengaturan SEO global: title template, meta, OG tags
+```
+
+##### [NEW & MODIFY] Views
+```
+resources/views/public/
+├── home.blade.php               # [MODIFY] Revamp: hero slider, berita terbaru, prestasi, CTA
+├── about.blade.php              # [NEW] Profil sekolah: sejarah, visi misi, sambutan kepsek
+├── news/
+│   ├── index.blade.php          # [NEW] Grid berita: thumbnail, judul, tanggal, kategori
+│   └── show.blade.php           # [NEW] Detail berita: cover image, content, author, share
+├── gallery.blade.php            # [NEW] Galeri foto: masonry grid + lightbox
+├── contact.blade.php            # [NEW] Kontak: form + maps + info
+├── facilities.blade.php         # [NEW] Fasilitas: card grid + foto per ruangan
+├── achievements.blade.php       # [NEW] Timeline prestasi sekolah
+├── staff-directory.blade.php    # [NEW] Guru & staf: card grid, foto, nama, mapel
+└── virtual-tour.blade.php       # [NEW] Virtual tour: embedded 360° viewer
+```
+
+---
+
+## 📦 FASE 18: Penguatan Communication, Workflow & Notification
+
+**Fokus:** Meningkatkan kemampuan komunikasi platform, workflow approval, dan notifikasi otomatis.
+
+---
+
+### 📲 Modul 18.1: Penguatan WhatsApp Automation & Broadcast
+
+**Status Saat Ini:** WhatsApp sudah punya test send, settings, dan log. Tapi belum ada: broadcast massal, template management, scheduled messages, delivery tracking, dan automated triggers.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_whatsapp_enhancements`
+```php
+Schema::create('whatsapp_templates', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');                                  // "Reminder SPP", "Info Ujian"
+    $table->enum('category', ['keuangan', 'akademik', 'keislaman', 'kegiatan', 'umum']);
+    $table->text('content');                                 // Template dengan placeholder: {nama_siswa}, {kelas}, {tagihan}
+    $table->json('placeholders')->nullable();                // ["nama_siswa", "kelas", "tagihan"]
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('whatsapp_broadcasts', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('template_id')->nullable()->constrained('whatsapp_templates');
+    $table->string('title');
+    $table->text('message');
+    $table->enum('target_type', ['all_parents', 'all_teachers', 'specific_class', 'custom']);
+    $table->json('target_ids')->nullable();                  // [classroom_id] atau [user_id]
+    $table->integer('total_recipients')->default(0);
+    $table->integer('sent_count')->default(0);
+    $table->integer('failed_count')->default(0);
+    $table->enum('status', ['draft', 'scheduled', 'sending', 'completed', 'cancelled'])->default('draft');
+    $table->timestamp('scheduled_at')->nullable();
+    $table->timestamp('sent_at')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('whatsapp_automations', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');                                  // "Auto-reminder SPP H-3"
+    $table->enum('trigger', [
+        'billing_due_3_days',        // SPP jatuh tempo H-3
+        'billing_overdue',           // SPP lewat jatuh tempo
+        'attendance_absent',         // Siswa alpa hari ini
+        'exam_upcoming_1_day',       // Ujian CBT besok
+        'uks_visit_severe',          // Kunjungan UKS severity berat
+        'grade_below_kkm',           // Nilai di bawah KKM
+        'mutabaah_grade_d',          // Grade mutaba'ah D
+        'tahfidz_behind_target',     // Tahfidz di belakang target
+    ]);
+    $table->foreignId('template_id')->constrained('whatsapp_templates');
+    $table->boolean('is_active')->default(true);
+    $table->json('config')->nullable();                      // Konfigurasi tambahan per trigger
+    $table->timestamps();
+});
+```
+
+##### [MODIFY] `app/Http/Controllers/WhatsappController.php`
+```php
+// Perkuat dari 4 method menjadi 15+ method:
+public function dashboard()                     // [NEW] Dashboard WA: sent stats, delivery rate, chart tren
+public function templates()                     // Template management: CRUD template
+public function storeTemplate(Request $r)
+public function updateTemplate($id, Request $r)
+public function deleteTemplate($id)
+public function broadcasts()                    // Daftar broadcast history
+public function createBroadcast()               // Form kirim broadcast: pilih target, template, preview
+public function storeBroadcast(Request $r)      // Simpan + kirim/jadwalkan broadcast
+public function showBroadcast($id)              // Detail broadcast: delivery stats, failed list
+public function retryFailed($broadcastId)       // Kirim ulang yang gagal
+public function automations()                   // Daftar automation triggers
+public function storeAutomation(Request $r)     // Buat automation baru
+public function toggleAutomation($id)           // Enable/disable automation
+public function deleteAutomation($id)           // Hapus automation
+public function logs(Request $r)                // [MODIFY] Log dengan filter: tanggal, status, tipe
+```
+
+##### [NEW] Views
+```
+resources/views/admin/whatsapp/
+├── dashboard.blade.php          # [NEW] Dashboard: sent/delivered/failed stats, chart per bulan
+├── templates/
+│   ├── index.blade.php          # [NEW] CRUD template: preview, placeholder chips
+│   └── create.blade.php         # [NEW] Form buat template: WYSIWYG + placeholder selector
+├── broadcasts/
+│   ├── index.blade.php          # [NEW] History broadcast: DataTable + filter
+│   ├── create.blade.php         # [NEW] Wizard broadcast: target → template → preview → kirim/jadwalkan
+│   └── show.blade.php           # [NEW] Detail: delivery stats pie chart, recipient list
+├── automations/
+│   ├── index.blade.php          # [NEW] Daftar automation: trigger, template, toggle on/off
+│   └── create.blade.php         # [NEW] Form: pilih trigger → template → config
+```
+
+---
+
+### 🔄 Modul 18.2: Penguatan Approval Workflow
+
+**Status Saat Ini:** Workflow punya pending list, my requests, dan approve/reject sederhana. Tapi belum ada: workflow definition CRUD, multi-step chains, delegation, resubmit after rejection, SLA tracking, dan analytics.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/WorkflowController.php`
+```php
+// Perkuat dari 5 method menjadi 12+ method:
+public function dashboard()                     // [NEW] Dashboard: pending counts per tipe, avg approval time
+public function definitions()                   // [NEW] Kelola definisi workflow
+public function storeDefinition(Request $r)     // [NEW] Buat workflow baru
+public function updateDefinition($id, Request $r) // [NEW] Edit workflow
+public function pending()                       // [EXISTING] Daftar menunggu approval
+public function myRequests()                    // [EXISTING] Request saya
+public function show($id)                       // [EXISTING] Detail request
+public function approve($id)                    // [EXISTING] Setujui
+public function reject($id)                     // [EXISTING] Tolak
+public function revise($id)                     // [NEW] Kembalikan untuk revisi (bukan tolak final)
+public function resubmit($id, Request $r)       // [NEW] Kirim ulang request setelah revisi
+public function delegate($id, Request $r)       // [NEW] Delegasikan approval ke orang lain
+public function history()                       // [NEW] Riwayat workflow: semua request yang sudah selesai
+public function analytics()                     // [NEW] Analytics: avg time, bottleneck analysis, chart
+```
+
+##### [NEW] Views
+```
+resources/views/workflows/
+├── dashboard.blade.php          # [NEW] Dashboard: pending stat cards, chart avg time
+├── definitions.blade.php        # [NEW] Kelola definisi workflow: tabel definisi + modal CRUD
+├── history.blade.php            # [NEW] Riwayat: DataTable semua request, filter status/tipe
+├── analytics.blade.php          # [NEW] Analytics: line chart avg time, bar chart per tipe
+```
+
+---
+
+### 🔔 Modul 18.3: Penguatan Smart Alert & Notifikasi
+
+**Status Saat Ini:** Smart Alert punya list, acknowledge, resolve, dan student alerts. Tapi belum ada: alert creation UI, notification integration (WhatsApp/email saat alert critical), alert rules config, dan dashboard visualization.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/SmartAlertController.php`
+```php
+// Tambahkan method baru:
+public function dashboard()                     // [NEW] Dashboard: stat cards, severity distribution chart
+public function show($id)                       // [NEW] Detail alert: timeline status changes, related data
+public function rulesConfig()                   // [NEW] Konfigurasi aturan alert: threshold per tipe
+public function updateRules(Request $r)         // [NEW] Simpan konfigurasi aturan
+public function manualCreate(Request $r)        // [NEW] Buat alert manual (untuk kasus khusus)
+public function history()                       // [NEW] Riwayat alert yang sudah resolved
+public function escalate($id)                   // [NEW] Eskalasi alert ke atasan
+public function exportReport(Request $r)        // [NEW] Export laporan alert ke PDF
+```
+
+---
+
+## 📦 FASE 19: Data Quality, Testing & Performance
+
+**Fokus:** Meningkatkan kualitas data, coverage testing, dan performa platform.
+
+---
+
+### 📦 Modul 19.1: Mega Seeder v2 — Data PPDB, HRD, Ekskul, OSIS
+
+##### [NEW] Seeders
+```
+database/seeders/
+├── PpdbSeeder.php              # 1 periode, 2 gelombang, 3 jalur, 70 pendaftar (simulasi full funnel)
+├── HrdEnhancementSeeder.php    # 10 evaluasi kinerja, 30 pelatihan, 50 dokumen pegawai
+├── ExtracurricularSeeder.php   # [MODIFY] Tambah prestasi lomba, nilai ekskul, jadwal
+├── OsisMpkSeeder.php           # Kepengurusan OSIS, 8 proker, 1 pemilihan dengan 3 kandidat + 100 suara
+├── StudentHealthSeeder.php     # Rekam medis 60 siswa, 1 screening + hasil
+├── WhatsappEnhancementSeeder.php # 5 template, 3 automations, 2 broadcast history
+├── AnalyticsDataSeeder.php     # Data dummy 2 semester untuk comparison analytics
+```
+
+---
+
+### 🧪 Modul 19.2: Test Coverage Expansion
+
+##### [NEW] Tests
+```
+tests/Feature/
+├── PPDB/
+│   ├── PpdbPublicTest.php       # Landing, registration form, status check, announcement
+│   ├── PpdbAdminTest.php        # Dashboard, verification, scoring, selection
+│   └── PpdbConversionTest.php   # Convert applicant → student
+├── HRD/
+│   ├── PerformanceEvaluationTest.php  # Evaluation CRUD, scoring, reporting
+│   ├── TrainingTest.php         # Training CRUD, certification tracking
+│   └── EmployeeDocumentTest.php # Document CRUD, expiry alerts
+├── Extracurricular/
+│   ├── ExtracurricularCrudTest.php    # Create/edit/delete ekskul
+│   ├── AchievementTest.php      # Achievement logging
+│   └── GradingTest.php          # Semester grading for report card
+├── Osis/
+│   ├── OsisMemberTest.php       # Member management
+│   ├── WorkProgramTest.php      # Work program CRUD
+│   └── ElectionTest.php         # Election, voting, results
+├── Analytics/
+│   ├── DrilldownTest.php        # Each drill-down view loads correctly
+│   └── PredictiveTest.php       # At-risk prediction calculations
+├── WhatsApp/
+│   ├── BroadcastTest.php        # Broadcast CRUD, sending, retry
+│   └── AutomationTest.php       # Automation trigger tests
+├── UKS/
+│   ├── HealthRecordTest.php     # Student health records CRUD
+│   └── ScreeningTest.php        # Health screening CRUD + results
+├── CMS/
+│   ├── PublicSiteTest.php       # All public pages render correctly
+│   └── MediaLibraryTest.php     # Media upload, browse, delete
+└── Workflow/
+    ├── DefinitionTest.php       # Workflow definition CRUD
+    └── DelegationTest.php       # Delegation, resubmit, revision
+```
+
+---
+
+### ⚡ Modul 19.3: Performance Optimization
+
+```
+Checklist optimasi performa:
+□ Database Indexing: Review semua query N+1 dan tambah eager loading
+□ Query Optimization: Identifikasi 10 query paling lambat (via Debugbar/Telescope)
+□ Caching: Implementasikan cache untuk data statis (settings, academic year, subjects)
+□ Asset Optimization: Minify CSS/JS, lazy load images
+□ Pagination: Pastikan semua DataTable menggunakan server-side pagination (bukan load all)
+□ View Caching: Cache Blade templates di production
+□ Service Worker: Update PWA cache strategy untuk halaman kritis
+□ Database Seeding Speed: Optimasi seeder dengan chunk insert
+□ Test Speed: Parallelisasi test execution
+```
+
+---
+
+## 📦 FASE 20: Final Polish & Portfolio Showcase
+
+**Fokus:** Finishing touches untuk membuat platform benar-benar layak menjadi portofolio premium.
+
+---
+
+### 🎨 Modul 20.1: Landing Page & Public Website Polish
+
+```
+Checklist:
+□ Landing page (welcome.blade.php) → full redesign: hero video/animation, counter stats, testimonials carousel
+□ SEO optimization: meta tags, sitemap.xml, robots.txt, structured data (JSON-LD)
+□ Open Graph tags untuk social sharing
+□ Favicon set lengkap (16x16, 32x32, apple-touch-icon, manifest.json)
+□ Print stylesheet untuk halaman yang perlu di-print
+□ Accessibility audit: ARIA labels, keyboard navigation, color contrast
+□ Loading performance: Lighthouse score target ≥ 90
+```
+
+### 📱 Modul 20.2: PWA Enhancement & Responsive Polish
+
+```
+Checklist:
+□ PWA manifest update: correct icons, theme color, scope
+□ Offline page: halaman cantik saat offline
+□ Install prompt: banner "Install SISTA App" di mobile
+□ Push notification: notifikasi browser untuk alert penting
+□ Responsive audit: semua halaman berfungsi di 375px, 768px, 1024px, 1440px
+□ Touch-friendly: semua button/link minimal 44x44px di mobile
+□ Sidebar: collapse otomatis di mobile, swipe gesture
+□ DataTable: horizontal scroll di mobile, column priority
+```
+
+### 📋 Modul 20.3: Documentation & Developer Portal
+
+```
+Checklist:
+□ README.md update: screenshot, demo credentials, feature list, tech stack
+□ API documentation: Scribe auto-generated
+□ Database schema diagram (ERD): mermaid/dbdiagram.io
+□ Architecture documentation: folder structure, design patterns, naming conventions
+□ Demo walkthrough guide: step-by-step untuk setiap role
+□ Deployment guide: Docker, shared hosting, VPS
+□ Environment setup guide: prerequisites, installation steps
+```
+
+---
+
+## 📋 Urutan Prioritas Implementasi (Updated)
+
+| Prioritas | Modul | Estimasi | Status |
+| :---: | :--- | :--- | :---: |
+| 🔴 **P0** | 11.3: Penilaian Harian & Remedial | 3-4 hari | ✅ Selesai |
+| 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ✅ Selesai |
+| 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ✅ Selesai |
+| 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ✅ Selesai |
+| 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ✅ Selesai |
+| 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ✅ Selesai |
+| 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 11.4: Item Analysis CBT | 2-3 hari | ✅ Selesai |
+| 🟡 **P2** | 12.3: Penguatan E-Learning | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 12.4: Penguatan Perpustakaan | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 12.5: Penguatan Keuangan | 2 hari | ✅ Selesai |
+| 🟡 **P2** | 15.1: Notulensi Rapat | 2-3 hari | ✅ Selesai |
+| 🟢 **P3** | 15.2: Pengumuman Rich | 1-2 hari | ✅ Selesai |
+| 🟢 **P3** | 15.3: Todo List Guru | 1-2 hari | ✅ Selesai |
+| 🟢 **P3** | 14.1: UI Consistency Audit | 3-4 hari | ✅ Selesai |
+| 🟢 **P3** | 14.2: Animasi & Micro-Interactions | 2 hari | ✅ Selesai |
+| 🟢 **P3** | 14.3: Error & Empty State Pages | 1-2 hari | ✅ Selesai |
+| 🟢 **P3** | 14.4: Factory & Test Expansion | 3-4 hari | ✅ Selesai |
+| | | | |
+| 🔴 **P0** | **16.1: Sistem SPMB Online Komprehensif** | **5-7 hari** | ✅ Selesai |
+| 🔴 **P0** | **16.2: Overhaul Alumni & Tracer Study** | **3-4 hari** | ✅ Selesai |
+| 🟠 **P1** | **16.3: Penguatan HRD & Kepegawaian** | **4-5 hari** | ✅ Selesai |
+| 🟠 **P1** | **16.4: Penguatan Ekskul & Kesiswaan** | **3-4 hari** | ✅ Selesai |
+| 🟠 **P1** | **16.5: Penguatan OSIS & MPK** | **3-4 hari** | ✅ Selesai |
+| 🟡 **P2** | **17.1: Analytics & Predictive Intelligence** | **4-5 hari** | ✅ Selesai |
+| 🟡 **P2** | **17.2: AI Chatbot Enhancement** | **2-3 hari** | ⬜ Belum |
+| 🟡 **P2** | **17.3: Penguatan UKS & Rekam Medis** | **3-4 hari** | ⬜ Belum |
+| 🟡 **P2** | **17.4: Penguatan CMS & Website Publik** | **3-4 hari** | ⬜ Belum |
+| 🟠 **P1** | **18.1: WhatsApp Automation & Broadcast** | **3-4 hari** | ⬜ Belum |
+| 🟢 **P3** | **18.2: Penguatan Workflow** | **2-3 hari** | ⬜ Belum |
+| 🟢 **P3** | **18.3: Penguatan Smart Alert** | **2 hari** | ⬜ Belum |
+| 🟡 **P2** | **19.1: Mega Seeder v2** | **3-4 hari** | ⬜ Belum |
+| 🟡 **P2** | **19.2: Test Coverage Expansion** | **4-5 hari** | ⬜ Belum |
+| 🟢 **P3** | **19.3: Performance Optimization** | **2-3 hari** | ⬜ Belum |
+| 🟢 **P3** | **20.1: Landing Page Polish** | **2-3 hari** | ⬜ Belum |
+| 🟢 **P3** | **20.2: PWA Enhancement** | **2 hari** | ⬜ Belum |
+| 🟢 **P3** | **20.3: Documentation & Dev Portal** | **2-3 hari** | ⬜ Belum |
+
+**Total Estimasi Fase 11-15 (Selesai):** ~38-50 hari kerja ✅
+**Total Estimasi Fase 16-20 (Baru):** ~48-62 hari kerja ⬜
+**Grand Total Estimasi:** ~86-112 hari kerja (18-22 minggu)
+
+---
+
+## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target Updated)
+
+| Metrik | Sekarang | Target (Fase 15) | **Target Akhir (Fase 20)** |
+| :--- | :---: | :---: | :---: |
+| **Model Eloquent** | 119 | ~120 | **~145** |
+| **Controller** | ~77 | ~112 | **~90** |
+| **Service Class** | 39 | ~40 | **~48** |
+| **Migration** | 99 | ~100 | **~112** |
+| **View Directory** | 61 | ~65 | **~75** |
+| **Blade Templates** | ~350 | ~340 | **~430** |
+| **Test Files** | ~90 | ~90 | **~120** |
+| **Seeder Files** | 30 | ~30 | **~38** |
+| **Factory Files** | 29 | ~24 | **~38** |
+| **Demo Records** | ~3000 | ~3000+ | **~5000+** |
 
 ---
 
@@ -1378,20 +2524,17 @@ Tidak ada dependencies baru yang diperlukan — semua fitur bisa dibangun dengan
 > Seluruh pengembangan di atas dijalankan **100% di localhost** menggunakan `php artisan serve` + SQLite. Tidak membutuhkan server, domain, atau layanan pihak ketiga. Semua fitur bisa dibangun, ditest, dan di-demo langsung dari laptop developer.
 
 > [!TIP]
-> **Mulai dari P0 (Prioritas Tertinggi):**
-> 1. Modul 11.3 (Penilaian Harian) (Selesai ✅) — karena ini fitur akademik inti yang belum ada
-> 2. Modul 12.1 (Dashboard Enhancement) (Selesai ✅) — karena dashboard adalah halaman pertama yang dilihat user
-> 3. Modul 13.1 (Mega Seeder) (Selesai ✅) — karena data demo yang rich membuat semua fitur terlihat hidup
-> 4. Modul 11.2 (Mutaba'ah Ibadah Lengkap) (Selesai ✅) — karena tracking ibadah adalah program unggulan keagamaan
-> 5. Modul 11.5 (Presensi Kegiatan Sekolah) (Selesai ✅) — karena tracking kehadiran kegiatan non-KBM melengkapi modul keislaman sekolah
-> 6. Modul 12.2 (Penguatan Jadwal Pelajaran) (Selesai ✅) — karena melengkapi modul penjadwalan dengan deteksi bentrok ruangan & print PDF.
-> 7. Modul 12.3 (Penguatan E-Learning & Materi Pembelajaran) (Selesai ✅) — karena menambahkan interaktif dan monitoring progress belajar siswa.
-> 8. Modul 12.4 (Penguatan Modul Perpustakaan) (Selesai ✅) — karena melengkapi perpustakaan dengan kartu anggota digital, statistik visual, rekomendasi buku cerdas, laporan overdue, dan pengingat WhatsApp.
-> 9. Modul 12.5 (Penguatan Keuangan) (Selesai ✅) — karena melengkapi modul keuangan dengan accounting journal, neraca saldo, laporan laba rugi, dan dashboard analitik keuangan yang komprehensif.
-> 10. Modul 15.1 (Notulensi Rapat) (Selesai ✅) — karena mendokumentasikan rapat guru, OSIS, yayasan dengan sistem notulensi digital, daftar hadir, action items tracker, dan cetak PDF resmi kop sekolah.
-> 11. Modul 15.2 (Pengumuman Rich) (Selesai ✅) — karena meningkatkan pengumuman dengan kategori, lampiran berkas, pin dashboard, acknowledgement, read receipts, dan dashboard widget mading digital.
-> 12. Modul 15.3 (Todo List Guru) (Selesai ✅) — karena menambahkan personal productivity guru dengan CRUD todo list, toggle completion, filter/sort, 7 stat cards, dashboard widget quick add, dan 17 automated tests.
-> 13. Modul 14.1 (UI Consistency Audit) (Selesai ✅) — karena mendefinisikan standar UI premium lewat komponen page-header, data-table, empty-state, stat-card, confirm-modal, form-group, status-badge, dan merefaktorkan modul inti.
-
-
+> **Urutan Implementasi Fase 16-20 (Rekomendasi):**
+> 1. **Modul 16.1 (SPMB Online)** ✅ — karena SPMB adalah celah fitur paling kritis (controller kosong total) dan merupakan proses tahunan wajib sekolah.
+> 2. **Modul 16.2 (Alumni & Tracer Study Overhaul)** ✅ — karena modul alumni saat ini sangat dangkal (hanya 3 method) dan data alumni penting untuk akreditasi.
+> 3. **Modul 16.3 (HRD Enhancement)** ✅ — karena evaluasi kinerja, tracking sertifikasi, dan manajemen dokumen pegawai adalah kebutuhan operasional kunci.
+> 4. **Modul 16.4 (Ekskul Enhancement)** ✅ — karena menambahkan CRUD admin, achievement tracking, dan penilaian untuk rapor.
+> 5. **Modul 16.5 (OSIS & MPK Enhancement)** ✅ — karena menambahkan kepengurusan, program kerja, dan sistem pemilihan OSIS digital.
+> 6. **Modul 18.1 (WhatsApp Automation)** ⬜ — karena notifikasi otomatis ke orang tua meningkatkan engagement dan value platform.
+> 7. **Modul 17.1 (Analytics & Predictive)** ✅ — karena predictive analytics untuk siswa at-risk adalah fitur pembeda premium.
+> 8. **Modul 17.3 (UKS & Rekam Medis)** ⬜ — karena rekam medis siswa penting untuk keamanan dan kesejahteraan.
+> 9. **Modul 17.2 (AI Chatbot)** ⬜ — karena chatbot context-aware adalah fitur WOW untuk portofolio.
+> 10. **Modul 17.4 (CMS & Website Publik)** ⬜ — karena website publik adalah "wajah" sekolah untuk dunia luar.
+> 11. **Modul 19.1-19.3 (Data, Testing, Performance)** ⬜ — quality assurance dan optimasi.
+> 12. **Modul 20.1-20.3 (Final Polish)** ⬜ — finishing touches untuk showcase portofolio.
 

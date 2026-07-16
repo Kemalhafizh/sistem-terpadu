@@ -26,6 +26,65 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
+            <!-- Drill-Down Navigation Block -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+                <a href="{{ route('analytics.student-risk') }}" class="group flex flex-col items-center justify-center p-3 bg-rose-50 dark:bg-rose-950/30 rounded-2xl hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-all border border-rose-100 dark:border-rose-900/50">
+                    <div class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-md shadow-rose-500/30">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-rose-700 dark:text-rose-400 text-center">Prediksi<br>At-Risk</span>
+                </a>
+                
+                <a href="{{ route('analytics.attendance') }}" class="group flex flex-col items-center justify-center p-3 bg-blue-50 dark:bg-blue-950/30 rounded-2xl hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all border border-blue-100 dark:border-blue-900/50">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-blue-700 dark:text-blue-400 text-center">Analitik<br>Kehadiran</span>
+                </a>
+
+                <a href="{{ route('analytics.academic') }}" class="group flex flex-col items-center justify-center p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all border border-emerald-100 dark:border-emerald-900/50">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-emerald-700 dark:text-emerald-400 text-center">Analitik<br>Akademik</span>
+                </a>
+
+                <a href="{{ route('analytics.financial') }}" class="group flex flex-col items-center justify-center p-3 bg-amber-50 dark:bg-amber-950/30 rounded-2xl hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all border border-amber-100 dark:border-amber-900/50">
+                    <div class="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-amber-700 dark:text-amber-400 text-center">Analitik<br>Keuangan</span>
+                </a>
+
+                <a href="{{ route('analytics.islamic') }}" class="group flex flex-col items-center justify-center p-3 bg-teal-50 dark:bg-teal-950/30 rounded-2xl hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-all border border-teal-100 dark:border-teal-900/50">
+                    <div class="w-10 h-10 rounded-full bg-teal-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m22 4v-4m-3.1-2a9 9 0 11-14.8 0"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-teal-700 dark:text-teal-400 text-center">BPI &<br>Keislaman</span>
+                </a>
+
+                <a href="{{ route('analytics.heatmap') }}" class="group flex flex-col items-center justify-center p-3 bg-orange-50 dark:bg-orange-950/30 rounded-2xl hover:bg-orange-100 dark:hover:bg-orange-900/50 transition-all border border-orange-100 dark:border-orange-900/50">
+                    <div class="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-orange-700 dark:text-orange-400 text-center">Heatmap<br>Kehadiran</span>
+                </a>
+
+                <a href="{{ route('analytics.comparison') }}" class="group flex flex-col items-center justify-center p-3 bg-indigo-50 dark:bg-indigo-950/30 rounded-2xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all border border-indigo-100 dark:border-indigo-900/50">
+                    <div class="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-indigo-700 dark:text-indigo-400 text-center">Komparasi<br>YoY</span>
+                </a>
+
+                <a href="{{ route('analytics.custom-report') }}" class="group flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 dark:bg-slate-500 text-white flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-700 dark:text-slate-300 text-center">Custom<br>Report</span>
+                </a>
+            </div>
+
             <!-- Classroom Filter Block -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-[2rem] p-6 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center">

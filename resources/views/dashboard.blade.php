@@ -65,12 +65,12 @@
                     @foreach($announcements ?? [] as $announcement)
                         <div class="rounded-3xl p-6 shadow-md flex flex-col md:flex-row gap-6 relative overflow-hidden transition-all duration-300 hover:shadow-lg border {{ $announcement->is_pinned ? 'bg-amber-50/20 dark:bg-amber-950/10 border-amber-300/40' : ($announcement->priority == 'urgent' ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/30' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700') }}">
                             @if($announcement->is_pinned)
-                                <div class="absolute top-0 right-0 px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg flex items-center z-10">
-                                    📌 {{ __('dashboard.pinned') ?? 'DISEMATKAN' }}
+                                <div class="absolute top-0 right-0 rtl:left-0 rtl:right-auto px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg rtl:rounded-br-lg rtl:rounded-bl-none flex items-center z-10">
+                                    📌 {{ __('dashboard.pinned_fallback') }}
                                 </div>
                             @elseif($announcement->priority == 'urgent')
-                                <div class="absolute top-0 right-0 px-3 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg flex items-center animate-pulse z-10">
-                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                <div class="absolute top-0 right-0 rtl:left-0 rtl:right-auto px-3 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg rtl:rounded-br-lg rtl:rounded-bl-none flex items-center animate-pulse z-10">
+                                    <svg class="w-3 h-3 mr-1 rtl:ml-1 rtl:mr-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                     {{ __('dashboard.urgent') }}
                                 </div>
                             @endif
@@ -90,16 +90,16 @@
                                             $announcement->category === 'kegiatan' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' : (
                                             $announcement->category === 'keislaman' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')))
                                         }}">
-                                            📁 {{ $announcement->category ?? 'umum' }}
+                                            📁 {{ __('dashboard.category_' . ($announcement->category ?? 'umum')) }}
                                         </span>
                                         @if($announcement->require_acknowledgement)
                                             @if($announcement->isAcknowledgedBy(auth()->id()))
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 flex items-center gap-1">
-                                                    ✓ {{ __('dashboard.acknowledged') ?? 'TERKONFIRMASI' }}
+                                                    ✓ {{ __('dashboard.acknowledged_fallback') }}
                                                 </span>
                                             @else
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300 animate-pulse flex items-center gap-1">
-                                                    ⚠️ {{ __('dashboard.needs_acknowledgement') ?? 'PERLU KONFIRMASI' }}
+                                                    ⚠️ {{ __('dashboard.needs_acknowledgement') }}
                                                 </span>
                                             @endif
                                         @endif

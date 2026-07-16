@@ -1,3 +1,4 @@
+<x-mail::message>
 # Pendaftaran Berhasil Diterima!
 
 Halo {{ $registration->full_name }},

@@ -30,6 +30,8 @@ class AlumniService
                     'relevance_score' => $data['relevance_score'] ?? 5,
                     'satisfaction_score' => $data['satisfaction_score'] ?? 5,
                     'suggestions' => $data['suggestions'] ?? null,
+                    'employer_name' => $data['employer_name'] ?? null,
+                    'entry_year' => $data['entry_year'] ?? null,
                 ]
             );
 

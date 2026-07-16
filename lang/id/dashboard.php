@@ -145,4 +145,14 @@ return [
     'widget_approval_pending' => 'Persetujuan Tertunda',
     'widget_top_xp_students' => 'Top 5 Siswa XP',
     'widget_weekly_mutabaah_recap' => 'Rekap Mutaba\'ah Minggu Ini',
+
+    // Dynamic Categories & Statuses
+    'category_akademik' => 'Akademik',
+    'category_keuangan' => 'Keuangan',
+    'category_kegiatan' => 'Kegiatan',
+    'category_keislaman' => 'Keislaman',
+    'category_umum' => 'Umum',
+    'pinned_fallback' => 'DISEMATKAN',
+    'acknowledged_fallback' => 'TERKONFIRMASI',
+    'needs_acknowledgement' => 'PERLU KONFIRMASI',
 ];

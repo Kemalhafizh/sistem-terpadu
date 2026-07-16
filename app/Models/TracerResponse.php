@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TracerResponse extends Model
 {
+    use \App\Traits\HasUuid;
+
     protected $fillable = [
         'alumni_data_id',
         'job_title',
@@ -14,6 +16,8 @@ class TracerResponse extends Model
         'relevance_score',
         'satisfaction_score',
         'suggestions',
+        'employer_name',
+        'entry_year',
     ];
 
     public function alumni()

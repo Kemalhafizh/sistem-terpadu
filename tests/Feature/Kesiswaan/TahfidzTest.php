@@ -227,7 +227,7 @@ test('submitting setoran awards grade-based XP and target updates', function () 
         'type' => 'ziyadah',
         'grade' => 'A',
         'notes' => 'Mumtaz',
-        'date' => now()->format('Y-m-d'),
+        'date' => '2026-03-01',
         'juz' => 30,
         'pages_count' => 1,
     ]);
@@ -252,7 +252,7 @@ test('submitting setoran awards grade-based XP and target updates', function () 
         'type' => 'ziyadah',
         'grade' => 'A',
         'notes' => 'Mumtaz',
-        'date' => now()->format('Y-m-d'),
+        'date' => '2026-03-01',
         'juz' => 30,
         'pages_count' => 1,
     ]);

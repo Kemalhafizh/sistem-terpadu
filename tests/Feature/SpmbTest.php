@@ -15,18 +15,67 @@ use Tests\TestCase;
 beforeEach(function () {
     Mail::fake();
     Storage::fake('public');
-    $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
+    $this->academicYear = AcademicYear::factory()->create([
+        'is_active' => true,
+        'year' => '2026/2027',
+        'semester' => 'Ganjil',
+    ]);
+
+    $this->period = \App\Models\SpmbPeriod::create([
+        'academic_year_id' => $this->academicYear->id,
+        'name' => 'SPMB 2026/2027',
+        'total_quota' => 100,
+        'status' => 'open',
+    ]);
+
+    $this->wave = \App\Models\SpmbWave::create([
+        'spmb_period_id' => $this->period->id,
+        'name' => 'Gelombang 1',
+        'registration_start' => now()->subDays(5)->format('Y-m-d'),
+        'registration_end' => now()->addDays(5)->format('Y-m-d'),
+        'quota' => 50,
+        'registration_fee' => 150000,
+        'status' => 'open',
+    ]);
+
+    $this->track = \App\Models\SpmbTrack::create([
+        'spmb_period_id' => $this->period->id,
+        'name' => 'Reguler',
+        'quota' => 30,
+        'scoring_weights' => [
+            'rapor' => 40,
+            'tes' => 30,
+            'prestasi' => 15,
+            'tahfidz' => 15,
+        ],
+        'requirements' => 'Persyaratan Reguler',
+    ]);
 });
 
 test('public user can submit registration', function () {
     $response = $this->post(route('spmb.store'), [
+        'spmb_wave_id' => $this->wave->id,
+        'spmb_track_id' => $this->track->id,
         'full_name' => 'Calon Siswa Baru',
         'email' => 'calon@example.com',
         'nisn' => '1234567890',
         'previous_school' => 'SMP Maju Jaya',
         'parent_phone' => '08123456789',
-        'document_kk' => UploadedFile::fake()->image('kk.jpg'),
-        'document_certificate' => UploadedFile::fake()->create('ijazah.pdf'),
+        'gender' => 'L',
+        'birth_date' => '2010-05-15',
+        'birth_place' => 'Semarang',
+        'address' => 'Jl. Pemuda No. 100, Semarang',
+        'parent_name' => 'Budi Wijaya',
+        'document_kk' => UploadedFile::fake()->create('kk.pdf', 500, 'application/pdf'),
+        'document_certificate' => UploadedFile::fake()->create('ijazah.pdf', 500, 'application/pdf'),
+        'photo' => UploadedFile::fake()->image('photo.jpg'),
+        'rapor_scores' => [
+            'matematika' => 85,
+            'ipa' => 80,
+            'ips' => 80,
+            'indonesia' => 90,
+            'inggris' => 85,
+        ],
     ]);
 
     $response->assertRedirect(route('spmb.success'));

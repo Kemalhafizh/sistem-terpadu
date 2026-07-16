@@ -27,7 +27,7 @@ class LetterController extends Controller
     {
         $this->authorize('viewAny', Letter::class);
 
-        $query = Letter::with(['template', 'student', 'employee', 'creator']);
+        $query = Letter::with(['template', 'student.classroom', 'employee', 'creator']);
 
         if ($request->filled('template_id')) {
             $query->where('template_id', $request->template_id);
@@ -55,7 +55,7 @@ class LetterController extends Controller
         $this->authorize('create', Letter::class);
 
         $template = LetterTemplate::findOrFail($request->template_id);
-        $students = Student::orderBy('name')->get();
+        $students = Student::with('classroom')->orderBy('name')->get();
         $employees = Employee::orderBy('name')->get();
 
         return view('letters.create', compact('template', 'students', 'employees'));
@@ -94,6 +94,8 @@ class LetterController extends Controller
     public function show(Letter $letter)
     {
         $this->authorize('view', $letter);
+
+        $letter->load(['template', 'student.classroom', 'employee', 'creator']);
 
         $renderedBody = $this->letterService->renderLetterBody($letter);
 

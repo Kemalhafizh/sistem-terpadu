@@ -108,6 +108,8 @@ Route::prefix('spmb')->middleware('throttle:spmb')->group(function () {
     Route::post('/register', [SpmbController::class, 'store'])->name('spmb.store');
     Route::get('/success', [SpmbController::class, 'success'])->name('spmb.success');
     Route::get('/status', [SpmbController::class, 'checkStatus'])->name('spmb.status');
+    Route::get('/announcement', [SpmbController::class, 'publicAnnouncement'])->name('spmb.announcement');
+    Route::get('/print-card/{registration}', [SpmbController::class, 'printCard'])->name('spmb.print-card');
 });
 
 // ============================================================
@@ -142,6 +144,11 @@ Route::middleware('auth')->group(function () {
 
     // Career & Scholarship Portal (read-only untuk semua)
     Route::get('career-portal', [CareerOpportunityController::class, 'index'])->name('career-portal.index');
+
+    // Alumni Directory & Network Map (read-only untuk semua)
+    Route::get('alumni/directory', [AlumniController::class, 'directory'])->name('alumni.directory');
+    Route::get('alumni/network-map', [AlumniController::class, 'alumniNetworkMap'])->name('alumni.network-map');
+    Route::get('alumni/profile/{alumni}', [AlumniController::class, 'show'])->name('alumni.show');
 
     // Keislaman — baca data tahfidz & mutaba'ah (semua user)
     Route::prefix('tahfidz')->name('tahfidz.')->group(function () {
@@ -194,19 +201,72 @@ Route::middleware('auth')->group(function () {
     // EKSTRAKURIKULER & OSIS — Pengembangan Non-Akademik
     // =========================================================
     Route::get('extracurriculars', [ExtracurricularController::class, 'index'])->name('ekskul.index');
+    Route::get('extracurriculars/schedule', [ExtracurricularController::class, 'schedule'])->name('ekskul.schedule');
     Route::get('extracurriculars/{extracurricular}', [ExtracurricularController::class, 'show'])->name('ekskul.show');
     Route::post('extracurriculars/{extracurricular}/register', [ExtracurricularController::class, 'register'])->name('ekskul.register');
 
     Route::middleware(['role:guru,bk,waka_kesiswaan,admin,superadmin'])->prefix('admin/extracurriculars')->name('ekskul.')->group(function () {
+        // CRUD Ekskul
+        Route::get('create', [ExtracurricularController::class, 'create'])->name('create');
+        Route::post('store', [ExtracurricularController::class, 'store'])->name('store');
+        Route::get('{extracurricular}/edit', [ExtracurricularController::class, 'edit'])->name('edit');
+        Route::put('{extracurricular}', [ExtracurricularController::class, 'update'])->name('update');
+        Route::delete('{extracurricular}', [ExtracurricularController::class, 'destroy'])->name('destroy');
+
         Route::get('manage/list', [ExtracurricularController::class, 'manage'])->name('manage');
         Route::post('attendance', [ExtracurricularController::class, 'storeAttendance'])->name('attendance.store');
         Route::post('activities', [ExtracurricularController::class, 'storeActivity'])->name('activities.store');
+        Route::delete('members/{member}/unregister', [ExtracurricularController::class, 'unregister'])->name('members.unregister');
+
+        // Achievements / Lomba
+        Route::get('{extracurricular}/achievements', [ExtracurricularController::class, 'achievements'])->name('achievements');
+        Route::post('{extracurricular}/achievements', [ExtracurricularController::class, 'storeAchievement'])->name('achievements.store');
+
+        // Rapor Grading
+        Route::get('{extracurricular}/grading', [ExtracurricularController::class, 'grading'])->name('grading');
+        Route::post('{extracurricular}/grading', [ExtracurricularController::class, 'storeGrades'])->name('grading.store');
+
+        // Reports
+        Route::get('{extracurricular}/attendance-report', [ExtracurricularController::class, 'attendanceReport'])->name('attendance-report');
+        Route::get('{extracurricular}/semester-report', [ExtracurricularController::class, 'semesterReport'])->name('semester-report');
+        Route::get('{extracurricular}/export-pdf', [ExtracurricularController::class, 'exportPdf'])->name('export-pdf');
     });
 
-    Route::middleware(['role:waka_kesiswaan,admin,superadmin'])->prefix('admin/osis')->name('osis.')->group(function () {
-        Route::get('/', [OsisController::class, 'dashboard'])->name('dashboard');
-        Route::post('transactions', [OsisController::class, 'storeTransaction'])->name('transactions.store');
-        Route::get('export', [OsisController::class, 'exportReport'])->name('export');
+    Route::prefix('admin/osis')->name('osis.')->group(function () {
+        // Staff Only Routes
+        Route::middleware(['role:waka_kesiswaan,admin,superadmin'])->group(function () {
+            Route::get('/', [OsisController::class, 'dashboard'])->name('dashboard');
+            Route::get('export', [OsisController::class, 'exportReport'])->name('export');
+
+            // Kas OSIS
+            Route::post('transactions', [OsisController::class, 'storeTransaction'])->name('transactions.store');
+            Route::get('transactions/{id}/edit', [OsisController::class, 'editTransaction'])->name('transactions.edit');
+            Route::delete('transactions/{id}', [OsisController::class, 'deleteTransaction'])->name('transactions.destroy');
+
+            // Kepengurusan
+            Route::get('members', [OsisController::class, 'members'])->name('members');
+            Route::post('members', [OsisController::class, 'storeMember'])->name('members.store');
+            Route::put('members/{member}', [OsisController::class, 'updateMember'])->name('members.update');
+            Route::delete('members/{member}', [OsisController::class, 'removeMember'])->name('members.destroy');
+
+            // Program Kerja
+            Route::get('work-programs', [OsisController::class, 'workPrograms'])->name('work-programs');
+            Route::post('work-programs', [OsisController::class, 'storeWorkProgram'])->name('work-programs.store');
+            Route::put('work-programs/{program}', [OsisController::class, 'updateWorkProgram'])->name('work-programs.update');
+
+            // Pemilihan OSIS Management
+            Route::get('elections', [OsisController::class, 'elections'])->name('elections');
+            Route::post('elections', [OsisController::class, 'storeElection'])->name('elections.store');
+            Route::get('elections/{election}/candidates', [OsisController::class, 'candidates'])->name('elections.candidates');
+            Route::post('elections/{election}/candidates', [OsisController::class, 'storeCandidate'])->name('elections.candidates.store');
+        });
+
+        // Bilik Suara E-Voting (Siswa & Staff)
+        Route::middleware(['role:waka_kesiswaan,admin,superadmin,student'])->group(function () {
+            Route::get('elections/{election}/voting', [OsisController::class, 'votingPage'])->name('elections.voting');
+            Route::post('elections/{election}/vote', [OsisController::class, 'castVote'])->name('elections.vote');
+            Route::get('elections/{election}/results', [OsisController::class, 'electionResults'])->name('elections.results');
+        });
     });
 
     // =========================================================
@@ -246,6 +306,8 @@ Route::middleware('auth')->group(function () {
         // Tracer Study (Siswa dengan status alumni)
         Route::get('alumni/tracer-study', [TracerStudyController::class, 'showForm'])->name('alumni.tracer-study.form');
         Route::post('alumni/tracer-study', [TracerStudyController::class, 'submitForm'])->name('alumni.tracer-study.submit');
+        Route::get('alumni/tracer-study/edit/{tracerResponse}', [TracerStudyController::class, 'editResponse'])->name('alumni.tracer-study.edit');
+        Route::put('alumni/tracer-study/update/{tracerResponse}', [TracerStudyController::class, 'updateResponse'])->name('alumni.tracer-study.update');
     });
 
     // =========================================================
@@ -365,11 +427,23 @@ Route::middleware('auth')->group(function () {
         Route::get('finance/billings/{billing}/invoice', [FinancialReportController::class, 'generateInvoice'])->name('finance.billings.invoice');
 
         // Advanced Executive Analytics
-        Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
-        Route::get('analytics/export/attendance', [AnalyticsExportController::class, 'exportAttendancePdf'])->name('analytics.export.attendance');
-        Route::get('analytics/export/grades', [AnalyticsExportController::class, 'exportGradesPdf'])->name('analytics.export.grades');
-        Route::get('analytics/export/finance', [AnalyticsExportController::class, 'exportFinancePdf'])->name('analytics.export.finance');
-        Route::get('analytics/export/all', [AnalyticsExportController::class, 'exportAllExcel'])->name('analytics.export.all');
+        Route::prefix('analytics')->name('analytics.')->group(function () {
+            Route::get('/', [AnalyticsController::class, 'index'])->name('index');
+            Route::get('attendance', [AnalyticsController::class, 'attendance'])->name('attendance');
+            Route::get('academic', [AnalyticsController::class, 'academic'])->name('academic');
+            Route::get('financial', [AnalyticsController::class, 'financial'])->name('financial');
+            Route::get('islamic', [AnalyticsController::class, 'islamic'])->name('islamic');
+            Route::get('student-risk', [AnalyticsController::class, 'studentRisk'])->name('student-risk');
+            Route::get('comparison', [AnalyticsController::class, 'comparison'])->name('comparison');
+            Route::get('heatmap', [AnalyticsController::class, 'heatmap'])->name('heatmap');
+            Route::get('custom-report', [AnalyticsController::class, 'customReport'])->name('custom-report');
+
+            // Exports
+            Route::get('export/attendance', [AnalyticsExportController::class, 'exportAttendancePdf'])->name('export.attendance');
+            Route::get('export/grades', [AnalyticsExportController::class, 'exportGradesPdf'])->name('export.grades');
+            Route::get('export/finance', [AnalyticsExportController::class, 'exportFinancePdf'])->name('export.finance');
+            Route::get('export/all', [AnalyticsExportController::class, 'exportAllExcel'])->name('export.all');
+        });
     });
 
     // =========================================================
@@ -482,7 +556,6 @@ Route::middleware('auth')->group(function () {
 
         // Mutasi & Alumni
         Route::resource('mutations', MutationController::class)->only(['index', 'create', 'store']);
-        Route::resource('alumni', AlumniController::class)->only(['index', 'create', 'store']);
     });
 
     // =========================================================
@@ -524,8 +597,21 @@ Route::middleware('auth')->group(function () {
         Route::post('announcements/{announcement}/pin', [AnnouncementController::class, 'pin'])->name('announcements.pin');
         Route::get('announcements/{announcement}/receipts', [AnnouncementController::class, 'receipts'])->name('announcements.receipts');
 
-        // Tracer Study Analytics
+        // Alumni & Tracer Study Advanced Admin Panel
+        Route::get('alumni/dashboard', [AlumniController::class, 'dashboard'])->name('alumni.dashboard');
+        Route::get('alumni/bulk-graduate', [AlumniController::class, 'showBulkGraduateForm'])->name('alumni.bulk-graduate');
+        Route::post('alumni/bulk-graduate', [AlumniController::class, 'bulkGraduate'])->name('alumni.bulk-graduate.store');
+        Route::get('alumni/export/excel', [AlumniController::class, 'exportExcel'])->name('alumni.export.excel');
+        Route::get('alumni/export/pdf/{year}', [AlumniController::class, 'exportPdf'])->name('alumni.export.pdf');
+        
+        // Full CRUD for Alumni
+        Route::resource('alumni', AlumniController::class)->except(['show']);
+        
+        // Advanced Tracer Study Control
         Route::get('alumni/tracer-study/analytics', [TracerStudyController::class, 'analytics'])->name('alumni.tracer-study.analytics');
+        Route::get('alumni/tracer-study/comparison', [TracerStudyController::class, 'comparison'])->name('alumni.tracer-study.comparison');
+        Route::get('alumni/tracer-study/invitation', [TracerStudyController::class, 'invitation'])->name('alumni.tracer-study.invitation');
+        Route::get('alumni/tracer-study/export/excel', [TracerStudyController::class, 'exportExcel'])->name('alumni.tracer-study.export.excel');
 
         // Career Opportunity Management
         Route::get('career-portal/manage', [CareerOpportunityController::class, 'manage'])->name('career-portal.manage');
@@ -587,7 +673,29 @@ Route::middleware('auth')->group(function () {
     // HRD & KEPEGAWAIAN — Manajemen Staf dan Guru
     // =========================================================
     Route::middleware('role:admin,superadmin,kepala_sekolah')->prefix('hrd')->name('hrd.')->group(function () {
+        // Dashboard & Reports
+        Route::get('dashboard', [EmployeeController::class, 'dashboard'])->name('dashboard');
+        Route::get('org-chart', [EmployeeController::class, 'orgChart'])->name('org-chart');
+        Route::get('attendance-report', [EmployeeController::class, 'attendanceReport'])->name('attendance-report');
+        Route::get('attendance-report/export', [EmployeeController::class, 'exportAttendanceCsv'])->name('attendance-report.export');
+        Route::get('certification-tracker', [EmployeeController::class, 'certificationTracker'])->name('certification-tracker');
+        Route::get('evaluations/report', [EmployeeController::class, 'evaluationReport'])->name('evaluations.report');
+
         Route::resource('employees', EmployeeController::class);
+
+        // Manage Employee Documents
+        Route::get('employees/{employee}/documents', [EmployeeController::class, 'documents'])->name('employees.documents');
+        Route::post('employees/{employee}/documents', [EmployeeController::class, 'storeDocument'])->name('employees.documents.store');
+        Route::delete('employees/{employee}/documents/{document}', [EmployeeController::class, 'deleteDocument'])->name('employees.documents.destroy');
+
+        // Manage Employee Trainings
+        Route::get('employees/{employee}/trainings', [EmployeeController::class, 'trainings'])->name('employees.trainings');
+        Route::post('employees/{employee}/trainings', [EmployeeController::class, 'storeTraining'])->name('employees.trainings.store');
+
+        // Manage Employee Evaluations
+        Route::get('employees/{employee}/evaluation', [EmployeeController::class, 'evaluation'])->name('employees.evaluation');
+        Route::post('employees/{employee}/evaluation', [EmployeeController::class, 'storeEvaluation'])->name('employees.evaluation.store');
+        Route::get('employees/{employee}/id-card', [EmployeeController::class, 'exportEmployeeCard'])->name('employees.id-card');
 
         // Admin Payroll Management
         Route::post('payrolls/generate', [PayrollController::class, 'store'])->name('payrolls.generate');
@@ -655,6 +763,22 @@ Route::middleware('auth')->group(function () {
         Route::post('admin/whatsapp/resend/{log}', [WhatsappController::class, 'resend'])->name('admin.whatsapp.resend');
 
         // SPMB (Manajemen Pendaftaran)
+        Route::get('/spmb-admin/dashboard', [SpmbController::class, 'adminDashboard'])->name('spmb.admin.dashboard');
+        Route::get('/spmb-admin/periods', [SpmbController::class, 'periods'])->name('spmb.admin.periods');
+        Route::post('/spmb-admin/periods', [SpmbController::class, 'storePeriod'])->name('spmb.admin.periods.store');
+        Route::get('/spmb-admin/waves', [SpmbController::class, 'waves'])->name('spmb.admin.waves');
+        Route::post('/spmb-admin/waves', [SpmbController::class, 'storeWave'])->name('spmb.admin.waves.store');
+        Route::get('/spmb-admin/tracks', [SpmbController::class, 'tracks'])->name('spmb.admin.tracks');
+        Route::post('/spmb-admin/tracks', [SpmbController::class, 'storeTrack'])->name('spmb.admin.tracks.store');
+        Route::post('/spmb-admin/documents/{document}/verify', [SpmbController::class, 'verifyDocument'])->name('spmb.admin.documents.verify');
+        Route::get('/spmb-admin/scoring/{wave}', [SpmbController::class, 'scoring'])->name('spmb.admin.scoring');
+        Route::post('/spmb-admin/scoring/{wave}', [SpmbController::class, 'storeScoring'])->name('spmb.admin.scoring.store');
+        Route::get('/spmb-admin/selection/{wave}', [SpmbController::class, 'selection'])->name('spmb.admin.selection');
+        Route::post('/spmb-admin/selection/{wave}/run', [SpmbController::class, 'runSelection'])->name('spmb.admin.selection.run');
+        Route::get('/spmb-admin/reregistration/{wave}', [SpmbController::class, 'reregistration'])->name('spmb.admin.reregistration');
+        Route::post('/spmb-admin/reregistration/{registration}/confirm', [SpmbController::class, 'confirmReregistered'])->name('spmb.admin.reregistration.confirm');
+        Route::post('/spmb-admin/bulk-convert/{wave}', [SpmbController::class, 'bulkConvert'])->name('spmb.admin.bulk-convert');
+
         Route::get('/spmb-admin', [SpmbController::class, 'index'])->name('spmb.admin.index');
         Route::get('/spmb-admin/{registration}', [SpmbController::class, 'show'])->name('spmb.admin.show');
         Route::post('/spmb-admin/{registration}/status', [SpmbController::class, 'updateStatus'])->name('spmb.admin.status');

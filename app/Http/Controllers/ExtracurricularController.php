@@ -6,7 +6,12 @@ use App\Models\Extracurricular;
 use App\Models\ExtracurricularMember;
 use App\Models\ExtracurricularAttendance;
 use App\Models\ExtracurricularActivity;
+use App\Models\ExtracurricularAchievement;
+use App\Models\ExtracurricularGrade;
+use App\Models\AcademicYear;
 use App\Models\Student;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -178,6 +183,225 @@ class ExtracurricularController extends Controller
         ]);
 
         return back()->with('success', 'Dokumentasi kegiatan berhasil ditambahkan.');
+    }
+
+    public function create()
+    {
+        $advisors = User::whereIn('role', ['guru', 'admin', 'superadmin'])->get();
+        return view('extracurricular.create', compact('advisors'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:extracurriculars,name',
+            'description' => 'nullable|string',
+            'advisor_id' => 'required|exists:users,id',
+            'schedule_day' => 'required|string|max:50',
+            'schedule_time' => 'required|string|max:50',
+            'location' => 'required|string|max:255',
+            'max_members' => 'nullable|integer|min:1',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ]);
+
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('extracurricular/covers', 'public');
+        }
+
+        Extracurricular::create($validated);
+
+        return redirect()->route('ekskul.manage')->with('success', 'Ekstrakurikuler berhasil dibuat.');
+    }
+
+    public function edit(Extracurricular $extracurricular)
+    {
+        $advisors = User::whereIn('role', ['guru', 'admin', 'superadmin'])->get();
+        return view('extracurricular.edit', compact('extracurricular', 'advisors'));
+    }
+
+    public function update(Request $request, Extracurricular $extracurricular)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:extracurriculars,name,' . $extracurricular->id,
+            'description' => 'nullable|string',
+            'advisor_id' => 'required|exists:users,id',
+            'schedule_day' => 'required|string|max:50',
+            'schedule_time' => 'required|string|max:50',
+            'location' => 'required|string|max:255',
+            'max_members' => 'nullable|integer|min:1',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ]);
+
+        if ($request->hasFile('cover_image')) {
+            if ($extracurricular->cover_image) {
+                Storage::disk('public')->delete($extracurricular->cover_image);
+            }
+            $validated['cover_image'] = $request->file('cover_image')->store('extracurricular/covers', 'public');
+        }
+
+        $extracurricular->update($validated);
+
+        return redirect()->route('ekskul.manage')->with('success', 'Ekstrakurikuler berhasil diperbarui.');
+    }
+
+    public function destroy(Extracurricular $extracurricular)
+    {
+        if ($extracurricular->cover_image) {
+            Storage::disk('public')->delete($extracurricular->cover_image);
+        }
+        $extracurricular->delete();
+        return redirect()->route('ekskul.manage')->with('success', 'Ekstrakurikuler berhasil dihapus.');
+    }
+
+    public function unregister(ExtracurricularMember $member)
+    {
+        $member->update(['status' => 'inactive', 'left_at' => now()]);
+        return back()->with('success', 'Siswa berhasil dikeluarkan dari anggota ekskul.');
+    }
+
+    public function achievements(Extracurricular $extracurricular)
+    {
+        $extracurricular->load('achievements');
+        $students = Student::with('user')->where('status', 'active')->get();
+        return view('extracurricular.achievements', compact('extracurricular', 'students'));
+    }
+
+    public function storeAchievement(Request $request, Extracurricular $extracurricular)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'level' => 'required|in:sekolah,kecamatan,kota,provinsi,nasional,internasional',
+            'event_date' => 'required|date',
+            'organizer' => 'required|string|max:255',
+            'participants' => 'required|array',
+            'participants.*' => 'exists:students,id',
+            'certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+            'notes' => 'nullable|string',
+        ]);
+
+        $certPath = null;
+        if ($request->hasFile('certificate')) {
+            $certPath = $request->file('certificate')->store('extracurricular/certificates', 'public');
+        }
+
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('extracurricular/photos', 'public');
+        }
+
+        ExtracurricularAchievement::create([
+            'extracurricular_id' => $extracurricular->id,
+            'title' => $validated['title'],
+            'level' => $validated['level'],
+            'event_date' => $validated['event_date'],
+            'organizer' => $validated['organizer'],
+            'participants' => $validated['participants'],
+            'certificate_path' => $certPath,
+            'photo_path' => $photoPath,
+            'notes' => $validated['notes'],
+        ]);
+
+        return back()->with('success', 'Prestasi baru berhasil ditambahkan.');
+    }
+
+    public function grading(Extracurricular $extracurricular)
+    {
+        $extracurricular->load('activeMembers.student.user');
+        
+        $academicYear = AcademicYear::where('is_active', true)->first();
+        if (!$academicYear) {
+            return back()->with('error', 'Tidak ada tahun ajaran aktif.');
+        }
+
+        $grades = ExtracurricularGrade::whereIn('extracurricular_member_id', $extracurricular->activeMembers->pluck('id'))
+            ->where('academic_year_id', $academicYear->id)
+            ->get()
+            ->keyBy('extracurricular_member_id');
+
+        return view('extracurricular.grading', compact('extracurricular', 'grades', 'academicYear'));
+    }
+
+    public function storeGrades(Request $request, Extracurricular $extracurricular)
+    {
+        $request->validate([
+            'grades' => 'required|array',
+            'grades.*.member_id' => 'required|exists:extracurricular_members,id',
+            'grades.*.grade' => 'nullable|in:A,B,C,D',
+            'grades.*.description' => 'nullable|string|max:1000',
+        ]);
+
+        $academicYear = AcademicYear::where('is_active', true)->first();
+        if (!$academicYear) {
+            return back()->with('error', 'Tidak ada tahun ajaran aktif.');
+        }
+
+        foreach ($request->grades as $item) {
+            ExtracurricularGrade::updateOrCreate(
+                [
+                    'extracurricular_member_id' => $item['member_id'],
+                    'academic_year_id' => $academicYear->id,
+                ],
+                [
+                    'grade' => $item['grade'] ?? null,
+                    'description' => $item['description'] ?? null,
+                ]
+            );
+        }
+
+        return back()->with('success', 'Nilai rapor anggota ekskul berhasil diperbarui.');
+    }
+
+    public function attendanceReport(Extracurricular $extracurricular)
+    {
+        $extracurricular->load('activeMembers.student.user');
+        
+        $attendanceSummary = [];
+        foreach ($extracurricular->activeMembers as $member) {
+            $attendances = ExtracurricularAttendance::where('extracurricular_id', $extracurricular->id)
+                ->where('student_id', $member->student_id)
+                ->get();
+
+            $hadir = $attendances->where('status', 'H')->count();
+            $sakit = $attendances->where('status', 'S')->count();
+            $izin = $attendances->where('status', 'I')->count();
+            $alfa = $attendances->where('status', 'A')->count();
+            $total = $attendances->count();
+
+            $rate = $total > 0 ? round(($hadir / $total) * 100, 1) : 0;
+
+            $attendanceSummary[] = [
+                'student' => $member->student,
+                'hadir' => $hadir,
+                'sakit' => $sakit,
+                'izin' => $izin,
+                'alfa' => $alfa,
+                'rate' => $rate,
+            ];
+        }
+
+        return view('extracurricular.attendance-report', compact('extracurricular', 'attendanceSummary'));
+    }
+
+    public function semesterReport(Extracurricular $extracurricular)
+    {
+        $extracurricular->load(['advisor', 'activeMembers.student.user', 'achievements', 'activities']);
+        return view('extracurricular.semester-report', compact('extracurricular'));
+    }
+
+    public function exportPdf(Extracurricular $extracurricular)
+    {
+        $extracurricular->load(['advisor', 'activeMembers.student.user', 'achievements', 'activities']);
+        
+        $pdf = Pdf::loadView('extracurricular.pdf-report', compact('extracurricular'))->setPaper('a4', 'portrait');
+        
+        return $pdf->download("laporan_semester_{$extracurricular->name}.pdf");
+    }
+
+    public function schedule()
+    {
+        $extracurriculars = Extracurricular::with('advisor')->where('is_active', true)->get();
+        return view('extracurricular.schedule', compact('extracurriculars'));
     }
 
     private function authorizeAdvisor(Extracurricular $ekskul)
