@@ -6,6 +6,44 @@
     
     @yield('seo_meta')
 
+    <!-- SEO Meta Tags & Open Graph -->
+    <meta name="keywords" content="sista, sma islam sultan agung 1 semarang, sultan agung, sekolah islam semarang, portal sekolah, spmb online">
+    <meta name="author" content="SMA Islam Sultan Agung 1 Semarang">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="SISTA SMA Islam Sultan Agung 1 Semarang">
+    <meta property="og:image" content="{{ asset('images/logo-kotak.png') }}">
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:image" content="{{ asset('images/logo-kotak.png') }}">
+
+    <!-- PWA & Favicon Set -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/logo-kotak.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/logo-kotak.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo-kotak.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#0d9488">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    @verbatim
+    {
+      "@context": "https://schema.org",
+      "@type": "School",
+      "name": "SMA Islam Sultan Agung 1 Semarang",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jl. Mataram No.657, Wonodri",
+        "addressLocality": "Semarang",
+        "addressRegion": "Jawa Tengah",
+        "postalCode": "50242",
+        "addressCountry": "ID"
+      },
+      "telephone": "(024) 6580019",
+      "email": "info@sultanagung1.sch.id"
+    }
+    @endverbatim
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +51,18 @@
 
     <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('ServiceWorker registered successfully.', reg.scope))
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
+            });
+        }
+    </script>
+    <script src="/offline-queue.js" defer></script>
 
     <style>
         body { 
@@ -35,19 +85,19 @@
         }
 
         /* Custom Animations */
-        @keyframes float {
+        @@keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-15px); }
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         
-        @keyframes fade-in-up {
+        @@keyframes fade-in-up {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
 
-        @keyframes blob {
+        @@keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
             66% { transform: translate(-20px, 20px) scale(0.9); }
@@ -58,7 +108,42 @@
         .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </head>
-<body class="text-slate-800 antialiased overflow-x-hidden selection:bg-primary-500 selection:text-white" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)">
+<body class="text-slate-800 antialiased overflow-x-hidden selection:bg-primary-500 selection:text-white" 
+    x-data="{ 
+        scrolled: false,
+        isOnline: navigator.onLine,
+        showOfflineToast: !navigator.onLine,
+        showOnlineBackToast: false,
+        pwaDeferredPrompt: null,
+        showPwaBanner: false
+    }" 
+    @scroll.window="scrolled = (window.pageYOffset > 20)"
+    x-init="
+        window.addEventListener('online', () => { 
+            isOnline = true; 
+            showOfflineToast = false;
+            showOnlineBackToast = true;
+            setTimeout(() => { showOnlineBackToast = false; }, 3000);
+        });
+        window.addEventListener('offline', () => { 
+            isOnline = false; 
+            showOfflineToast = true;
+            showOnlineBackToast = false;
+        });
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            pwaDeferredPrompt = e;
+            if (localStorage.getItem('pwa_dismissed') !== 'true') {
+                showPwaBanner = true;
+            }
+        });
+        window.addEventListener('appinstalled', () => {
+            pwaDeferredPrompt = null;
+            showPwaBanner = false;
+            localStorage.setItem('pwa_dismissed', 'true');
+        });
+    "
+>
 
     <!-- Navigation -->
     <nav :class="{'py-3 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200': scrolled, 'py-5 bg-transparent': !scrolled}" 
@@ -79,6 +164,29 @@
             <div class="flex items-center space-x-4 md:space-x-8 rtl:space-x-reverse">
                 <div class="hidden lg:flex items-center space-x-6 rtl:space-x-reverse">
                     <a href="{{ route('home') }}#fitur" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_features') }}</a>
+                    <!-- Profil Dropdown -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors flex items-center space-x-1">
+                            <span>{{ __('public.nav_profile') }}</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute left-0 rtl:right-0 rtl:left-auto mt-2 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 z-50 overflow-hidden py-1"
+                             style="display: none;">
+                            <a href="{{ route('public.about') }}" class="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 transition-colors">{{ __('public.nav_about') }}</a>
+                            <a href="{{ route('public.facilities') }}" class="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 transition-colors">{{ __('public.nav_facilities') }}</a>
+                            <a href="{{ route('public.achievements') }}" class="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 transition-colors">{{ __('public.nav_achievements') }}</a>
+                            <a href="{{ route('public.staff-directory') }}" class="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 transition-colors">{{ __('public.nav_staff') }}</a>
+                            <a href="{{ route('public.virtual-tour') }}" class="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 transition-colors">{{ __('public.nav_virtual_tour') }}</a>
+                            <a href="{{ route('public.contact') }}" class="block px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-primary-600 transition-colors">{{ __('public.nav_contact') }}</a>
+                        </div>
+                    </div>
                     <a href="{{ route('public.posts') }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_news') }}</a>
                     <a href="{{ route('public.gallery') }}" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_gallery') }}</a>
                     <a href="{{ route('home') }}#spmb" class="text-slate-600 hover:text-primary-600 font-bold text-xs uppercase tracking-widest transition-colors">{{ __('public.nav_spmb') }}</a>
@@ -182,6 +290,11 @@
                         {{ __('public.footer_header_pages') }}
                     </h5>
                     <ul class="space-y-4">
+                        <li><a href="{{ route('public.about') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_about') }}</a></li>
+                        <li><a href="{{ route('public.facilities') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_facilities') }}</a></li>
+                        <li><a href="{{ route('public.achievements') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_achievements') }}</a></li>
+                        <li><a href="{{ route('public.staff-directory') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_staff') }}</a></li>
+                        <li><a href="{{ route('public.virtual-tour') }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ __('public.nav_virtual_tour') }}</a></li>
                         @if(isset($navPages))
                             @foreach($navPages as $navPage)
                                 <li><a href="{{ route('public.page', $navPage->slug) }}" class="text-slate-400 hover:text-primary-400 transition-colors font-bold text-sm tracking-wide">{{ $navPage->title }}</a></li>
@@ -224,5 +337,80 @@
             </div>
         </div>
     </footer>
+    <!-- Connection Guard: Glassmorphic Offline Toast -->
+    <div x-show="showOfflineToast"
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="translate-y-10 opacity-0 scale-95"
+         x-transition:enter-end="translate-y-0 opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="translate-y-0 opacity-100 scale-100"
+         x-transition:leave-end="translate-y-10 opacity-0 scale-95"
+         class="fixed bottom-6 right-6 z-300 bg-red-950/85 text-red-200 border border-red-800/50 backdrop-blur-md rounded-2xl p-4 shadow-2xl flex items-center space-x-4 max-w-sm"
+         style="display: none;">
+        <div class="relative shrink-0 flex items-center justify-center w-10 h-10 bg-red-900/50 rounded-xl text-red-400">
+            <span class="absolute inline-flex h-3 w-3 rounded-full bg-red-500 animate-ping"></span>
+            <svg class="w-5 h-5 relative" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"></path></svg>
+        </div>
+        <div class="flex-1">
+            <h4 class="text-sm font-black tracking-tight text-white">Koneksi Terputus</h4>
+            <p class="text-[11px] font-semibold text-red-300 mt-0.5">Mode luring aktif. Beberapa aksi mungkin ditunda.</p>
+        </div>
+        <button @click="isOnline = navigator.onLine; if(isOnline) { showOfflineToast = false; showOnlineBackToast = true; setTimeout(() => { showOnlineBackToast = false; }, 3000); }" class="shrink-0 px-3 py-1.5 bg-red-800/60 hover:bg-red-700/60 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border border-red-700/40">
+            Coba Lagi
+        </button>
+    </div>
+
+    <!-- Connection Guard: Glassmorphic Online Restored Toast -->
+    <div x-show="showOnlineBackToast"
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="translate-y-10 opacity-0 scale-95"
+         x-transition:enter-end="translate-y-0 opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-300 transform"
+         x-transition:leave-start="translate-y-0 opacity-100 scale-100"
+         x-transition:leave-end="translate-y-[-20px] opacity-0 scale-95"
+         class="fixed bottom-6 right-6 z-300 bg-emerald-950/85 text-emerald-200 border border-emerald-800/50 backdrop-blur-md rounded-2xl p-4 shadow-2xl flex items-center space-x-4 max-w-sm"
+         style="display: none;">
+        <div class="shrink-0 flex items-center justify-center w-10 h-10 bg-emerald-900/50 rounded-xl text-emerald-400">
+            <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <div class="grow">
+            <h4 class="text-sm font-black tracking-tight text-white">Koneksi Pulih!</h4>
+            <p class="text-[11px] font-semibold text-emerald-300 mt-0.5">Sinkronisasi data berhasil diselesaikan.</p>
+        </div>
+    </div>
+
+    <!-- PWA Install Banner -->
+    <div x-show="showPwaBanner"
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="translate-y-10 opacity-0 scale-95"
+         x-transition:enter-end="translate-y-0 opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200 transform"
+         x-transition:leave-start="translate-y-0 opacity-100 scale-100"
+         x-transition:leave-end="translate-y-10 opacity-0 scale-95"
+         class="fixed bottom-6 left-6 z-300 bg-slate-900/85 text-slate-100 border border-slate-700/50 backdrop-blur-md rounded-2xl p-4 shadow-2xl flex flex-col md:flex-row items-start md:items-center space-y-3 md:space-y-0 md:space-x-4 max-w-md w-full"
+         style="display: none;">
+        <div class="shrink-0 flex items-center justify-center w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400">
+            <img src="/images/logo-kotak.png" alt="Logo SISTA" class="w-8 h-8 rounded-lg object-contain">
+        </div>
+        <div class="grow">
+            <h4 class="text-sm font-bold tracking-tight text-white">Pasang Aplikasi SISTA</h4>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">Nikmati akses instan lebih cepat, hemat kuota, dan dukungan moda luring offline penuh.</p>
+        </div>
+        <div class="shrink-0 flex items-center space-x-2 w-full md:w-auto justify-end">
+            <button @click="showPwaBanner = false; localStorage.setItem('pwa_dismissed', 'true')" class="px-3 py-1.5 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg text-xs font-semibold transition-all">
+                Nanti
+            </button>
+            <button @click="
+                pwaDeferredPrompt.prompt();
+                pwaDeferredPrompt.userChoice.then((choiceResult) => {
+                    localStorage.setItem('pwa_dismissed', 'true');
+                    showPwaBanner = false;
+                    pwaDeferredPrompt = null;
+                });
+            " class="px-4 py-1.5 bg-linear-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all border border-blue-400/20">
+                Pasang
+            </button>
+        </div>
+    </div>
 </body>
 </html>

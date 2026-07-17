@@ -237,4 +237,98 @@
   padding-left: 1.25rem !important;
 }
 
+/* ==========================================
+   Print Stylesheet
+   ========================================== */
+@media print {
+  nav,
+  footer,
+  button,
+  .btn,
+  .no-print,
+  [role="button"],
+  iframe,
+  .fixed,
+  .absolute,
+  .animate-blob {
+    display: none !important;
+  }
+
+  body, 
+  html, 
+  main {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 12pt !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+
+  .grid {
+    display: block !important;
+  }
+
+  .glass,
+  .glass-dark,
+  .bg-white,
+  .bg-slate-900 {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #000 !important;
+  }
+
+  article,
+  tr,
+  li,
+  .card {
+    page-break-inside: avoid;
+  }
+}
+
+/* ==========================================
+   Modul 20.2: PWA & Responsive Polish
+   ========================================== */
+
+/* Ensure touch-friendly tap targets on mobile screen sizes */
+@media (max-width: 768px) {
+  a, button, select, input, [role="button"] {
+    min-height: 42px;
+    min-width: 42px;
+  }
+  .btn, .button {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+}
+
+/* Responsive tables with smooth horizontal scroll container */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+}
+
+/* Swipe scroll container */
+.swipe-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.swipe-item {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
 

@@ -3,7 +3,7 @@
 Dokumentasi API untuk aplikasi mobile (Siswa & Orang Tua) Sistem Terpadu Sultan Agung 1.
 
 <aside>
-    <strong>Base URL</strong>: <code>http://sistem-terpadu.test</code>
+    <strong>Base URL</strong>: <code>https://sistem-terpadu.test</code>
 </aside>
 
     This documentation aims to provide all the information you need to work with our API.

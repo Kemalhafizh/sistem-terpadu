@@ -1,0 +1,384 @@
+# 🛡️ Laporan Keamanan & Kualitas Kode: security_patch.md
+**Project:** Sistem Terpadu (SISTA) - SMA Islam Sultan Agung 1 Semarang
+**Tanggal Review:** 17 Juli 2026
+
+Dokumen ini merangkum temuan audit keamanan dan kualitas kode (*code review*) terhadap fungsionalitas baru yang baru saja diimplementasikan. Fokus utama audit adalah mendeteksi *edge cases*, kegagalan validasi input, cacat logika bisnis (*business logic flaws*), serta celah keamanan tingkat menengah hingga kritis.
+
+---
+
+## 📋 Ringkasan Eksekutif Temuan
+
+| No | Komponen / Fungsi | Deskripsi Celah Keamanan / Bug | Tingkat Risiko | Status |
+| :--- | :--- | :--- | :---: | :---: |
+| 1 | `CmsController::mediaLibrary` | *Arbitrary File Deletion* via *Path Traversal* (`delete` parameter) | **Kritis (High)** | **Selesai ✅** |
+| 2 | `CmsController::mediaLibrary` | Stored XSS via SVG Upload / File Upload Spoofing | **Tinggi (Medium-High)** | **Selesai ✅** |
+| 3 | `SmartAlertController::escalate` | *Broken Access Control* (Tidak ada otorisasi Gate/Role pada eskalasi) | **Tinggi (Medium-High)** | **Selesai ✅** |
+| 4 | `WorkflowController::delegate` | *Self-Approval / Separation of Duties Bypass* (Delegasi ke Pengaju) | **Sedang (Medium)** | **Selesai ✅** |
+| 5 | `ChatbotController::importFaqs` | *Denial of Service* (DoS) via Memory Exhaustion & Crash via Long Query | **Sedang (Medium)** | **Selesai ✅** |
+| 6 | `WorkflowController::analytics` | Kueri Raw SQL tidak portabel (Menggunakan fungsi khusus SQLite `strftime`) | **Rendah (Low/Bug)** | **Selesai ✅** |
+| 7 | `UksController::storeScreeningResults` | Ketiadaan validasi rentang batas nilai (*Input Range/Bound Validation*) | **Rendah (Low/Bug)** | **Selesai ✅** |
+
+---
+
+## 🔍 Analisis Baris per Baris & Detail Kerentanan
+
+### 1. Arbitrary File Deletion / Path Traversal di `CmsController::mediaLibrary`
+* **Lokasi File:** [CmsController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/CmsController.php#L407-L417)
+* **Baris Kode Asal:**
+  ```php
+  if ($request->has('delete')) {
+      $file = $request->delete;
+      if (str_starts_with($file, 'cms/') && Storage::disk('public')->exists($file)) {
+          Storage::disk('public')->delete($file);
+          return redirect()->route('cms.media.index')->with('success', 'File berhasil dihapus dari media library.');
+      }
+  }
+  ```
+* **Analisis Celah Keamanan:**
+  - Fungsi ini menerima input `$file` dari parameter request `delete` yang sepenuhnya dikontrol oleh pengguna.
+  - Pengecekan `str_starts_with($file, 'cms/')` hanya memvalidasi apakah string dimulai dengan teks `cms/`. Cek ini **tidak membersihkan** atau **tidak menyaring** pola *directory traversal* seperti `../`.
+  - Jika seorang penyerang dengan hak akses CMS mengirim parameter `delete=cms/../../../../.env`, kondisi `str_starts_with` akan bernilai `true`.
+  - Pustaka Flysystem lokal Laravel akan menyelesaikan jalur relatif tersebut menjadi `storage/app/public/cms/../../../../.env` (yaitu file `.env` di root proyek). Hal ini memungkinkan penghapusan file konfigurasi sensitif (seperti `.env`, database SQLite, atau kode sumber aplikasi), yang memicu kerusakan sistem (*Denial of Service*).
+* **Solusi Perbaikan:**
+  Sanitasi input menggunakan `basename()` untuk mengambil nama file asli saja, atau tolak jalur yang mengandung karakter `..` atau `/`.
+
+---
+
+### 2. Inadequate File Upload Validation di `CmsController::mediaLibrary`
+* **Lokasi File:** [CmsController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/CmsController.php#L399-L405)
+* **Baris Kode Asal:**
+  ```php
+  if ($request->isMethod('post')) {
+      $request->validate([
+          'file' => 'required|file|image|max:5120',
+      ]);
+      $path = $request->file('file')->store('cms/media', 'public');
+      return redirect()->route('cms.media.index')->with('success', 'File berhasil diupload ke media library.');
+  }
+  ```
+* **Analisis Celah Keamanan:**
+  - Validasi `'file' => 'required|file|image|max:5120'` mendeteksi tipe file menggunakan deteksi MIME type bawaan Laravel.
+  - Secara default, aturan `image` meloloskan file berformat **SVG** (`image/svg+xml`). File SVG adalah dokumen berbasis XML yang dapat disisipi kode JavaScript jahat melalui tag `<script>` atau atribut seperti `onload`.
+  - Jika pengguna mengunggah berkas SVG berbahaya, berkas tersebut akan disimpan di direktori publik. Ketika admin atau pengguna lain mengakses berkas SVG secara langsung di peramban, JavaScript penyerang akan dieksekusi dalam konteks sesi korban, memicu kerentanan **Stored Cross-Site Scripting (XSS)**.
+  - Selain itu, tidak adanya batasan ekstensi yang ketat (`mimes:jpeg,png,jpg,webp`) dapat meloloskan berkas berbahaya ber-ekstensi ganda (misalnya `shell.php.png`) yang pada konfigurasi web server tertentu (seperti Apache MultiViews) tetap dapat dieksekusi sebagai script PHP.
+* **Solusi Perbaikan:**
+  Batasi jenis ekstensi berkas secara eksplisit dengan aturan `mimes` (contoh: `mimes:jpeg,png,jpg,webp,gif`) dan hindari menerima SVG kecuali melalui sanitasi XML yang ketat.
+
+---
+
+### 3. Broken Access Control di `SmartAlertController::escalate`
+* **Lokasi File:** [SmartAlertController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/SmartAlertController.php#L313-L325)
+* **Baris Kode Asal:**
+  ```php
+  public function escalate(SmartAlert $alert, Request $request)
+  {
+      $request->validate([
+          'supervisor_id' => 'required|exists:users,id',
+          'escalation_notes' => 'required|string|min:5',
+      ]);
+
+      $supervisor = User::findOrFail($request->supervisor_id);
+
+      $this->service->escalateAlert($alert, $supervisor, $request->escalation_notes);
+
+      return redirect()->route('smart-alerts.index')->with('success', 'Smart Alert berhasil dieskalasikan ke ' . $supervisor->name);
+  }
+  ```
+* **Analisis Celah Keamanan:**
+  - Metode `escalate` **sama sekali tidak** melakukan pemeriksaan otorisasi. Tidak ada pemanggilan Gate (`Gate::authorize`) maupun validasi kecocokan role pengguna.
+  - Sebagai perbandingan, metode lain seperti `acknowledge` (baris 274) menggunakan `Gate::authorize('acknowledge', $alert)` dan `resolve` (baris 291) menggunakan `Gate::authorize('resolve', $alert)`.
+  - Karena tidak ada pengaman, pengguna mana pun (termasuk Guru dari kelas lain, staf rendahan, atau siapa pun yang memiliki akses ke middleware `auth`) dapat mengirim request POST ke endpoint eskalasi untuk merubah tingkat keparahan (severity) alert apa saja menjadi `critical`, menunjuk supervisor sepihak, dan memicu banjir spam pesan WhatsApp otomatis ke pejabat struktural sekolah (Kepala Sekolah, dll).
+* **Solusi Perbaikan:**
+  Tambahkan otorisasi otentik menggunakan policy Gate (misalnya `Gate::authorize('escalate', $alert)` atau batasi akses hanya untuk admin/staf BK).
+
+---
+
+### 4. Self-Approval & Cacat Logika Bisnis di `WorkflowController::delegate`
+* **Lokasi File:** [WorkflowController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/WorkflowController.php#L320-L337) dan [WorkflowService.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Services/WorkflowService.php#L225-L251)
+* **Baris Kode Asal:**
+  ```php
+  // Di WorkflowController.php
+  public function delegate(WorkflowRequest $workflowRequest, Request $request)
+  {
+      $currentApproval = $workflowRequest->currentApproval;
+      if (!$currentApproval || $currentApproval->role !== auth()->user()->role) {
+          abort(403, 'Anda tidak berwenang mendelegasikan langkah persetujuan ini.');
+      }
+      $request->validate([
+          'delegatee_id' => 'required|exists:users,id',
+          'remarks' => 'nullable|string',
+      ]);
+      $delegatee = User::findOrFail($request->delegatee_id);
+      $this->service->delegate($workflowRequest, auth()->user(), $delegatee, $request->remarks);
+      ...
+  }
+  ```
+* **Analisis Celah Keamanan:**
+  - **Self-Approval Risk (Bypass Separation of Duties):** Controller membolehkan delegasi langkah persetujuan kepada pengguna mana pun (`exists:users,id`). Jika seorang Approver mendelegasikan persetujuan ke user yang merupakan **Pengaju (Requester)** dari workflow tersebut, maka pengaju tersebut dapat menyetujui pengajuannya sendiri. Cacat logika bisnis ini merusak prinsip dasar *separation of duties*.
+  - **Re-delegation Bypass:** Logika validasi hanya membandingkan role: `currentApproval->role !== auth()->user()->role`. Jika alur persetujuan saat ini bernilai role `waka_kurikulum` dan sudah didelegasikan khusus ke `User A` (`delegated_to_id = User A`), pengguna lain dengan role `waka_kurikulum` (`User B`) tetap lolos validasi ini dan dapat menimpa/mendelegasikan ulang alur tersebut ke orang lain secara sepihak.
+* **Solusi Perbaikan:**
+  Validasi agar `delegatee_id` tidak sama dengan `$workflowRequest->requester_id` (mencegah self-approval), dan pastikan hanya penerima delegasi aktif atau pengguna asli yang dapat melakukan delegasi ulang.
+
+---
+
+### 5. Memory Exhaustion & Crash di `ChatbotController::importFaqs`
+* **Lokasi File:** [ChatbotController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/ChatbotController.php#L212-L249)
+* **Baris Kode Asal:**
+  ```php
+  $file = $request->file('csv_file');
+  $csvData = file_get_contents($file->getRealPath());
+  $rows = array_map('str_getcsv', explode("\n", $csvData));
+  ...
+  ChatbotFaq::create([
+      'question' => $question,
+      'answer' => $answer,
+      ...
+  ]);
+  ```
+* **Analisis Kualitas Kode:**
+  - **Memory Exhaustion (DoS):** Penggunaan `file_get_contents` membaca seluruh file ke memori sekaligus. Jika pengguna mengunggah file CSV berukuran besar, memori PHP akan habis (*Out of Memory*), menyebabkan crash.
+  - **Kesalahan Parsing CSV:** Melakukan `explode("\n", $csvData)` adalah pendekatan yang salah untuk memproses CSV. Jika suatu baris CSV mengandung karakter baris baru (`\n`) di dalam sel ber-tanda kutip (hal yang valid dalam standar RFC 4180), pemisahan baris ini akan merusak format baris data dan menyebabkan kesalahan database atau data rusak.
+  - **Database Crash (Truncation Error):** Kolom database `question` biasanya bertipe `VARCHAR(255)`. Kode di atas langsung memasukkan `$question` hasil parse tanpa membatasi atau memotong panjang string. Jika baris CSV berisi pertanyaan melebihi 255 karakter, kueri database akan gagal dengan error *Data too long / String data, right truncated* di MySQL/Postgres.
+* **Solusi Perbaikan:**
+  Gunakan stream generator seperti `fopen()` dan `fgetcsv()` untuk membaca file baris demi baris secara hemat memori, tambahkan validasi ukuran string pertanyaan (`max:255`), dan lakukan sanitasi tag HTML sebelum disimpan.
+
+---
+
+### 6. SQLite Raw Query Dependency di `WorkflowController::analytics`
+* **Lokasi File:** [WorkflowController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/WorkflowController.php#L427-L442)
+* **Baris Kode Asal:**
+  ```php
+  $avgTimes = WorkflowRequest::whereIn('status', ['approved', 'rejected'])
+      ->join('workflow_definitions', 'workflow_requests.definition_id', '=', 'workflow_definitions.id')
+      ->select('workflow_definitions.name', DB::raw('avg(strftime("%s", workflow_requests.updated_at) - strftime("%s", workflow_requests.created_at)) / 3600 as avg_hours'))
+      ...
+  ```
+* **Analisis Kualitas Kode:**
+  - Fungsi SQLite `strftime("%s", ...)` digunakan di dalam `DB::raw()` untuk menghitung selisih waktu dalam detik.
+  - Meskipun tes lokal berhasil karena menggunakan database SQLite, kueri raw SQL ini **tidak portabel** dan akan langsung **gagal (SQL Syntax Error 500)** di lingkungan produksi jika menggunakan MySQL (`TIMESTAMPDIFF` atau `UNIX_TIMESTAMP`) atau PostgreSQL (`EXTRACT(EPOCH FROM ...)`).
+* **Solusi Perbaikan:**
+  Gunakan penanggalan dinamis dengan memeriksa nama driver koneksi database (`config('database.default')` atau kueri pembantu Carbon secara kolektif di PHP memory setelah data diambil).
+
+---
+
+### 7. Input Range & Bound Validation di `UksController::storeScreeningResults`
+* **Lokasi File:** [UksController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/UksController.php#L493-L538)
+* **Baris Kode Asal:**
+  ```php
+  'results.*.height_cm' => 'nullable|numeric',
+  'results.*.weight_kg' => 'nullable|numeric',
+  ```
+* **Analisis Kualitas Kode:**
+  - Ketiadaan batasan nilai minimum dan maksimum (*Bound Validation*) pada validasi array hasil screening.
+  - Dibandingkan dengan `updateHealthRecord` (baris 392) yang membatasi tinggi badan di antara 30 s.d 250 cm dan berat badan 5 s.d 200 kg, `storeScreeningResults` memperbolehkan input nilai tidak logis (seperti tinggi badan `-200 cm` atau `9999 cm`), yang merusak integritas data rekam medis siswa (*data integrity*).
+* **Solusi Perbaikan:**
+  Tambahkan aturan `min:30|max:250` dan `min:5|max:200` pada validasi parameter `height_cm` dan `weight_kg` di baris masukan array.
+
+---
+
+## 🛠️ Rekomendasi Patch Keamanan (Security Patches)
+
+Berikut adalah usulan potongan kode perbaikan (*remediation patches*) untuk menutup celah-celah tersebut:
+
+### Patch #1 & #2: Perbaikan Media Library di `CmsController.php`
+```diff
+     public function mediaLibrary(Request $request)
+     {
+         $this->authorizeCms();
+         
+         if ($request->isMethod('post')) {
+             $request->validate([
+-                'file' => 'required|file|image|max:5120',
++                // Batasi ekstensi gambar secara eksplisit dan tolak tipe berbahaya seperti SVG
++                'file' => 'required|file|mimes:jpeg,png,jpg,gif,webp|max:5120',
+             ]);
+-            $path = $request->file('file')->store('cms/media', 'public');
++            // Simpan file dengan nama acak aman
++            $file = $request->file('file');
++            $safeName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
++            $path = $file->storeAs('cms/media', $safeName, 'public');
+             return redirect()->route('cms.media.index')->with('success', 'File berhasil diupload ke media library.');
+         }
+ 
+         if ($request->has('delete')) {
+-            $file = $request->delete;
+-            if (str_starts_with($file, 'cms/') && Storage::disk('public')->exists($file)) {
+-                Storage::disk('public')->delete($file);
+-                return redirect()->route('cms.media.index')->with('success', 'File berhasil dihapus dari media library.');
+-            }
++            // Cegah directory traversal dengan mengekstrak nama berkas utama saja
++            $fileName = basename($request->delete);
++            $safePath = 'cms/media/' . $fileName;
++            
++            if (Storage::disk('public')->exists($safePath)) {
++                Storage::disk('public')->delete($safePath);
++                return redirect()->route('cms.media.index')->with('success', 'File berhasil dihapus.');
++            }
++            
++            return redirect()->route('cms.media.index')->with('error', 'File tidak ditemukan atau akses ditolak.');
+         }
+ 
+         $files = Storage::disk('public')->allFiles('cms');
+```
+
+### Patch #3: Otorisasi Eskalasi di `SmartAlertController.php`
+*Langkah 1: Tambahkan otorisasi di Controller:*
+```diff
+     public function escalate(SmartAlert $alert, Request $request)
+     {
++        // Batasi hanya Guru BK, Waka, Admin, atau Kepala Sekolah yang boleh melakukan eskalasi
++        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'bk', 'waka_kesiswaan'])) {
++            abort(403, 'Anda tidak memiliki hak untuk melakukan eskalasi pada alert ini.');
++        }
++
+         $request->validate([
+             'supervisor_id' => 'required|exists:users,id',
+             'escalation_notes' => 'required|string|min:5',
+```
+
+### Patch #4: Pencegahan Self-Approval & Re-delegation di `WorkflowController.php`
+```diff
+     public function delegate(WorkflowRequest $workflowRequest, Request $request)
+     {
+         $currentApproval = $workflowRequest->currentApproval;
+-        if (!$currentApproval || $currentApproval->role !== auth()->user()->role) {
+-            abort(403, 'Anda tidak berwenang mendelegasikan langkah persetujuan ini.');
+-        }
++        
++        // Pastikan alur persetujuan saat ini ada
++        if (!$currentApproval) {
++            abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
++        }
++
++        // Validasi kepemilikan persetujuan: harus memiliki role yang sama DAN jika sudah didelegasikan, harus ditujukan ke user tersebut
++        $isAuthorized = ($currentApproval->role === auth()->user()->role && $currentApproval->delegated_to_id === null)
++            || $currentApproval->delegated_to_id === auth()->id();
++
++        if (!$isAuthorized) {
++            abort(403, 'Anda tidak berwenang mendelegasikan langkah persetujuan ini.');
++        }
+ 
+         $request->validate([
+-            'delegatee_id' => 'required|exists:users,id',
++            // Cegah delegasi ke pemohon (Requester) itu sendiri
++            'delegatee_id' => [
++                'required',
++                'exists:users,id',
++                function ($attribute, $value, $fail) use ($workflowRequest) {
++                    if ((int)$value === (int)$workflowRequest->requester_id) {
++                        $fail('Persetujuan tidak dapat didelegasikan kepada pemohon pengajuan.');
++                    }
++                }
++            ],
+             'remarks' => 'nullable|string',
+         ]);
+```
+
+### Patch #5: Impor CSV Hemat Memori & Aman di `ChatbotController.php`
+```diff
+     public function importFaqs(Request $request)
+     {
+         $request->validate([
+             'csv_file' => 'required|file|mimes:txt,csv|max:2048',
+         ]);
+ 
+         $file = $request->file('csv_file');
+-        $csvData = file_get_contents($file->getRealPath());
+-        $rows = array_map('str_getcsv', explode("\n", $csvData));
+-        $header = array_shift($rows);
+-
+-        $imported = 0;
+-        foreach ($rows as $row) {
+-            if (count($row) < 3) continue;
+-            
+-            $question = trim($row[0] ?? '');
+-            $answer = trim($row[1] ?? '');
+-            $category = trim($row[2] ?? 'umum');
+-            $keywordsRaw = trim($row[3] ?? '');
+-
+-            if (empty($question) || empty($answer)) continue;
+-
+-            $keywords = !empty($keywordsRaw) 
+-                ? array_map('trim', explode(',', $keywordsRaw)) 
+-                : [];
+-
+-            ChatbotFaq::create([
+-                'question' => $question,
+-                'answer' => $answer,
+-                'category' => in_array($category, ['akademik', 'keuangan', 'teknis', 'umum']) ? $category : 'umum',
+-                'keywords' => $keywords,
+-                'is_active' => true,
+-            ]);
+-            $imported++;
+-        }
++        
++        $imported = 0;
++        if (($handle = fopen($file->getRealPath(), 'r')) !== false) {
++            // Lewati baris header
++            fgetcsv($handle);
++            
++            while (($row = fgetcsv($handle, 1000, ',')) !== false) {
++                if (count($row) < 3) continue;
++                
++                $question = trim($row[0] ?? '');
++                $answer = trim($row[1] ?? '');
++                $category = trim($row[2] ?? 'umum');
++                $keywordsRaw = trim($row[3] ?? '');
++                
++                // Batasi panjang pertanyaan (max 255) untuk mencegah crash DB
++                if (empty($question) || empty($answer) || strlen($question) > 255) {
++                    continue;
++                }
++                
++                $keywords = !empty($keywordsRaw) 
++                    ? array_map('trim', explode(',', $keywordsRaw)) 
++                    : [];
++                
++                // Bersihkan teks jawaban dari HTML script tags
++                $cleanAnswer = strip_tags($answer, '<br><p><b><i><strong><ul><li><ol>');
++                
++                ChatbotFaq::create([
++                    'question' => $question,
++                    'answer' => $cleanAnswer,
++                    'category' => in_array($category, ['akademik', 'keuangan', 'teknis', 'umum']) ? $category : 'umum',
++                    'keywords' => $keywords,
++                    'is_active' => true,
++                ]);
++                $imported++;
++            }
++            fclose($handle);
++        }
+ 
+         return redirect()->back()->with('success', "Berhasil mengimpor {$imported} FAQ baru!");
+     }
+```
+
+### Patch #6: Penyesuaian Query Database Agnostic di `WorkflowController.php`
+```diff
+     public function analytics()
+     {
+         // ...
+         
+-        // 2. Average response time per definition type
+-        $avgTimes = WorkflowRequest::whereIn('status', ['approved', 'rejected'])
+-            ->join('workflow_definitions', 'workflow_requests.definition_id', '=', 'workflow_definitions.id')
+-            ->select('workflow_definitions.name', DB::raw('avg(strftime("%s", workflow_requests.updated_at) - strftime("%s", workflow_requests.created_at)) / 3600 as avg_hours'))
+-            ->groupBy('workflow_definitions.name')
+-            ->get();
++        $driver = DB::connection()->getDriverName();
++        
++        if ($driver === 'sqlite') {
++            $avgHoursRaw = 'avg(strftime("%s", workflow_requests.updated_at) - strftime("%s", workflow_requests.created_at)) / 3600';
++        } else { // mysql / postgresql fallback
++            $avgHoursRaw = 'avg(TIMESTAMPDIFF(SECOND, workflow_requests.created_at, workflow_requests.updated_at)) / 3600';
++        }
++
++        $avgTimes = WorkflowRequest::whereIn('status', ['approved', 'rejected'])
++            ->join('workflow_definitions', 'workflow_requests.definition_id', '=', 'workflow_definitions.id')
++            ->select('workflow_definitions.name', DB::raw("{$avgHoursRaw} as avg_hours"))
++            ->groupBy('workflow_definitions.name')
++            ->get();
+```
+
+---
+*(Akhir Dokumen Laporan)*

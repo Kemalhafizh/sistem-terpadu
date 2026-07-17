@@ -39,11 +39,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -52,6 +49,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -106,11 +104,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -119,6 +114,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -173,11 +169,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -186,6 +179,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -240,11 +234,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -253,6 +244,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -307,11 +299,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -320,6 +309,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -374,11 +364,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -387,6 +374,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -441,11 +429,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 401
+        content: '{"message":"Unauthenticated."}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -454,6 +439,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []

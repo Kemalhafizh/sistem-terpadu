@@ -14,12 +14,15 @@ class WorkflowApproval extends Model
         'step_order',
         'role',
         'approver_id',
+        'delegated_to_id',
         'decision',
         'remarks',
+        'due_at',
         'decided_at',
     ];
 
     protected $casts = [
+        'due_at' => 'datetime',
         'decided_at' => 'datetime',
     ];
 
@@ -31,5 +34,10 @@ class WorkflowApproval extends Model
     public function approver()
     {
         return $this->belongsTo(User::class, 'approver_id');
+    }
+
+    public function delegatedTo()
+    {
+        return $this->belongsTo(User::class, 'delegated_to_id');
     }
 }

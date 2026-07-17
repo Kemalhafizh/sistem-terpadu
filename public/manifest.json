@@ -3,9 +3,10 @@
     "short_name": "SISTA",
     "description": "Platform Layanan & Informasi Sekolah Terpadu SMA Islam Sultan Agung 1",
     "start_url": "/dashboard",
+    "scope": "/",
     "display": "standalone",
     "background_color": "#0f172a",
-    "theme_color": "#3b82f6",
+    "theme_color": "#0d9488",
     "orientation": "portrait-primary",
     "icons": [
         {

@@ -103,6 +103,61 @@
                 </div>
             </div>
 
+            <!-- Quick Navigation Menu -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Link: Rekam Medis -->
+                <a href="{{ route('uks.health-records.index') }}" class="bg-gradient-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white rounded-3xl p-6 shadow-md transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-between group">
+                    <div>
+                        <h4 class="font-extrabold text-lg">Rekam Medis Siswa</h4>
+                        <p class="text-xs text-teal-100 mt-1">Alergi, penyakit kronis & riwayat medis</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Link: Health Screening -->
+                <a href="{{ route('uks.screenings.index') }}" class="bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-3xl p-6 shadow-md transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-between group">
+                    <div>
+                        <h4 class="font-extrabold text-lg">Health Screening</h4>
+                        <p class="text-xs text-blue-100 mt-1">Pemeriksaan berkala & grafik tinggi/berat</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Link: Log Pemberian Obat -->
+                <a href="{{ route('uks.medicines.dispense-log') }}" class="bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-3xl p-6 shadow-md transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-between group">
+                    <div>
+                        <h4 class="font-extrabold text-lg">Log Pemberian Obat</h4>
+                        <p class="text-xs text-indigo-100 mt-1">Log pemberian resep & obat ke siswa</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Link: Log Restock Obat -->
+                <a href="{{ route('uks.medicines.restock-log') }}" class="bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-3xl p-6 shadow-md transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-between group">
+                    <div>
+                        <h4 class="font-extrabold text-lg">Log Restock Obat</h4>
+                        <p class="text-xs text-purple-100 mt-1">Log restock & penambahan obat baru</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+
             <!-- Grafik Tren & Sebaran (ApexCharts) -->
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-700/50">
                 <div class="flex justify-between items-center mb-6">

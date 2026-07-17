@@ -12,10 +12,12 @@ Gunakan menu berikut untuk menelusuri dokumentasi teknis secara menyeluruh:
 
 ### 🏗️ Arsitektur & Infrastruktur
 *   [**ARCHITECTURE.md**](ARCHITECTURE.md): Struktur arsitektur sistem, desain database, dan diagram sequence alur workflows.
+*   [**DATABASE.md**](DATABASE.md): Skema relasi database (ERD Mermaid), penjelasan tabel inti, dan kamus data SISTA.
 *   [**adr/**](adr/) (Architecture Decision Records): Catatan keputusan arsitektural utama (Service Pattern, Reverb).
 
 ### 💻 Panduan Developer & Operasional
 *   [**INSTALLATION.md**](INSTALLATION.md): Langkah-langkah instalasi lokal lengkap (PHP 8.4, Composer, NPM, SQLite).
+*   [**WALKTHROUGH.md**](WALKTHROUGH.md): Panduan alur pengujian demo fitur untuk setiap peran pengguna (roles).
 *   [**DEPLOYMENT.md**](DEPLOYMENT.md): Panduan deployment produksi menggunakan VPS, Docker, Systemd, dan Nginx.
 *   [**TESTING.md**](TESTING.md): Manual pengujian menggunakan Pest PHP, coverage report, dan simulasi transaksi.
 *   [**CONTRIBUTING.md**](CONTRIBUTING.md): Aturan kontribusi, standarisasi PSR-12, Laravel Pint, dan alur git.

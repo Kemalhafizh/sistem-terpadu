@@ -17,6 +17,11 @@ class WorkflowRequest extends Model
         'current_step',
         'status',
         'notes',
+        'due_at',
+    ];
+
+    protected $casts = [
+        'due_at' => 'datetime',
     ];
 
     public function definition()

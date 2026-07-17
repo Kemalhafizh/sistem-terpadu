@@ -23,12 +23,16 @@ class SmartAlert extends Model
         'resolved_by',
         'resolved_at',
         'resolution_notes',
+        'escalated_to_id',
+        'escalation_notes',
+        'escalated_at',
     ];
 
     protected $casts = [
         'context_data' => 'array',
         'acknowledged_at' => 'datetime',
         'resolved_at' => 'datetime',
+        'escalated_at' => 'datetime',
     ];
 
     public function alertable()
@@ -44,6 +48,11 @@ class SmartAlert extends Model
     public function resolvedBy()
     {
         return $this->belongsTo(User::class, 'resolved_by');
+    }
+
+    public function escalatedTo()
+    {
+        return $this->belongsTo(User::class, 'escalated_to_id');
     }
 
     public function scopeActive($query)

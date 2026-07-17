@@ -6,6 +6,7 @@ use App\Models\CmsPage;
 use App\Models\CmsPost;
 use App\Models\CmsGallery;
 use App\Models\CmsTestimonial;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -385,5 +386,98 @@ class CmsController extends Controller
         }
 
         return response()->json(['error' => 'No image uploaded.'], 400);
+    }
+
+    /**
+     * Jadwalkan publikasi post.
+     */
+    public function schedulePost(Request $request, $id)
+    {
+        $this->authorizeCms();
+        $request->validate([
+            'published_at' => 'required|date|after:now',
+        ]);
+        $post = CmsPost::findOrFail($id);
+        $post->update([
+            'published_at' => $request->published_at,
+            'is_published' => true,
+        ]);
+        return redirect()->route('cms.posts.index')->with('success', 'Artikel berhasil dijadwalkan.');
+    }
+
+    /**
+     * Kelola tag/kategori.
+     */
+    public function tagManagement(Request $request)
+    {
+        $this->authorizeCms();
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'tags' => 'required|string',
+            ]);
+            Setting::set('cms_tags', $request->tags, 'cms');
+            return redirect()->route('cms.tags.index')->with('success', 'Tag/kategori berhasil diperbarui.');
+        }
+        $tags = Setting::get('cms_tags', 'Berita, Pengumuman, Prestasi, Kegiatan, Artikel');
+        return view('cms.tags.index', compact('tags'));
+    }
+
+    /**
+     * Perpustakaan media: upload, browse, delete gambar/file.
+     */
+    public function mediaLibrary(Request $request)
+    {
+        $this->authorizeCms();
+        
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'file' => 'required|file|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            ]);
+            $path = $request->file('file')->store('cms/media', 'public');
+            return redirect()->route('cms.media.index')->with('success', 'File berhasil diupload ke media library.');
+        }
+
+        if ($request->has('delete')) {
+            $file = $request->delete;
+            // Cegah directory traversal dan pastikan berkas berada di dalam cms/
+            $isSafe = str_starts_with($file, 'cms/') && !str_contains($file, '..') && !str_contains($file, '\\');
+            
+            if ($isSafe && Storage::disk('public')->exists($file)) {
+                Storage::disk('public')->delete($file);
+                return redirect()->route('cms.media.index')->with('success', 'File berhasil dihapus dari media library.');
+            }
+        }
+
+        $files = Storage::disk('public')->allFiles('cms');
+        return view('cms.media.index', compact('files'));
+    }
+
+    /**
+     * Pengaturan SEO global.
+     */
+    public function seoSettings(Request $request)
+    {
+        $this->authorizeCms();
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'seo_title_template' => 'nullable|string|max:255',
+                'seo_meta_description' => 'nullable|string|max:500',
+                'seo_og_title' => 'nullable|string|max:255',
+            ]);
+
+            Setting::set('seo_title_template', $request->seo_title_template, 'seo');
+            Setting::set('seo_meta_description', $request->seo_meta_description, 'seo');
+            Setting::set('seo_og_title', $request->seo_og_title, 'seo');
+
+            return redirect()->route('cms.seo.index')->with('success', 'Pengaturan SEO berhasil diperbarui.');
+        }
+
+        $seo = [
+            'title_template' => Setting::get('seo_title_template', 'SISTA | {title}'),
+            'meta_description' => Setting::get('seo_meta_description', 'Website Resmi SMA Islam Sultan Agung 1 Semarang.'),
+            'og_title' => Setting::get('seo_og_title', 'SMA Islam Sultan Agung 1 Semarang'),
+        ];
+
+        return view('cms.seo.index', compact('seo'));
     }
 }

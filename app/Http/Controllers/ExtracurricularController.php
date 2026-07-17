@@ -103,7 +103,7 @@ class ExtracurricularController extends Controller
         
         // Guru hanya bisa mengelola ekskul yang dibimbingnya
         if ($user->role === 'guru') {
-            $extracurriculars = Extracurricular::where('advisor_id', $user->id)->get();
+            $extracurriculars = Extracurricular::with('advisor')->where('advisor_id', $user->id)->get();
         } else {
             // Admin/Waka Kesiswaan bisa melihat semua
             $extracurriculars = Extracurricular::with('advisor')->get();

@@ -13,6 +13,8 @@ use App\Models\Student;
 use App\Models\TeachingJournal;
 use App\Models\UksMedicine;
 use App\Models\User;
+use App\Models\Setting;
+use App\Services\WhatsappService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -36,15 +38,17 @@ class SmartAlertService
             $riskFactors = [];
             
             // 1. Academic: check average grade
+            $gpaThreshold = (float) Setting::get('smart_alert_at_risk_gpa_threshold', 70);
             $avgGrade = $student->grades()
                 ->where('academic_year_id', $activeYear->id)
                 ->avg('score');
             
-            if ($avgGrade !== null && $avgGrade < 70) {
+            if ($avgGrade !== null && $avgGrade < $gpaThreshold) {
                 $riskFactors[] = "Akademik (Rerata nilai: " . number_format($avgGrade, 1) . ")";
             }
 
             // 2. Attendance percentage
+            $attendanceThreshold = (float) Setting::get('smart_alert_at_risk_attendance_threshold', 80);
             $attendances = $student->attendances()
                 ->where('academic_year_id', $activeYear->id)
                 ->get();
@@ -53,21 +57,23 @@ class SmartAlertService
             if ($attendances->count() > 0) {
                 $presentCount = $attendances->where('status', 'H')->count();
                 $attendanceRate = ($presentCount / $attendances->count()) * 100;
-                if ($attendanceRate < 80) {
+                if ($attendanceRate < $attendanceThreshold) {
                     $riskFactors[] = "Kehadiran (Tingkat kehadiran: " . number_format($attendanceRate, 1) . "%)";
                 }
             }
 
             // 3. BK Points
+            $bkPointsThreshold = (int) Setting::get('smart_alert_at_risk_bk_points_threshold', 50);
             $bkPoints = $student->total_points;
-            if ($bkPoints >= 50) {
+            if ($bkPoints >= $bkPointsThreshold) {
                 $riskFactors[] = "Tata Tertib BK (Akumulasi poin: " . $bkPoints . ")";
             }
 
             // If any risk factor met, create alert
             if (count($riskFactors) > 0) {
                 $severity = 'warning';
-                if (count($riskFactors) >= 2 || $bkPoints >= 75) {
+                $bkPointsCriticalThreshold = (int) Setting::get('smart_alert_at_risk_bk_points_critical_threshold', 75);
+                if (count($riskFactors) >= 2 || $bkPoints >= $bkPointsCriticalThreshold) {
                     $severity = 'critical';
                 }
 
@@ -280,8 +286,10 @@ class SmartAlertService
                 $gapDays = $this->getWorkingDaysDifference($teacher->created_at);
             }
 
-            if ($gapDays > 5) {
-                $severity = $gapDays > 10 ? 'critical' : 'warning';
+            $journalGapDays = (int) Setting::get('smart_alert_journal_gap_days', 5);
+            $journalGapCriticalDays = (int) Setting::get('smart_alert_journal_gap_critical_days', 10);
+            if ($gapDays > $journalGapDays) {
+                $severity = $gapDays > $journalGapCriticalDays ? 'critical' : 'warning';
                 $title = "Kesenjangan Jurnal Mengajar: " . $teacher->name;
                 $description = "Guru belum mengisikan/mengirimkan jurnal mengajar selama " . $gapDays . " hari kerja terakhir (Jurnal terakhir: " . $lastDateString . ").";
 
@@ -351,12 +359,15 @@ class SmartAlertService
             // Check expiry
             if ($med->expiry_date) {
                 $expiry = Carbon::parse($med->expiry_date);
-                if ($expiry->isPast()) {
+                 if ($expiry->isPast()) {
                     $isCritical = true;
                     $reasons[] = "Obat kedaluwarsa pada " . $expiry->format('d-m-Y');
-                } elseif ($expiry->diffInDays(Carbon::now()) <= 30) {
-                    $isWarning = true;
-                    $reasons[] = "Obat mendekati kedaluwarsa (" . $expiry->format('d-m-Y') . ")";
+                } else {
+                    $expiryDays = (int) Setting::get('smart_alert_medicine_expiry_days', 30);
+                    if ($expiry->diffInDays(Carbon::now()) <= $expiryDays) {
+                        $isWarning = true;
+                        $reasons[] = "Obat mendekati kedaluwarsa (" . $expiry->format('d-m-Y') . ")";
+                    }
                 }
             }
 
@@ -409,10 +420,11 @@ class SmartAlertService
         $alerts = collect();
 
         foreach ($overdueLoans as $loan) {
-            $expectedReturn = Carbon::parse($loan->expected_return_at);
+             $expectedReturn = Carbon::parse($loan->expected_return_at);
             $overdueDays = $expectedReturn->diffInDays(Carbon::now());
             
-            $severity = $overdueDays > 7 ? 'critical' : 'warning';
+            $overdueAssetDays = (int) Setting::get('smart_alert_overdue_asset_days', 7);
+            $severity = $overdueDays > $overdueAssetDays ? 'critical' : 'warning';
             $title = "Peminjaman Aset Terlambat: " . $loan->asset->name;
             $description = "Barang [" . $loan->asset->name . "] dipinjam oleh " . $loan->borrower->name . " melewati batas waktu pengembalian (" . $expectedReturn->format('d-m-Y H:i') . "). Terlambat " . $overdueDays . " hari.";
 
@@ -502,6 +514,59 @@ class SmartAlertService
                 'severity' => $alert->severity,
                 'created_at' => $alert->created_at->toDateTimeString(),
             ]));
+
+            // Send WhatsApp if recipient has phone number and it is a critical alert
+            if ($user->phone_number && $alert->severity === 'critical') {
+                try {
+                    $message = "⚠️ *SMART ALERT CRITICAL (SISTA)* ⚠️\n\n" .
+                               "Judul: *{$alert->title}*\n" .
+                               "Deskripsi: {$alert->description}\n" .
+                               "Waktu: " . now()->format('d-m-Y H:i') . "\n\n" .
+                               "Mohon segera tindak lanjuti melalui portal SISTA.";
+                    app(WhatsappService::class)->sendMessage($user->phone_number, $message, 'smart_alert_critical');
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp Alert to {$user->name}: " . $e->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * Escalate an alert to a supervisor.
+     */
+    public function escalateAlert(SmartAlert $alert, User $supervisor, string $notes): void
+    {
+        $alert->update([
+            'severity' => 'critical',
+            'escalated_to_id' => $supervisor->id,
+            'escalation_notes' => $notes,
+            'escalated_at' => now(),
+            'status' => 'active',
+        ]);
+
+        // Send Reverb Notification
+        event(new NewNotificationEvent($supervisor, [
+            'id' => $alert->id,
+            'type' => 'smart_alert',
+            'title' => "🚨 Eskalasi Alert: " . $alert->title,
+            'description' => "Alert telah dieskalasikan kepada Anda: " . $notes,
+            'severity' => 'critical',
+            'created_at' => now()->toDateTimeString(),
+        ]));
+
+        // Send WhatsApp Notification to Supervisor
+        if ($supervisor->phone_number) {
+            try {
+                $message = "🚨 *ESKALASI SMART ALERT (SISTA)* 🚨\n\n" .
+                           "Sebuah alert telah dieskalasikan kepada Anda:\n" .
+                           "Judul: *{$alert->title}*\n" .
+                           "Catatan Eskalasi: _{$notes}_\n" .
+                           "Waktu: " . now()->format('d-m-Y H:i') . "\n\n" .
+                           "Silakan login ke portal SISTA untuk mengambil tindakan.";
+                app(WhatsappService::class)->sendMessage($supervisor->phone_number, $message, 'smart_alert_escalation');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp Escalation to {$supervisor->name}: " . $e->getMessage());
+            }
         }
     }
 }

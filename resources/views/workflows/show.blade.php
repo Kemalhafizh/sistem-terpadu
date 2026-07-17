@@ -25,6 +25,10 @@
                     <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
                         ✗ Ditolak
                     </span>
+                @elseif($request->status === 'revision')
+                    <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                        🔄 Perlu Revisi
+                    </span>
                 @elseif($request->status === 'cancelled')
                     <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                         Batal
@@ -163,8 +167,9 @@
                             @php
                                 $isCompleted = $approval->decision === 'approved';
                                 $isRejected = $approval->decision === 'rejected';
-                                $isActive = ($request->status !== 'approved' && $request->status !== 'rejected' && $request->status !== 'cancelled' && $request->current_step === $approval->step_order);
-                                $isLocked = (!$isCompleted && !$isActive && !$isRejected);
+                                $isRevision = $approval->decision === 'revision';
+                                $isActive = ($request->status !== 'approved' && $request->status !== 'rejected' && $request->status !== 'cancelled' && $request->status !== 'revision' && $request->current_step === $approval->step_order);
+                                $isLocked = (!$isCompleted && !$isActive && !$isRejected && !$isRevision);
                             @endphp
 
                             <div class="relative">
@@ -172,12 +177,15 @@
                                 <div class="absolute -left-[35px] w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow transition-all duration-300
                                      {{ $isCompleted ? 'bg-emerald-500 text-white ring-4 ring-emerald-50 dark:ring-emerald-950/20' : '' }}
                                      {{ $isRejected ? 'bg-rose-500 text-white ring-4 ring-rose-50 dark:ring-rose-950/20' : '' }}
+                                     {{ $isRevision ? 'bg-amber-500 text-white ring-4 ring-amber-50 dark:ring-amber-950/20 animate-pulse' : '' }}
                                      {{ $isActive ? 'bg-blue-500 text-white ring-4 ring-blue-50 dark:ring-blue-950/20 animate-pulse' : '' }}
                                      {{ $isLocked ? 'bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-600' : '' }}">
                                     @if($isCompleted)
                                         ✓
                                     @elseif($isRejected)
                                         ✗
+                                    @elseif($isRevision)
+                                        🔄
                                     @else
                                         {{ $approval->step_order }}
                                     @endif
@@ -211,6 +219,17 @@
                                                 "{{ $approval->remarks }}"
                                             </p>
                                         @endif
+                                    @elseif($isRevision)
+                                        <div class="text-[11px] font-semibold text-amber-600 dark:text-amber-400 flex flex-col">
+                                            <span>🔄 Perlu Revisi</span>
+                                            <span class="text-gray-500 dark:text-gray-400 mt-0.5">Penilai: {{ $approval->approver->name ?? 'Sistem' }}</span>
+                                            <span class="text-[9px] text-gray-400 dark:text-gray-500">{{ $approval->decided_at ? $approval->decided_at->format('d-m-Y H:i') : '' }}</span>
+                                        </div>
+                                        @if($approval->remarks)
+                                            <p class="text-[11px] italic font-medium text-amber-800 dark:text-amber-300 mt-1 bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-xl border border-amber-100 dark:border-amber-900/30 leading-relaxed">
+                                                "{{ $approval->remarks }}"
+                                            </p>
+                                        @endif
                                     @elseif($isActive)
                                         <span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 block animate-pulse">
                                             ⏳ Menunggu Review Saat Ini
@@ -223,52 +242,128 @@
                                             🔒 Dikunci
                                         </span>
                                     @endif
+
+                                    {{-- Info Delegasi --}}
+                                    @if($approval->delegated_to_id)
+                                        <div class="mt-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 px-2 py-0.5 rounded-lg border border-blue-200 dark:border-blue-800/30 inline-block">
+                                            👥 Didelegasikan ke: {{ $approval->delegatedTo->name }}
+                                        </div>
+                                    @endif
+
+                                    {{-- SLA Limit --}}
+                                    @if($approval->due_at)
+                                        <div class="text-[9px] text-gray-400 dark:text-gray-500 flex items-center mt-1">
+                                            <span>📅 SLA: {{ $approval->due_at->format('d-m-Y H:i') }}</span>
+                                            @if($approval->decision === 'pending' && $approval->due_at->isPast())
+                                                <span class="ml-2 px-1 py-0.2 bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 text-[8px] font-bold uppercase rounded border border-rose-200 dark:border-rose-900/30 animate-pulse">SLA Breached</span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
 
-                {{-- Action Panel Form (If pending for the current user) --}}
-                @if($request->status !== 'approved' && $request->status !== 'rejected' && $request->status !== 'cancelled' && $request->currentApproval && $request->currentApproval->role === auth()->user()->role)
+                {{-- Action Panel Form (If pending and authorized for the current user) --}}
+                @php
+                    $currentApproval = $request->currentApproval;
+                    $isAuthorizedApprover = false;
+                    if ($request->status !== 'approved' && $request->status !== 'rejected' && $request->status !== 'cancelled' && $request->status !== 'revision' && $currentApproval) {
+                        $isAuthorizedApprover = ($currentApproval->role === auth()->user()->role && $currentApproval->delegated_to_id === null)
+                            || $currentApproval->delegated_to_id === auth()->id();
+                    }
+                @endphp
+
+                @if($isAuthorizedApprover)
                     <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-indigo-100 dark:border-indigo-950/50 rounded-3xl p-6 shadow-xl relative overflow-hidden"
-                         x-data="{ activeAction: 'approve', remarks: '' }">
+                         x-data="{ activeAction: 'approve', remarks: '', delegatee_id: '' }">
                         
                         <div class="absolute -right-10 -top-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
 
                         <span class="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest block mb-1">Tinjauan Anda Diperlukan</span>
                         <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-4">Ulas & Berikan Keputusan</h4>
 
-                        <div class="flex items-center space-x-2 bg-gray-50 dark:bg-slate-800 p-1.5 rounded-2xl mb-4 border border-gray-100 dark:border-slate-800">
+                        <div class="grid grid-cols-2 gap-2 bg-gray-50 dark:bg-slate-800 p-1.5 rounded-2xl mb-4 border border-gray-100 dark:border-slate-800">
                             <button type="button" @click="activeAction = 'approve'"
                                     :class="activeAction === 'approve' ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-500/10' : 'text-gray-600 dark:text-gray-400 font-semibold'"
-                                    class="flex-1 py-2 text-xs rounded-xl transition-all">
+                                    class="py-1.5 text-xs rounded-xl transition-all">
                                 ✅ Setujui
                             </button>
                             <button type="button" @click="activeAction = 'reject'"
                                     :class="activeAction === 'reject' ? 'bg-rose-600 text-white font-bold shadow-md shadow-rose-500/10' : 'text-gray-600 dark:text-gray-400 font-semibold'"
-                                    class="flex-1 py-2 text-xs rounded-xl transition-all">
-                                ❌ Tolak
+                                    class="py-1.5 text-xs rounded-xl transition-all">
+                                ❌ Tolak (Final)
                             </button>
+                            <button type="button" @click="activeAction = 'revise'"
+                                    :class="activeAction === 'revise' ? 'bg-amber-600 text-white font-bold shadow-md shadow-amber-500/10' : 'text-gray-600 dark:text-gray-400 font-semibold'"
+                                    class="py-1.5 text-xs rounded-xl transition-all col-span-2">
+                                🔄 Kembalikan untuk Revisi
+                            </button>
+                            @if($currentApproval->role === auth()->user()->role)
+                                <button type="button" @click="activeAction = 'delegate'"
+                                        :class="activeAction === 'delegate' ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/10' : 'text-gray-600 dark:text-gray-400 font-semibold'"
+                                        class="py-1.5 text-xs rounded-xl transition-all col-span-2">
+                                    👥 Delegasikan Tugas
+                                </button>
+                            @endif
                         </div>
 
                         <form :action="'/workflows/{{ $request->id }}/' + activeAction" method="POST" class="space-y-4">
                             @csrf
+                            
+                            {{-- Dropdown Pilihan Delegasi --}}
+                            <div class="space-y-1.5" x-show="activeAction === 'delegate'">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                    Pilih User Penerima Delegasi <span class="text-rose-500">*</span>
+                                </label>
+                                <select name="delegatee_id" x-model="delegatee_id" :required="activeAction === 'delegate'"
+                                        class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-1 focus:border-blue-500 focus:ring-blue-500 transition-all text-gray-800 dark:text-white">
+                                    <option value="">-- Pilih Staf --</option>
+                                    @foreach($staffUsers as $staff)
+                                        <option value="{{ $staff->id }}">{{ $staff->name }} ({{ str_replace('_', ' ', $staff->role) }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="space-y-1.5">
                                 <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                                    Catatan / Alasan Penilaian <span x-show="activeAction === 'reject'" class="text-rose-500">*</span>
+                                    Catatan / Alasan Tindakan <span x-show="activeAction === 'reject' || activeAction === 'revise'" class="text-rose-500">*</span>
                                 </label>
-                                <textarea name="remarks" :required="activeAction === 'reject'" rows="3" x-model="remarks"
-                                          :placeholder="activeAction === 'approve' ? 'Tambahkan catatan opsional jika diperlukan...' : 'Tuliskan alasan penolakan secara jelas (wajib, minimal 5 karakter)...'"
+                                <textarea name="remarks" :required="activeAction === 'reject' || activeAction === 'revise'" rows="3" x-model="remarks"
+                                          :placeholder="activeAction === 'approve' ? 'Tambahkan catatan opsional...' : (activeAction === 'delegate' ? 'Tulis instruksi delegasi (opsional)...' : 'Tuliskan catatan perbaikan/alasan keputusan (wajib, minimal 5 karakter)...')"
                                           class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-1 transition-all"
-                                          :class="activeAction === 'approve' ? 'focus:border-emerald-500 focus:ring-emerald-500' : 'focus:border-rose-500 focus:ring-rose-500'"></textarea>
+                                          :class="activeAction === 'approve' ? 'focus:border-emerald-500 focus:ring-emerald-500' : (activeAction === 'delegate' ? 'focus:border-blue-500 focus:ring-blue-500' : 'focus:border-rose-500 focus:ring-rose-500')"></textarea>
                             </div>
 
                             <button type="submit"
-                                    :disabled="activeAction === 'reject' && remarks.trim().length < 5"
-                                    :class="activeAction === 'approve' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'"
+                                    :disabled="(activeAction === 'reject' || activeAction === 'revise') && remarks.trim().length < 5 || (activeAction === 'delegate' && !delegatee_id)"
+                                    :class="activeAction === 'approve' ? 'bg-emerald-600 hover:bg-emerald-700' : (activeAction === 'delegate' ? 'bg-blue-600 hover:bg-blue-700' : (activeAction === 'revise' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-rose-600 hover:bg-rose-700'))"
                                     class="w-full py-2.5 disabled:opacity-50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg active:scale-95">
-                                <span x-text="activeAction === 'approve' ? 'Kirim Persetujuan' : 'Kirim Penolakan'"></span>
+                                <span x-text="activeAction === 'approve' ? 'Kirim Persetujuan' : (activeAction === 'delegate' ? 'Kirim Delegasi' : (activeAction === 'revise' ? 'Minta Revisi' : 'Kirim Penolakan'))"></span>
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
+                {{-- Resubmit Form (If revision and current user is requester) --}}
+                @if($request->status === 'revision' && $request->requester_id === auth()->id())
+                    <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-amber-200 dark:border-amber-950/50 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                        <span class="text-[9px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest block mb-1">Pengajuan Perlu Diperbaiki</span>
+                        <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-4">Kirim Ulang Setelah Revisi</h4>
+
+                        <form action="{{ route('workflows.resubmit', $request->id) }}" method="POST" class="space-y-4">
+                            @csrf
+                            <div class="space-y-1.5">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                    Catatan Tambahan untuk Revisi (Opsional)
+                                </label>
+                                <textarea name="notes" rows="3" placeholder="Tuliskan catatan perbaikan yang telah dilakukan..."
+                                          class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-1 focus:border-amber-500 focus:ring-amber-500 transition-all"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg active:scale-95">
+                                Kirim Ulang Pengajuan
                             </button>
                         </form>
                     </div>

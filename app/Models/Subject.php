@@ -16,4 +16,24 @@ class Subject extends Model
         'kkm',
         'description',
     ];
+
+    /**
+     * Get all subjects, cached forever.
+     */
+    public static function allCached()
+    {
+        return \Illuminate\Support\Facades\Cache::rememberForever('subjects_all', function () {
+            return self::orderBy('name')->get();
+        });
+    }
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('subjects_all');
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('subjects_all');
+        });
+    }
 }

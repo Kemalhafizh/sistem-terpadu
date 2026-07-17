@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">🧠</span>
+                    <span class="p-2 bg-teal-500/10 text-teal-600 rounded-xl">🧠</span>
                     <span>{{ __('Smart Alerts & Deteksi Dini') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -16,14 +16,17 @@
     <div class="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8"
          x-data="{ 
             showResolveModal: false, 
+            showEscalateModal: false,
             activeAlertId: null, 
             activeAlertTitle: '',
-            resolutionNotes: ''
+            resolutionNotes: '',
+            escalationNotes: '',
+            selectedSupervisorId: ''
          }">
          
         {{-- Success Alert --}}
         @if(session('success'))
-            <div class="p-4 bg-emerald-50/80 dark:bg-emerald-950/30 backdrop-blur-sm border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center space-x-3 animate-fade-in">
+            <div class="p-4 bg-emerald-50/80 dark:bg-emerald-950/30 backdrop-blur-sm border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center space-x-3 animate-fade-in shadow-sm">
                 <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
@@ -32,12 +35,59 @@
         @endif
 
         {{-- Live Notification Alert Banner --}}
-        <div id="live-alert-banner" class="hidden p-4 bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-2xl flex items-center justify-between space-x-3 animate-pulse">
+        <div id="live-alert-banner" class="hidden p-4 bg-teal-500/10 backdrop-blur-md border border-teal-500/20 text-teal-700 dark:text-teal-300 rounded-2xl flex items-center justify-between space-x-3 animate-pulse">
             <div class="flex items-center space-x-3">
                 <span class="text-xl">🔔</span>
                 <span class="text-sm font-black uppercase tracking-wider">Smart Alert Kritis Baru Terdeteksi Real-time!</span>
             </div>
-            <button onclick="window.location.reload()" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition">Reload Halaman</button>
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-teal-700 transition">Reload Halaman</button>
+        </div>
+
+        {{-- Navigation/Tabs Bar --}}
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md p-2 rounded-2xl border border-gray-100 dark:border-slate-800/80 shadow-sm">
+            <div class="flex flex-wrap items-center gap-1">
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
+                    <a href="{{ route('smart-alerts.dashboard') }}" 
+                       class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
+                       📊 Dashboard
+                    </a>
+                @endif
+                <a href="{{ route('smart-alerts.index') }}" 
+                   class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 bg-teal-500 text-white shadow-lg shadow-teal-500/20">
+                   🚨 Alert Aktif
+                </a>
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
+                    <a href="{{ route('smart-alerts.rules') }}" 
+                       class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
+                       ⚙️ Aturan Deteksi
+                    </a>
+                @endif
+                <a href="{{ route('smart-alerts.history') }}" 
+                   class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
+                   ⏱️ Riwayat
+                </a>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
+                    <a href="{{ route('smart-alerts.export') }}" 
+                       class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 active:scale-95 flex items-center space-x-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Unduh PDF</span>
+                    </a>
+                @endif
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'bk']))
+                    <a href="{{ route('smart-alerts.create') }}" 
+                       class="px-4 py-2 bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 active:scale-95 shadow-md shadow-teal-500/10 flex items-center space-x-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>Alert Baru</span>
+                    </a>
+                @endif
+            </div>
         </div>
 
         {{-- Dasbor KPI Cerdas --}}
@@ -47,12 +97,12 @@
                 <span class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Alert Aktif</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-gray-900 dark:text-gray-100">{{ $stats['total_active'] }}</span>
-                    <span class="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl text-lg">💡</span>
+                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl text-lg">💡</span>
                 </div>
             </div>
 
             {{-- KPI 2: Kritis --}}
-            <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-300">
+            <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-300 animate-pulse">
                 <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest">Kategori Kritis</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-rose-600 dark:text-rose-400">{{ $stats['critical'] }}</span>
@@ -95,7 +145,7 @@
                 <div class="space-y-1.5">
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Kategori Alert</label>
                     <select name="type"
-                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all">
                         <option value="">Semua Kategori</option>
                         <option value="at_risk_student" {{ request('type') === 'at_risk_student' ? 'selected' : '' }}>Siswa Berisiko Tinggi</option>
                         <option value="attendance_decline" {{ request('type') === 'attendance_decline' ? 'selected' : '' }}>Penurunan Kehadiran</option>
@@ -103,6 +153,7 @@
                         <option value="journal_gap" {{ request('type') === 'journal_gap' ? 'selected' : '' }}>Guru: Kesenjangan Jurnal</option>
                         <option value="critical_medicine" {{ request('type') === 'critical_medicine' ? 'selected' : '' }}>Kesehatan: Stok Kritis UKS</option>
                         <option value="overdue_asset" {{ request('type') === 'overdue_asset' ? 'selected' : '' }}>Sarpras: Keterlambatan Aset</option>
+                        <option value="manual" {{ request('type') === 'manual' ? 'selected' : '' }}>Input Manual</option>
                     </select>
                 </div>
 
@@ -110,7 +161,7 @@
                 <div class="space-y-1.5">
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Tingkat Bahaya</label>
                     <select name="severity"
-                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all">
                         <option value="">Semua Tingkat</option>
                         <option value="critical" {{ request('severity') === 'critical' ? 'selected' : '' }}>🚨 Kritis (Critical)</option>
                         <option value="warning" {{ request('severity') === 'warning' ? 'selected' : '' }}>⚠️ Peringatan (Warning)</option>
@@ -122,7 +173,7 @@
                 <div class="space-y-1.5">
                     <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Status Tindak Lanjut</label>
                     <select name="status"
-                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all">
                         <option value="">Belum Selesai (Aktif/Pantau)</option>
                         <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
                         <option value="acknowledged" {{ request('status') === 'acknowledged' ? 'selected' : '' }}>Diketahui/Dipantau</option>
@@ -190,6 +241,13 @@
                                     Terselesaikan
                                 </span>
                             @endif
+
+                            {{-- Escalated Badge --}}
+                            @if($alert->escalated_to_id && $alert->escalatedTo)
+                                <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-purple-100 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300 border border-purple-200 dark:border-purple-900/50 flex items-center gap-1">
+                                    📤 Dieskalasikan ke: <strong class="font-black">{{ $alert->escalatedTo->name }}</strong>
+                                </span>
+                            @endif
                         </div>
 
                         <h3 class="text-base font-black text-gray-900 dark:text-gray-100">
@@ -199,6 +257,13 @@
                         <p class="text-xs font-medium text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
                             {{ $alert->description }}
                         </p>
+
+                        {{-- Escalated Notes --}}
+                        @if($alert->escalated_to_id && $alert->escalation_notes)
+                            <div class="mt-2 p-2.5 bg-purple-500/5 border border-purple-200/10 dark:border-purple-900/10 rounded-xl text-[11px] text-purple-800 dark:text-purple-300 font-semibold italic">
+                                📤 Alasan Eskalasi: "{{ $alert->escalation_notes }}"
+                            </div>
+                        @endif
 
                         {{-- Metadata context info --}}
                         @if($alert->context_data)
@@ -211,7 +276,7 @@
                                 @endif
                                 @if(isset($alert->context_data['average_grade']))
                                     <div>
-                                        <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400 mt-0.5">Rata-Rata Nilas</span>
+                                        <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400 mt-0.5">Rata-Rata Nilai</span>
                                         <span class="font-bold text-gray-700 dark:text-gray-300">{{ $alert->context_data['average_grade'] }}</span>
                                     </div>
                                 @endif
@@ -275,7 +340,7 @@
 
                     {{-- Actions block --}}
                     @if(in_array($alert->status, ['active', 'acknowledged']))
-                        <div class="flex items-center gap-2 flex-shrink-0 self-end md:self-center">
+                        <div class="flex flex-wrap items-center gap-2 flex-shrink-0 self-end md:self-center">
                             {{-- Student Analytics Button (if alert is student-related) --}}
                             @if($alert->alertable_type === 'App\Models\Student')
                                 <a href="{{ route('smart-alerts.student', $alert->alertable_id) }}" 
@@ -295,6 +360,12 @@
                                     </button>
                                 </form>
                             @endif
+
+                            {{-- Escalate Button --}}
+                            <button @click="showEscalateModal = true; activeAlertId = {{ $alert->id }}; activeAlertTitle = '{{ addslashes($alert->title) }}'; escalationNotes = ''; selectedSupervisorId = ''" 
+                                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition shadow-md shadow-purple-500/10 active:scale-95 flex items-center space-x-1">
+                                📤 Eskalasi
+                            </button>
 
                             {{-- Resolve Button --}}
                             <button @click="showResolveModal = true; activeAlertId = {{ $alert->id }}; activeAlertTitle = '{{ addslashes($alert->title) }}'; resolutionNotes = ''" 
@@ -363,6 +434,62 @@
                         <button type="submit" :disabled="resolutionNotes.trim().length < 5"
                                 class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-emerald-500/15 active:scale-95">
                             Simpan Solusi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Premium Escalate Modal popup --}}
+        <div x-show="showEscalateModal" x-transition.opacity x-cloak
+             class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+             
+            <div @click.away="showEscalateModal = false"
+                 class="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 max-w-md w-full p-6 space-y-6 shadow-2xl relative animate-scale-up"
+                 x-data>
+                 
+                {{-- Modal Header --}}
+                <div class="space-y-1">
+                    <h4 class="text-lg font-black text-gray-900 dark:text-gray-100 flex items-center space-x-2">
+                        <span class="p-1.5 bg-purple-500/10 text-purple-600 rounded-lg">📤</span>
+                        <span>Eskalasi Kasus</span>
+                    </h4>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" x-text="activeAlertTitle"></p>
+                </div>
+
+                {{-- Modal Form --}}
+                <form :action="'/smart-alerts/' + activeAlertId + '/escalate'" method="POST" class="space-y-4">
+                    @csrf
+                    
+                    {{-- Supervisor Selector --}}
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500">Pilih Supervisor / Atasan</label>
+                        <select name="supervisor_id" required x-model="selectedSupervisorId"
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-semibold">
+                            <option value="">-- Pilih Penerima Eskalasi --</option>
+                            @foreach($supervisors as $supervisor)
+                                <option value="{{ $supervisor->id }}">{{ $supervisor->name }} ({{ ucwords(str_replace('_', ' ', $supervisor->role)) }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Escalation Notes --}}
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500">Catatan Eskalasi</label>
+                        <textarea name="escalation_notes" required rows="3" x-model="escalationNotes"
+                                  placeholder="Tulis alasan mengapa kasus ini perlu dieskalasikan ke supervisor (minimal 5 karakter)..."
+                                  class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-medium leading-relaxed"></textarea>
+                    </div>
+
+                    {{-- Form Actions --}}
+                    <div class="flex items-center justify-end space-x-2 pt-2">
+                        <button type="button" @click="showEscalateModal = false"
+                                class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-xl text-xs font-bold transition active:scale-95">
+                            Batal
+                        </button>
+                        <button type="submit" :disabled="!selectedSupervisorId || escalationNotes.trim().length < 5"
+                                class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-purple-500/15 active:scale-95">
+                            Kirim Eskalasi
                         </button>
                     </div>
                 </form>

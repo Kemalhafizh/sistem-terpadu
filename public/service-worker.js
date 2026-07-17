@@ -138,3 +138,50 @@ self.addEventListener('fetch', (event) => {
             })
     );
 });
+
+// 4. PUSH EVENT: Show native browser notifications
+self.addEventListener('push', (event) => {
+    let data = { title: 'SISTA Sultan Agung 1', body: 'Notifikasi baru dari portal sekolah.' };
+    if (event.data) {
+        try {
+            data = event.data.json();
+        } catch (e) {
+            data = { title: 'SISTA Sultan Agung 1', body: event.data.text() };
+        }
+    }
+
+    const options = {
+        body: data.body,
+        icon: '/images/logo-kotak.png',
+        badge: '/images/logo-kotak.png',
+        data: data.url || '/dashboard',
+        vibrate: [100, 50, 100],
+        actions: [
+            { action: 'open', title: 'Buka Portal' }
+        ]
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});
+
+// 5. NOTIFICATION CLICK EVENT: Navigate to target URL
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    
+    let targetUrl = event.notification.data || '/dashboard';
+    
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+            for (let client of windowClients) {
+                if (client.url === targetUrl && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(targetUrl);
+            }
+        })
+    );
+});

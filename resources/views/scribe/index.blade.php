@@ -26,7 +26,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://sistem-terpadu.test";
+        var tryItOutBaseUrl = "https://sistem-terpadu.test";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -100,14 +100,14 @@
                     <a href="#endpoints">Endpoints</a>
                 </li>
                                     <ul id="tocify-subheader-endpoints" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="endpoints-GETapi-academic-events">
-                                <a href="#endpoints-GETapi-academic-events">GET api/academic-events</a>
-                            </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-health">
+                                                    <li class="tocify-item level-2" data-unique="endpoints-GETapi-health">
                                 <a href="#endpoints-GETapi-health">Application health check endpoint.</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="endpoints-POSTapi-midtrans-webhook">
                                 <a href="#endpoints-POSTapi-midtrans-webhook">Handle webhook callback dari Midtrans (Sandbox & Simulator).</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-academic-events">
+                                <a href="#endpoints-GETapi-academic-events">GET api/academic-events</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -248,7 +248,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: May 29, 2026</li>
+        <li>Last updated: July 17, 2026</li>
     </ul>
 </div>
 
@@ -258,7 +258,7 @@
         <h1 id="introduction">Introduction</h1>
 <p>Dokumentasi API untuk aplikasi mobile (Siswa &amp; Orang Tua) Sistem Terpadu Sultan Agung 1.</p>
 <aside>
-    <strong>Base URL</strong>: <code>http://sistem-terpadu.test</code>
+    <strong>Base URL</strong>: <code>https://sistem-terpadu.test</code>
 </aside>
 <pre><code>This documentation aims to provide all the information you need to work with our API.
 
@@ -288,7 +288,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/profile" \
+    --get "https://sistem-terpadu.test/api/v1/profile" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -296,7 +296,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/profile"
+    "https://sistem-terpadu.test/api/v1/profile"
 );
 
 const headers = {
@@ -315,7 +315,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-profile">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -328,11 +328,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -440,7 +441,7 @@ Menerapkan rotasi token berbasis nama perangkat (device_name).</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/login" \
+    "https://sistem-terpadu.test/api/v1/login" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -454,7 +455,7 @@ Menerapkan rotasi token berbasis nama perangkat (device_name).</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/login"
+    "https://sistem-terpadu.test/api/v1/login"
 );
 
 const headers = {
@@ -615,7 +616,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/logout" \
+    "https://sistem-terpadu.test/api/v1/logout" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -623,7 +624,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/logout"
+    "https://sistem-terpadu.test/api/v1/logout"
 );
 
 const headers = {
@@ -741,7 +742,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/refresh-token" \
+    "https://sistem-terpadu.test/api/v1/refresh-token" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -749,7 +750,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/refresh-token"
+    "https://sistem-terpadu.test/api/v1/refresh-token"
 );
 
 const headers = {
@@ -867,7 +868,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/me" \
+    --get "https://sistem-terpadu.test/api/v1/me" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -875,7 +876,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/me"
+    "https://sistem-terpadu.test/api/v1/me"
 );
 
 const headers = {
@@ -894,7 +895,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-me">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -907,11 +908,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -1004,217 +1006,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
     
 
-                                <h2 id="endpoints-GETapi-academic-events">GET api/academic-events</h2>
-
-<p>
-<small class="badge badge-darkred">requires authentication</small>
-</p>
-
-
-
-<span id="example-requests-GETapi-academic-events">
-<blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/academic-events" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
-    --data "{
-    \"start\": \"2026-05-29T07:05:25\",
-    \"end\": \"2026-05-29T07:05:25\",
-    \"type\": \"architecto\",
-    \"classroom_id\": 16
-}"
-</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/academic-events"
-);
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-let body = {
-    "start": "2026-05-29T07:05:25",
-    "end": "2026-05-29T07:05:25",
-    "type": "architecto",
-    "classroom_id": 16
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-    body: JSON.stringify(body),
-}).then(response =&gt; response.json());</code></pre></div>
-
-</span>
-
-<span id="example-responses-GETapi-academic-events">
-            <blockquote>
-            <p>Example response (404):</p>
-        </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-x-content-type-options: nosniff
-x-frame-options: SAMEORIGIN
-x-xss-protection: 1; mode=block
-referrer-policy: strict-origin-when-cross-origin
-permissions-policy: camera=(), microphone=(), geolocation=(self)
-access-control-allow-origin: *
- </code></pre></details>         <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
-}</code>
- </pre>
-    </span>
-<span id="execution-results-GETapi-academic-events" hidden>
-    <blockquote>Received response<span
-                id="execution-response-status-GETapi-academic-events"></span>:
-    </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-academic-events"
-      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
-</span>
-<span id="execution-error-GETapi-academic-events" hidden>
-    <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-academic-events">
-
-Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
-You can check the Dev Tools console for debugging information.</code></pre>
-</span>
-<form id="form-GETapi-academic-events" data-method="GET"
-      data-path="api/academic-events"
-      data-authed="1"
-      data-hasfiles="0"
-      data-isarraybody="0"
-      autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-academic-events', this);">
-    <h3>
-        Request&nbsp;&nbsp;&nbsp;
-                    <button type="button"
-                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-academic-events"
-                    onclick="tryItOut('GETapi-academic-events');">Try it out ⚡
-            </button>
-            <button type="button"
-                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-academic-events"
-                    onclick="cancelTryOut('GETapi-academic-events');" hidden>Cancel 🛑
-            </button>&nbsp;&nbsp;
-            <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-academic-events"
-                    data-initial-text="Send Request 💥"
-                    data-loading-text="⏱ Sending..."
-                    hidden>Send Request 💥
-            </button>
-            </h3>
-            <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/academic-events</code></b>
-        </p>
-                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="GETapi-academic-events"
-               value="Bearer {YOUR_AUTH_KEY}"
-               data-component="header">
-    <br>
-<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-academic-events"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-academic-events"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>start</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="start"                data-endpoint="GETapi-academic-events"
-               value="2026-05-29T07:05:25"
-               data-component="body">
-    <br>
-<p>Must be a valid date. Example: <code>2026-05-29T07:05:25</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>end</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="end"                data-endpoint="GETapi-academic-events"
-               value="2026-05-29T07:05:25"
-               data-component="body">
-    <br>
-<p>Must be a valid date. Example: <code>2026-05-29T07:05:25</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="type"                data-endpoint="GETapi-academic-events"
-               value="architecto"
-               data-component="body">
-    <br>
-<p>Example: <code>architecto</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>classroom_id</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="classroom_id"                data-endpoint="GETapi-academic-events"
-               value="16"
-               data-component="body">
-    <br>
-<p>Example: <code>16</code></p>
-        </div>
-        </form>
-
-                    <h2 id="endpoints-GETapi-health">Application health check endpoint.</h2>
+                                <h2 id="endpoints-GETapi-health">Application health check endpoint.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -1229,7 +1021,7 @@ Used by load balancers, monitoring tools, and Docker healthchecks.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/health" \
+    --get "https://sistem-terpadu.test/api/health" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1237,7 +1029,7 @@ Used by load balancers, monitoring tools, and Docker healthchecks.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/health"
+    "https://sistem-terpadu.test/api/health"
 );
 
 const headers = {
@@ -1256,7 +1048,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-health">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1269,11 +1061,26 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;status&quot;: &quot;healthy&quot;,
+    &quot;timestamp&quot;: &quot;2026-07-17T17:02:52+07:00&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;checks&quot;: {
+        &quot;database&quot;: {
+            &quot;status&quot;: &quot;ok&quot;,
+            &quot;latency_ms&quot;: 0.25
+        },
+        &quot;cache&quot;: {
+            &quot;status&quot;: &quot;ok&quot;
+        },
+        &quot;storage&quot;: {
+            &quot;status&quot;: &quot;ok&quot;
+        }
+    }
 }</code>
  </pre>
     </span>
@@ -1376,7 +1183,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/midtrans/webhook" \
+    "https://sistem-terpadu.test/api/midtrans/webhook" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1384,7 +1191,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/midtrans/webhook"
+    "https://sistem-terpadu.test/api/midtrans/webhook"
 );
 
 const headers = {
@@ -1488,6 +1295,218 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
+                    <h2 id="endpoints-GETapi-academic-events">GET api/academic-events</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-academic-events">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://sistem-terpadu.test/api/academic-events" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"start\": \"2026-07-17T17:02:53\",
+    \"end\": \"2026-07-17T17:02:53\",
+    \"type\": \"architecto\",
+    \"classroom_id\": 16
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://sistem-terpadu.test/api/academic-events"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "start": "2026-07-17T17:02:53",
+    "end": "2026-07-17T17:02:53",
+    "type": "architecto",
+    "classroom_id": 16
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-academic-events">
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
+access-control-allow-origin: *
+set-cookie: XSRF-TOKEN=eyJpdiI6IjVoVkhRdHQ1TittRTlVM3U4TFNwSHc9PSIsInZhbHVlIjoiWWJnbWVXSEdneG1BZmZJRjhxdVlrU3RqTlc3bC9LM09RVXBLK09lTjRSdWpQblN3eGJyMkwzSlFGOE9PSndMY0ZKSVQ0R29aSEtiNlA3czU1R1Mwbi9LUm9yS0pBYTF0QnRGK2hlZVpQVEdkY3lrbTJ5MkVqRitBTHM2anFZSFYiLCJtYWMiOiI2ODVhMmUwNzZmYzgyMTFiNmQ1M2JmNzg0OTk0ZmFkYzRmZWRiOTExN2Y3OGZkMmY3ZDk1ZjJkMmU5MWRkNDliIiwidGFnIjoiIn0%3D; expires=Fri, 17 Jul 2026 12:02:53 GMT; Max-Age=7200; path=/; samesite=lax; sista-sma-isa-1-session=eyJpdiI6IjIwZFZoWUlydFVYaExRcHE3QzdGK3c9PSIsInZhbHVlIjoiZVd2c0daMDNKZWRBY3Y2dVAxUUFINjJrS3BNK3J0WEhWMEFpRENHRmUyMDlyY3puTUljUG1XWnR3N2VwZkhMT0pPaGIwUFZyckJPM1B4OXdwK0hjUDBGMUFlRmtuc1phZ3lIeTc4eHIxdXptcjBlTU4yU2VpbHdNYXhZUlYyUG0iLCJtYWMiOiI1Mzk5N2NhMGUyNDJlYTJmNzllYjZkMmI4Yzk5OWJhMTAyZDYzMzMyMjJjMTA5ZGIzNGY5ZjI2YTNmYjUwYjZhIiwidGFnIjoiIn0%3D; expires=Fri, 17 Jul 2026 12:02:53 GMT; Max-Age=7200; path=/; httponly; samesite=lax
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-academic-events" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-academic-events"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-academic-events"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-academic-events" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-academic-events">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-academic-events" data-method="GET"
+      data-path="api/academic-events"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-academic-events', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-academic-events"
+                    onclick="tryItOut('GETapi-academic-events');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-academic-events"
+                    onclick="cancelTryOut('GETapi-academic-events');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-academic-events"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/academic-events</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-academic-events"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-academic-events"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-academic-events"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>start</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start"                data-endpoint="GETapi-academic-events"
+               value="2026-07-17T17:02:53"
+               data-component="body">
+    <br>
+<p>validation.date. Example: <code>2026-07-17T17:02:53</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>end</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="end"                data-endpoint="GETapi-academic-events"
+               value="2026-07-17T17:02:53"
+               data-component="body">
+    <br>
+<p>validation.date. Example: <code>2026-07-17T17:02:53</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="type"                data-endpoint="GETapi-academic-events"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>Example: <code>architecto</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>classroom_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="classroom_id"                data-endpoint="GETapi-academic-events"
+               value="16"
+               data-component="body">
+    <br>
+<p>Example: <code>16</code></p>
+        </div>
+        </form>
+
                 <h1 id="mobile-application-data">Mobile Application Data</h1>
 
     <p>API endpoint untuk mengambil data akademik, keuangan, dan islami
@@ -1509,7 +1528,7 @@ Jika login sebagai <code>student</code>, mengembalikan data dirinya sendiri.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students" \
+    --get "https://sistem-terpadu.test/api/v1/students" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1517,7 +1536,7 @@ Jika login sebagai <code>student</code>, mengembalikan data dirinya sendiri.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students"
+    "https://sistem-terpadu.test/api/v1/students"
 );
 
 const headers = {
@@ -1536,7 +1555,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1549,11 +1568,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -1656,7 +1676,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students/123e4567-e89b-12d3-a456-426614174000/attendances" \
+    --get "https://sistem-terpadu.test/api/v1/students/123e4567-e89b-12d3-a456-426614174000/attendances" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1664,7 +1684,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students/123e4567-e89b-12d3-a456-426614174000/attendances"
+    "https://sistem-terpadu.test/api/v1/students/123e4567-e89b-12d3-a456-426614174000/attendances"
 );
 
 const headers = {
@@ -1683,7 +1703,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students--uuid--attendances">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1696,11 +1716,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -1816,7 +1837,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/grades" \
+    --get "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/grades" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1824,7 +1845,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/grades"
+    "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/grades"
 );
 
 const headers = {
@@ -1843,7 +1864,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students--uuid--grades">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -1856,11 +1877,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -1976,7 +1998,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/billings" \
+    --get "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/billings" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -1984,7 +2006,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/billings"
+    "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/billings"
 );
 
 const headers = {
@@ -2003,7 +2025,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students--uuid--billings">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2016,11 +2038,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -2136,7 +2159,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/point-logs" \
+    --get "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/point-logs" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2144,7 +2167,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/point-logs"
+    "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/point-logs"
 );
 
 const headers = {
@@ -2163,7 +2186,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students--uuid--point-logs">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2176,11 +2199,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -2296,7 +2320,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/tahfidz" \
+    --get "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/tahfidz" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2304,7 +2328,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/tahfidz"
+    "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/tahfidz"
 );
 
 const headers = {
@@ -2323,7 +2347,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students--uuid--tahfidz">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2336,11 +2360,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -2456,7 +2481,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/mutabaah" \
+    --get "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/mutabaah" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2464,7 +2489,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/mutabaah"
+    "https://sistem-terpadu.test/api/v1/students/6ff8f7f6-1eb3-3525-be4a-3932c805afed/mutabaah"
 );
 
 const headers = {
@@ -2483,7 +2508,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-students--uuid--mutabaah">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2496,11 +2521,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -2620,7 +2646,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/children" \
+    --get "https://sistem-terpadu.test/api/v1/parent/children" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2628,7 +2654,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/children"
+    "https://sistem-terpadu.test/api/v1/parent/children"
 );
 
 const headers = {
@@ -2647,7 +2673,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-children">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2660,11 +2686,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -2767,7 +2794,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/child/123e4567-e89b-12d3-a456-426614174000/summary" \
+    --get "https://sistem-terpadu.test/api/v1/parent/child/123e4567-e89b-12d3-a456-426614174000/summary" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2775,7 +2802,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/child/123e4567-e89b-12d3-a456-426614174000/summary"
+    "https://sistem-terpadu.test/api/v1/parent/child/123e4567-e89b-12d3-a456-426614174000/summary"
 );
 
 const headers = {
@@ -2794,7 +2821,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-child--student--summary">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2807,11 +2834,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -2927,7 +2955,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/child/architecto/grades" \
+    --get "https://sistem-terpadu.test/api/v1/parent/child/architecto/grades" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -2935,7 +2963,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/child/architecto/grades"
+    "https://sistem-terpadu.test/api/v1/parent/child/architecto/grades"
 );
 
 const headers = {
@@ -2954,7 +2982,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-child--student--grades">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2967,11 +2995,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -3087,7 +3116,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/child/architecto/attendance" \
+    --get "https://sistem-terpadu.test/api/v1/parent/child/architecto/attendance" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3095,7 +3124,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/child/architecto/attendance"
+    "https://sistem-terpadu.test/api/v1/parent/child/architecto/attendance"
 );
 
 const headers = {
@@ -3114,7 +3143,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-child--student--attendance">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -3127,11 +3156,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -3247,7 +3277,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/child/architecto/billings" \
+    --get "https://sistem-terpadu.test/api/v1/parent/child/architecto/billings" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3255,7 +3285,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/child/architecto/billings"
+    "https://sistem-terpadu.test/api/v1/parent/child/architecto/billings"
 );
 
 const headers = {
@@ -3274,7 +3304,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-child--student--billings">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -3287,11 +3317,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -3407,7 +3438,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/child/architecto/points" \
+    --get "https://sistem-terpadu.test/api/v1/parent/child/architecto/points" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3415,7 +3446,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/child/architecto/points"
+    "https://sistem-terpadu.test/api/v1/parent/child/architecto/points"
 );
 
 const headers = {
@@ -3434,7 +3465,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-child--student--points">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -3447,11 +3478,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -3567,7 +3599,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/parent/messages" \
+    --get "https://sistem-terpadu.test/api/v1/parent/messages" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3575,7 +3607,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/messages"
+    "https://sistem-terpadu.test/api/v1/parent/messages"
 );
 
 const headers = {
@@ -3594,7 +3626,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-parent-messages">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -3607,11 +3639,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -3715,7 +3748,7 @@ Memicu pengiriman WebSocket real-time <code>ChatMessageSent</code> secara intern
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/parent/messages" \
+    "https://sistem-terpadu.test/api/v1/parent/messages" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -3729,7 +3762,7 @@ Memicu pengiriman WebSocket real-time <code>ChatMessageSent</code> secara intern
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/parent/messages"
+    "https://sistem-terpadu.test/api/v1/parent/messages"
 );
 
 const headers = {
@@ -3894,7 +3927,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/profile" \
+    --get "https://sistem-terpadu.test/api/v1/student/profile" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3902,7 +3935,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/profile"
+    "https://sistem-terpadu.test/api/v1/student/profile"
 );
 
 const headers = {
@@ -3921,7 +3954,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-profile">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -3934,11 +3967,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4041,7 +4075,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/schedule" \
+    --get "https://sistem-terpadu.test/api/v1/student/schedule" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4049,7 +4083,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/schedule"
+    "https://sistem-terpadu.test/api/v1/student/schedule"
 );
 
 const headers = {
@@ -4068,7 +4102,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-schedule">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4081,11 +4115,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4188,7 +4223,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/grades" \
+    --get "https://sistem-terpadu.test/api/v1/student/grades" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4196,7 +4231,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/grades"
+    "https://sistem-terpadu.test/api/v1/student/grades"
 );
 
 const headers = {
@@ -4215,7 +4250,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-grades">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4228,11 +4263,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4335,7 +4371,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/attendance" \
+    --get "https://sistem-terpadu.test/api/v1/student/attendance" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4343,7 +4379,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/attendance"
+    "https://sistem-terpadu.test/api/v1/student/attendance"
 );
 
 const headers = {
@@ -4362,7 +4398,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-attendance">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4375,11 +4411,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4482,7 +4519,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/billings" \
+    --get "https://sistem-terpadu.test/api/v1/student/billings" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4490,7 +4527,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/billings"
+    "https://sistem-terpadu.test/api/v1/student/billings"
 );
 
 const headers = {
@@ -4509,7 +4546,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-billings">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4522,11 +4559,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4629,7 +4667,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/points" \
+    --get "https://sistem-terpadu.test/api/v1/student/points" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4637,7 +4675,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/points"
+    "https://sistem-terpadu.test/api/v1/student/points"
 );
 
 const headers = {
@@ -4656,7 +4694,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-points">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4669,11 +4707,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4776,7 +4815,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/student/notifications" \
+    --get "https://sistem-terpadu.test/api/v1/student/notifications" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4784,7 +4823,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/notifications"
+    "https://sistem-terpadu.test/api/v1/student/notifications"
 );
 
 const headers = {
@@ -4803,7 +4842,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-student-notifications">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -4816,11 +4855,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -4923,7 +4963,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/student/notifications/architecto/read" \
+    "https://sistem-terpadu.test/api/v1/student/notifications/architecto/read" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -4931,7 +4971,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/student/notifications/architecto/read"
+    "https://sistem-terpadu.test/api/v1/student/notifications/architecto/read"
 );
 
 const headers = {
@@ -5066,7 +5106,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/teacher/schedule" \
+    --get "https://sistem-terpadu.test/api/v1/teacher/schedule" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5074,7 +5114,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/teacher/schedule"
+    "https://sistem-terpadu.test/api/v1/teacher/schedule"
 );
 
 const headers = {
@@ -5093,7 +5133,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-teacher-schedule">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -5106,11 +5146,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -5213,7 +5254,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/teacher/classes" \
+    --get "https://sistem-terpadu.test/api/v1/teacher/classes" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5221,7 +5262,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/teacher/classes"
+    "https://sistem-terpadu.test/api/v1/teacher/classes"
 );
 
 const headers = {
@@ -5240,7 +5281,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-teacher-classes">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -5253,11 +5294,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -5360,7 +5402,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/teacher/attendance" \
+    "https://sistem-terpadu.test/api/v1/teacher/attendance" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -5377,7 +5419,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/teacher/attendance"
+    "https://sistem-terpadu.test/api/v1/teacher/attendance"
 );
 
 const headers = {
@@ -5554,10 +5596,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="students.0.status"                data-endpoint="POSTapi-v1-teacher-attendance"
-               value="I"
+               value="A"
                data-component="body">
     <br>
-<p>Example: <code>I</code></p>
+<p>Example: <code>A</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>H</code></li> <li><code>S</code></li> <li><code>I</code></li> <li><code>A</code></li></ul>
                     </div>
@@ -5571,7 +5613,7 @@ Must be one of:
                value="n"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>n</code></p>
+<p>validation.max. Example: <code>n</code></p>
                     </div>
                                                                 <div style=" margin-left: 14px; clear: unset;">
         <details>
@@ -5639,7 +5681,7 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/teacher/journals" \
+    --get "https://sistem-terpadu.test/api/v1/teacher/journals" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5647,7 +5689,7 @@ Must be one of:
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/teacher/journals"
+    "https://sistem-terpadu.test/api/v1/teacher/journals"
 );
 
 const headers = {
@@ -5666,7 +5708,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-teacher-journals">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -5679,11 +5721,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -5786,7 +5829,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://sistem-terpadu.test/api/v1/teacher/journals" \
+    "https://sistem-terpadu.test/api/v1/teacher/journals" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
@@ -5801,12 +5844,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "notes=Perlu review materi aljabar"\
     --form "students_present=32"\
     --form "students_absent=2"\
-    --form "attachment=@C:\Users\kemalhafizh\AppData\Local\Temp\php5EF5.tmp" </code></pre></div>
+    --form "attachment=@C:\Users\kemalhafizh\AppData\Local\Temp\phpB2CA.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/teacher/journals"
+    "https://sistem-terpadu.test/api/v1/teacher/journals"
 );
 
 const headers = {
@@ -6065,7 +6108,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional File PDF/Gambar lampiran jurnal (max 10MB). Example: <code>C:\Users\kemalhafizh\AppData\Local\Temp\php5EF5.tmp</code></p>
+<p>optional File PDF/Gambar lampiran jurnal (max 10MB). Example: <code>C:\Users\kemalhafizh\AppData\Local\Temp\phpB2CA.tmp</code></p>
         </div>
         </form>
 
@@ -6087,7 +6130,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/announcements" \
+    --get "https://sistem-terpadu.test/api/v1/announcements" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -6095,7 +6138,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/announcements"
+    "https://sistem-terpadu.test/api/v1/announcements"
 );
 
 const headers = {
@@ -6114,7 +6157,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-announcements">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -6127,11 +6170,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -6234,7 +6278,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/calendar" \
+    --get "https://sistem-terpadu.test/api/v1/calendar" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -6242,7 +6286,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/calendar"
+    "https://sistem-terpadu.test/api/v1/calendar"
 );
 
 const headers = {
@@ -6261,7 +6305,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-calendar">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -6274,11 +6318,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -6381,7 +6426,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://sistem-terpadu.test/api/v1/notifications" \
+    --get "https://sistem-terpadu.test/api/v1/notifications" \
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -6389,7 +6434,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://sistem-terpadu.test/api/v1/notifications"
+    "https://sistem-terpadu.test/api/v1/notifications"
 );
 
 const headers = {
@@ -6408,7 +6453,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-notifications">
             <blockquote>
-            <p>Example response (404):</p>
+            <p>Example response (401):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -6421,11 +6466,12 @@ x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(self)
+content-security-policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; &#039;unsafe-eval&#039; https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src &#039;self&#039; &#039;unsafe-inline&#039; https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src &#039;self&#039; https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src &#039;self&#039; data: https:; frame-src &#039;self&#039; https://app.midtrans.com https://sandbox.midtrans.com; connect-src &#039;self&#039; ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>

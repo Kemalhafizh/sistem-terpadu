@@ -86,6 +86,13 @@ use App\Http\Controllers\TeacherTodoController;
 
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
+Route::get('/tentang-kami', [PublicSiteController::class, 'about'])->name('public.about');
+Route::get('/kontak', [PublicSiteController::class, 'contact'])->name('public.contact');
+Route::get('/fasilitas', [PublicSiteController::class, 'facilities'])->name('public.facilities');
+Route::get('/prestasi', [PublicSiteController::class, 'achievements'])->name('public.achievements');
+Route::get('/direktori-staff', [PublicSiteController::class, 'staffDirectory'])->name('public.staff-directory');
+Route::get('/ppdb-info', [PublicSiteController::class, 'ppdbInfo'])->name('public.ppdb-info');
+Route::get('/virtual-tour', [PublicSiteController::class, 'virtualTour'])->name('public.virtual-tour');
 Route::get('/page/{slug}', [PublicSiteController::class, 'page'])->name('public.page');
 Route::get('/berita', [PublicSiteController::class, 'posts'])->name('public.posts');
 Route::get('/berita/{slug}', [PublicSiteController::class, 'post'])->name('public.post');
@@ -475,11 +482,13 @@ Route::middleware('auth')->group(function () {
         Route::middleware('role:guru,bk,staf_tu,waka_kesiswaan,admin,superadmin')->group(function () {
             Route::get('/', [UksController::class, 'dashboard'])->name('dashboard');
 
-            // Kunjungan CRUD
+            // Kunjungan CRUD & Edit
             Route::get('visits', [UksController::class, 'visitsIndex'])->name('visits.index');
             Route::get('visits/create', [UksController::class, 'visitsCreate'])->name('visits.create');
             Route::post('visits', [UksController::class, 'visitsStore'])->name('visits.store');
             Route::get('visits/{visit}', [UksController::class, 'visitsShow'])->name('visits.show');
+            Route::get('visits/{visit}/edit', [UksController::class, 'editVisit'])->name('visits.edit');
+            Route::put('visits/{visit}', [UksController::class, 'updateVisit'])->name('visits.update');
             Route::delete('visits/{visit}', [UksController::class, 'visitsDestroy'])->name('visits.destroy');
 
             // Inventaris Obat
@@ -487,6 +496,24 @@ Route::middleware('auth')->group(function () {
             Route::post('medicines', [UksController::class, 'medicinesStore'])->name('medicines.store');
             Route::put('medicines/{medicine}', [UksController::class, 'medicinesUpdate'])->name('medicines.update');
             Route::delete('medicines/{medicine}', [UksController::class, 'medicinesDestroy'])->name('medicines.destroy');
+
+            // Rekam Medis Siswa
+            Route::get('health-records', [UksController::class, 'healthRecords'])->name('health-records.index');
+            Route::get('health-records/{student}', [UksController::class, 'showHealthRecord'])->name('health-records.show');
+            Route::post('health-records', [UksController::class, 'updateHealthRecord'])->name('health-records.update');
+
+            // Health Screening
+            Route::get('screenings', [UksController::class, 'screeningIndex'])->name('screenings.index');
+            Route::post('screenings', [UksController::class, 'storeScreening'])->name('screenings.store');
+            Route::get('screenings/{screening}/results', [UksController::class, 'inputScreeningResults'])->name('screenings.results');
+            Route::post('screenings/results', [UksController::class, 'storeScreeningResults'])->name('screenings.results.store');
+            Route::get('screenings/{screening}/report', [UksController::class, 'screeningReport'])->name('screenings.report');
+            Route::get('screenings/{screening}/pdf', [UksController::class, 'exportScreeningPdf'])->name('screenings.export-pdf');
+
+            // Log Obat & Restock
+            Route::get('medicines/dispense-log', [UksController::class, 'medicineDispenseLog'])->name('medicines.dispense-log');
+            Route::get('medicines/restock-log', [UksController::class, 'restockLog'])->name('medicines.restock-log');
+            Route::post('medicines/restock', [UksController::class, 'storeRestock'])->name('medicines.restock.store');
 
             // Ekspor Rekap Bulanan PDF
             Route::get('export/monthly', [UksController::class, 'exportMonthlyReport'])->name('export.monthly');
@@ -660,11 +687,15 @@ Route::middleware('auth')->group(function () {
         Route::post('testimonials', [CmsController::class, 'testimonialsStore'])->name('testimonials.store');
         Route::put('testimonials/{testimonial}', [CmsController::class, 'testimonialsUpdate'])->name('testimonials.update');
         Route::delete('testimonials/{testimonial}', [CmsController::class, 'testimonialsDestroy'])->name('testimonials.destroy');
-
         // Editor uploads
         Route::post('upload-image', [CmsController::class, 'uploadImage'])->name('upload-image');
-    });
 
+        // New administrative endpoints
+        Route::post('posts/{id}/schedule', [CmsController::class, 'schedulePost'])->name('posts.schedule');
+        Route::match(['get', 'post'], 'tags', [CmsController::class, 'tagManagement'])->name('tags.index');
+        Route::match(['get', 'post'], 'media', [CmsController::class, 'mediaLibrary'])->name('media.index');
+        Route::match(['get', 'post'], 'seo', [CmsController::class, 'seoSettings'])->name('seo.index');
+    });
     // Career Opportunity Detail & Download (wildcards, evaluated after specific paths)
     Route::get('career-portal/{opportunity}', [CareerOpportunityController::class, 'show'])->name('career-portal.show');
     Route::get('career-portal/{opportunity}/download', [CareerOpportunityController::class, 'downloadBrosur'])->name('career-portal.download');
@@ -761,6 +792,31 @@ Route::middleware('auth')->group(function () {
         Route::post('admin/whatsapp/send-test', [WhatsappController::class, 'sendTest'])->name('admin.whatsapp.send-test');
         Route::post('admin/whatsapp/settings', [WhatsappController::class, 'updateSettings'])->name('admin.whatsapp.settings-update');
         Route::post('admin/whatsapp/resend/{log}', [WhatsappController::class, 'resend'])->name('admin.whatsapp.resend');
+
+        // WhatsApp Gateway Enhancements
+        Route::get('admin/whatsapp/dashboard', [WhatsappController::class, 'dashboard'])->name('admin.whatsapp.dashboard');
+        Route::get('admin/whatsapp/logs', [WhatsappController::class, 'logs'])->name('admin.whatsapp.logs');
+
+        // Templates CRUD
+        Route::get('admin/whatsapp/templates', [WhatsappController::class, 'templates'])->name('admin.whatsapp.templates.index');
+        Route::get('admin/whatsapp/templates/create', [WhatsappController::class, 'createTemplate'])->name('admin.whatsapp.templates.create');
+        Route::post('admin/whatsapp/templates', [WhatsappController::class, 'storeTemplate'])->name('admin.whatsapp.templates.store');
+        Route::get('admin/whatsapp/templates/{id}/edit', [WhatsappController::class, 'editTemplate'])->name('admin.whatsapp.templates.edit');
+        Route::put('admin/whatsapp/templates/{id}', [WhatsappController::class, 'updateTemplate'])->name('admin.whatsapp.templates.update');
+        Route::delete('admin/whatsapp/templates/{id}', [WhatsappController::class, 'deleteTemplate'])->name('admin.whatsapp.templates.delete');
+
+        // Broadcasts CRUD
+        Route::get('admin/whatsapp/broadcasts', [WhatsappController::class, 'broadcasts'])->name('admin.whatsapp.broadcasts.index');
+        Route::get('admin/whatsapp/broadcasts/create', [WhatsappController::class, 'createBroadcast'])->name('admin.whatsapp.broadcasts.create');
+        Route::post('admin/whatsapp/broadcasts', [WhatsappController::class, 'storeBroadcast'])->name('admin.whatsapp.broadcasts.store');
+        Route::get('admin/whatsapp/broadcasts/{id}', [WhatsappController::class, 'showBroadcast'])->name('admin.whatsapp.broadcasts.show');
+        Route::post('admin/whatsapp/broadcasts/{id}/retry', [WhatsappController::class, 'retryFailed'])->name('admin.whatsapp.broadcasts.retry');
+
+        // Automations Toggle/CRUD
+        Route::get('admin/whatsapp/automations', [WhatsappController::class, 'automations'])->name('admin.whatsapp.automations.index');
+        Route::post('admin/whatsapp/automations', [WhatsappController::class, 'storeAutomation'])->name('admin.whatsapp.automations.store');
+        Route::post('admin/whatsapp/automations/{id}/toggle', [WhatsappController::class, 'toggleAutomation'])->name('admin.whatsapp.automations.toggle');
+        Route::delete('admin/whatsapp/automations/{id}', [WhatsappController::class, 'deleteAutomation'])->name('admin.whatsapp.automations.delete');
 
         // SPMB (Manajemen Pendaftaran)
         Route::get('/spmb-admin/dashboard', [SpmbController::class, 'adminDashboard'])->name('spmb.admin.dashboard');
@@ -999,8 +1055,16 @@ Route::middleware('auth')->group(function () {
         ->name('smart-alerts.')
         ->group(function () {
             Route::get('/', [SmartAlertController::class, 'index'])->name('index');
+            Route::get('/dashboard', [SmartAlertController::class, 'dashboard'])->name('dashboard');
+            Route::get('/rules', [SmartAlertController::class, 'rulesConfig'])->name('rules');
+            Route::post('/rules', [SmartAlertController::class, 'updateRules'])->name('rules.update');
+            Route::get('/create', [SmartAlertController::class, 'create'])->name('create');
+            Route::post('/manual-create', [SmartAlertController::class, 'manualCreate'])->name('manual-create');
             Route::post('/{alert}/acknowledge', [SmartAlertController::class, 'acknowledge'])->name('acknowledge');
             Route::post('/{alert}/resolve', [SmartAlertController::class, 'resolve'])->name('resolve');
+            Route::post('/{alert}/escalate', [SmartAlertController::class, 'escalate'])->name('escalate');
+            Route::get('/history', [SmartAlertController::class, 'history'])->name('history');
+            Route::get('/export', [SmartAlertController::class, 'exportReport'])->name('export');
             Route::get('/student/{student}', [SmartAlertController::class, 'studentAlerts'])->name('student');
         });
 
@@ -1011,11 +1075,25 @@ Route::middleware('auth')->group(function () {
         ->prefix('workflows')
         ->name('workflows.')
         ->group(function () {
+            Route::middleware('role:admin,superadmin,kepala_sekolah')->group(function () {
+                Route::get('/dashboard', [WorkflowController::class, 'dashboard'])->name('dashboard');
+                Route::get('/definitions', [WorkflowController::class, 'definitions'])->name('definitions');
+                Route::post('/definitions', [WorkflowController::class, 'storeDefinition'])->name('definitions.store');
+                Route::put('/definitions/{id}', [WorkflowController::class, 'updateDefinition'])->name('definitions.update');
+                Route::delete('/definitions/{id}', [WorkflowController::class, 'deleteDefinition'])->name('definitions.delete');
+                Route::get('/analytics', [WorkflowController::class, 'analytics'])->name('analytics');
+            });
+
+            Route::get('/history', [WorkflowController::class, 'history'])->name('history');
             Route::get('/pending', [WorkflowController::class, 'pending'])->name('pending');
             Route::get('/my-requests', [WorkflowController::class, 'myRequests'])->name('my-requests');
+            
             Route::get('/{workflowRequest}', [WorkflowController::class, 'show'])->name('show');
             Route::post('/{workflowRequest}/approve', [WorkflowController::class, 'approve'])->name('approve');
             Route::post('/{workflowRequest}/reject', [WorkflowController::class, 'reject'])->name('reject');
+            Route::post('/{workflowRequest}/revise', [WorkflowController::class, 'revise'])->name('revise');
+            Route::post('/{workflowRequest}/resubmit', [WorkflowController::class, 'resubmit'])->name('resubmit');
+            Route::post('/{workflowRequest}/delegate', [WorkflowController::class, 'delegate'])->name('delegate');
         });
 
     // =========================================================
@@ -1153,14 +1231,21 @@ Route::middleware(['auth'])->prefix('chatbot')->name('chatbot.')->group(function
     Route::post('send', [ChatbotController::class, 'send'])->name('send');
     Route::post('feedback', [ChatbotController::class, 'feedback'])->name('feedback');
 });
-
 Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/chatbot')->name('admin.chatbot.')->group(function () {
+    Route::get('/', [ChatbotController::class, 'adminDashboard'])->name('dashboard');
+    Route::get('conversations', [ChatbotController::class, 'conversationHistory'])->name('conversations');
+    Route::get('conversations/{id}', [ChatbotController::class, 'showConversation'])->name('conversations.show');
+    Route::post('conversations/{id}/escalate', [ChatbotController::class, 'escalateToTicket'])->name('conversations.escalate');
+    Route::get('analytics', [ChatbotController::class, 'analytics'])->name('analytics');
+    Route::get('train-suggestions', [ChatbotController::class, 'trainSuggestions'])->name('train-suggestions');
+    Route::post('faqs/import', [ChatbotController::class, 'importFaqs'])->name('faqs.import');
+    Route::get('faqs/export', [ChatbotController::class, 'exportFaqs'])->name('faqs.export');
+
     Route::get('faqs', [ChatbotController::class, 'manageFaqs'])->name('faqs');
     Route::post('faqs', [ChatbotController::class, 'storeFaq'])->name('faqs.store');
     Route::put('faqs/{faq}', [ChatbotController::class, 'updateFaq'])->name('faqs.update');
     Route::delete('faqs/{faq}', [ChatbotController::class, 'destroyFaq'])->name('faqs.destroy');
 });
-
 // --- Advanced Logging & Observability (Modul 9) ---
 Route::middleware(['auth', 'role:superadmin'])->prefix('admin/observability')->name('admin.observability.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\ObservabilityController::class, 'dashboard'])->name('dashboard');

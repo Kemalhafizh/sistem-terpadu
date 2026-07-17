@@ -8,6 +8,13 @@ return [
     'nav_spmb' => 'Admissions',
     'nav_signin' => 'Sign In',
     'nav_portal' => 'Access Portal',
+    'nav_profile' => 'Profile',
+    'nav_about' => 'About Us',
+    'nav_facilities' => 'Facilities',
+    'nav_achievements' => 'Achievements',
+    'nav_staff' => 'Staff Directory',
+    'nav_virtual_tour' => 'Virtual Tour',
+    'nav_contact' => 'Contact Us',
 
     // Hero Section
     'hero_badge' => 'Integrated System V2.0',

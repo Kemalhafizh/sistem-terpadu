@@ -85,6 +85,33 @@ Fase terbaru ini melengkapi platform SISTA menjadi solusi 360-derajat paling kom
 
 ---
 
+## ⚡ FASE 16-20: Layanan Penerimaan Siswa Baru, Manajemen Alumni, Tata Kelola SDM, OSIS & Ekstrakurikuler, Notifikasi Otomatis, dan Alur Persetujuan Kerja (NEW)
+
+Fase ini menghadirkan fitur-fitur skala *enterprise-grade* untuk operasional dan keterlibatan komunitas sekolah:
+
+### 🎓 1. Sistem SPMB Online Terpadu (Modul 16.1 - ✅ DONE)
+* **Penerimaan Murid Baru**: Pendaftaran online terotomasi terhubung dengan gelombang pendaftaran, jalur masuk (Prestasi, Afiliasi, Reguler), pengunggahan berkas digital (KK, SKL), ujian masuk CBT, kelulusan otomatis, dan daftar ulang.
+
+### 🎓 2. Tracer Study & Overhaul Portal Alumni (Modul 16.2 - ✅ DONE)
+* **Pelacakan Karir**: Pengisian survei karir (kuliah, bekerja, wirausaha) pasca-kelulusan oleh alumni untuk menyusun metrik keterserapan industri pendukung akreditasi sekolah.
+
+### 💼 3. Penguatan Kepegawaian & HRD (Modul 16.3 - ✅ DONE)
+* **Manajemen SDM**: Evaluasi kinerja pegawai bulanan/semester (PKG), tracking keikutsertaan pelatihan Kurikulum Merdeka, serta manajemen arsip dokumen kepegawaian (SK, ijazah) lengkap dengan pengingat otomatis tanggal kedaluwarsa.
+
+### ⚽ 4. Manajemen Ekstrakurikuler & OSIS (Modul 16.4 & 16.5 - ✅ DONE)
+* **Kegiatan & Pemilu**: Pendaftaran anggota ekskul, pencatatan prestasi lomba, log kehadiran ekskul, kas keuangan OSIS, serta sistem Pemilu OSIS digital (E-Voting anonim dengan voter hash unik terverifikasi).
+
+### 💬 5. Fonnte WhatsApp Gateway & Automations (Modul 18.1 - ✅ DONE)
+* **Notifikasi Otomatis**: Integrasi Gateway WhatsApp untuk mengirim pesan tagihan SPP otomatis, presensi masuk/pulang, dan peringatan kesehatan UKS langsung ke nomor WhatsApp orang tua murid.
+
+### 🔄 6. Digital Approval Workflow Engine (Modul 18.2 - ✅ DONE)
+* **Alur Persetujuan**: Engine pengajuan berkas (cuti, surat dinas, silabus) berjenjang dengan SLA penanganan otomatis.
+
+### 🚨 7. Smart Alerts & Monitoring At-Risk Students (Modul 18.3 - ✅ DONE)
+* **Deteksi Dini**: Dasbor pemantauan otomatis indikator resiko tinggi siswa (seperti penurunan drastis kehadiran atau nilai, dan akumulasi poin pelanggaran) untuk intervensi dini.
+
+---
+
 ## 💻 Tech Stack Utama
 
 * **Core Framework:** Laravel 12 & PHP 8.4 (PSR-12 Standardized via Laravel Pint)

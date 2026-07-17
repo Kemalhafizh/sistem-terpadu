@@ -20,6 +20,17 @@ class ChatbotService
     public function processMessage(User $user, string $message): array
     {
         $normalizedMessage = Str::lower(trim($message));
+
+        // 0. Try to match Contextual Role-Based Intent
+        $contextResponse = $this->getContextualResponse($user, $message);
+        if ($contextResponse) {
+            $conversation = $this->logConversation($user, $message, $contextResponse['reply'], $contextResponse['intent'], $contextResponse['context'], 1.0);
+            return [
+                'reply' => $contextResponse['reply'],
+                'intent' => $contextResponse['intent'],
+                'conversation_id' => $conversation->id,
+            ];
+        }
         
         // 1. Try to match Data Query Intent
         $dataResponse = $this->handleDataQueryIntent($user, $normalizedMessage);
@@ -67,6 +78,124 @@ class ChatbotService
             'intent' => 'unknown',
             'conversation_id' => $conversation->id,
         ];
+    }
+
+    /**
+     * Get dynamic contextual responses based on User role.
+     */
+    public function getContextualResponse(User $user, string $message): ?array
+    {
+        $normalized = Str::lower(trim($message));
+
+        // 1. Student context: check exams
+        if ($user->role === 'student' && $user->student) {
+            if (Str::contains($normalized, ['ujian', 'cbt', 'kapan'])) {
+                $exams = \App\Models\Exam::where('classroom_id', $user->student->classroom_id)
+                    ->where('status', 'published')
+                    ->where('start_time', '>', now())
+                    ->orderBy('start_time')
+                    ->limit(5)
+                    ->get();
+
+                if ($exams->isNotEmpty()) {
+                    $reply = "Berikut adalah jadwal ujian/CBT mendatang untuk kelas Anda:<br/>";
+                    foreach ($exams as $exam) {
+                        $startTime = $exam->start_time->format('d M Y H:i');
+                        $reply .= "- **{$exam->title}** ({$exam->type}) pada {$startTime} (Durasi: {$exam->duration_minutes} menit)<br/>";
+                    }
+                    return [
+                        'reply' => $reply,
+                        'intent' => 'context_student_exam',
+                        'context' => ['exams_count' => $exams->count()],
+                    ];
+                } else {
+                    return [
+                        'reply' => "Tidak ada ujian atau CBT terjadwal terdekat untuk kelas Anda saat ini.",
+                        'intent' => 'context_student_exam',
+                        'context' => ['exams_count' => 0],
+                    ];
+                }
+            }
+        }
+
+        // 2. Parent context: check child's unpaid billings
+        if ($user->role === 'parent') {
+            if (Str::contains($normalized, ['tunggakan', 'spp', 'bayar', 'tagihan'])) {
+                $children = $user->children;
+                if ($children->isEmpty()) {
+                    return [
+                        'reply' => "Anda belum terdaftar memiliki data anak di sistem.",
+                        'intent' => 'context_parent_billing',
+                        'context' => ['children_count' => 0],
+                    ];
+                }
+
+                $reply = "Berikut rincian tagihan/tunggakan anak Anda:<br/>";
+                $hasTunggakan = false;
+
+                foreach ($children as $child) {
+                    $billings = \App\Models\Billing::where('student_id', $child->id)
+                        ->where('remaining_balance', '>', 0)
+                        ->get();
+
+                    if ($billings->isNotEmpty()) {
+                        $hasTunggakan = true;
+                        $reply .= "👦 **{$child->user->name}**:<br/>";
+                        foreach ($billings as $billing) {
+                            $balance = number_format($billing->remaining_balance, 0, ',', '.');
+                            $dueDate = $billing->due_date ? \Carbon\Carbon::parse($billing->due_date)->format('d M Y') : '-';
+                            $reply .= "- Tagihan SPP sisa **Rp {$balance}** (Jatuh tempo: {$dueDate})<br/>";
+                        }
+                    }
+                }
+
+                if (!$hasTunggakan) {
+                    return [
+                        'reply' => "Alhamdulillah, seluruh tagihan SPP anak Anda saat ini **sudah lunas**.",
+                        'intent' => 'context_parent_billing',
+                        'context' => ['has_tunggakan' => false],
+                    ];
+                }
+
+                return [
+                    'reply' => $reply,
+                    'intent' => 'context_parent_billing',
+                    'context' => ['has_tunggakan' => true],
+                ];
+            }
+        }
+
+        // 3. Teacher/Guru context: check today's absent students
+        if ($user->role === 'guru') {
+            if (Str::contains($normalized, ['belum absen', 'siapa', 'absen', 'kehadiran'])) {
+                $absents = \App\Models\Attendance::where('date', today()->toDateString())
+                    ->where('status', 'A')
+                    ->with('student.user')
+                    ->get();
+
+                if ($absents->isNotEmpty()) {
+                    $reply = "Berikut adalah daftar siswa yang **Alpa (tidak hadir tanpa keterangan)** hari ini:<br/>";
+                    foreach ($absents as $absent) {
+                        $studentName = $absent->student->user->name ?? 'Siswa';
+                        $classroomName = $absent->student->classroom->name ?? '-';
+                        $reply .= "- **{$studentName}** ({$classroomName})<br/>";
+                    }
+                    return [
+                        'reply' => $reply,
+                        'intent' => 'context_teacher_attendance',
+                        'context' => ['absent_count' => $absents->count()],
+                    ];
+                } else {
+                    return [
+                        'reply' => "Semua siswa telah tercatat kehadirannya hari ini (tidak ada siswa yang Alpa).",
+                        'intent' => 'context_teacher_attendance',
+                        'context' => ['absent_count' => 0],
+                    ];
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -222,5 +351,56 @@ class ChatbotService
             'context_data' => $context,
             'confidence' => $confidence,
         ]);
+    }
+
+    /**
+     * Get aggregated metrics for Admin Dashboard.
+     */
+    public function getAnalytics(): array
+    {
+        $totalChats = ChatbotConversation::count();
+        $helpfulChats = ChatbotConversation::where('was_helpful', true)->count();
+        $unhelpfulChats = ChatbotConversation::where('was_helpful', false)->count();
+        $ratedChats = $helpfulChats + $unhelpfulChats;
+        
+        $helpfulnessRate = $ratedChats > 0 ? round(($helpfulChats / $ratedChats) * 100, 1) : 100.0;
+        
+        $intentStats = ChatbotConversation::select('intent', \DB::raw('count(*) as count'))
+            ->groupBy('intent')
+            ->orderByDesc('count')
+            ->get()
+            ->pluck('count', 'intent')
+            ->toArray();
+
+        $dailyStats = ChatbotConversation::select(\DB::raw("date(created_at) as date"), \DB::raw('count(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->limit(7)
+            ->get()
+            ->pluck('count', 'date')
+            ->toArray();
+
+        return [
+            'total_chats' => $totalChats,
+            'helpful_chats' => $helpfulChats,
+            'unhelpful_chats' => $unhelpfulChats,
+            'helpfulness_rate' => $helpfulnessRate,
+            'intent_stats' => $intentStats,
+            'daily_stats' => $dailyStats,
+        ];
+    }
+
+    /**
+     * Get training suggestions from unknown queries.
+     */
+    public function getTrainingSuggestions(): array
+    {
+        return ChatbotConversation::where('intent', 'unknown')
+            ->select('user_message', \DB::raw('count(*) as frequency'))
+            ->groupBy('user_message')
+            ->orderByDesc('frequency')
+            ->limit(10)
+            ->get()
+            ->toArray();
     }
 }

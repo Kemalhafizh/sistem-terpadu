@@ -148,7 +148,7 @@ class OsisController extends Controller
             ->where('status', 'active')
             ->get();
 
-        $students = Student::with('user')->where('status', 'active')->get();
+        $students = Student::with(['user', 'classroom'])->where('status', 'active')->get();
         return view('extracurricular.osis.members', compact('members', 'students', 'activeYear'));
     }
 
@@ -280,7 +280,7 @@ class OsisController extends Controller
     public function candidates(OsisElection $election)
     {
         $election->load('candidates.student.user');
-        $students = Student::with('user')->where('status', 'active')->get();
+        $students = Student::with(['user', 'classroom'])->where('status', 'active')->get();
         return view('extracurricular.osis.election.candidates', compact('election', 'students'));
     }
 

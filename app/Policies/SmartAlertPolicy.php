@@ -30,4 +30,12 @@ class SmartAlertPolicy
     {
         return in_array($user->role, ['kepala_sekolah', 'admin', 'superadmin', 'bk', 'waka_kesiswaan', 'waka_kurikulum']);
     }
+
+    /**
+     * Determine whether the user can escalate the alert.
+     */
+    public function escalate(User $user, SmartAlert $alert): bool
+    {
+        return in_array($user->role, ['kepala_sekolah', 'admin', 'superadmin', 'bk', 'waka_kesiswaan', 'waka_kurikulum']);
+    }
 }

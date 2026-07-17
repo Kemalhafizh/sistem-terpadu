@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /login
+Disallow: /cbt
+Disallow: /elearning
+
+Sitemap: https://sista.sultanagung1.sch.id/sitemap.xml

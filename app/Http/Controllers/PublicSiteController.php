@@ -33,7 +33,7 @@ class PublicSiteController extends Controller
             ->get();
 
         // Calculate real-time stats
-        $studentCount = Student::where('status', 'aktif')->count();
+        $studentCount = Student::where('status', 'active')->count();
         $teacherStaffCount = User::whereIn('role', [
             'guru', 'staf_tu', 'admin', 'superadmin', 'bk', 
             'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah'
@@ -161,5 +161,71 @@ class PublicSiteController extends Controller
             ->get();
 
         return view('public.gallery', compact('galleries', 'categories', 'navPages'));
+    }
+
+    /**
+     * Display about page.
+     */
+    public function about()
+    {
+        $navPages = CmsPage::published()->inNavbar()->get();
+        return view('public.about', compact('navPages'));
+    }
+
+    /**
+     * Display contact page.
+     */
+    public function contact()
+    {
+        $navPages = CmsPage::published()->inNavbar()->get();
+        return view('public.contact', compact('navPages'));
+    }
+
+    /**
+     * Display facilities page.
+     */
+    public function facilities()
+    {
+        $navPages = CmsPage::published()->inNavbar()->get();
+        return view('public.facilities', compact('navPages'));
+    }
+
+    /**
+     * Display achievements page.
+     */
+    public function achievements()
+    {
+        $navPages = CmsPage::published()->inNavbar()->get();
+        $achievements = CmsPost::published()->byCategory('prestasi')->latest('published_at')->get();
+        return view('public.achievements', compact('achievements', 'navPages'));
+    }
+
+    /**
+     * Display staff directory page.
+     */
+    public function staffDirectory()
+    {
+        $navPages = CmsPage::published()->inNavbar()->get();
+        $staff = User::whereIn('role', ['guru', 'staf_tu', 'bk', 'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah'])
+            ->orderBy('name')
+            ->get();
+        return view('public.staff-directory', compact('staff', 'navPages'));
+    }
+
+    /**
+     * Redirect to PPDB.
+     */
+    public function ppdbInfo()
+    {
+        return redirect()->route('spmb.welcome');
+    }
+
+    /**
+     * Display virtual tour page.
+     */
+    public function virtualTour()
+    {
+        $navPages = CmsPage::published()->inNavbar()->get();
+        return view('public.virtual-tour', compact('navPages'));
     }
 }

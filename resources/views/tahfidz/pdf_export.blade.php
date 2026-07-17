@@ -209,7 +209,7 @@
             <td class="header-text">
                 <h1>Yayasan Badan Wakaf Sultan Agung</h1>
                 <h2>SMA Islam Sultan Agung 1 Semarang</h2>
-                <p>Jalan Kaligawe Raya Km. 4 Telp. (024) 6582628 Semarang 50112</p>
+                <p>Jalan Mataram No. 657, Wonodri, Semarang 50242 | Telp. (024) 6580019</p>
                 <p>Website: www.smaislasa1.sch.id | E-mail: info@smaislasa1.sch.id</p>
             </td>
         </tr>

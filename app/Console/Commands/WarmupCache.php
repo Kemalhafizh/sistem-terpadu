@@ -83,12 +83,10 @@ class WarmupCache extends Command
         // 4. Warmup Metadata Lists
         try {
             Cache::forget('classrooms_all');
-            $classrooms = Classroom::all();
-            Cache::forever('classrooms_all', $classrooms);
+            $classrooms = Classroom::allCached();
             
             Cache::forget('subjects_all');
-            $subjects = Subject::all();
-            Cache::forever('subjects_all', $subjects);
+            $subjects = Subject::allCached();
             
             $this->line('✓ Metadata cached (' . $classrooms->count() . ' classrooms, ' . $subjects->count() . ' subjects).');
         } catch (\Exception $e) {

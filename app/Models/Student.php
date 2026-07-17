@@ -81,6 +81,16 @@ class Student extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function healthRecord()
+    {
+        return $this->hasOne(StudentHealthRecord::class);
+    }
+
+    public function screeningResults()
+    {
+        return $this->hasMany(HealthScreeningResult::class);
+    }
+
     /**
      * Get the student's name from the user relationship.
      */

@@ -116,8 +116,8 @@ class ElearningController extends Controller
             abort(403, 'Anda tidak terdaftar di kelas virtual ini.');
         }
 
-        $materials = $elearningClass->materials()->latest()->get();
-        $assignments = $elearningClass->assignments()->latest()->get();
+        $materials = $elearningClass->materials()->with('comments')->latest()->get();
+        $assignments = $elearningClass->assignments()->with('submissions')->latest()->get();
         $announcements = $elearningClass->announcements()->with('user')->latest()->get();
 
         // Calculate progress if student

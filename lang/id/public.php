@@ -8,6 +8,13 @@ return [
     'nav_spmb' => 'SPMB',
     'nav_signin' => 'Sign In',
     'nav_portal' => 'Akses Portal',
+    'nav_profile' => 'Profil',
+    'nav_about' => 'Tentang Kami',
+    'nav_facilities' => 'Fasilitas',
+    'nav_achievements' => 'Prestasi',
+    'nav_staff' => 'Direktori Guru',
+    'nav_virtual_tour' => 'Virtual Tour',
+    'nav_contact' => 'Hubungi Kami',
 
     // Hero Section
     'hero_badge' => 'Sistem Terpadu V2.0',

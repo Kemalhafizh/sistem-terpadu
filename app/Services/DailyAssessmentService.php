@@ -98,6 +98,23 @@ class DailyAssessmentService
                     'remedial_status' => $scoreRecord->remedial_status === 'not_needed' ? 'pending' : $scoreRecord->remedial_status,
                 ]);
                 $remedialCount++;
+
+                // Trigger grade_below_kkm WhatsApp automation
+                $student = $scoreRecord->student;
+                $parent = $student?->parent;
+                if ($parent && $parent->phone_number) {
+                    $automationService = app(\App\Services\WhatsappAutomationService::class);
+                    $context = [
+                        'nama_siswa' => $student->name,
+                        'nama_orang_tua' => $parent->name,
+                        'kelas' => $student->classroom?->name ?? '',
+                        'nilai' => $scoreRecord->score,
+                        'kkm' => $kkm,
+                        'mata_pelajaran' => $assessment->subject?->name ?? '',
+                        'judul_penilaian' => $assessment->title,
+                    ];
+                    $automationService->triggerInstant('grade_below_kkm', $student, $context);
+                }
             } else {
                 // If they passed, clear pending remedial flag unless they already completed it
                 if ($scoreRecord->remedial_status !== 'completed') {

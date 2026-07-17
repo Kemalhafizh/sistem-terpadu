@@ -8,6 +8,13 @@ return [
     'nav_spmb' => 'القبول والتسجيل',
     'nav_signin' => 'تسجيل الدخول',
     'nav_portal' => 'دخول البوابة',
+    'nav_profile' => 'ملف المدرسة',
+    'nav_about' => 'من نحن',
+    'nav_facilities' => 'المرافق',
+    'nav_achievements' => 'الإنجازات',
+    'nav_staff' => 'دليل المعلمين',
+    'nav_virtual_tour' => 'جولة افتراضية',
+    'nav_contact' => 'اتصل بنا',
 
     // Hero Section
     'hero_badge' => 'النظام المتكامل V2.0',

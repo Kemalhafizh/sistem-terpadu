@@ -227,7 +227,6 @@
                                                 Belum ada aktivitas pengiriman log WhatsApp.
                                             </td>
                                         </tr>
-                                    @empty
                                     @endforelse
                                 </tbody>
                             </table>

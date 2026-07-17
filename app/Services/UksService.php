@@ -130,19 +130,42 @@ class UksService
                 ];
                 $dispositionText = $dispMapping[$visit->disposition] ?? 'Sedang ditangani di UKS';
 
-                $message = "⚠️ *PEMBERITAHUAN DARURAT UKS SMA ISLAM SULTAN AGUNG 1*\n\n"
-                    ."Bapak/Ibu Orang Tua/Wali dari siswa:\n"
-                    ."Nama: *{$studentName}*\n"
-                    ."Kelas: *{$classroom}*\n\n"
-                    ."Menginfokan bahwa putra/putri Bapak/Ibu masuk ke Unit Kesehatan Sekolah (UKS) pada:\n"
-                    ."Waktu: {$time} WIB\n"
-                    ."Keluhan: *{$visit->complaint}*\n"
-                    ."Diagnosis Sementara: {$visit->diagnosis}\n"
-                    ."Penanganan: {$visit->treatment}\n"
-                    .'Tingkat Gejala: *'.strtoupper($visit->severity)."*\n\n"
-                    ."Status Tindakan: *{$dispositionText}*\n\n"
-                    ."Mohon segera menghubungi petugas UKS sekolah atau wali kelas untuk koordinasi penanganan lebih lanjut.\n"
-                    .'Terima kasih.';
+                // Check if active automation for uks_visit_severe exists
+                $automationService = app(\App\Services\WhatsappAutomationService::class);
+                $context = [
+                    'nama_siswa' => $studentName,
+                    'nama_orang_tua' => $parent->name,
+                    'kelas' => $classroom,
+                    'tanggal' => $time,
+                    'keluhan' => $visit->complaint,
+                    'diagnosa' => $visit->diagnosis,
+                    'penanganan' => $visit->treatment,
+                    'gejala' => $visit->severity,
+                    'disposisi' => $dispositionText
+                ];
+
+                $automation = \App\Models\WhatsappAutomation::where('trigger', 'uks_visit_severe')
+                    ->where('is_active', true)
+                    ->with('template')
+                    ->first();
+
+                if ($automation && $automation->template) {
+                    $message = $automationService->parseMessage($automation->template->content, $context);
+                } else {
+                    $message = "⚠️ *PEMBERITAHUAN DARURAT UKS SMA ISLAM SULTAN AGUNG 1*\n\n"
+                        ."Bapak/Ibu Orang Tua/Wali dari siswa:\n"
+                        ."Nama: *{$studentName}*\n"
+                        ."Kelas: *{$classroom}*\n\n"
+                        ."Menginfokan bahwa putra/putri Bapak/Ibu masuk ke Unit Kesehatan Sekolah (UKS) pada:\n"
+                        ."Waktu: {$time} WIB\n"
+                        ."Keluhan: *{$visit->complaint}*\n"
+                        ."Diagnosis Sementara: {$visit->diagnosis}\n"
+                        ."Penanganan: {$visit->treatment}\n"
+                        .'Tingkat Gejala: *'.strtoupper($visit->severity)."*\n\n"
+                        ."Status Tindakan: *{$dispositionText}*\n\n"
+                        ."Mohon segera menghubungi petugas UKS sekolah atau wali kelas untuk koordinasi penanganan lebih lanjut.\n"
+                        .'Terima kasih.';
+                }
 
                 try {
                     $this->whatsappService->sendMessage($parent->phone_number, $message, 'uks_emergency');

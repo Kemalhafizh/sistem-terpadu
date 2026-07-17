@@ -5,106 +5,6 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: api/academic-events
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      start:
-        custom: []
-        name: start
-        description: 'Must be a valid date.'
-        required: true
-        example: '2026-05-29T07:05:25'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      end:
-        custom: []
-        name: end
-        description: 'Must be a valid date.'
-        required: true
-        example: '2026-05-29T07:05:25'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      type:
-        custom: []
-        name: type
-        description: ''
-        required: false
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-      classroom_id:
-        custom: []
-        name: classroom_id
-        description: ''
-        required: false
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        deprecated: false
-    cleanBodyParameters:
-      start: '2026-05-29T07:05:25'
-      end: '2026-05-29T07:05:25'
-      type: architecto
-      classroom_id: 16
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: SAMEORIGIN
-          x-xss-protection: '1; mode=block'
-          referrer-policy: strict-origin-when-cross-origin
-          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
-          access-control-allow-origin: '*'
-        description: null
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
     uri: api/health
     metadata:
       custom: []
@@ -132,11 +32,8 @@ endpoints:
     responses:
       -
         custom: []
-        status: 404
-        content: |-
-          {
-              "message": ""
-          }
+        status: 200
+        content: '{"status":"healthy","timestamp":"2026-07-17T17:02:52+07:00","version":"1.0.0","checks":{"database":{"status":"ok","latency_ms":0.25},"cache":{"status":"ok"},"storage":{"status":"ok"}}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -145,6 +42,7 @@ endpoints:
           x-xss-protection: '1; mode=block'
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -182,6 +80,105 @@ endpoints:
     cleanBodyParameters: []
     fileParameters: []
     responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/academic-events
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      start:
+        custom: []
+        name: start
+        description: validation.date.
+        required: true
+        example: '2026-07-17T17:02:53'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      end:
+        custom: []
+        name: end
+        description: validation.date.
+        required: true
+        example: '2026-07-17T17:02:53'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      classroom_id:
+        custom: []
+        name: classroom_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      start: '2026-07-17T17:02:53'
+      end: '2026-07-17T17:02:53'
+      type: architecto
+      classroom_id: 16
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: SAMEORIGIN
+          x-xss-protection: '1; mode=block'
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(self)'
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: https:; frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;"
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IjVoVkhRdHQ1TittRTlVM3U4TFNwSHc9PSIsInZhbHVlIjoiWWJnbWVXSEdneG1BZmZJRjhxdVlrU3RqTlc3bC9LM09RVXBLK09lTjRSdWpQblN3eGJyMkwzSlFGOE9PSndMY0ZKSVQ0R29aSEtiNlA3czU1R1Mwbi9LUm9yS0pBYTF0QnRGK2hlZVpQVEdkY3lrbTJ5MkVqRitBTHM2anFZSFYiLCJtYWMiOiI2ODVhMmUwNzZmYzgyMTFiNmQ1M2JmNzg0OTk0ZmFkYzRmZWRiOTExN2Y3OGZkMmY3ZDk1ZjJkMmU5MWRkNDliIiwidGFnIjoiIn0%3D; expires=Fri, 17 Jul 2026 12:02:53 GMT; Max-Age=7200; path=/; samesite=lax; sista-sma-isa-1-session=eyJpdiI6IjIwZFZoWUlydFVYaExRcHE3QzdGK3c9PSIsInZhbHVlIjoiZVd2c0daMDNKZWRBY3Y2dVAxUUFINjJrS3BNK3J0WEhWMEFpRENHRmUyMDlyY3puTUljUG1XWnR3N2VwZkhMT0pPaGIwUFZyckJPM1B4OXdwK0hjUDBGMUFlRmtuc1phZ3lIeTc4eHIxdXptcjBlTU4yU2VpbHdNYXhZUlYyUG0iLCJtYWMiOiI1Mzk5N2NhMGUyNDJlYTJmNzllYjZkMmI4Yzk5OWJhMTAyZDYzMzMyMjJjMTA5ZGIzNGY5ZjI2YTNmYjUwYjZhIiwidGFnIjoiIn0%3D; expires=Fri, 17 Jul 2026 12:02:53 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
     responseFields: []
     auth:
       - headers
