@@ -37,7 +37,8 @@ class MutabaahController extends Controller
         $endOfMonth = $carbonDate->copy()->endOfMonth()->format('Y-m-d');
 
         // Fetch monthly logs for calendar view
-        $monthlyLogs = MutabaahLog::where('student_id', $student->id)
+        $monthlyLogs = MutabaahLog::with('verifier')
+            ->where('student_id', $student->id)
             ->whereNull('mutabaah_item_id')
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->get()

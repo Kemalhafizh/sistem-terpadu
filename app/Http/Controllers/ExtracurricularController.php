@@ -40,7 +40,7 @@ class ExtracurricularController extends Controller
 
     public function show(Extracurricular $extracurricular)
     {
-        $extracurricular->load(['advisor', 'activeMembers.student.classroom', 'activities']);
+        $extracurricular->load(['advisor', 'activeMembers.student.classroom', 'activeMembers.student.user', 'activities.creator']);
         
         // Cek Keikutsertaan Siswa
         $isMember = false;
