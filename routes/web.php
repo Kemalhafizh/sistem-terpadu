@@ -29,6 +29,9 @@ use App\Http\Controllers\ElearningController;
 use App\Http\Controllers\ElearningSecureController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\FinancialReportController;
+use App\Http\Controllers\Finance\WadiahController;
+use App\Http\Controllers\Finance\CanteenController;
+use App\Http\Controllers\Finance\CharityController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
@@ -80,7 +83,10 @@ use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\GamificationController;
 use App\Http\Controllers\DailyAssessmentController;
+use App\Http\Controllers\Admin\SyncController;
 use App\Http\Controllers\TeacherTodoController;
+use App\Http\Controllers\Academic\AiCopilotController;
+use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
 
 
 
@@ -305,6 +311,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:student')->group(function () {
         Route::get('my-billings', [StudentFinanceController::class, 'index'])->name('finance.student.index');
         Route::get('my-academic', [StudentAcademicController::class, 'index'])->name('student.academic');
+        Route::get('my-wadiah', [StudentFinanceController::class, 'wadiahWallet'])->name('student.wadiah.wallet');
         Route::get('my-daily-assessments', [StudentAcademicController::class, 'dailyAssessments'])->name('student.daily-assessments');
         Route::get('my-billings/{billing}/checkout', [StudentFinanceController::class, 'checkout'])->name('finance.student.checkout');
         Route::get('gateway/{billing}/mock', [StudentFinanceController::class, 'mockGateway'])->name('finance.mock-gateway');
@@ -327,6 +334,8 @@ Route::middleware('auth')->group(function () {
         Route::get('child/{student}/attendance', [ParentPortalController::class, 'viewAttendanceHistory'])->name('attendance');
         Route::get('child/{student}/billings', [ParentPortalController::class, 'viewBillings'])->name('billings');
         Route::get('child/{student}/daily-assessments', [ParentPortalController::class, 'viewDailyAssessments'])->name('daily-assessments');
+        Route::get('child/{student}/wallet', [ParentPortalController::class, 'viewWadiahWallet'])->name('wallet');
+        Route::post('child/{student}/wallet/limit', [ParentPortalController::class, 'setWadiahLimit'])->name('wallet.limit');
 
         // Fitur Pembayaran / Billings
         Route::get('billing/{billing}/checkout', [ParentPortalController::class, 'checkout'])->name('billings.checkout');
@@ -1261,6 +1270,84 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('developer')->name(
     Route::get('/', [\App\Http\Controllers\Admin\DeveloperPortalController::class, 'index'])->name('portal');
     Route::get('/{category}', [\App\Http\Controllers\Admin\DeveloperPortalController::class, 'index'])->name('page');
     Route::get('/{category}/{page}', [\App\Http\Controllers\Admin\DeveloperPortalController::class, 'index'])->name('subpage');
+});
+
+// =========================================================
+// FINANCE — Tabungan Wadiah & Cashless Kantin (Admin/TU/Merchant)
+// =========================================================
+Route::middleware(['auth'])->group(function () {
+    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/wadiah')->name('admin.finance.wadiah.')->group(function () {
+        Route::get('dashboard', [WadiahController::class, 'dashboard'])->name('dashboard');
+        Route::get('accounts', [WadiahController::class, 'index'])->name('index');
+        Route::get('accounts/{account}', [WadiahController::class, 'showAccount'])->name('show');
+        Route::get('accounts/{account}/deposit', [WadiahController::class, 'depositForm'])->name('deposit');
+        Route::post('deposit', [WadiahController::class, 'storeDeposit'])->name('deposit.store');
+        Route::get('accounts/{account}/withdraw', [WadiahController::class, 'withdrawForm'])->name('withdraw');
+        Route::post('withdraw', [WadiahController::class, 'storeWithdraw'])->name('withdraw.store');
+        Route::post('accounts/{account}/limit', [WadiahController::class, 'setLimit'])->name('limit.store');
+        Route::get('accounts/{account}/export-passbook', [WadiahController::class, 'exportPassbook'])->name('export-passbook');
+    });
+
+    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/canteen')->name('admin.finance.canteen.')->group(function () {
+        Route::get('merchants', [CanteenController::class, 'merchants'])->name('merchants');
+        Route::post('merchants', [CanteenController::class, 'storeMerchant'])->name('merchants.store');
+        Route::post('merchants/{id}/toggle', [CanteenController::class, 'toggleMerchant'])->name('merchants.toggle');
+    });
+
+    Route::middleware('role:merchant,admin,superadmin')->prefix('merchant/canteen')->name('merchant.canteen.')->group(function () {
+        Route::get('dashboard', [CanteenController::class, 'merchantDashboard'])->name('dashboard');
+        Route::get('pos', [CanteenController::class, 'posTerminal'])->name('pos');
+        Route::post('payment', [CanteenController::class, 'processPayment'])->name('payment');
+        Route::get('settlement', [CanteenController::class, 'settlementReport'])->name('settlement');
+    });
+
+    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/charity')->name('admin.finance.charity.')->group(function () {
+        Route::get('/', [CharityController::class, 'index'])->name('index');
+        Route::get('create', [CharityController::class, 'create'])->name('create');
+        Route::post('store', [CharityController::class, 'store'])->name('store');
+        Route::get('{id}/edit', [CharityController::class, 'edit'])->name('edit');
+        Route::put('{id}/update', [CharityController::class, 'update'])->name('update');
+        Route::get('{campaignId}/donors', [CharityController::class, 'campaignDonors'])->name('donors');
+        Route::post('donations/{id}/verify', [CharityController::class, 'verify'])->name('verify');
+        Route::post('donations/{id}/cancel', [CharityController::class, 'cancel'])->name('cancel');
+    });
+
+    Route::middleware('role:student,parent,admin,superadmin')->prefix('portal/charity')->name('portal.charity.')->group(function () {
+        Route::get('/', [CharityController::class, 'portal'])->name('portal');
+        Route::get('donate/{campaignId}', [CharityController::class, 'donateForm'])->name('donate');
+        Route::post('donate', [CharityController::class, 'processDonate'])->name('donate.store');
+        Route::get('history', [CharityController::class, 'history'])->name('history');
+        Route::get('donations/{id}/certificate', [CharityController::class, 'downloadCertificate'])->name('certificate');
+    });
+
+    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/integration/sync')->name('admin.integration.sync.')->group(function () {
+        Route::get('dashboard', [SyncController::class, 'dashboard'])->name('dashboard');
+        Route::get('mapping/{target}/{table}', [SyncController::class, 'mappingForm'])->name('mapping');
+        Route::post('mapping', [SyncController::class, 'saveMapping'])->name('mapping.store');
+        Route::get('validation/{target}/{table}', [SyncController::class, 'runValidation'])->name('validation');
+        Route::get('export/{target}/{table}', [SyncController::class, 'exportData'])->name('export');
+        Route::get('history', [SyncController::class, 'syncHistory'])->name('history');
+    });
+
+    Route::middleware('role:guru,admin,superadmin')->prefix('academic/copilot')->name('academic.copilot.')->group(function () {
+        Route::get('/', [AiCopilotController::class, 'index'])->name('index');
+        Route::get('rpp', [AiCopilotController::class, 'rppForm'])->name('rpp');
+        Route::post('rpp', [AiCopilotController::class, 'generateRpp'])->name('rpp.generate');
+        Route::post('rpp/save', [AiCopilotController::class, 'saveRppToSista'])->name('rpp.save');
+        Route::get('cbt', [AiCopilotController::class, 'cbtForm'])->name('cbt');
+        Route::post('cbt', [AiCopilotController::class, 'generateCbt'])->name('cbt.generate');
+        Route::post('cbt/save', [AiCopilotController::class, 'saveCbtToSista'])->name('cbt.save');
+    });
+
+    Route::get('assets/maintenance/scan/{uuid}', [AssetMaintenanceTicketController::class, 'scanQr'])->name('admin.assets.maintenance.scan');
+    Route::post('assets/maintenance/ticket', [AssetMaintenanceTicketController::class, 'storeTicket'])->name('admin.assets.maintenance.store');
+
+    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/assets/maintenance')->name('admin.assets.maintenance.')->group(function () {
+        Route::get('/', [AssetMaintenanceTicketController::class, 'index'])->name('index');
+        Route::get('tickets/{id}', [AssetMaintenanceTicketController::class, 'showTicket'])->name('show');
+        Route::post('tickets/{id}/status', [AssetMaintenanceTicketController::class, 'updateTicketStatus'])->name('update-status');
+        Route::get('print-qr', [AssetMaintenanceTicketController::class, 'generateQrLabels'])->name('print-qr');
+    });
 });
 
 require __DIR__.'/auth.php';

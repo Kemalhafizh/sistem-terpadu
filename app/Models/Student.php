@@ -47,6 +47,11 @@ class Student extends Model
         return $this->hasMany(MutabaahLog::class);
     }
 
+    public function wadiahAccount()
+    {
+        return $this->hasOne(WadiahAccount::class);
+    }
+
     public function mutations()
     {
         return $this->hasMany(StudentMutation::class);

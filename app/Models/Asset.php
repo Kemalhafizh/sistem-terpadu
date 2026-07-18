@@ -94,4 +94,9 @@ class Asset extends Model
     {
         return $this->hasMany(AssetMaintenance::class);
     }
+
+    public function maintenanceTickets()
+    {
+        return $this->hasMany(AssetMaintenanceTicket::class);
+    }
 }

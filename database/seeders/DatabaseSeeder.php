@@ -58,6 +58,10 @@ class DatabaseSeeder extends Seeder
                 StudentHealthSeeder::class,
                 WhatsappEnhancementSeeder::class,
                 AnalyticsDataSeeder::class,
+                WadiahAndCanteenSeeder::class,
+                CharitySeeder::class,
+                SyncConfigSeeder::class,
+                AssetMaintenanceTicketSeeder::class,
             ]);
         });
     }

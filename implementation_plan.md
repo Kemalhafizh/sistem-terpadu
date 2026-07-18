@@ -2548,7 +2548,485 @@ Checklist:
 
 ---
 
-## 📋 Urutan Prioritas Implementasi (Updated)
+## 📦 FASE 21: Fitur Baru — Manajemen Keuangan Syariah, ZIS & Wakaf Sekolah
+
+**Fokus:** Menghadirkan nilai-nilai keislaman pada aspek finansial sekolah melalui implementasi tabungan syariah siswa wadiah, cashless canteen, serta portal Zakat, Infaq, Shodaqoh (ZIS) & Wakaf yang terintegrasi dengan yayasan induk (YBWSA).
+
+---
+
+### 💳 Modul 21.1: Tabungan Wadiah Siswa & Cashless Canteen System (Selesai ✅)
+
+Sistem tabungan internal sekolah berbasis akad Wadiah (titipan amanah). Siswa atau orang tua dapat menyetor dana untuk digunakan sebagai alat pembayaran nontunai (cashless) di kantin dan koperasi sekolah, lengkap dengan rekapitulasi pengeluaran harian dan batasan limit jajan harian dari orang tua.
+
+#### User Review Required
+> [!IMPORTANT]
+> **Metode Identifikasi Transaksi Kantin:**
+> Mengingat platform berjalan penuh di localhost, verifikasi transaksi kantin akan disimulasikan menggunakan scan QR Code unik siswa (generasi statis di layar profil siswa) atau penginputan Nomor Induk Siswa (NIS) oleh kasir kantin. Apakah ini disetujui, atau apakah diperlukan integrasi dengan NFC emulator untuk simulasi kartu fisik?
+> *Usulan Kami:* Menggunakan QR Code dinamis berbasis waktu (TOTP) di halaman Portal Siswa yang discan oleh kasir menggunakan kamera web/kamera laptop.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_syariah_savings_and_canteen_tables`
+```php
+Schema::create('wadiah_accounts', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
+    $table->string('account_number')->unique();              // Auto: WDH-YYYYMM-NNNN
+    $table->decimal('balance', 12, 2)->default(0.00);
+    $table->decimal('daily_spending_limit', 12, 2)->default(50000.00); // Batasan belanja harian oleh ortu
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('wadiah_transactions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('wadiah_account_id')->constrained('wadiah_accounts')->cascadeOnDelete();
+    $table->enum('type', ['deposit', 'withdrawal', 'purchase', 'refund']);
+    $table->decimal('amount', 12, 2);
+    $table->decimal('previous_balance', 12, 2);
+    $table->decimal('current_balance', 12, 2);
+    $table->string('reference_number')->unique();            // Ref transaksi
+    $table->string('description')->nullable();
+    $table->foreignId('processed_by')->constrained('users'); // Petugas koperasi/kantin/kasir
+    $table->timestamps();
+});
+
+Schema::create('canteen_merchants', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');                                  // "Kantin Bu Sri", "Koperasi YBWSA"
+    $table->foreignId('owner_user_id')->constrained('users'); // Akun merchant kantin
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('canteen_transactions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('canteen_merchant_id')->constrained('canteen_merchants');
+    $table->foreignId('wadiah_transaction_id')->nullable()->constrained('wadiah_transactions')->nullOnDelete();
+    $table->json('items_ordered');                           // [{"name":"Nasi Goreng","qty":1,"price":12000}]
+    $table->decimal('total_amount', 12, 2);
+    $table->timestamps();
+});
+```
+
+##### [NEW] Models
+```
+app/Models/
+├── WadiahAccount.php      → belongsTo(Student), hasMany(WadiahTransaction)
+├── WadiahTransaction.php  → belongsTo(WadiahAccount, User processed_by), hasOne(CanteenTransaction)
+├── CanteenMerchant.php    → belongsTo(User), hasMany(CanteenTransaction)
+└── CanteenTransaction.php → belongsTo(CanteenMerchant, WadiahTransaction)
+```
+
+##### [NEW] `app/Http/Controllers/Finance/WadiahController.php`
+```php
+class WadiahController extends Controller
+{
+    public function dashboard()                             // Dashboard tabungan: total tabungan sekolah, chart transaksi
+    public function index()                                 // List rekening siswa (admin/TU)
+    public function showAccount($id)                        // Detail rekening + riwayat transaksi lengkap
+    public function depositForm($accountId)                 // Form setor tunai
+    public function storeDeposit(Request $r)                // Simpan setoran tunai
+    public function withdrawForm($accountId)                // Form tarik tunai
+    public function storeWithdraw(Request $r)               // Simpan penarikan tunai
+    public function setLimit($accountId, Request $r)        // Atur limit harian (oleh orang tua/wali)
+    public function exportPassbook($accountId)              // Cetak buku tabungan PDF
+}
+```
+
+##### [NEW] `app/Http/Controllers/Finance/CanteenController.php`
+```php
+class CanteenController extends Controller
+{
+    public function merchantDashboard()                     // Panel pemilik kantin: penjualan hari ini, daftar transaksi
+    public function posTerminal()                           // Terminal kasir kantin (tambah item belanjaan → scan QR/input NIS)
+    public function processPayment(Request $r)              // Eksekusi pembayaran wadiah, validasi saldo & limit harian
+    public function settlementReport()                      // Laporan pencairan dana kantin ke rekening bank merchant
+}
+```
+
+##### [NEW] `app/Services/WadiahService.php`
+```php
+class WadiahService
+{
+    public function createAccount(Student $student): WadiahAccount;
+    public function deposit(WadiahAccount $account, float $amount, int $processedBy, string $desc = ''): WadiahTransaction;
+    public function withdraw(WadiahAccount $account, float $amount, int $processedBy, string $desc = ''): WadiahTransaction;
+    public function purchase(WadiahAccount $account, float $amount, int $merchantUserId, array $items): WadiahTransaction;
+    public function checkDailyLimit(WadiahAccount $account, float $amountRequested): bool;
+}
+```
+
+---
+
+### 🕌 Modul 21.2: Portal ZIS & Wakaf YBWSA Sekolah (Selesai ✅)
+
+Penyediaan kanal donasi digital khusus untuk seluruh civitas akademika (guru, siswa, orang tua) yang disalurkan langsung ke program YBWSA. Mencakup pelacakan dana tersalurkan dan sertifikat apresiasi elektronik (e-sertifikat).
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_zis_wakaf_tables`
+```php
+Schema::create('charity_campaigns', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');                                 // "Wakaf Pembangunan Masjid Sultan Agung"
+    $table->enum('type', ['zakat', 'infaq', 'shodaqoh', 'wakaf']);
+    $table->text('description');
+    $table->decimal('target_amount', 12, 2)->nullable();
+    $table->decimal('collected_amount', 12, 2)->default(0);
+    $table->date('end_date')->nullable();
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('charity_donations', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('charity_campaign_id')->constrained('charity_campaigns')->cascadeOnDelete();
+    $table->foreignId('user_id')->nullable()->constrained('users'); // NULL jika anonim
+    $table->string('donor_name');                            // "Hamba Allah" jika anonim
+    $table->decimal('amount', 12, 2);
+    $table->enum('payment_method', ['transfer', 'wadiah_wallet', 'cash']);
+    $table->enum('status', ['pending', 'verified', 'cancelled'])->default('pending');
+    $table->string('evidence_path')->nullable();             // Bukti transfer
+    $table->boolean('is_anonymous')->default(false);
+    $table->string('receipt_number')->unique();              // ZIS-YYYYMMDD-NNNN
+    $table->timestamps();
+});
+```
+
+##### [NEW] `app/Http/Controllers/Finance/CharityController.php`
+```php
+class CharityController extends Controller
+{
+    public function index()                                 // List campaign ZIS & Wakaf aktif bagi publik/siswa
+    public function campaignDetail($id)                     // Detail campaign + list donatur terbaru
+    public function donateForm($campaignId)                 // Form pengisian donasi
+    public function submitDonation(Request $r)              // Kirim donasi (upload bukti / potong saldo wadiah)
+    public function manageCampaigns()                       // Admin: CRUD campaign
+    public function verifyDonations()                       // Admin: daftar verifikasi pembayaran donasi
+    public function approveDonation($id)                    // Admin: verifikasi sukses, generate receipt & e-sertifikat
+    public function printReceipt($id)                       // Unduh kuitansi resmi donasi PDF
+}
+```
+
+---
+
+## 📦 FASE 22: Fitur Baru — Integrasi Dapodik/EMIS & AI Copilot untuk Guru
+
+**Fokus:** Otomatisasi sinkronisasi data sekolah ke sistem Kemendikbud & Kemenag, serta pemanfaatan kecerdasan buatan untuk meningkatkan efisiensi tugas guru.
+
+---
+
+### 🖥️ Modul 22.1: Dapodik & EMIS Sync Mapper (Selesai ✅)
+
+SMA Islam Sultan Agung 1 Semarang harus melaporkan data ganda ke Kemendikbud (Dapodik) dan Kemenag (EMIS). Modul ini menyediakan visual mapper untuk memetakan kolom database lokal ke skema ekspor EMIS/Dapodik, mendeteksi ketidakcocokan data (mismatches), dan memvalidasi kelengkapan data siswa/guru sebelum ekspor.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_sync_mapping_tables`
+```php
+Schema::create('sync_configs', function (Blueprint $table) {
+    $table->id();
+    $table->string('system_target');                         // "dapodik" atau "emis"
+    $table->string('local_table');                           // "students", "teachers", "classrooms"
+    $table->json('field_mapping');                           // Map local_col => target_col
+    $table->timestamps();
+});
+
+Schema::create('sync_reports', function (Blueprint $table) {
+    $table->id();
+    $table->string('system_target');
+    $table->timestamp('sync_run_at');
+    $table->integer('records_processed');
+    $table->integer('records_success');
+    $table->integer('records_failed');
+    $table->json('error_logs')->nullable();                  // Detail data mana yang gagal beserta alasannya
+    $table->foreignId('run_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+##### [NEW] `app/Http/Controllers/Admin/SyncController.php`
+```php
+class SyncController extends Controller
+{
+    public function dashboard()                             // Tampilan status sinkronisasi, log terakhir, widget alert kegagalan
+    public function mappingForm($target)                    // Halaman setting pemetaan kolom database
+    public function saveMapping(Request $r)                 // Simpan pemetaan kolom
+    public function runValidation($target)                  // Audit data lokal: cek NISN kosong, NUPTK salah format, dll
+    public function exportData($target, $type)              // Generate file ekspor (.xlsx / .xml / .json) siap unggah
+    public function syncHistory()                           // Riwayat laporan ekspor/sinkronisasi
+}
+```
+
+---
+
+### 🤖 Modul 22.2: AI Teacher Copilot (RPP & CBT Generator) (Selesai ✅)
+
+Asisten AI khusus guru untuk membantu menyusun Rencana Pelaksanaan Pembelajaran (RPP) berbasis Kurikulum Merdeka dan membuat butir soal ujian secara otomatis berdasarkan modul ajar. Karena berjalan di localhost, modul ini akan menyediakan integrasi API key OpenAI/Gemini API yang fleksibel, lengkap dengan local fallback model berbasis aturan (rule-based) jika koneksi internet terputus.
+
+#### Rencana Implementasi
+
+##### [NEW] `app/Services/AiCopilotService.php`
+```php
+class AiCopilotService
+{
+    public function generateLessonPlan(string $subject, string $topic, string $gradeLevel, array $competencies): string;
+    public function generateExamQuestions(string $materialText, string $type, int $count, string $difficulty): array;
+}
+```
+
+##### [NEW] `app/Http/Controllers/Academic/AiCopilotController.php`
+```php
+class AiCopilotController extends Controller
+{
+    public function index()                                 // Menu dashboard AI Teacher Copilot
+    public function lessonPlanForm()                        // Form pembuat RPP otomatis
+    public function generateLessonPlan(Request $r)          // Kirim prompt ke AI, dapatkan output markdown RPP
+    public function saveLessonPlanToCurriculum(Request $r)  // Simpan hasil RPP ke tabel lesson_plans internal
+    public function questionGeneratorForm()                 // Form pembuat soal otomatis (input teks materi / silabus)
+    public function generateQuestions(Request $r)           // Kirim materi ke AI, hasilkan butir soal pilihan ganda/esai
+    public function importQuestionsToBank(Request $r)       // Masukkan soal hasil generate ke bank soal CBT internal
+}
+```
+
+##### [NEW] Views
+```
+resources/views/academic/ai-copilot/
+├── index.blade.php              # Navigasi utama AI Copilot
+├── lesson-plan.blade.php        # Form input kompetensi inti + area output RPP editor (split-screen)
+└── question-generator.blade.php # Generator soal: input teks modul ajar → output grid butir soal dengan pilihan jawaban
+```
+
+---
+
+## 📦 FASE 23: Fitur Baru — Manajemen Aset IoT (Smart School Inventory) & Barcode
+
+**Fokus:** Digitalisasi pencatatan aset fisik sekolah menggunakan pelabelan QR Code, integrasi tiket perawatan sarana prasarana, serta integrasi peminjaman buku perpustakaan via scan barcode.
+
+---
+
+### 🏷️ Modul 23.1: QR Code Asset Tracking & Maintenance Ticket
+
+Pelabelan seluruh barang inventaris sekolah (meja, kursi, komputer lab, AC, proyektor) dengan QR Code unik. Guru dan siswa dapat memindai QR Code tersebut untuk melaporkan kerusakan langsung, otomatis menerbitkan tiket perawatan bagi waka sarpras.
+
+#### Rencana Implementasi
+
+##### [MODIFY] Migration: `enhance_assets_for_qr_and_maintenance`
+```php
+Schema::table('assets', function (Blueprint $table) {
+    $table->string('qr_code')->nullable()->unique()->after('code');
+});
+
+Schema::create('asset_maintenance_tickets', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('asset_id')->constrained('assets')->cascadeOnDelete();
+    $table->foreignId('reported_by')->constrained('users');
+    $table->text('issue_description');
+    $table->enum('priority', ['low', 'medium', 'high', 'critical'])->default('medium');
+    $table->enum('status', ['pending', 'investigating', 'repairing', 'resolved', 'scrapped'])->default('pending');
+    $table->string('photo_evidence')->nullable();
+    $table->text('resolution_notes')->nullable();
+    $table->foreignId('resolved_by')->nullable()->constrained('users'); // Petugas sarpras
+    $table->timestamp('resolved_at')->nullable();
+    $table->timestamps();
+});
+```
+
+##### [NEW] `app/Http/Controllers/Admin/AssetMaintenanceTicketController.php`
+```php
+class AssetMaintenanceTicketController extends Controller
+{
+    public function scanQr($qrCode)                          // Endpoint redirect scan QR: tampilkan info detail aset + tombol lapor
+    public function createTicketForm($assetId)               // Form pelaporan masalah
+    public function storeTicket(Request $r)                  // Simpan tiket keluhan sarpras
+    public function index()                                  // Admin Sarpras: List tiket masuk + filter status/prioritas
+    public function editTicket($id)                          // Update progres perbaikan
+    public function updateTicketStatus($id, Request $r)      // Ubah status + catatan penyelesaian
+    public function generateQrLabels()                       // Cetak label lembaran QR Code massal (PDF grid)
+}
+```
+
+##### [NEW] Views
+```
+resources/views/assets/maintenance/
+├── scan.blade.php               # Halaman responsif mobile: info barang & form cepat laporkan masalah
+├── index.blade.php              # Dashboard Sarpras: Kanban board tiket perbaikan aset
+├── ticket-detail.blade.php      # Riwayat kerusakan per barang + status penanganan
+└── qr-print.blade.php           # Lembaran cetak stiker QR Code (layout CSS grid print)
+```
+
+---
+
+### 📚 Modul 23.2: Barcode & NFC Integrasi Perpustakaan
+
+Peningkatan sirkulasi perpustakaan dengan integrasi barcode scanner untuk mempercepat proses pencatatan peminjaman (borrow) dan pengembalian (return) buku fisik.
+
+#### Rencana Implementasi
+
+##### [MODIFY] `app/Http/Controllers/LibraryController.php`
+```php
+// Tambahkan method baru untuk sirkulasi cepat:
+public function quickCirculationTerminal()               // Terminal sirkulasi cepat perpustakaan
+public function processBarcodeBorrow(Request $r)         // Proses pinjam buku via input scan barcode buku + NIS siswa
+public function processBarcodeReturn(Request $r)         // Proses kembali buku via input scan barcode buku
+```
+
+##### [NEW] Views
+```
+resources/views/library/
+└── quick-terminal.blade.php     # Terminal minimalis: autofokus input scanner, scan siswa → scan buku → selesai (AJAX feedback)
+```
+
+---
+
+## 📦 FASE 24: Fitur Baru — Keamanan Sistem, Audit Keuangan & Forensic Log
+
+**Fokus:** Menjamin akuntabilitas pengelolaan keuangan sekolah serta perlindungan data dari serangan siber melalui forensic logging, security alert, dan audit double-entry otomatis.
+
+---
+
+### ⚖️ Modul 24.1: Double-Entry Ledger Auditor & Fraud Detector
+
+Mengingat platform memiliki sistem pencatatan keuangan double-entry (`JournalEntry` & `JournalEntryLine`), modul ini bertindak sebagai auditor internal otomatis. Sistem akan memindai seluruh entri jurnal keuangan secara berkala, memastikan keseimbangan debit-kredit, dan mendeteksi adanya transaksi aneh (misal: pengeluaran tanpa akun kas berpasangan, atau perubahan manual saldo akun di luar entri jurnal).
+
+#### Rencana Implementasi
+
+##### [NEW] `app/Services/FinancialAuditorService.php`
+```php
+class FinancialAuditorService
+{
+    public function auditLedgerBalance(): array;             // Deteksi selisih total debit vs kredit global
+    public function findUnbalancedEntries(): Collection;      // Cari entri jurnal yang debit & kreditnya tidak balance
+    public function detectManualBalanceModifications(): array; // Bandingkan saldo akun kalkulasi historis vs saldo kolom 'balance' riil
+    public function runAuditCheck(): array;                  // Eksekusi semua modul audit, kembalikan summary temuan
+}
+```
+
+##### [NEW] `app/Http/Controllers/Finance/FinancialAuditController.php`
+```php
+class FinancialAuditController extends Controller
+{
+    public function index()                                 // Dashboard audit keuangan: status audit terakhir, rekap temuan
+    public function runAudit()                              // Jalankan audit langsung, tampilkan log hasil
+    public function showUnbalancedJournalDetails($id)       // Tampilkan detail jurnal bermasalah
+    public function exportAuditReport()                     // Unduh laporan hasil audit keuangan PDF resmi
+}
+```
+
+##### [NEW] Views
+```
+resources/views/finance/audit/
+├── index.blade.php              # Dashboard status audit keuangan (badge hijau: Aman, merah: Bahaya/Selisih)
+└── report.blade.php             # Tampilan log audit terperinci dan instruksi perbaikan jurnal selisih
+```
+
+---
+
+### 🛡️ Modul 24.2: Security Forensic Log & Intrusion Prevention Dashboard
+
+Memonitor aktivitas keamanan sistem secara forensik, melacak detail login mencurigakan (perubahan IP tiba-tiba, user agent tidak wajar), mencatat modifikasi data kritis (misal: pengubahan nilai raport di luar jam kerja), dan menyediakan tombol darurat "Lockdown System" bagi superadmin jika terindikasi adanya serangan.
+
+#### Rencana Implementasi
+
+##### [NEW] Migration: `create_security_forensic_tables`
+```php
+Schema::create('security_threat_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+    $table->string('event_type');                            // "brute_force", "unauthorized_escalation", "impossible_travel"
+    $table->string('severity');                              // "low", "medium", "high", "critical"
+    $table->string('ip_address');
+    $table->string('user_agent');
+    $table->json('payload_data')->nullable();                // Detail request mencurigakan
+    $table->boolean('is_resolved')->default(false);
+    $table->timestamps();
+});
+
+Schema::table('settings', function (Blueprint $table) {
+    $table->boolean('is_system_lockdown')->default(false);   // Flag darurat global
+});
+```
+
+##### [NEW] Middleware: `SystemLockdownMiddleware`
+```php
+class SystemLockdownMiddleware
+{
+    public function handle($request, Closure $next)
+    {
+        // Jika status lockdown aktif, blokir seluruh rute kecuali halaman login admin tertentu
+        if (Setting::get('is_system_lockdown', false)) {
+            if (!$request->is('admin/security*') && !$request->is('logout')) {
+                abort(503, 'Sistem dinonaktifkan sementara karena alasan keamanan.');
+            }
+        }
+        return $next($request);
+    }
+}
+```
+
+##### [NEW] `app/Http/Controllers/Admin/SecurityDashboardController.php`
+```php
+class SecurityDashboardController extends Controller
+{
+    public function dashboard()                             // Dashboard keamanan: visualisasi login gagal, aktivitas admin
+    public function threatLogs()                            // List log ancaman/ancaman keamanan sistem
+    public function toggleLockdown()                        // Aktifkan / nonaktifkan status lockdown darurat sekolah
+    public function blockIp(Request $r)                     // Blokir IP address tertentu dari akses web
+    public function activeSessions()                        // Daftar session aktif seluruh user saat ini
+    public function terminateSession($sessionId)            // Paksa logout salah satu user yang mencurigakan
+}
+```
+
+##### [NEW] Views
+```
+resources/views/admin/security/
+├── dashboard.blade.php          # Monitor ancaman keamanan real-time, tombol Lockdown merah menyala
+└── logs.blade.php               # Forensic audit trail: pencatatan detail siapa mengubah apa, kapan, dan di mana
+```
+
+---
+
+## 🧪 Rencana Verifikasi Fase 21-24
+
+### 1. Automated Tests (Unit & Feature)
+
+##### [NEW] Tests
+```
+tests/Feature/Finance/WadiahSavingsTest.php:
+- Setor tunai wadiah menambah saldo dengan benar.
+- Tarik tunai memotong saldo & memicu exception jika saldo tidak cukup.
+- Batasan limit jajan harian berfungsi menolak transaksi koperasi jika terlampaui.
+
+tests/Feature/Finance/ZisWakafTest.php:
+- Pendaftar dapat mengirim donasi ke program YBWSA.
+- Admin dapat memverifikasi donasi & kuitansi ZIS terbit dengan nomor unik.
+
+tests/Feature/Academic/SyncDapodikEmisTest.php:
+- Menjamin pemetaan kolom dan ekspor XML/JSON file sync lolos validasi skema nasional.
+
+tests/Feature/Academic/AiCopilotTest.php:
+- Output RPP & Soal CBT tergenerate dengan format yang valid dan tersimpan di bank soal lokal.
+
+tests/Feature/Admin/AssetMaintenanceTest.php:
+- Scanning QR Code mengembalikan informasi aset secara presisi.
+- Pengaduan masalah sarpras otomatis menerbitkan tiket maintenance berstatus pending.
+
+tests/Feature/Finance/LedgerAuditTest.php:
+- Auditor mendeteksi secara akurat jika entri debit vs kredit jurnal keuangan tidak berimbang (unbalanced).
+
+tests/Feature/Security/ForensicSecurityTest.php:
+- Sistem mendeteksi ancaman brute force & menolak akses rute saat lockdown aktif.
+```
+
+### 2. Manual Verification
+* Akses terminal POS kantin, uji coba transaksi potong saldo dengan NIS siswa yang memiliki saldo cukup vs kurang.
+* Jalankan simulasi audit ledger keuangan, sengaja buat satu jurnal tidak berimbang di database, pastikan dashboard audit memunculkan peringatan merah bahaya.
+* Tekan tombol "Lockdown System", verifikasi bahwa rute e-learning/SPP siswa langsung memunculkan halaman error 503 Maintenance.
+
+---
+
+## 📋 Urutan Prioritas Implementasi (Updated Juli 2026)
 
 | Prioritas | Modul | Estimasi | Status |
 | :---: | :--- | :--- | :---: |
@@ -2570,7 +3048,6 @@ Checklist:
 | 🟢 **P3** | 14.2: Animasi & Micro-Interactions | 2 hari | ✅ Selesai |
 | 🟢 **P3** | 14.3: Error & Empty State Pages | 1-2 hari | ✅ Selesai |
 | 🟢 **P3** | 14.4: Factory & Test Expansion | 3-4 hari | ✅ Selesai |
-| | | | |
 | 🔴 **P0** | **16.1: Sistem SPMB Online Komprehensif** | **5-7 hari** | ✅ Selesai |
 | 🔴 **P0** | **16.2: Overhaul Alumni & Tracer Study** | **3-4 hari** | ✅ Selesai |
 | 🟠 **P1** | **16.3: Penguatan HRD & Kepegawaian** | **4-5 hari** | ✅ Selesai |
@@ -2589,27 +3066,32 @@ Checklist:
 | 🟢 **P3** | **20.1: Landing Page Polish** | **2-3 hari** | ✅ Selesai |
 | 🟢 **P3** | **20.2: PWA Enhancement** | **2 hari** | ✅ Selesai |
 | 🟢 **P3** | **20.3: Documentation & Dev Portal** | **2-3 hari** | ✅ Selesai |
-
-**Total Estimasi Fase 11-15 (Selesai):** ~38-50 hari kerja ✅
-**Total Estimasi Fase 16-20 (Baru):** ~48-62 hari kerja ✅
-**Grand Total Estimasi:** ~86-112 hari kerja (18-22 minggu) ✅
+| 🔴 **P0** | **21.1: Tabungan Wadiah & Cashless Kantin** | **4-5 hari** | ✅ Selesai |
+| 🟠 **P1** | **21.2: Portal ZIS & Wakaf YBWSA** | **3-4 hari** | ✅ Selesai |
+| 🔴 **P0** | **22.1: Dapodik & EMIS Sync Mapper** | **3-4 hari** | ✅ Selesai |
+| 🟠 **P1** | **22.2: AI Teacher Copilot (RPP & CBT)** | **4-5 hari** | ✅ Selesai |
+| 🟡 **P2** | **23.1: IoT QR Code Asset Tracking** | **3-4 hari** | ⬜ Belum |
+| 🟡 **P2** | **23.2: Barcode & NFC Integrasi Library** | **2-3 hari** | ⬜ Belum |
+| 🔴 **P0** | **24.1: Double-Entry Ledger Auditor** | **3-4 hari** | ⬜ Belum |
+| 🟢 **P3** | **24.2: Security Dashboard & Intrusion Alert** | **3-4 hari** | ⬜ Belum |
 
 ---
 
-## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target Updated)
+## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target Akhir Terkini)
 
-| Metrik | Sekarang | Target (Fase 15) | **Target Akhir (Fase 20)** |
+| Metrik | Sekarang | Target Akhir (Fase 20) | **Target Akhir (Fase 24)** |
 | :--- | :---: | :---: | :---: |
-| **Model Eloquent** | 119 | ~120 | **~145** |
-| **Controller** | ~77 | ~112 | **~90** |
-| **Service Class** | 39 | ~40 | **~48** |
-| **Migration** | 99 | ~100 | **~112** |
-| **View Directory** | 61 | ~65 | **~75** |
-| **Blade Templates** | ~350 | ~340 | **~430** |
-| **Test Files** | ~90 | ~90 | **~120** |
-| **Seeder Files** | 30 | ~30 | **~38** |
-| **Factory Files** | 29 | ~24 | **~38** |
-| **Demo Records** | ~3000 | ~3000+ | **~5000+** |
+| **Model Eloquent** | 119 | ~145 | **~158** |
+| **Controller** | ~77 | ~90 | **~105** |
+| **Service Class** | 39 | ~48 | **~54** |
+| **Migration** | 99 | ~112 | **~118** |
+| **View Directory** | 61 | ~75 | **~85** |
+| **Blade Templates** | ~350 | ~430 | **~480** |
+| **Test Files** | ~90 | ~120 | **~135** |
+| **Seeder Files** | 30 | ~38 | **~45** |
+| **Factory Files** | 29 | ~38 | **~45** |
+| **Demo Records** | ~3000 | ~5000+ | **~7500+** |
+
 
 ---
 

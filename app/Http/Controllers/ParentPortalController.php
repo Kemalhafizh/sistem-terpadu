@@ -12,6 +12,8 @@ use App\Models\ReportCard;
 use App\Models\Schedule;
 use App\Models\SchedulePreset;
 use App\Models\Student;
+use App\Models\WadiahAccount;
+use App\Services\WadiahService;
 use App\Models\UksVisit;
 use App\Models\User;
 use App\Events\ChatMessageSent;
@@ -537,5 +539,42 @@ class ParentPortalController extends Controller
             ->get();
 
         return view('daily-assessments.parent-index', compact('student', 'dailyScores', 'activeYear'));
+    }
+
+    /**
+     * View child's Wadiah savings mutations.
+     */
+    public function viewWadiahWallet(Student $student)
+    {
+        $this->validateChild($student);
+
+        // Ensure wadiah account exists
+        $wadiahService = app(WadiahService::class);
+        $account = $wadiahService->createAccount($student);
+
+        $transactions = $account->transactions()->with('processedBy')->latest()->paginate(15);
+
+        return view('parent.wadiah', compact('student', 'account', 'transactions'));
+    }
+
+    /**
+     * Set daily spending limit for child.
+     */
+    public function setWadiahLimit(Student $student, Request $request)
+    {
+        $this->validateChild($student);
+
+        $request->validate([
+            'daily_spending_limit' => 'required|numeric|min:0',
+        ]);
+
+        $account = WadiahAccount::where('student_id', $student->id)->first();
+        if ($account) {
+            $account->update([
+                'daily_spending_limit' => $request->daily_spending_limit,
+            ]);
+        }
+
+        return back()->with('success', 'Batasan limit jajan harian anak berhasil diperbarui.');
     }
 }

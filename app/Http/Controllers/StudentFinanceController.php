@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Billing;
 use App\Models\Payment;
 use App\Models\Student;
+use App\Models\WadiahAccount;
+use App\Services\WadiahService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -159,5 +161,28 @@ class StudentFinanceController extends Controller
         });
 
         return redirect()->route('finance.student.index')->with('success', 'Pembayaran berhasil dikonfirmasi secara otomatis!');
+    }
+
+    /**
+     * Show student's Wadiah savings/wallet.
+     */
+    public function wadiahWallet()
+    {
+        $student = Student::where('user_id', auth()->id())->first();
+        if (! $student && (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')) {
+            $student = Student::first();
+        }
+        if (! $student) {
+            return back()->with('error', 'Profil siswa tidak ditemukan.');
+        }
+
+        // Use service to get or create account
+        $wadiahService = app(WadiahService::class);
+        $account = $wadiahService->createAccount($student);
+
+        // Load transactions
+        $transactions = $account->transactions()->latest()->take(20)->get();
+
+        return view('student.wadiah', compact('account', 'transactions'));
     }
 }
