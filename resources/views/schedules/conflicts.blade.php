@@ -11,7 +11,7 @@
             </div>
             <div>
                 <a href="{{ route('schedules.grid') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                    ⬅️ PLOTTING JADWAL
+                    ⬅ PLOTTING JADWAL
                 </a>
             </div>
         </div>
@@ -30,7 +30,7 @@
             <div class="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center space-x-4">
                     <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl {{ count($conflicts) > 0 ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100' }}">
-                        {{ count($conflicts) > 0 ? '⚠️' : '✅' }}
+                        {{ count($conflicts) > 0 ? '' : '' }}
                     </div>
                     <div>
                         <h3 class="font-black text-lg text-gray-800">Status Audit Database</h3>
@@ -83,16 +83,16 @@
                                     </div>
                                     <h4 class="font-black text-sm text-gray-800 leading-tight">{{ $conflict['schedule_1']->subject->name }}</h4>
                                     <p class="text-[10px] text-gray-500 font-bold">
-                                        👨‍🏫 {{ $conflict['schedule_1']->teacher->name }} <br>
-                                        🏫 Kelas: {{ $conflict['schedule_1']->classroom->name }} <br>
-                                        📍 Ruang: {{ $conflict['schedule_1']->room->name ?? 'Bawaan Kelas' }}
+                                         {{ $conflict['schedule_1']->teacher->name }} <br>
+                                         Kelas: {{ $conflict['schedule_1']->classroom->name }} <br>
+                                         Ruang: {{ $conflict['schedule_1']->room->name ?? 'Bawaan Kelas' }}
                                     </p>
                                 </div>
                                 <div class="border-t border-gray-50 pt-3 mt-4 flex justify-end">
                                     <form action="{{ route('schedules.destroy', $conflict['schedule_1']->id) }}" method="POST">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                                            🗑️ HAPUS JADWAL A
+                                             HAPUS JADWAL A
                                         </button>
                                     </form>
                                 </div>
@@ -107,16 +107,16 @@
                                     </div>
                                     <h4 class="font-black text-sm text-gray-800 leading-tight">{{ $conflict['schedule_2']->subject->name }}</h4>
                                     <p class="text-[10px] text-gray-500 font-bold">
-                                        👨‍🏫 {{ $conflict['schedule_2']->teacher->name }} <br>
-                                        🏫 Kelas: {{ $conflict['schedule_2']->classroom->name }} <br>
-                                        📍 Ruang: {{ $conflict['schedule_2']->room->name ?? 'Bawaan Kelas' }}
+                                         {{ $conflict['schedule_2']->teacher->name }} <br>
+                                         Kelas: {{ $conflict['schedule_2']->classroom->name }} <br>
+                                         Ruang: {{ $conflict['schedule_2']->room->name ?? 'Bawaan Kelas' }}
                                     </p>
                                 </div>
                                 <div class="border-t border-gray-50 pt-3 mt-4 flex justify-end">
                                     <form action="{{ route('schedules.destroy', $conflict['schedule_2']->id) }}" method="POST">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                                            🗑️ HAPUS JADWAL B
+                                             HAPUS JADWAL B
                                         </button>
                                     </form>
                                 </div>
@@ -125,7 +125,7 @@
                     </div>
                 @empty
                     <div class="py-12 text-center text-gray-400 font-bold">
-                        <span class="text-6xl block">🛡️</span>
+                        <span class="text-6xl block"></span>
                         <h4 class="font-black text-emerald-600 text-sm mt-3 uppercase tracking-widest">Database Jadwal Bersih</h4>
                         <p class="text-[11px] text-gray-400 font-medium max-w-xs mx-auto mt-1">Luar biasa! Tidak ada bentrok waktu guru, jam kelas, maupun pemakaian ruangan ganda.</p>
                     </div>

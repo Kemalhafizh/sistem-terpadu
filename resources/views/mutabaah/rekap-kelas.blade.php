@@ -42,7 +42,7 @@
             {{-- Week Switcher --}}
             <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center space-x-2">
-                    <span class="p-2 bg-emerald-50 text-emerald-600 rounded-xl">📅</span>
+                    <span class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"></span>
                     <div>
                         <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block leading-none">Periode Laporan</span>
                         <span class="text-sm font-black text-gray-700 mt-1 block">
@@ -111,7 +111,7 @@
             @endphp
             @if($needsAttention->count() > 0)
                 <div class="bg-rose-50 border border-rose-100 rounded-3xl p-5 flex items-start space-x-3 shadow-sm">
-                    <span class="text-2xl">⚠️</span>
+                    <span class="text-2xl"></span>
                     <div>
                         <h4 class="text-sm font-black text-rose-950">PERHATIAN WALI KELAS</h4>
                         <p class="text-xs font-bold text-rose-700 mt-1">

@@ -104,7 +104,7 @@
                                     <dt class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">WhatsApp Orang Tua</dt>
                                     <dd class="mt-1 text-sm font-bold text-slate-900 flex items-center">
                                         {{ $registration->parent_phone }}
-                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $registration->parent_phone) }}" target="_blank" class="ml-2 text-green-500 hover:text-green-600">💬 Chat</a>
+                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $registration->parent_phone) }}" target="_blank" class="ml-2 text-green-500 hover:text-green-600"> Chat</a>
                                     </dd>
                                 </div>
                                 <div class="sm:col-span-2">

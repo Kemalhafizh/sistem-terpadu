@@ -5,7 +5,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 tracking-tight">
-                    📝 Buat Rencana Pelaksanaan Pembelajaran (RPP)
+                     Buat Rencana Pelaksanaan Pembelajaran (RPP)
                 </h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     Isi detail rencana pembelajaran mingguan untuk diajukan ke Waka Kurikulum.
@@ -24,7 +24,7 @@
             <div class="rounded-3xl border border-white/20 dark:border-gray-700/40 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-xl overflow-hidden">
                 <div class="px-6 py-5 border-b border-gray-200/60 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-900/40">
                     <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <span>📝</span> Formulir RPP Digital
+                        <span></span> Formulir RPP Digital
                     </h3>
                 </div>
 

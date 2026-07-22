@@ -47,7 +47,7 @@
             <!-- Total Feedbacks -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 dark:border-gray-700/50 flex items-center space-x-4">
                 <div class="w-12 h-12 rounded-2xl bg-emerald-600/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center text-xl shrink-0">
-                    📝
+                    
                 </div>
                 <div>
                     <span class="text-xs font-bold text-gray-400 block uppercase tracking-wider">Total Laporan Masuk</span>
@@ -59,14 +59,14 @@
             <!-- Average Satisfaction Rating -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 dark:border-gray-700/50 flex items-center space-x-4">
                 <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center text-xl shrink-0">
-                    ★
+                    
                 </div>
                 <div>
                     <span class="text-xs font-bold text-gray-400 block uppercase tracking-wider">Skor Kepuasan Pengguna</span>
                     <h3 class="text-2xl font-black text-gray-900 dark:text-white mt-0.5">{{ number_format($avgRating, 1) }} / 5.0</h3>
                     <div class="flex gap-0.5 mt-0.5 text-amber-400 text-xs">
                         @for($i = 1; $i <= 5; $i++)
-                            <span>{{ $avgRating >= $i ? '★' : ($avgRating >= $i - 0.5 ? '½' : '☆') }}</span>
+                            <span>{{ $avgRating >= $i ? '' : ($avgRating >= $i - 0.5 ? '½' : '') }}</span>
                         @endfor
                     </div>
                 </div>
@@ -75,7 +75,7 @@
             <!-- Resolution Rate -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 dark:border-gray-700/50 flex items-center space-x-4">
                 <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 flex items-center justify-center text-xl shrink-0">
-                    ✓
+                    
                 </div>
                 @php
                     $resolvedCount = ($byStatus['fixed']['count'] ?? 0) + ($byStatus['verified']['count'] ?? 0);
@@ -99,11 +99,11 @@
                     
                     <div class="space-y-4">
                         @foreach([
-                            'bug' => ['label' => 'Bug / Galat Sistem 🐛', 'color' => 'bg-red-500'],
-                            'ui_suggestion' => ['label' => 'Saran Tampilan / UI 🎨', 'color' => 'bg-sky-500'],
-                            'unclear_feature' => ['label' => 'Fitur Kurang Jelas 💡', 'color' => 'bg-amber-500'],
-                            'slow' => ['label' => 'Lambat / Performa ⚡', 'color' => 'bg-orange-500'],
-                            'other' => ['label' => 'Lainnya 📌', 'color' => 'bg-gray-500'],
+                            'bug' => ['label' => 'Bug / Galat Sistem ', 'color' => 'bg-red-500'],
+                            'ui_suggestion' => ['label' => 'Saran Tampilan / UI ', 'color' => 'bg-sky-500'],
+                            'unclear_feature' => ['label' => 'Fitur Kurang Jelas ', 'color' => 'bg-amber-500'],
+                            'slow' => ['label' => 'Lambat / Performa ', 'color' => 'bg-orange-500'],
+                            'other' => ['label' => 'Lainnya ', 'color' => 'bg-gray-500'],
                         ] as $key => $meta)
                             @php
                                 $item = $byCategory[$key] ?? ['count' => 0, 'percentage' => 0];
@@ -144,7 +144,7 @@
                                             {{ $page->total }} Laporan
                                         </td>
                                         <td class="py-3 px-3 text-center text-amber-500 font-bold">
-                                            {{ number_format($page->avg_rating, 1) }} ★
+                                            {{ number_format($page->avg_rating, 1) }} 
                                         </td>
                                     </tr>
                                 @empty
@@ -195,25 +195,25 @@
                     <div class="grid grid-cols-2 gap-3">
                         <!-- Critical -->
                         <div class="p-3 bg-red-500/10 border border-red-500/25 rounded-2xl text-center">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-red-500">Critical 🚨</span>
+                            <span class="text-[9px] font-black uppercase tracking-wider text-red-500">Critical </span>
                             <h4 class="text-xl font-black text-red-600 dark:text-red-400 mt-1">{{ $byPriority['critical'] ?? 0 }}</h4>
                         </div>
 
                         <!-- High -->
                         <div class="p-3 bg-orange-500/10 border border-orange-500/25 rounded-2xl text-center">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-orange-500">High 🔴</span>
+                            <span class="text-[9px] font-black uppercase tracking-wider text-orange-500">High </span>
                             <h4 class="text-xl font-black text-orange-600 dark:text-orange-400 mt-1">{{ $byPriority['high'] ?? 0 }}</h4>
                         </div>
 
                         <!-- Medium -->
                         <div class="p-3 bg-amber-500/10 border border-amber-500/25 rounded-2xl text-center">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-amber-500">Medium 🟡</span>
+                            <span class="text-[9px] font-black uppercase tracking-wider text-amber-500">Medium </span>
                             <h4 class="text-xl font-black text-amber-600 dark:text-amber-400 mt-1">{{ $byPriority['medium'] ?? 0 }}</h4>
                         </div>
 
                         <!-- Low -->
                         <div class="p-3 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl text-center">
-                            <span class="text-[9px] font-black uppercase tracking-wider text-emerald-500">Low 🟢</span>
+                            <span class="text-[9px] font-black uppercase tracking-wider text-emerald-500">Low </span>
                             <h4 class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1">{{ $byPriority['low'] ?? 0 }}</h4>
                         </div>
                     </div>

@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">🎓</span>
+                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"></span>
                     <span>{{ __('e-Portfolio Saya') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -23,7 +23,7 @@
                  }">
                 <button @click="copyLink"
                         class="px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 rounded-xl text-xs font-black uppercase tracking-wider transition active:scale-95 flex items-center space-x-1.5 shadow-md border border-slate-800 dark:border-slate-200">
-                    <span x-text="copied ? '✓ Tersalin!' : '🔗 Tautan Publik'"></span>
+                    <span x-text="copied ? ' Tersalin!' : ' Tautan Publik'"></span>
                 </button>
             </div>
         </div>
@@ -51,7 +51,7 @@
             {{-- Profile Card --}}
             <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-5 flex items-center space-x-4 shadow-sm md:col-span-2">
                 <div class="w-14 h-14 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center text-2xl font-black">
-                    👤
+                    
                 </div>
                 <div>
                     <h3 class="text-base font-black text-gray-900 dark:text-gray-100 leading-tight">
@@ -69,7 +69,7 @@
                     <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Total Berkas</span>
                     <span class="text-3xl font-black text-gray-900 dark:text-gray-100 mt-1 block">{{ $student->portfolioItems->count() }}</span>
                 </div>
-                <span class="p-3 bg-blue-500/10 text-blue-500 rounded-2xl text-xl">📁</span>
+                <span class="p-3 bg-blue-500/10 text-blue-500 rounded-2xl text-xl"></span>
             </div>
 
             {{-- Stat 2: Total badges --}}
@@ -78,7 +78,7 @@
                     <span class="text-[9px] font-black text-amber-500 uppercase tracking-widest block">Lencana Emas</span>
                     <span class="text-3xl font-black text-amber-600 mt-1 block">{{ $student->badges->count() }}</span>
                 </div>
-                <span class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl text-xl">🏆</span>
+                <span class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl text-xl"></span>
             </div>
         </div>
 
@@ -120,7 +120,7 @@
                 <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest">Daftar Item & Klaim Prestasi Anda</span>
                 <button @click="showCreateModal = true"
                         class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition active:scale-95 shadow-md shadow-indigo-500/10 flex items-center space-x-1">
-                    <span>➕ Tambah Item Baru</span>
+                    <span> Tambah Item Baru</span>
                 </button>
             </div>
 
@@ -139,7 +139,7 @@
                                 {{-- Verification Status --}}
                                 @if($item->is_verified)
                                     <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-                                        ✓ Terverifikasi
+                                         Terverifikasi
                                     </span>
                                 @else
                                     <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">
@@ -150,11 +150,11 @@
                                 {{-- Public Visibility Toggle Status --}}
                                 @if($item->is_public)
                                     <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300">
-                                        🌐 Publik
+                                         Publik
                                     </span>
                                 @else
                                     <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400">
-                                        🔒 Privat
+                                         Privat
                                     </span>
                                 @endif
                             </div>
@@ -184,7 +184,7 @@
                                 @csrf
                                 <button type="submit" 
                                         class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-[9px] font-black uppercase tracking-wider transition">
-                                    🌐 Set {{ $item->is_public ? 'Privat' : 'Publik' }}
+                                     Set {{ $item->is_public ? 'Privat' : 'Publik' }}
                                 </button>
                             </form>
 
@@ -194,7 +194,7 @@
                                     <a href="{{ Storage::url($item->file_path) }}" target="_blank"
                                        class="p-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs transition"
                                        title="Download Bukti/Sertifikat">
-                                        📄
+                                        
                                     </a>
                                 @endif
 
@@ -203,7 +203,7 @@
                                     <button @click="showEditModal = true; editItem = { id: '{{ $item->id }}', title: '{{ addslashes($item->title) }}', description: '{{ addslashes($item->description) }}', category: '{{ $item->category }}', date: '{{ $item->date ? $item->date->format('Y-m-d') : '' }}', external_link: '{{ $item->external_link }}' }"
                                             class="p-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-xs transition"
                                             title="Ubah Item">
-                                        ✏️
+                                        
                                     </button>
                                     
                                     <form action="{{ route('portfolios.destroy', $item) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus item portofolio ini?')">
@@ -212,7 +212,7 @@
                                         <button type="submit" 
                                                 class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition"
                                                 title="Hapus Item">
-                                            🗑️
+                                            
                                         </button>
                                     </form>
                                 @endif
@@ -223,7 +223,7 @@
                     <div class="col-span-2 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-16 text-center shadow-sm">
                         <div class="flex flex-col items-center">
                             <div class="w-20 h-20 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-5 border border-gray-100">
-                                <span class="text-3xl">🗂️</span>
+                                <span class="text-3xl"></span>
                             </div>
                             <h3 class="text-lg font-black text-gray-800 dark:text-gray-200 mb-2">Belum Ada Portfolio</h3>
                             <p class="text-xs text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed">
@@ -244,7 +244,7 @@
                  
                 <div class="space-y-1">
                     <h4 class="text-lg font-black text-gray-900 dark:text-gray-100 flex items-center space-x-2">
-                        <span class="p-1.5 bg-indigo-500/10 text-indigo-600 rounded-lg">➕</span>
+                        <span class="p-1.5 bg-indigo-500/10 text-indigo-600 rounded-lg"></span>
                         <span>Tambah Portofolio Baru</span>
                     </h4>
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lengkapi formulir prestasi/karya anda secara valid</p>
@@ -326,7 +326,7 @@
                  
                 <div class="space-y-1">
                     <h4 class="text-lg font-black text-gray-900 dark:text-gray-100 flex items-center space-x-2">
-                        <span class="p-1.5 bg-indigo-500/10 text-indigo-600 rounded-lg">✏️</span>
+                        <span class="p-1.5 bg-indigo-500/10 text-indigo-600 rounded-lg"></span>
                         <span>Ubah Portofolio</span>
                     </h4>
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Perbarui data prestasi/karya anda secara valid</p>

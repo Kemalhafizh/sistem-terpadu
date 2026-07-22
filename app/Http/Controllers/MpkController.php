@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class MpkController extends Controller
 {
     // =========================================================
-    // 📊 DASHBOARD & OSIS FINANCIAL AUDIT
+    //  DASHBOARD & OSIS FINANCIAL AUDIT
     // =========================================================
 
     public function index()
@@ -75,7 +75,7 @@ class MpkController extends Controller
     }
 
     // =========================================================
-    // 📂 LPJ HUB: SIDE & ACCOUNTABILITY REVIEW
+    //  LPJ HUB: SIDE & ACCOUNTABILITY REVIEW
     // =========================================================
 
     public function lpjIndex()
@@ -144,7 +144,7 @@ class MpkController extends Controller
     }
 
     // =========================================================
-    // 🗣️ STUDENT VOICE BOX: ASPIRATIONS HUB
+    //  STUDENT VOICE BOX: ASPIRATIONS HUB
     // =========================================================
 
     public function aspirationsIndex()

@@ -177,9 +177,9 @@
                     </td>
                     <td class="text-center">
                         @if($alert->severity === 'critical')
-                            <span class="badge badge-critical">🚨 Kritis</span>
+                            <span class="badge badge-critical"> Kritis</span>
                         @else
-                            <span class="badge badge-warning">⚠️ Peringatan</span>
+                            <span class="badge badge-warning"> Peringatan</span>
                         @endif
                     </td>
                     <td class="text-center">

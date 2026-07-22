@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>📋</span> Checklist Instrumen Akreditasi
+                    <span></span> Checklist Instrumen Akreditasi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Evaluasi keselarasan pemenuhan 8 Standar Nasional Pendidikan (SNP) berdasar data operasional sekolah.
@@ -26,16 +26,16 @@
         <!-- Submenu Navigation -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-2 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg flex flex-wrap gap-1">
             <a href="{{ route('compliance.index') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📊 Dashboard Kepatuhan
+                 Dashboard Kepatuhan
             </a>
             <a href="{{ route('compliance.checklist') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all bg-primary-600 text-white shadow-md shadow-primary-500/20">
-                📋 Checklist Instrumen
+                 Checklist Instrumen
             </a>
             <a href="{{ route('compliance.documents') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📁 Repositori Bukti Fisik
+                 Repositori Bukti Fisik
             </a>
             <a href="{{ route('compliance.timeline') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📅 Timeline Visitasi
+                 Timeline Visitasi
             </a>
         </div>
 
@@ -76,17 +76,17 @@
 
                 $badgeClass = 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 border border-red-200 dark:border-red-900/50';
                 $badgeText = 'BELUM TERPENUHI';
-                $icon = '❌';
+                $icon = '';
 
                 if ($metric) {
                     if ($metric['status'] === 'terpenuhi') {
                         $badgeClass = 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50';
                         $badgeText = 'TERPENUHI';
-                        $icon = '✅';
+                        $icon = '';
                     } elseif ($metric['status'] === 'perlu_perbaikan') {
                         $badgeClass = 'bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50';
                         $badgeText = 'PERLU PERBAIKAN';
-                        $icon = '⚠️';
+                        $icon = '';
                     }
                 }
             @endphp
@@ -132,7 +132,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             @forelse($standard->indicators as $indicator)
                             <div class="flex items-start space-x-2.5 p-3 bg-white dark:bg-gray-850 rounded-xl border border-gray-100 dark:border-gray-750/30">
-                                <span class="text-emerald-500 dark:text-emerald-400 mt-0.5">✓</span>
+                                <span class="text-emerald-500 dark:text-emerald-400 mt-0.5"></span>
                                 <div>
                                     <div class="text-xs font-black text-gray-800 dark:text-gray-200 leading-snug">Indikator {{ $indicator->code }}</div>
                                     <div class="text-[11px] text-gray-400 mt-1 leading-snug font-normal">{{ $indicator->name }}</div>

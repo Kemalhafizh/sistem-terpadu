@@ -35,7 +35,7 @@
                     <div class="bg-gradient-to-r from-indigo-950/90 to-slate-900/90 backdrop-blur-md border border-indigo-500/20 text-white rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
                         <div class="flex items-center space-x-4">
                             <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-2xl relative shadow-lg shadow-indigo-500/10 shrink-0">
-                                🧠
+                                
                                 @if($dashCriticalCount > 0)
                                     <span class="absolute -top-1 -right-1 flex h-3 w-3">
                                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
@@ -66,7 +66,7 @@
                         <div class="rounded-3xl p-6 shadow-md flex flex-col md:flex-row gap-6 relative overflow-hidden transition-all duration-300 hover:shadow-lg border {{ $announcement->is_pinned ? 'bg-amber-50/20 dark:bg-amber-950/10 border-amber-300/40' : ($announcement->priority == 'urgent' ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/30' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700') }}">
                             @if($announcement->is_pinned)
                                 <div class="absolute top-0 right-0 rtl:left-0 rtl:right-auto px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg rtl:rounded-br-lg rtl:rounded-bl-none flex items-center z-10">
-                                    📌 {{ __('dashboard.pinned_fallback') }}
+                                     {{ __('dashboard.pinned_fallback') }}
                                 </div>
                             @elseif($announcement->priority == 'urgent')
                                 <div class="absolute top-0 right-0 rtl:left-0 rtl:right-auto px-3 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-lg rtl:rounded-br-lg rtl:rounded-bl-none flex items-center animate-pulse z-10">
@@ -90,16 +90,16 @@
                                             $announcement->category === 'kegiatan' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' : (
                                             $announcement->category === 'keislaman' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')))
                                         }}">
-                                            📁 {{ __('dashboard.category_' . ($announcement->category ?? 'umum')) }}
+                                             {{ __('dashboard.category_' . ($announcement->category ?? 'umum')) }}
                                         </span>
                                         @if($announcement->require_acknowledgement)
                                             @if($announcement->isAcknowledgedBy(auth()->id()))
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 flex items-center gap-1">
-                                                    ✓ {{ __('dashboard.acknowledged_fallback') }}
+                                                     {{ __('dashboard.acknowledged_fallback') }}
                                                 </span>
                                             @else
                                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300 animate-pulse flex items-center gap-1">
-                                                    ⚠️ {{ __('dashboard.needs_acknowledgement') }}
+                                                     {{ __('dashboard.needs_acknowledgement') }}
                                                 </span>
                                             @endif
                                         @endif
@@ -123,7 +123,7 @@
                                     <div class="flex items-center gap-2">
                                         @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'waka_humas']) || $announcement->created_by === auth()->id())
                                             <a href="{{ route('announcements.receipts', $announcement) }}" class="inline-flex items-center justify-center px-4 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
-                                                📊 {{ __('dashboard.read_receipts') ?? 'Penerima' }}
+                                                 {{ __('dashboard.read_receipts') ?? 'Penerima' }}
                                             </a>
                                         @endif
                                         <a href="{{ route('announcements.show', $announcement) }}" class="inline-flex items-center justify-center px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-primary-600/10">
@@ -212,7 +212,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <h3 class="text-xl font-extrabold text-gray-800 dark:text-white flex items-center">
                         <span class="w-8 h-8 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center mr-3">
-                            🏢
+                            
                         </span>
                         {{ __('dashboard.school_overview_dashboard') }}
                     </h3>
@@ -241,7 +241,7 @@
                             <div class="bg-slate-900/90 dark:bg-slate-950/80 backdrop-blur-md border border-slate-800 rounded-4xl p-8 text-white relative overflow-hidden shadow-xl">
                                 <div class="relative z-10">
                                     <h4 class="text-lg font-black mb-4 flex items-center text-amber-400">
-                                        🚀 {{ __('dashboard.quick_access') }}
+                                         {{ __('dashboard.quick_access') }}
                                     </h4>
                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <a href="{{ route('mutabaah.index') }}" class="bg-slate-800/80 hover:bg-slate-700/80 p-4 rounded-2xl transition-all border border-slate-700 hover:border-emerald-500">
@@ -333,13 +333,13 @@
                                         <div class="flex flex-wrap gap-2">
                                             @foreach($unfilledTeachers as $ut)
                                                 <span class="px-3 py-1.5 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 rounded-xl text-xs font-bold border border-red-100/50 dark:border-red-900/30">
-                                                    ⚠️ {{ $ut['name'] }}
+                                                     {{ $ut['name'] }}
                                                 </span>
                                             @endforeach
                                         </div>
                                     </div>
                                 @else
-                                    <p class="text-xs text-emerald-600 font-bold">🎉 Luar biasa! Semua guru sudah mengisi jurnal mengajar hari ini.</p>
+                                    <p class="text-xs text-emerald-600 font-bold"> Luar biasa! Semua guru sudah mengisi jurnal mengajar hari ini.</p>
                                 @endif
                             </div>
                         </div>
@@ -353,7 +353,7 @@
                                         <p class="text-xs text-gray-400 dark:text-gray-500 font-bold mt-0.5">Rata-rata Penilaian per Mapel & Angkatan</p>
                                     </div>
                                     <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 flex items-center justify-center text-lg">
-                                        📊
+                                        
                                     </div>
                                 </div>
                                 <div id="averageGradesChart" class="w-full h-80" data-grades="{{ json_encode($averageGrades) }}"></div>
@@ -390,7 +390,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm flex items-center justify-between">
                                 <div class="flex items-center space-x-4">
                                     <div class="w-12 h-12 bg-amber-50 dark:bg-amber-950/30 text-amber-600 rounded-2xl flex items-center justify-center text-xl">
-                                        📋
+                                        
                                     </div>
                                     <div>
                                         <h4 class="text-base font-black text-gray-900 dark:text-white">{{ __('dashboard.widget_approval_pending') }}</h4>
@@ -410,7 +410,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
                                     <span class="w-2.5 h-6 bg-amber-500 rounded-full mr-3"></span>
-                                    🏆 {{ __('dashboard.widget_top_xp_students') }}
+                                     {{ __('dashboard.widget_top_xp_students') }}
                                 </h4>
                                 <div class="space-y-4">
                                     @foreach($topXpStudents as $idx => $ts)
@@ -436,7 +436,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
                                 <div class="flex items-center space-x-4">
                                     <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 rounded-2xl flex items-center justify-center text-xl">
-                                        🕌
+                                        
                                     </div>
                                     <div>
                                         <h4 class="text-base font-black text-gray-900 dark:text-white">{{ __('dashboard.widget_weekly_mutabaah_recap') }}</h4>
@@ -474,7 +474,7 @@
                                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{{ __('dashboard.last_7_days') }}</p>
                                     </div>
                                     <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                                        💰
+                                        
                                     </div>
                                 </div>
                                 
@@ -581,7 +581,7 @@
                         <div x-show="isWidgetVisible('teacher_schedule_today')" :style="'order: ' + getWidgetOrder('teacher_schedule_today')" class="w-full transition-all duration-300" style="display: none;">
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center justify-between">
-                                    <span>📅 {{ __('dashboard.widget_teacher_schedule_today') }} ({{ $todayDayName }})</span>
+                                    <span> {{ __('dashboard.widget_teacher_schedule_today') }} ({{ $todayDayName }})</span>
                                     @if($isWeekend)
                                         <span class="text-[10px] bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-xl font-bold">Fallback Weekend</span>
                                     @endif
@@ -609,7 +609,7 @@
                             @if(count($pendingAttendanceAlerts) > 0)
                                 <div class="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 text-amber-900 dark:text-amber-300 rounded-3xl p-6 shadow-sm">
                                     <h4 class="text-base font-black flex items-center">
-                                        ⚠️ {{ __('dashboard.widget_teacher_pending_attendance') }}
+                                         {{ __('dashboard.widget_teacher_pending_attendance') }}
                                     </h4>
                                     <div class="mt-4 space-y-2">
                                         @foreach($pendingAttendanceAlerts as $paa)
@@ -628,7 +628,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm flex items-center justify-between">
                                 <div class="flex items-center space-x-4">
                                     <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl {{ $journalTodayFilled ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600' : 'bg-red-50 dark:bg-red-950/30 text-red-600' }}">
-                                        {{ $journalTodayFilled ? '✅' : '📝' }}
+                                        {{ $journalTodayFilled ? '' : '' }}
                                     </div>
                                     <div>
                                         <h4 class="text-base font-black text-gray-900 dark:text-white">{{ __('dashboard.widget_teacher_journal_today') }}</h4>
@@ -646,7 +646,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm flex items-center justify-between">
                                 <div class="flex items-center space-x-4">
                                     <div class="w-12 h-12 bg-purple-50 dark:bg-purple-950/30 text-purple-600 rounded-2xl flex items-center justify-center text-xl">
-                                        📖
+                                        
                                     </div>
                                     <div>
                                         <h4 class="text-base font-black text-gray-900 dark:text-white">{{ __('dashboard.widget_teacher_ungraded_assignments') }}</h4>
@@ -668,7 +668,7 @@
                                         <p class="text-xs text-gray-400 dark:text-gray-500 font-bold mt-0.5">Jumlah Setoran Ziyadah/Murajaah 7 Hari Terakhir: <strong class="text-emerald-600">{{ $tahfidzLogsCount }}</strong></p>
                                     </div>
                                     <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl text-emerald-600 flex items-center justify-center text-lg">
-                                        🕌
+                                        
                                     </div>
                                 </div>
                                 <div id="tahfidzTrendChart" class="w-full h-60" data-trend="{{ json_encode($tahfidzTrend) }}"></div>
@@ -720,17 +720,17 @@
                                 <div class="flex items-center justify-between mb-5">
                                     <h4 class="text-lg font-black text-gray-800 dark:text-white flex items-center">
                                         <span class="w-2.5 h-6 bg-violet-600 rounded-full mr-3"></span>
-                                        ✅ Todo List Saya
+                                         Todo List Saya
                                     </h4>
                                     <div class="flex items-center gap-2">
                                         @if(($todoOverdueCount ?? 0) > 0)
                                             <span class="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-lg text-[9px] font-black uppercase tracking-wider animate-pulse">
-                                                🔴 {{ $todoOverdueCount }} Terlambat
+                                                 {{ $todoOverdueCount }} Terlambat
                                             </span>
                                         @endif
                                         @if(($todoDueTodayCount ?? 0) > 0)
                                             <span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 rounded-lg text-[9px] font-black uppercase tracking-wider">
-                                                📅 {{ $todoDueTodayCount }} Hari Ini
+                                                 {{ $todoDueTodayCount }} Hari Ini
                                             </span>
                                         @endif
                                         <a href="{{ route('todos.index') }}" class="px-2.5 py-1 bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-violet-100 transition-all">
@@ -775,7 +775,7 @@
                                                     <span class="text-[9px] font-black uppercase tracking-wider text-gray-400">{{ $todo->category_icon }} {{ $todo->category_label }}</span>
                                                     @if($todo->due_date)
                                                         <span class="text-[9px] font-black uppercase tracking-wider {{ $todo->isOverdue() ? 'text-red-500' : ($todo->isDueToday() ? 'text-amber-500' : 'text-gray-400') }}">
-                                                            📅 {{ $todo->isOverdue() ? 'TERLAMBAT' : ($todo->isDueToday() ? 'HARI INI' : $todo->due_date->translatedFormat('d M')) }}
+                                                             {{ $todo->isOverdue() ? 'TERLAMBAT' : ($todo->isDueToday() ? 'HARI INI' : $todo->due_date->translatedFormat('d M')) }}
                                                         </span>
                                                     @endif
                                                 </div>
@@ -786,7 +786,7 @@
                                         </div>
                                     @empty
                                         <div class="text-center py-6">
-                                            <p class="text-xs text-gray-400 dark:text-gray-500 font-bold">🎉 Semua tugas selesai! Tidak ada todo pending.</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 font-bold"> Semua tugas selesai! Tidak ada todo pending.</p>
                                         </div>
                                     @endforelse
                                 </div>
@@ -806,7 +806,7 @@
                         <div x-show="isWidgetVisible('student_schedule_today')" :style="'order: ' + getWidgetOrder('student_schedule_today')" class="w-full transition-all duration-300" style="display: none;">
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center justify-between">
-                                    <span>📅 {{ __('dashboard.widget_student_schedule_today') }} ({{ $todayDayName }})</span>
+                                    <span> {{ __('dashboard.widget_student_schedule_today') }} ({{ $todayDayName }})</span>
                                     @if($isWeekend)
                                         <span class="text-[10px] bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-xl font-bold">Fallback Weekend</span>
                                     @endif
@@ -858,7 +858,7 @@
                         <div x-show="isWidgetVisible('student_gamification')" :style="'order: ' + getWidgetOrder('student_gamification')" class="w-full transition-all duration-300" style="display: none;">
                             <div class="bg-gradient-to-br from-indigo-900 to-indigo-950 text-white rounded-4xl p-6 shadow-lg relative overflow-hidden border border-indigo-800">
                                 <div class="absolute -right-10 -bottom-10 opacity-10">
-                                    🏆
+                                    
                                 </div>
                                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                     <div>
@@ -872,7 +872,7 @@
                                             <p class="text-[9px] text-indigo-400 font-bold uppercase tracking-wider">Total XP</p>
                                         </div>
                                         <div class="text-center">
-                                            <span class="text-3xl font-black text-amber-400">🔥 {{ $student_profile->current_streak }}</span>
+                                            <span class="text-3xl font-black text-amber-400"> {{ $student_profile->current_streak }}</span>
                                             <p class="text-[9px] text-indigo-400 font-bold uppercase tracking-wider">Streak Hari</p>
                                         </div>
                                     </div>
@@ -961,7 +961,7 @@
                                 }
                             }">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center justify-between">
-                                    <span>🕌 {{ __('dashboard.widget_student_mutabaah_today') }}</span>
+                                    <span> {{ __('dashboard.widget_student_mutabaah_today') }}</span>
                                     <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold">Hari Ini: {{ today()->translatedFormat('d F Y') }}</span>
                                 </h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -978,7 +978,7 @@
                                                     :disabled="loading[{{ $item->id }}]"
                                                     class="px-4 py-2 text-xs font-black rounded-xl uppercase tracking-wider transition-all {{ $isCompleted ? 'bg-emerald-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300' }}">
                                                 <span x-show="loading[{{ $item->id }}]">...</span>
-                                                <span x-show="!loading[{{ $item->id }}]">{{ $isCompleted ? 'Sudah ✅' : 'Belum ⏳' }}</span>
+                                                <span x-show="!loading[{{ $item->id }}]">{{ $isCompleted ? 'Sudah ' : 'Belum ⏳' }}</span>
                                             </button>
                                         </div>
                                     @endforeach
@@ -991,7 +991,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
                                     <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                                    📚 {{ __('dashboard.widget_student_library_loans') }}
+                                     {{ __('dashboard.widget_student_library_loans') }}
                                 </h4>
                                 <div class="space-y-4">
                                     @forelse($borrowedBooks ?? [] as $loan)
@@ -1005,7 +1005,7 @@
                                             </div>
                                             @if($isOverdue)
                                                 <span class="px-2.5 py-1 bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 text-[10px] font-black uppercase rounded-lg">
-                                                    Terlambat ⚠️
+                                                    Terlambat 
                                                 </span>
                                             @else
                                                 <span class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-[10px] font-black uppercase rounded-lg">
@@ -1025,7 +1025,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
                                     <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                                    💬 {{ __('dashboard.widget_student_recent_forum') }}
+                                     {{ __('dashboard.widget_student_recent_forum') }}
                                 </h4>
                                 <div class="space-y-4">
                                     @forelse($studentForumThreads ?? [] as $thread)
@@ -1070,7 +1070,7 @@
                                             </div>
                                             <span class="px-4 py-2 text-xs font-black rounded-xl uppercase tracking-wider
                                                 {{ $ch['childAttendanceToday']?->status === 'H' ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600' : 'bg-red-50 dark:bg-red-950 text-red-600' }}">
-                                                {{ $ch['childAttendanceToday']?->status === 'H' ? 'Hadir ✅' : ($ch['childAttendanceToday']?->status ?? 'Alpa ⚠️') }}
+                                                {{ $ch['childAttendanceToday']?->status === 'H' ? 'Hadir ' : ($ch['childAttendanceToday']?->status ?? 'Alpa ') }}
                                             </span>
                                         </div>
                                     @endforeach
@@ -1110,7 +1110,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
                                     <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                                    🕌 {{ __('dashboard.widget_parent_child_mutabaah') }}
+                                     {{ __('dashboard.widget_parent_child_mutabaah') }}
                                 </h4>
                                 <div class="space-y-6">
                                     @foreach($children as $ch)
@@ -1129,7 +1129,7 @@
                                                 </form>
                                             @else
                                                 <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs font-black rounded-lg">
-                                                    Terverifikasi ✅
+                                                    Terverifikasi 
                                                 </span>
                                             @endif
                                         </div>
@@ -1143,7 +1143,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
                                     <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                                    📅 {{ __('dashboard.widget_parent_upcoming_events') }}
+                                     {{ __('dashboard.widget_parent_upcoming_events') }}
                                 </h4>
                                 <div class="space-y-4">
                                     @forelse($upcomingSchoolEvents ?? [] as $event)
@@ -1168,7 +1168,7 @@
                             <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
                                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
                                     <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                                    📊 {{ __('dashboard.widget_parent_report_progress') }}
+                                     {{ __('dashboard.widget_parent_report_progress') }}
                                 </h4>
                                 @foreach($children as $ch)
                                     <div class="mb-8 last:mb-0">
@@ -1185,7 +1185,7 @@
                                 <div class="flex justify-between items-center mb-6">
                                     <h4 class="text-lg font-black text-gray-900 dark:text-white flex items-center">
                                         <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                                        💬 {{ __('dashboard.widget_parent_homeroom_messages') }}
+                                         {{ __('dashboard.widget_parent_homeroom_messages') }}
                                     </h4>
                                     @if($unreadHomeroomMessagesCount > 0)
                                         <span class="px-2.5 py-1 bg-red-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">

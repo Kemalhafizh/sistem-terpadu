@@ -11,14 +11,14 @@
             </div>
             <div class="flex items-center space-x-2">
                 <a href="{{ route('tahfidz.leaderboard') }}" class="px-4 py-2 bg-amber-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.03] transition-all">
-                    🏆 LEADERBOARD
+                     LEADERBOARD
                 </a>
                 @if(in_array(auth()->user()->role, ['guru', 'admin', 'superadmin']))
                     <a href="{{ route('tahfidz.bulk-input') }}" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-600/20 hover:scale-[1.03] transition-all">
-                        📝 INPUT MASSAL
+                         INPUT MASSAL
                     </a>
                     <a href="{{ route('tahfidz.target-setting') }}" class="px-4 py-2 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-600/20 hover:scale-[1.03] transition-all">
-                        ⚙️ ATUR TARGET
+                         ATUR TARGET
                     </a>
                 @endif
             </div>
@@ -95,7 +95,7 @@
                                     <p class="text-lg font-black">Level {{ $student->level }}</p>
                                 </div>
                                 <a href="{{ route('tahfidz.export-pdf', $student->id) }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                                    🖨️ PDF RAPOR
+                                     PDF RAPOR
                                 </a>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                             </div>
 
                             <div class="mt-6 p-4 rounded-2xl bg-amber-50 border border-amber-100 flex items-center space-x-3">
-                                <span class="text-2xl">✨</span>
+                                <span class="text-2xl"></span>
                                 <div class="text-xs">
                                     <p class="font-black text-amber-900">Total Poin Keaktifan</p>
                                     <p class="text-amber-700 font-bold">{{ $student->total_xp }} XP (Streak: {{ $student->current_streak }} Hari)</p>
@@ -217,7 +217,7 @@
                     </div>
                 @else
                     <div class="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100">
-                        <span class="text-4xl">⚠️</span>
+                        <span class="text-4xl"></span>
                         <h3 class="font-black text-lg text-gray-800 mt-4 uppercase">Data Siswa Tidak Ditemukan</h3>
                         <p class="text-xs text-gray-400 mt-2">Akun Anda belum terhubung dengan data profil siswa aktif.</p>
                     </div>
@@ -259,7 +259,7 @@
                                 <p class="text-3xl font-black text-primary-600">{{ $summary['average_completion_percent'] }}%</p>
                                 <p class="text-[9px] font-bold text-gray-400 uppercase">Berdasarkan Halaman/Juz target siswa</p>
                             </div>
-                            <div class="w-12 h-12 bg-primary-50 rounded-2xl flex items-center justify-center text-primary-600 text-lg">📈</div>
+                            <div class="w-12 h-12 bg-primary-50 rounded-2xl flex items-center justify-center text-primary-600 text-lg"></div>
                         </div>
 
                         {{-- Total setoran logs count --}}
@@ -269,7 +269,7 @@
                                 <p class="text-3xl font-black text-emerald-600">{{ $summary['total_setoran_count'] }} <span class="text-xs text-gray-400 font-black">Kali</span></p>
                                 <p class="text-[9px] font-bold text-gray-400 uppercase">Setoran ziyadah & muraja'ah semester ini</p>
                             </div>
-                            <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 text-lg">📖</div>
+                            <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 text-lg"></div>
                         </div>
 
                         {{-- Target status breakdown --}}
@@ -395,7 +395,7 @@
                                             </td>
                                             <td class="py-4 text-right">
                                                 <a href="{{ route('tahfidz.show', $st->id) }}" class="px-3 py-1 bg-gray-50 hover:bg-gray-100 border border-gray-100 rounded-lg text-[10px] font-black uppercase tracking-wider text-gray-600 transition-all">
-                                                    👁️ DETAIL
+                                                     DETAIL
                                                 </a>
                                             </td>
                                         </tr>
@@ -438,7 +438,7 @@
                     </div>
                 @else
                     <div class="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100">
-                        <span class="text-4xl">⚠️</span>
+                        <span class="text-4xl"></span>
                         <h3 class="font-black text-lg text-gray-800 mt-4 uppercase">Kelas Tidak Tersedia</h3>
                         <p class="text-xs text-gray-400 mt-2">Belum ada data kelas terdaftar dalam sistem.</p>
                     </div>

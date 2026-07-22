@@ -11,11 +11,11 @@
             </div>
             <div class="flex items-center space-x-2">
                 <a href="{{ route('schedules.grid') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                    ⬅️ PLOTTING JADWAL
+                    ⬅ PLOTTING JADWAL
                 </a>
                 @if($selectedTeacher)
                     <a href="{{ route('schedules.print.teacher', $selectedTeacher->id) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-all">
-                        📄 CETAK JADWAL GURU
+                         CETAK JADWAL GURU
                     </a>
                 @endif
             </div>
@@ -83,7 +83,7 @@
                                                             <p class="text-[9px] mt-2 font-black uppercase tracking-wider bg-white/20 inline-block px-2 py-0.5 rounded-lg">Kelas: {{ $existing->classroom->name }}</p>
                                                             @if($existing->room)
                                                                 <p class="text-[9px] font-black text-amber-200 mt-1 uppercase tracking-wider flex items-center">
-                                                                    📍 {{ $existing->room->name }}
+                                                                     {{ $existing->room->name }}
                                                                 </p>
                                                             @endif
                                                         </div>
@@ -105,7 +105,7 @@
                 </div>
             @else
                 <div class="bg-gray-50 rounded-[2.5rem] p-12 text-center border border-gray-100">
-                    <span class="text-4xl block">👨‍🏫</span>
+                    <span class="text-4xl block"></span>
                     <h3 class="font-black text-lg text-gray-800 mt-3">Jadwal Mengajar Dewan Guru</h3>
                     <p class="text-xs text-gray-400 mt-1 max-w-sm mx-auto">Silakan pilih guru pengampu di atas untuk menampilkan grid jadwal mengajar mingguan mereka secara real-time.</p>
                 </div>

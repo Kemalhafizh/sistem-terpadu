@@ -80,10 +80,8 @@ class LibraryCirculationController extends Controller
             ]);
         }
 
-        // 2. Cari di data Buku (berdasarkan UUID atau ID)
-        $book = LibraryBook::where('uuid', $code)
-            ->orWhere('id', $code)
-            ->first();
+        // 2. Cari di data Buku (berdasarkan Barcode, NFC UID, UUID, atau ID)
+        $book = LibraryBook::byCode($code)->first();
 
         if ($book) {
             return response()->json([
@@ -198,5 +196,148 @@ class LibraryCirculationController extends Controller
                 'message' => $e->getMessage(),
             ], 400);
         }
+    }
+
+    /**
+     * Tampilan terminal sirkulasi cepat (High-speed Barcode & NFC mode).
+     */
+    public function quickCirculationTerminal()
+    {
+        $activeLoansCount = LibraryLoan::whereNull('returned_at')->count();
+        $todayLoansCount = LibraryLoan::whereDate('borrowed_at', today())->count();
+
+        return view('library.quick-terminal', compact('activeLoansCount', 'todayLoansCount'));
+    }
+
+    /**
+     * Proses peminjaman buku instan via Barcode/NFC.
+     */
+    public function processBarcodeBorrow(Request $request)
+    {
+        $request->validate([
+            'student_code' => 'required|string',
+            'book_code' => 'required|string',
+        ]);
+
+        try {
+            $studentCode = trim($request->student_code);
+            $bookCode = trim($request->book_code);
+
+            $student = Student::with('user')
+                ->where('nis', $studentCode)
+                ->orWhere('id', $studentCode)
+                ->first();
+
+            if (! $student) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Siswa dengan kode/NIS "' . $studentCode . '" tidak ditemukan.',
+                ], 404);
+            }
+
+            $book = LibraryBook::byCode($bookCode)->first();
+
+            if (! $book) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Buku fisik dengan kode/barcode "' . $bookCode . '" tidak ditemukan.',
+                ], 404);
+            }
+
+            if (! $book->isAvailableForBorrow()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Buku "' . $book->title . '" sedang tidak tersedia untuk dipinjam (sedang dipinjam siswa lain / berstatus digital).',
+                ], 422);
+            }
+
+            // Durasi standar 7 hari
+            $dueAt = now()->addDays(7);
+            $loan = $this->libraryService->borrowBook($student, $book, $dueAt, auth()->user());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Peminjaman buku "' . $book->title . '" untuk siswa ' . $student->user->name . ' berhasil dicatat!',
+                'student_name' => $student->user->name,
+                'book_title' => $book->title,
+                'due_date' => $dueAt->format('d-m-Y'),
+                'loan' => $loan,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses peminjaman: ' . $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Proses pengembalian buku instan via Barcode/NFC.
+     */
+    public function processBarcodeReturn(Request $request)
+    {
+        $request->validate([
+            'book_code' => 'required|string',
+        ]);
+
+        try {
+            $bookCode = trim($request->book_code);
+
+            $book = LibraryBook::byCode($bookCode)->first();
+
+            if (! $book) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Buku dengan kode/barcode "' . $bookCode . '" tidak ditemukan.',
+                ], 404);
+            }
+
+            $loan = LibraryLoan::with(['student.user', 'book'])
+                ->where('library_book_id', $book->id)
+                ->whereNull('returned_at')
+                ->first();
+
+            if (! $loan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Buku "' . $book->title . '" sedang tidak dalam status dipinjam.',
+                ], 422);
+            }
+
+            $returnedLoan = $this->libraryService->returnBook($loan, auth()->user());
+            $fine = $returnedLoan->calculateFine();
+
+            $msg = 'Buku "' . $book->title . '" milik siswa ' . ($loan->student->user->name ?? 'Siswa') . ' berhasil dikembalikan!';
+            if ($fine > 0) {
+                $msg .= ' Terdapat denda keterlambatan sebesar Rp ' . number_format($fine, 0, ',', '.') . '.';
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $msg,
+                'student_name' => $loan->student->user->name ?? '-',
+                'book_title' => $book->title,
+                'fine' => $fine,
+                'loan' => $returnedLoan,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses pengembalian: ' . $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Cetak lembaran stiker label barcode & QR Code buku fisik.
+     */
+    public function printBarcodeLabels()
+    {
+        $books = LibraryBook::where('type', 'physical')
+            ->orWhereNotNull('barcode')
+            ->orderBy('title')
+            ->get();
+
+        return view('library.barcode-print', compact('books'));
     }
 }

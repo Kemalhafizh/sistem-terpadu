@@ -85,28 +85,28 @@
                     <!-- Quick Menu Buttons -->
                     <div class="flex flex-wrap gap-3 w-full lg:w-auto">
                         <a href="{{ route('parent-portal.dashboard', ['child_id' => $student->id]) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
-                            🏠 Dashboard
+                             Dashboard
                         </a>
                         <a href="{{ route('parent-portal.report-card', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
-                            📝 Rapor Detail
+                             Rapor Detail
                         </a>
                         <a href="{{ route('parent-portal.daily-assessments', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
-                            📊 Nilai Harian
+                             Nilai Harian
                         </a>
                         <a href="{{ route('parent-portal.schedule', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
-                            📅 Jadwal Mingguan
+                             Jadwal Mingguan
                         </a>
                         <a href="{{ route('parent-portal.attendance', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
                             ⏰ Log Presensi
                         </a>
                         <a href="{{ route('parent-portal.billings', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
-                            💰 Tagihan SPP
+                             Tagihan SPP
                         </a>
                         <a href="{{ route('parent-portal.wallet', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-primary-600 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
-                            💳 Wadiah Wallet
+                             Wadiah Wallet
                         </a>
                         <a href="{{ route('parent-portal.messages', ['child_id' => $student->id]) }}" class="w-full lg:w-auto text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2">
-                            💬 Chat Wali Kelas
+                             Chat Wali Kelas
                         </a>
                     </div>
                 </div>

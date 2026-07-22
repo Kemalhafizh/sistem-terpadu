@@ -36,14 +36,14 @@
         <!-- Banner Otorisasi / Status -->
         @if($isCompleted)
         <div class="p-4 text-sm text-emerald-800 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-250 dark:border-emerald-900/50 flex items-center space-x-3" role="alert">
-            <span class="text-xl">🔒</span>
+            <span class="text-xl"></span>
             <div>
                 <span class="font-bold">Periode Evaluasi Terkunci.</span> Evaluasi Diri Sekolah (EDS) telah diselesaikan secara formal. Seluruh pengisian dan berkas bukti fisik bersifat read-only (tidak dapat dimodifikasi).
             </div>
         </div>
         @elseif(!$canAssess)
         <div class="p-4 text-sm text-blue-800 rounded-2xl bg-blue-50 dark:bg-blue-950/30 dark:text-blue-400 border border-blue-250 dark:border-blue-900/50 flex items-center space-x-3" role="alert">
-            <span class="text-xl">👁️</span>
+            <span class="text-xl"></span>
             <div>
                 <span class="font-bold">Mode Peninjauan (Read-Only).</span> Anda hanya memiliki hak akses peninjauan untuk memantau data mutu. Pengisian evaluasi dibatasi hanya untuk Waka Kurikulum, Admin, atau Superadmin.
             </div>
@@ -222,7 +222,7 @@
                                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                         />
                                         <div class="text-center space-y-2 pointer-events-none">
-                                            <span class="text-3xl inline-block group-hover:scale-110 transition-transform">📂</span>
+                                            <span class="text-3xl inline-block group-hover:scale-110 transition-transform"></span>
                                             <p class="text-xs font-bold text-gray-600 dark:text-gray-300">Pilih Berkas atau Seret ke Sini</p>
                                             <p class="text-[10px] text-gray-400">PDF, JPEG, atau PNG (Maksimum 5MB per berkas)</p>
                                         </div>
@@ -245,7 +245,7 @@
                                         @endphp
                                         <div class="flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-gray-950 border border-gray-200/50 dark:border-gray-800/80 text-xs font-bold">
                                             <div class="flex items-center space-x-2.5 truncate max-w-[75%]">
-                                                <span>{{ $isPdf ? '📄' : '🖼️' }}</span>
+                                                <span>{{ $isPdf ? '' : '' }}</span>
                                                 <a href="{{ $filePath }}" target="_blank" class="text-primary-600 hover:text-primary-750 dark:text-primary-400 dark:hover:text-primary-350 truncate transition-colors">{{ $fileName }}</a>
                                             </div>
                                             

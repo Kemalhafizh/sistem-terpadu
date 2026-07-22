@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>📋</span> Rencana Pelaksanaan Pembelajaran
+                    <span></span> Rencana Pelaksanaan Pembelajaran
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Kelola dokumen RPP, ajukan review, dan pantau status persetujuan kurikulum.</p>
             </div>

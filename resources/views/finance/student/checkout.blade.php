@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800 leading-tight">💳 Portal Pembayaran Tagihan</h2>
+        <h2 class="font-bold text-2xl text-gray-800 leading-tight"> Portal Pembayaran Tagihan</h2>
     </x-slot>
 
     <div class="py-12 bg-gray-50 min-h-[calc(100vh-4rem)]">
@@ -16,7 +16,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h4 class="font-black text-lg tracking-tight">💡 Mode Demonstrasi Portofolio</h4>
+                        <h4 class="font-black text-lg tracking-tight"> Mode Demonstrasi Portofolio</h4>
                         <p class="text-emerald-50 font-medium text-sm mt-1 leading-relaxed">
                             Aplikasi ini dikonfigurasi khusus untuk dijalankan pada komputer lokal (localhost). Anda dapat mencoba alur pembayaran menggunakan <strong>Midtrans Sandbox</strong> asli (jika server key terisi & online) ATAU menggunakan <strong>Simulator Webhook</strong> offline di bawah tanpa memerlukan koneksi internet sama sekali!
                         </p>
@@ -168,7 +168,7 @@
                 if (isDemoToken) {
                     // Beri tahu user bahwa ini adalah token demo (luring)
                     Swal.fire({
-                        title: 'Mode Luring Aktif 💡',
+                        title: 'Mode Luring Aktif ',
                         html: `Anda berada dalam mode pengembangan lokal portofolio tanpa konfigurasi Midtrans Server Key.<br><br>Gunakan panel <strong>Simulasi Webhook</strong> di sebelah kanan untuk melunasi tagihan ini secara instan dan aman secara lokal!`,
                         icon: 'info',
                         confirmButtonText: 'Saya Mengerti',
@@ -185,7 +185,7 @@
                 window.snap.pay(snapToken, {
                     onSuccess: function (result) {
                         Swal.fire({
-                            title: 'Pembayaran Berhasil! 🎉',
+                            title: 'Pembayaran Berhasil! ',
                             text: 'Sistem sedang memproses konfirmasi pembayaran.',
                             icon: 'success',
                             showConfirmButton: false,
@@ -207,7 +207,7 @@
                     },
                     onError: function (result) {
                         Swal.fire({
-                            title: 'Pembayaran Gagal ❌',
+                            title: 'Pembayaran Gagal ',
                             text: 'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.',
                             icon: 'error',
                             confirmButtonText: 'Tutup',
@@ -259,12 +259,12 @@
                     const data = await response.json();
 
                     if (response.ok && data.status === 'success') {
-                        let alertTitle = 'Simulasi Sukses! 🚀';
+                        let alertTitle = 'Simulasi Sukses! ';
                         let alertText = 'Status tagihan berhasil diubah menjadi Lunas dan buku besar akuntansi telah diselaraskan!';
                         let alertIcon = 'success';
 
                         if (status === 'expire') {
-                            alertTitle = 'Simulasi Pembatalan Sukses! 🛡️';
+                            alertTitle = 'Simulasi Pembatalan Sukses! ';
                             alertText = 'Token transaksi berhasil di-reset agar siswa dapat mengajukan checkout baru.';
                             alertIcon = 'info';
                         }
@@ -287,7 +287,7 @@
                     }
                 } catch (error) {
                     Swal.fire({
-                        title: 'Simulasi Gagal ❌',
+                        title: 'Simulasi Gagal ',
                         text: error.message || 'Tidak dapat terhubung ke endpoint webhook lokal.',
                         icon: 'error',
                         confirmButtonText: 'Tutup',

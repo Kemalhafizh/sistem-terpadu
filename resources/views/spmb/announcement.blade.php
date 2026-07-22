@@ -83,7 +83,7 @@
                                 @if($registration->photo_path)
                                     <img src="{{ asset('storage/' . $registration->photo_path) }}" alt="Foto" class="h-full w-full object-cover rounded-full">
                                 @else
-                                    <span class="text-2xl">👤</span>
+                                    <span class="text-2xl"></span>
                                 @endif
                             </div>
                             <h3 class="text-base font-black text-slate-800 leading-none">{{ $registration->full_name }}</h3>
@@ -116,23 +116,23 @@
                                 <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status Hasil Seleksi</span>
                                 @if($registration->status === 'accepted')
                                     <div class="inline-flex px-6 py-3 bg-emerald-50 border border-emerald-200 text-emerald-700 font-black rounded-2xl text-sm uppercase tracking-wider animate-pulse">
-                                        🎉 DITERIMA / PASSED
+                                         DITERIMA / PASSED
                                     </div>
                                     <p class="text-[11px] text-slate-500 mt-3 max-w-sm mx-auto leading-relaxed">
                                         Selamat! Anda dinyatakan lulus seleksi masuk SMA Islam Sultan Agung 1 Semarang. Silakan melakukan proses daftar ulang.
                                     </p>
                                     @if(!$registration->has_reregistered)
                                         <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs font-semibold text-amber-800 text-center">
-                                            ⚠️ Status: Belum Daftar Ulang. Silakan menghubungi panitia SPMB untuk pembayaran uang pangkal.
+                                             Status: Belum Daftar Ulang. Silakan menghubungi panitia SPMB untuk pembayaran uang pangkal.
                                         </div>
                                     @else
                                         <div class="mt-4 p-4 bg-emerald-50 border border-emerald-250 rounded-2xl text-xs font-semibold text-emerald-800 text-center">
-                                            ✅ Daftar Ulang Selesai. Akun siswa Anda sedang diproses.
+                                             Daftar Ulang Selesai. Akun siswa Anda sedang diproses.
                                         </div>
                                     @endif
                                 @elseif($registration->status === 'rejected')
                                     <div class="inline-flex px-6 py-3 bg-red-50 border border-red-200 text-red-700 font-black rounded-2xl text-sm uppercase tracking-wider">
-                                        ❌ TIDAK DITERIMA
+                                         TIDAK DITERIMA
                                     </div>
                                     <p class="text-[11px] text-slate-500 mt-3 max-w-sm mx-auto leading-relaxed">
                                         Terima kasih atas partisipasi Anda. Jangan berkecil hati dan tetap semangat belajar untuk meraih cita-cita Anda.
@@ -149,12 +149,12 @@
                         </div>
 
                         <div class="pt-4 border-t border-slate-100 flex justify-center gap-2">
-                            <a href="{{ route('spmb.print-card', $registration->id) }}" target="_blank" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl transition-all">Cetak Bukti Kartu Pendaftar</a>
+                            <a href="{{ route('spmb.print-card', $registration) }}" target="_blank" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl transition-all">Cetak Bukti Kartu Pendaftar</a>
                         </div>
                     </div>
                 @else
                     <div class="bg-white p-8 shadow-xl rounded-3xl border border-slate-200/60 text-center">
-                        <span class="text-4xl">🔍</span>
+                        <span class="text-4xl"></span>
                         <h3 class="text-sm font-black text-slate-800 mt-2">Data Tidak Ditemukan</h3>
                         <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">Pastikan nomor pendaftaran yang Anda masukkan benar dan sesuai dengan format SPMB-YYYY-XXXX.</p>
                     </div>

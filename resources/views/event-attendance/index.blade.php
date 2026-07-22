@@ -11,7 +11,7 @@
             </div>
             <div class="flex items-center space-x-2">
                 <a href="{{ route('event-attendance.rekap') }}" class="px-4 py-2 bg-amber-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.03] transition-all">
-                    📊 REKAP KEHADIRAN
+                     REKAP KEHADIRAN
                 </a>
                 @if(in_array(auth()->user()->role, ['guru', 'admin', 'superadmin']))
                     <a href="{{ route('event-attendance.create') }}" class="px-5 py-2 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary-900/20 hover:scale-[1.05] transition-all">
@@ -144,11 +144,11 @@
                                 </td>
                                 <td class="py-4 text-right space-x-1">
                                     <a href="{{ route('event-attendance.show', $event->id) }}" class="px-3 py-1 bg-gray-50 hover:bg-gray-100 border border-gray-100 rounded-lg text-[9px] font-black uppercase tracking-wider text-gray-600 transition-all">
-                                        👁️ DETAIL
+                                         DETAIL
                                     </a>
                                     @if(in_array(auth()->user()->role, ['guru', 'admin', 'superadmin']))
                                         <a href="{{ route('event-attendance.input', $event->id) }}" class="px-3 py-1 bg-primary-50 hover:bg-primary-100 border border-primary-100 rounded-lg text-[9px] font-black uppercase tracking-wider text-primary-600 transition-all">
-                                            📝 INPUT ABSEN
+                                             INPUT ABSEN
                                         </a>
                                     @endif
                                 </td>

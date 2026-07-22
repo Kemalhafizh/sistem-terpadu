@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    ⚙️ Kelola Template Surat Resmi
+                     Kelola Template Surat Resmi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Buat dan konfigurasikan template surat dengan placeholders dinamis, otorisasi penandatangan, dan scan TTD digital.
                 </p>
             </div>
             <a href="{{ route('letters.index') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali ke Surat
+                ⬅ Kembali ke Surat
             </a>
         </div>
     </x-slot>
@@ -22,7 +22,7 @@
         <!-- PANEL KIRI: LIST TEMPLATE AKTIF -->
         <div class="xl:col-span-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
             <h4 class="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-100 dark:border-gray-700/50 pb-2">
-                📋 Daftar Template Surat
+                 Daftar Template Surat
             </h4>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -66,7 +66,7 @@
         <!-- PANEL KANAN: FORM TAMBAH TEMPLATE -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
             <h4 class="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-100 dark:border-gray-700/50 pb-2">
-                ➕ Tambah Template Baru
+                 Tambah Template Baru
             </h4>
 
             <form action="{{ route('letters.templates.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -90,7 +90,7 @@
                     <textarea name="body_template" id="body_template" rows="8" required placeholder="Tuliskan badan surat di sini... Gunakan placeholder @{{nama_siswa}}, @{{nisn}}, @{{purpose}}, dsb." class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500 font-mono"></textarea>
                     
                     <div class="mt-2 bg-gray-50 dark:bg-gray-900 border border-gray-200/40 dark:border-gray-700/30 p-3 rounded-xl">
-                        <span class="block text-[10px] font-black uppercase text-gray-400 tracking-wider">💡 PANDUAN PLACEHOLDER:</span>
+                        <span class="block text-[10px] font-black uppercase text-gray-400 tracking-wider"> PANDUAN PLACEHOLDER:</span>
                         <div class="grid grid-cols-2 gap-1 text-[10px] text-gray-500 font-semibold mt-1">
                             <div><code>&#123;&#123;nama_siswa&#125;&#125;</code>: Nama Siswa</div>
                             <div><code>&#123;&#123;nisn&#125;&#125;</code>: NISN Siswa</div>

@@ -58,7 +58,7 @@
                                 <div class="mt-6 pt-6 border-t border-gray-100 text-left space-y-4 text-xs font-semibold text-gray-600">
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                                            📧
+                                            
                                         </div>
                                         <div>
                                             <span class="text-[9px] text-gray-400 font-black block uppercase tracking-wider">Email</span>
@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                                            📞
+                                            
                                         </div>
                                         <div>
                                             <span class="text-[9px] text-gray-400 font-black block uppercase tracking-wider">Nomor Telepon</span>
@@ -78,7 +78,7 @@
                             </div>
                         @else
                             <div class="py-6 text-center text-gray-400 italic text-xs">
-                                ⚠️ Wali kelas tidak ditemukan untuk kelas anak ini.
+                                 Wali kelas tidak ditemukan untuk kelas anak ini.
                             </div>
                         @endif
                     </div>
@@ -257,7 +257,7 @@
                             
                             <template x-if="messages.length === 0">
                                 <div class="h-full flex flex-col items-center justify-center text-center text-gray-400 space-y-3">
-                                    <span class="text-4xl">💬</span>
+                                    <span class="text-4xl"></span>
                                     <div>
                                         <p class="font-black text-sm text-gray-500">Belum Ada Riwayat Konsultasi</p>
                                         <p class="text-xs text-gray-400 mt-1 max-w-[280px] leading-relaxed mx-auto">

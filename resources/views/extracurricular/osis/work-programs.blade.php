@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📋 Program Kerja OSIS (Proker)
+                     Program Kerja OSIS (Proker)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Catat perolehan realisasi, timeline pelaksanaan, dan ulasan anggaran proker.
                 </p>
             </div>
             <a href="{{ route('osis.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Form Tambah Program Kerja -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl self-start">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4">📋 Rencana Proker Baru</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4"> Rencana Proker Baru</h3>
             
             <form action="{{ route('osis.work-programs.store') }}" method="POST" class="space-y-4">
                 @csrf
@@ -60,7 +60,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                    🚀 Buat Rencana Proker
+                     Buat Rencana Proker
                 </button>
             </form>
         </div>
@@ -104,7 +104,7 @@
 
                     <!-- Update Realisasi / Form LPJ -->
                     <div class="pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                        <h4 class="font-bold text-xs text-gray-800 dark:text-white mb-2">📋 Laporan Pertanggungjawaban (LPJ) Realisasi</h4>
+                        <h4 class="font-bold text-xs text-gray-800 dark:text-white mb-2"> Laporan Pertanggungjawaban (LPJ) Realisasi</h4>
                         <form action="{{ route('osis.work-programs.update', $prog->id) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @csrf
                             @method('PUT')
@@ -140,7 +140,7 @@
                                 </div>
                                 <div class="flex justify-end pt-1">
                                     <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl py-2 px-6 text-xs font-bold transition-all shadow-md">
-                                        💾 Simpan LPJ
+                                         Simpan LPJ
                                     </button>
                                 </div>
                             </div>

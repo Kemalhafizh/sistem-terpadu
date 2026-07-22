@@ -59,13 +59,13 @@
                     <div class="flex items-center space-x-2">
                         @if($thread->is_pinned)
                             <span class="inline-flex px-2 py-1 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 rounded-md text-[9px] font-black uppercase tracking-wider border border-indigo-200 dark:border-indigo-900">
-                                📌 PINNED
+                                 PINNED
                             </span>
                         @endif
                         
                         @if($thread->is_announcement)
                             <span class="inline-flex px-2 py-1 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-md text-[9px] font-black uppercase tracking-wider border border-emerald-200 dark:border-emerald-900">
-                                📢 PENGUMUMAN
+                                 PENGUMUMAN
                             </span>
                         @endif
 
@@ -128,30 +128,30 @@
                                 <input type="hidden" name="reactable_type" value="thread">
                                 <input type="hidden" name="reactable_id" value="{{ $thread->id }}">
                                 
-                                <!-- Like 👍 -->
+                                <!-- Like  -->
                                 <button type="submit" name="type" value="like" class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold transition-all border {{ $thread->reactions->where('user_id', auth()->id())->where('type', 'like')->count() > 0 ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 border-indigo-200/50 dark:border-indigo-900/50' : 'bg-transparent text-gray-500 dark:text-slate-400 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-950/50' }}">
-                                    <span>👍</span>
+                                    <span></span>
                                     <span class="ml-1.5">{{ $thread->reactions->where('type', 'like')->count() }}</span>
                                 </button>
 
-                                <!-- Helpful 💡 -->
+                                <!-- Helpful  -->
                                 <button type="submit" name="type" value="helpful" class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold transition-all border {{ $thread->reactions->where('user_id', auth()->id())->where('type', 'helpful')->count() > 0 ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200/50 dark:border-amber-900/50' : 'bg-transparent text-gray-500 dark:text-slate-400 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-950/50' }}">
-                                    <span>💡</span>
+                                    <span></span>
                                     <span class="ml-1.5">{{ $thread->reactions->where('type', 'helpful')->count() }}</span>
                                 </button>
 
-                                <!-- Insightful 🧠 -->
+                                <!-- Insightful  -->
                                 <button type="submit" name="type" value="insightful" class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold transition-all border {{ $thread->reactions->where('user_id', auth()->id())->where('type', 'insightful')->count() > 0 ? 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 border-violet-200/50 dark:border-violet-900/50' : 'bg-transparent text-gray-500 dark:text-slate-400 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-950/50' }}">
-                                    <span>🧠</span>
+                                    <span></span>
                                     <span class="ml-1.5">{{ $thread->reactions->where('type', 'insightful')->count() }}</span>
                                 </button>
                             </form>
                         @else
                             <!-- Parents view only reaction numbers -->
                             <div class="flex items-center space-x-2 text-xs font-bold text-slate-400">
-                                <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-800 px-2.5 py-1 rounded-full">👍 {{ $thread->reactions->where('type', 'like')->count() }}</span>
-                                <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-800 px-2.5 py-1 rounded-full">💡 {{ $thread->reactions->where('type', 'helpful')->count() }}</span>
-                                <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-800 px-2.5 py-1 rounded-full">🧠 {{ $thread->reactions->where('type', 'insightful')->count() }}</span>
+                                <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-800 px-2.5 py-1 rounded-full"> {{ $thread->reactions->where('type', 'like')->count() }}</span>
+                                <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-800 px-2.5 py-1 rounded-full"> {{ $thread->reactions->where('type', 'helpful')->count() }}</span>
+                                <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-800 px-2.5 py-1 rounded-full"> {{ $thread->reactions->where('type', 'insightful')->count() }}</span>
                             </div>
                         @endif
                     </div>

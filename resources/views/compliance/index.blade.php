@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>📑</span> Audit & Kepatuhan Akreditasi
+                    <span></span> Audit & Kepatuhan Akreditasi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Pusat kendali persiapan akreditasi sekolah SMA Islam Sultan Agung 1 Semarang terintegrasi data riil sistem.
@@ -33,16 +33,16 @@
         <!-- Submenu Navigation -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-2 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg flex flex-wrap gap-1">
             <a href="{{ route('compliance.index') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all bg-primary-600 text-white shadow-md shadow-primary-500/20">
-                📊 Dashboard Kepatuhan
+                 Dashboard Kepatuhan
             </a>
             <a href="{{ route('compliance.checklist') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📋 Checklist Instrumen
+                 Checklist Instrumen
             </a>
             <a href="{{ route('compliance.documents') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📁 Repositori Bukti Fisik
+                 Repositori Bukti Fisik
             </a>
             <a href="{{ route('compliance.timeline') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📅 Timeline Visitasi
+                 Timeline Visitasi
             </a>
         </div>
 
@@ -154,7 +154,7 @@
         <!-- Metric Breakdown Grid -->
         <div>
             <h3 class="text-lg font-black text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                <span>📊</span> Detail 10 Indikator Akreditasi
+                <span></span> Detail 10 Indikator Akreditasi
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

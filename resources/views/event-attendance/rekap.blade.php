@@ -12,7 +12,7 @@
             <div>
                 @if(in_array(auth()->user()->role, ['guru', 'admin', 'superadmin']))
                     <a href="{{ route('event-attendance.index') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                        ⬅️ KELOLA KEGIATAN
+                        ⬅ KELOLA KEGIATAN
                     </a>
                 @endif
             </div>
@@ -56,7 +56,7 @@
 
                         <div class="flex items-end">
                             <button type="submit" class="w-full px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all">
-                                🔍 Tampilkan Rekap
+                                 Tampilkan Rekap
                             </button>
                         </div>
                     </form>
@@ -71,7 +71,7 @@
                             @foreach($students as $stud)
                                 <a href="{{ route('event-attendance.rekap', ['student_id' => $stud->id]) }}" 
                                    class="px-4 py-2 rounded-xl text-xs font-black transition-all border {{ (isset($student) && $student->id == $stud->id) ? 'bg-primary-600 text-white border-primary-600 shadow-lg shadow-primary-900/10' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border-gray-100' }}">
-                                    👶 {{ $stud->user->name ?? $stud->name }}
+                                     {{ $stud->user->name ?? $stud->name }}
                                 </a>
                             @endforeach
                         </div>
@@ -85,7 +85,7 @@
                     {{-- Student Card --}}
                     <div class="bg-gradient-to-br from-primary-950 to-primary-900 rounded-[2.5rem] p-6 text-white shadow-xl relative overflow-hidden flex flex-col justify-between">
                         <div class="absolute right-0 top-0 translate-y-2 -translate-x-2 opacity-10 pointer-events-none">
-                            <span class="text-9xl">🎓</span>
+                            <span class="text-9xl"></span>
                         </div>
                         <div class="relative z-10">
                             <p class="text-[9px] font-black uppercase tracking-widest text-primary-300">Profil Siswa</p>
@@ -161,19 +161,19 @@
                                 
                                 $typeIcons = [
                                     'upacara' => '🇮🇩',
-                                    'sholat_dhuha' => '☀️',
-                                    'sholat_dzuhur' => '🕌',
-                                    'kultum' => '🎤',
-                                    'phbi' => '🌙',
-                                    'class_meeting' => '🏆',
-                                    'lainnya' => '📋'
+                                    'sholat_dhuha' => '',
+                                    'sholat_dzuhur' => '',
+                                    'kultum' => '',
+                                    'phbi' => '',
+                                    'class_meeting' => '',
+                                    'lainnya' => ''
                                 ];
 
                                 $tRate = $typeStat['rate'];
                             @endphp
                             <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-2xl">{{ $typeIcons[$type] ?? '📋' }}</span>
+                                    <span class="text-2xl">{{ $typeIcons[$type] ?? '' }}</span>
                                     <span class="text-[10px] font-black px-2 py-0.5 rounded-full {{ $tRate >= 85 ? 'bg-emerald-50 text-emerald-600' : ($tRate >= 70 ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-600') }}">
                                         {{ $tRate }}%
                                     </span>
@@ -214,11 +214,11 @@
                             @forelse($summary['records'] as $record)
                                 @php
                                     $statusLabels = [
-                                        'hadir' => '🟢 Hadir',
-                                        'terlambat' => '🟡 Terlambat',
-                                        'izin' => '🟠 Izin',
-                                        'sakit' => '🔴 Sakit',
-                                        'alpa' => '⚪ Alpa'
+                                        'hadir' => ' Hadir',
+                                        'terlambat' => ' Terlambat',
+                                        'izin' => ' Izin',
+                                        'sakit' => ' Sakit',
+                                        'alpa' => ' Alpa'
                                     ];
 
                                     $statusColors = [
@@ -276,7 +276,7 @@
                                     @if(!in_array(auth()->user()->role, ['student', 'parent']))
                                         <td class="py-4 text-right">
                                             <a href="{{ route('event-attendance.show', $record->event_id) }}" class="px-3 py-1 bg-gray-50 hover:bg-gray-100 border border-gray-100 rounded-lg text-[9px] font-black uppercase tracking-wider text-gray-600 transition-all">
-                                                👁️ DETAIL
+                                                 DETAIL
                                             </a>
                                         </td>
                                     @endif
@@ -295,7 +295,7 @@
             @else
                 {{-- Empty/Selection State --}}
                 <div class="bg-white rounded-[2.5rem] p-12 text-center border border-gray-100 space-y-4">
-                    <span class="text-6xl block">📋</span>
+                    <span class="text-6xl block"></span>
                     <h3 class="font-black text-lg text-gray-800">Silakan pilih kelas dan siswa terlebih dahulu</h3>
                     <p class="text-xs text-gray-400 max-w-md mx-auto">Pilih kelas di atas untuk memunculkan daftar siswa, kemudian pilih salah satu siswa untuk melihat rangkuman statistik dan riwayat presensi kegiatan mereka.</p>
                 </div>

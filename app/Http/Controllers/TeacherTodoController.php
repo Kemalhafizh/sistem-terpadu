@@ -145,7 +145,7 @@ class TeacherTodoController extends Controller
             return response()->json([
                 'success' => true,
                 'is_completed' => $todo->is_completed,
-                'message' => $todo->is_completed ? 'Todo selesai! ✅' : 'Todo dikembalikan ke daftar aktif.',
+                'message' => $todo->is_completed ? 'Todo selesai! ' : 'Todo dikembalikan ke daftar aktif.',
             ]);
         }
 

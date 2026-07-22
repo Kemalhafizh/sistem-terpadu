@@ -14,7 +14,7 @@
                 <form action="{{ route('spmb.admin.bulk-convert', $wave->id) }}" method="POST">
                     @csrf
                     <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-1.5">
-                        ⚙️ Konversi Massal ke Akun Siswa Baru
+                         Konversi Massal ke Akun Siswa Baru
                     </button>
                 </form>
             </div>
@@ -58,7 +58,7 @@
                                     </td>
                                     <td class="p-4 text-center font-inter font-semibold">
                                         @if($app->user_id)
-                                            <span class="text-emerald-600 font-bold">✅ AKTIF (User ID: {{ $app->user_id }})</span>
+                                            <span class="text-emerald-600 font-bold"> AKTIF (User ID: {{ $app->user_id }})</span>
                                         @else
                                             <span class="text-slate-400">Belum Dikoneksi</span>
                                         @endif

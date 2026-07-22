@@ -8,7 +8,7 @@
             </a>
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    ✍️ Pengisian Jurnal Mengajar Harian
+                     Pengisian Jurnal Mengajar Harian
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Catat detail aktivitas tatap muka pembelajaran kelas, metode, materi, dan kendala hari ini.</p>
             </div>
@@ -142,7 +142,7 @@
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex flex-col justify-between h-fit gap-6">
             <div>
                 <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>📅</span> Jadwal Anda Hari Ini
+                    <span></span> Jadwal Anda Hari Ini
                 </h3>
                 <div class="space-y-3">
                     @forelse($suggestedSchedule ?? [] as $sched)

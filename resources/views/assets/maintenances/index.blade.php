@@ -27,7 +27,7 @@
 
             @if(session('success'))
                 <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center space-x-2 text-sm font-bold shadow-sm">
-                    <span class="p-1 bg-emerald-100 rounded-lg text-emerald-600">✓</span>
+                    <span class="p-1 bg-emerald-100 rounded-lg text-emerald-600"></span>
                     <span>{{ session('success') }}</span>
                 </div>
             @endif

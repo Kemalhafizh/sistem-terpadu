@@ -6,7 +6,7 @@
             <div>
                 <span class="text-[10px] uppercase tracking-widest text-teal-650 dark:text-teal-400 font-black">ADMINISTRASI KEUANGAN SYARIAH</span>
                 <h2 class="font-black text-3xl text-gray-800 dark:text-white leading-tight mt-1">
-                    💳 Rekening Tabungan Wadiah Siswa
+                     Rekening Tabungan Wadiah Siswa
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Kelola data rekening wadiah, batas jajan harian, serta aktivitas setor/tarik tunai siswa.
@@ -14,7 +14,7 @@
             </div>
             <div>
                 <a href="{{ route('admin.finance.wadiah.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-2xl py-2.5 px-5 text-xs font-bold transition-all flex items-center gap-2">
-                    📊 Dashboard Wadiah
+                     Dashboard Wadiah
                 </a>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <form action="{{ url()->current() }}" method="GET" class="flex flex-col md:flex-row items-center gap-4">
                 <div class="relative w-full flex-1">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                        🔍
+                        
                     </div>
                     <input type="text" name="search" value="{{ $search }}" placeholder="Cari nomor rekening, NIS, atau nama siswa..." class="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-850 dark:text-white">
                 </div>
@@ -101,14 +101,14 @@
                                 <td class="py-5 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <a href="{{ route('admin.finance.wadiah.show', $acc->id) }}" class="p-2 bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 rounded-xl transition-all text-xs font-black uppercase tracking-wider flex items-center gap-1 shadow-xs" title="Lihat Detail Mutasi">
-                                            🔎 Detail
+                                             Detail
                                         </a>
                                         @if($acc->is_active)
                                             <a href="{{ route('admin.finance.wadiah.deposit', $acc->id) }}" class="p-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-450 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-xl transition-all text-xs font-black uppercase tracking-wider flex items-center gap-1 shadow-xs" title="Setor Tunai">
-                                                📥 Setor
+                                                 Setor
                                             </a>
                                             <a href="{{ route('admin.finance.wadiah.withdraw', $acc->id) }}" class="p-2 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-450 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-xl transition-all text-xs font-black uppercase tracking-wider flex items-center gap-1 shadow-xs" title="Tarik Tunai">
-                                                📤 Tarik
+                                                 Tarik
                                             </a>
                                         @endif
                                     </div>

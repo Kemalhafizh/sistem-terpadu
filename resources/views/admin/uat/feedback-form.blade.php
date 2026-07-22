@@ -47,7 +47,7 @@
             <template x-if="successMessage">
                 <div class="flex flex-col items-center justify-center py-10 text-center space-y-4">
                     <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-3xl animate-bounce">
-                        ✓
+                        
                     </div>
                     <h4 class="font-bold text-white text-base">Feedback Terkirim!</h4>
                     <p class="text-xs text-gray-400 max-w-[280px]" x-text="successMessage"></p>
@@ -70,7 +70,7 @@
                                         @mouseleave="hoverRating = 0"
                                         class="text-2xl transition-all duration-150 focus:outline-none transform hover:scale-125"
                                         :class="(hoverRating || rating) >= star ? 'text-amber-400' : 'text-gray-600'">
-                                    ★
+                                    
                                 </button>
                             </template>
                             <span class="text-xs font-bold text-gray-400 ml-2" x-text="getRatingLabel()"></span>
@@ -85,11 +85,11 @@
                                 required
                                 class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
                             <option value="" class="bg-gray-900">Pilih Kategori...</option>
-                            <option value="bug" class="bg-gray-900">Bug / Galat Sistem 🐛</option>
-                            <option value="ui_suggestion" class="bg-gray-900">Saran Tampilan / UI 🎨</option>
-                            <option value="unclear_feature" class="bg-gray-900">Fitur Kurang Jelas 💡</option>
-                            <option value="slow" class="bg-gray-900">Lambat / Performa Halaman ⚡</option>
-                            <option value="other" class="bg-gray-900">Lainnya 📌</option>
+                            <option value="bug" class="bg-gray-900">Bug / Galat Sistem </option>
+                            <option value="ui_suggestion" class="bg-gray-900">Saran Tampilan / UI </option>
+                            <option value="unclear_feature" class="bg-gray-900">Fitur Kurang Jelas </option>
+                            <option value="slow" class="bg-gray-900">Lambat / Performa Halaman </option>
+                            <option value="other" class="bg-gray-900">Lainnya </option>
                         </select>
                     </div>
 
@@ -189,11 +189,11 @@
 
             getRatingLabel() {
                 const labels = {
-                    1: 'Sangat Buruk 😞',
-                    2: 'Buruk 😐',
-                    3: 'Cukup 🙂',
-                    4: 'Baik 😀',
-                    5: 'Sangat Baik 😍'
+                    1: 'Sangat Buruk ',
+                    2: 'Buruk ',
+                    3: 'Cukup ',
+                    4: 'Baik ',
+                    5: 'Sangat Baik '
                 };
                 return labels[this.rating] || '';
             },

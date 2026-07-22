@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-3">
-            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-xl dark:bg-emerald-950 dark:text-emerald-350">📂</span>
+            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-xl dark:bg-emerald-950 dark:text-emerald-350"></span>
             Repositori LPJ & Sidang Kesiswaan
         </h2>
     </x-slot>
@@ -20,20 +20,20 @@
         <!-- Tab Navigation -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
             <a href="{{ route('mpk.index') }}" class="px-4 py-2 bg-white text-slate-650 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
-                📊 Audit Keuangan
+                 Audit Keuangan
             </a>
             <a href="{{ route('mpk.lpj.index') }}" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all">
-                📂 Repositori LPJ OSIS
+                 Repositori LPJ OSIS
             </a>
             <a href="{{ route('mpk.aspirations.index') }}" class="px-4 py-2 bg-white text-slate-650 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
-                🗣️ Kotak Suara Aspirasi
+                 Kotak Suara Aspirasi
             </a>
         </div>
 
         <!-- Session Status -->
         @if(session('success'))
             <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-semibold flex items-center gap-3">
-                <span>✅</span>
+                <span></span>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
@@ -107,14 +107,14 @@
                                     <!-- Actions -->
                                     <div class="flex gap-2 justify-end mt-2 sm:mt-0">
                                         <a href="{{ asset('storage/' . $lpj->file_path) }}" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-gray-650 text-slate-800 dark:text-gray-250 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5" title="Buka Dokumen PDF">
-                                            📄 Dokumen
+                                             Dokumen
                                         </a>
                                         @if($canReview && $lpj->status === 'submitted')
                                             <button 
                                                 @click="openReviewModal({{ json_encode($lpj) }})" 
                                                 class="px-3 py-2 bg-emerald-650 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all"
                                             >
-                                                ⚖️ Keputusan
+                                                 Keputusan
                                             </button>
                                         @endif
                                     </div>

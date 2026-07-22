@@ -85,7 +85,7 @@
         {{-- Timeline Section Header --}}
         <div class="space-y-4">
             <h4 class="text-sm font-black uppercase tracking-widest text-gray-400 flex items-center space-x-1.5">
-                <span>⏱️ Timeline Riwayat Smart Alerts</span>
+                <span>⏱ Timeline Riwayat Smart Alerts</span>
             </h4>
 
             {{-- Timeline Container --}}
@@ -95,7 +95,7 @@
                         {{-- Icon bullet indicator --}}
                         <div class="absolute -left-3 top-1.5 w-6 h-6 rounded-full flex items-center justify-center text-xs 
                              {{ $alert->status === 'resolved' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-300' : ($alert->severity === 'critical' ? 'bg-rose-500/10 text-rose-500 border border-rose-300 animate-pulse' : 'bg-amber-500/10 text-amber-500 border border-amber-300') }}">
-                            {{ $alert->status === 'resolved' ? '✓' : '!' }}
+                            {{ $alert->status === 'resolved' ? '' : '!' }}
                         </div>
 
                         {{-- Alert Card --}}
@@ -133,13 +133,13 @@
                                         <form action="{{ route('smart-alerts.acknowledge', $alert) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-[9px] font-black uppercase tracking-wider transition active:scale-95">
-                                                👁️ Pantau
+                                                 Pantau
                                             </button>
                                         </form>
                                     @endif
                                     <button @click="showResolveModal = true; activeAlertId = {{ $alert->id }}; activeAlertTitle = '{{ addslashes($alert->title) }}'; resolutionNotes = ''" 
                                             class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[9px] font-black uppercase tracking-wider transition active:scale-95">
-                                        ✅ Selesaikan
+                                         Selesaikan
                                     </button>
                                 </div>
                             @endif

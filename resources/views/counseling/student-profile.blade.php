@@ -138,9 +138,9 @@
                                             <div>
                                                 <span class="h-8 w-8 rounded-full {{ $log->points > 0 ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600' }} flex items-center justify-center">
                                                     @if($log->points > 0)
-                                                        ⚠️
+                                                        
                                                     @else
-                                                        🏆
+                                                        
                                                     @endif
                                                 </span>
                                             </div>

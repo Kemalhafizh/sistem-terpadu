@@ -11,21 +11,21 @@
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('schedules.teacher') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 hover:scale-[1.03] transition-all">
-                    👨‍🏫 JADWAL GURU
+                     JADWAL GURU
                 </a>
                 <a href="{{ route('schedules.room') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20 hover:scale-[1.03] transition-all">
-                    🏫 JADWAL RUANGAN
+                     JADWAL RUANGAN
                 </a>
                 <a href="{{ route('schedules.conflicts') }}" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:scale-[1.03] transition-all">
-                    ⚠️ AUDIT BENTROK
+                     AUDIT BENTROK
                 </a>
                 @if($selectedClassroom)
                     <a href="{{ route('schedules.print.class', $selectedClassroom->id) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.03] transition-all">
-                        📄 CETAK KELAS
+                         CETAK KELAS
                     </a>
                 @endif
                 <a href="{{ route('schedules.print.master') }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-[1.03] transition-all">
-                    📁 CETAK MASTER
+                     CETAK MASTER
                 </a>
             </div>
         </div>
@@ -67,7 +67,7 @@
                     </div>
                 @else
                     <div class="px-4 py-2 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase tracking-wider border border-amber-100">
-                        ⚠️ Belum ada Preset Waktu Aktif
+                         Belum ada Preset Waktu Aktif
                     </div>
                 @endif
             </div>
@@ -118,7 +118,7 @@
                                                             <p class="text-[9px] mt-2 font-black uppercase tracking-wider bg-white/20 inline-block px-2 py-0.5 rounded-lg">{{ $existing->teacher->name }}</p>
                                                             @if($existing->room)
                                                                 <p class="text-[9px] font-black text-amber-200 mt-1 uppercase tracking-wider flex items-center">
-                                                                    📍 {{ $existing->room->name }}
+                                                                     {{ $existing->room->name }}
                                                                 </p>
                                                             @endif
                                                         </div>
@@ -142,7 +142,7 @@
                 </div>
             @else
                 <div class="bg-gray-50 rounded-[2.5rem] p-12 text-center border border-gray-100">
-                    <span class="text-4xl block">📅</span>
+                    <span class="text-4xl block"></span>
                     <h3 class="font-black text-lg text-gray-800 mt-3">Plotting Sesi Belajar Kelas</h3>
                     <p class="text-xs text-gray-400 mt-1 max-w-sm mx-auto">Pilih kelas di atas untuk mulai menyusun plotting jadwal pelajaran per hari dan jam sesi.</p>
                 </div>

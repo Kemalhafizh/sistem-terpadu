@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-black text-2xl text-gray-900 leading-tight">
-            💳 Portal Pembayaran <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Snap Checkout</span>
+             Portal Pembayaran <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Snap Checkout</span>
         </h2>
     </x-slot>
 
@@ -17,7 +17,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h4 class="font-black text-lg tracking-tight">💡 Mode Demonstrasi Pembayaran Premium</h4>
+                        <h4 class="font-black text-lg tracking-tight"> Mode Demonstrasi Pembayaran Premium</h4>
                         <p class="text-emerald-50 font-medium text-xs mt-1.5 leading-relaxed">
                             Sebagai bagian dari premium portal, sistem terintegrasi dengan **Midtrans Snap SDK** asli (jika server key terisi & online). Untuk mode pengembangan lokal offline (localhost), sistem akan mendeteksi demo token dan secara dinamis membelokkan rute Anda ke **Mock Payment Gateway** yang elegan untuk menyelesaikan simulasi pembayaran.
                         </p>
@@ -118,7 +118,7 @@
                         </div>
 
                         <div class="pt-2 text-xs text-slate-400 italic">
-                            ⚠️ *Pastikan Anda tidak menutup halaman checkout sebelum konfirmasi transaksi sukses dikirimkan ke server sekolah.*
+                             *Pastikan Anda tidak menutup halaman checkout sebelum konfirmasi transaksi sukses dikirimkan ke server sekolah.*
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
 
                 if (isDemoToken) {
                     Swal.fire({
-                        title: 'Mode Simulasi Pembayaran 💡',
+                        title: 'Mode Simulasi Pembayaran ',
                         html: `Anda berada dalam mode pengembangan lokal offline.<br><br>Sistem akan mengalihkan Anda ke **Mock Payment Gateway** premium kami untuk merampungkan transaksi simulasi.`,
                         icon: 'info',
                         confirmButtonText: 'Lanjutkan ke Mock Gateway',
@@ -174,7 +174,7 @@
                 window.snap.pay(snapToken, {
                     onSuccess: function (result) {
                         Swal.fire({
-                            title: 'Pembayaran Berhasil! 🎉',
+                            title: 'Pembayaran Berhasil! ',
                             text: 'Sistem sedang memproses konfirmasi pembayaran.',
                             icon: 'success',
                             showConfirmButton: false,
@@ -196,7 +196,7 @@
                     },
                     onError: function (result) {
                         Swal.fire({
-                            title: 'Pembayaran Gagal ❌',
+                            title: 'Pembayaran Gagal ',
                             text: 'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.',
                             icon: 'error',
                             confirmButtonText: 'Tutup',

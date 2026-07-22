@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📁 Dokumen Digital Pegawai
+                     Dokumen Digital Pegawai
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Pegawai: {{ $employee->user->name }} | NIY/NIP: {{ $employee->employee_number }}
                 </p>
             </div>
             <a href="{{ route('hrd.employees.show', $employee->id) }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                👁️ Lihat Profil
+                 Lihat Profil
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Form Upload Berkas -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl self-start">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4">📤 Unggah Berkas Baru</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4"> Unggah Berkas Baru</h3>
             
             <form action="{{ route('hrd.employees.documents.store', $employee->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
@@ -65,7 +65,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                    🚀 Unggah Dokumen
+                     Unggah Dokumen
                 </button>
             </form>
         </div>
@@ -73,7 +73,7 @@
         <!-- Daftar Dokumen Terunggah -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">📁 Berkas Tersimpan</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Berkas Tersimpan</h3>
             </div>
 
             <div class="overflow-x-auto">
@@ -111,13 +111,13 @@
                                 </td>
                                 <td class="px-6 py-4 text-right flex justify-end gap-2">
                                     <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-1.5 px-3 text-xs font-bold transition-all">
-                                        👁️ Buka
+                                         Buka
                                     </a>
                                     <form action="{{ route('hrd.employees.documents.destroy', [$employee->id, $doc->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berkas ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white rounded-xl py-1.5 px-3 text-xs font-bold transition-all shadow-md">
-                                            🗑️ Hapus
+                                             Hapus
                                         </button>
                                     </form>
                                 </td>

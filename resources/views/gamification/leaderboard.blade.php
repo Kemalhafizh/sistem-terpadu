@@ -10,7 +10,7 @@
             <!-- Filter & Judul Utama -->
             <div class="bg-gradient-to-r from-indigo-900/90 to-slate-900/90 backdrop-blur-md border border-indigo-500/20 text-white rounded-[2rem] p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
                 <div class="space-y-2 flex-grow">
-                    <h3 class="text-2xl font-black tracking-tight text-indigo-300">🏆 Liga Keunggulan Sultan Agung</h3>
+                    <h3 class="text-2xl font-black tracking-tight text-indigo-300"> Liga Keunggulan Sultan Agung</h3>
                     <p class="text-xs text-gray-300 font-medium leading-relaxed max-w-xl">
                         Apresiasi siswa-siswi teraktif yang konsisten mengumpulkan XP melalui keaktifan belajar, kehadiran presensi masuk kelas, setoran hafalan Tahfidz Al-Quran, dan jurnal mutaba'ah ibadah harian.
                     </p>
@@ -29,7 +29,7 @@
                 </form>
             </div>
 
-            <!-- Area Podium 3 Besar (🥇🥈🥉) -->
+            <!-- Area Podium 3 Besar () -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-end pt-8 max-w-5xl mx-auto">
                 
                 <!-- Peringkat 2 (Kiri) -->
@@ -38,7 +38,7 @@
                     <div class="order-2 md:order-1 bg-white/70 backdrop-blur-lg border border-gray-100 rounded-[2rem] p-6 shadow-lg hover:shadow-indigo-500/5 transition-all hover:scale-105 duration-300 flex flex-col items-center text-center relative overflow-hidden h-[300px] justify-end">
                         <div class="absolute -top-4 -left-4 w-20 h-20 bg-slate-100 rounded-full opacity-30"></div>
                         <div class="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center text-3xl font-black text-slate-500 border-4 border-slate-300 shadow-xl relative z-10 mb-4 animate-pulse">
-                            🥈
+                            
                         </div>
                         <h4 class="text-lg font-black text-gray-900 leading-tight">{{ $p2->name }}</h4>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ $p2->classroom?->name ?? 'Kelas -' }}</p>
@@ -47,7 +47,7 @@
                         </div>
                         @if($p2->current_streak > 0)
                             <div class="mt-2 text-[10px] font-black text-orange-500 flex items-center gap-1">
-                                🔥 Streak {{ $p2->current_streak }} Hari
+                                 Streak {{ $p2->current_streak }} Hari
                             </div>
                         @endif
                     </div>
@@ -61,10 +61,10 @@
                 @if(isset($leaderboard[0]))
                     @php $p1 = $leaderboard[0]; @endphp
                     <div class="order-1 md:order-2 bg-gradient-to-b from-amber-50/80 to-yellow-50/80 backdrop-blur-lg border-2 border-amber-400 rounded-[2.5rem] p-8 shadow-2xl hover:shadow-amber-500/10 transition-all hover:scale-108 duration-300 flex flex-col items-center text-center relative overflow-hidden h-[360px] justify-end">
-                        <div class="absolute top-4 right-4 text-3xl animate-bounce">👑</div>
+                        <div class="absolute top-4 right-4 text-3xl animate-bounce"></div>
                         <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-200 rounded-full opacity-20"></div>
                         <div class="w-24 h-24 bg-amber-100 rounded-2xl flex items-center justify-center text-4xl font-black text-amber-600 border-4 border-amber-400 shadow-xl relative z-10 mb-4 animate-bounce">
-                            🥇
+                            
                         </div>
                         <h4 class="text-xl font-black text-gray-900 leading-tight">{{ $p1->name }}</h4>
                         <p class="text-xs font-bold text-amber-700 uppercase tracking-widest mt-1">{{ $p1->classroom?->name ?? 'Kelas -' }}</p>
@@ -73,7 +73,7 @@
                         </div>
                         @if($p1->current_streak > 0)
                             <div class="mt-2 text-xs font-black text-orange-600 flex items-center gap-1">
-                                🔥 Streak {{ $p1->current_streak }} Hari
+                                 Streak {{ $p1->current_streak }} Hari
                             </div>
                         @endif
                     </div>
@@ -89,7 +89,7 @@
                     <div class="order-3 bg-white/70 backdrop-blur-lg border border-gray-100 rounded-[2rem] p-6 shadow-lg hover:shadow-indigo-500/5 transition-all hover:scale-105 duration-300 flex flex-col items-center text-center relative overflow-hidden h-[270px] justify-end">
                         <div class="absolute -bottom-4 -right-4 w-20 h-20 bg-orange-100 rounded-full opacity-30"></div>
                         <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl font-black text-orange-600 border-4 border-orange-300 shadow-xl relative z-10 mb-4">
-                            🥉
+                            
                         </div>
                         <h4 class="text-base font-black text-gray-900 leading-tight">{{ $p3->name }}</h4>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{{ $p3->classroom?->name ?? 'Kelas -' }}</p>
@@ -98,7 +98,7 @@
                         </div>
                         @if($p3->current_streak > 0)
                             <div class="mt-2 text-[10px] font-black text-orange-500 flex items-center gap-1">
-                                🔥 Streak {{ $p3->current_streak }} Hari
+                                 Streak {{ $p3->current_streak }} Hari
                             </div>
                         @endif
                     </div>
@@ -149,7 +149,7 @@
                                     <td class="py-4">
                                         @if($student->current_streak > 0)
                                             <span class="inline-flex items-center text-orange-600 text-xs font-bold gap-1 bg-orange-50 px-2.5 py-1 rounded-full">
-                                                🔥 {{ $student->current_streak }} Hari
+                                                 {{ $student->current_streak }} Hari
                                             </span>
                                         @else
                                             <span class="text-xs text-gray-400 font-medium">0 Hari</span>

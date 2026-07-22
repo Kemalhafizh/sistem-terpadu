@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl">⚙️</span>
+                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl"></span>
                     <span>{{ __('Aturan & Ambang Batas Smart Alert') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -21,22 +21,22 @@
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
                     <a href="{{ route('smart-alerts.dashboard') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                       📊 Dashboard
+                        Dashboard
                     </a>
                 @endif
                 <a href="{{ route('smart-alerts.index') }}" 
                    class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                   🚨 Alert Aktif
+                    Alert Aktif
                 </a>
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
                     <a href="{{ route('smart-alerts.rules') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 bg-teal-500 text-white shadow-lg shadow-teal-500/20">
-                       ⚙️ Aturan Deteksi
+                        Aturan Deteksi
                     </a>
                 @endif
                 <a href="{{ route('smart-alerts.history') }}" 
                    class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                   ⏱️ Riwayat
+                   ⏱ Riwayat
                 </a>
             </div>
             
@@ -96,7 +96,7 @@
             {{-- Section 1: Akademik & Kehadiran Siswa --}}
             <div class="space-y-4">
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center space-x-2">
-                    <span class="p-1 bg-indigo-500/10 text-indigo-500 rounded">🎓</span>
+                    <span class="p-1 bg-indigo-500/10 text-indigo-500 rounded"></span>
                     <span>Akademik & Kehadiran Siswa</span>
                 </h3>
 
@@ -146,7 +146,7 @@
             {{-- Section 2: Poin Pelanggaran Bimbingan Konseling (BK) --}}
             <div class="space-y-4">
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center space-x-2">
-                    <span class="p-1 bg-rose-500/10 text-rose-500 rounded">🚨</span>
+                    <span class="p-1 bg-rose-500/10 text-rose-500 rounded"></span>
                     <span>Poin Pelanggaran BK Siswa</span>
                 </h3>
 
@@ -196,7 +196,7 @@
             {{-- Section 3: Kinerja & Jurnal Mengajar Guru --}}
             <div class="space-y-4">
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center space-x-2">
-                    <span class="p-1 bg-indigo-500/10 text-indigo-500 rounded">📝</span>
+                    <span class="p-1 bg-indigo-500/10 text-indigo-500 rounded"></span>
                     <span>Kinerja & Jurnal Mengajar Guru</span>
                 </h3>
 
@@ -246,7 +246,7 @@
             {{-- Section 4: UKS & Aset Sarpras --}}
             <div class="space-y-4">
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center space-x-2">
-                    <span class="p-1 bg-indigo-500/10 text-indigo-500 rounded">🏥</span>
+                    <span class="p-1 bg-indigo-500/10 text-indigo-500 rounded"></span>
                     <span>UKS & Keterlambatan Pengembalian Aset</span>
                 </h3>
 

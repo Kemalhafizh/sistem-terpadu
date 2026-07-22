@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\UpdateActiveSession::class,
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\PerformanceLogger::class,
+            \App\Http\Middleware\SystemLockdownMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

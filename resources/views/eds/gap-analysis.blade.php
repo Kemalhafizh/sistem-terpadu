@@ -147,7 +147,7 @@
                         @empty
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center text-emerald-600 dark:text-emerald-400 font-extrabold italic bg-emerald-50/10 dark:bg-emerald-950/5">
-                                <div>🎉 Luar Biasa!</div>
+                                <div> Luar Biasa!</div>
                                 <div class="text-xs text-gray-400 mt-1 font-normal uppercase tracking-wider">Seluruh aspek mutu sekolah terdata dalam pencapaian Baik atau Unggul (Skor &ge; 3.00)</div>
                             </td>
                         </tr>

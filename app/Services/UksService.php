@@ -152,7 +152,7 @@ class UksService
                 if ($automation && $automation->template) {
                     $message = $automationService->parseMessage($automation->template->content, $context);
                 } else {
-                    $message = "⚠️ *PEMBERITAHUAN DARURAT UKS SMA ISLAM SULTAN AGUNG 1*\n\n"
+                    $message = " *PEMBERITAHUAN DARURAT UKS SMA ISLAM SULTAN AGUNG 1*\n\n"
                         ."Bapak/Ibu Orang Tua/Wali dari siswa:\n"
                         ."Nama: *{$studentName}*\n"
                         ."Kelas: *{$classroom}*\n\n"

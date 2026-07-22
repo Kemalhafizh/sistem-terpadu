@@ -5,12 +5,12 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    ✍️ Buat Draf: {{ $template->name }}
+                     Buat Draf: {{ $template->name }}
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Gunakan formulir di kiri untuk mengisi data secara asinkron. Tinjauan surat fisik akan ter-update secara real-time di kanan.</p>
             </div>
             <a href="{{ route('letters.index') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -94,7 +94,7 @@
         <!-- PANEL KIRI: FORM ENTRI (40%) -->
         <div class="w-full lg:w-[40%] bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-y-auto max-h-[85vh]">
             <h4 class="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-gray-700/50 pb-2">
-                ✍️ Pengisian Data Surat
+                 Pengisian Data Surat
             </h4>
 
             <form action="{{ route('letters.store') }}" method="POST" class="space-y-4">
@@ -167,7 +167,7 @@
         <!-- PANEL KANAN: LIVE PREVIEW (60%) -->
         <div class="w-full lg:w-[60%] flex flex-col h-[85vh]">
             <div class="flex justify-between items-center mb-2 px-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">📄 Tinjauan Cetak (A4 Live Preview)</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-gray-400"> Tinjauan Cetak (A4 Live Preview)</span>
                 <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Asinkron & Aktif</span>
             </div>
             

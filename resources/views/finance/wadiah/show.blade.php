@@ -6,7 +6,7 @@
             <div>
                 <span class="text-[10px] uppercase tracking-widest text-teal-600 dark:text-teal-400 font-black">MUTASI TABUNGAN SYARIAH</span>
                 <h2 class="font-black text-3xl text-gray-805 dark:text-white leading-tight mt-1">
-                    📖 Detail Rekening & Mutasi
+                     Detail Rekening & Mutasi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Detail informasi rekening tabungan wadiah {{ $account->student->user->name }}.
@@ -18,10 +18,10 @@
                 </a>
                 @if($account->is_active)
                     <a href="{{ route('admin.finance.wadiah.deposit', $account->id) }}" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl py-2.5 px-5 text-xs font-bold transition-all shadow-md shadow-emerald-500/10 flex items-center gap-2">
-                        📥 Setor Tunai
+                         Setor Tunai
                     </a>
                     <a href="{{ route('admin.finance.wadiah.withdraw', $account->id) }}" class="bg-rose-600 hover:bg-rose-700 text-white rounded-2xl py-2.5 px-5 text-xs font-bold transition-all shadow-md shadow-rose-500/10 flex items-center gap-2">
-                        📤 Tarik Tunai
+                         Tarik Tunai
                     </a>
                 @endif
             </div>
@@ -37,7 +37,7 @@
                 
                 <div class="flex flex-col items-center text-center pb-6 border-b border-gray-100 dark:border-gray-750">
                     <div class="w-20 h-20 bg-teal-50 dark:bg-teal-900/30 text-teal-650 dark:text-teal-400 rounded-[2rem] flex items-center justify-center text-4xl shadow-inner mb-4">
-                        🕌
+                        
                     </div>
                     <span class="text-[10px] font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest mb-1">PROFIL TABUNGAN</span>
                     <h3 class="font-black text-xl text-gray-800 dark:text-white leading-snug">{{ $account->student->user->name }}</h3>
@@ -120,7 +120,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>
                         <span class="text-[10px] font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest block">RIWAYAT MUTASI REKENING</span>
-                        <h3 class="font-black text-xl text-gray-800 dark:text-white mt-1">📊 Aktivitas Transaksi</h3>
+                        <h3 class="font-black text-xl text-gray-800 dark:text-white mt-1"> Aktivitas Transaksi</h3>
                     </div>
                     <a href="{{ route('admin.finance.wadiah.export-passbook', $account->id) }}" class="bg-teal-50 hover:bg-teal-100 dark:bg-teal-900/20 dark:hover:bg-teal-900/35 text-teal-650 text-teal-600 dark:text-teal-400 rounded-2xl py-2.5 px-4 text-xs font-bold transition-all flex items-center gap-2 border border-teal-100/50 dark:border-teal-900/30 shadow-xs">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>

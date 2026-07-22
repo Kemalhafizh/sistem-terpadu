@@ -97,7 +97,7 @@
 
         <!-- Notification Warning Bar -->
         <div id="violation-warning-bar" class="hidden bg-amber-600 text-white py-2 px-4 text-center text-[10px] font-black uppercase tracking-widest animate-pulse flex-shrink-0">
-            ⚠️ PERINGATAN: Perpindahan layar terdeteksi! Pelanggaran: <span id="warning-violation-count">0</span> / {{ $elearningAssignment->max_violations }}
+             PERINGATAN: Perpindahan layar terdeteksi! Pelanggaran: <span id="warning-violation-count">0</span> / {{ $elearningAssignment->max_violations }}
         </div>
 
         <!-- Scrollable Exam Area -->

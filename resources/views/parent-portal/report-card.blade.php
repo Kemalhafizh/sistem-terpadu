@@ -192,7 +192,7 @@
                     <div class="mt-8">
                         @if($reportCard)
                             <a href="{{ route('report-cards.pdf', $student->id) }}" target="_blank" class="w-full text-center py-4 bg-primary-600 hover:bg-primary-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg shadow-primary-900/10 transition-all flex items-center justify-center gap-2">
-                                📥 Cetak Rapor Digital PDF
+                                 Cetak Rapor Digital PDF
                             </a>
                         @else
                             <button disabled class="w-full py-4 bg-gray-100 text-gray-400 rounded-2xl text-xs font-black uppercase tracking-wider cursor-not-allowed">

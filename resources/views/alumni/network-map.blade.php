@@ -15,14 +15,14 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    🗺️ Peta Geografis Sebaran Alumni
+                     Peta Geografis Sebaran Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Visualisasi lokasi domisili alumni SMA Islam Sultan Agung 1 Semarang secara geografis.
                 </p>
             </div>
             <a href="{{ route('alumni.directory') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Direktori Alumni
+                ⬅ Direktori Alumni
             </a>
         </div>
     </x-slot>
@@ -35,7 +35,7 @@
 
         <!-- Ringkasan Lokasi Sebaran -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm">📍 Wilayah Persebaran Terbanyak</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Wilayah Persebaran Terbanyak</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                 @foreach($locations->sortByDesc('total')->take(4) as $loc)
                     <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
@@ -77,7 +77,7 @@
                             <div class="p-2 space-y-1">
                                 <h4 class="font-black text-xs text-gray-800 m-0">${loc.city}, ${loc.province || ''}</h4>
                                 <p class="text-[10px] text-gray-500 m-0">${loc.country}</p>
-                                <p class="text-blue-600 font-bold text-xs m-0 mt-1">🎓 ${loc.total} Alumni Berdomisili</p>
+                                <p class="text-blue-600 font-bold text-xs m-0 mt-1"> ${loc.total} Alumni Berdomisili</p>
                             </div>
                         `;
                         marker.bindPopup(popupContent);

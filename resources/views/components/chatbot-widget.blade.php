@@ -29,7 +29,7 @@
                 <!-- Glowing avatar -->
                 <div class="relative w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
                     <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-gray-950 rounded-full"></span>
-                    <span class="text-xs">🤖</span>
+                    <span class="text-xs"></span>
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-white tracking-wide">Asisten SISTA</h3>
@@ -48,16 +48,16 @@
         <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages" x-ref="messageContainer">
             <!-- Welcome message -->
             <div class="flex items-start gap-2.5">
-                <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-[10px]">🤖</div>
+                <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-[10px]"></div>
                 <div class="p-3 bg-white/5 border border-white/5 rounded-2xl rounded-tl-none max-w-[80%]">
                     <p class="text-xs text-gray-200 leading-relaxed">
                         Halo **{{ auth()->user()->name }}**! Saya adalah asisten sekolah cerdas Anda. Anda dapat berkonsultasi tentang:
                     </p>
                     <ul class="mt-2 space-y-1 text-[11px] text-gray-400">
-                        <li>• 📊 *Jumlah alpa hari ini*</li>
-                        <li>• 💸 *Total tunggakan tagihan SPP*</li>
-                        <li>• 🗺️ *Buka halaman E-Rapor atau Jadwal*</li>
-                        <li>• 💡 Informasi administrasi lainnya.</li>
+                        <li>•  *Jumlah alpa hari ini*</li>
+                        <li>•  *Total tunggakan tagihan SPP*</li>
+                        <li>•  *Buka halaman E-Rapor atau Jadwal*</li>
+                        <li>•  Informasi administrasi lainnya.</li>
                     </ul>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                 <div :class="msg.isBot ? 'flex items-start gap-2.5' : 'flex items-start justify-end gap-2.5'">
                     <!-- Bot Avatar -->
                     <template x-if="msg.isBot">
-                        <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-[10px]">🤖</div>
+                        <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-[10px]"></div>
                     </template>
 
                     <!-- Bubble Content -->
@@ -82,8 +82,8 @@
                         <template x-if="msg.isBot && msg.conversation_id && !msg.feedbackGiven">
                             <div class="flex items-center gap-2 mt-1.5 px-1">
                                 <span class="text-[10px] text-gray-500">Membantu?</span>
-                                <button @click="sendFeedback(msg, true)" class="text-gray-400 hover:text-green-400 transition text-[11px]">👍</button>
-                                <button @click="sendFeedback(msg, false)" class="text-gray-400 hover:text-red-400 transition text-[11px]">👎</button>
+                                <button @click="sendFeedback(msg, true)" class="text-gray-400 hover:text-green-400 transition text-[11px]"></button>
+                                <button @click="sendFeedback(msg, false)" class="text-gray-400 hover:text-red-400 transition text-[11px]"></button>
                             </div>
                         </template>
                         <template x-if="msg.isBot && msg.feedbackGiven">
@@ -95,7 +95,7 @@
 
             <!-- Loading indicator -->
             <div x-show="isLoading" x-cloak class="flex items-start gap-2.5">
-                <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-[10px]">🤖</div>
+                <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-[10px]"></div>
                 <div class="p-3 bg-white/5 border border-white/5 rounded-2xl rounded-tl-none flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
                     <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>

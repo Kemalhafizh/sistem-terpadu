@@ -110,16 +110,16 @@ class DeveloperPortalController extends Controller
             $text = trim(preg_replace('/^>\s?/m', '', $matches[2]));
             
             $bg = 'bg-blue-500/10 border-blue-500/30 text-blue-300';
-            $icon = 'ℹ️';
+            $icon = 'ℹ';
             if ($type === 'TIP') {
                 $bg = 'bg-green-500/10 border-green-500/30 text-green-300';
-                $icon = '💡';
+                $icon = '';
             } elseif ($type === 'IMPORTANT' || $type === 'WARNING') {
                 $bg = 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300';
-                $icon = '⚠️';
+                $icon = '';
             } elseif ($type === 'CAUTION') {
                 $bg = 'bg-red-500/10 border-red-500/30 text-red-300';
-                $icon = '🚨';
+                $icon = '';
             }
             
             return "<div class=\"p-4 my-6 rounded-2xl border {$bg} flex gap-3 items-start\"><span class=\"text-xl\">{$icon}</span><div><strong class=\"block text-sm uppercase tracking-wider mb-1\">{$type}</strong><span class=\"text-sm leading-relaxed\">{$text}</span></div></div>";

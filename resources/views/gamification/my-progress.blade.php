@@ -16,7 +16,7 @@
                     <div class="space-y-4">
                         <div class="flex items-center space-x-4">
                             <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg">
-                                🎓
+                                
                             </div>
                             <div>
                                 <h3 class="text-2xl font-black tracking-tight text-indigo-300">Level {{ $student->level }}</h3>
@@ -50,13 +50,13 @@
                     </div>
                 </div>
 
-                <!-- Card 2: Streak Kehadiran (🔥 Flame Card) -->
+                <!-- Card 2: Streak Kehadiran ( Flame Card) -->
                 <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center relative overflow-hidden group">
                     <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-100 rounded-full opacity-20 blur-xl"></div>
                     <p class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-6">Konsistensi Kehadiran</p>
                     
                     <div class="w-32 h-32 rounded-full bg-gradient-to-br {{ $student->current_streak > 0 ? 'from-orange-100 to-amber-100' : 'from-slate-100 to-slate-200' }} flex items-center justify-center mb-6 shadow-md shadow-orange-500/5 group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-6xl animate-pulse">🔥</span>
+                        <span class="text-6xl animate-pulse"></span>
                     </div>
 
                     <div class="space-y-1">
@@ -66,7 +66,7 @@
 
                     <div class="mt-6 pt-4 border-t border-gray-50 w-full flex justify-between text-xs text-gray-500 font-bold">
                         <span>Rekor Terpanjang:</span>
-                        <span class="text-gray-900">🔥 {{ $student->longest_streak }} Hari</span>
+                        <span class="text-gray-900"> {{ $student->longest_streak }} Hari</span>
                     </div>
                 </div>
 
@@ -98,7 +98,7 @@
                             </div>
                         @empty
                             <div class="flex flex-col items-center justify-center py-12 text-center opacity-50">
-                                <span class="text-4xl mb-3">🔒</span>
+                                <span class="text-4xl mb-3"></span>
                                 <p class="text-xs font-bold text-gray-500 leading-relaxed">Belum ada lencana terbuka.<br>Kerjakan tugas dan presensi untuk membuka!</p>
                             </div>
                         @endforelse

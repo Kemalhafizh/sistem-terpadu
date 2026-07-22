@@ -109,7 +109,7 @@
                                     <td class="py-5 px-8">
                                         <div class="flex items-center gap-3">
                                             <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg {{ $billing->status === 'paid' ? 'bg-emerald-50 text-emerald-600' : ($billing->status === 'partial' ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600') }}">
-                                                💳
+                                                
                                             </div>
                                             <div>
                                                 <h5 class="font-extrabold text-gray-800">{{ $billing->category->name }}</h5>
@@ -157,7 +157,7 @@
                             @empty
                                 <tr>
                                     <td colspan="6" class="py-12 text-center text-gray-400 italic font-bold">
-                                        🎉 Tidak ada catatan tagihan keuangan untuk siswa ini.
+                                         Tidak ada catatan tagihan keuangan untuk siswa ini.
                                     </td>
                                 </tr>
                             @endforelse
@@ -210,7 +210,7 @@
                                         </td>
                                         <td class="py-4 px-8 text-center">
                                             <a href="{{ route('finance.payments.receipt', $payment->id) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-800 rounded-xl text-xs font-bold transition-colors duration-200">
-                                                📄 Kuitansi
+                                                 Kuitansi
                                             </a>
                                         </td>
                                     </tr>

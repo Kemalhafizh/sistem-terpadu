@@ -244,7 +244,7 @@
                         </div>
                         
                         <div class="mt-4 pt-4 border-t border-gray-150 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-500 font-medium">
-                            <p class="leading-relaxed">⚠️ Catatan: Variabel dynamic placeholder seperti <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-teal-600 dark:text-teal-400 font-bold">{nama_siswa}</code> akan otomatis diubah menjadi data riil saat dikirim.</p>
+                            <p class="leading-relaxed"> Catatan: Variabel dynamic placeholder seperti <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-teal-600 dark:text-teal-400 font-bold">{nama_siswa}</code> akan otomatis diubah menjadi data riil saat dikirim.</p>
                         </div>
                     </div>
                 </div>

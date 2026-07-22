@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-tight leading-tight">
-                📜 Log Riwayat Audit Integrasi
+                 Log Riwayat Audit Integrasi
             </h2>
             <a href="{{ route('admin.integrations.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-800 rounded-xl text-sm font-semibold text-gray-300 bg-gray-900 hover:bg-gray-850 hover:text-white transition-all duration-200">
                 &larr; Kembali
@@ -104,7 +104,7 @@
                 <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 max-w-lg w-full space-y-6">
                     <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                         <h3 class="text-lg font-bold text-gray-100 flex items-center space-x-2">
-                            <span class="text-rose-400">⚠️</span>
+                            <span class="text-rose-400"></span>
                             <span>Riwayat Peringatan / Masalah Validasi</span>
                         </h3>
                         <button @click="showDetailModal = false" class="text-gray-400 hover:text-white transition-colors">

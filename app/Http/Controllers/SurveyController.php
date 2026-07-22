@@ -376,10 +376,10 @@ class SurveyController extends Controller
      */
     protected function broadcastNotification(Survey $survey)
     {
-        $message = "📢 *SISTEM INFORMASI TERPADU SMA ISLAM SULTAN AGUNG 1*\n\n"
+        $message = " *SISTEM INFORMASI TERPADU SMA ISLAM SULTAN AGUNG 1*\n\n"
                  . "Ada kuesioner/survei digital baru yang memerlukan partisipasi Anda:\n"
-                 . "📌 *Judul:* {$survey->title}\n"
-                 . "📝 *Sifat:* " . ($survey->is_anonymous ? "Anonim (Rahasia & PDP Protected)" : "Umum") . "\n\n"
+                 . " *Judul:* {$survey->title}\n"
+                 . " *Sifat:* " . ($survey->is_anonymous ? "Anonim (Rahasia & PDP Protected)" : "Umum") . "\n\n"
                  . "Mohon luangkan waktu 2-3 menit untuk mengisi survei ini pada portal Sistem Terpadu Anda.\n"
                  . "Link: " . route('surveys.show', $survey->uuid) . "\n\n"
                  . "_Terima kasih atas kerja samanya._";

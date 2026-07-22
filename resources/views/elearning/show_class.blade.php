@@ -234,7 +234,7 @@
                                                     @if(auth()->user()->role === 'student' && auth()->user()->student)
                                                         @php $isViewed = $item->isViewedBy(auth()->user()->student); @endphp
                                                         @if($isViewed)
-                                                            <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20">Dibaca ✅</span>
+                                                            <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20">Dibaca </span>
                                                         @else
                                                             <span class="px-2 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[9px] font-black uppercase border border-amber-500/20">Belum Dibaca</span>
                                                         @endif
@@ -365,7 +365,7 @@
                                             @if(auth()->user()->role === 'student' && auth()->user()->student)
                                                 @php $isViewed = $material->isViewedBy(auth()->user()->student); @endphp
                                                 @if($isViewed)
-                                                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20 shrink-0">Dibaca ✅</span>
+                                                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20 shrink-0">Dibaca </span>
                                                 @else
                                                     <span class="px-2 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[9px] font-black uppercase border border-amber-500/20 shrink-0">Baru</span>
                                                 @endif

@@ -31,7 +31,7 @@
                 <div class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border border-emerald-500/30 rounded-[2.5rem] p-8 shadow-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
                     <div class="flex items-center gap-5">
                         <div class="w-16 h-16 bg-emerald-500/20 border border-emerald-500/40 rounded-3xl flex items-center justify-center text-3xl shrink-0 shadow-lg shadow-emerald-500/20">
-                            ✅
+                            
                         </div>
                         <div>
                             <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Hasil Audit Data</span>
@@ -53,7 +53,7 @@
                     <div class="bg-gradient-to-r from-rose-500/10 via-red-500/10 to-rose-500/10 border-2 border-rose-500/30 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex items-center gap-5">
                             <div class="w-16 h-16 bg-rose-500/20 border border-rose-500/40 rounded-3xl flex items-center justify-center text-3xl animate-bounce shrink-0 shadow-lg shadow-rose-500/20">
-                                ❌
+                                
                             </div>
                             <div>
                                 <span class="text-[10px] font-black uppercase tracking-widest text-rose-600 dark:text-rose-400">Jumlah Masalah Ditemukan: {{ $totalCount }}</span>
@@ -77,7 +77,7 @@
                     <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-500/30 rounded-[2.5rem] p-8 shadow-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex items-center gap-5">
                             <div class="w-16 h-16 bg-amber-500/20 border border-amber-500/40 rounded-3xl flex items-center justify-center text-3xl shrink-0 shadow-lg shadow-amber-500/20">
-                                ⚠️
+                                
                             </div>
                             <div>
                                 <span class="text-[10px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-400">Jumlah Masalah Ditemukan: {{ $totalCount }}</span>

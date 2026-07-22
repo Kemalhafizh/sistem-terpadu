@@ -94,11 +94,11 @@
                         <select id="category" name="category"
                                 class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none dark:text-white">
                             <option value="">Semua Kategori</option>
-                            <option value="bug" {{ request('category') === 'bug' ? 'selected' : '' }}>Bug / Galat 🐛</option>
-                            <option value="ui_suggestion" {{ request('category') === 'ui_suggestion' ? 'selected' : '' }}>Saran Tampilan 🎨</option>
-                            <option value="unclear_feature" {{ request('category') === 'unclear_feature' ? 'selected' : '' }}>Fitur Kurang Jelas 💡</option>
-                            <option value="slow" {{ request('category') === 'slow' ? 'selected' : '' }}>Lambat ⚡</option>
-                            <option value="other" {{ request('category') === 'other' ? 'selected' : '' }}>Lainnya 📌</option>
+                            <option value="bug" {{ request('category') === 'bug' ? 'selected' : '' }}>Bug / Galat </option>
+                            <option value="ui_suggestion" {{ request('category') === 'ui_suggestion' ? 'selected' : '' }}>Saran Tampilan </option>
+                            <option value="unclear_feature" {{ request('category') === 'unclear_feature' ? 'selected' : '' }}>Fitur Kurang Jelas </option>
+                            <option value="slow" {{ request('category') === 'slow' ? 'selected' : '' }}>Lambat </option>
+                            <option value="other" {{ request('category') === 'other' ? 'selected' : '' }}>Lainnya </option>
                         </select>
                     </div>
 
@@ -122,10 +122,10 @@
                         <select id="priority" name="priority"
                                 class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none dark:text-white">
                             <option value="">Semua Prioritas</option>
-                            <option value="critical" {{ request('priority') === 'critical' ? 'selected' : '' }}>Critical 🚨</option>
-                            <option value="high" {{ request('priority') === 'high' ? 'selected' : '' }}>High 🔴</option>
-                            <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>Medium 🟡</option>
-                            <option value="low" {{ request('priority') === 'low' ? 'selected' : '' }}>Low 🟢</option>
+                            <option value="critical" {{ request('priority') === 'critical' ? 'selected' : '' }}>Critical </option>
+                            <option value="high" {{ request('priority') === 'high' ? 'selected' : '' }}>High </option>
+                            <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>Medium </option>
+                            <option value="low" {{ request('priority') === 'low' ? 'selected' : '' }}>Low </option>
                         </select>
                     </div>
                 </div>
@@ -172,16 +172,16 @@
                                     <div class="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-0.5">{{ $feedback->user->role }}</div>
                                 </td>
                                 <td class="py-4 px-4 text-amber-500 font-black text-sm">
-                                    {{ str_repeat('★', $feedback->rating) }}{{ str_repeat('☆', 5 - $feedback->rating) }}
+                                    {{ str_repeat('', $feedback->rating) }}{{ str_repeat('', 5 - $feedback->rating) }}
                                 </td>
                                 <td class="py-4 px-4">
                                     @php
                                         $catLabels = [
-                                            'bug' => ['label' => 'Bug 🐛', 'class' => 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'],
-                                            'ui_suggestion' => ['label' => 'UI 🎨', 'class' => 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20'],
-                                            'unclear_feature' => ['label' => 'Fitur 💡', 'class' => 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'],
-                                            'slow' => ['label' => 'Lambat ⚡', 'class' => 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20'],
-                                            'other' => ['label' => 'Lainnya 📌', 'class' => 'bg-gray-500/10 text-gray-600 dark:text-gray-400 border border-gray-500/20'],
+                                            'bug' => ['label' => 'Bug ', 'class' => 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'],
+                                            'ui_suggestion' => ['label' => 'UI ', 'class' => 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20'],
+                                            'unclear_feature' => ['label' => 'Fitur ', 'class' => 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'],
+                                            'slow' => ['label' => 'Lambat ', 'class' => 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20'],
+                                            'other' => ['label' => 'Lainnya ', 'class' => 'bg-gray-500/10 text-gray-600 dark:text-gray-400 border border-gray-500/20'],
                                         ];
                                         $cat = $catLabels[$feedback->category] ?? ['label' => $feedback->category, 'class' => 'bg-gray-100 text-gray-600'];
                                     @endphp

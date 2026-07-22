@@ -8,7 +8,7 @@
                     </a>
                 </div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2 mt-1">
-                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">🔍</span>
+                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"></span>
                     <span>Ulas e-Portfolio Siswa</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -56,7 +56,7 @@
                                 </span>
                                 @if($item->is_verified)
                                     <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-                                        ✓ Terverifikasi oleh {{ $item->verifier->name ?? 'Staf' }}
+                                         Terverifikasi oleh {{ $item->verifier->name ?? 'Staf' }}
                                     </span>
                                 @else
                                     <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300 animate-pulse">
@@ -89,7 +89,7 @@
                                 @if($item->file_path)
                                     <a href="{{ Storage::url($item->file_path) }}" target="_blank"
                                        class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition active:scale-95 flex items-center space-x-1">
-                                        <span>📄 Buka Sertifikat</span>
+                                        <span> Buka Sertifikat</span>
                                     </a>
                                 @else
                                     <span class="text-xs text-gray-400 dark:text-gray-500 font-medium italic">Tidak ada berkas bukti diunggah</span>
@@ -102,13 +102,13 @@
                                     <input type="hidden" name="status" value="unverified">
                                     <button type="submit"
                                             class="px-4 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 rounded-xl text-[10px] font-black uppercase tracking-wider transition active:scale-95">
-                                        ❌ Batalkan Verifikasi
+                                         Batalkan Verifikasi
                                     </button>
                                 @else
                                     <input type="hidden" name="status" value="verified">
                                     <button type="submit"
                                             class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition active:scale-95 shadow-md shadow-emerald-500/10">
-                                        ✓ Setujui & Verifikasi
+                                         Setujui & Verifikasi
                                     </button>
                                 @endif
                             </form>
@@ -117,7 +117,7 @@
                 @empty
                     <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-16 text-center shadow-sm">
                         <div class="flex flex-col items-center">
-                            <span class="text-3xl mb-4">📭</span>
+                            <span class="text-3xl mb-4"></span>
                             <h3 class="text-base font-black text-gray-800 dark:text-gray-200">Tidak ada pengajuan berkas</h3>
                             <p class="text-xs text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed mt-1">
                                 Siswa belum pernah mengunggah draf pencapaian portofolio apapun untuk diulas saat ini.
@@ -158,7 +158,7 @@
 
                         <button type="submit"
                                 class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-indigo-500/10 active:scale-95">
-                            🏆 Anugerahkan Lencana
+                             Anugerahkan Lencana
                         </button>
                     </form>
                 </div>

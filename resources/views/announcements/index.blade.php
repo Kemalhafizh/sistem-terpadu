@@ -49,7 +49,7 @@
                                 <!-- Pinned indicator -->
                                 @if($announcement->is_pinned)
                                     <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/45 dark:text-amber-300 text-[9px] font-extrabold uppercase tracking-wider border border-amber-250 dark:border-amber-900/30 shadow-xs">
-                                        📌 PINNED
+                                         PINNED
                                     </span>
                                 @endif
 
@@ -66,7 +66,7 @@
                                 <!-- Priority level -->
                                 @if($announcement->priority === 'urgent')
                                     <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-red-50 text-red-700 dark:bg-red-950/45 dark:text-red-300 border border-red-250 dark:border-red-900/40 uppercase tracking-wider animate-pulse">
-                                        🚨 URGENT
+                                         URGENT
                                     </span>
                                 @endif
                             </div>
@@ -81,12 +81,12 @@
                         <!-- Target Penerima -->
                         <td class="py-4 px-6 whitespace-nowrap">
                             <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-750 dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
-                                👥 {{ $announcement->target_role ? ucfirst($announcement->target_role) : 'Semua Orang' }}
+                                 {{ $announcement->target_role ? ucfirst($announcement->target_role) : 'Semua Orang' }}
                             </span>
                             @if($announcement->targetClassroom)
                                 <div class="mt-1.5">
                                     <span class="px-2.5 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-750 dark:text-purple-400 border border-purple-200 dark:border-purple-900/40">
-                                        🏫 {{ $announcement->targetClassroom->name }}
+                                         {{ $announcement->targetClassroom->name }}
                                     </span>
                                 </div>
                             @endif
@@ -95,7 +95,7 @@
                         <!-- Pembaca -->
                         <td class="py-4 px-6 whitespace-nowrap">
                             <div class="text-sm font-black text-gray-800 dark:text-slate-200">
-                                👁️ {{ $announcement->read_count }}
+                                 {{ $announcement->read_count }}
                             </div>
                             <div class="text-[10px] text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider mt-0.5">
                                 Pembaca Unik

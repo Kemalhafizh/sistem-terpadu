@@ -45,7 +45,7 @@
                             @if($announcement->attachment_path)
                                 <div class="mb-3 flex items-center space-x-3 bg-gray-50 dark:bg-gray-900 p-2.5 rounded-xl border border-gray-200/50 dark:border-gray-700">
                                     <div class="w-10 h-10 rounded bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-650 dark:text-indigo-400 text-lg">
-                                        📎
+                                        
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-xs text-gray-400 dark:text-gray-550 font-bold truncate">Ada lampiran aktif</p>

@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>📁</span> Repositori Bukti Fisik Akreditasi
+                    <span></span> Repositori Bukti Fisik Akreditasi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Arsip digital bukti fisik pendukung instrumen akreditasi 8 Standar Nasional Pendidikan (SNP).
@@ -26,16 +26,16 @@
         <!-- Submenu Navigation -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-2 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg flex flex-wrap gap-1">
             <a href="{{ route('compliance.index') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📊 Dashboard Kepatuhan
+                 Dashboard Kepatuhan
             </a>
             <a href="{{ route('compliance.checklist') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📋 Checklist Instrumen
+                 Checklist Instrumen
             </a>
             <a href="{{ route('compliance.documents') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all bg-primary-600 text-white shadow-md shadow-primary-500/20">
-                📁 Repositori Bukti Fisik
+                 Repositori Bukti Fisik
             </a>
             <a href="{{ route('compliance.timeline') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📅 Timeline Visitasi
+                 Timeline Visitasi
             </a>
         </div>
 
@@ -84,7 +84,7 @@
                                 <tr class="border-b border-gray-100 dark:border-gray-750/50 hover:bg-gray-50/20 dark:hover:bg-gray-850/20">
                                     <td class="py-4">
                                         <div class="flex items-center space-x-2">
-                                            <span class="text-lg">📄</span>
+                                            <span class="text-lg"></span>
                                             <span class="text-xs font-extrabold text-gray-800 dark:text-gray-200">{{ $doc->name }}</span>
                                         </div>
                                     </td>
@@ -96,13 +96,13 @@
                                     <td class="py-4 text-right">
                                         <div class="inline-flex space-x-2">
                                             <a href="{{ Storage::url($doc->file_path) }}" target="_blank" class="p-1.5 bg-gray-100 dark:bg-gray-750 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-xs font-bold transition-all" title="Buka File">
-                                                👁️ Buka
+                                                 Buka
                                             </a>
                                             <form method="post" action="{{ route('compliance.documents.destroy', $doc->id) }}" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen bukti akreditasi ini?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="p-1.5 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/40 rounded-lg text-xs font-bold transition-all" title="Hapus Dokumen">
-                                                    🗑️ Hapus
+                                                     Hapus
                                                 </button>
                                             </form>
                                         </div>
@@ -130,7 +130,7 @@
             @csrf
             
             <h2 class="text-lg font-black text-gray-950 dark:text-white flex items-center gap-1.5">
-                <span>📁</span> Unggah Bukti Fisik Baru
+                <span></span> Unggah Bukti Fisik Baru
             </h2>
             
             <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-normal">

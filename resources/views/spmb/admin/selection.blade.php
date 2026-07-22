@@ -14,7 +14,7 @@
                 <form action="{{ route('spmb.admin.selection.run', $wave->id) }}" method="POST">
                     @csrf
                     <button type="submit" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-1.5">
-                        ⚡ Jalankan Perangkingan & Umumkan Kelulusan
+                         Jalankan Perangkingan & Umumkan Kelulusan
                     </button>
                 </form>
             </div>

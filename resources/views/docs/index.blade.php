@@ -86,7 +86,7 @@
             <div class="mb-6 px-3 py-2.5 rounded-xl bg-white/5 border border-white/5">
                 <p class="text-xs text-gray-500 font-mono uppercase tracking-wider">File Aktif</p>
                 <p class="text-sm font-semibold text-blue-400 font-mono truncate" title="{{ $selectedFile }}">
-                    📄 docs/{{ $selectedFile }}
+                     docs/{{ $selectedFile }}
                 </p>
             </div>
 

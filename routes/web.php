@@ -32,6 +32,10 @@ use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\Finance\WadiahController;
 use App\Http\Controllers\Finance\CanteenController;
 use App\Http\Controllers\Finance\CharityController;
+use App\Http\Controllers\Finance\FinancialAuditController;
+use App\Http\Controllers\Admin\SecurityDashboardController;
+use App\Http\Controllers\Admin\SchoolBrandingController;
+use App\Http\Controllers\Admin\CacheMonitorController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
@@ -774,6 +778,12 @@ Route::middleware('auth')->group(function () {
         Route::post('library/circulation/return/{loan}', [LibraryCirculationController::class, 'returnBook'])->name('library.circulation.return');
         Route::post('library/circulation/pay-fine/{loan}', [LibraryCirculationController::class, 'payFine'])->name('library.circulation.pay-fine');
 
+        // Barcode & NFC Sirkulasi Cepat
+        Route::get('library/circulation/quick-terminal', [LibraryCirculationController::class, 'quickCirculationTerminal'])->name('library.circulation.quick-terminal');
+        Route::post('library/circulation/barcode-borrow', [LibraryCirculationController::class, 'processBarcodeBorrow'])->name('library.circulation.barcode-borrow');
+        Route::post('library/circulation/barcode-return', [LibraryCirculationController::class, 'processBarcodeReturn'])->name('library.circulation.barcode-return');
+        Route::get('library/books/print-barcodes', [LibraryCirculationController::class, 'printBarcodeLabels'])->name('library.books.print-barcodes');
+
         // Statistik, Overdue & WhatsApp Reminders
         Route::get('library/statistics', [LibraryController::class, 'statistics'])->name('library.statistics');
         Route::get('library/overdue-report', [LibraryController::class, 'overdueReport'])->name('library.overdue-report');
@@ -1318,6 +1328,42 @@ Route::middleware(['auth'])->group(function () {
         Route::post('donate', [CharityController::class, 'processDonate'])->name('donate.store');
         Route::get('history', [CharityController::class, 'history'])->name('history');
         Route::get('donations/{id}/certificate', [CharityController::class, 'downloadCertificate'])->name('certificate');
+    });
+
+    Route::middleware('role:staf_tu,admin,superadmin')->prefix('finance/audit')->name('finance.audit.')->group(function () {
+        Route::get('/', [FinancialAuditController::class, 'index'])->name('index');
+        Route::post('run', [FinancialAuditController::class, 'runAudit'])->name('run');
+        Route::get('journal/{id}', [FinancialAuditController::class, 'showUnbalancedJournalDetails'])->name('show');
+        Route::get('export', [FinancialAuditController::class, 'exportAuditReport'])->name('export');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/security')->name('admin.security.')->group(function () {
+        Route::get('/', [SecurityDashboardController::class, 'dashboard'])->name('index');
+        Route::get('logs', [SecurityDashboardController::class, 'threatLogs'])->name('logs');
+        Route::post('lockdown', [SecurityDashboardController::class, 'toggleLockdown'])->name('lockdown');
+        Route::post('block-ip', [SecurityDashboardController::class, 'blockIp'])->name('block-ip');
+        Route::delete('unblock-ip/{id}', [SecurityDashboardController::class, 'unblockIp'])->name('unblock-ip');
+        Route::post('resolve-threat/{id}', [SecurityDashboardController::class, 'resolveThreat'])->name('resolve-threat');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/school')->name('admin.school.')->group(function () {
+        Route::get('branding', [SchoolBrandingController::class, 'index'])->name('branding.index');
+        Route::post('branding', [SchoolBrandingController::class, 'update'])->name('branding.update');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/queues')->name('admin.observability.queues.')->group(function () {
+        Route::get('/', [QueueMonitorController::class, 'index'])->name('index');
+        Route::post('retry/{id}', [QueueMonitorController::class, 'retryFailedJob'])->name('retry');
+        Route::delete('delete/{id}', [QueueMonitorController::class, 'deleteFailedJob'])->name('delete');
+        Route::post('flush', [QueueMonitorController::class, 'flushFailedJobs'])->name('flush');
+        Route::post('dispatch', [QueueMonitorController::class, 'dispatchDemoJob'])->name('dispatch');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/cache')->name('admin.observability.cache.')->group(function () {
+        Route::get('/', [CacheMonitorController::class, 'index'])->name('index');
+        Route::post('flush-tag', [CacheMonitorController::class, 'flushTag'])->name('flush-tag');
+        Route::post('flush-all', [CacheMonitorController::class, 'flushAll'])->name('flush-all');
+        Route::post('warmup', [CacheMonitorController::class, 'warmupCache'])->name('warmup');
     });
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/integration/sync')->name('admin.integration.sync.')->group(function () {

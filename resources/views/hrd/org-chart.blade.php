@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    🌳 Struktur Organisasi Sekolah (Organogram)
+                     Struktur Organisasi Sekolah (Organogram)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Bagan hierarki komando dan koordinasi kerja KBM SMA Islam Sultan Agung 1 Semarang.
                 </p>
             </div>
             <a href="{{ route('hrd.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Ke Dashboard
+                ⬅ Ke Dashboard
             </a>
         </div>
     </x-slot>
@@ -69,7 +69,7 @@
             <div class="org-row">
                 <div class="org-card border-t-4 border-t-indigo-600">
                     <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-full flex items-center justify-center font-black mx-auto mb-2 text-sm shadow-sm">
-                        👑
+                        
                     </div>
                     <h4 class="font-extrabold text-xs text-gray-800 dark:text-white leading-tight">
                         {{ $kepsek->user->name ?? 'Drs. H. Soetarto, M.Pd.' }}
@@ -86,7 +86,7 @@
                 @forelse($wakas as $wk)
                     <div class="org-card border-t-4 border-t-blue-500">
                         <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full flex items-center justify-center font-black mx-auto mb-2 text-xs">
-                            👤
+                            
                         </div>
                         <h4 class="font-extrabold text-[11px] text-gray-800 dark:text-white leading-tight">
                             {{ $wk->user->name }}
@@ -105,7 +105,7 @@
                 @forelse($staffAndBk as $st)
                     <div class="org-card border-t-4 border-t-purple-500">
                         <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full flex items-center justify-center font-black mx-auto mb-2 text-xs">
-                            💼
+                            
                         </div>
                         <h4 class="font-extrabold text-[11px] text-gray-800 dark:text-white leading-tight">
                             {{ $st->user->name }}
@@ -124,7 +124,7 @@
                 @forelse($gurus as $gr)
                     <div class="org-card border-t-4 border-t-emerald-500">
                         <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full flex items-center justify-center font-black mx-auto mb-2 text-xs">
-                            🎓
+                            
                         </div>
                         <h4 class="font-extrabold text-[11px] text-gray-800 dark:text-white leading-tight">
                             {{ $gr->user->name }}

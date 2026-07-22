@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-outfit font-black text-3xl text-gray-900 dark:text-white leading-tight">
-            🤖 Kelola FAQ Chatbot Sekolah
+             Kelola FAQ Chatbot Sekolah
         </h2>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Konfigurasi bank data tanya-jawab lokal asisten pintar SISTA.</p>
     </x-slot>
@@ -10,7 +10,7 @@
         <!-- Dashboard Top Banner -->
         <div class="p-6 bg-gradient-to-r from-blue-900/40 via-indigo-900/40 to-purple-900/40 rounded-3xl border border-white/10 shadow-xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/20">💡</div>
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/20"></div>
                 <div>
                     <h3 class="text-lg font-bold text-white">Tambahkan FAQ Lokal</h3>
                     <p class="text-xs text-indigo-200 mt-0.5">Semua data tanya-jawab disimpan secara lokal tanpa biaya token eksternal.</p>
@@ -114,8 +114,8 @@
             <div @click.away="showCreateModal = false" class="w-full max-w-lg bg-gray-950 border border-white/10 rounded-3xl shadow-2xl overflow-hidden"
                  x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                 <div class="p-6 border-b border-white/5 bg-gradient-to-r from-blue-900/20 to-purple-900/20 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-white">✨ Tambah FAQ Baru</h3>
-                    <button @click="showCreateModal = false" class="text-gray-400 hover:text-white">✕</button>
+                    <h3 class="text-sm font-bold text-white"> Tambah FAQ Baru</h3>
+                    <button @click="showCreateModal = false" class="text-gray-400 hover:text-white"></button>
                 </div>
                 <form action="{{ route('admin.chatbot.faqs.store') }}" method="POST" class="p-6 space-y-4">
                     @csrf
@@ -158,8 +158,8 @@
             <div @click.away="showEditModal = false" class="w-full max-w-lg bg-gray-950 border border-white/10 rounded-3xl shadow-2xl overflow-hidden"
                  x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                 <div class="p-6 border-b border-white/5 bg-gradient-to-r from-blue-900/20 to-purple-900/20 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-white">✏️ Edit FAQ Chatbot</h3>
-                    <button @click="showEditModal = false" class="text-gray-400 hover:text-white">✕</button>
+                    <h3 class="text-sm font-bold text-white"> Edit FAQ Chatbot</h3>
+                    <button @click="showEditModal = false" class="text-gray-400 hover:text-white"></button>
                 </div>
                 <template x-if="activeFaq">
                     <form :action="'/admin/chatbot/faqs/' + activeFaq.id" method="POST" class="p-6 space-y-4">

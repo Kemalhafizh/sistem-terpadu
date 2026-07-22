@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📈 Laporan Absensi Latihan Rutin
+                     Laporan Absensi Latihan Rutin
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Ekskul: {{ $extracurricular->name }} | Pembina: {{ $extracurricular->advisor->name ?? '-' }}
                 </p>
             </div>
             <a href="{{ route('ekskul.manage') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -22,7 +22,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex items-center gap-4">
                 <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-xl font-bold">
-                    👥
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Anggota Aktif</span>
@@ -32,7 +32,7 @@
 
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex items-center gap-4">
                 <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-xl font-bold">
-                    📈
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rata-rata Kehadiran Anggota</span>
@@ -47,7 +47,7 @@
         <!-- Tabel Kehadiran Anggota -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">📅 Rekap Presensi Per Siswa</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Rekap Presensi Per Siswa</h3>
             </div>
 
             <div class="overflow-x-auto">

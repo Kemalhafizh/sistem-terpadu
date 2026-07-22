@@ -5,7 +5,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight flex items-center gap-2">
-                    📊 {{ __('Dashboard Analitik Helpdesk') }}
+                     {{ __('Dashboard Analitik Helpdesk') }}
                 </h2>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
                     Pemantauan KPI performa penyelesaian pengaduan, waktu respons SLA, dan distribusi laporan fasilitas sekolah.

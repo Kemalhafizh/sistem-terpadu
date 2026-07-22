@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>📅</span> Timeline Persiapan Akreditasi
+                    <span></span> Timeline Persiapan Akreditasi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Agenda, target waktu, dan pelacakan kelengkapan visitasi tim penilai akreditasi BAN-S/M.
@@ -26,16 +26,16 @@
         <!-- Submenu Navigation -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-2 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg flex flex-wrap gap-1">
             <a href="{{ route('compliance.index') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📊 Dashboard Kepatuhan
+                 Dashboard Kepatuhan
             </a>
             <a href="{{ route('compliance.checklist') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📋 Checklist Instrumen
+                 Checklist Instrumen
             </a>
             <a href="{{ route('compliance.documents') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-gray-800 dark:hover:text-white">
-                📁 Repositori Bukti Fisik
+                 Repositori Bukti Fisik
             </a>
             <a href="{{ route('compliance.timeline') }}" class="px-4 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl transition-all bg-primary-600 text-white shadow-md shadow-primary-500/20">
-                📅 Timeline Visitasi
+                 Timeline Visitasi
             </a>
         </div>
 
@@ -61,7 +61,7 @@
                 <!-- Outer Ring Indicator -->
                 <span class="absolute -left-[14px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full ring-4 {{ $circleColor }} transition-all duration-300">
                     @if($isCompleted)
-                        ✓
+                        
                     @else
                         ○
                     @endif
@@ -104,7 +104,7 @@
                                 @if($isCompleted)
                                     ↩ Batal Selesai
                                 @else
-                                    ✓ Tandai Selesai
+                                     Tandai Selesai
                                 @else
                                 @endif
                             </button>
@@ -114,7 +114,7 @@
             </div>
             @empty
             <div class="pl-8 md:pl-10 text-center py-12 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl max-w-lg mx-auto">
-                <span class="text-5xl">📅</span>
+                <span class="text-5xl"></span>
                 <h3 class="text-base font-black text-gray-800 dark:text-white mt-4">Belum Ada Agenda Persiapan</h3>
                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-xs mx-auto">Mulai susun milestone agenda persiapan visitasi penilai akreditasi dengan menekan tombol Tambah Agenda.</p>
             </div>
@@ -128,7 +128,7 @@
             @csrf
             
             <h2 class="text-lg font-black text-gray-950 dark:text-white flex items-center gap-1.5">
-                <span>📅</span> Tambah Agenda Persiapan Baru
+                <span></span> Tambah Agenda Persiapan Baru
             </h2>
             
             <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-normal">

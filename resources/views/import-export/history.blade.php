@@ -58,9 +58,9 @@
                                 <td class="py-4 text-center">
                                     <div class="flex items-center justify-center space-x-2 text-[10px]">
                                         <span class="text-gray-400" title="Total Baris">Σ {{ $log->total_rows }}</span>
-                                        <span class="text-emerald-500 font-bold" title="Sukses">✓ {{ $log->success_count }}</span>
+                                        <span class="text-emerald-500 font-bold" title="Sukses"> {{ $log->success_count }}</span>
                                         @if($log->error_count > 0)
-                                            <span class="text-red-500 font-bold" title="Error">✗ {{ $log->error_count }}</span>
+                                            <span class="text-red-500 font-bold" title="Error"> {{ $log->error_count }}</span>
                                         @endif
                                     </div>
                                 </td>

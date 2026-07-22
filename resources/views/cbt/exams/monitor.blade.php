@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">🔴 Monitor Ujian Live</h2>
+                <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight"> Monitor Ujian Live</h2>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ $exam->title }} — {{ $exam->subject?->name }} — {{ $exam->classroom?->name ?? 'Semua Kelas' }}</p>
             </div>
             <div class="flex items-center gap-3">

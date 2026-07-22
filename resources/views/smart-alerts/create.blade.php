@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl">✍️</span>
+                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl"></span>
                     <span>{{ __('Buat Manual Smart Alert') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -103,10 +103,10 @@
                         {{-- Status Check Icon --}}
                         <div class="absolute right-4 top-3.5 text-gray-400">
                             <template x-if="selectedId">
-                                <span class="text-emerald-500">✓</span>
+                                <span class="text-emerald-500"></span>
                             </template>
                             <template x-if="!selectedId">
-                                <span class="text-xs">🔍</span>
+                                <span class="text-xs"></span>
                             </template>
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                                :class="severity === 'warning' ? 'border-amber-500 bg-amber-500/5' : 'border-gray-200 dark:border-slate-700'"
                                x-data="{ severity: 'warning' }">
                             <input type="radio" name="severity" value="warning" class="sr-only" checked @change="severity = 'warning'">
-                            <span class="text-xl mb-1">⚠️</span>
+                            <span class="text-xl mb-1"></span>
                             <span class="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400">Warning</span>
                         </label>
 
@@ -149,7 +149,7 @@
                                :class="severity === 'critical' ? 'border-rose-500 bg-rose-500/5' : 'border-gray-200 dark:border-slate-700'"
                                x-data="{ severity: 'warning' }">
                             <input type="radio" name="severity" value="critical" class="sr-only" @change="severity = 'critical'">
-                            <span class="text-xl mb-1">🚨</span>
+                            <span class="text-xl mb-1"></span>
                             <span class="text-xs font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">Critical</span>
                         </label>
                     </div>

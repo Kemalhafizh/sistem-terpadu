@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    👥 Pembuatan Surat Resmi Massal (Bulk)
+                     Pembuatan Surat Resmi Massal (Bulk)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Buat draf surat resmi sekaligus untuk satu kelas / kelompok siswa terpilih.
                 </p>
             </div>
             <a href="{{ route('letters.index') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="max-w-3xl mx-auto">
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-8 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-6">
             <h4 class="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-100 dark:border-gray-700/50 pb-2">
-                📝 Parameter Pembuatan Massal
+                 Parameter Pembuatan Massal
             </h4>
 
             <form action="{{ route('letters.bulk.store') }}" method="POST" class="space-y-4">
@@ -50,7 +50,7 @@
 
                 <!-- Common Field Values -->
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 space-y-4">
-                    <span class="block text-[11px] font-black uppercase text-gray-400 tracking-wider">💡 Variabel Isian Seragam</span>
+                    <span class="block text-[11px] font-black uppercase text-gray-400 tracking-wider"> Variabel Isian Seragam</span>
                     
                     <div>
                         <label for="purpose" class="block text-[11px] font-bold text-gray-500 mb-1">Keperluan (purpose)</label>

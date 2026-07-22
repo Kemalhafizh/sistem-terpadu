@@ -17,6 +17,12 @@ Dokumen ini merangkum temuan audit keamanan dan kualitas kode (*code review*) te
 | 5 | `ChatbotController::importFaqs` | *Denial of Service* (DoS) via Memory Exhaustion & Crash via Long Query | **Sedang (Medium)** | **Selesai ✅** |
 | 6 | `WorkflowController::analytics` | Kueri Raw SQL tidak portabel (Menggunakan fungsi khusus SQLite `strftime`) | **Rendah (Low/Bug)** | **Selesai ✅** |
 | 7 | `UksController::storeScreeningResults` | Ketiadaan validasi rentang batas nilai (*Input Range/Bound Validation*) | **Rendah (Low/Bug)** | **Selesai ✅** |
+| 8 | `ElearningController` | *Broken Object Level Authorization* (BOLA) pada akses kelas virtual, materi, dan komentar | **Tinggi (Medium-High)** | **Selesai ✅** |
+| 9 | `ElearningController::storeComment` | Stored XSS pada komentar materi diskusi e-learning | **Sedang (Medium)** | **Selesai ✅** |
+| 10 | `ElearningController` | *Insecure Direct Object Reference* (IDOR) pada penulisan materi/tugas/pengumuman oleh Guru lain | **Tinggi (Medium-High)** | **Selesai ✅** |
+| 11 | `SpmbController::printCard` | IDOR/BOLA publik pada cetak kartu pendaftaran peserta | **Tinggi (Medium-High)** | **Selesai ✅** |
+| 12 | `ImportExportController::execute` | *Path Traversal / Arbitrary File Reading* pada parameter `file_path` | **Kritis (High)** | **Selesai ✅** |
+| 13 | `MidtransWebhookController` | Webhook Signature Bypass / Payment Spoofing via parameter `is_simulation` | **Kritis (High)** | **Selesai ✅** |
 
 ---
 
@@ -378,6 +384,249 @@ Berikut adalah usulan potongan kode perbaikan (*remediation patches*) untuk menu
 +            ->select('workflow_definitions.name', DB::raw("{$avgHoursRaw} as avg_hours"))
 +            ->groupBy('workflow_definitions.name')
 +            ->get();
+```
+
+### 8. Broken Object Level Authorization (BOLA) di `ElearningController`
+* **Lokasi File:** [ElearningController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/ElearningController.php)
+* **Analisis Celah Keamanan:**
+  - Metode `showClass` dan `showMaterial` hanya memeriksa otorisasi jika role pengguna adalah `student`. Jika pengakses memiliki role `parent` atau `guru` lain yang tidak mengajar kelas tersebut, mereka dapat mengakses data/materi kelas mana saja tanpa batasan.
+  - Metode `storeComment` sama sekali tidak memeriksa apakah pengguna yang mengirim komentar terdaftar di kelas virtual tersebut, memungkinkan spamming/posting komentar liar lintas kelas virtual.
+* **Solusi Perbaikan:**
+  Tambahkan pengecekan otorisasi yang ketat dan konsisten berdasarkan peran pengguna (siswa harus di kelas yang sama, orang tua harus memiliki anak di kelas tersebut, guru harus merupakan pengajar kelas virtual tersebut, dan admin dibebaskan).
+
+### 9. Stored XSS pada Diskusi Komentar di `ElearningController::storeComment`
+* **Lokasi File:** [ElearningController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/ElearningController.php#L368-L382)
+* **Analisis Celah Keamanan:**
+  - Input `content` yang dikirim pengguna disimpan secara mentah-mentah ke database dan ditampilkan di halaman diskusi materi e-learning.
+  - Ini memungkinkan penyerang menyisipkan tag `<script>` jahat untuk melakukan pencurian sesi admin/guru saat halaman materi diakses.
+* **Solusi Perbaikan:**
+  Sanitasi input komentar menggunakan `strip_tags()` untuk menyaring tag HTML berbahaya sebelum menyimpannya ke database.
+
+### 10. Insecure Direct Object Reference (IDOR) Pembuatan Konten di `ElearningController`
+* **Lokasi File:** [ElearningController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/ElearningController.php#L135-L190)
+* **Analisis Celah Keamanan:**
+  - Fungsi `storeMaterial`, `storeAssignment`, dan `storeAnnouncement` menerima objek `ElearningClass` tetapi tidak memverifikasi apakah pengajar yang login adalah pemilik/pengajar terdaftar kelas tersebut (`$elearningClass->teacher_id === auth()->id()`).
+  - Guru luar kelas dapat memanipulasi materi/tugas di kelas milik guru lain secara ilegal.
+* **Solusi Perbaikan:**
+  Batasi pembuatan konten (materi, tugas, pengumuman) hanya bagi pemilik kelas virtual terkait atau admin.
+
+### 11. IDOR / Broken Object Level Authorization di `SpmbController::printCard`
+* **Lokasi File:** [SpmbController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/SpmbController.php#L228-L231)
+* **Analisis Celah Keamanan:**
+  - Endpoint `/spmb/print-card/{registration}` menggunakan model binding default berbasis UUID. Namun, jika URL ini diakses publik tanpa pembatasan, siapa pun yang menebak/mendapatkan UUID calon siswa dapat mengunduh dan mencetak kartu pendaftaran orang lain yang berisi data NISN dan data pribadi sensitif lainnya.
+* **Solusi Perbaikan:**
+  Batasi agar pencetakan kartu hanya dapat diakses oleh admin/staf yang sudah terotentikasi, atau oleh pendaftar itu sendiri yang memiliki nomor registrasi yang cocok dengan data session pendaftaran aktif (`session('registration_number')`).
+
+### 12. Path Traversal & Arbitrary File Reading di `ImportExportController::execute`
+* **Lokasi File:** [ImportExportController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/ImportExportController.php#L76-L98)
+* **Analisis Celah Keamanan:**
+  - Parameter input `file_path` dikirim langsung dari browser dan digunakan di `Storage::path($path)` tanpa pembersihan.
+  - Penyerang dengan akses impor/staf TU dapat mengganti `file_path` menjadi `../../.env` atau file database utama, sehingga sistem memuat data sensitif tersebut sebagai baris CSV/Spreadsheet dan menampilkannya kembali ke layar.
+* **Solusi Perbaikan:**
+  Validasi secara ketat agar parameter `file_path` hanya diawali dengan `temp_imports/` serta bersihkan karakter traversal (`..`, `\`, `/`).
+
+### 13. Webhook Signature Bypass / Payment Spoofing di `MidtransWebhookController`
+* **Lokasi File:** [MidtransWebhookController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/MidtransWebhookController.php#L34-L47)
+* **Analisis Celah Keamanan:**
+  - Sistem memiliki logika bypass tanda tangan (signature key check) jika parameter `"is_simulation": true` disematkan dalam payload webhook.
+  - Ini adalah celah pembayaran palsu (*payment spoofing*) yang kritis, di mana penyerang luar dapat melunasi tagihan keuangan siswa secara cuma-cuma dengan meniru callback Midtrans dan menyematkan parameter simulasi tersebut.
+* **Solusi Perbaikan:**
+  Batasi bypass `is_simulation` agar hanya diizinkan secara eksklusif jika aplikasi berjalan di lingkungan lokal/testing (`app()->environment('local', 'testing')`).
+
+---
+
+## 🛠️ Rekomendasi Patch Keamanan Tambahan (Fase 2)
+
+### Patch #8, #9, & #10: Perbaikan Otorisasi & XSS di `ElearningController.php`
+```diff
+@@ -114,6 +114,24 @@
+     public function showClass(ElearningClass $elearningClass)
+     {
+         $user = auth()->user();
+ 
+         // Security check
+-        if ($user->role === 'student' && $user->student->classroom_id !== $elearningClass->classroom_id) {
+-            abort(403, 'Anda tidak terdaftar di kelas virtual ini.');
+-        }
++        $isAuthorized = false;
++        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
++            $isAuthorized = true;
++        } elseif ($user->role === 'student' && $user->student) {
++            if ($user->student->classroom_id === $elearningClass->classroom_id) {
++                $isAuthorized = true;
++            }
++        } elseif ($user->role === 'parent') {
++            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
++                ->where('classroom_id', $elearningClass->classroom_id)
++                ->exists();
++        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
++            if ($elearningClass->teacher_id === $user->id) {
++                $isAuthorized = true;
++            }
++        }
++        if (!$isAuthorized) {
++            abort(403, 'Anda tidak memiliki akses ke kelas virtual ini.');
++        }
+ 
+         $materials = $elearningClass->materials()->with('comments')->latest()->get();
+@@ -134,6 +152,11 @@
+     public function storeMaterial(Request $request, ElearningClass $elearningClass)
+     {
++        $user = auth()->user();
++        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
++            abort(403, 'Anda hanya dapat menambahkan materi ke kelas mengajar Anda.');
++        }
++
+         $validated = $request->validate([
+             'title' => 'required|string|max:255',
+@@ -166,6 +189,11 @@
+     public function storeAssignment(Request $request, ElearningClass $elearningClass)
+     {
++        $user = auth()->user();
++        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
++            abort(403, 'Anda hanya dapat menambahkan tugas ke kelas mengajar Anda.');
++        }
++
+         $validated = $request->validate([
+             'title' => 'required|string|max:255',
+@@ -304,6 +332,11 @@
+     public function storeAnnouncement(Request $request, ElearningClass $elearningClass)
+     {
++        $user = auth()->user();
++        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
++            abort(403, 'Anda hanya dapat menambahkan pengumuman ke kelas mengajar Anda.');
++        }
++
+         $validated = $request->validate([
+             'content' => 'required|string',
+@@ -346,9 +379,24 @@
+         $user = auth()->user();
+ 
+         // Security check
+         if ($material->elearning_class_id !== $elearningClass->id) {
+             abort(404);
+         }
+-        if ($user->role === 'student' && $user->student->classroom_id !== $elearningClass->classroom_id) {
+-            abort(403);
+-        }
++        $isAuthorized = false;
++        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
++            $isAuthorized = true;
++        } elseif ($user->role === 'student' && $user->student) {
++            if ($user->student->classroom_id === $elearningClass->classroom_id) {
++                $isAuthorized = true;
++            }
++        } elseif ($user->role === 'parent') {
++            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
++                ->where('classroom_id', $elearningClass->classroom_id)
++                ->exists();
++        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
++            if ($elearningClass->teacher_id === $user->id) {
++                $isAuthorized = true;
++            }
++        }
++        if (!$isAuthorized) {
++            abort(403, 'Anda tidak memiliki akses ke materi ini.');
++        }
+ 
+         // Log view if student
+@@ -367,9 +415,31 @@
+     public function storeComment(Request $request, ElearningMaterial $material)
+     {
++        $user = auth()->user();
++        $elearningClass = $material->elearningClass;
++        
++        // Security check
++        $isAuthorized = false;
++        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
++            $isAuthorized = true;
++        } elseif ($user->role === 'student' && $user->student) {
++            if ($user->student->classroom_id === $elearningClass->classroom_id) {
++                $isAuthorized = true;
++            }
++        } elseif ($user->role === 'parent') {
++            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
++                ->where('classroom_id', $elearningClass->classroom_id)
++                ->exists();
++        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
++            if ($elearningClass->teacher_id === $user->id) {
++                $isAuthorized = true;
++            }
++        }
++        if (!$isAuthorized) {
++            abort(403, 'Akses ditolak.');
++        }
++
+         $validated = $request->validate([
+             'content' => 'required|string',
+         ]);
+ 
++        // Sanitasi XSS pada komentar
++        $cleanContent = strip_tags($validated['content'], '<br><p><b><i><strong>');
++
+         ElearningMaterialComment::create([
+             'uuid' => (string) Str::uuid(),
+             'elearning_material_id' => $material->id,
+             'user_id' => auth()->id(),
+-            'content' => $validated['content'],
++            'content' => $cleanContent,
+         ]);
+```
+
+### Patch #11: Otorisasi Cetak Kartu di `SpmbController.php`
+```diff
+@@ -227,5 +227,20 @@
+     // Cetak Kartu Peserta
+     public function printCard(Registration $registration)
+     {
++        $isAuthorized = false;
++        
++        if (auth()->check()) {
++            $user = auth()->user();
++            if (in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'kepala_sekolah'])) {
++                $isAuthorized = true;
++            }
++        }
++        
++        if (!$isAuthorized && session('registration_number') === $registration->registration_number) {
++            $isAuthorized = true;
++        }
++        
++        if (!$isAuthorized) {
++            abort(403, 'Akses ditolak. Anda tidak berwenang mencetak kartu peserta ini.');
++        }
++
+         return view('spmb.print-card', compact('registration'));
+     }
+```
+
+### Patch #12: Mencegah Path Traversal di `ImportExportController.php`
+```diff
+@@ -83,6 +83,11 @@
+ 
+         $module = $request->module;
+         $path = $request->file_path;
++        
++        // Validasi dan sanitasi jalur berkas untuk mencegah path traversal
++        $isSafePath = str_starts_with($path, 'temp_imports/') && !str_contains($path, '..') && !str_contains($path, '\\');
++        
++        if (!$isSafePath || !Storage::exists($path)) {
++            return redirect()->route('import-export.index')->with('error', 'Berkas tidak valid atau sesi kadaluarsa.');
++        }
++
+         $fileName = $request->file_name;
+```
+
+### Patch #13: Batasi Bypass Webhook di `MidtransWebhookController.php`
+```diff
+@@ -33,6 +33,7 @@
+ 
+         // Tentukan apakah request berasal dari Simulator Portofolio
+-        $isSimulation = isset($payload['is_simulation']) && $payload['is_simulation'] === true;
++        // Hanya izinkan bypass signature simulasi pada lingkungan lokal/testing
++        $isSimulation = isset($payload['is_simulation']) && $payload['is_simulation'] === true && app()->environment('local', 'testing');
+ 
+         // 1. Verifikasi Tanda Tangan (Signature Key)
 ```
 
 ---

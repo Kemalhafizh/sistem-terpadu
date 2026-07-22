@@ -317,15 +317,15 @@
         @else
             <!-- Empty state when no comparison has been made -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl p-12 text-center">
-                <span class="text-5xl">📊</span>
+                <span class="text-5xl"></span>
                 <h3 class="text-lg font-black text-gray-800 dark:text-white mt-4">Analisis Komparatif Mutu</h3>
                 <p class="text-sm text-gray-400 dark:text-gray-550 mt-2 max-w-lg mx-auto">
                     Silakan pilih <strong>Periode Acuan (Baseline)</strong> dan <strong>Periode Pembanding (Target)</strong> pada form pilihan di atas, kemudian klik tombol <strong>Bandingkan Sekarang</strong> untuk memetakan deviasi mutu secara real-time.
                 </p>
                 <div class="mt-6 flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-400">
-                    <span class="flex items-center gap-1">🛡️ Visualisasi Area Chart Tren 8 SNP</span>
-                    <span class="flex items-center gap-1">📈 Perhitungan Delta Peningkatan</span>
-                    <span class="flex items-center gap-1">⚡ Rincian Perbandingan Numerik</span>
+                    <span class="flex items-center gap-1"> Visualisasi Area Chart Tren 8 SNP</span>
+                    <span class="flex items-center gap-1"> Perhitungan Delta Peningkatan</span>
+                    <span class="flex items-center gap-1"> Rincian Perbandingan Numerik</span>
                 </div>
             </div>
         @endif

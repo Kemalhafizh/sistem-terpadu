@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    🔔 Undangan Pengisian Tracer Study
+                     Undangan Pengisian Tracer Study
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Kirim undangan pengisian kuesioner ke alumni yang belum mengisi data.
                 </p>
             </div>
             <a href="{{ route('alumni.tracer-study.analytics') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -38,7 +38,7 @@
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 space-y-4 flex flex-col justify-center">
                 <div class="flex justify-between items-center text-xs">
                     <div>
-                        <h4 class="font-extrabold text-gray-800 dark:text-white text-sm">📊 Angka Partisipasi Angkatan {{ $selectedYear }}</h4>
+                        <h4 class="font-extrabold text-gray-800 dark:text-white text-sm"> Angka Partisipasi Angkatan {{ $selectedYear }}</h4>
                         <p class="text-gray-400 mt-0.5">Rasio pengisian kuesioner tracer study.</p>
                     </div>
                     <span class="font-black text-blue-600 dark:text-blue-400 text-lg">{{ $responseRate['percentage'] }}%</span>
@@ -58,7 +58,7 @@
         <!-- Tabel Daftar Alumni Belum Mengisi -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">🔔 Daftar Alumni Belum Mengisi Kuesioner (Angkatan {{ $selectedYear }})</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Daftar Alumni Belum Mengisi Kuesioner (Angkatan {{ $selectedYear }})</h3>
                 <p class="text-xs text-gray-400 mt-1">Salin draf teks undangan broadcast WhatsApp/Email cepat di bawah ini.</p>
             </div>
 
@@ -90,7 +90,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <button onclick="copyInviteMessage('{{ addslashes($al->student->name) }}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-1.5 px-3.5 text-xs font-bold transition-all shadow-md">
-                                        📋 Salin Pesan
+                                         Salin Pesan
                                     </button>
                                 </td>
                             </tr>
@@ -110,7 +110,7 @@
     <script>
         function copyInviteMessage(name) {
             const inviteLink = `${window.location.origin}/alumni/tracer-study`;
-            const text = `Assalamu'alaikum wr. wb. Halo ${name}, mohon bantuan Anda untuk meluangkan waktu sejenak mengisi kuesioner Tracer Study alumni SMA Islam Sultan Agung 1 Semarang melalui tautan berikut:\n\n🔗 ${inviteLink}\n\nMasukan Anda sangat berharga bagi akreditasi dan peningkatan kualitas kurikulum sekolah kita. Terima kasih banyak atas partisipasinya!`;
+            const text = `Assalamu'alaikum wr. wb. Halo ${name}, mohon bantuan Anda untuk meluangkan waktu sejenak mengisi kuesioner Tracer Study alumni SMA Islam Sultan Agung 1 Semarang melalui tautan berikut:\n\n ${inviteLink}\n\nMasukan Anda sangat berharga bagi akreditasi dan peningkatan kualitas kurikulum sekolah kita. Terima kasih banyak atas partisipasinya!`;
             
             navigator.clipboard.writeText(text).then(function() {
                 alert('Draf pesan WhatsApp untuk ' + name + ' berhasil disalin ke clipboard!');

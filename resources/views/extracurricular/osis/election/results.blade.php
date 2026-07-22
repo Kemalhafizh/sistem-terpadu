@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📈 Hasil Real-Count E-Voting
+                     Hasil Real-Count E-Voting
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Agenda: {{ $election->title }} | Total Suara Masuk: {{ $totalVotes }} Suara
                 </p>
             </div>
             <a href="{{ route('osis.elections') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Visual Donut Chart ApexCharts -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-1 flex flex-col justify-between">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4">📈 Distribusi Persentase Suara</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4"> Distribusi Persentase Suara</h3>
             
             <div id="voteDistributionChart" class="w-full h-64"></div>
         </div>
@@ -28,7 +28,7 @@
         <!-- Rincian Suara per Kandidat -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">📋 Rekapitulasi Perolehan Suara Calon</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Rekapitulasi Perolehan Suara Calon</h3>
             </div>
 
             <div class="overflow-x-auto">

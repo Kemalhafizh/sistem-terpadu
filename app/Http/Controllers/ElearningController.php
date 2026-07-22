@@ -112,8 +112,25 @@ class ElearningController extends Controller
         $user = auth()->user();
 
         // Security check
-        if ($user->role === 'student' && $user->student->classroom_id !== $elearningClass->classroom_id) {
-            abort(403, 'Anda tidak terdaftar di kelas virtual ini.');
+        $isAuthorized = false;
+        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+            $isAuthorized = true;
+        } elseif ($user->role === 'student' && $user->student) {
+            if ($user->student->classroom_id === $elearningClass->classroom_id) {
+                $isAuthorized = true;
+            }
+        } elseif ($user->role === 'parent') {
+            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
+                ->where('classroom_id', $elearningClass->classroom_id)
+                ->exists();
+        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
+            if ($elearningClass->teacher_id === $user->id) {
+                $isAuthorized = true;
+            }
+        }
+
+        if (!$isAuthorized) {
+            abort(403, 'Anda tidak memiliki akses ke kelas virtual ini.');
         }
 
         $materials = $elearningClass->materials()->with('comments')->latest()->get();
@@ -134,6 +151,11 @@ class ElearningController extends Controller
      */
     public function storeMaterial(Request $request, ElearningClass $elearningClass)
     {
+        $user = auth()->user();
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403, 'Anda hanya dapat menambahkan materi ke kelas mengajar Anda.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -166,6 +188,11 @@ class ElearningController extends Controller
      */
     public function storeAssignment(Request $request, ElearningClass $elearningClass)
     {
+        $user = auth()->user();
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403, 'Anda hanya dapat menambahkan tugas ke kelas mengajar Anda.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -304,6 +331,11 @@ class ElearningController extends Controller
      */
     public function storeAnnouncement(Request $request, ElearningClass $elearningClass)
     {
+        $user = auth()->user();
+        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+            abort(403, 'Anda hanya dapat menambahkan pengumuman ke kelas mengajar Anda.');
+        }
+
         $validated = $request->validate([
             'content' => 'required|string',
         ]);
@@ -348,8 +380,25 @@ class ElearningController extends Controller
         if ($material->elearning_class_id !== $elearningClass->id) {
             abort(404);
         }
-        if ($user->role === 'student' && $user->student->classroom_id !== $elearningClass->classroom_id) {
-            abort(403);
+        $isAuthorized = false;
+        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+            $isAuthorized = true;
+        } elseif ($user->role === 'student' && $user->student) {
+            if ($user->student->classroom_id === $elearningClass->classroom_id) {
+                $isAuthorized = true;
+            }
+        } elseif ($user->role === 'parent') {
+            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
+                ->where('classroom_id', $elearningClass->classroom_id)
+                ->exists();
+        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
+            if ($elearningClass->teacher_id === $user->id) {
+                $isAuthorized = true;
+            }
+        }
+
+        if (!$isAuthorized) {
+            abort(403, 'Anda tidak memiliki akses ke materi ini.');
         }
 
         // Log view if student
@@ -367,15 +416,43 @@ class ElearningController extends Controller
      */
     public function storeComment(Request $request, ElearningMaterial $material)
     {
+        $user = auth()->user();
+        $elearningClass = $material->elearningClass;
+
+        // Security check
+        $isAuthorized = false;
+        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+            $isAuthorized = true;
+        } elseif ($user->role === 'student' && $user->student) {
+            if ($user->student->classroom_id === $elearningClass->classroom_id) {
+                $isAuthorized = true;
+            }
+        } elseif ($user->role === 'parent') {
+            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
+                ->where('classroom_id', $elearningClass->classroom_id)
+                ->exists();
+        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
+            if ($elearningClass->teacher_id === $user->id) {
+                $isAuthorized = true;
+            }
+        }
+
+        if (!$isAuthorized) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $validated = $request->validate([
             'content' => 'required|string',
         ]);
+
+        // Sanitasi XSS pada komentar
+        $cleanContent = strip_tags($validated['content'], '<br><p><b><i><strong>');
 
         ElearningMaterialComment::create([
             'uuid' => (string) Str::uuid(),
             'elearning_material_id' => $material->id,
             'user_id' => auth()->id(),
-            'content' => $validated['content'],
+            'content' => $cleanContent,
         ]);
 
         return back()->with('success', 'Komentar berhasil dikirim.');

@@ -16,7 +16,7 @@
                 
                 <div class="relative z-10 max-w-3xl">
                     <span class="px-3.5 py-1.5 bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 rounded-full text-[10px] uppercase font-black tracking-widest inline-block mb-6">
-                        ✨ AI Powered Assistant
+                         AI Powered Assistant
                     </span>
                     <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-tight mb-4 bg-gradient-to-r from-white via-indigo-100 to-violet-200 bg-clip-text text-transparent">
                         AI Teacher Copilot: Asisten Cerdas Guru Kreatif

@@ -87,8 +87,11 @@ class ImportExportController extends Controller
         $fileName = $request->file_name;
         $mapping = $request->mapping; // e.g. ['name' => 0, 'email' => 1]
 
-        if (!Storage::exists($path)) {
-            return redirect()->route('import-export.index')->with('error', 'Sesi berkas kadaluarsa. Silakan unggah kembali berkas Anda / File session expired. Please re-upload.');
+        // Validasi dan sanitasi jalur berkas untuk mencegah path traversal
+        $isSafePath = str_starts_with($path, 'temp_imports/') && !str_contains($path, '..') && !str_contains($path, '\\');
+
+        if (!$isSafePath || !Storage::exists($path)) {
+            return redirect()->route('import-export.index')->with('error', 'Berkas tidak valid atau sesi kadaluarsa / Invalid file or session expired.');
         }
 
         $absolutePath = Storage::path($path);

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-tight leading-tight">
-                🔗 Sinkronisasi Ekspor Dapodik
+                 Sinkronisasi Ekspor Dapodik
             </h2>
             <a href="{{ route('admin.integrations.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-800 rounded-xl text-sm font-semibold text-gray-300 bg-gray-900 hover:bg-gray-850 hover:text-white transition-all duration-200">
                 &larr; Kembali
@@ -17,19 +17,19 @@
             <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-px">
                 <a href="{{ route('admin.integrations.dapodik', ['type' => 'students', 'classroom_id' => $classroomId]) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'students' ? 'border-emerald-500 text-emerald-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    🧑‍🎓 Data Siswa
+                     Data Siswa
                 </a>
                 <a href="{{ route('admin.integrations.dapodik', ['type' => 'teachers']) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'teachers' ? 'border-emerald-500 text-emerald-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    👩‍🏫 Data PTK / Guru
+                     Data PTK / Guru
                 </a>
                 <a href="{{ route('admin.integrations.dapodik', ['type' => 'classrooms']) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'classrooms' ? 'border-emerald-500 text-emerald-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    🏫 Rombongan Belajar
+                     Rombongan Belajar
                 </a>
                 <a href="{{ route('admin.integrations.dapodik', ['type' => 'attendances', 'classroom_id' => $classroomId]) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'attendances' ? 'border-emerald-500 text-emerald-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    📅 Rekap Absensi Siswa
+                     Rekap Absensi Siswa
                 </a>
             </div>
 
@@ -83,7 +83,7 @@
                                 <input type="hidden" name="month" value="{{ request('month') }}">
                                 
                                 <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 font-bold text-sm text-gray-950 rounded-2xl shadow-lg shadow-emerald-950/20 transition-all duration-200">
-                                    📥 Ekspor ke Excel Dapodik
+                                     Ekspor ke Excel Dapodik
                                 </button>
                             </form>
                         </div>
@@ -128,7 +128,7 @@
                                                 <td class="py-4 font-mono text-xs text-gray-300">
                                                     @if(empty($row['nisn']) || strlen($row['nisn']) !== 10)
                                                         <span class="text-rose-400 font-bold flex items-center space-x-1" title="Format NISN Bermasalah">
-                                                            <span>⚠️</span> <span>{{ $row['nisn'] ?: 'KOSONG' }}</span>
+                                                            <span></span> <span>{{ $row['nisn'] ?: 'KOSONG' }}</span>
                                                         </span>
                                                     @else
                                                         {{ $row['nisn'] }}
@@ -143,7 +143,7 @@
                                                 <td class="py-4 font-mono text-xs text-gray-300">
                                                     @if(empty($row['nuptk']))
                                                         <span class="text-rose-400 font-bold flex items-center space-x-1" title="NUPTK Kosong">
-                                                            <span>⚠️</span> <span>KOSONG</span>
+                                                            <span></span> <span>KOSONG</span>
                                                         </span>
                                                     @else
                                                         {{ $row['nuptk'] }}
@@ -185,7 +185,7 @@
                 <div class="lg:col-span-1 space-y-6">
                     <div class="backdrop-blur-xl bg-gray-900/40 border border-gray-800/80 rounded-3xl p-6 shadow-xl min-h-[300px]">
                         <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-4 flex items-center space-x-2">
-                            <span>🔍 Pra-Validasi Kelayakan Dapodik</span>
+                            <span> Pra-Validasi Kelayakan Dapodik</span>
                         </h4>
 
                         @if(empty($validationWarnings))
@@ -198,7 +198,7 @@
                             <div class="space-y-4">
                                 <div class="p-3 bg-rose-950/40 border border-rose-800/50 rounded-2xl text-center">
                                     <p class="text-sm font-bold text-rose-400 flex items-center justify-center space-x-1">
-                                        <span>⚠️</span> <span>Ditemukan {{ count($validationWarnings) }} Masalah</span>
+                                        <span></span> <span>Ditemukan {{ count($validationWarnings) }} Masalah</span>
                                     </p>
                                     <p class="text-[11px] text-gray-400 mt-1">Beberapa data tidak lengkap dan berpotensi ditolak server Dapodik.</p>
                                 </div>

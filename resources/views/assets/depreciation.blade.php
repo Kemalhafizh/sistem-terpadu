@@ -61,7 +61,7 @@
 
             <!-- Explanation Box -->
             <div class="bg-emerald-50/70 border border-emerald-100 p-5 rounded-3xl text-emerald-800 text-xs flex items-start space-x-3.5">
-                <div class="p-2 bg-emerald-100 rounded-2xl text-emerald-600 font-bold text-sm">🧮</div>
+                <div class="p-2 bg-emerald-100 rounded-2xl text-emerald-600 font-bold text-sm"></div>
                 <div>
                     <h4 class="font-black uppercase tracking-wider text-[10px] text-emerald-950 mb-1">Metode Garis Lurus (Straight-Line Depreciation):</h4>
                     <p class="leading-relaxed text-emerald-850 font-medium">Penyusutan dihitung per hari secara real-time sejak <strong>Tanggal Perolehan (Purchase Date)</strong> berdasarkan total <strong>Umur Manfaat (Useful Life Years)</strong> yang dikonfigurasi. Nilai buku aset terus berkurang secara linier setiap hari hingga mencapai nilai sisa Rp 0 ketika masa manfaatnya telah habis terlampaui.</p>

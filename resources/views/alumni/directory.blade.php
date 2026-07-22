@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    🌐 Direktori & Jaringan Alumni
+                     Direktori & Jaringan Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Jelajahi profil alumni SMA Islam Sultan Agung 1 Semarang lintas angkatan.
@@ -13,11 +13,11 @@
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('alumni.network-map') }}" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    🗺️ Lihat Peta Sebaran
+                     Lihat Peta Sebaran
                 </a>
                 @if(in_array(auth()->user()->role, ['waka_humas', 'admin', 'superadmin']))
                     <a href="{{ route('alumni.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                        ⚙️ Kelola Alumni
+                         Kelola Alumni
                     </a>
                 @endif
             </div>
@@ -53,10 +53,10 @@
                 </div>
                 <div class="flex gap-2">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                        🔍 Cari
+                         Cari
                     </button>
                     <a href="{{ route('alumni.directory') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all text-center">
-                        🔄 Reset
+                         Reset
                     </a>
                 </div>
             </form>
@@ -103,7 +103,7 @@
                     <!-- Tombol Detail / Aksi -->
                     <div class="px-6 py-4 bg-gray-50/50 dark:bg-gray-900/20 border-t border-gray-100 dark:border-gray-700/50">
                         <a href="{{ route('alumni.show', $al->uuid) }}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2 text-xs font-bold transition-all shadow-sm">
-                            👁️ Lihat Profil Lengkap
+                             Lihat Profil Lengkap
                         </a>
                     </div>
                 </div>

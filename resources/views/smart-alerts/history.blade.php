@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl">⏱️</span>
+                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl">⏱</span>
                     <span>{{ __('Riwayat Penanganan Smart Alerts') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -21,22 +21,22 @@
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
                     <a href="{{ route('smart-alerts.dashboard') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                       📊 Dashboard
+                        Dashboard
                     </a>
                 @endif
                 <a href="{{ route('smart-alerts.index') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                       🚨 Alert Aktif
+                        Alert Aktif
                 </a>
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
                     <a href="{{ route('smart-alerts.rules') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                       ⚙️ Aturan Deteksi
+                        Aturan Deteksi
                     </a>
                 @endif
                 <a href="{{ route('smart-alerts.history') }}" 
                    class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 bg-teal-500 text-white shadow-lg shadow-teal-500/20">
-                   ⏱️ Riwayat
+                   ⏱ Riwayat
                 </a>
             </div>
             
@@ -109,15 +109,15 @@
                                 {{-- Severity Badge --}}
                                 @if($alert->severity === 'critical')
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50">
-                                        🚨 Kritis
+                                         Kritis
                                     </span>
                                 @elseif($alert->severity === 'warning')
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
-                                        ⚠️ Peringatan
+                                         Peringatan
                                     </span>
                                 @else
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
-                                        ℹ️ Info
+                                        ℹ Info
                                     </span>
                                 @endif
 
@@ -129,11 +129,11 @@
                                 {{-- Status Badge --}}
                                 @if($alert->status === 'resolved')
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-                                        ✓ Terselesaikan
+                                         Terselesaikan
                                     </span>
                                 @else
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300">
-                                        👁️ Dipantau (Monitoring)
+                                         Dipantau (Monitoring)
                                     </span>
                                 @endif
                             </div>
@@ -166,7 +166,7 @@
                         {{-- Escalated info --}}
                         @if($alert->escalatedTo)
                             <div class="p-3 bg-purple-500/5 border border-purple-200/10 rounded-xl text-xs font-semibold text-purple-700 dark:text-purple-300">
-                                <span class="font-black text-[9px] uppercase tracking-wider text-purple-500">📤 Informasi Eskalasi:</span>
+                                <span class="font-black text-[9px] uppercase tracking-wider text-purple-500"> Informasi Eskalasi:</span>
                                 <p class="mt-0.5">Dieskalasikan kepada <strong class="font-black">{{ $alert->escalatedTo->name }}</strong></p>
                                 @if($alert->escalation_notes)
                                     <p class="italic text-[11px] text-gray-500 dark:text-gray-400 mt-1">"{{ $alert->escalation_notes }}"</p>
@@ -178,7 +178,7 @@
                         @if($alert->status === 'resolved')
                             <div class="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 rounded-xl text-xs font-semibold text-emerald-800 dark:text-emerald-300 space-y-1.5">
                                 <div class="flex items-center space-x-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-600">
-                                    <span>✅ Tindakan Penanganan & Solusi:</span>
+                                    <span> Tindakan Penanganan & Solusi:</span>
                                 </div>
                                 <p class="italic">"{{ $alert->resolution_notes }}"</p>
                                 <p class="text-[9px] text-gray-400 dark:text-gray-500 font-bold">
@@ -187,7 +187,7 @@
                             </div>
                         @elseif($alert->status === 'acknowledged')
                             <div class="p-4 bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50 rounded-xl text-xs font-semibold text-blue-800 dark:text-blue-300">
-                                <span class="block text-[10px] font-black uppercase tracking-wider text-blue-600 mb-1">👁️ Status Pengawasan (Monitoring):</span>
+                                <span class="block text-[10px] font-black uppercase tracking-wider text-blue-600 mb-1"> Status Pengawasan (Monitoring):</span>
                                 <p class="text-xs font-medium text-gray-600 dark:text-gray-400">Kasus sedang dipantau di bawah pengawasan ketat dan dikoordinasikan dengan dinas / guru terkait.</p>
                                 <p class="text-[9px] text-gray-400 dark:text-gray-500 font-bold mt-2">
                                     Ditandai Diketahui oleh <span class="underline">{{ $alert->acknowledgedBy->name ?? 'Sistem' }}</span> pada {{ $alert->acknowledged_at->format('d-m-Y H:i') }}
@@ -201,7 +201,7 @@
                 <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-16 text-center shadow-sm">
                     <div class="flex flex-col items-center">
                         <div class="w-20 h-20 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-5 border border-gray-100">
-                            <span class="text-3xl">📭</span>
+                            <span class="text-3xl"></span>
                         </div>
                         <h3 class="text-lg font-black text-gray-800 dark:text-gray-200 mb-2">Arsip Riwayat Kosong</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed">

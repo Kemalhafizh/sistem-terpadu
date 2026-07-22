@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    ⚡ Kelulusan Massal (Bulk Graduate)
+                     Kelulusan Massal (Bulk Graduate)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Ubah status seluruh siswa kelas XII secara massal menjadi alumni.
                 </p>
             </div>
             <a href="{{ route('alumni.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                        🔍 Muat Daftar Siswa
+                         Muat Daftar Siswa
                     </button>
                 </div>
                 <div></div>
@@ -47,7 +47,7 @@
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-2xl border border-gray-200 dark:border-gray-700">
                         <div>
-                            <h4 class="font-extrabold text-sm text-gray-800 dark:text-white">🎓 Konfigurasi Kelulusan</h4>
+                            <h4 class="font-extrabold text-sm text-gray-800 dark:text-white"> Konfigurasi Kelulusan</h4>
                             <p class="text-xs text-gray-400 mt-0.5">Tentukan tahun kelulusan untuk siswa yang dipilih di bawah ini.</p>
                         </div>
                         <div class="flex items-center gap-2">
@@ -101,7 +101,7 @@
                                 Batal
                             </a>
                             <button type="submit" onclick="return confirm('Apakah Anda yakin ingin meluluskan siswa terpilih? Aksi ini akan mengubah status mereka menjadi ALUMNI.')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-2 px-6 text-xs font-bold transition-all shadow-md">
-                                🎓 Luluskan Siswa Terpilih
+                                 Luluskan Siswa Terpilih
                             </button>
                         </div>
                     @endif

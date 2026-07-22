@@ -44,7 +44,7 @@
             <!-- Banner Dashboard -->
             <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-[2rem] p-8 border border-indigo-500/10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
                 <div class="space-y-2">
-                    <h3 class="text-xl font-black text-indigo-300">📧 Pusat Laporan Otomatis & Email Digest</h3>
+                    <h3 class="text-xl font-black text-indigo-300"> Pusat Laporan Otomatis & Email Digest</h3>
                     <p class="text-xs text-slate-300 font-medium leading-relaxed max-w-2xl">
                         Konfigurasikan jadwal pengiriman rekapitulasi data sekolah. Kepala sekolah, staf keuangan, administrator, dan orang tua murid akan menerima rangkuman performa secara otomatis melalui integrasi Email Mailable dan notifikasi WhatsApp Gateway.
                     </p>
@@ -110,7 +110,7 @@
                                         <form method="POST" action="{{ route('admin.scheduled-reports.trigger', $report->id) }}" class="inline-block">
                                             @csrf
                                             <button type="submit" class="px-3.5 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
-                                                ⚡ Kirim Sekarang
+                                                 Kirim Sekarang
                                             </button>
                                         </form>
                                     </td>
@@ -150,7 +150,7 @@
                     <div class="px-8 py-6 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
                         <h3 class="text-lg font-black text-gray-900 tracking-tight">+ Buat Jadwal Laporan Baru</h3>
                         <button @click="showCreateModal = false" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 transition-all">
-                            ✕
+                            
                         </button>
                     </div>
 
@@ -203,7 +203,7 @@
                                             <option value="role">Role Pengguna</option>
                                         </select>
                                         <input type="text" :name="'recipients['+idx+'][value]'" required placeholder="Alamat email / Nama role" class="bg-gray-50 border border-gray-200 rounded-xl py-2 px-3 text-xs font-bold flex-1 focus:outline-none">
-                                        <button type="button" @click="removeRecipientRow('create', idx)" class="text-rose-500 text-xs font-black px-2 hover:bg-rose-50 py-1.5 rounded-lg">✕</button>
+                                        <button type="button" @click="removeRecipientRow('create', idx)" class="text-rose-500 text-xs font-black px-2 hover:bg-rose-50 py-1.5 rounded-lg"></button>
                                     </div>
                                 </template>
                             </div>
@@ -254,7 +254,7 @@
                     <div class="px-8 py-6 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
                         <h3 class="text-lg font-black text-gray-900 tracking-tight">Edit Jadwal Laporan</h3>
                         <button @click="showEditModal = false" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 transition-all">
-                            ✕
+                            
                         </button>
                     </div>
 
@@ -308,7 +308,7 @@
                                             <option value="role">Role Pengguna</option>
                                         </select>
                                         <input type="text" :name="'recipients['+idx+'][value]'" x-model="recipient.value" required placeholder="Alamat email / Nama role" class="bg-gray-50 border border-gray-200 rounded-xl py-2 px-3 text-xs font-bold flex-1 focus:outline-none">
-                                        <button type="button" @click="removeRecipientRow('edit', idx)" class="text-rose-500 text-xs font-black px-2 hover:bg-rose-50 py-1.5 rounded-lg">✕</button>
+                                        <button type="button" @click="removeRecipientRow('edit', idx)" class="text-rose-500 text-xs font-black px-2 hover:bg-rose-50 py-1.5 rounded-lg"></button>
                                     </div>
                                 </template>
                             </div>

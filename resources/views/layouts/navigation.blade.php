@@ -53,7 +53,7 @@
                                     // Show custom toast if dispatchEvent / Alpine toast exists
                                     window.dispatchEvent(new CustomEvent('toast', { 
                                         detail: { 
-                                            title: '🔔 Notifikasi Baru', 
+                                            title: ' Notifikasi Baru', 
                                             message: e.notification.message, 
                                             type: 'info' 
                                         } 

@@ -61,7 +61,7 @@
                                             </span>
                                             @if($summary->parent_acknowledged)
                                                 <span class="px-2 py-0.5 rounded-lg bg-emerald-100 border border-emerald-200 text-emerald-800 text-[9px] font-black uppercase tracking-wider flex items-center gap-0.5">
-                                                    ✓ Ditandatangani Ortu
+                                                     Ditandatangani Ortu
                                                 </span>
                                             @else
                                                 <span class="px-2 py-0.5 rounded-lg bg-gray-100 border border-gray-200 text-gray-500 text-[9px] font-black uppercase tracking-wider">

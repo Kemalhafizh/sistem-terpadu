@@ -22,7 +22,7 @@
             @if(session('success'))
                 <div class="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/30 rounded-3xl p-5 shadow-sm flex items-center gap-4 animate-fade-in-up">
                     <div class="w-10 h-10 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl flex items-center justify-center text-emerald-600 shrink-0">
-                        ✓
+                        
                     </div>
                     <div>
                         <p class="text-sm font-bold text-gray-900 dark:text-white">{{ session('success') }}</p>
@@ -33,7 +33,7 @@
             @if(session('error'))
                 <div class="bg-gradient-to-r from-rose-500/10 to-red-500/10 border border-rose-500/30 rounded-3xl p-5 shadow-sm flex items-center gap-4 animate-fade-in-up">
                     <div class="w-10 h-10 bg-rose-500/20 border border-rose-500/40 rounded-2xl flex items-center justify-center text-rose-600 shrink-0">
-                        ⚠️
+                        
                     </div>
                     <div>
                         <p class="text-sm font-bold text-gray-900 dark:text-white">{{ session('error') }}</p>
@@ -49,7 +49,7 @@
                     <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex items-center gap-5">
                             <div class="w-16 h-16 bg-rose-500/20 border border-rose-500/45 rounded-3xl flex items-center justify-center text-3xl animate-bounce shrink-0 shadow-lg shadow-rose-500/20">
-                                ⚠️
+                                
                             </div>
                             <div>
                                 <span class="text-[10px] font-black uppercase tracking-widest text-rose-600 dark:text-rose-400">Peringatan Integritas Data</span>
@@ -75,7 +75,7 @@
                 <div class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 border border-emerald-500/30 rounded-[2.5rem] p-8 shadow-md relative overflow-hidden">
                     <div class="relative z-10 flex items-center gap-5">
                         <div class="w-16 h-16 bg-emerald-500/20 border border-emerald-500/40 rounded-3xl flex items-center justify-center text-3xl shrink-0 shadow-lg shadow-emerald-500/20">
-                            ✅
+                            
                         </div>
                         <div>
                             <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Status Integritas Data</span>
@@ -115,7 +115,7 @@
                                 <div class="flex justify-between items-center mb-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 text-lg font-bold">
-                                            🎓
+                                            
                                         </div>
                                         <div>
                                             <h4 class="font-bold text-gray-900 dark:text-white">Data Siswa</h4>
@@ -147,7 +147,7 @@
                                 <div class="flex justify-between items-center mb-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 bg-teal-100 dark:bg-teal-900/40 rounded-2xl flex items-center justify-center text-teal-600 dark:text-teal-400 text-lg font-bold">
-                                            👨‍🏫
+                                            
                                         </div>
                                         <div>
                                             <h4 class="font-bold text-gray-900 dark:text-white">Data Guru / PTK</h4>
@@ -201,7 +201,7 @@
                                 <div class="flex justify-between items-center mb-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-lg font-bold">
-                                            🎓
+                                            
                                         </div>
                                         <div>
                                             <h4 class="font-bold text-gray-900 dark:text-white">Data Siswa</h4>
@@ -233,7 +233,7 @@
                                 <div class="flex justify-between items-center mb-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/40 rounded-2xl flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-lg font-bold">
-                                            👨‍🏫
+                                            
                                         </div>
                                         <div>
                                             <h4 class="font-bold text-gray-900 dark:text-white">Data Guru / PTK</h4>

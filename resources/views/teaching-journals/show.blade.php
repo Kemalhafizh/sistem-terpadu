@@ -9,7 +9,7 @@
                 </a>
                 <div>
                     <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                        📄 Detail Jurnal Mengajar Harian
+                         Detail Jurnal Mengajar Harian
                     </h2>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Laporan detail administrasi pembelajaran kelas tatap muka.</p>
                 </div>
@@ -125,7 +125,7 @@
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-6 h-fit">
                 <div>
                     <h3 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-wider mb-2 flex items-center gap-2">
-                        <span>🔍</span> Tinjauan Koordinator
+                        <span></span> Tinjauan Koordinator
                     </h3>
                     <p class="text-[11px] text-gray-400 dark:text-gray-550 leading-relaxed">Kolom verifikasi untuk menyatakan kesesuaian administrasi jurnal mengajar dengan realisasi kurikulum.</p>
                 </div>

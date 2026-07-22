@@ -32,7 +32,8 @@ class MidtransWebhookController extends Controller
         }
 
         // Tentukan apakah request berasal dari Simulator Portofolio
-        $isSimulation = isset($payload['is_simulation']) && $payload['is_simulation'] === true;
+        // Hanya izinkan bypass signature simulasi pada lingkungan lokal/testing untuk keamanan
+        $isSimulation = isset($payload['is_simulation']) && $payload['is_simulation'] === true && app()->environment('local', 'testing');
 
         // 1. Verifikasi Tanda Tangan (Signature Key)
         $serverKey = config('services.midtrans.server_key');

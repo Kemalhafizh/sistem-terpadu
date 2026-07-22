@@ -14,9 +14,9 @@ class AchievementDefinitionSeeder extends Seeder
         $achievements = [
             [
                 'code' => 'first_day',
-                'name' => 'Hari Pertama 🎒',
+                'name' => 'Hari Pertama ',
                 'description' => 'Masuk ke platform SISTA untuk pertama kali dan rasakan petualangan barumu.',
-                'icon' => '🎒',
+                'icon' => '',
                 'color' => '#3b82f6', // Blue
                 'category' => 'akademik',
                 'rarity' => 'common',
@@ -40,9 +40,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'perfect_month',
-                'name' => 'Bulan Sempurna 🌟',
+                'name' => 'Bulan Sempurna ',
                 'description' => 'Hadiri kegiatan belajar di kelas secara penuh selama 1 bulan penuh tanpa alpa.',
-                'icon' => '🌟',
+                'icon' => '',
                 'color' => '#f59e0b', // Amber
                 'category' => 'kehadiran',
                 'rarity' => 'rare',
@@ -53,9 +53,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'streak_30',
-                'name' => 'Streak 30 Hari 🔥',
+                'name' => 'Streak 30 Hari ',
                 'description' => 'Pertahankan catatan presensi kehadiran masuk kelas selama 30 hari berturut-turut.',
-                'icon' => '🔥',
+                'icon' => '',
                 'color' => '#ef4444', // Red
                 'category' => 'kehadiran',
                 'rarity' => 'epic',
@@ -66,9 +66,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'top_scorer',
-                'name' => 'Juara Kelas 🏅',
+                'name' => 'Juara Kelas ',
                 'description' => 'Raih pencapaian tinggi dan kumpulkan total minimal 1000 XP semester ini.',
-                'icon' => '🏅',
+                'icon' => '',
                 'color' => '#fbbf24', // Amber glow
                 'category' => 'akademik',
                 'rarity' => 'rare',
@@ -79,9 +79,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'bookworm',
-                'name' => 'Kutu Buku 📚',
+                'name' => 'Kutu Buku ',
                 'description' => 'Pinjam buku perpustakaan atau kumpulkan total minimal 500 XP untuk kecintaan pada literasi.',
-                'icon' => '📚',
+                'icon' => '',
                 'color' => '#6366f1', // Indigo
                 'category' => 'sosial',
                 'rarity' => 'rare',
@@ -92,9 +92,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'forum_helper',
-                'name' => 'Penolong Forum 🤝',
+                'name' => 'Penolong Forum ',
                 'description' => 'Berpartisipasi aktif dengan memposting minimal 20 balasan di forum diskusi akademik.',
-                'icon' => '🤝',
+                'icon' => '',
                 'color' => '#06b6d4', // Cyan
                 'category' => 'sosial',
                 'rarity' => 'rare',
@@ -105,9 +105,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'tahfidz_juz',
-                'name' => 'Hafiz Juz Al-Quran 🕌',
+                'name' => 'Hafiz Juz Al-Quran ',
                 'description' => 'Lakukan setoran hafalan Al-Quran sebanyak 10 kali di bawah bimbingan guru tahfidz.',
-                'icon' => '🕌',
+                'icon' => '',
                 'color' => '#10b981', // Emerald green
                 'category' => 'keislaman',
                 'rarity' => 'legendary',
@@ -118,9 +118,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'mutabaah_streak',
-                'name' => 'Istiqomah Ibadah 🌙',
+                'name' => 'Istiqomah Ibadah ',
                 'description' => 'Konsisten mengisi catatan amal ibadah harian mutaba\'ah yaumi sebanyak 30 hari.',
-                'icon' => '🌙',
+                'icon' => '',
                 'color' => '#8b5cf6', // Purple
                 'category' => 'keislaman',
                 'rarity' => 'epic',
@@ -131,9 +131,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'quiz_ace',
-                'name' => 'Ace Ujian CBT 💯',
+                'name' => 'Ace Ujian CBT ',
                 'description' => 'Tunjukkan keunggulan akademik dengan mengumpulkan total minimal 1500 XP.',
-                'icon' => '💯',
+                'icon' => '',
                 'color' => '#ec4899', // Pink
                 'category' => 'akademik',
                 'rarity' => 'epic',
@@ -144,9 +144,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'early_bird',
-                'name' => 'Siswa Terajin ✅',
+                'name' => 'Siswa Terajin ',
                 'description' => 'Raih minimal 800 XP sebagai bukti keaktifan menyelesaikan tugas kelas E-Learning awal waktu.',
-                'icon' => '✅',
+                'icon' => '',
                 'color' => '#14b8a6', // Teal
                 'category' => 'akademik',
                 'rarity' => 'common',
@@ -157,9 +157,9 @@ class AchievementDefinitionSeeder extends Seeder
             ],
             [
                 'code' => 'sholat_champion',
-                'name' => 'Sholat Champion 🕋',
+                'name' => 'Sholat Champion ',
                 'description' => 'Jaga amalan ibadah sholat 5 waktu secara konsisten dan catat 40 kali mutaba\'ah harian.',
-                'icon' => '🕋',
+                'icon' => '',
                 'color' => '#059669', // Dark emerald
                 'category' => 'keislaman',
                 'rarity' => 'legendary',

@@ -5,21 +5,21 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📈 Rekapitulasi Evaluasi Kinerja Pegawai
+                     Rekapitulasi Evaluasi Kinerja Pegawai
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Daftar seluruh hasil evaluasi berkala guru dan staf SMA Islam Sultan Agung 1 Semarang.
                 </p>
             </div>
             <a href="{{ route('hrd.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Ke Dashboard
+                ⬅ Ke Dashboard
             </a>
         </div>
     </x-slot>
 
     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
         <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm">📝 Daftar Hasil Penilaian</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Daftar Hasil Penilaian</h3>
         </div>
 
         <div class="overflow-x-auto">
@@ -58,7 +58,7 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <a href="{{ route('hrd.employees.show', $ev->employee->id) }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-1.5 px-3.5 text-xs font-bold transition-all">
-                                    👁️ Detail Profil
+                                     Detail Profil
                                 </a>
                             </td>
                         </tr>

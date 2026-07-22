@@ -170,7 +170,7 @@ class CounselingService
             $bkTeachers = User::where('role', 'bk')->get();
             foreach ($bkTeachers as $bk) {
                 if ($bk->phone_number) {
-                    $msg = "🔔 *PERMOHONAN KONSELING BARU (BK ONLINE)*\n\n"
+                    $msg = " *PERMOHONAN KONSELING BARU (BK ONLINE)*\n\n"
                          ."Halo Bapak/Ibu Guru BK, terdapat permohonan sesi konseling baru dari:\n"
                          ."Nama Siswa: *{$studentName}*\n"
                          ."Kelas: *{$classroomName}*\n"
@@ -187,7 +187,7 @@ class CounselingService
             }
         } elseif ($actionType === 'scheduled') {
             // Notifikasi jadwal terkonfirmasi ke Siswa & Orang Tua
-            $msg = "📅 *JADWAL KONSELING BK TERKONFIRMASI*\n\n"
+            $msg = " *JADWAL KONSELING BK TERKONFIRMASI*\n\n"
                  ."Assalamu'alaikum,\n"
                  ."Menginfokan jadwal sesi bimbingan konseling (BK) untuk:\n"
                  ."Nama: *{$studentName}*\n"
@@ -213,7 +213,7 @@ class CounselingService
         } elseif ($actionType === 'completed') {
             // Beritahu orang tua sesi selesai dilaksanakan
             if ($parentPhone) {
-                $msg = "✅ *SESI KONSELING BK SELESAI*\n\n"
+                $msg = " *SESI KONSELING BK SELESAI*\n\n"
                      ."Assalamu'alaikum,\n"
                      ."Menginfokan bahwa sesi bimbingan konseling (BK) ananda:\n"
                      ."Nama: *{$studentName}*\n"
@@ -226,7 +226,7 @@ class CounselingService
             }
         } elseif ($actionType === 'cancelled') {
             // Beritahu pembatalan sesi
-            $msg = "❌ *SESI KONSELING BK DIBATALKAN*\n\n"
+            $msg = " *SESI KONSELING BK DIBATALKAN*\n\n"
                  ."Assalamu'alaikum,\n"
                  ."Sesi bimbingan konseling (BK) ananda:\n"
                  ."Nama: *{$studentName}*\n"
@@ -250,11 +250,11 @@ class CounselingService
         } elseif ($actionType === 'mandatory_triggered') {
             // Notifikasi Peringatan Darurat Konseling Wajib karena akumulasi poin >= 50
             if ($parentPhone) {
-                $msg = "🚨 *PEMBERITAHUAN DARURAT: KONSELING BK WAJIB*\n\n"
+                $msg = " *PEMBERITAHUAN DARURAT: KONSELING BK WAJIB*\n\n"
                      ."Assalamu'alaikum Bapak/Ibu Wali Murid dari *{$studentName}*,\n\n"
                      ."Menginfokan dari Unit Bimbingan Konseling (BK) SMA Islam Sultan Agung 1 bahwa ananda saat ini telah mengumpulkan akumulasi poin pelanggaran sebesar *{$student->total_points} Poin* (Batas kritis >= 50).\n\n"
                      ."Sesuai dengan peraturan tata tertib sekolah, sistem secara otomatis menjadwalkan:\n"
-                     ."🎯 *Sesi Konseling Wajib Individual*\n"
+                     ." *Sesi Konseling Wajib Individual*\n"
                      ."Hari/Tanggal: *Bilah Jadwal Antrean BK*\n"
                      ."Konselor BK: *{$counselorName}*\n\n"
                      ."Bapak/Ibu diharapkan mendampingi atau memantau kehadiran ananda pada sesi khusus ini guna merumuskan program pembinaan terpadu.\n"

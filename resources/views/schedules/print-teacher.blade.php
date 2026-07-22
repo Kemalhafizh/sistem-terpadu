@@ -179,7 +179,7 @@
                                         <div class="subject-name">{{ $existing->subject->name }}</div>
                                         <div class="classroom-name">Kelas: {{ $existing->classroom->name }}</div>
                                         @if($existing->room)
-                                            <div class="room-name">📍 {{ $existing->room->name }}</div>
+                                            <div class="room-name"> {{ $existing->room->name }}</div>
                                         @endif
                                     </div>
                                 @endif

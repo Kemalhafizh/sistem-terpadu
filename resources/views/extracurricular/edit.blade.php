@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    ✏️ Edit Ekstrakurikuler: {{ $extracurricular->name }}
+                     Edit Ekstrakurikuler: {{ $extracurricular->name }}
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Sesuaikan detail agenda latihan, kuota slot, pembina, atau profil ekskul.
                 </p>
             </div>
             <a href="{{ route('ekskul.manage') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -75,7 +75,7 @@
 
                 <div class="flex justify-end gap-2 pt-4 border-t border-gray-150 dark:border-gray-700">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-8 text-xs font-bold transition-all shadow-md">
-                        🔄 Perbarui Ekskul
+                         Perbarui Ekskul
                     </button>
                 </div>
             </form>

@@ -10,7 +10,7 @@
             <!-- Header Ringkasan & Aksen Estetis -->
             <div class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 backdrop-blur-md border border-indigo-500/20 text-white rounded-[2rem] p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
                 <div class="space-y-2 flex-grow">
-                    <h3 class="text-2xl font-black tracking-tight text-indigo-300">🏅 Galeri Lencana Kehormatan</h3>
+                    <h3 class="text-2xl font-black tracking-tight text-indigo-300"> Galeri Lencana Kehormatan</h3>
                     <p class="text-xs text-gray-200 font-medium leading-relaxed max-w-xl">
                         Kumpulkan lencana prestisius dengan menyelesaikan tantangan akademik, disiplin presensi kelas, partisipasi sosial di forum, dan amalan ibadah Islami terpadu.
                     </p>
@@ -51,7 +51,7 @@
                                         {{ $def->rarity }}
                                     </span>
                                     <span class="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-black shadow-inner shadow-emerald-600/10">
-                                        ✓
+                                        
                                     </span>
                                 </div>
 
@@ -84,7 +84,7 @@
                                         {{ $def->rarity }}
                                     </span>
                                     <span class="text-gray-400 text-xs">
-                                        🔒
+                                        
                                     </span>
                                 </div>
 

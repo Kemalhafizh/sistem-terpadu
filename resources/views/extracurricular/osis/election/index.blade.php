@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    🗳️ Pemilihan Ketua OSIS (E-Voting)
+                     Pemilihan Ketua OSIS (E-Voting)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Kelola agenda pemilu ketua OSIS aktif.
                 </p>
             </div>
             <a href="{{ route('osis.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Form Buat Agenda Pemilu Baru -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl self-start">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4">🗳️ Buka Pemilu Baru</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4"> Buka Pemilu Baru</h3>
             
             <form action="{{ route('osis.elections.store') }}" method="POST" class="space-y-4">
                 @csrf
@@ -41,7 +41,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                    🚀 Publikasikan Pemilu
+                     Publikasikan Pemilu
                 </button>
             </form>
         </div>
@@ -49,7 +49,7 @@
         <!-- Daftar Pemilu OSIS -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">🗳️ Agenda Pemilu Ketua OSIS</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Agenda Pemilu Ketua OSIS</h3>
             </div>
 
             <div class="overflow-x-auto">
@@ -79,13 +79,13 @@
                                 </td>
                                 <td class="px-6 py-4 text-right flex justify-end gap-1.5 text-xs">
                                     <a href="{{ route('osis.elections.candidates', $el->id) }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-1.5 px-3.5 text-xs font-bold transition-all">
-                                        👥 Calon
+                                         Calon
                                     </a>
                                     <a href="{{ route('osis.elections.voting', $el->id) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-1.5 px-3.5 text-xs font-bold transition-all shadow-md">
-                                        🗳️ Bilik Suara
+                                         Bilik Suara
                                     </a>
                                     <a href="{{ route('osis.elections.results', $el->id) }}" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl py-1.5 px-3.5 text-xs font-bold transition-all shadow-md">
-                                        📈 Hasil
+                                         Hasil
                                     </a>
                                 </td>
                             </tr>

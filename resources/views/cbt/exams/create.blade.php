@@ -123,7 +123,7 @@
                     <label class="flex items-center gap-3 p-4 rounded-xl border border-red-200 dark:border-red-800/50 bg-red-50/50 dark:bg-red-950/20 hover:bg-red-100/50 dark:hover:bg-red-950/30 transition-all cursor-pointer md:col-span-2">
                         <input type="checkbox" name="is_secure_mode" value="1" x-model="secureMode" class="w-4 h-4 rounded border-gray-300 dark:border-slate-600 text-red-600 focus:ring-red-500" checked>
                         <div>
-                            <p class="text-xs font-bold text-slate-800 dark:text-white">🔒 Mode Anti-Curang Penuh</p>
+                            <p class="text-xs font-bold text-slate-800 dark:text-white"> Mode Anti-Curang Penuh</p>
                             <p class="text-[10px] text-slate-400 mt-0.5">Fullscreen lock, deteksi tab switch, getaran peringatan, blokir copy-paste, dan pemantauan real-time</p>
                         </div>
                     </label>

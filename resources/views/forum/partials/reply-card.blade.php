@@ -30,7 +30,7 @@
         <div class="flex items-center space-x-2">
             @if($isBest)
                 <span class="inline-flex px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-md text-[8px] font-black uppercase tracking-wider border border-emerald-200 dark:border-emerald-900 shadow-sm">
-                    🏆 JAWABAN TERBAIK
+                     JAWABAN TERBAIK
                 </span>
             @endif
 
@@ -76,30 +76,30 @@
                     <input type="hidden" name="reactable_type" value="reply">
                     <input type="hidden" name="reactable_id" value="{{ $reply->id }}">
                     
-                    <!-- Like 👍 -->
+                    <!-- Like  -->
                     <button type="submit" name="type" value="like" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border {{ $reply->reactions->where('user_id', auth()->id())->where('type', 'like')->count() > 0 ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 border-indigo-200/50 dark:border-indigo-900/50' : 'bg-transparent text-gray-400 dark:text-slate-500 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-950/50' }}">
-                        <span>👍</span>
+                        <span></span>
                         <span class="ml-1">{{ $reply->reactions->where('type', 'like')->count() }}</span>
                     </button>
 
-                    <!-- Helpful 💡 -->
+                    <!-- Helpful  -->
                     <button type="submit" name="type" value="helpful" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border {{ $reply->reactions->where('user_id', auth()->id())->where('type', 'helpful')->count() > 0 ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200/50 dark:border-amber-900/50' : 'bg-transparent text-gray-400 dark:text-slate-500 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-950/50' }}">
-                        <span>💡</span>
+                        <span></span>
                         <span class="ml-1">{{ $reply->reactions->where('type', 'helpful')->count() }}</span>
                     </button>
 
-                    <!-- Insightful 🧠 -->
+                    <!-- Insightful  -->
                     <button type="submit" name="type" value="insightful" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border {{ $reply->reactions->where('user_id', auth()->id())->where('type', 'insightful')->count() > 0 ? 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 border-violet-200/50 dark:border-violet-900/50' : 'bg-transparent text-gray-400 dark:text-slate-500 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-950/50' }}">
-                        <span>🧠</span>
+                        <span></span>
                         <span class="ml-1">{{ $reply->reactions->where('type', 'insightful')->count() }}</span>
                     </button>
                 </form>
             @else
                 <!-- Parent read-only view of reactions numbers -->
                 <div class="flex items-center space-x-1.5 text-[10px] font-bold text-slate-400">
-                    <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-850 px-2 py-0.5 rounded-full">👍 {{ $reply->reactions->where('type', 'like')->count() }}</span>
-                    <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-850 px-2 py-0.5 rounded-full">💡 {{ $reply->reactions->where('type', 'helpful')->count() }}</span>
-                    <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-850 px-2 py-0.5 rounded-full">🧠 {{ $reply->reactions->where('type', 'insightful')->count() }}</span>
+                    <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-850 px-2 py-0.5 rounded-full"> {{ $reply->reactions->where('type', 'like')->count() }}</span>
+                    <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-850 px-2 py-0.5 rounded-full"> {{ $reply->reactions->where('type', 'helpful')->count() }}</span>
+                    <span class="bg-gray-50 dark:bg-slate-950/50 border border-gray-100 dark:border-slate-850 px-2 py-0.5 rounded-full"> {{ $reply->reactions->where('type', 'insightful')->count() }}</span>
                 </div>
             @endif
         </div>

@@ -4,7 +4,7 @@
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight flex items-center">
                     <span class="w-8 h-8 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center mr-3">
-                        🎒
+                        
                     </span>
                     {{ __('Dashboard OSIS & Kesiswaan') }}
                 </h2>
@@ -14,21 +14,21 @@
             <div class="flex flex-wrap gap-2">
                 @if(auth()->user()->role !== 'student')
                     <a href="{{ route('osis.members') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md">
-                        👥 Kepengurusan
+                         Kepengurusan
                     </a>
                     <a href="{{ route('osis.work-programs') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md">
-                        📋 Program Kerja
+                         Program Kerja
                     </a>
                     <a href="{{ route('osis.elections') }}" class="inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md">
-                        🗳️ Pemilihan OSIS
+                         Pemilihan OSIS
                     </a>
                     <button type="button" @click="$dispatch('open-modal', 'add-transaction-modal')" class="inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md">
-                        ➕ Catat Kas Baru
+                         Catat Kas Baru
                     </button>
                 @endif
                 
                 <button type="button" @click="$dispatch('open-modal', 'export-pdf-modal')" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-750 transition-all shadow-sm">
-                    📜 Cetak Laporan PDF
+                     Cetak Laporan PDF
                 </button>
             </div>
         </div>
@@ -40,13 +40,13 @@
             <!-- Alert Session Messages -->
             @if(session('success'))
                 <div class="rounded-2xl p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 flex items-center text-emerald-800 dark:text-emerald-300 animate-fade-in">
-                    <span class="text-sm font-bold">✅ {{ session('success') }}</span>
+                    <span class="text-sm font-bold"> {{ session('success') }}</span>
                 </div>
             @endif
 
             @if(session('error'))
                 <div class="rounded-2xl p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 flex items-center text-red-800 dark:text-red-300 animate-fade-in">
-                    <span class="text-sm font-bold">❌ {{ session('error') }}</span>
+                    <span class="text-sm font-bold"> {{ session('error') }}</span>
                 </div>
             @endif
 
@@ -85,7 +85,7 @@
                 <!-- Pemilu OSIS -->
                 <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-6 sm:p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-md space-y-4">
                     <h3 class="font-extrabold text-sm text-gray-800 dark:text-white flex items-center">
-                        🗳️ Pemilihan Ketua OSIS Aktif
+                         Pemilihan Ketua OSIS Aktif
                     </h3>
                     <div class="divide-y divide-gray-100 dark:divide-gray-700/50">
                         @forelse($elections as $el)
@@ -96,10 +96,10 @@
                                 </div>
                                 <div class="flex gap-2">
                                     <a href="{{ route('osis.elections.voting', $el->id) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-1 px-3 text-[10px] font-bold transition-all shadow-md">
-                                        🗳️ Bilik Suara
+                                         Bilik Suara
                                     </a>
                                     <a href="{{ route('osis.elections.results', $el->id) }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-1 px-3 text-[10px] font-bold transition-all">
-                                        📈 Hasil
+                                         Hasil
                                     </a>
                                 </div>
                             </div>
@@ -112,7 +112,7 @@
                 <!-- Program Kerja Terbaru -->
                 <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-6 sm:p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-md space-y-4">
                     <h3 class="font-extrabold text-sm text-gray-800 dark:text-white flex items-center">
-                        📋 Program Kerja OSIS
+                         Program Kerja OSIS
                     </h3>
                     <div class="divide-y divide-gray-100 dark:divide-gray-700/50">
                         @forelse($programs as $prog)
@@ -136,7 +136,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-6 sm:p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-md space-y-6">
                 <div>
                     <h4 class="text-lg font-black text-gray-900 dark:text-white">
-                        📖 Jurnal Kas & Transaksi OSIS
+                         Jurnal Kas & Transaksi OSIS
                     </h4>
                 </div>
 

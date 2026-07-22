@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📝 Detail Hasil Evaluasi Kinerja
+                     Detail Hasil Evaluasi Kinerja
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Pegawai: {{ $evaluation->employee->user->name }} | Periode: {{ $evaluation->period }}
                 </p>
             </div>
             <a href="{{ route('hrd.evaluations.report') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -37,7 +37,7 @@
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl md:col-span-2 space-y-6">
             <!-- Nilai Per Kriteria -->
             <div class="space-y-4">
-                <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">🎯 Rincian Kriteria Penilaian</h3>
+                <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Rincian Kriteria Penilaian</h3>
                 @php
                     $scores = is_string($evaluation->criteria_scores) ? json_decode($evaluation->criteria_scores, true) : $evaluation->criteria_scores;
                 @endphp
@@ -53,7 +53,7 @@
 
             <!-- Ulasan Kualitatif -->
             <div class="space-y-4 pt-4 border-t border-gray-150 dark:border-gray-700/50">
-                <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">💬 Catatan & Ulasan Evaluator</h3>
+                <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Catatan & Ulasan Evaluator</h3>
                 
                 <div class="space-y-3">
                     <div>

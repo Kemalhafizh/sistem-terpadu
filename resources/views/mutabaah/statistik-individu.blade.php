@@ -45,7 +45,7 @@
             {{-- Line Chart Card --}}
             <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6">
                 <h3 class="text-sm font-black text-gray-800 uppercase tracking-wider mb-6 flex items-center gap-2">
-                    <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">📈</span>
+                    <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"></span>
                     Tren Grafik Skor Harian (15 Input Terakhir)
                 </h3>
                 <div class="h-80 relative">
@@ -53,7 +53,7 @@
                         <canvas id="trendChart"></canvas>
                     @else
                         <div class="text-center text-gray-400 py-16">
-                            <span class="text-3xl block mb-2">📋</span>
+                            <span class="text-3xl block mb-2"></span>
                             <span>Belum ada data jurnal ibadah yang cukup untuk membuat grafik tren.</span>
                         </div>
                     @endif
@@ -63,7 +63,7 @@
             {{-- Spiritual Encouragement Message --}}
             <div class="bg-emerald-50/50 border border-emerald-100 rounded-3xl p-6 shadow-sm">
                 <h4 class="text-sm font-black text-emerald-950 flex items-center gap-1.5">
-                    <span>🌟</span> Pesan Motivasi Ruhiyah
+                    <span></span> Pesan Motivasi Ruhiyah
                 </h4>
                 @if($avgScore >= 85)
                     <p class="text-xs text-emerald-800 mt-2 leading-relaxed font-bold">

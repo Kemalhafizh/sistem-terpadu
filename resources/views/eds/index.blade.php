@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>🛡️</span> Raport Mutu Sekolah (EDS)
+                    <span></span> Raport Mutu Sekolah (EDS)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sistem penjaminan mutu internal terintegrasi 8 Standar Nasional Pendidikan (SNP) untuk persiapan akreditasi BAN-S/M.</p>
             </div>
@@ -185,7 +185,7 @@
             </div>
             @empty
             <div class="col-span-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-12 text-center rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl">
-                <span class="text-5xl">📊</span>
+                <span class="text-5xl"></span>
                 <h3 class="text-lg font-black text-gray-800 dark:text-white mt-4">Belum Ada Periode EDS</h3>
                 <p class="text-sm text-gray-400 dark:text-gray-550 mt-1 max-w-md mx-auto">Silakan lakukan inisiasi periode Evaluasi Diri Sekolah baru untuk memulai penilaian mutu sekolah Anda.</p>
                 @can('manage', App\Models\EdsPeriod::class)
@@ -204,7 +204,7 @@
             @csrf
             
             <h2 class="text-lg font-black text-gray-950 dark:text-white flex items-center gap-1.5">
-                <span>🛡️</span> Inisiasi Periode EDS Baru
+                <span></span> Inisiasi Periode EDS Baru
             </h2>
             
             <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">

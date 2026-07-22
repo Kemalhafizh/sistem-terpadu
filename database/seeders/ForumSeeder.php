@@ -168,7 +168,7 @@ class ForumSeeder extends Seeder
                         'user_id' => $reactionUsers[$rc]->id,
                         'reactable_type' => ForumReply::class,
                         'reactable_id' => $reply->id,
-                        'type' => ['👍', '❤️', '👏', '😮'][rand(0, 3)],
+                        'type' => ['', '', '', ''][rand(0, 3)],
                     ]);
                 }
             }
@@ -181,7 +181,7 @@ class ForumSeeder extends Seeder
                     'user_id' => $reactionUsers[$tc]->id,
                     'reactable_type' => ForumThread::class,
                     'reactable_id' => $thread->id,
-                    'type' => ['👍', '❤️', '👏', '🔥'][rand(0, 3)],
+                    'type' => ['', '', '', ''][rand(0, 3)],
                 ]);
             }
         }

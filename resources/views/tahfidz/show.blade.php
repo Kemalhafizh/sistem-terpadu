@@ -134,7 +134,7 @@
             <div class="bg-white w-full max-w-lg rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-3xl">
                 <div class="px-6 py-4 sm:px-8 sm:py-6 bg-primary-900 text-white flex justify-between items-center">
                     <h3 class="font-black uppercase tracking-widest text-xs sm:text-sm">Input Setoran Baru</h3>
-                    <button onclick="document.getElementById('modal-tahfidz').classList.add('hidden')" class="text-white hover:opacity-50 transition-all">✕</button>
+                    <button onclick="document.getElementById('modal-tahfidz').classList.add('hidden')" class="text-white hover:opacity-50 transition-all"></button>
                 </div>
                 <form action="{{ route('tahfidz.store') }}" method="POST" class="p-6 sm:p-8 space-y-4 sm:space-y-6 max-h-[80vh] overflow-y-auto">
                     @csrf

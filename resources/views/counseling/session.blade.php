@@ -46,7 +46,7 @@
                                     <span class="w-2.5 h-6 bg-emerald-600 rounded-full mr-3"></span>
                                     Catatan & Rencana Tindak Lanjut
                                 </h3>
-                                <p class="text-xs text-emerald-600 font-bold uppercase mt-1 tracking-wider">🔒 Enkripsi Transparan database diaktifkan</p>
+                                <p class="text-xs text-emerald-600 font-bold uppercase mt-1 tracking-wider"> Enkripsi Transparan database diaktifkan</p>
                             </div>
                             <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-black uppercase tracking-wider">
                                 {{ $session->status }}

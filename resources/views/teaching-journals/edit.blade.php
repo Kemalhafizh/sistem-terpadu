@@ -8,7 +8,7 @@
             </a>
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    ✏️ Edit Jurnal Mengajar Harian
+                     Edit Jurnal Mengajar Harian
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sunting data jurnal mengajar harian sebelum diajukan/dikunci.</p>
             </div>

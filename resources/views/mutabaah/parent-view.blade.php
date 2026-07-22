@@ -26,7 +26,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex items-center space-x-4">
                     <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
-                        📈
+                        
                     </div>
                     <div>
                         <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block leading-none">Rata Skor</span>
@@ -38,7 +38,7 @@
 
                 <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex items-center space-x-4">
                     <div class="p-3 bg-amber-50 text-amber-600 rounded-2xl">
-                        📖
+                        
                     </div>
                     <div>
                         <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block leading-none">Total Tadarus</span>
@@ -50,7 +50,7 @@
 
                 <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex items-center space-x-4">
                     <div class="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
-                        ✍️
+                        
                     </div>
                     <div>
                         <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block leading-none">Laporan Tertanda</span>
@@ -104,7 +104,7 @@
                                             </span>
                                             @if($summary->parent_acknowledged)
                                                 <span class="px-2 py-0.5 rounded-lg bg-emerald-100 border border-emerald-200 text-emerald-800 text-[9px] font-black uppercase tracking-wider flex items-center gap-0.5">
-                                                    ✓ Ditandatangani
+                                                     Ditandatangani
                                                 </span>
                                             @else
                                                 <span class="px-2 py-0.5 rounded-lg bg-gray-100 border border-gray-200 text-gray-500 text-[9px] font-black uppercase tracking-wider">

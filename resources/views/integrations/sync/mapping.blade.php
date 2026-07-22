@@ -69,7 +69,7 @@
                      class="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-3xl p-5 shadow-sm flex items-start gap-4 animate-fade-in-up"
                      style="display: none;">
                     <div class="w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-2xl flex items-center justify-center text-amber-600 shrink-0">
-                        ⚠️
+                        
                     </div>
                     <div>
                         <h4 class="text-sm font-bold text-gray-900 dark:text-white">Peringatan Duplikasi Kolom</h4>

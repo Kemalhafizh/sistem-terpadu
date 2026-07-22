@@ -62,6 +62,12 @@ class DatabaseSeeder extends Seeder
                 CharitySeeder::class,
                 SyncConfigSeeder::class,
                 AssetMaintenanceTicketSeeder::class,
+                LibraryBarcodeSeeder::class,
+                FinancialAuditSeeder::class,
+                SecurityThreatSeeder::class,
+                SchoolBrandingSeeder::class,
+                QueueDemoSeeder::class,
+                CacheWarmupSeeder::class,
             ]);
         });
     }

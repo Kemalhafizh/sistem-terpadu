@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📝 Penilaian Batch Rapor Anggota
+                     Penilaian Batch Rapor Anggota
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Ekskul: {{ $extracurricular->name }} | Tahun Ajaran Aktif: {{ $academicYear->year }}
                 </p>
             </div>
             <a href="{{ route('ekskul.manage') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -22,9 +22,9 @@
             @csrf
 
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50 flex justify-between items-center">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">📝 Input Predikat & Capaian Rapor Siswa</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Input Predikat & Capaian Rapor Siswa</h3>
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2 px-6 text-xs font-bold transition-all shadow-md">
-                    💾 Simpan Semua Nilai
+                     Simpan Semua Nilai
                 </button>
             </div>
 

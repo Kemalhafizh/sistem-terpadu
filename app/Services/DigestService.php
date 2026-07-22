@@ -213,7 +213,7 @@ class DigestService
             $html = "
                 <p>Yth. Kepala Sekolah, berikut rekapitulasi strategis sekolah mingguan periode <strong>{$data['start_date']} s.d. {$data['end_date']}</strong>:</p>
                 <div style='background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-top: 20px;'>
-                    <h3 style='margin-top: 0; color: #312e81; font-size: 16px;'>📊 Ringkasan Eksekutif</h3>
+                    <h3 style='margin-top: 0; color: #312e81; font-size: 16px;'> Ringkasan Eksekutif</h3>
                     <ul style='padding-left: 20px; margin-bottom: 0; line-height: 1.8;'>
                         <li>Rata-rata Kehadiran Siswa Kelas: <strong>{$data['attendance_rate']}%</strong></li>
                         <li>Total Penerimaan Iuran SPP Baru: <strong>Rp " . number_format($data['total_payments'], 0, ',', '.') . "</strong></li>
@@ -252,7 +252,7 @@ class DigestService
                     </div>
                 </div>
                 
-                <h3 style='margin-top: 30px; color: #312e81; font-size: 15px;'>🚨 Klasemen 5 Siswa Penunggak Terbesar</h3>
+                <h3 style='margin-top: 30px; color: #312e81; font-size: 15px;'> Klasemen 5 Siswa Penunggak Terbesar</h3>
                 <table style='width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px;'>
                     <tr style='background-color: #f1f5f9; text-align: left; font-weight: bold;'>
                         <th style='padding: 10px; border: 1px solid #cbd5e1; text-align: center; width: 50px;'>Pos</th>
@@ -278,25 +278,25 @@ class DigestService
                 $hwHtml .= "<li>{$hw->elearningClass->subject->name} - {$hw->title} (Batas: " . Carbon::parse($hw->due_at)->translatedFormat('d M Y') . ")</li>";
             }
             if ($data['pending_assignments']->isEmpty()) {
-                $hwHtml = "<li><span style='color:#10b981;'>✓ Sempurna! Semua tugas E-Learning telah diselesaikan.</span></li>";
+                $hwHtml = "<li><span style='color:#10b981;'> Sempurna! Semua tugas E-Learning telah diselesaikan.</span></li>";
             }
 
             $html = "
                 <p>Bapak/Ibu Orang Tua Wali dari <strong>{$data['student_name']}</strong> ({$data['classroom_name']}), berikut ringkasan tumbuh kembang belajar anak periode <strong>{$data['start_date']} s.d. {$data['end_date']}</strong>:</p>
                 
-                <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'>🔔 Kedisiplinan & Presensi</h3>
+                <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'> Kedisiplinan & Presensi</h3>
                 <ul style='padding-left: 20px; line-height: 1.7;'>
                     <li>Siswa tidak hadir tanpa keterangan (Alpa): <strong>{$data['alpa_count']} Kali</strong></li>
                     <li>Siswa terlambat masuk sekolah: <strong>{$data['late_count']} Kali</strong></li>
                     <li>Akumulasi poin sanksi bimbingan BK baru: <strong style='color: " . ($data['bk_points'] > 0 ? '#ef4444' : '#64748b') . "'>{$data['bk_points']} Poin</strong></li>
                 </ul>
 
-                <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'>📚 Perkembangan Akademik</h3>
+                <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'> Perkembangan Akademik</h3>
                 <ul style='padding-left: 20px; line-height: 1.7;'>
                     {$gradesHtml}
                 </ul>
 
-                <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'>📝 Pekerjaan Rumah (PR) E-Learning yang Tertunda</h3>
+                <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'> Pekerjaan Rumah (PR) E-Learning yang Tertunda</h3>
                 <ul style='padding-left: 20px; line-height: 1.7;'>
                     {$hwHtml}
                 </ul>
@@ -500,7 +500,7 @@ class DigestService
         // B. WhatsApp Delivery
         if ($report->delivery_method === 'whatsapp' || $report->delivery_method === 'both') {
             if (!empty($phone)) {
-                $smsText = "🏆 SISTA INFO DIGEST: *{$report->name}*\n\n";
+                $smsText = " SISTA INFO DIGEST: *{$report->name}*\n\n";
                 if ($type === 'daily_admin') {
                     $smsText .= "• Alpa Hari Ini: {$data['alpa_count']} Siswa\n• Tiket Baru: {$data['new_tickets']}\n• SPP Baru: {$data['new_billings']}\n• Smart Alerts: {$data['active_alerts']}\n\nHarap login ke dashboard admin SISTA.";
                 } elseif ($type === 'weekly_kepsek') {

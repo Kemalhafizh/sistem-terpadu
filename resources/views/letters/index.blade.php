@@ -5,17 +5,17 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span>✉️</span> Manajemen Dokumen & Surat Digital
+                    <span></span> Manajemen Dokumen & Surat Digital
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pembuatan, penerbitan, pencetakan, dan pengarsipan surat-surat resmi sekolah.</p>
             </div>
             <div class="flex flex-wrap gap-2">
                 @if(in_array(auth()->user()->role, ['superadmin', 'admin', 'staf_tu']))
                 <a href="{{ route('letters.templates.index') }}" class="inline-flex items-center justify-center bg-gray-250 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-850 dark:text-gray-150 rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300">
-                    ⚙️ Kelola Template
+                     Kelola Template
                 </a>
                 <a href="{{ route('letters.bulk') }}" class="inline-flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300 shadow-md">
-                    👥 Cetak Massal
+                     Cetak Massal
                 </a>
                 <button @click="$dispatch('open-modal', 'create-letter-modal')" class="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-2.5 px-5 text-sm font-black uppercase tracking-wider shadow-lg shadow-primary-500/20 hover:shadow-primary-500/35 transition-all duration-300 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
@@ -129,12 +129,12 @@
                                 <td class="px-6 py-4">
                                     @if($letter->student)
                                         <span class="font-bold text-sm text-gray-800 dark:text-white flex items-center gap-1.5">
-                                            🎓 {{ $letter->student->name }}
+                                             {{ $letter->student->name }}
                                         </span>
                                         <p class="text-[11px] text-gray-400 mt-0.5">NISN: {{ $letter->student->nisn }} | Kelas: {{ $letter->student->classroom?->name ?? '-' }}</p>
                                     @elseif($letter->employee)
                                         <span class="font-bold text-sm text-gray-800 dark:text-white flex items-center gap-1.5">
-                                            🧑‍🏫 {{ $letter->employee->name }}
+                                             {{ $letter->employee->name }}
                                         </span>
                                         <p class="text-[11px] text-gray-400 mt-0.5">NIP: {{ $letter->employee->nip ?? '-' }}</p>
                                     @else
@@ -163,20 +163,20 @@
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-1 whitespace-nowrap">
                                     <a href="{{ route('letters.show', $letter->id) }}" class="inline-flex items-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg px-3 py-1.5 text-xs font-bold transition-all">
-                                        👁️ Detail
+                                         Detail
                                     </a>
                                     @if($letter->status === 'draft' && in_array(auth()->user()->role, ['staf_tu', 'admin', 'superadmin']))
                                         <form action="{{ route('letters.issue', $letter->id) }}" method="POST" class="inline">
                                             @csrf
                                             <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menerbitkan surat ini? Setelah diterbitkan, nomor surat akan otomatis dihasilkan dan surat tidak dapat diubah lagi.')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold transition-all">
-                                                ✍️ Terbitkan
+                                                 Terbitkan
                                             </button>
                                         </form>
                                         <form action="{{ route('letters.destroy', $letter->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" onclick="return confirm('Hapus draf surat ini?')" class="bg-red-100 hover:bg-red-200 text-red-600 rounded-lg p-1.5 text-xs font-bold transition-all">
-                                                🗑️
+                                                
                                             </button>
                                         </form>
                                     @endif

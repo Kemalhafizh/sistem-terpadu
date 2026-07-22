@@ -6,7 +6,7 @@
             <div>
                 <span class="text-[10px] uppercase tracking-widest text-rose-600 dark:text-rose-455 font-black">TRANSAKSI TABUNGAN</span>
                 <h2 class="font-black text-3xl text-gray-805 dark:text-white leading-tight mt-1">
-                    📤 Penarikan Tunai Wadiah
+                     Penarikan Tunai Wadiah
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Proses penarikan saldo tabungan wadiah siswa secara manual.
@@ -27,7 +27,7 @@
                 <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-rose-500/10 dark:bg-rose-500/5 rounded-full blur-2xl"></div>
                 <div class="flex flex-col items-center text-center">
                     <div class="w-20 h-20 bg-rose-50 dark:bg-rose-900/20 text-rose-605 dark:text-rose-450 rounded-[2rem] flex items-center justify-center text-4xl shadow-inner mb-4">
-                        👤
+                        
                     </div>
                     <span class="text-[10px] font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest mb-1">DATA PEMILIK REKENING</span>
                     <h3 class="font-black text-xl text-gray-800 dark:text-white leading-snug">{{ $account->student->user->name }}</h3>
@@ -50,7 +50,7 @@
             </div>
             
             <div class="bg-blue-50/80 dark:bg-blue-950/20 border border-blue-200/50 dark:border-blue-900/30 rounded-[2rem] p-6 text-blue-805 dark:text-blue-300 flex items-start gap-4">
-                <span class="text-2xl mt-0.5">ℹ️</span>
+                <span class="text-2xl mt-0.5">ℹ</span>
                 <div class="text-xs space-y-1">
                     <h4 class="font-black text-blue-900 dark:text-blue-250">Batas Penarikan Harian</h4>
                     <p class="leading-relaxed text-blue-700 dark:text-blue-300">Harap pastikan jumlah penarikan tidak mengganggu limit harian jajan anak jika rekening digunakan untuk kartu kantin cashless sekolah.</p>
@@ -77,7 +77,7 @@
                         
                         <!-- Alpine.js real-time validation warning -->
                         <div x-show="amount > balance" x-transition.opacity class="mt-2 p-3 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/35 rounded-2xl text-rose-750 dark:text-rose-400 text-xs font-bold flex items-center gap-2" style="display: none;">
-                            <span>⚠️</span>
+                            <span></span>
                             <span>Peringatan: Jumlah penarikan melebihi saldo saat ini (Sisa Saldo: Rp {{ number_format($account->balance, 0, ',', '.') }}). Transaksi mungkin ditolak.</span>
                         </div>
                         

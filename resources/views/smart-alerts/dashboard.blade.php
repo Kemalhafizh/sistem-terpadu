@@ -24,7 +24,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl">🧠</span>
+                    <span class="p-2 bg-teal-500/10 text-teal-500 rounded-xl"></span>
                     <span>{{ __('Smart Alerts Dashboard') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -42,22 +42,22 @@
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
                     <a href="{{ route('smart-alerts.dashboard') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 bg-teal-500 text-white shadow-lg shadow-teal-500/20">
-                       📊 Dashboard
+                        Dashboard
                     </a>
                 @endif
                 <a href="{{ route('smart-alerts.index') }}" 
                    class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                   🚨 Alert Aktif
+                    Alert Aktif
                 </a>
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']))
                     <a href="{{ route('smart-alerts.rules') }}" 
                        class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                       ⚙️ Aturan Deteksi
+                        Aturan Deteksi
                     </a>
                 @endif
                 <a href="{{ route('smart-alerts.history') }}" 
                    class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-gray-100">
-                   ⏱️ Riwayat
+                   ⏱ Riwayat
                 </a>
             </div>
             
@@ -90,7 +90,7 @@
                 <span class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Total Alert Terdeteksi</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-gray-900 dark:text-gray-100">{{ $kpis['total'] }}</span>
-                    <span class="p-2 bg-gray-500/10 text-gray-500 rounded-xl text-lg">📁</span>
+                    <span class="p-2 bg-gray-500/10 text-gray-500 rounded-xl text-lg"></span>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@
                 <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest">Alert Aktif</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-indigo-600 dark:text-indigo-400">{{ $kpis['active'] }}</span>
-                    <span class="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl text-lg">💡</span>
+                    <span class="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl text-lg"></span>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@
                 <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest">Kritis (Critical)</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-rose-600 dark:text-rose-400">{{ $kpis['critical'] }}</span>
-                    <span class="p-2 bg-rose-500/10 text-rose-500 rounded-xl text-lg">🚨</span>
+                    <span class="p-2 bg-rose-500/10 text-rose-500 rounded-xl text-lg"></span>
                 </div>
             </div>
 
@@ -117,7 +117,7 @@
                 <span class="text-[9px] font-black text-amber-500 uppercase tracking-widest">Peringatan (Warning)</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-amber-600 dark:text-amber-400">{{ $kpis['warning'] }}</span>
-                    <span class="p-2 bg-amber-500/10 text-amber-500 rounded-xl text-lg">⚠️</span>
+                    <span class="p-2 bg-amber-500/10 text-amber-500 rounded-xl text-lg"></span>
                 </div>
             </div>
 
@@ -126,7 +126,7 @@
                 <span class="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Terselesaikan</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-emerald-600 dark:text-emerald-400">{{ $kpis['resolved'] }}</span>
-                    <span class="p-2 bg-emerald-500/10 text-emerald-500 rounded-xl text-lg">✅</span>
+                    <span class="p-2 bg-emerald-500/10 text-emerald-500 rounded-xl text-lg"></span>
                 </div>
             </div>
 
@@ -135,7 +135,7 @@
                 <span class="text-[9px] font-black text-purple-500 uppercase tracking-widest">Dieskalasikan</span>
                 <div class="flex items-end justify-between mt-2">
                     <span class="text-3xl font-black text-purple-600 dark:text-purple-400">{{ $kpis['escalated'] }}</span>
-                    <span class="p-2 bg-purple-500/10 text-purple-500 rounded-xl text-lg">📤</span>
+                    <span class="p-2 bg-purple-500/10 text-purple-500 rounded-xl text-lg"></span>
                 </div>
             </div>
         </div>
@@ -195,14 +195,14 @@
                         <div class="p-4 bg-rose-500/5 border border-rose-200/20 rounded-2xl flex items-center justify-between">
                             <div class="flex items-center space-x-2.5">
                                 <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></span>
-                                <span class="text-xs font-black text-gray-700 dark:text-gray-300">🚨 Kritis (Critical)</span>
+                                <span class="text-xs font-black text-gray-700 dark:text-gray-300"> Kritis (Critical)</span>
                             </div>
                             <span class="text-sm font-black text-rose-600 dark:text-rose-400">{{ $criticalCount }} Alert</span>
                         </div>
                         <div class="p-4 bg-amber-500/5 border border-amber-200/20 rounded-2xl flex items-center justify-between">
                             <div class="flex items-center space-x-2.5">
                                 <span class="w-3 h-3 rounded-full bg-amber-500 shadow-sm"></span>
-                                <span class="text-xs font-black text-gray-700 dark:text-gray-300">⚠️ Peringatan (Warning)</span>
+                                <span class="text-xs font-black text-gray-700 dark:text-gray-300"> Peringatan (Warning)</span>
                             </div>
                             <span class="text-sm font-black text-amber-600 dark:text-amber-400">{{ $warningCount }} Alert</span>
                         </div>
@@ -389,7 +389,7 @@
                             <a href="{{ route('smart-alerts.create') }}" 
                                class="flex items-center justify-between p-4 bg-gradient-to-r from-teal-500/5 to-teal-500/10 hover:from-teal-500/10 hover:to-teal-500/20 border border-teal-500/20 rounded-2xl transition duration-200 group active:scale-[0.98]">
                                 <div class="flex items-center space-x-3">
-                                    <span class="text-lg">➕</span>
+                                    <span class="text-lg"></span>
                                     <div class="text-left">
                                         <span class="block text-xs font-black text-teal-800 dark:text-teal-300">Buat Alert Manual</span>
                                         <span class="block text-[9px] text-gray-500 dark:text-gray-400 font-medium">Laporkan anomali di luar sistem</span>
@@ -403,7 +403,7 @@
                             <a href="{{ route('smart-alerts.rules') }}" 
                                class="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-500/5 to-indigo-500/10 hover:from-indigo-500/10 hover:to-indigo-500/20 border border-indigo-500/20 rounded-2xl transition duration-200 group active:scale-[0.98]">
                                 <div class="flex items-center space-x-3">
-                                    <span class="text-lg">⚙️</span>
+                                    <span class="text-lg"></span>
                                     <div class="text-left">
                                         <span class="block text-xs font-black text-indigo-800 dark:text-indigo-300">Edit Aturan Deteksi</span>
                                         <span class="block text-[9px] text-gray-500 dark:text-gray-400 font-medium">Ubah batas ambang kriteria pemicu</span>
@@ -416,7 +416,7 @@
                         <a href="{{ route('smart-alerts.history') }}" 
                            class="flex items-center justify-between p-4 bg-gradient-to-r from-slate-500/5 to-slate-500/10 hover:from-slate-500/10 hover:to-slate-500/20 border border-slate-500/20 rounded-2xl transition duration-200 group active:scale-[0.98]">
                             <div class="flex items-center space-x-3">
-                                <span class="text-lg">⏱️</span>
+                                <span class="text-lg">⏱</span>
                                 <div class="text-left">
                                     <span class="block text-xs font-black text-slate-800 dark:text-slate-300 font-bold">Lihat Riwayat Penanganan</span>
                                     <span class="block text-[9px] text-gray-500 dark:text-gray-400 font-medium">Arsip alert yang telah diselesaikan</span>

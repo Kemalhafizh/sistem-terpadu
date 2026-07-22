@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📋 Kuesioner Tracer Study
+                     Kuesioner Tracer Study
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Bantu kami meningkatkan mutu pembelajaran di SMA Islam Sultan Agung 1 Semarang.
                 </p>
             </div>
             <a href="{{ route('alumni.show', $alumni->uuid) }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                👁️ Lihat Profil
+                 Lihat Profil
             </a>
         </div>
     </x-slot>
@@ -46,7 +46,7 @@
 
                 <!-- Bagian 1: Melanjutkan Kuliah -->
                 <div id="section-study" class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700/50 hidden">
-                    <h3 class="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider">🎓 Informasi Kuliah</h3>
+                    <h3 class="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider"> Informasi Kuliah</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Perguruan Tinggi</label>
@@ -61,7 +61,7 @@
 
                 <!-- Bagian 2: Bekerja / Wirausaha -->
                 <div id="section-work" class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700/50 hidden">
-                    <h3 class="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">💼 Informasi Pekerjaan / Bisnis</h3>
+                    <h3 class="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"> Informasi Pekerjaan / Bisnis</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Perusahaan / Usaha</label>
@@ -93,7 +93,7 @@
 
                 <!-- Bagian 3: Feedback & Keselarasan -->
                 <div class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                    <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">🎯 Evaluasi Hubungan Kurikulum & Pembelajaran</h3>
+                    <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Evaluasi Hubungan Kurikulum & Pembelajaran</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Seberapa selaras materi di sekolah dengan aktivitas Anda saat ini? (1-5)</label>
@@ -129,7 +129,7 @@
                 <!-- Tombol Aksi -->
                 <div class="pt-6 border-t border-gray-100 dark:border-gray-700/50 flex justify-end gap-2">
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-8 text-xs font-bold transition-all shadow-md">
-                        {{ $existingResponse ? '✏️ Perbarui Respons' : '🚀 Kirim Kuesioner' }}
+                        {{ $existingResponse ? ' Perbarui Respons' : ' Kirim Kuesioner' }}
                     </button>
                 </div>
             </form>

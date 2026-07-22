@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">📚</span>
+                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"></span>
                     <span>{{ __('Direktori e-Portfolio Siswa') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -53,7 +53,7 @@
                                 <td class="py-4 text-center">
                                     @if($st->badges_count > 0)
                                         <span class="px-2.5 py-1 bg-amber-500/10 text-amber-600 rounded-lg text-xs font-black flex items-center justify-center space-x-1 w-max mx-auto border border-amber-500/20">
-                                            <span>🏆</span>
+                                            <span></span>
                                             <span>{{ $st->badges_count }} Lencana</span>
                                         </span>
                                     @else
@@ -63,7 +63,7 @@
                                 <td class="py-4 pr-4 text-right">
                                     <a href="{{ route('portfolios.review', $st) }}"
                                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition active:scale-95 shadow-md shadow-indigo-500/10">
-                                        🔍 Ulas & Lencana
+                                         Ulas & Lencana
                                     </a>
                                 </td>
                             </tr>

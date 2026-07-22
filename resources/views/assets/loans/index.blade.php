@@ -39,14 +39,14 @@
 
             @if(session('success'))
                 <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center space-x-2 text-sm font-bold shadow-sm">
-                    <span class="p-1 bg-emerald-100 rounded-lg text-emerald-600">✓</span>
+                    <span class="p-1 bg-emerald-100 rounded-lg text-emerald-600"></span>
                     <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if(session('error'))
                 <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-2xl flex items-center space-x-2 text-sm font-bold shadow-sm">
-                    <span class="p-1 bg-red-100 rounded-lg text-red-600">⚠</span>
+                    <span class="p-1 bg-red-100 rounded-lg text-red-600"></span>
                     <span>{{ session('error') }}</span>
                 </div>
             @endif

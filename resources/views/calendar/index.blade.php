@@ -3,7 +3,7 @@
 
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-            📅 Kalender & Agenda Akademik Terpadu
+             Kalender & Agenda Akademik Terpadu
         </h2>
     </x-slot>
 

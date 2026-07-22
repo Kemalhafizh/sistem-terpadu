@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📝 Form Evaluasi Kinerja Guru/Staf
+                     Form Evaluasi Kinerja Guru/Staf
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Pegawai: {{ $employee->user->name }} | Jabatan: {{ $employee->position }}
                 </p>
             </div>
             <a href="{{ route('hrd.employees.show', $employee->id) }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                👁️ Lihat Profil
+                 Lihat Profil
             </a>
         </div>
     </x-slot>
@@ -36,7 +36,7 @@
 
                 <!-- Sliders Kompetensi -->
                 <div class="space-y-5 pt-4 border-t border-gray-150 dark:border-gray-700">
-                    <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">🎯 Kriteria Kompetensi Kinerja</h3>
+                    <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Kriteria Kompetensi Kinerja</h3>
 
                     <!-- Pedagogik -->
                     <div class="space-y-2">
@@ -77,7 +77,7 @@
 
                 <!-- Evaluasi Kualitatif -->
                 <div class="space-y-4 pt-4 border-t border-gray-150 dark:border-gray-700">
-                    <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">💬 Ulasan Kualitatif</h3>
+                    <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Ulasan Kualitatif</h3>
 
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Kekuatan Utama (Strengths)</label>
@@ -97,7 +97,7 @@
 
                 <div class="pt-6 border-t border-gray-150 dark:border-gray-700 flex justify-end">
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2.5 px-8 text-xs font-bold transition-all shadow-md">
-                        🚀 Simpan Hasil Evaluasi
+                         Simpan Hasil Evaluasi
                     </button>
                 </div>
             </form>

@@ -43,7 +43,7 @@
                         @php $st2 = $leaderboard->values()[1]; @endphp
                         <div class="bg-white rounded-[2rem] p-6 text-center border border-gray-100 shadow-sm relative overflow-hidden order-2 md:order-1">
                             <div class="absolute top-0 left-0 right-0 h-2 bg-slate-300"></div>
-                            <span class="text-3xl block mt-2">🥈</span>
+                            <span class="text-3xl block mt-2"></span>
                             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Peringkat 2</span>
                             <h4 class="font-black text-gray-800 text-sm mt-2">{{ $st2->name }}</h4>
                             <p class="text-[10px] font-bold text-gray-400 uppercase mt-0.5">Kelas {{ $st2->classroom?->name }}</p>
@@ -60,7 +60,7 @@
                         @php $st1 = $leaderboard->values()[0]; @endphp
                         <div class="bg-white rounded-[2.5rem] p-8 text-center border-2 border-amber-300 shadow-xl relative overflow-hidden order-1 md:order-2 md:scale-105">
                             <div class="absolute top-0 left-0 right-0 h-3 bg-amber-400"></div>
-                            <span class="text-5xl block mt-2">👑</span>
+                            <span class="text-5xl block mt-2"></span>
                             <span class="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em]">Peringkat 1</span>
                             <h4 class="font-black text-gray-900 text-lg mt-2">{{ $st1->name }}</h4>
                             <p class="text-[10px] font-bold text-gray-400 uppercase mt-0.5">Kelas {{ $st1->classroom?->name }}</p>
@@ -77,7 +77,7 @@
                         @php $st3 = $leaderboard->values()[2]; @endphp
                         <div class="bg-white rounded-[2rem] p-6 text-center border border-gray-100 shadow-sm relative overflow-hidden order-3">
                             <div class="absolute top-0 left-0 right-0 h-2 bg-amber-600"></div>
-                            <span class="text-3xl block mt-2">🥉</span>
+                            <span class="text-3xl block mt-2"></span>
                             <span class="text-[9px] font-black text-amber-700 uppercase tracking-widest">Peringkat 3</span>
                             <h4 class="font-black text-gray-800 text-sm mt-2">{{ $st3->name }}</h4>
                             <p class="text-[10px] font-bold text-gray-400 uppercase mt-0.5">Kelas {{ $st3->classroom?->name }}</p>
@@ -115,11 +115,11 @@
                                     <tr class="{{ $rank <= 3 ? 'bg-primary-50/10' : '' }}">
                                         <td class="py-4 text-center">
                                             @if($rank == 1)
-                                                <span class="text-lg">🥇</span>
+                                                <span class="text-lg"></span>
                                             @elseif($rank == 2)
-                                                <span class="text-lg">🥈</span>
+                                                <span class="text-lg"></span>
                                             @elseif($rank == 3)
-                                                <span class="text-lg">🥉</span>
+                                                <span class="text-lg"></span>
                                             @else
                                                 <span class="px-2 py-1 rounded-lg bg-gray-100 text-gray-600 text-[10px] font-black">#{{ $rank }}</span>
                                             @endif
@@ -152,7 +152,7 @@
                 </div>
             @else
                 <div class="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100">
-                    <span class="text-4xl">🏆</span>
+                    <span class="text-4xl"></span>
                     <h3 class="font-black text-lg text-gray-800 mt-4 uppercase font-bold">Belum Ada Peringkat</h3>
                     <p class="text-xs text-gray-400 mt-2">Belum ada data setoran ziyadah tercatat di sistem semester ini.</p>
                 </div>

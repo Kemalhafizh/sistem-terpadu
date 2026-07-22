@@ -5,7 +5,7 @@
         <div class="flex justify-between items-center flex-wrap gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📅 Laporan Kehadiran Bulanan Pegawai
+                     Laporan Kehadiran Bulanan Pegawai
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Rekapitulasi absensi presensi bulanan guru dan staf SMA Islam Sultan Agung 1 Semarang.
@@ -13,10 +13,10 @@
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('hrd.attendance-report.export', ['month' => $month, 'year' => $year]) }}" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    📥 Ekspor CSV Excel
+                     Ekspor CSV Excel
                 </a>
                 <a href="{{ route('hrd.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                    ⬅️ Ke Dashboard
+                    ⬅ Ke Dashboard
                 </a>
             </div>
         </div>
@@ -46,7 +46,7 @@
                 </div>
                 <div>
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                        🔄 Refresh Laporan
+                         Refresh Laporan
                     </button>
                 </div>
             </form>
@@ -55,7 +55,7 @@
         <!-- Tabel Rekap Absensi -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">📅 Rekap Presensi Pegawai</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Rekap Presensi Pegawai</h3>
             </div>
 
             <div class="overflow-x-auto">

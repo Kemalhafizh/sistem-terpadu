@@ -16,10 +16,10 @@
 
             <!-- Navigation bar quick links -->
             <div class="mb-8 flex flex-wrap gap-2">
-                <a href="{{ route('spmb.admin.periods') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all">⚙️ Kelola Periode</a>
-                <a href="{{ route('spmb.admin.waves') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all">🌊 Kelola Gelombang</a>
-                <a href="{{ route('spmb.admin.tracks') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all">🛣️ Kelola Jalur</a>
-                <a href="{{ route('spmb.admin.index') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all">📋 Verifikasi Dokumen (Kanban)</a>
+                <a href="{{ route('spmb.admin.periods') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all"> Kelola Periode</a>
+                <a href="{{ route('spmb.admin.waves') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all"> Kelola Gelombang</a>
+                <a href="{{ route('spmb.admin.tracks') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all"> Kelola Jalur</a>
+                <a href="{{ route('spmb.admin.index') }}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm transition-all"> Verifikasi Dokumen (Kanban)</a>
             </div>
 
             <!-- Stats grid -->
@@ -30,7 +30,7 @@
                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pendaftar</span>
                         <strong class="text-3xl font-black text-slate-900 mt-1 block">{{ $applicants->count() }}</strong>
                     </div>
-                    <span class="text-3xl bg-slate-50 p-3 rounded-2xl border border-slate-100">👥</span>
+                    <span class="text-3xl bg-slate-50 p-3 rounded-2xl border border-slate-100"></span>
                 </div>
                 <!-- Stat 2 -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
@@ -38,7 +38,7 @@
                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Diterima</span>
                         <strong class="text-3xl font-black text-emerald-600 mt-1 block">{{ $applicants->where('status', 'accepted')->count() }}</strong>
                     </div>
-                    <span class="text-3xl bg-emerald-50 p-3 rounded-2xl border border-emerald-100">🎉</span>
+                    <span class="text-3xl bg-emerald-50 p-3 rounded-2xl border border-emerald-100"></span>
                 </div>
                 <!-- Stat 3 -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
@@ -54,7 +54,7 @@
                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Daftar Ulang</span>
                         <strong class="text-3xl font-black text-indigo-600 mt-1 block">{{ $applicants->where('has_reregistered', true)->count() }}</strong>
                     </div>
-                    <span class="text-3xl bg-indigo-50 p-3 rounded-2xl border border-indigo-100">✅</span>
+                    <span class="text-3xl bg-indigo-50 p-3 rounded-2xl border border-indigo-100"></span>
                 </div>
             </div>
 
@@ -83,9 +83,9 @@
                                     <p class="text-xs text-slate-500 font-medium mt-1">Sisa Kuota: {{ $wave->quota - $applicants->where('spmb_wave_id', $wave->id)->count() }} dari {{ $wave->quota }} kursi</p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <a href="{{ route('spmb.admin.scoring', $wave->id) }}" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all">📝 Input Nilai</a>
-                                    <a href="{{ route('spmb.admin.selection', $wave->id) }}" class="px-3 py-1.5 bg-emerald-650 text-emerald-800 bg-emerald-50 border border-emerald-250 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-all">🏆 Jalankan Seleksi</a>
-                                    <a href="{{ route('spmb.admin.reregistration', $wave->id) }}" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all">💸 Daftar Ulang</a>
+                                    <a href="{{ route('spmb.admin.scoring', $wave->id) }}" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all"> Input Nilai</a>
+                                    <a href="{{ route('spmb.admin.selection', $wave->id) }}" class="px-3 py-1.5 bg-emerald-650 text-emerald-800 bg-emerald-50 border border-emerald-250 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-all"> Jalankan Seleksi</a>
+                                    <a href="{{ route('spmb.admin.reregistration', $wave->id) }}" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all"> Daftar Ulang</a>
                                 </div>
                             </div>
                         @empty
@@ -101,7 +101,7 @@
                             <h3 class="font-black text-slate-800 text-sm">Periode Tahun Ajaran Aktif</h3>
                         </div>
                         <div class="p-6 text-center">
-                            <span class="text-4xl bg-emerald-50 p-4 rounded-full border border-emerald-150 inline-block mb-3">🏫</span>
+                            <span class="text-4xl bg-emerald-50 p-4 rounded-full border border-emerald-150 inline-block mb-3"></span>
                             @if($activeYear)
                                 <h4 class="font-black text-slate-800 text-lg leading-tight">{{ $activeYear->year }}</h4>
                                 <p class="text-xs text-slate-400 font-semibold uppercase mt-1">Semester {{ $activeYear->semester }}</p>

@@ -34,7 +34,7 @@
                 </div>
                 @if($students->isNotEmpty())
                     <button type="button" @click="copyFirstTargetToAll" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/10 transition-all">
-                        📋 SET TARGET BARIS PERTAMA KE SEMUA SISWA
+                         SET TARGET BARIS PERTAMA KE SEMUA SISWA
                     </button>
                 @endif
             </div>
@@ -117,7 +117,7 @@
                 </form>
             @else
                 <div class="bg-white rounded-3xl p-12 text-center shadow-sm border border-gray-100">
-                    <span class="text-4xl">⚠️</span>
+                    <span class="text-4xl"></span>
                     <h3 class="font-black text-lg text-gray-800 mt-4 uppercase">Tidak Ada Siswa</h3>
                     <p class="text-xs text-gray-400 mt-2">Pilih kelas lain atau hubungkan siswa ke kelas ini terlebih dahulu.</p>
                 </div>

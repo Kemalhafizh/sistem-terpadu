@@ -26,7 +26,7 @@
 
                 <div class="relative z-10 space-y-4">
                     <span class="inline-flex px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-[10px] font-black uppercase tracking-widest border border-indigo-500/30">
-                        🎓 Ruang Kolaborasi Asinkron
+                         Ruang Kolaborasi Asinkron
                     </span>
                     <h3 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
                         Diskusikan Pelajaran & Berbagi Pengetahuan
@@ -187,13 +187,13 @@
                                             <div class="flex items-center space-x-2">
                                                 @if($isPinned)
                                                     <span class="inline-flex px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 rounded-md text-[9px] font-black uppercase tracking-wider border border-indigo-200 dark:border-indigo-900 animate-pulse">
-                                                        📌 PINNED
+                                                         PINNED
                                                     </span>
                                                 @endif
                                                 
                                                 @if($isAnnounce)
                                                     <span class="inline-flex px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-md text-[9px] font-black uppercase tracking-wider border border-emerald-200 dark:border-emerald-900">
-                                                        📢 PENGUMUMAN
+                                                         PENGUMUMAN
                                                     </span>
                                                 @endif
 

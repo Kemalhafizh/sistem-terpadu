@@ -11,15 +11,15 @@
             </div>
             <div class="flex items-center space-x-2">
                 <a href="{{ route('event-attendance.index') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                    ⬅️ KEMBALI
+                    ⬅ KEMBALI
                 </a>
                 
                 @if(in_array(auth()->user()->role, ['guru', 'admin', 'superadmin']))
                     <a href="{{ route('event-attendance.export-pdf', $event->id) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-all">
-                        📄 CETAK PDF
+                         CETAK PDF
                     </a>
                     <a href="{{ route('event-attendance.input', $event->id) }}" class="px-5 py-2 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary-900/20 hover:scale-[1.04] transition-all">
-                        📝 EDIT ABSENSI
+                         EDIT ABSENSI
                     </a>
                 @endif
             </div>
@@ -154,11 +154,11 @@
                         @forelse($records as $index => $record)
                             @php
                                 $statusLabels = [
-                                    'hadir' => '🟢 Hadir',
-                                    'terlambat' => '🟡 Terlambat',
-                                    'izin' => '🟠 Izin',
-                                    'sakit' => '🔴 Sakit',
-                                    'alpa' => '⚪ Alpa'
+                                    'hadir' => ' Hadir',
+                                    'terlambat' => ' Terlambat',
+                                    'izin' => ' Izin',
+                                    'sakit' => ' Sakit',
+                                    'alpa' => ' Alpa'
                                 ];
 
                                 $statusColors = [

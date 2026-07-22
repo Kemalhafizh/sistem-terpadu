@@ -78,11 +78,11 @@
                         <div class="space-y-2">
                             <label for="select-charttype" class="block text-xs text-slate-400">Tipe Visualisasi Dasbor</label>
                             <select name="chartType" id="select-charttype" class="w-full bg-slate-900 border border-slate-700/60 rounded-xl px-4 py-2 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20 text-sm">
-                                <option value="table">Tabel Data Mentah saja 📋</option>
-                                <option value="bar">Grafik Batang (Bar Chart) 📊</option>
-                                <option value="line">Grafik Garis (Line Chart) 📈</option>
-                                <option value="pie">Grafik Lingkaran (Pie Chart) 🍕</option>
-                                <option value="donut">Grafik Donut (Donut Chart) 🍩</option>
+                                <option value="table">Tabel Data Mentah saja </option>
+                                <option value="bar">Grafik Batang (Bar Chart) </option>
+                                <option value="line">Grafik Garis (Line Chart) </option>
+                                <option value="pie">Grafik Lingkaran (Pie Chart) </option>
+                                <option value="donut">Grafik Donut (Donut Chart) </option>
                             </select>
                         </div>
                     </div>

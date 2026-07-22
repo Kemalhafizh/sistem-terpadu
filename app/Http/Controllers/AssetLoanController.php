@@ -120,7 +120,7 @@ class AssetLoanController extends Controller
         return redirect()->route('assets.loans.index')->with('success', 'Aset berhasil dikembalikan.');
     }
 
-    // 🏷️ Generate Sticker QR Labels (PDF)
+    //  Generate Sticker QR Labels (PDF)
     public function qrLabelsSheet(Request $request)
     {
         $this->authorize('approve', AssetLoan::class);
@@ -129,7 +129,7 @@ class AssetLoanController extends Controller
         return $pdf->setPaper('a4', 'portrait')->download('Stiker_Label_Aset.pdf');
     }
 
-    // 📊 Laporan Penyusutan Garis Lurus (Depreciation)
+    //  Laporan Penyusutan Garis Lurus (Depreciation)
     public function depreciationReport()
     {
         $user = auth()->user();

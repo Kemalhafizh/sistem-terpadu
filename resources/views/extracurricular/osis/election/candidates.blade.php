@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    👥 Kandidat Calon Ketua OSIS
+                     Kandidat Calon Ketua OSIS
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Agenda: {{ $election->title }}
                 </p>
             </div>
             <a href="{{ route('osis.elections') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Form Daftarkan Paslon Kandidat -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl self-start">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4">👥 Daftarkan Paslon Kandidat</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4"> Daftarkan Paslon Kandidat</h3>
             
             <form action="{{ route('osis.elections.candidates.store', $election->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
@@ -55,7 +55,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                    🚀 Simpan Kandidat
+                     Simpan Kandidat
                 </button>
             </form>
         </div>
@@ -68,7 +68,7 @@
                         <img src="{{ asset('storage/' . $cand->photo_path) }}" class="w-24 h-24 rounded-2xl object-cover border border-gray-200 dark:border-gray-700 shadow-md">
                     @else
                         <div class="w-24 h-24 bg-gray-100 dark:bg-gray-900/50 rounded-2xl flex items-center justify-center text-3xl font-black text-gray-400 border border-gray-200 dark:border-gray-700">
-                            👤
+                            
                         </div>
                     @endif
 

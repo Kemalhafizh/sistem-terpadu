@@ -243,7 +243,7 @@ class SmartAlertController extends Controller
                 event(new \App\Events\NewNotificationEvent($user, [
                     'id' => $alert->id,
                     'type' => 'smart_alert',
-                    'title' => '🚨 ' . $alert->title,
+                    'title' => ' ' . $alert->title,
                     'description' => $alert->description,
                     'severity' => $alert->severity,
                     'created_at' => $alert->created_at->toDateTimeString(),
@@ -251,7 +251,7 @@ class SmartAlertController extends Controller
 
                 if ($user->phone_number) {
                     try {
-                        $message = "⚠️ *MANUAL SMART ALERT CRITICAL (SISTA)* ⚠️\n\n" .
+                        $message = " *MANUAL SMART ALERT CRITICAL (SISTA)* \n\n" .
                                    "Judul: *{$alert->title}*\n" .
                                    "Pencipta: " . auth()->user()->name . "\n" .
                                    "Deskripsi: {$alert->description}\n" .

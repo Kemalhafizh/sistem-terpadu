@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    🎓 Kelola Data Alumni
+                     Kelola Data Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Administrasi dan pelacakan kelulusan siswa SMA Islam Sultan Agung 1 Semarang.
@@ -13,16 +13,16 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('alumni.dashboard') }}" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    📊 Dashboard Stats
+                     Dashboard Stats
                 </a>
                 <a href="{{ route('alumni.bulk-graduate') }}" class="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    ⚡ Kelulusan Massal
+                     Kelulusan Massal
                 </a>
                 <a href="{{ route('alumni.create') }}" class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    ➕ Tambah Manual
+                     Tambah Manual
                 </a>
                 <a href="{{ route('alumni.export.excel') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                    ⬇️ Ekspor CSV
+                    ⬇ Ekspor CSV
                 </a>
             </div>
         </div>
@@ -58,10 +58,10 @@
                 </div>
                 <div class="flex gap-2">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                        🔍 Filter
+                         Filter
                     </button>
                     <a href="{{ route('alumni.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all text-center">
-                        🔄 Reset
+                         Reset
                     </a>
                 </div>
             </form>
@@ -70,7 +70,7 @@
         <!-- Download Buku Alumni PDF Card -->
         <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 rounded-3xl text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h3 class="font-extrabold text-lg">📚 Cetak Buku Profil Alumni</h3>
+                <h3 class="font-extrabold text-lg"> Cetak Buku Profil Alumni</h3>
                 <p class="text-xs text-blue-100 mt-1">Dapatkan data cetak dokumen Buku Angkatan Alumni dalam format PDF portrait resmi.</p>
             </div>
             <div class="flex items-center gap-2 bg-white/10 p-2 rounded-2xl">
@@ -84,7 +84,7 @@
                     @endif
                 </select>
                 <button onclick="downloadAlumniBook()" class="bg-white text-blue-600 hover:bg-blue-50 rounded-xl px-4 py-1.5 text-xs font-black transition-all shadow-sm">
-                    ⬇️ Unduh PDF
+                    ⬇ Unduh PDF
                 </button>
             </div>
         </div>
@@ -149,26 +149,26 @@
                                 <td class="px-6 py-4">
                                     @if($al->tracerResponse)
                                         <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
-                                            ✅ Mengisi
+                                             Mengisi
                                         </span>
                                     @else
                                         <span class="inline-flex items-center gap-1 text-red-500 dark:text-red-400 font-bold text-xs">
-                                            ❌ Belum
+                                             Belum
                                         </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-1">
                                     <a href="{{ route('alumni.show', $al->uuid) }}" class="inline-flex items-center justify-center p-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-xl text-gray-600 dark:text-gray-300 transition-all" title="Detail Profil">
-                                        👁️
+                                        
                                     </a>
                                     <a href="{{ route('alumni.edit', $al->uuid) }}" class="inline-flex items-center justify-center p-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/20 dark:hover:bg-amber-900/30 rounded-xl text-amber-600 dark:text-amber-400 transition-all border border-amber-100 dark:border-amber-900/30" title="Edit Data">
-                                        ✏️
+                                        
                                     </a>
                                     <form action="{{ route('alumni.destroy', $al->uuid) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus data alumni ini? Status siswa akan dikembalikan ke Aktif.')" class="inline-flex items-center justify-center p-2 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 rounded-xl text-red-600 dark:text-red-400 transition-all border border-red-100 dark:border-red-900/30" title="Hapus Data">
-                                            🗑️
+                                            
                                         </button>
                                     </form>
                                 </td>

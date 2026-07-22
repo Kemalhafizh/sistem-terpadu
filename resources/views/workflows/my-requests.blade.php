@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">📤</span>
+                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"></span>
                     <span>{{ __('Pelacakan Pengajuan Saya') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -22,7 +22,7 @@
                     <span class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest block">Total Pengajuan</span>
                     <span class="text-2xl font-black text-gray-900 dark:text-gray-100 mt-1 block">{{ $requests->count() }}</span>
                 </div>
-                <span class="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl text-lg">📋</span>
+                <span class="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl text-lg"></span>
             </div>
             
             <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition">
@@ -42,7 +42,7 @@
                         {{ $requests->where('status', 'approved')->count() }}
                     </span>
                 </div>
-                <span class="p-2 bg-emerald-500/10 text-emerald-500 rounded-xl text-lg">✅</span>
+                <span class="p-2 bg-emerald-500/10 text-emerald-500 rounded-xl text-lg"></span>
             </div>
 
             <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition">
@@ -52,7 +52,7 @@
                         {{ $requests->whereIn('status', ['rejected', 'cancelled'])->count() }}
                     </span>
                 </div>
-                <span class="p-2 bg-rose-500/10 text-rose-500 rounded-xl text-lg">❌</span>
+                <span class="p-2 bg-rose-500/10 text-rose-500 rounded-xl text-lg"></span>
             </div>
         </div>
 
@@ -73,11 +73,11 @@
                                 {{-- Status Badges --}}
                                 @if($req->status === 'approved')
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
-                                        ✓ Disetujui Penuh
+                                         Disetujui Penuh
                                     </span>
                                 @elseif($req->status === 'rejected')
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300">
-                                        ✗ Ditolak
+                                         Ditolak
                                     </span>
                                 @elseif($req->status === 'cancelled')
                                     <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
@@ -131,9 +131,9 @@
                                                      {{ $isLocked ? 'bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-600' : '' }}">
                                                     
                                                     @if($isCompleted)
-                                                        ✓
+                                                        
                                                     @elseif($isRejected)
-                                                        ✗
+                                                        
                                                     @else
                                                         {{ $approval->step_order }}
                                                     @endif
@@ -145,13 +145,13 @@
                                                         Step {{ $approval->step_order }}: {{ str_replace('_', ' ', $approval->role) }}
                                                     </span>
                                                     @if($approval->decision === 'approved')
-                                                        <span class="text-emerald-400 font-bold">✓ Disetujui</span>
+                                                        <span class="text-emerald-400 font-bold"> Disetujui</span>
                                                         <span class="block text-[10px] text-gray-300 mt-1">Oleh: {{ $approval->approver->name ?? 'Sistem' }}</span>
                                                         @if($approval->remarks)
                                                             <span class="block text-[10px] italic text-gray-300 mt-1 bg-slate-800 p-1.5 rounded-lg">"{{ $approval->remarks }}"</span>
                                                         @endif
                                                     @elseif($approval->decision === 'rejected')
-                                                        <span class="text-rose-400 font-bold">✗ Ditolak</span>
+                                                        <span class="text-rose-400 font-bold"> Ditolak</span>
                                                         <span class="block text-[10px] text-gray-300 mt-1">Oleh: {{ $approval->approver->name ?? 'Sistem' }}</span>
                                                         @if($approval->remarks)
                                                             <span class="block text-[10px] italic text-rose-300 mt-1 bg-rose-950/40 p-1.5 rounded-lg border border-rose-800/30">"{{ $approval->remarks }}"</span>
@@ -184,7 +184,7 @@
                         <div class="flex flex-row lg:flex-col gap-2 flex-shrink-0 self-end lg:self-center w-full lg:w-auto pt-4 lg:pt-0 border-t border-gray-100 dark:border-slate-800 lg:border-t-0">
                             <a href="{{ route('workflows.show', $req) }}" 
                                class="flex-1 lg:w-full text-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition active:scale-95 shadow-lg shadow-indigo-500/10 flex items-center justify-center space-x-1.5">
-                                <span>🔍 Audit Lengkap</span>
+                                <span> Audit Lengkap</span>
                             </a>
                         </div>
                     </div>
@@ -194,7 +194,7 @@
                 <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-16 text-center shadow-sm">
                     <div class="flex flex-col items-center">
                         <div class="w-20 h-20 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-5 border border-gray-100">
-                            <span class="text-3xl">📤</span>
+                            <span class="text-3xl"></span>
                         </div>
                         <h3 class="text-lg font-black text-gray-800 dark:text-gray-200 mb-2">Belum Ada Pengajuan</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed">

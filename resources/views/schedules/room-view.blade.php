@@ -11,7 +11,7 @@
             </div>
             <div>
                 <a href="{{ route('schedules.grid') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                    ⬅️ PLOTTING JADWAL
+                    ⬅ PLOTTING JADWAL
                 </a>
             </div>
         </div>
@@ -76,7 +76,7 @@
                                                             <p class="text-[9px] font-black uppercase tracking-widest mb-1 opacity-80">{{ $existing->subject->code }}</p>
                                                             <p class="text-xs font-black leading-tight">{{ $existing?->subject?->name }}</p>
                                                             <p class="text-[9px] mt-2 font-black uppercase tracking-wider bg-white/20 inline-block px-2 py-0.5 rounded-lg">Kelas: {{ $existing->classroom->name }}</p>
-                                                            <span class="block text-[9px] font-black text-teal-100 mt-1 uppercase tracking-wider">👩‍🏫 {{ $existing->teacher->name }}</span>
+                                                            <span class="block text-[9px] font-black text-teal-100 mt-1 uppercase tracking-wider"> {{ $existing->teacher->name }}</span>
                                                         </div>
                                                     @endif
                                                 @else
@@ -96,7 +96,7 @@
                 </div>
             @else
                 <div class="bg-gray-50 rounded-[2.5rem] p-12 text-center border border-gray-100">
-                    <span class="text-4xl block">🏫</span>
+                    <span class="text-4xl block"></span>
                     <h3 class="font-black text-lg text-gray-800 mt-3">Jadwal Penggunaan Ruangan Fisik</h3>
                     <p class="text-xs text-gray-400 mt-1 max-w-sm mx-auto">Silakan pilih ruangan di atas untuk melihat alokasi pemakaian ruangan fisik sekolah (kelas, laboratorium, dll.) dalam seminggu.</p>
                 </div>

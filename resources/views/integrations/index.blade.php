@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-tight leading-tight">
-            🔗 Integrasi Sistem Pemerintah & Yayasan
+             Integrasi Sistem Pemerintah & Yayasan
         </h2>
     </x-slot>
 

@@ -127,7 +127,7 @@
                                     <div class="flex flex-wrap items-center gap-2 mb-1.5">
                                         <span class="text-xs font-black {{ $labelColor }}">
                                             @if($isInternalNote)
-                                                🔒 Catatan Internal (Hanya Staf)
+                                                 Catatan Internal (Hanya Staf)
                                             @else
                                                 {{ $comment->user?->name }}
                                             @endif
@@ -203,7 +203,7 @@
                                     @if(auth()->user()->can('viewInternalComments', $ticket))
                                         <label class="inline-flex items-center gap-2 cursor-pointer select-none text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-500/5 px-3 py-2 border border-amber-300/30 rounded-xl hover:bg-amber-500/10 transition-colors">
                                             <input type="checkbox" name="is_internal" value="1" class="rounded border-amber-300 text-amber-500 focus:ring-amber-500/35 bg-white dark:bg-slate-900 w-3.5 h-3.5">
-                                            🔒 Catatan Staf
+                                             Catatan Staf
                                         </label>
                                     @endif
 

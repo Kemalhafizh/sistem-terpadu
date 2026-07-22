@@ -19,7 +19,7 @@
         <div class="flex-grow text-center md:text-left space-y-2">
             <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
                 <span class="px-3 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                    <span>✓</span> Terverifikasi Sekolah
+                    <span></span> Terverifikasi Sekolah
                 </span>
                 <span class="px-3 py-1 bg-primary-500/10 text-primary-700 dark:text-primary-400 border border-primary-500/20 rounded-xl text-[10px] font-black uppercase tracking-wider">
                     Siswa Aktif
@@ -81,7 +81,7 @@
                         <div class="relative">
                             {{-- Dot Node --}}
                             <div class="absolute -left-[35px] w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-black shadow-md ring-4 ring-emerald-50">
-                                ✓
+                                
                             </div>
 
                             <div class="space-y-2">
@@ -110,14 +110,14 @@
                                         @if($item->file_path)
                                             <a href="{{ Storage::url($item->file_path) }}" target="_blank"
                                                class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[9px] font-black uppercase tracking-wider transition active:scale-95 flex items-center space-x-1 shadow">
-                                                <span>📄 Buka Sertifikat</span>
+                                                <span> Buka Sertifikat</span>
                                             </a>
                                         @endif
 
                                         @if($item->external_link)
                                             <a href="{{ $item->external_link }}" target="_blank"
                                                class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 rounded-lg text-[9px] font-black uppercase tracking-wider transition active:scale-95 flex items-center space-x-1 shadow">
-                                                <span>🌐 Sumber Karya ↗</span>
+                                                <span> Sumber Karya ↗</span>
                                             </a>
                                         @endif
                                     </div>
@@ -127,7 +127,7 @@
                     @empty
                         <div class="py-12 text-center">
                             <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4 border border-slate-100 mx-auto text-2xl">
-                                ✨
+                                
                             </div>
                             <h4 class="text-sm font-black text-slate-700">Portofolio Masih Kosong</h4>
                             <p class="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed mt-1">

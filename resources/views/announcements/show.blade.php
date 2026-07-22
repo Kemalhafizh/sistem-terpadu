@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center">
             <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight flex items-center">
                 <span class="w-8 h-8 bg-primary-100 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 rounded-lg flex items-center justify-center mr-3">
-                    📢
+                    
                 </span>
                 {{ __('Detail Pengumuman') }}
             </h2>
@@ -32,19 +32,19 @@
                             $announcement->category === 'kegiatan' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' : (
                             $announcement->category === 'keislaman' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300')))
                         }}">
-                            📁 {{ $announcement->category ?? 'umum' }}
+                             {{ $announcement->category ?? 'umum' }}
                         </span>
                         
                         <!-- Priority -->
                         <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider {{
                             $announcement->priority === 'urgent' ? 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 animate-pulse' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                         }}">
-                            🔥 {{ $announcement->priority }}
+                             {{ $announcement->priority }}
                         </span>
 
                         @if($announcement->is_pinned)
                             <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border border-amber-200/20">
-                                📌 Pinned
+                                 Pinned
                             </span>
                         @endif
                     </div>
@@ -61,7 +61,7 @@
                             {{ $announcement->title }}
                         </h1>
                         <div class="mt-3 flex items-center text-sm font-bold text-gray-500 dark:text-gray-450">
-                            <span class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-750 flex items-center justify-center mr-2 text-base">👤</span>
+                            <span class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-750 flex items-center justify-center mr-2 text-base"></span>
                             {{ __('Diterbitkan oleh') }} <span class="text-gray-800 dark:text-gray-250 ml-1">{{ $announcement->creator->name }}</span>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                         <div class="p-5 bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100 dark:border-indigo-900/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div class="flex items-center space-x-3">
                                 <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl">
-                                    📎
+                                    
                                 </div>
                                 <div>
                                     <h4 class="text-sm font-bold text-gray-900 dark:text-white">Dokumen Lampiran Pengumuman</h4>
@@ -107,7 +107,7 @@
                             @if($acknowledgedAt)
                                 <div class="p-5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/30 rounded-2xl flex items-center space-x-4">
                                     <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg">
-                                        ✓
+                                        
                                     </div>
                                     <div>
                                         <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300">Konfirmasi Diterima</h4>
@@ -118,7 +118,7 @@
                                 <div class="p-6 bg-rose-50/50 dark:bg-rose-950/10 border border-rose-200/50 dark:border-rose-900/30 rounded-2xl space-y-4">
                                     <div class="flex items-start space-x-3">
                                         <div class="w-10 h-10 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg shrink-0">
-                                            ⚠️
+                                            
                                         </div>
                                         <div>
                                             <h4 class="text-sm font-black text-rose-900 dark:text-rose-300">Konfirmasi Pembacaan Wajib</h4>

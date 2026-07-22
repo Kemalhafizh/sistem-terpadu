@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-black text-2xl text-gray-900 leading-tight">
-            🛡️ Gerbang Simulasi <span class="bg-gradient-to-r from-indigo-600 to-primary-600 bg-clip-text text-transparent">Pembayaran (Mock Gateway)</span>
+             Gerbang Simulasi <span class="bg-gradient-to-r from-indigo-600 to-primary-600 bg-clip-text text-transparent">Pembayaran (Mock Gateway)</span>
         </h2>
     </x-slot>
 
@@ -29,7 +29,7 @@
                             <p class="text-[9px] font-bold text-indigo-200 uppercase tracking-widest">Sistem Terpadu Bank</p>
                             <h4 class="text-xl font-black mt-2 tracking-wide">MOCK TRANSACTION</h4>
                         </div>
-                        <span class="text-2xl">💳</span>
+                        <span class="text-2xl"></span>
                     </div>
                     
                     <div class="mt-8">

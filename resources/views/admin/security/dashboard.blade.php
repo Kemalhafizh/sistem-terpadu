@@ -1,330 +1,287 @@
+@php
+    $isLockdown = $isLockdown ?? false;
+    $unresolvedCount = $unresolvedCount ?? 0;
+    $blockedIpsCount = $blockedIpsCount ?? 0;
+    $todayThreatsCount = $todayThreatsCount ?? 0;
+    $recentThreats = $recentThreats ?? [];
+    $blockedIps = $blockedIps ?? [];
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-slate-200 leading-tight">
-                <i class="fa-solid fa-shield-halved text-indigo-400 mr-2"></i> {{ __('Dashboard Keamanan & SIEM') }}
-            </h2>
-            <div class="flex space-x-2">
-                <a href="{{ route('admin.security.audit') }}" id="btn-security-audit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-lg shadow-emerald-500/20 flex items-center">
-                    <i class="fa-solid fa-shield-virus mr-2"></i> Audit Kepatuhan Keamanan
-                </a>
-                <a href="{{ route('admin.security.sessions') }}" id="btn-active-sessions" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-lg shadow-indigo-500/20 flex items-center">
-                    <i class="fa-solid fa-desktop mr-2"></i> Monitor Sesi Aktif
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
+                    <span class="p-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-2xl border border-rose-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </span>
+                    Security Forensic Log & Intrusion Prevention Dashboard
+                </h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Monitor aktivitas forensik, pelacakan IP mencurigakan, dan kontrol darurat Lockdown System.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.security.logs') }}" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold text-xs transition-all flex items-center gap-2 border border-gray-300 dark:border-gray-700">
+                    <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Forensic Audit Logs
                 </a>
             </div>
         </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
-            <!-- Global Flash Messages -->
-            @if(session('success'))
-                <div class="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-sm flex items-center">
-                    <i class="fa-solid fa-circle-check mr-2 text-lg"></i>
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-sm flex items-center">
-                    <i class="fa-solid fa-triangle-exclamation mr-2 text-lg"></i>
-                    {{ session('error') }}
-                </div>
-            @endif
+    <div class="py-6" x-data="{ lockdownModalOpen: false, blockIpModalOpen: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-            <!-- 🚨 BRUTE-FORCE DETECTED ALERTS -->
-            @if(!empty($stats['brute_force_alerts']))
-                <div id="brute-force-alert-panel" class="bg-rose-950/40 backdrop-blur-xl border border-rose-500/50 rounded-2xl p-6 shadow-2xl shadow-rose-950/20 animate-pulse">
-                    <div class="flex items-start">
-                        <div class="shrink-0 bg-rose-500/20 p-3 rounded-xl border border-rose-500/30">
-                            <i class="fa-solid fa-radiation text-rose-400 text-2xl"></i>
+            <!-- System Lockdown Banner -->
+            <div class="rounded-3xl p-6 border shadow-lg relative overflow-hidden transition-all duration-500 {{ $isLockdown ? 'bg-gradient-to-r from-rose-950 via-rose-900 to-rose-950 border-rose-500/50 text-white' : 'bg-gradient-to-r from-gray-900 via-gray-850 to-gray-900 border-gray-800 text-white' }}">
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="space-y-2 max-w-2xl">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $isLockdown ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/50 animate-pulse' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' }}">
+                                {{ $isLockdown ? 'LOCKDOWN SISTEM AKTIF' : 'Sistem Beroperasi Normal' }}
+                            </span>
                         </div>
-                        <div class="ml-5 flex-1">
-                            <h3 class="text-lg font-semibold text-rose-200">Deteksi Serangan Brute-Force Aktif!</h3>
-                            <p class="text-sm text-rose-300 mt-1">Sistem mendeteksi aktivitas mencurigakan berupa kegagalan login berulang (&ge; 5 kali) dalam 10 menit terakhir dari alamat IP berikut:</p>
-                            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                @foreach($stats['brute_force_alerts'] as $alert)
-                                    <div class="bg-rose-900/30 border border-rose-500/30 rounded-xl p-3 flex justify-between items-center">
-                                        <div class="flex items-center space-x-2">
-                                            <i class="fa-solid fa-mask text-rose-400"></i>
-                                            <span class="font-mono text-white text-sm font-semibold">{{ $alert['ip_address'] }}</span>
-                                        </div>
-                                        <span class="bg-rose-500/25 text-rose-200 text-xs px-2.5 py-1 rounded-full font-bold border border-rose-400/30">
-                                            {{ $alert['total_failures'] }} Gagal
-                                        </span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
+                        <h3 class="text-2xl font-black tracking-tight">
+                            {{ $isLockdown ? 'SISTEM SISTA DALAM MODE LOCKDOWN DARURAT!' : 'Kontrol Pertahanan Darurat Intrusi (Intrusion Prevention)' }}
+                        </h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            {{ $isLockdown 
+                                ? 'Seluruh akses publik dan rute non-administrator telah diblokir secara darurat. Hanya superadmin yang dapat mengelola rute keamanan ini.' 
+                                : 'Gunakan tombol darurat Lockdown hanya jika terdeteksi adanya serbuan brute force, eksploitasi data nilai, atau indikasi peretasan sistem.' }}
+                        </p>
                     </div>
-                </div>
-            @endif
 
-            <!-- KPI Metrics -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <!-- Total Attempts Today -->
-                <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <div class="shrink-0 bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
-                                <i class="fa-solid fa-fingerprint text-blue-400 text-2xl"></i>
-                            </div>
-                            <div class="ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-sm font-medium text-slate-400 truncate">Percobaan Login (Hari Ini)</dt>
-                                    <dd class="flex items-baseline">
-                                        <div class="text-3xl font-semibold text-white">{{ $stats['total_attempts_today'] }}</div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Successful Today -->
-                <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <div class="shrink-0 bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
-                                <i class="fa-solid fa-circle-check text-emerald-400 text-2xl"></i>
-                            </div>
-                            <div class="ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-sm font-medium text-slate-400 truncate">Sukses Hari Ini</dt>
-                                    <dd class="flex items-baseline">
-                                        <div class="text-3xl font-semibold text-emerald-400">{{ $stats['successful_today'] }}</div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Failed Today -->
-                <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <div class="shrink-0 bg-rose-500/10 p-4 rounded-xl border border-rose-500/20">
-                                <i class="fa-solid fa-circle-xmark text-rose-400 text-2xl"></i>
-                            </div>
-                            <div class="ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-sm font-medium text-slate-400 truncate">Gagal Hari Ini</dt>
-                                    <dd class="flex items-baseline">
-                                        <div class="text-3xl font-semibold text-rose-400">{{ $stats['failed_today'] }}</div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Sessions -->
-                <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600/50">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <div class="shrink-0 bg-indigo-500/10 p-4 rounded-xl border border-indigo-500/20">
-                                <i class="fa-solid fa-users-viewfinder text-indigo-400 text-2xl"></i>
-                            </div>
-                            <div class="ml-5 w-0 flex-1">
-                                <dl>
-                                    <dt class="text-sm font-medium text-slate-400 truncate">Sesi Aktif Saat Ini</dt>
-                                    <dd class="flex items-baseline">
-                                        <div class="text-3xl font-semibold text-indigo-400">{{ $stats['active_sessions_count'] }}</div>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
+                    <div>
+                        <button @click="lockdownModalOpen = true" class="px-6 py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-xl flex items-center gap-3 {{ $isLockdown ? 'bg-white text-rose-700 hover:bg-rose-50 shadow-white/10' : 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-600/30 border border-rose-500/30' }}">
+                            <svg class="w-5 h-5 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            {{ $isLockdown ? 'NONAKTIFKAN LOCKDOWN' : 'AKTIFKAN DARURAT LOCKDOWN' }}
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Visualization: Charts & Top IP Sources -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Trend Chart (2/3 Column) -->
-                <div class="lg:col-span-2 bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl p-6">
-                    <h3 class="text-lg font-medium text-slate-200 mb-4 flex items-center">
-                        <i class="fa-solid fa-chart-line mr-2 text-indigo-400"></i> Tren Percobaan Login (30 Hari Terakhir)
-                    </h3>
-                    <div id="login-trend-chart" class="w-full h-80"></div>
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Status Lockdown</span>
+                        <h4 class="text-xl font-black mt-1 {{ $isLockdown ? 'text-rose-500' : 'text-emerald-500' }}">
+                            {{ $isLockdown ? 'AKTIF (SISTEM DIKUNCI)' : 'NON-AKTIF (NORMAL)' }}
+                        </h4>
+                    </div>
+                    <div class="p-3 rounded-2xl {{ $isLockdown ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-500' }}">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
                 </div>
 
-                <!-- Top IP Sources (1/3 Column) -->
-                <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl p-6 flex flex-col">
-                    <h3 class="text-lg font-medium text-slate-200 mb-4 flex items-center">
-                        <i class="fa-solid fa-list-ol mr-2 text-indigo-400"></i> Top 5 IP Address Teraktif
-                    </h3>
-                    @if($stats['top_ips']->isEmpty())
-                        <div class="flex-1 flex flex-col items-center justify-center text-slate-400 py-8">
-                            <i class="fa-solid fa-circle-info text-3xl text-slate-600 mb-2"></i>
-                            <p class="text-sm">Belum ada data login terekam.</p>
-                        </div>
-                    @else
-                        <div class="space-y-4 flex-1">
-                            @foreach($stats['top_ips'] as $ip)
-                                <div class="bg-slate-900/50 border border-slate-700/30 rounded-xl p-3 flex justify-between items-center hover:border-slate-600 transition-colors">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="bg-slate-800 p-2 rounded-lg border border-slate-700">
-                                            <i class="fa-solid fa-network-wired text-indigo-400"></i>
-                                        </div>
-                                        <div>
-                                            <span class="font-mono text-sm text-white font-medium block">{{ $ip->ip_address }}</span>
-                                            <span class="text-xs text-slate-400">Indonesia (Lokal)</span>
-                                        </div>
-                                    </div>
-                                    <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded-full font-semibold border border-slate-700/50">
-                                        {{ $ip->count }} Request
-                                    </span>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Ancaman Unresolved</span>
+                        <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-1">{{ number_format($unresolvedCount) }} Event</h4>
+                    </div>
+                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-rose-500 uppercase tracking-wider">IP Terblokir</span>
+                        <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-1">{{ number_format($blockedIpsCount) }} IP</h4>
+                    </div>
+                    <div class="p-3 bg-rose-500/10 text-rose-500 rounded-2xl">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-500 uppercase tracking-wider">Log Hari Ini</span>
+                        <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-1">{{ number_format($todayThreatsCount) }} Event</h4>
+                    </div>
+                    <div class="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
                 </div>
             </div>
 
-            <!-- Recent Security Audit Log Table -->
-            <div class="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
-                <div class="px-6 py-5 border-b border-slate-700/50 flex justify-between items-center">
-                    <h3 class="text-lg font-medium text-slate-200">
-                        <i class="fa-solid fa-clock-rotate-left mr-2 text-indigo-400"></i> Audit Trail: Percobaan Login Terbaru
-                    </h3>
-                    <span class="text-xs text-slate-400">Menampilkan 20 data terakhir</span>
-                </div>
-                
-                @if($recentAttempts->isEmpty())
-                    <div class="p-8 text-center text-slate-400">
-                        <i class="fa-solid fa-shield text-4xl text-slate-600 mb-3 block"></i>
-                        <p>Belum ada rekaman log percobaan login.</p>
+            <!-- Dual Split Grid Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Left: Recent Threat Logs Table -->
+                <div class="lg:col-span-7 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+                            Aktivitas Ancaman Keamanan Terkini
+                        </h3>
+                        <a href="{{ route('admin.security.logs') }}" class="text-xs text-rose-600 dark:text-rose-400 font-bold hover:underline">Lihat Selengkapnya →</a>
                     </div>
-                @else
+
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-slate-700/50">
-                            <thead class="bg-slate-900/50">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50 dark:bg-gray-900/50 text-gray-400 uppercase text-[9px] font-bold">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Timestamp</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Identitas / Email</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">IP Address / Asal</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Device & Browser</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status Keamanan</th>
+                                    <th class="p-3 rounded-l-xl">Waktu & IP</th>
+                                    <th class="p-3">Jenis Peristiwa</th>
+                                    <th class="p-3">Keparahan</th>
+                                    <th class="p-3 text-right rounded-r-xl">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-700/50 bg-slate-800/20">
-                                @foreach($recentAttempts as $attempt)
-                                    <tr class="hover:bg-slate-700/20 transition-colors">
-                                        <!-- Timestamp -->
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
-                                            {{ $attempt->created_at->format('d M Y - H:i:s') }}
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-750 font-medium">
+                                @forelse($recentThreats as $threat)
+                                    <tr>
+                                        <td class="p-3">
+                                            <span class="font-bold text-gray-900 dark:text-white font-mono block">{{ $threat->ip_address }}</span>
+                                            <span class="text-[10px] text-gray-400">{{ $threat->created_at->diffForHumans() }}</span>
                                         </td>
-                                        <!-- Identitas -->
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-white flex items-center space-x-2">
-                                                <i class="fa-solid fa-user-tag text-slate-400 text-xs"></i>
-                                                <span>{{ $attempt->email }}</span>
-                                            </div>
+                                        <td class="p-3">
+                                            <span class="font-bold text-gray-800 dark:text-gray-200 block">{{ $threat->event_type }}</span>
+                                            <span class="text-[10px] text-gray-400 truncate max-w-[180px] block">{{ $threat->user->name ?? 'Anonim / Guest' }}</span>
                                         </td>
-                                        <!-- IP & Country -->
-                                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">
-                                            <div class="text-slate-300 font-semibold">{{ $attempt->ip_address }}</div>
-                                            <div class="text-xs text-slate-500 flex items-center mt-0.5">
-                                                <i class="fa-solid fa-location-dot text-indigo-400 mr-1 text-[10px]"></i>
-                                                {{ $attempt->country ?: 'Indonesia (Lokal)' }}
-                                            </div>
+                                        <td class="p-3">
+                                            <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider {{ $threat->severity_badge }}">
+                                                {{ $threat->severity }}
+                                            </span>
                                         </td>
-                                        <!-- User Agent Info -->
-                                        <td class="px-6 py-4 max-w-xs">
-                                            <div class="text-xs text-slate-400 truncate" title="{{ $attempt->user_agent }}">
-                                                {{ $attempt->user_agent ?: 'Unknown User Agent' }}
-                                            </div>
-                                        </td>
-                                        <!-- Security Status -->
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($attempt->successful)
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                                    <span class="h-2 w-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-                                                    Sukses Masuk
-                                                </span>
+                                        <td class="p-3 text-right">
+                                            @if(!$threat->is_resolved)
+                                                <form action="{{ route('admin.security.resolve-threat', $threat->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-lg text-[9px] font-bold transition-all">
+                                                        Resolve
+                                                    </button>
+                                                </form>
                                             @else
-                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20" title="{{ $attempt->failure_reason }}">
-                                                    <span class="h-2 w-2 rounded-full bg-rose-400 mr-2"></span>
-                                                    Gagal: {{ $attempt->failure_reason ?: 'Kredensial salah' }}
-                                                </span>
+                                                <span class="text-[10px] text-emerald-500 font-bold">Selesai</span>
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="p-6 text-center text-gray-400 italic">Tidak ditemukan log ancaman keamanan terkini.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
-                @endif
+                </div>
+
+                <!-- Right: Blocked IPs Panel -->
+                <div class="lg:col-span-5 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Daftar IP Address Terblokir</h3>
+                        <button @click="blockIpModalOpen = true" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-[10px] uppercase transition-all shadow-md">
+                            + Blokir IP Manual
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        @forelse($blockedIps as $bIp)
+                            <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-750 flex items-center justify-between text-xs">
+                                <div>
+                                    <strong class="font-mono text-rose-600 dark:text-rose-400 block font-bold">{{ $bIp->ip_address }}</strong>
+                                    <span class="text-[10px] text-gray-500 italic block">{{ $bIp->reason ?? 'Tidak ada alasan' }}</span>
+                                </div>
+                                <form action="{{ route('admin.security.unblock-ip', $bIp->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-2.5 py-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg text-[9px] font-bold transition-all">
+                                        Unblock
+                                    </button>
+                                </form>
+                            </div>
+                        @empty
+                            <div class="py-8 text-center text-gray-400 text-xs italic">
+                                Belum ada IP address yang diblokir.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
             </div>
 
         </div>
+
+        <!-- Lockdown Modal Confirmation -->
+        <div x-show="lockdownModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div x-show="lockdownModalOpen" x-transition.opacity class="fixed inset-0 bg-gray-900/80 backdrop-blur-md transition-opacity" @click="lockdownModalOpen = false"></div>
+
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <div x-show="lockdownModalOpen" x-transition.scale class="inline-block align-bottom bg-gray-900 text-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-rose-500/40 p-6 space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-500 border border-rose-500/30 flex items-center justify-center font-black text-2xl">
+                            
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-black text-white leading-tight">
+                                {{ $isLockdown ? 'Nonaktifkan System Lockdown?' : 'Konfirmasi Darurat System Lockdown' }}
+                            </h3>
+                            <p class="text-xs text-rose-400 mt-1 font-semibold">Tindakan ini memiliki dampak tinggi pada akses pengguna sistem SISTA.</p>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        {{ $isLockdown 
+                            ? 'Dengan menonaktifkan status Lockdown, rute publik dan akses pengguna umum akan dibuka kembali.' 
+                            : 'Mengaktifkan Lockdown akan memutus akses seluruh rute siswa, guru, dan staf secara seketika. Hanya rute keamanan admin yang diizinkan.' }}
+                    </p>
+
+                    <form action="{{ route('admin.security.lockdown') }}" method="POST" class="flex items-center justify-end gap-3 pt-4 border-t border-gray-800">
+                        @csrf
+                        <button type="button" @click="lockdownModalOpen = false" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-bold">Batal</button>
+                        <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-rose-600/30">
+                            Ya, Eksekusi Sekarang
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Block IP Manual Modal -->
+        <div x-show="blockIpModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div x-show="blockIpModalOpen" x-transition.opacity class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" @click="blockIpModalOpen = false"></div>
+
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <div x-show="blockIpModalOpen" x-transition.scale class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+                    <h3 class="text-base font-black text-gray-900 dark:text-white">Blokir IP Address Manual</h3>
+                    
+                    <form action="{{ route('admin.security.block-ip') }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">IP Address</label>
+                            <input type="text" name="ip_address" placeholder="Contoh: 192.168.1.100" required class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-3.5 py-2.5 font-mono focus:ring-2 focus:ring-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Alasan Pemblokiran</label>
+                            <input type="text" name="reason" placeholder="Contoh: Terdeteksi Brute Force Login 20x" required class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-3.5 py-2.5 focus:ring-2 focus:ring-rose-500">
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                            <button type="button" @click="blockIpModalOpen = false" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-bold">Batal</button>
+                            <button type="submit" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold">Blokir IP</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-    <!-- ApexCharts Library Integration -->
-    @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const chartData = @json($trend);
-            
-            const options = {
-                chart: {
-                    type: 'area',
-                    height: '100%',
-                    toolbar: { show: false },
-                    background: 'transparent',
-                    foreColor: '#94a3b8'
-                },
-                colors: ['#34d399', '#f87171'], // Success: emerald, Failure: rose
-                series: [
-                    { name: 'Login Sukses', data: chartData.success },
-                    { name: 'Login Gagal', data: chartData.failure }
-                ],
-                xaxis: {
-                    categories: chartData.dates.map(date => {
-                        const d = new Date(date);
-                        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                    }),
-                    labels: { style: { colors: '#94a3b8' } },
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
-                },
-                yaxis: {
-                    labels: { style: { colors: '#94a3b8' } },
-                },
-                grid: {
-                    borderColor: '#334155',
-                    strokeDashArray: 4,
-                },
-                dataLabels: { enabled: false },
-                stroke: { curve: 'smooth', width: 3 },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.45,
-                        opacityTo: 0.05,
-                        stops: [0, 90, 100]
-                    }
-                },
-                tooltip: {
-                    theme: 'dark',
-                    x: { show: true },
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    labels: { colors: '#f1f5f9' }
-                }
-            };
-
-            const chartElement = document.querySelector("#login-trend-chart");
-            if (chartElement) {
-                const chart = new ApexCharts(chartElement, options);
-                chart.render();
-            }
-        });
-    </script>
-    @endpush
 </x-app-layout>

@@ -17,6 +17,8 @@ class LibraryBook extends Model
         'category_id',
         'subject_id',
         'type',
+        'barcode',
+        'nfc_uid',
         'file_path',
         'cover_path',
         'video_url',
@@ -29,6 +31,14 @@ class LibraryBook extends Model
     protected $casts = [
         'is_physical_available' => 'boolean',
     ];
+
+    public function scopeByCode($query, string $code)
+    {
+        return $query->where('barcode', $code)
+            ->orWhere('nfc_uid', $code)
+            ->orWhere('uuid', $code)
+            ->orWhere('id', $code);
+    }
 
     public function category()
     {

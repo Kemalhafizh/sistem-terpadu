@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center">
             <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight flex items-center">
                 <span class="w-8 h-8 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center mr-3">
-                    📊
+                    
                 </span>
                 {{ __('Log Penerima & Konfirmasi Pembacaan') }}
             </h2>
@@ -25,7 +25,7 @@
                 
                 @if($announcement->require_acknowledgement)
                     <span class="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200/50 dark:border-rose-900/30 text-rose-700 dark:text-rose-450 text-xs font-black uppercase tracking-wider rounded-xl">
-                        ⚠️ Wajib Konfirmasi Pembacaan
+                         Wajib Konfirmasi Pembacaan
                     </span>
                 @else
                     <span class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-650 dark:text-gray-400 text-xs font-black uppercase tracking-wider rounded-xl">
@@ -43,7 +43,7 @@
                         <p class="text-3xl font-black text-gray-900 dark:text-white mt-1">{{ $totalTarget }}</p>
                     </div>
                     <div class="w-12 h-12 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-450 rounded-2xl flex items-center justify-center text-2xl">
-                        👥
+                        
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
                         </p>
                     </div>
                     <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-450 rounded-2xl flex items-center justify-center text-2xl">
-                        👁️
+                        
                     </div>
                 </div>
 
@@ -75,7 +75,7 @@
                         </p>
                     </div>
                     <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center text-2xl">
-                        ✓
+                        
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($read)
                                             <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
-                                                ✓ Dibaca
+                                                 Dibaca
                                             </span>
                                             <div class="text-[10px] text-gray-450 dark:text-gray-500 mt-1">
                                                 {{ $read->read_at->translatedFormat('d M Y H:i') }}
@@ -149,7 +149,7 @@
                                         @if($announcement->require_acknowledgement)
                                             @if($read && $read->acknowledged_at)
                                                 <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-850 dark:bg-indigo-900/40 dark:text-indigo-300">
-                                                    ✓ Terkonfirmasi
+                                                     Terkonfirmasi
                                                 </span>
                                                 <div class="text-[10px] text-gray-450 dark:text-gray-500 mt-1">
                                                     {{ $read->acknowledged_at->translatedFormat('d M Y H:i') }}

@@ -518,7 +518,7 @@ class SmartAlertService
             // Send WhatsApp if recipient has phone number and it is a critical alert
             if ($user->phone_number && $alert->severity === 'critical') {
                 try {
-                    $message = "⚠️ *SMART ALERT CRITICAL (SISTA)* ⚠️\n\n" .
+                    $message = " *SMART ALERT CRITICAL (SISTA)* \n\n" .
                                "Judul: *{$alert->title}*\n" .
                                "Deskripsi: {$alert->description}\n" .
                                "Waktu: " . now()->format('d-m-Y H:i') . "\n\n" .
@@ -548,7 +548,7 @@ class SmartAlertService
         event(new NewNotificationEvent($supervisor, [
             'id' => $alert->id,
             'type' => 'smart_alert',
-            'title' => "🚨 Eskalasi Alert: " . $alert->title,
+            'title' => " Eskalasi Alert: " . $alert->title,
             'description' => "Alert telah dieskalasikan kepada Anda: " . $notes,
             'severity' => 'critical',
             'created_at' => now()->toDateTimeString(),
@@ -557,7 +557,7 @@ class SmartAlertService
         // Send WhatsApp Notification to Supervisor
         if ($supervisor->phone_number) {
             try {
-                $message = "🚨 *ESKALASI SMART ALERT (SISTA)* 🚨\n\n" .
+                $message = " *ESKALASI SMART ALERT (SISTA)* \n\n" .
                            "Sebuah alert telah dieskalasikan kepada Anda:\n" .
                            "Judul: *{$alert->title}*\n" .
                            "Catatan Eskalasi: _{$notes}_\n" .

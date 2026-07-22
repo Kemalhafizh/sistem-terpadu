@@ -205,7 +205,7 @@ class PortfolioController extends Controller
         event(new NewNotificationEvent($portfolioItem->student->user, [
             'id' => $portfolioItem->id,
             'type' => 'portfolio_verified',
-            'title' => $isVerified ? 'Sertifikat Terverifikasi! 🎉' : 'Status Verifikasi Dicabut',
+            'title' => $isVerified ? 'Sertifikat Terverifikasi! ' : 'Status Verifikasi Dicabut',
             'description' => $isVerified 
                 ? 'Item portofolio "' . $portfolioItem->title . '" Anda telah disetujui sekolah.' 
                 : 'Verifikasi item portofolio "' . $portfolioItem->title . '" Anda dicabut oleh staf pengajar.',
@@ -243,7 +243,7 @@ class PortfolioController extends Controller
         event(new NewNotificationEvent($student->user, [
             'id' => $badge->id,
             'type' => 'portfolio_badge',
-            'title' => 'Lencana Penghargaan Baru! 🏆',
+            'title' => 'Lencana Penghargaan Baru! ',
             'description' => 'Selamat! Anda dianugerahi lencana kehormatan "' . $badge->name . '".',
             'created_at' => now()->toDateTimeString(),
         ]));

@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📊 Dashboard Analytics Alumni
+                     Dashboard Analytics Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Statistik penyerapan lulusan SMA Islam Sultan Agung 1 Semarang.
@@ -13,10 +13,10 @@
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('alumni.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                    📋 Daftar Alumni
+                     Daftar Alumni
                 </a>
                 <a href="{{ route('alumni.network-map') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    🗺️ Peta Sebaran
+                     Peta Sebaran
                 </a>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <!-- Card 1 -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex items-center gap-4">
                 <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-xl font-bold">
-                    🎓
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Alumni</span>
@@ -39,7 +39,7 @@
             <!-- Card 2 -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex items-center gap-4">
                 <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-xl font-bold">
-                    📚
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Kuliah (Studi)</span>
@@ -53,7 +53,7 @@
             <!-- Card 3 -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex items-center gap-4">
                 <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-xl font-bold">
-                    💼
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Bekerja/Wirausaha</span>
@@ -67,7 +67,7 @@
             <!-- Card 4 -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl flex items-center gap-4">
                 <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center text-xl font-bold">
-                    📍
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Sebaran Wilayah</span>
@@ -80,7 +80,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Doughnut Chart: Aktivitas -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-1 flex flex-col justify-between">
-                <h3 class="font-bold text-gray-850 dark:text-gray-150 text-sm mb-4">🍩 Distribusi Aktivitas Alumni</h3>
+                <h3 class="font-bold text-gray-850 dark:text-gray-150 text-sm mb-4"> Distribusi Aktivitas Alumni</h3>
                 <div class="relative w-full aspect-square flex items-center justify-center">
                     <canvas id="activityChart"></canvas>
                 </div>
@@ -88,7 +88,7 @@
 
             <!-- Bar Chart: Top 5 Perusahaan/Instansi -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 flex flex-col justify-between">
-                <h3 class="font-bold text-gray-850 dark:text-gray-150 text-sm mb-4">🏢 Top 5 Instansi / Tempat Kerja Alumni</h3>
+                <h3 class="font-bold text-gray-850 dark:text-gray-150 text-sm mb-4"> Top 5 Instansi / Tempat Kerja Alumni</h3>
                 <div class="relative w-full aspect-[2/1] min-h-[220px]">
                     <canvas id="institutionChart"></canvas>
                 </div>
@@ -99,7 +99,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Top Majors -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">🎓 Top Program Studi Pilihan (Kuliah)</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Top Program Studi Pilihan (Kuliah)</h3>
                 <div class="space-y-3">
                     @forelse($stats['top_majors'] as $mj)
                         <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-900 rounded-2xl">
@@ -114,7 +114,7 @@
 
             <!-- Top Jobs -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">🧑‍💼 Top Profesi / Pekerjaan Alumni</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Top Profesi / Pekerjaan Alumni</h3>
                 <div class="space-y-3">
                     @forelse($stats['top_jobs'] as $jb)
                         <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-900 rounded-2xl">

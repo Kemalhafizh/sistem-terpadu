@@ -68,9 +68,9 @@ class ChatbotService
 
         // 4. Fallback (Unknown Intent)
         $fallbackReply = "Maaf, saya belum memahami pertanyaan Anda secara detail. Cobalah menanyakan hal lain seperti:<br/>" .
-            "- 📊 *\"berapa siswa alpa hari ini\"* atau *\"total tunggakan spp\"*<br/>" .
-            "- 🎯 *\"buka halaman nilai\"* atau *\"buka absensi\"*<br/>" .
-            "- 💡 Pertanyaan umum tentang sistem SISTA.";
+            "-  *\"berapa siswa alpa hari ini\"* atau *\"total tunggakan spp\"*<br/>" .
+            "-  *\"buka halaman nilai\"* atau *\"buka absensi\"*<br/>" .
+            "-  Pertanyaan umum tentang sistem SISTA.";
             
         $conversation = $this->logConversation($user, $message, $fallbackReply, 'unknown', null, 0.0);
         return [
@@ -140,7 +140,7 @@ class ChatbotService
 
                     if ($billings->isNotEmpty()) {
                         $hasTunggakan = true;
-                        $reply .= "👦 **{$child->user->name}**:<br/>";
+                        $reply .= " **{$child->user->name}**:<br/>";
                         foreach ($billings as $billing) {
                             $balance = number_format($billing->remaining_balance, 0, ',', '.');
                             $dueDate = $billing->due_date ? \Carbon\Carbon::parse($billing->due_date)->format('d M Y') : '-';

@@ -559,7 +559,7 @@
                                 </div>
 
                                 <div class="bg-blue-50 border border-blue-200/50 p-4 rounded-xl text-blue-900 text-xs leading-relaxed font-inter font-medium">
-                                    🔔 {{ __('spmb.review_warning') }}
+                                     {{ __('spmb.review_warning') }}
                                 </div>
                             </div>
                         </div>
@@ -599,7 +599,7 @@
                 </div>
             @else
                 <div class="bg-white py-12 px-6 text-center shadow-xl rounded-3xl border border-slate-200/60">
-                    <span class="text-5xl">🔒</span>
+                    <span class="text-5xl"></span>
                     <h3 class="text-lg font-black text-slate-800 mt-4">{{ __('spmb.closed_title') }}</h3>
                     <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">{{ __('spmb.closed_desc') }}</p>
                 </div>

@@ -141,7 +141,7 @@
 
                         <!-- Step 1: Submit -->
                         <div class="flex flex-col items-center relative z-10">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-emerald-500 text-white border border-emerald-500 ring-4 ring-emerald-50">✓</div>
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-emerald-500 text-white border border-emerald-500 ring-4 ring-emerald-50"></div>
                             <span class="text-[8px] font-black uppercase tracking-wider mt-2 text-emerald-600 text-center">{{ __('spmb.step_submitted') }}</span>
                         </div>
 
@@ -151,7 +151,7 @@
                                 @if($step2) bg-emerald-500 text-white border-emerald-500 ring-4 ring-emerald-50
                                 @else bg-white text-slate-400 border-slate-200
                                 @endif">
-                                @if($step2) ✓ @else 2 @endif
+                                @if($step2)  @else 2 @endif
                             </div>
                             <span class="text-[8px] font-black uppercase tracking-wider mt-2 text-center
                                 @if($step2) text-emerald-600 @else text-slate-400 @endif">{{ __('spmb.step_verification') }}</span>
@@ -166,7 +166,7 @@
                                     @endif
                                 @else bg-white text-slate-400 border-slate-200
                                 @endif">
-                                @if($step3) ✓ @else 3 @endif
+                                @if($step3)  @else 3 @endif
                             </div>
                             <span class="text-[8px] font-black uppercase tracking-wider mt-2 text-center
                                 @if($step3) 
@@ -214,7 +214,7 @@
                                         @click="navigator.clipboard.writeText('Email: {{ $email }}\nPassword: {{ $password }}'); copied = true; setTimeout(() => copied = false, 2000)"
                                         class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[9px] font-bold transition-all border border-slate-200 flex items-center gap-1 cursor-pointer"
                                     >
-                                        <span x-text="copied ? '✓ ' + '{{ __('spmb.btn_copied') }}' : '📋 ' + '{{ __('spmb.btn_copy_account') }}'"></span>
+                                        <span x-text="copied ? ' ' + '{{ __('spmb.btn_copied') }}' : ' ' + '{{ __('spmb.btn_copy_account') }}'"></span>
                                     </button>
                                 </div>
                                 <div class="text-xs text-slate-650 space-y-1">

@@ -15,7 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class CurriculumController extends Controller
 {
     // =========================================================
-    // 📊 DASHBOARD & REPORT
+    //  DASHBOARD & REPORT
     // =========================================================
 
     public function index()
@@ -107,7 +107,7 @@ class CurriculumController extends Controller
     }
 
     // =========================================================
-    // 📘 BANK SILABUS
+    //  BANK SILABUS
     // =========================================================
 
     public function syllabiIndex()
@@ -198,7 +198,7 @@ class CurriculumController extends Controller
     }
 
     // =========================================================
-    // 📝 RENCANA PELAKSANAAN PEMBELAJARAN (RPP)
+    //  RENCANA PELAKSANAAN PEMBELAJARAN (RPP)
     // =========================================================
 
     public function lessonPlansIndex(Request $request)

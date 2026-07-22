@@ -6,7 +6,7 @@
             <div>
                 <span class="text-[10px] uppercase tracking-widest text-emerald-600 dark:text-emerald-450 font-black">TRANSAKSI TABUNGAN</span>
                 <h2 class="font-black text-3xl text-gray-800 dark:text-white leading-tight mt-1">
-                    📥 Setoran Tunai Wadiah
+                     Setoran Tunai Wadiah
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Proses penambahan saldo tabungan wadiah siswa secara manual.
@@ -27,7 +27,7 @@
                 <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-2xl"></div>
                 <div class="flex flex-col items-center text-center">
                     <div class="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-[2rem] flex items-center justify-center text-4xl shadow-inner mb-4">
-                        👤
+                        
                     </div>
                     <span class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">DATA PEMILIK REKENING</span>
                     <h3 class="font-black text-xl text-gray-800 dark:text-white leading-snug">{{ $account->student->user->name }}</h3>
@@ -50,7 +50,7 @@
             </div>
             
             <div class="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/30 rounded-[2rem] p-6 text-amber-805 dark:text-amber-300 flex items-start gap-4">
-                <span class="text-2xl mt-0.5">💡</span>
+                <span class="text-2xl mt-0.5"></span>
                 <div class="text-xs space-y-1">
                     <h4 class="font-black text-amber-900 dark:text-amber-200">Prinsip Syariah Wadiah</h4>
                     <p class="leading-relaxed text-amber-700 dark:text-amber-300">Setoran ini dikelola dengan akad Wadiah Yad Dhamanah (titipan amanah). Saldo sepenuhnya dapat ditarik sewaktu-waktu atau digunakan bertransaksi secara aman.</p>

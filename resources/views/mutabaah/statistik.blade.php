@@ -76,7 +76,7 @@
                                 <canvas id="gradeChart" class="max-w-[250px] max-h-[250px]"></canvas>
                             @else
                                 <div class="text-center text-gray-400">
-                                    <span class="text-3xl block mb-2">📊</span>
+                                    <span class="text-3xl block mb-2"></span>
                                     <span>Belum ada data untuk direkap pekan ini.</span>
                                 </div>
                             @endif

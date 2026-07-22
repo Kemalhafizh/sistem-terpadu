@@ -2806,7 +2806,7 @@ resources/views/academic/ai-copilot/
 
 ---
 
-### 🏷️ Modul 23.1: QR Code Asset Tracking & Maintenance Ticket
+### 🏷️ Modul 23.1: QR Code Asset Tracking & Maintenance Ticket (Selesai ✅)
 
 Pelabelan seluruh barang inventaris sekolah (meja, kursi, komputer lab, AC, proyektor) dengan QR Code unik. Guru dan siswa dapat memindai QR Code tersebut untuk melaporkan kerusakan langsung, otomatis menerbitkan tiket perawatan bagi waka sarpras.
 
@@ -2858,7 +2858,7 @@ resources/views/assets/maintenance/
 
 ---
 
-### 📚 Modul 23.2: Barcode & NFC Integrasi Perpustakaan
+### 📚 Modul 23.2: Barcode & NFC Integrasi Perpustakaan (Selesai ✅)
 
 Peningkatan sirkulasi perpustakaan dengan integrasi barcode scanner untuk mempercepat proses pencatatan peminjaman (borrow) dan pengembalian (return) buku fisik.
 
@@ -2886,7 +2886,7 @@ resources/views/library/
 
 ---
 
-### ⚖️ Modul 24.1: Double-Entry Ledger Auditor & Fraud Detector
+### ⚖️ Modul 24.1: Double-Entry Ledger Auditor & Fraud Detector (Selesai ✅)
 
 Mengingat platform memiliki sistem pencatatan keuangan double-entry (`JournalEntry` & `JournalEntryLine`), modul ini bertindak sebagai auditor internal otomatis. Sistem akan memindai seluruh entri jurnal keuangan secara berkala, memastikan keseimbangan debit-kredit, dan mendeteksi adanya transaksi aneh (misal: pengeluaran tanpa akun kas berpasangan, atau perubahan manual saldo akun di luar entri jurnal).
 
@@ -2923,7 +2923,7 @@ resources/views/finance/audit/
 
 ---
 
-### 🛡️ Modul 24.2: Security Forensic Log & Intrusion Prevention Dashboard
+### 🛡️ Modul 24.2: Security Forensic Log & Intrusion Prevention Dashboard (Selesai ✅)
 
 Memonitor aktivitas keamanan sistem secara forensik, melacak detail login mencurigakan (perubahan IP tiba-tiba, user agent tidak wajar), mencatat modifikasi data kritis (misal: pengubahan nilai raport di luar jam kerja), dan menyediakan tombol darurat "Lockdown System" bagi superadmin jika terindikasi adanya serangan.
 
@@ -3026,6 +3026,373 @@ tests/Feature/Security/ForensicSecurityTest.php:
 
 ---
 
+## 📦 FASE 25: Blueprint Refaktorisasi & Purifikasi UI/UX — Eliminasi Total Emoji untuk Standar Corporate & Enterprise Professional
+
+**Fokus Utama:** Penghapusan 100% seluruh karakter emoji dari seluruh komponen UI Blade, cetakan dokumen PDF, pesan balasan Controller/Service, notifikasi email/WhatsApp, serta seeder data master. Karakter emoji digantikan secara sistematis menggunakan Ikon Vektor SVG (Heroicons/Lucide), komponen badge Tailwind berspesifikasi enterprise, serta tipografi formal sesuai standar identitas korporat Yayasan Badan Wakaf Sultan Agung (YBWSA).
+
+---
+
+### 🏛️ 25.1: Latar Belakang & Rasionalitas Arsitektural (Selesai ✅)
+
+#### 1. Kebutuhan Standar Enterprise Korporat
+Aplikasi **Sistem Terpadu (SISTA)** dikembangkan untuk SMA Islam Sultan Agung 1 Semarang yang berada di bawah naungan yayasan resmi. Penggunaan emotikon/emoji kasual (seperti 🚀, 🕌, 📊, 📝, ✅, ⚠️, 🔥) memberikan kesan informal dan tidak selaras dengan citra kelembagaan pendidikan formal.
+
+#### 2. Inkonsistensi Rendering Lintas Platform (Cross-Platform Discrepancy)
+Karakter Unicode Emoji dirender secara berbeda oleh vendor sistem operasi:
+- Windows (Segoe UI Emoji) vs macOS/iOS (Apple Color Emoji) vs Android (Noto Color Emoji) vs Linux (Noto/Twitter Emoji).
+- Perbedaan warna, bentuk, dan resolusi menyebabkan tampilan antarmuka (UI) tidak konsisten di layar pengguna yang berbeda.
+- Beberapa sistem operasi atau browser versi lama merender emoji menjadi karakter kotak rusak `[?]` atau simbol tidak dikenal.
+
+#### 3. Kerusakan Engine Rendering PDF (DomPDF Font Engine Failure)
+Mesin pencetak PDF (`dompdf/dompdf`) yang digunakan untuk mencetak Rapor, Kwitansi SPP, Surat Resmi, Slip Gaji, dan Sertifikat Tahfidz **tidak mendukung karakter UTF-8 Multibyte 4-byte (Emoji)** secara native tanpa font khusus yang berukuran sangat besar:
+- Keberadaan emoji pada berkas Blade PDF menyebabkan karakter terpotong, muncul tanda tanya `?`, kotak hitam, atau menyebabkan eror kompilasi font `Font_Exception`.
+
+#### 4. Integritas Data & Log Sistem
+Menghindari isu encoding database (`utf8mb3` vs `utf8mb4`) pada string flash message session, log audit, dan log WhatsApp, yang berpotensi memotong string teks saat menyimpan ke database jika charset tidak dikonfigurasi dengan sempurna.
+
+---
+
+### 🗺️ 25.2: Pemetaan Komprehensif Lokasi Penggunaan Emoji di Codebase
+
+Audit komprehensif memetakan seluruh titik ditemukannya karakter emoji pada 5 layer utama aplikasi:
+
+| Layer Aplikasi | Lokasi File | Jenis Konten Emoji | Dampak Masalah | Rencana Purifikasi |
+| :--- | :--- | :--- | :--- | :--- |
+| **Layer 1: Blade UI Views** | `resources/views/components/*.blade.php`<br>`resources/views/**/*.blade.php` | Navigasi sidebar, header halaman, badge status, card widget, tombol aksi | Tampilan kasual & inkonsisten antar OS | Ganti dengan `<x-heroicon-*/>` atau inline SVG + Badge Tailwind |
+| **Layer 2: PDF & Print Views** | `resources/views/**/pdf*.blade.php`<br>`resources/views/**/print*.blade.php` | Header dokumen, status pembayaran, penilaian, ikon cetak | Karakter `[?]` / cetakan PDF rusak | Hapus 100% emoji, gunakan styling CSS border/badge murni |
+| **Layer 3: Controller & Service** | `app/Http/Controllers/**/*.php`<br>`app/Services/**/*.php` | Flash message (`session()->flash`), Toast notification, Exception text | Text string terpolusi emoji | Hapus prefix emoji pada teks flash message |
+| **Layer 4: Notification & Mail** | `app/Notifications/**/*.php`<br>`app/Mail/**/*.php`<br>`app/Services/WhatsappService.php` | Subject email, isi WhatsApp broadcast, notifikasi push | Terlihat seperti spam/chat kasual | Gunakan format pesan formal profesional |
+| **Layer 5: Seeder & Data Demo** | `database/seeders/*.php` | Data pengumuman, forum thread, FAQ chatbot, mutabaah items | Data demo terkontaminasi emoji | Pembersihan data master via seeder refactored |
+
+---
+
+### 📐 25.3: Standar Substitusi & UI Design System Replacement Protocol
+
+Untuk menggantikan karakter emoji, ditetapkan 4 protokol substitusi desain visual enterprise:
+
+#### Protocol 1: Substitusi Status Badge (Menggantikan ✅, ⚠️, ❌, ⏳, 🔴, 🟢, 🟡)
+Penggunaan emoji status diganti penuh dengan komponen Blade `<x-status-badge>` atau kelas Tailwind CSS pill badge dengan warna semantik yang memenuhi standar kontras WCAG AAA:
+
+```html
+<!-- SEBELUM (Kasual dengan Emoji) -->
+<span class="badge">✅ Lunas</span>
+<span class="badge">⚠️ Terlambat</span>
+<span class="badge">❌ Belum Bayar</span>
+
+<!-- SESUDAH (Standar Corporate Enterprise) -->
+<!-- Status Sukses / Lunas -->
+<span class="inline-flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+    <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+    </svg>
+    Lunas
+</span>
+
+<!-- Status Peringatan / Terlambat -->
+<span class="inline-flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+    <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    Terlambat
+</span>
+
+<!-- Status Gagal / Belum Bayar -->
+<span class="inline-flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+    <svg class="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+    Belum Dibayar
+</span>
+```
+
+#### Protocol 2: Substitusi Ikon Modul & Navigasi Sidebar (Menggantikan 🕌, 📊, 📝, 💰, 🎓, 📅, 🏆)
+Seluruh emoji navigasi di `resources/views/components/sidebar.blade.php` diganti 100% menggunakan SVG Vektor (Heroicons Outline / Solid 24px) dengan presisi pixel-perfect:
+
+| Modul Navigasi | Emoji Lama | Substitusi Ikon SVG Heroicon | Deskripsi Vektor |
+| :--- | :---: | :--- | :--- |
+| **Keislaman & Tahfidz** | 🕌 / 📖 | `heroicon-o-book-open` / `heroicon-o-academic-cap` | Vektor Kitab/Al-Qur'an & Kubah Geometris Minimalis |
+| **Mutaba'ah Ibadah** | 🌙 / 🤲 | `heroicon-o-sparkles` / `heroicon-o-calendar-days` | Vektor Kalender Keaktifan Ibadah |
+| **Keuangan & SPP** | 💰 / 💳 | `heroicon-o-banknotes` / `heroicon-o-credit-card` | Vektor Uang Kertas & Kartu Transaksi Resmi |
+| **Akademik & Nilai** | 📊 / 🎓 | `heroicon-o-chart-bar` / `heroicon-o-academic-cap` | Vektor Grafik Batang & Toga Akademik |
+| **Presensi KBM** | 📅 / ✅ | `heroicon-o-clipboard-document-check` | Vektor Papan Klip Kehadiran Resmi |
+| **Jurnal & Notulensi** | 📝 / 📋 | `heroicon-o-document-text` | Vektor Berkas Dokumen Resmi |
+| **Perpustakaan** | 📚 | `heroicon-o-rectangle-stack` | Vektor Tumpukan Katalog Buku |
+| **Konseling (BK)** | 💬 | `heroicon-o-chat-bubble-left-right` | Vektor Gelembung Diskusi Resmi |
+
+#### Protocol 3: Substitusi Gamifikasi & Poin Siswa (Menggantikan 🔥, ⭐, 👑, ⚡)
+Poin XP, Streak, dan Achievement Siswa diubah dari simbol emoji playful menjadi indikator visual enterprise:
+- **Streak Harian (🔥)**: Digantikan dengan komponen visual **"Istiqomah Tracker"** menggunakan indikator hari aktif berwarna emerald-600 (`bg-emerald-600`) dan badge tingkat keaktifan.
+- **Badge Achievement (⭐ / 👑)**: Digantikan dengan **Badge Vektor Logam / Tingkat Capaian Resmi** (Tingkat *Mumtaz*, *Jayyid Jiddan*, *Jayyid*) dengan latar belakang gradien halus khas YBWSA (Teal/Emerald).
+
+#### Protocol 4: Purifikasi Cetakan PDF & Laporan Resmi
+Seluruh cetakan PDF (DomPDF) mematuhi **Aturan Nol Emoji (Zero-Emoji Policy)**:
+- Menggunakan font standar PDF (`Helvetica`, `Times-Roman`, atau `Courier`).
+- Penanda status menggunakan teks kapital murni (`LUNAS`, `PROSES`, `PERLU REVISI`) dalam boks batas (border) tipis CSS tanpa gambar/emotikon.
+
+---
+
+### 📋 25.4: Katalog Pemetaan Substitusi Karakter (Complete Emoji Replacement Catalog)
+
+Berikut adalah katalog pemetaan menyeluruh untuk 40+ karakter emoji yang ditemukan di codebase beserta padanan penggantinya:
+
+| Emoji Original | Kategori | Lokasi Temuan Utama | Substitusi Ikon SVG / Teks Formal | Kelas Styling Tailwind / Kode |
+| :---: | :--- | :--- | :--- | :--- |
+| 🚀 | Header / Launcher | `implementation_plan.md`, Welcome page | `heroicon-o-rocket-launch` / Hapus | `w-5 h-5 text-emerald-600` |
+| 📊 | Dashboard / Analytics | Sidebar, Admin Controllers | `heroicon-o-chart-pie` | `w-5 h-5 text-slate-500` |
+| 🕌 | Keislaman / Tahfidz | Sidebar, Modul Tahfidz | `heroicon-o-book-open` | `w-5 h-5 text-emerald-600` |
+| 🌙 | Mutaba'ah Ibadah | Modul Mutaba'ah | `heroicon-o-moon` / `heroicon-o-sparkles` | `w-5 h-5 text-amber-500` |
+| 🎓 | Akademik / Rapor | Modul Rapor, Dashboard Siswa | `heroicon-o-academic-cap` | `w-5 h-5 text-blue-600` |
+| 💰 | Keuangan / SPP | Modul Keuangan, Invoicing | `heroicon-o-banknotes` | `w-5 h-5 text-emerald-600` |
+| 📝 | Jurnal / Assessment | Modul Penilaian Harian | `heroicon-o-document-edit` | `w-5 h-5 text-slate-600` |
+| 📅 | Jadwal / Presensi | Modul Penjadwalan | `heroicon-o-calendar` | `w-5 h-5 text-indigo-600` |
+| ✅ | Status Sukses | Flash Session, DataTable, PDF | Teks "Selesai" / "Lunas" + SVG Check | `bg-emerald-100 text-emerald-800` |
+| ⚠️ | Status Peringatan | Flash Warning, Smart Alerts | Teks "Peringatan" + SVG Exclamation | `bg-amber-100 text-amber-800` |
+| ❌ | Status Gagal / Batal | Flash Error, Modal Confirmation | Teks "Gagal" / "Ditolak" + SVG X | `bg-rose-100 text-rose-800` |
+| ⏳ | Status Pending | Status Permohonan, Workflow | Teks "Menunggu" + SVG Clock | `bg-sky-100 text-sky-800` |
+| 🔴 | Indicator Critical | Smart Alert, Audit Log | Teks "Tinggi" / Badge Merah | `bg-red-500 rounded-full w-2 h-2` |
+| 🟢 | Indicator Active | Status User Online, Session | Teks "Aktif" / Badge Hijau | `bg-emerald-500 rounded-full w-2 h-2` |
+| 🟡 | Indicator Medium | Status Warning, Moderasi | Teks "Sedang" / Badge Kuning | `bg-amber-500 rounded-full w-2 h-2` |
+| 🔥 | Gamifikasi Streak | Dashboard Siswa, Leaderboard | Teks "Istiqomah" + SVG Bolt | `text-amber-600 font-semibold` |
+| ⭐ | Achievement | Rating, Award Siswa | SVG Star Vector | `w-4 h-4 text-amber-400 fill-amber-400` |
+| 🏆 | Ranking / Juara | Leaderboard Tahfidz | SVG Trophy Vector | `w-5 h-5 text-amber-500` |
+| 📚 | Perpustakaan | Modul Perpustakaan | `heroicon-o-book-open` | `w-5 h-5 text-sky-600` |
+| 💬 | Forum / Chatbot | Modul Forum & Chatbot | `heroicon-o-chat-bubble-bottom-center-text` | `w-5 h-5 text-slate-500` |
+| 🎒 | Siswa / SPMB | Modul Kesiswaan | `heroicon-o-user-group` | `w-5 h-5 text-blue-500` |
+| 👨‍💼 | HRD / Pegawai | Modul Kepegawaian | `heroicon-o-briefcase` | `w-5 h-5 text-slate-700` |
+| 🏷️ | Asset IoT / QR | Modul Inventaris Sarpras | `heroicon-o-qr-code` | `w-5 h-5 text-teal-600` |
+| 🛡️ | Keamanan / Audit | Modul Security & Audit | `heroicon-o-shield-check` | `w-5 h-5 text-rose-600` |
+| 🖥️ | Integrasi System | Modul Sync Dapodik/EMIS | `heroicon-o-arrow-path-rounded-square` | `w-5 h-5 text-cyan-600` |
+| 💳 | Cashless / Wadiah | Modul Tabungan Siswa | `heroicon-o-credit-card` | `w-5 h-5 text-emerald-600` |
+
+---
+
+### 🛠️ 25.5: Eksekusi Refaktorisasi & Automasi Pipeline
+
+Proses eliminasi emoji dikerjakan secara sistematis dalam 6 tahap terkontrol:
+
+#### Tahap 1: Eksekusi Script Audit Regex (Audit & Detection)
+Menjalankan script pemindai Unicode Emoji berbasis Regex di PowerShell/Bash untuk membuat daftar seluruh berkas dan nomor baris yang mengandung karakter emoji:
+
+```powershell
+# Script Pemindai Emoji Codebase SISTA
+$emojiRegex = '[\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}]'
+Get-ChildItem -Path ./resources, ./app, ./database -Recurse -Include *.blade.php, *.php | ForEach-Object {
+    $matches = Select-String -Path $_.FullName -Pattern $emojiRegex -AllMatches
+    if ($matches) {
+        Write-Host "Emoji Found in: $($_.FullName)" -ForegroundColor Yellow
+    }
+}
+```
+
+#### Tahap 2: Refaktorisasi Komponen Reusable Blade UI
+1. Update `resources/views/components/sidebar.blade.php`: Hapus seluruh emoji dari teks header menu dan link navigasi, ganti dengan komponen SVG Heroicons.
+2. Update `resources/views/components/page-header.blade.php`: Hapus prefix emoji dari judul dan deskripsi halaman.
+3. Update `resources/views/components/status-badge.blade.php`: Pastikan 100% badge menggunakan ikon SVG dan warna Tailwind semantik.
+4. Update `resources/views/components/stat-card.blade.php`: Ganti ikon stat card berbasis emoji dengan SVG Heroicons dinamis.
+
+#### Tahap 3: Cleansing Controller Flash Session & Notification String
+Mengedit seluruh file Controller di `app/Http/Controllers/` dan `app/Services/`:
+- Mengubah `session()->flash('success', '✅ Data berhasil disimpan')` menjadi `session()->flash('success', 'Data berhasil disimpan.')`.
+- Mengubah `session()->flash('error', '❌ Terjadi kesalahan')` menjadi `session()->flash('error', 'Terjadi kesalahan sistem. Silakan coba lagi.')`.
+
+#### Tahap 4: Sanitasi Cetakan PDF & Print Layouts
+Memeriksa seluruh berkas cetakan di `resources/views/**/pdf*.blade.php`:
+- Hapus semua simbol Unicode emoji.
+- Pastikan komponen tabel dan badge PDF menggunakan teks murni dengan style CSS border yang aman untuk engine DomPDF.
+
+#### Tahap 5: Purifikasi Database Seeders & Demo Data
+Memperbarui berkas seeder di `database/seeders/`:
+- Hapus emoji dari judul pengumuman demo (`AnnouncementSeeder.php`).
+- Hapus emoji dari judul thread forum demo (`ForumSeeder.php`).
+- Hapus emoji dari FAQ Chatbot (`ChatbotFaqSeeder.php`).
+- Hapus emoji dari deskripsi mutabaah & poin pelanggaran.
+
+#### Tahap 6: Pembuatan Automated Architecture Guard Test (Anti-Emoji Governance)
+Membuat file test baru `tests/Feature/Architecture/NoEmojiGovernanceTest.php` untuk memastikan tidak ada emoji baru yang masuk ke codebase di masa mendatang:
+
+```php
+namespace Tests\Feature\Architecture;
+
+use Tests\TestCase;
+
+class NoEmojiGovernanceTest extends TestCase
+{
+    /** @test */
+    public function views_and_controllers_must_not_contain_emojis()
+    {
+        $emojiPattern = '/[\x{1F600}-\x{1F64F}\x{1F300}-\x{1F5FF}\x{1F680}-\x{1F6FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}]/u';
+        
+        $directories = [
+            resource_path('views'),
+            app_path('Http/Controllers'),
+            app_path('Services'),
+        ];
+
+        $filesWithEmoji = [];
+
+        foreach ($directories as $dir) {
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
+            foreach ($iterator as $file) {
+                if ($file->isFile() && in_array($file->getExtension(), ['php', 'blade.php'])) {
+                    $content = file_get_contents($file->getPathname());
+                    if (preg_match($emojiPattern, $content)) {
+                        $filesWithEmoji[] = str_replace(base_path(), '', $file->getPathname());
+                    }
+                }
+            }
+        }
+
+        $this->assertEmpty(
+            $filesWithEmoji,
+            "Emoji ditemukan di file berikut. Harap ganti dengan ikon SVG / teks formal:\n" . implode("\n", $filesWithEmoji)
+        );
+    }
+}
+```
+
+---
+
+### 🧪 25.7: Rencana Verifikasi Purifikasi UI/UX
+
+#### 1. Automated Verification
+- Jalankan test governance anti-emoji: `php artisan test --filter=NoEmojiGovernanceTest` (Harus PASS 100%).
+- Jalankan seluruh suite pengujian aplikasi: `php artisan test` untuk memastikan tidak ada regresi pada pengujian UI/Feature yang ada.
+
+#### 2. Visual & PDF Inspection
+- Membuka halaman Dashboard per role (Admin, Guru, Siswa, Ortu) dan memastikan seluruh navigasi sidebar & header bersih dari emoji.
+- Melakukan ekspor PDF Rapor, Kwitansi SPP, dan Slip Gaji untuk memastikan rendering PDF 100% rapi tanpa karakter rusak `[?]`.
+- Memeriksa tampilan PWA mobile di layar 375px untuk memastikan kepatuhan standar profesionalisme UI korporat YBWSA.
+
+---
+
+## 📦 FASE 26: Arsitektur Enterprise Lite & High-Availability Technology Standards (Adopsi Teknologi Skala Enterprise)
+
+**Fokus Utama:** Mentransformasi aplikasi web Sistem Terpadu (SISTA) SMA Islam Sultan Agung 1 Semarang dari aplikasi monolithic standar menjadi platform berskala enterprise (Enterprise Lite Edition). Mengadopsi pola arsitektur, infrastruktur, observability, serta keamanan modern yang biasa digunakan oleh platform web layanan berskala besar (high-availability enterprise web applications).
+
+---
+
+### 🏛️ 26.1: Modular Domain-Driven Architecture & Single-School Enterprise Core (Selesai ✅)
+
+Sistem dirancang secara khusus (**Single-School Dedicated Core**) untuk **SMA Islam Sultan Agung 1 Semarang** tanpa kompleksitas *multi-tenant overhead*. Fokus utama adalah pemisahan batas domain bisnis (*Bounded Context*) agar aplikasi monolithic berskala besar ini tetap bersih, mudah dirawat, dan berkinerja tinggi.
+
+- **Single-School Dedicated Core**:
+  - Seluruh skema database dan entitas disesuaikan secara khusus untuk struktur operasional tunggal SMA Islam Sultan Agung 1 Semarang (YBWSA).
+  - Tanpa isolasi tenant ganda atau *overhead* `tenant_id` untuk memastikan eksekusi query SQL berjalan dengan latensi sekecil mungkin tanpa filter tambahan di setiap klausa `WHERE`.
+- **Domain-Driven Modular Boundaries**:
+  - Pengelompokan logika domain ke dalam struktur modul internal yang terisolasi rapi:
+    - `App\Domains\Academic` (Kurikulum, Rapor, CBT, Penilaian Harian)
+    - `App\Domains\Keislaman` (Tahfidz, Mutaba'ah, Presensi Kegiatan Keagamaan)
+    - `App\Domains\Finance` (SPP, Wadiah, ZIS/Wakaf YBWSA, Accounting Ledger)
+    - `App\Domains\HumanResources` (Pegawai, Presensi GPS, Payroll, Evaluasi Kinerja)
+    - `App\Domains\Kesiswaan` (OSIS, MPK, Ekstrakurikuler, BK/Konseling)
+- **Dedicated School Branding & Settings Engine**:
+  - Pengaturan terpusat eksklusif SMA ISA 1 Semarang di tabel `settings` (Logo YBWSA, Visi-Misi Sekolah, Alamat Wonodri Semarang, Tanda Tangan Digital Kepala Sekolah & Waka).
+
+```php
+// app/Domains/Academic/Services/GradeCalculationService.php
+namespace App\Domains\Academic\Services;
+
+class GradeCalculationService
+{
+    public function calculateFinalGrade(int $studentId, int $subjectId): float
+    {
+        // Logika domain terisolasi khusus akademik SMA ISA 1
+    }
+}
+```
+
+---
+
+### ⚡ 26.2: Asynchronous Event-Driven Architecture & Queue Systems (Selesai ✅)
+
+Mengadopsi pemrosesan latar belakang (asynchronous processing) untuk seluruh operasi berat guna menjamin latensi respon HTTP pengguna tetap di bawah **100ms** (p99).
+
+- **Event Bus & Event Listeners**:
+  - `StudentGraduated` → `GenerateAlumniRecord`, `NotifyParentsViaWhatsApp`, `ArchiveElearningAccess`.
+  - `PaymentReceived` → `UpdateBillingStatus`, `IssueWadiahReceipt`, `LogJournalEntry`.
+  - `ExamCompleted` → `CalculateCbtScore`, `TriggerItemAnalysisJob`.
+- **Queue Pipeline & Worker Management**:
+  - Pengelompokan Queue berdasarkan prioritas: `high` (WhatsApp, OTP, Flash Alert), `default` (CBT Score, Attendance), `low` (PDF Generation, Report Sync).
+  - **Dead Letter Queue (DLQ)** & Automatic Exponential Backoff Retry untuk pekerjaan yang gagal.
+  - Dasbor Pemantauan Queue (`QueueMonitorController`) berbasis web di localhost.
+
+---
+
+### 🚀 26.3: Multi-Layer Distributed Caching & Tag Invalidation (Selesai ✅)
+
+Mengadopsi pola caching berlapis (Multi-Tier Caching Strategy) seperti aplikasi enterprise:
+
+1. **Layer 1 - In-Memory Request Cache**: Caching per HTTP Lifecycle menggunakan Singleton Service.
+2. **Layer 2 - Shared Key-Value Cache**: Caching data konstan (Mata Pelajaran, Tahun Ajaran, Daftar Ruangan, Peran & Izin User).
+3. **Layer 3 - HTTP Response Cache Gateway**: Cache halaman publik statis (Landing Page, Profil Sekolah, Berita CMS) menggunakan header `Cache-Control` & ETag validation.
+4. **Cache Invalidation via Tags**:
+   - `Cache::tags(['students', 'class-10a'])->flush()` saat ada mutasi siswa.
+
+---
+
+### 🛡️ 26.4: API Gateway Pattern, Rate Limiting & Circuit Breakers
+
+Penerapan kontrol lalu lintas dan ketahanan sistem terhadap kegagalan pihak ketiga (3rd party dependencies):
+
+- **API Gateway & Versioning**:
+  - Prefix rute terstruktur `/api/v1/` dan `/api/v2/` dengan API Key Authentication (`Bearer Token` / Sanctum).
+- **Rate Limiting (Leaky Bucket / Token Bucket)**:
+  - Pembatasan request berbasis peran: Siswa (60 req/min), Guru (120 req/min), Public API (20 req/min), Login Attempt (5 req/min).
+- **Circuit Breaker Pattern**:
+  - Melindungi aplikasi dari hang/crash ketika layanan eksternal (Fonnte WA Gateway, Midtrans Payment, Kemendikbud Dapodik) lambat atau down. Jika gagal 5x berturut-turut, sistem otomatis mengaktifkan *Fallback Mode* tanpa membuat user menunggu timeout.
+
+---
+
+### 📊 26.5: Enterprise Observability, Telemetry & APM Dashboard
+
+Menyediakan transparansi kesehatan aplikasi tingkat enterprise:
+
+- **Correlation ID (Distributed Tracing)**:
+  - Setiap HTTP Request diberikan header unik `X-Correlation-ID` yang diteruskan ke log database, queue job, dan respon API untuk memudahkan penelusuran eror lintas modul (end-to-end tracing).
+- **System APM & Health Metrics Dashboard**:
+  - Dasbor metrik sistem di `/admin/observability`:
+    - Respon Time P50, P90, P99.
+    - Database Query Counter & Slow Query Detector (> 200ms).
+    - Memory Usage & Storage IO Monitor.
+    - SLA & Error Budget Tracker (Target Uptime: 99.9%).
+
+---
+
+### 🔑 26.6: Fine-Grained RBAC, ABAC & Immutable Audit Ledger
+
+Sistem otorisasi dan akuntabilitas tingkat tinggi:
+
+- **Hybrid RBAC + ABAC (Role-Based & Attribute-Based Access Control)**:
+  - Otorisasi dinamis berdasarkan kombinasi Peran + Atribut (misal: Guru hanya bisa mengedit nilai mata pelajaran yang ia ampu di kelas tempat ia mengajar pada semester aktif).
+- **Immutable Tamper-Evident Audit Trail**:
+  - Pencatatan log perubahan data sensitif (Nilai Rapor, Saldo SPP, Perubahan User) dilengkapi nilai Hashing SHA-256 berantai (Merkle Tree / Cryptographic Ledger) untuk mencegah manipulasi data dari tingkat database langsung.
+- **Enterprise SSO & OAuth2 / SAML Ready**:
+  - Arsitektur terintegrasi dengan Google Workspace for Education & SSO YBWSA Pusat.
+
+---
+
+### 🚩 26.7: Zero-Downtime Feature Flag Engine & Blue-Green Readiness
+
+Manajemen rilis fitur berskala enterprise tanpa downtime:
+
+- **Feature Flag System (`FeatureFlagService`)**:
+  - Peluncuran fitur baru secara bertahap (Canary Release / Percentage Rollout) tanpa perlu redeploy kode.
+  - Sakelar On/Off instan di admin panel untuk modul opsional (misal: AI Copilot, Cashless Kantin, Maintenance Mode per Modul).
+- **Blue-Green Migration Safety**:
+  - Aturan migrasi database non-breaking (Expand & Contract Pattern): penambahan kolom baru dibuat nullable/default terlebih dahulu sebelum deprecation kolom lama.
+
+---
+
+### 🔒 26.8: Compliance Perlindungan Data Pribadi (PDPL / GDPR Ready)
+
+Kepatuhan terhadap Undang-Undang Perlindungan Data Pribadi (UU PDP No. 27 Tahun 2022):
+
+- **Encryption at Rest**: Enkripsi kolom sensitif (NIK, Nomor Telepon, Alamat Rumah, Rekam Medis UKS) menggunakan AES-256-GCM.
+- **Data Anonymization & Pseudonymization**: Fitur otomatis untuk menyamarkan nama dan identitas siswa saat mengekspor data untuk keperluan riset/statistik eksternal.
+- **Automated Data Archival Policy**: Kebijakan otomatis mengarsipkan data histori > 5 tahun ke tabel arsip dingin (*Cold Storage Tables*) untuk menjaga ukuran database utama tetap efisien.
+
+---
+
 ## 📋 Urutan Prioritas Implementasi (Updated Juli 2026)
 
 | Prioritas | Modul | Estimasi | Status |
@@ -3070,49 +3437,46 @@ tests/Feature/Security/ForensicSecurityTest.php:
 | 🟠 **P1** | **21.2: Portal ZIS & Wakaf YBWSA** | **3-4 hari** | ✅ Selesai |
 | 🔴 **P0** | **22.1: Dapodik & EMIS Sync Mapper** | **3-4 hari** | ✅ Selesai |
 | 🟠 **P1** | **22.2: AI Teacher Copilot (RPP & CBT)** | **4-5 hari** | ✅ Selesai |
-| 🟡 **P2** | **23.1: IoT QR Code Asset Tracking** | **3-4 hari** | ⬜ Belum |
-| 🟡 **P2** | **23.2: Barcode & NFC Integrasi Library** | **2-3 hari** | ⬜ Belum |
-| 🔴 **P0** | **24.1: Double-Entry Ledger Auditor** | **3-4 hari** | ⬜ Belum |
-| 🟢 **P3** | **24.2: Security Dashboard & Intrusion Alert** | **3-4 hari** | ⬜ Belum |
+| 🟡 **P2** | **23.1: IoT QR Code Asset Tracking** | **3-4 hari** | ✅ Selesai |
+| 🟡 **P2** | **23.2: Barcode & NFC Integrasi Library** | **2-3 hari** | ✅ Selesai |
+| 🔴 **P0** | **24.1: Double-Entry Ledger Auditor** | **3-4 hari** | ✅ Selesai |
+| 🟢 **P3** | **24.2: Security Dashboard & Intrusion Alert** | **3-4 hari** | ✅ Selesai |
+| 🔴 **P0** | **25.1: Purifikasi UI/UX — Eliminasi Total Emoji** | **2-3 hari** | ✅ Selesai |
+| 🔴 **P0** | **26.1: Modular Domain Boundaries (Single-School Enterprise Core)** | **3-4 hari** | ✅ Selesai |
+| 🟠 **P1** | **26.2: Event-Driven Queue & Background Bus** | **3-4 hari** | ✅ Selesai |
+| 🟡 **P2** | **26.3: Distributed Multi-Layer Cache Strategy** | **2-3 hari** | ✅ Selesai |
+| 🔴 **P0** | **26.4: API Gateway, Rate Limit & Circuit Breakers**| **3-4 hari** | ⬜ Belum |
+| 🟢 **P3** | **26.5: APM Observability, Tracing & Health Dashboard**| **3-4 hari** | ⬜ Belum |
+| 🔴 **P0** | **26.6: Immutable Audit Ledger & Enterprise RBAC**| **4-5 hari** | ⬜ Belum |
+| 🟢 **P3** | **26.7: Zero-Downtime Feature Flag Engine** | **2-3 hari** | ⬜ Belum |
+| 🟠 **P1** | **26.8: PDPL Privacy & Data Anonymization Engine** | **3-4 hari** | ⬜ Belum |
 
 ---
 
-## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target Akhir Terkini)
+## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target Akhir Enterprise Edition)
 
-| Metrik | Sekarang | Target Akhir (Fase 20) | **Target Akhir (Fase 24)** |
+| Metrik | Sekarang | Target Akhir (Fase 24) | **Target Akhir Enterprise (Fase 26)** |
 | :--- | :---: | :---: | :---: |
-| **Model Eloquent** | 119 | ~145 | **~158** |
-| **Controller** | ~77 | ~90 | **~105** |
-| **Service Class** | 39 | ~48 | **~54** |
-| **Migration** | 99 | ~112 | **~118** |
-| **View Directory** | 61 | ~75 | **~85** |
-| **Blade Templates** | ~350 | ~430 | **~480** |
-| **Test Files** | ~90 | ~120 | **~135** |
-| **Seeder Files** | 30 | ~38 | **~45** |
-| **Factory Files** | 29 | ~38 | **~45** |
-| **Demo Records** | ~3000 | ~5000+ | **~7500+** |
-
+| **Model Eloquent** | 119 | ~158 | **~175** |
+| **Controller** | ~77 | ~105 | **~120** |
+| **Service Class** | 39 | ~54 | **~68** |
+| **Migration** | 99 | ~118 | **~132** |
+| **View Directory** | 61 | ~85 | **~95** |
+| **Blade Templates** | ~350 | ~480 | **~540** |
+| **Test Files** | ~90 | ~135 | **~160** |
+| **Seeder Files** | 30 | ~45 | **~55** |
+| **Factory Files** | 29 | ~45 | **~55** |
+| **Demo Records** | ~3000 | ~7500+ | **~10.000+** |
 
 ---
 
 > [!IMPORTANT]
-> Seluruh pengembangan di atas dijalankan **100% di localhost** menggunakan `php artisan serve` + SQLite. Tidak membutuhkan server, domain, atau layanan pihak ketiga. Semua fitur bisa dibangun, ditest, dan di-demo langsung dari laptop developer.
+> Seluruh adopsi arsitektur enterprise di atas dirancang **Enterprise Lite Edition (Localhost Ready)** — dapat dijalankan 100% menggunakan `php artisan serve` + SQLite/Database lokal, tanpa mengharuskan server fisik multi-node atau Kubernetes, namun memiliki kesiapan struktur (architecture readiness) tingkat tinggi untuk portofolio teknologi berstandar industri.
 
 > [!TIP]
-> **Urutan Implementasi Fase 16-20 (Rekomendasi):**
-> 1. **Modul 16.1 (SPMB Online)** ✅ — karena SPMB adalah celah fitur paling kritis (controller kosong total) dan merupakan proses tahunan wajib sekolah.
-> 2. **Modul 16.2 (Alumni & Tracer Study Overhaul)** ✅ — karena modul alumni saat ini sangat dangkal (hanya 3 method) dan data alumni penting untuk akreditasi.
-> 3. **Modul 16.3 (HRD Enhancement)** ✅ — karena evaluasi kinerja, tracking sertifikasi, dan manajemen dokumen pegawai adalah kebutuhan operasional kunci.
-> 4. **Modul 16.4 (Ekskul Enhancement)** ✅ — karena menambahkan CRUD admin, achievement tracking, dan penilaian untuk rapor.
-> 5. **Modul 16.5 (OSIS & MPK Enhancement)** ✅ — karena menambahkan kepengurusan, program kerja, dan sistem pemilihan OSIS digital.
-> 6. **Modul 18.1 (WhatsApp Automation)** ✅ — karena notifikasi otomatis ke orang tua meningkatkan engagement dan value platform.
-> 7. **Modul 17.1 (Analytics & Predictive)** ✅ — karena predictive analytics untuk siswa at-risk adalah fitur pembeda premium.
-> 8. **Modul 17.3 (UKS & Rekam Medis)** ✅ — karena rekam medis siswa penting untuk keamanan dan kesejahteraan.
-> 9. **Modul 17.2 (AI Chatbot)** ✅ — karena chatbot context-aware adalah fitur WOW untuk portofolio.
-> 10. **Modul 17.4 (CMS & Website Publik)** ✅ — karena website publik adalah "wajah" sekolah untuk dunia luar.
-> 11. **Modul 18.2 (Penguatan Workflow)** ✅ — karena alur persetujuan dinamis dan pendelegasian memperkuat tata kelola sekolah digital.
-> 12. **Modul 19.1-19.3 (Data, Testing, Performance)** ✅ — quality assurance dan optimasi.
-> 13. **Modul 20.1 (Landing Page Polish)** ✅ — redesain landing, SEO, PWA, sitemap, print stylesheet.
-> 14. **Modul 20.2 (PWA Enhancement)** ✅ — offline page, install banner, push notification, responsive.
-> 15. **Modul 20.3 (Documentation)** ✅ — README, CHANGELOG, developer portal final update.
-
+> **Urutan Implementasi Fase 26 (Rekomendasi Enterprise):**
+> 1. **Modul 26.2 (Event-Driven Queue & Background Bus)** — memisahkan tugas berat dari HTTP Request lifecycle.
+> 2. **Modul 26.4 (API Gateway & Rate Limiting)** — mengamankan API endpoint dan mengintegrasikan Circuit Breaker.
+> 3. **Modul 26.6 (Immutable Audit Ledger)** — menjamin keamanan dan anti-tamper log transaksi keuangan & akademik.
+> 4. **Modul 26.5 (Enterprise Observability & APM)** — menyediakan visibilitas P99 latency dan query slow log.
+> 5. **Modul 26.7 (Feature Flag Engine)** — manajemen peluncuran modul baru tanpa redeploy.

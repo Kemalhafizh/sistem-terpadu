@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 no-print">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📄 Rincian Dokumen Surat
+                     Rincian Dokumen Surat
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {{ $letter->letter_number ?? 'Draf Surat (Belum Diterbitkan)' }}
@@ -13,25 +13,25 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('letters.index') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                    ⬅️ Kembali
+                    ⬅ Kembali
                 </a>
                 
                 @if($letter->status === 'draft' && in_array(auth()->user()->role, ['staf_tu', 'admin', 'superadmin']))
                     <form action="{{ route('letters.issue', $letter->id) }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menerbitkan surat ini? Setelah diterbitkan, nomor surat akan otomatis dihasilkan dan surat tidak dapat diubah lagi.')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                            ✍️ Terbitkan Surat
+                             Terbitkan Surat
                         </button>
                     </form>
                 @endif
 
                 <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                    🖨️ Cetak Langsung
+                     Cetak Langsung
                 </button>
 
                 @if($letter->status === 'issued')
                     <a href="{{ route('letters.pdf', $letter->id) }}" class="bg-red-600 hover:bg-red-700 text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shadow-md">
-                        ⬇️ Unduh PDF
+                        ⬇ Unduh PDF
                     </a>
                 @endif
             </div>
@@ -78,7 +78,7 @@
         <!-- Panel Informasi / Log Aktivitas -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4 no-print">
             <h4 class="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-100 dark:border-gray-700/50 pb-2">
-                📌 Detail Administrasi
+                 Detail Administrasi
             </h4>
 
             <div class="space-y-3 text-sm">
@@ -113,12 +113,12 @@
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Penerima Manfaat</span>
                     @if($letter->student)
                         <div class="mt-1 p-3 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-700/50">
-                            <p class="font-extrabold text-sm text-gray-800 dark:text-white">🎓 {{ $letter->student->name }}</p>
+                            <p class="font-extrabold text-sm text-gray-800 dark:text-white"> {{ $letter->student->name }}</p>
                             <p class="text-[11px] text-gray-400 mt-1">NISN: {{ $letter->student->nisn }} | Kelas: {{ $letter->student->classroom?->name ?? '-' }}</p>
                         </div>
                     @elseif($letter->employee)
                         <div class="mt-1 p-3 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-700/50">
-                            <p class="font-extrabold text-sm text-gray-800 dark:text-white">🧑‍🏫 {{ $letter->employee->name }}</p>
+                            <p class="font-extrabold text-sm text-gray-800 dark:text-white"> {{ $letter->employee->name }}</p>
                             <p class="text-[11px] text-gray-400 mt-1">NIP: {{ $letter->employee->nip ?? '-' }} | Jabatan: {{ $letter->employee->position ?? '-' }}</p>
                         </div>
                     @else
@@ -128,7 +128,7 @@
 
                 <div>
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Dibuat Oleh</span>
-                    <p class="font-bold text-gray-850 dark:text-gray-150 mt-0.5">👤 {{ $letter->creator->name }}</p>
+                    <p class="font-bold text-gray-850 dark:text-gray-150 mt-0.5"> {{ $letter->creator->name }}</p>
                     <p class="text-[11px] text-gray-400">Tanggal Pengarsipan: {{ $letter->created_at->translatedFormat('d M Y H:i') }} WIB</p>
                 </div>
 

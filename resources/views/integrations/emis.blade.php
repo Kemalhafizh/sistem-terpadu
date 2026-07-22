@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-300 tracking-tight leading-tight">
-                🔗 Sinkronisasi Ekspor EMIS Kemenag
+                 Sinkronisasi Ekspor EMIS Kemenag
             </h2>
             <a href="{{ route('admin.integrations.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-800 rounded-xl text-sm font-semibold text-gray-300 bg-gray-900 hover:bg-gray-850 hover:text-white transition-all duration-200">
                 &larr; Kembali
@@ -17,15 +17,15 @@
             <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-px">
                 <a href="{{ route('admin.integrations.emis', ['type' => 'students', 'classroom_id' => $classroomId]) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'students' ? 'border-cyan-500 text-cyan-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    🕌 Data Keagamaan Siswa
+                     Data Keagamaan Siswa
                 </a>
                 <a href="{{ route('admin.integrations.emis', ['type' => 'teachers']) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'teachers' ? 'border-cyan-500 text-cyan-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    👩‍🏫 Sertifikasi Guru (PTK)
+                     Sertifikasi Guru (PTK)
                 </a>
                 <a href="{{ route('admin.integrations.emis', ['type' => 'classrooms']) }}" 
                    class="px-5 py-3 text-sm font-bold border-b-2 transition-all duration-200 {{ $type === 'classrooms' ? 'border-cyan-500 text-cyan-400 font-extrabold' : 'border-transparent text-gray-400 hover:text-gray-200' }}">
-                    🏫 Rombongan Belajar
+                     Rombongan Belajar
                 </a>
             </div>
 
@@ -69,7 +69,7 @@
                             <input type="hidden" name="classroom_id" value="{{ $classroomId }}">
                             
                             <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 font-bold text-sm text-gray-950 rounded-2xl shadow-lg shadow-cyan-950/20 transition-all duration-200">
-                                📥 Ekspor ke Excel EMIS Kemenag
+                                 Ekspor ke Excel EMIS Kemenag
                             </button>
                         </form>
                     </div>

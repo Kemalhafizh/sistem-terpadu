@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    👥 Struktur Kepengurusan OSIS
+                     Struktur Kepengurusan OSIS
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Kelola pengurus OSIS aktif Tahun Ajaran: {{ $activeYear->year ?? '-' }}
                 </p>
             </div>
             <a href="{{ route('osis.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali
+                ⬅ Kembali
             </a>
         </div>
     </x-slot>
@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Form Daftarkan Pengurus -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl self-start">
-            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4">👥 Daftarkan Pengurus Baru</h3>
+            <h3 class="font-bold text-gray-800 dark:text-white text-sm mb-4"> Daftarkan Pengurus Baru</h3>
             
             <form action="{{ route('osis.members.store') }}" method="POST" class="space-y-4">
                 @csrf
@@ -55,7 +55,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                    🚀 Simpan Pengurus
+                     Simpan Pengurus
                 </button>
             </form>
         </div>
@@ -63,7 +63,7 @@
         <!-- Daftar Pengurus OSIS -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
-                <h3 class="font-bold text-gray-800 dark:text-white text-sm">👥 Daftar Pengurus Aktif</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Daftar Pengurus Aktif</h3>
             </div>
 
             <div class="overflow-x-auto">
@@ -96,7 +96,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-rose-600 hover:text-rose-700 text-xs font-bold">
-                                            ⚠️ Nonaktifkan
+                                             Nonaktifkan
                                         </button>
                                     </form>
                                 </td>

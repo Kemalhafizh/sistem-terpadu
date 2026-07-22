@@ -11,7 +11,7 @@
             </div>
             <div>
                 <a href="{{ route('event-attendance.show', $event->id) }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                    ⬅️ KEMBALI
+                    ⬅ KEMBALI
                 </a>
             </div>
         </div>
@@ -34,7 +34,7 @@
             {{-- Event Details Glassmorphic Card --}}
             <div class="bg-gradient-to-r from-primary-950 to-primary-900 rounded-[2.5rem] p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 translate-y-12 translate-x-12 opacity-10 pointer-events-none">
-                    <span class="text-[12rem]">🕌</span>
+                    <span class="text-[12rem]"></span>
                 </div>
                 <div class="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div>
@@ -68,7 +68,7 @@
                             {{ $event->event_date?->format('d M Y') }}
                             @if($event->start_time)
                                 <span class="block text-[10px] opacity-75 font-normal mt-0.5">
-                                    🕒 {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . \Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
+                                     {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}{{ $event->end_time ? ' - ' . \Carbon\Carbon::parse($event->end_time)->format('H:i') : '' }} WIB
                                 </span>
                             @endif
                         </p>
@@ -82,19 +82,19 @@
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mr-2">Set Semua Ke:</span>
                     <button type="button" @click="allStatus('hadir')" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                        🟢 HADIR
+                         HADIR
                     </button>
                     <button type="button" @click="allStatus('terlambat')" class="px-3 py-1.5 bg-teal-50 text-teal-600 hover:bg-teal-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                        🟡 TERLAMBAT
+                         TERLAMBAT
                     </button>
                     <button type="button" @click="allStatus('izin')" class="px-3 py-1.5 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                        🟠 IZIN
+                         IZIN
                     </button>
                     <button type="button" @click="allStatus('sakit')" class="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                        🔴 SAKIT
+                         SAKIT
                     </button>
                     <button type="button" @click="allStatus('alpa')" class="px-3 py-1.5 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
-                        ⚫ ALPA
+                         ALPA
                     </button>
                 </div>
 
@@ -228,7 +228,7 @@
                             Batal
                         </a>
                         <button type="submit" class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-primary-900/10">
-                            💾 Simpan Presensi
+                             Simpan Presensi
                         </button>
                     </div>
                 </div>

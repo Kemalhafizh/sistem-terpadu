@@ -6,7 +6,7 @@
             <div>
                 <span class="text-[10px] uppercase tracking-widest text-teal-600 dark:text-teal-400 font-black">SISTEM KEUANGAN SYARIAH</span>
                 <h2 class="font-black text-3xl text-gray-805 dark:text-white leading-tight mt-1">
-                    🕌 Dashboard Tabungan Wadiah
+                     Dashboard Tabungan Wadiah
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Kelola simpanan wadiah dan transaksi cashless siswa SMA Islam Sultan Agung 1 Semarang.
@@ -32,7 +32,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-150/60 dark:border-gray-700/50 shadow-xl shadow-slate-100/40 dark:shadow-none p-8 flex items-center gap-6 relative overflow-hidden transition-all hover:scale-[1.02]">
                 <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-teal-500/10 dark:bg-teal-500/5 rounded-full blur-2xl"></div>
                 <div class="w-16 h-16 bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 rounded-3xl flex items-center justify-center text-3xl shadow-inner shrink-0">
-                    💰
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Total Saldo Wadiah</span>
@@ -47,7 +47,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-150/60 dark:border-gray-700/50 shadow-xl shadow-slate-100/40 dark:shadow-none p-8 flex items-center gap-6 relative overflow-hidden transition-all hover:scale-[1.02]">
                 <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-2xl"></div>
                 <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-3xl flex items-center justify-center text-3xl shadow-inner shrink-0">
-                    👤
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Rekening Aktif</span>
@@ -62,7 +62,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-150/60 dark:border-gray-700/50 shadow-xl shadow-slate-100/40 dark:shadow-none p-8 flex items-center gap-6 relative overflow-hidden transition-all hover:scale-[1.02]">
                 <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-2xl"></div>
                 <div class="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-3xl flex items-center justify-center text-3xl shadow-inner shrink-0">
-                    🔄
+                    
                 </div>
                 <div>
                     <span class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Total Transaksi</span>
@@ -81,7 +81,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <span class="text-[10px] font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest block">ANALISIS AKTIVITAS 7 HARI TERAKHIR</span>
-                        <h3 class="font-black text-xl text-gray-800 dark:text-white mt-1">📊 Perbandingan Setoran vs Penarikan</h3>
+                        <h3 class="font-black text-xl text-gray-800 dark:text-white mt-1"> Perbandingan Setoran vs Penarikan</h3>
                     </div>
                 </div>
                 <div class="w-full">
@@ -93,12 +93,12 @@
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] border border-gray-150/60 dark:border-gray-700/50 shadow-xl p-6 md:p-8 lg:col-span-1 flex flex-col justify-between">
                 <div>
                     <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest block mb-1">AKSI CEPAT</span>
-                    <h3 class="font-black text-xl text-gray-800 dark:text-white mb-6">⚡ Operasi Keuangan</h3>
+                    <h3 class="font-black text-xl text-gray-800 dark:text-white mb-6"> Operasi Keuangan</h3>
                     
                     <div class="space-y-4">
                         <a href="{{ route('admin.finance.wadiah.index') }}" class="group flex items-center gap-4 p-4 rounded-3xl bg-teal-50/50 dark:bg-teal-900/10 border border-teal-100/50 dark:border-teal-900/20 hover:bg-teal-50 dark:hover:bg-teal-900/25 transition-all">
                             <div class="w-10 h-10 bg-teal-600 text-white rounded-2xl flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition-transform">
-                                📥
+                                
                             </div>
                             <div>
                                 <span class="block font-bold text-sm text-gray-800 dark:text-white">Setor Tunai</span>
@@ -108,7 +108,7 @@
                         
                         <a href="{{ route('admin.finance.wadiah.index') }}" class="group flex items-center gap-4 p-4 rounded-3xl bg-rose-50/50 dark:bg-rose-900/10 border border-rose-100/50 dark:border-rose-900/20 hover:bg-rose-50 dark:hover:bg-rose-900/25 transition-all">
                             <div class="w-10 h-10 bg-rose-605 bg-rose-600 text-white rounded-2xl flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition-transform">
-                                📤
+                                
                             </div>
                             <div>
                                 <span class="block font-bold text-sm text-gray-800 dark:text-white">Tarik Tunai</span>
@@ -118,7 +118,7 @@
 
                         <a href="{{ route('admin.finance.wadiah.merchants') }}" class="group flex items-center gap-4 p-4 rounded-3xl bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100/50 dark:border-indigo-900/20 hover:bg-indigo-50 dark:hover:bg-indigo-900/25 transition-all">
                             <div class="w-10 h-10 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition-transform">
-                                🏪
+                                
                             </div>
                             <div>
                                 <span class="block font-bold text-sm text-gray-800 dark:text-white">Register Merchant</span>
@@ -141,7 +141,7 @@
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <span class="text-[10px] font-black text-teal-600 dark:text-teal-400 uppercase tracking-widest block">RIWAYAT AKTIVITAS TERBARU</span>
-                    <h3 class="font-black text-xl text-gray-800 dark:text-white mt-1">🕒 10 Transaksi Terakhir</h3>
+                    <h3 class="font-black text-xl text-gray-800 dark:text-white mt-1"> 10 Transaksi Terakhir</h3>
                 </div>
                 <a href="{{ route('admin.finance.wadiah.index') }}" class="text-xs font-black text-teal-600 dark:text-teal-400 hover:underline">
                     LIHAT SEMUA TRANSAKSI →

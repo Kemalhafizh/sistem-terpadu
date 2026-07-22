@@ -11,7 +11,7 @@
             </div>
             <div>
                 <a href="{{ route('event-attendance.index') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                    ⬅️ KEMBALI
+                    ⬅ KEMBALI
                 </a>
             </div>
         </div>
@@ -98,7 +98,7 @@
                             <label class="relative flex flex-col p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 transition-all hover:bg-gray-100/50"
                                    :class="target === 'all_students' ? 'border-primary-600 bg-primary-50/20' : 'border-transparent'">
                                 <input type="radio" name="target" value="all_students" x-model="target" class="sr-only">
-                                <span class="text-xl mb-2">🎓</span>
+                                <span class="text-xl mb-2"></span>
                                 <span class="text-[10px] font-black uppercase tracking-wider text-gray-800">Semua Murid</span>
                                 <span class="text-[9px] text-gray-400 mt-1">Seluruh siswa aktif sekolah</span>
                             </label>
@@ -107,7 +107,7 @@
                             <label class="relative flex flex-col p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 transition-all hover:bg-gray-100/50"
                                    :class="target === 'all_teachers' ? 'border-primary-600 bg-primary-50/20' : 'border-transparent'">
                                 <input type="radio" name="target" value="all_teachers" x-model="target" class="sr-only">
-                                <span class="text-xl mb-2">👩‍🏫</span>
+                                <span class="text-xl mb-2"></span>
                                 <span class="text-[10px] font-black uppercase tracking-wider text-gray-800">Semua Guru</span>
                                 <span class="text-[9px] text-gray-400 mt-1">Seluruh staf & guru pengajar</span>
                             </label>
@@ -116,7 +116,7 @@
                             <label class="relative flex flex-col p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 transition-all hover:bg-gray-100/50"
                                    :class="target === 'specific_class' ? 'border-primary-600 bg-primary-50/20' : 'border-transparent'">
                                 <input type="radio" name="target" value="specific_class" x-model="target" class="sr-only">
-                                <span class="text-xl mb-2">🏫</span>
+                                <span class="text-xl mb-2"></span>
                                 <span class="text-[10px] font-black uppercase tracking-wider text-gray-800">Kelas Spesifik</span>
                                 <span class="text-[9px] text-gray-400 mt-1">Siswa dari kelas-kelas tertentu</span>
                             </label>
@@ -125,7 +125,7 @@
                             <label class="relative flex flex-col p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 transition-all hover:bg-gray-100/50"
                                    :class="target === 'specific_group' ? 'border-primary-600 bg-primary-50/20' : 'border-transparent'">
                                 <input type="radio" name="target" value="specific_group" x-model="target" class="sr-only">
-                                <span class="text-xl mb-2">👥</span>
+                                <span class="text-xl mb-2"></span>
                                 <span class="text-[10px] font-black uppercase tracking-wider text-gray-800">Grup Kustom</span>
                                 <span class="text-[9px] text-gray-400 mt-1">Kombinasi personal pilihan</span>
                             </label>
@@ -222,7 +222,7 @@
                             Batal
                         </a>
                         <button type="submit" class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-primary-900/10">
-                            🚀 Buat Kegiatan
+                             Buat Kegiatan
                         </button>
                     </div>
                 </form>

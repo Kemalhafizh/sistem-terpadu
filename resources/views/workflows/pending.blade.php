@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2">
-                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl">📥</span>
+                    <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"></span>
                     <span>{{ __('Inbox Persetujuan') }}</span>
                 </h2>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -63,7 +63,7 @@
                         {{ str_replace('_', ' ', auth()->user()->role) }}
                     </span>
                 </div>
-                <span class="p-3 bg-indigo-500/10 text-indigo-500 rounded-2xl text-xl">🛡️</span>
+                <span class="p-3 bg-indigo-500/10 text-indigo-500 rounded-2xl text-xl"></span>
             </div>
 
             <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-6 flex items-center justify-between shadow-sm hover:shadow-md transition duration-300">
@@ -73,7 +73,7 @@
                         Engine Aktif (Polimorfik)
                     </span>
                 </div>
-                <span class="p-3 bg-emerald-500/10 text-emerald-500 rounded-2xl text-xl">⚡</span>
+                <span class="p-3 bg-emerald-500/10 text-emerald-500 rounded-2xl text-xl"></span>
             </div>
         </div>
 
@@ -86,7 +86,7 @@
                     <div class="space-y-3 flex-grow max-w-4xl">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/50">
-                                📋 {{ $req->definition->name }}
+                                 {{ $req->definition->name }}
                             </span>
                             <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
                                 Step {{ $req->current_step }} / {{ $req->approvals->count() }}
@@ -160,9 +160,9 @@
                                 @foreach($req->approvals as $approval)
                                     <div class="flex items-center space-x-1">
                                         @if($approval->decision === 'approved')
-                                            <span class="w-3.5 h-3.5 bg-emerald-500 text-white rounded-full flex items-center justify-center text-[9px] font-black shadow-sm" title="{{ str_replace('_', ' ', $approval->role) }}: Disetujui">✓</span>
+                                            <span class="w-3.5 h-3.5 bg-emerald-500 text-white rounded-full flex items-center justify-center text-[9px] font-black shadow-sm" title="{{ str_replace('_', ' ', $approval->role) }}: Disetujui"></span>
                                         @elseif($approval->decision === 'rejected')
-                                            <span class="w-3.5 h-3.5 bg-rose-500 text-white rounded-full flex items-center justify-center text-[9px] font-black shadow-sm" title="{{ str_replace('_', ' ', $approval->role) }}: Ditolak">✗</span>
+                                            <span class="w-3.5 h-3.5 bg-rose-500 text-white rounded-full flex items-center justify-center text-[9px] font-black shadow-sm" title="{{ str_replace('_', ' ', $approval->role) }}: Ditolak"></span>
                                         @else
                                             <span class="w-3.5 h-3.5 bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-full flex items-center justify-center text-[8px] font-black" title="{{ str_replace('_', ' ', $approval->role) }}: Menunggu">
                                                 {{ $approval->step_order }}
@@ -182,17 +182,17 @@
                     <div class="flex flex-row md:flex-col items-center justify-end gap-2 flex-shrink-0 self-end md:self-center w-full md:w-auto pt-4 md:pt-0 border-t border-gray-100 dark:border-slate-800 md:border-t-0">
                         <a href="{{ route('workflows.show', $req) }}" 
                            class="flex-1 md:w-full text-center px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition active:scale-95 flex items-center justify-center space-x-1.5 shadow-sm">
-                            <span>🔍 Audit Trail & Detail</span>
+                            <span> Audit Trail & Detail</span>
                         </a>
 
                         <button @click="showActionModal = true; modalType = 'approve'; activeRequestId = {{ $req->id }}; activeRequestTitle = '{{ addslashes($req->definition->name) }}'; activeRequester = '{{ addslashes($req->requester->name) }}'; remarks = ''" 
                                 class="flex-grow md:w-full px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-md shadow-emerald-500/10 active:scale-95 flex items-center justify-center space-x-1">
-                            <span>✅ Setujui</span>
+                            <span> Setujui</span>
                         </button>
 
                         <button @click="showActionModal = true; modalType = 'reject'; activeRequestId = {{ $req->id }}; activeRequestTitle = '{{ addslashes($req->definition->name) }}'; activeRequester = '{{ addslashes($req->requester->name) }}'; remarks = ''" 
                                 class="flex-grow md:w-full px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition shadow-md shadow-rose-500/10 active:scale-95 flex items-center justify-center space-x-1">
-                            <span>❌ Tolak</span>
+                            <span> Tolak</span>
                         </button>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                 <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-16 text-center shadow-sm">
                     <div class="flex flex-col items-center">
                         <div class="w-20 h-20 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-5 border border-gray-100">
-                            <span class="text-3xl">📭</span>
+                            <span class="text-3xl"></span>
                         </div>
                         <h3 class="text-lg font-black text-gray-800 dark:text-gray-200 mb-2">Kotak Masuk Kosong</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed">
@@ -223,7 +223,7 @@
                 <div class="space-y-1">
                     <h4 class="text-lg font-black text-gray-900 dark:text-gray-100 flex items-center space-x-2">
                         <span :class="modalType === 'approve' ? 'p-1.5 bg-emerald-500/10 text-emerald-600' : 'p-1.5 bg-rose-500/10 text-rose-600'" class="rounded-lg">
-                            <span x-text="modalType === 'approve' ? '✅' : '❌'"></span>
+                            <span x-text="modalType === 'approve' ? '' : ''"></span>
                         </span>
                         <span x-text="modalType === 'approve' ? 'Persetujuan Pengajuan' : 'Penolakan Pengajuan'"></span>
                     </h4>

@@ -5,14 +5,14 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight">
-                    📊 Cohort Comparison (Perbandingan Angkatan)
+                     Cohort Comparison (Perbandingan Angkatan)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Bandingkan statistik penyerapan dan keselarasan kurikulum antar-angkatan alumni.
                 </p>
             </div>
             <a href="{{ route('alumni.tracer-study.analytics') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
-                ⬅️ Kembali ke Analitik
+                ⬅ Kembali ke Analitik
             </a>
         </div>
     </x-slot>
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
-                        🔄 Bandingkan Data
+                         Bandingkan Data
                     </button>
                 </div>
             </form>
@@ -50,7 +50,7 @@
             <!-- Cohort A Card -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border-gray-250 dark:border-gray-700 shadow-xl space-y-6 border-t-4 border-t-blue-500">
                 <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700/50">
-                    <h3 class="font-black text-lg text-blue-600 dark:text-blue-400">🎓 Angkatan {{ $yearA }}</h3>
+                    <h3 class="font-black text-lg text-blue-600 dark:text-blue-400"> Angkatan {{ $yearA }}</h3>
                     <span class="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 font-extrabold text-[10px] rounded-lg">Cohort A</span>
                 </div>
 
@@ -67,7 +67,7 @@
 
                 <!-- Activity Bars -->
                 <div class="space-y-3">
-                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider">🍩 Distribusi Aktivitas</h4>
+                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider"> Distribusi Aktivitas</h4>
                     
                     <div class="space-y-2 text-xs">
                         <!-- Kuliah -->
@@ -121,7 +121,7 @@
             <!-- Cohort B Card -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border-gray-250 dark:border-gray-700 shadow-xl space-y-6 border-t-4 border-t-purple-500">
                 <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700/50">
-                    <h3 class="font-black text-lg text-purple-600 dark:text-purple-400">🎓 Angkatan {{ $yearB }}</h3>
+                    <h3 class="font-black text-lg text-purple-600 dark:text-purple-400"> Angkatan {{ $yearB }}</h3>
                     <span class="px-2.5 py-1 bg-purple-50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-400 font-extrabold text-[10px] rounded-lg">Cohort B</span>
                 </div>
 
@@ -138,7 +138,7 @@
 
                 <!-- Activity Bars -->
                 <div class="space-y-3">
-                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider">🍩 Distribusi Aktivitas</h4>
+                    <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider"> Distribusi Aktivitas</h4>
                     
                     <div class="space-y-2 text-xs">
                         <!-- Kuliah -->

@@ -227,6 +227,23 @@ class SpmbController extends Controller
     // Cetak Kartu Peserta
     public function printCard(Registration $registration)
     {
+        $isAuthorized = false;
+        
+        if (auth()->check()) {
+            $user = auth()->user();
+            if (in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'kepala_sekolah'])) {
+                $isAuthorized = true;
+            }
+        }
+        
+        if (!$isAuthorized && session('registration_number') === $registration->registration_number) {
+            $isAuthorized = true;
+        }
+        
+        if (!$isAuthorized) {
+            abort(403, 'Akses ditolak. Anda tidak berwenang mencetak kartu peserta ini.');
+        }
+
         return view('spmb.print-card', compact('registration'));
     }
 

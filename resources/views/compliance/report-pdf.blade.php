@@ -181,7 +181,7 @@
     <table class="header-table" cellpadding="0" cellspacing="0">
         <tr>
             <td class="logo-cell">
-                <div class="logo-cell" style="font-size: 28px; line-height: 1;">🕌</div>
+                <div class="logo-cell" style="font-size: 28px; line-height: 1;"></div>
             </td>
             <td class="title-cell">
                 <div class="school-name">{{ $schoolName }}</div>
@@ -268,7 +268,7 @@
     <table class="header-table" cellpadding="0" cellspacing="0">
         <tr>
             <td class="logo-cell">
-                <div class="logo-cell" style="font-size: 28px; line-height: 1;">🕌</div>
+                <div class="logo-cell" style="font-size: 28px; line-height: 1;"></div>
             </td>
             <td class="title-cell">
                 <div class="school-name">{{ $schoolName }}</div>

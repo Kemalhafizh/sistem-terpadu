@@ -178,7 +178,7 @@
                                         <div class="subject-name">{{ $existing->subject->name }}</div>
                                         <div class="teacher-name">{{ $existing->teacher->name }}</div>
                                         @if($existing->room)
-                                            <div class="room-name">📍 {{ $existing->room->name }}</div>
+                                            <div class="room-name"> {{ $existing->room->name }}</div>
                                         @endif
                                     </div>
                                 @endif

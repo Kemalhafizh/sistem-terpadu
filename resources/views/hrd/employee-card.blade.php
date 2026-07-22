@@ -112,7 +112,7 @@
         
         <!-- Foto -->
         <div class="photo-box">
-            <div class="photo-placeholder">👤</div>
+            <div class="photo-placeholder"></div>
         </div>
 
         <!-- Info Pegawai -->

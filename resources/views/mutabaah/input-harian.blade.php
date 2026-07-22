@@ -28,7 +28,7 @@
                 <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-4">
                     <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                         <h3 class="text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">🕌</span>
+                            <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"></span>
                             Shalat 5 Waktu Wajib
                         </h3>
                         <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Maksimal 75 Poin</span>
@@ -76,7 +76,7 @@
                 <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-4">
                     <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                         <h3 class="text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <span class="p-1.5 bg-amber-50 text-amber-600 rounded-lg">📖</span>
+                            <span class="p-1.5 bg-amber-50 text-amber-600 rounded-lg"></span>
                             Sunnah & Tadarus Al-Qur'an
                         </h3>
                         <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Maksimal 20 Poin</span>
@@ -134,7 +134,7 @@
                 <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-4">
                     <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                         <h3 class="text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                            <span class="p-1.5 bg-rose-50 text-rose-600 rounded-lg">✨</span>
+                            <span class="p-1.5 bg-rose-50 text-rose-600 rounded-lg"></span>
                             Puasa, Sedekah & Dzikir
                         </h3>
                         <span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Maksimal 15 Poin</span>
@@ -194,7 +194,7 @@
                 {{-- Catatan Harian / Refleksi --}}
                 <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-4">
                     <h3 class="text-sm font-black text-gray-800 uppercase tracking-wider flex items-center gap-2 border-b border-gray-100 pb-3">
-                        <span class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">💭</span>
+                        <span class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg"></span>
                         Catatan Harian & Refleksi Diri
                     </h3>
                     <div>

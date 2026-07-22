@@ -19,26 +19,26 @@
             {{-- ── Statistics Cards ─────────────────────────────────────── --}}
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
                 <x-stat-card title="Total" :value="$stats['total']" color="secondary">
-                    <x-slot name="icon">📊</x-slot>
+                    <x-slot name="icon"></x-slot>
                 </x-stat-card>
                 <x-stat-card title="Pending" :value="$stats['pending']" color="info">
                     <x-slot name="icon">⏳</x-slot>
                 </x-stat-card>
                 <x-stat-card title="Selesai" :value="$stats['completed']" color="success">
-                    <x-slot name="icon">✅</x-slot>
+                    <x-slot name="icon"></x-slot>
                 </x-stat-card>
                 <x-stat-card title="Terlambat" :value="$stats['overdue']" color="danger" class="{{ $stats['overdue'] > 0 ? 'animate-pulse' : '' }}">
-                    <x-slot name="icon">🔴</x-slot>
+                    <x-slot name="icon"></x-slot>
                 </x-stat-card>
                 <x-stat-card title="Hari Ini" :value="$stats['due_today']" color="warning">
-                    <x-slot name="icon">📅</x-slot>
+                    <x-slot name="icon"></x-slot>
                 </x-stat-card>
                 <x-stat-card title="Prioritas" :value="$stats['high_priority']" color="danger">
-                    <x-slot name="icon">🔥</x-slot>
+                    <x-slot name="icon"></x-slot>
                 </x-stat-card>
                 <div class="bg-gradient-to-br from-primary-600 to-indigo-700 dark:from-primary-750 dark:to-indigo-850 rounded-2xl p-4 shadow-xs relative overflow-hidden group hover:shadow-md transition-all transform hover:-translate-y-0.5 border border-transparent">
                     <div class="absolute top-0 right-0 w-12 h-12 bg-white/10 rounded-bl-xl flex items-center justify-center">
-                        <span class="text-md">🏆</span>
+                        <span class="text-md"></span>
                     </div>
                     <p class="text-[10px] font-black text-white/70 uppercase tracking-widest">Produktivitas</p>
                     <p class="text-2xl font-black text-white mt-1">{{ $stats['completion_rate'] }}%</p>
@@ -65,11 +65,11 @@
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Kategori</label>
                         <select name="category" class="w-full text-xs font-bold rounded-xl border-gray-100 focus:border-primary-500 focus:ring-primary-500">
                             <option value="">Semua Kategori</option>
-                            <option value="mengajar" {{ request('category') == 'mengajar' ? 'selected' : '' }}>📚 Mengajar</option>
-                            <option value="administrasi" {{ request('category') == 'administrasi' ? 'selected' : '' }}>📋 Administrasi</option>
-                            <option value="rapat" {{ request('category') == 'rapat' ? 'selected' : '' }}>🤝 Rapat</option>
-                            <option value="penilaian" {{ request('category') == 'penilaian' ? 'selected' : '' }}>📝 Penilaian</option>
-                            <option value="lainnya" {{ request('category') == 'lainnya' ? 'selected' : '' }}>📌 Lainnya</option>
+                            <option value="mengajar" {{ request('category') == 'mengajar' ? 'selected' : '' }}> Mengajar</option>
+                            <option value="administrasi" {{ request('category') == 'administrasi' ? 'selected' : '' }}> Administrasi</option>
+                            <option value="rapat" {{ request('category') == 'rapat' ? 'selected' : '' }}> Rapat</option>
+                            <option value="penilaian" {{ request('category') == 'penilaian' ? 'selected' : '' }}> Penilaian</option>
+                            <option value="lainnya" {{ request('category') == 'lainnya' ? 'selected' : '' }}> Lainnya</option>
                         </select>
                     </div>
                     <div>
@@ -177,7 +177,7 @@
                                             ];
                                         @endphp
                                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider border {{ $prioStyles[$todo->priority] ?? 'bg-gray-50 text-gray-600' }}">
-                                            {{ $todo->priority === 'high' ? '🔴' : ($todo->priority === 'medium' ? '🟡' : '🟢') }}
+                                            {{ $todo->priority === 'high' ? '' : ($todo->priority === 'medium' ? '' : '') }}
                                             {{ ucfirst($todo->priority) }}
                                         </span>
 
@@ -198,14 +198,14 @@
                                                 }
                                             @endphp
                                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider border {{ $dueBadge }}">
-                                                📅 {{ $dueLabel }}
+                                                 {{ $dueLabel }}
                                             </span>
                                         @endif
 
                                         {{-- Completed At --}}
                                         @if($todo->is_completed && $todo->completed_at)
                                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-600 border border-emerald-100">
-                                                ✅ Selesai {{ $todo->completed_at->diffForHumans() }}
+                                                 Selesai {{ $todo->completed_at->diffForHumans() }}
                                             </span>
                                         @endif
                                     </div>
@@ -214,7 +214,7 @@
                         </div>
                     @empty
                         <div class="text-center py-16">
-                            <div class="text-5xl mb-4">🎯</div>
+                            <div class="text-5xl mb-4"></div>
                             <h3 class="font-black text-gray-400 text-sm uppercase tracking-wider">Belum Ada Todo</h3>
                             <p class="text-xs text-gray-400 mt-2">
                                 @if($status === 'completed')
@@ -265,19 +265,19 @@
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Prioritas *</label>
                         <select name="priority" required class="w-full text-xs font-bold rounded-xl border-gray-100 focus:border-primary-500 focus:ring-primary-500">
-                            <option value="low">🟢 Low</option>
-                            <option value="medium" selected>🟡 Medium</option>
-                            <option value="high">🔴 High</option>
+                            <option value="low"> Low</option>
+                            <option value="medium" selected> Medium</option>
+                            <option value="high"> High</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Kategori *</label>
                         <select name="category" required class="w-full text-xs font-bold rounded-xl border-gray-100 focus:border-primary-500 focus:ring-primary-500">
-                            <option value="mengajar">📚 Mengajar</option>
-                            <option value="administrasi">📋 Administrasi</option>
-                            <option value="rapat">🤝 Rapat</option>
-                            <option value="penilaian">📝 Penilaian</option>
-                            <option value="lainnya">📌 Lainnya</option>
+                            <option value="mengajar"> Mengajar</option>
+                            <option value="administrasi"> Administrasi</option>
+                            <option value="rapat"> Rapat</option>
+                            <option value="penilaian"> Penilaian</option>
+                            <option value="lainnya"> Lainnya</option>
                         </select>
                     </div>
                 </div>
@@ -321,19 +321,19 @@
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Prioritas *</label>
                         <select name="priority" id="editPriority" required class="w-full text-xs font-bold rounded-xl border-gray-100 focus:border-primary-500 focus:ring-primary-500">
-                            <option value="low">🟢 Low</option>
-                            <option value="medium">🟡 Medium</option>
-                            <option value="high">🔴 High</option>
+                            <option value="low"> Low</option>
+                            <option value="medium"> Medium</option>
+                            <option value="high"> High</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Kategori *</label>
                         <select name="category" id="editCategory" required class="w-full text-xs font-bold rounded-xl border-gray-100 focus:border-primary-500 focus:ring-primary-500">
-                            <option value="mengajar">📚 Mengajar</option>
-                            <option value="administrasi">📋 Administrasi</option>
-                            <option value="rapat">🤝 Rapat</option>
-                            <option value="penilaian">📝 Penilaian</option>
-                            <option value="lainnya">📌 Lainnya</option>
+                            <option value="mengajar"> Mengajar</option>
+                            <option value="administrasi"> Administrasi</option>
+                            <option value="rapat"> Rapat</option>
+                            <option value="penilaian"> Penilaian</option>
+                            <option value="lainnya"> Lainnya</option>
                         </select>
                     </div>
                 </div>
