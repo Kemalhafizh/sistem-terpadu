@@ -853,10 +853,11 @@
                 scrollToActive() {
                     const container = this.$refs.container;
                     if (container && container.children[this.active]) {
-                        container.children[this.active].scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'nearest',
-                            inline: 'start'
+                        const child = container.children[this.active];
+                        const targetLeft = child.offsetLeft - container.offsetLeft;
+                        container.scrollTo({
+                            left: targetLeft,
+                            behavior: 'smooth'
                         });
                     }
                 },

@@ -12,9 +12,26 @@ class Student extends Model
 
     protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_date', 'address', 'status', 'total_xp', 'current_streak', 'longest_streak'];
 
-    protected $casts = [
-        'address' => 'encrypted',
-    ];
+    /**
+     * Graceful Encrypted Attribute for Student Address (handles legacy plain-text data safely).
+     */
+    protected function address(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: function ($value) {
+                if (empty($value)) {
+                    return $value;
+                }
+                try {
+                    return \Illuminate\Support\Facades\Crypt::decryptString($value);
+                } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                    // Jika data lama di database masih berbentuk plain-text, kembalikan tanpa error
+                    return $value;
+                }
+            },
+            set: fn ($value) => !empty($value) ? \Illuminate\Support\Facades\Crypt::encryptString($value) : $value
+        );
+    }
 
     public function user()
     {

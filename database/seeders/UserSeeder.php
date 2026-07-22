@@ -10,8 +10,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = [
-            // Staff & Admins (9 users)
-            ['name' => 'Superadmin IT', 'email' => 'admin@sultanagung1.sch.id', 'role' => 'admin'],
+            // Executive Superadmin (Akun Tunggal Ultimate Root Power)
+            ['name' => 'Superadmin Ultimate YBWSA', 'email' => 'superadmin@sultanagung1.sch.id', 'role' => 'superadmin'],
+            // Technical Admin (Troubleshooting & System Monitoring)
+            ['name' => 'Admin Operasional Support', 'email' => 'admin@sultanagung1.sch.id', 'role' => 'admin'],
             ['name' => 'KH. Ahmad Fauzi, S.Pd.I', 'email' => 'kepsek@sultanagung1.sch.id', 'role' => 'kepala_sekolah'],
             ['name' => 'Dra. Siti Aminah, M.Pd', 'email' => 'waka.kurikulum@sultanagung1.sch.id', 'role' => 'waka_kurikulum'],
             ['name' => 'Ust. Mahmud Hasan, S.Pd', 'email' => 'waka.kesiswaan@sultanagung1.sch.id', 'role' => 'waka_kesiswaan'],
@@ -77,10 +79,14 @@ class UserSeeder extends Seeder
         }
 
         foreach ($users as $u) {
-            User::create(array_merge($u, [
-                'password' => bcrypt('password123'),
-                'email_verified_at' => now(),
-            ]));
+            User::updateOrCreate(
+                ['email' => $u['email']],
+                array_merge($u, [
+                    'password' => bcrypt('password'),
+                    'email_verified_at' => now(),
+                    'uuid' => (string) \Illuminate\Support\Str::uuid(),
+                ])
+            );
         }
     }
 }

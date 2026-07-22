@@ -10,13 +10,23 @@ class PermissionService
     public function getRolePermissionMatrix(): array
     {
         return [
-            'admin' => [
-                'label' => 'Administrator Utama',
-                'permissions' => ['academic.*', 'finance.*', 'security.*', 'observability.*', 'hrd.*'],
-            ],
             'superadmin' => [
-                'label' => 'Super Administrator (YBWSA)',
+                'label' => 'Super Administrator (Ultimate Single Account YBWSA)',
+                'description' => 'Akun tunggal pemilik hak akses penuh tanpa batas (*), pengontrol utama seluruh modul dan kebijakan enterprise.',
                 'permissions' => ['*'],
+            ],
+            'admin' => [
+                'label' => 'Administrator Operasional & Observabilitas (Troubleshoot & Monitor)',
+                'description' => 'Administrator teknis terbatas untuk pemantauan sistem, troubleshooting, monitoring APM, queue, cache, dan audit log.',
+                'permissions' => [
+                    'observability.*',
+                    'security.logs.view',
+                    'system.cache.manage',
+                    'system.queue.monitor',
+                    'system.troubleshoot.*',
+                    'academic.view',
+                    'finance.view',
+                ],
             ],
             'guru' => [
                 'label' => 'Guru Pengajar',

@@ -46,7 +46,8 @@ test('verify chain integrity detects tampered log record', function () {
 
 test('permission service validates enterprise role and permission matrix', function () {
     expect($this->permissionService->hasPermission('superadmin', 'any.random.permission'))->toBeTrue();
-    expect($this->permissionService->hasPermission('admin', 'academic.grades.edit'))->toBeTrue();
+    expect($this->permissionService->hasPermission('admin', 'observability.apm.view'))->toBeTrue();
+    expect($this->permissionService->hasPermission('admin', 'academic.grades.edit'))->toBeFalse();
     expect($this->permissionService->hasPermission('student', 'finance.ledger.view'))->toBeFalse();
 });
 
