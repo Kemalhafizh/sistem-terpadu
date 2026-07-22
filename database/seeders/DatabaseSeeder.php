@@ -68,6 +68,11 @@ class DatabaseSeeder extends Seeder
                 SchoolBrandingSeeder::class,
                 QueueDemoSeeder::class,
                 CacheWarmupSeeder::class,
+                CircuitBreakerSeeder::class,
+                ApmTelemetrySeeder::class,
+                ImmutableAuditLedgerSeeder::class,
+                PdplPrivacySeeder::class,
+                FeatureFlagSeeder::class,
             ]);
         });
     }

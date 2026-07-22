@@ -630,4 +630,136 @@ Berikut adalah usulan potongan kode perbaikan (*remediation patches*) untuk menu
 ```
 
 ---
+
+## 🏛️ Cetak Biru (Blueprint) Keamanan Web Sekolah Skala Enterprise
+
+Sebagai bagian dari komitmen peningkatan mutu dan kualitas sistem informasi **Sistem Terpadu (SISTA) SMA Islam Sultan Agung 1 Semarang**, dokumen ini merumuskan skema cetak biru arsitektur keamanan tingkat profesional dan enterprise. Cetak biru ini dirancang untuk melindungi data sensitif siswa, rekam medis, dan transaksi keuangan sekolah baik dari ancaman luar (perimeter) maupun ancaman dari dalam (internal).
+
+```mermaid
+graph TD
+    subgraph Perimeter Keamanan Eksternal (Cloudflare Enterprise)
+        Internet --> CloudflareWAF["Cloudflare WAF & DDoS Mitigation"]
+        CloudflareWAF --> SSL_TLS["TLS 1.3 & HSTS Enforcer"]
+        SSL_TLS --> DNSSEC["DNSSEC / SPF / DKIM / DMARC Validation"]
+    end
+
+    subgraph Server Boundary (Reverse Proxy & API Gateway)
+        DNSSEC --> NginxProxy["Nginx Reverse Proxy (Rate Limiter & IP Whitelisting)"]
+    end
+
+    subgraph Internal Application & Data Defense (Laravel Core)
+        NginxProxy --> AppRBAC["Zero Trust Role-Based Access Control (Policies/Gates)"]
+        AppRBAC --> CryptEngine["AES-256-GCM Database Column-Level Encryption"]
+        AppRBAC --> MFA["Mandatory Multi-Factor Authentication (TOTP / WebAuthn)"]
+    end
+
+    subgraph Storage & Database Layer
+        CryptEngine --> EncryptedDB["PostgreSQL / MySQL (Encrypted at Rest)"]
+        MFA --> SecurityLogs["Tamper-Proof Audit Trail (ELK / Wazuh SIEM)"]
+    end
+```
+
+---
+
+### 1. Perimeter Keamanan Eksternal (External Security Boundaries)
+Perimeter luar berfungsi sebagai garda terdepan untuk menepis serangan siber sebelum masuk menyentuh server aplikasi utama sekolah.
+
+#### A. Web Application Firewall (WAF) & DDoS Mitigation **[Selesai ✅]**
+- **Rekomendasi Solusi**: Implementasi **Cloudflare Enterprise** atau **AWS WAF** (Level Edge) & **AdminIpWhitelistMiddleware** (Level Aplikasi).
+- **Skema Implementasi**:
+  - Mengaktifkan perlindungan DDoS Layer 3/4 (Network) dan Layer 7 (Application) untuk menyaring trafik tidak sah (*botnets*, *crawlers*, *brute-force*).
+  - Menerapkan aturan WAF OWASP Top 10 secara ketat guna memblokir injeksi SQL, Cross-Site Scripting (XSS), dan Remote File Inclusion (RFI) di level edge server.
+  - Melakukan *geo-blocking* atau *rate limiting* serta IP Whitelisting (`AdminIpWhitelistMiddleware.php`) untuk mencegah akses dari bot asing mencurigakan.
+
+#### B. Otentikasi Email & DNS Security (Anti-Phishing) **[Selesai ✅]**
+- **Rekomendasi Solusi**: Konfigurasi DNS Sekolah (`sultanagung1.sch.id`) & Otomatisasi Audit via `php artisan security:check-dns`.
+- **Skema Implementasi**:
+  - **DNSSEC (DNS Security Extensions)**: Mengaktifkan DNSSEC untuk mencegah serangan *DNS Cache Poisoning* dan pembajakan rute DNS (*DNS Spoofing*).
+  - **SPF (Sender Policy Framework)**: Mendefinisikan IP server pengirim email sekolah yang sah guna mencegah pemalsuan identitas email (*email spoofing*).
+  - **DKIM (DomainKeys Identified Mail)**: Menambahkan tanda tangan digital pada header email keluar untuk menjamin integritas isi email.
+  - **DMARC (Domain-based Message Authentication, Reporting, and Conformance)**: Mengatur kebijakan DMARC ke tingkat `reject` atau `quarantine` jika email dari domain sekolah gagal validasi SPF/DKIM, guna meminimalisir penipuan (phishing) bertema PPDB atau SPP kepada orang tua siswa.
+  - **Skrip Auditor Otomatis**: Menjalankan `CheckDnsSecurityCommand.php` untuk memvalidasi kepatuhan record DNS secara berkala.
+
+#### C. SSL/TLS Modern & HTTP Security Headers **[Selesai ✅]**
+- **Rekomendasi Solusi**: Konfigurasi TLS server web (Nginx/Apache).
+- **Skema Implementasi**:
+  - Menolak seluruh koneksi di bawah **TLS 1.2** dan mewajibkan penggunaan **TLS 1.3** dengan Cipher Suite modern (misal: `ECDHE-ECDSA-AES256-GCM-SHA384`).
+  - Mengaktifkan **HSTS (HTTP Strict Transport Security)** dengan masa aktif minimal 1 tahun (`max-age=31536000; includeSubDomains; preload`) untuk mencegah serangan *downgrade* SSL (*Man-in-the-Middle*).
+  - Menambahkan security headers penting pada respon HTTP aplikasi:
+    ```http
+    Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-random' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: strict-origin-when-cross-origin
+    Permissions-Policy: geolocation=(), camera=(), microphone=()
+    ```
+
+---
+
+### 2. Pertahanan Aplikasi & Data Internal (Internal Application & Data Defense)
+Pertahanan dari dalam bertujuan meminimalkan risiko apabila penyerang berhasil menembus perimeter luar atau jika terjadi ancaman dari aktor internal (insider threat).
+
+#### A. Zero Trust Role-Based Access Control (RBAC) & IP Whitelisting **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Seluruh akses administratif (misal: menu HRD Payroll, Keuangan Executive, Integrasi WhatsApp Gateway) wajib menggunakan verifikasi ganda.
+  - Menerapkan **IP Whitelisting** (`AdminIpWhitelistMiddleware`) di level web server sehingga rute `/admin/*` hanya dapat diakses melalui alamat IP publik kantor sekolah SMA Islam Sultan Agung 1 Semarang atau koneksi VPN internal sekolah.
+  - Membatasi delegasi wewenang secara bertingkat: guru biasa tidak boleh membaca laporan keuangan atau data siswa kelas lain secara langsung, melainkan harus mendapat delegasi resmi dari kepala sekolah atau waka kesiswaan.
+
+#### B. Multi-Factor Authentication (MFA / 2FA) yang Wajib **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Mengintegrasikan otentikasi dua faktor berbasis **TOTP (Time-based One-Time Password)** menggunakan Google Authenticator/Microsoft Authenticator untuk semua pengguna dengan hak akses administratif (Admin, Superadmin, Staf Keuangan/TU, Kepala Sekolah).
+  - Menyediakan opsi otentikasi fisik tanpa sandi menggunakan standar **WebAuthn (FIDO2 / YubiKey)** untuk proteksi tingkat tinggi bagi administrator sistem utama.
+
+#### C. Enkripsi Kolom Database Tingkat Lanjut (Column-Level Encryption) **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Menggunakan fitur enkripsi kolom bawaan Laravel (`casts: encrypted` menggunakan AES-256-GCM) untuk mengamankan data sensitif siswa dan staf:
+    - Nomor Rekening Bank dan Slip Gaji Guru (Modul HRD).
+    - Rekam Medis UKS dan Riwayat Screening Siswa (Modul UKS).
+    - Catatan Konseling BK Siswa yang bersifat rahasia (Modul Counseling).
+  - Melakukan enkripsi pada level penyimpanan disk database (*Encryption-at-Rest*) pada server database PostgreSQL/MySQL untuk mencegah pencurian data jika berkas fisik database bocor.
+
+#### D. Tamper-Proof Audit Logging & SIEM Integration **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Log aktivitas tidak boleh disimpan hanya di database lokal (karena admin nakal dapat memodifikasinya). Log harus diekspor secara real-time ke log collector eksternal.
+  - Mengirimkan log keamanan Laravel (failed login attempts, role changes, financial modifications) ke SIEM platform (seperti **Wazuh** atau **Elasticsearch/Logstash/Kibana (ELK)**) menggunakan protokol log terenkripsi.
+  - Mengaktifkan notifikasi instan via Telegram/WhatsApp khusus kepada tim IT sekolah jika terjadi anomali, seperti login admin di luar jam kerja sekolah (misal: jam 2 malam) atau pencatatan transfer dana besar.
+
+---
+
+### 3. DevSecOps & Siklus Hidup Keamanan (Security Lifecycle)
+Proses pengembangan sistem informasi sekolah harus mengintegrasikan pengujian keamanan secara otomatis guna mendeteksi bug baru secara dini.
+
+#### A. Static Application Security Testing (SAST) & Dependency Audit **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Mengintegrasikan perkakas analisis statis **Larastan** (PHPStan tingkat lanjut) dan **Snyk/GitHub Dependabot** ke dalam alur kerja CI/CD (GitHub Actions).
+  - Setiap perubahan kode baru (*Pull Request*) secara otomatis akan diperiksa untuk mendeteksi:
+    - Penggunaan dependensi PHP (Composer packages) yang memiliki kerentanan keamanan yang terdaftar (CVE).
+    - Pola penulisan kode berisiko (raw query SQL rawan SQLi, manipulasi path rawan Path Traversal).
+  - Pembuatan *build* ke server staging/production akan diblokir otomatis jika ditemukan kerentanan dengan tingkat keparahan tinggi (*High/Critical*).
+
+#### B. Dynamic Application Security Testing (DAST) harian **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Menjalankan perkakas scanning otomatis seperti **OWASP ZAP** secara berkala (seminggu sekali) terhadap server staging/pengembangan untuk mendeteksi kesalahan konfigurasi server web, kerentanan SSL, dan kebocoran informasi (*information disclosure*).
+
+---
+
+### 4. Strategi Pemulihan Bencana & Business Continuity (BCP / DRP)
+Sekolah harus siap menghadapi skenario terburuk, termasuk kehilangan server akibat ransomware atau kegagalan perangkat keras lokal.
+
+#### A. Kebijakan Pencadangan Data Tiga Arah (3-2-1 Backup Strategy) **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Menyimpan minimal **3** salinan data SISTA.
+  - Menggunakan **2** jenis media penyimpanan berbeda (server database lokal dan cloud storage).
+  - Menyimpan **1** salinan cadangan di luar lokasi (*off-site*) cloud storage terpisah.
+- **Teknis Implementasi**:
+  - Menggunakan cron schedule harian (`php artisan backup:secure`) untuk mencadangkan database dan direktori berkas publik (`storage/app/public`).
+  - Seluruh file cadangan wajib di-zip menggunakan proteksi kata sandi kuat dan diunggah secara otomatis ke **Amazon S3 Glacier** atau **Backblaze B2** dengan fitur **Object Lock (WORM - Write Once, Read Many)** diaktifkan selama 30 hari. Ini menjamin berkas cadangan di cloud tidak dapat dihapus atau dienkripsi ulang oleh penyerang, bahkan jika server utama terinfeksi ransomware.
+
+#### B. Skenario Pemulihan Bencana (Disaster Recovery Plan) **[Selesai ✅]**
+- **Skema Implementasi**:
+  - Melakukan simulasi latihan pemulihan data sistem (*Restore Drill*) secara berkala (`php artisan backup:restore-test`) setiap 6 bulan sekali pada server replika darurat.
+  - Menyusun dokumentasi petunjuk instalasi ulang sistem (*Runbook*) dari nol secara terperinci untuk meminimalisir waktu mati sistem (*downtime*) maksimal 4 jam jika terjadi kegagalan server total.
+
+---
 *(Akhir Dokumen Laporan)*
+

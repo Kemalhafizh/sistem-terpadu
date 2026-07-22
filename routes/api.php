@@ -8,8 +8,10 @@ use App\Http\Controllers\Api\v1\ApiAuthController;
 use App\Http\Controllers\Api\v1\ApiStudentController;
 use App\Http\Controllers\Api\v1\ApiParentController;
 use App\Http\Controllers\Api\v1\ApiTeacherController;
-use App\Http\Controllers\Api\v1\ApiGeneralController;
+use App\Http\Controllers\Api\V1\StudentApiController;
+use App\Http\Controllers\Api\V1\ExternalIntegrationApiController;
 use App\Http\Middleware\ApiVersion;
+use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -99,6 +101,12 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 Route::get('/tahfidz', [MobileDataController::class, 'getTahfidzLogs']);
                 Route::get('/mutabaah', [MobileDataController::class, 'getMutabaahLogs']);
             });
+        });
+
+        // === API GATEWAY V1 ENTERPRISE GATEWAY ENDPOINTS ===
+        Route::prefix('gateway')->middleware(RoleBasedRateLimiterMiddleware::class)->group(function () {
+            Route::get('student/me', [StudentApiController::class, 'profile'])->name('api.v1.student.me');
+            Route::post('whatsapp/send', [ExternalIntegrationApiController::class, 'sendWhatsapp'])->name('api.v1.whatsapp.send');
         });
     });
 });

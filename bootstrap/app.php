@@ -20,6 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class,
+            'mfa' => \App\Http\Middleware\VerifyMfa::class,
+            'admin.ip' => \App\Http\Middleware\AdminIpWhitelistMiddleware::class,
         ]);
 
         $middleware->append(SecurityHeaders::class);
@@ -32,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\PerformanceLogger::class,
             \App\Http\Middleware\SystemLockdownMiddleware::class,
+            \App\Http\Middleware\CorrelationIdMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

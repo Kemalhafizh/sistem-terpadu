@@ -36,6 +36,11 @@ use App\Http\Controllers\Finance\FinancialAuditController;
 use App\Http\Controllers\Admin\SecurityDashboardController;
 use App\Http\Controllers\Admin\SchoolBrandingController;
 use App\Http\Controllers\Admin\CacheMonitorController;
+use App\Http\Controllers\Admin\ApiGatewayMonitorController;
+use App\Http\Controllers\Admin\ApmObservabilityController;
+use App\Http\Controllers\Admin\RbacAuditController;
+use App\Http\Controllers\Admin\PdplPrivacyController;
+use App\Http\Controllers\Admin\FeatureFlagController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
@@ -1364,6 +1369,34 @@ Route::middleware(['auth'])->group(function () {
         Route::post('flush-tag', [CacheMonitorController::class, 'flushTag'])->name('flush-tag');
         Route::post('flush-all', [CacheMonitorController::class, 'flushAll'])->name('flush-all');
         Route::post('warmup', [CacheMonitorController::class, 'warmupCache'])->name('warmup');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/gateway')->name('admin.observability.gateway.')->group(function () {
+        Route::get('/', [ApiGatewayMonitorController::class, 'index'])->name('index');
+        Route::post('reset', [ApiGatewayMonitorController::class, 'resetCircuit'])->name('reset');
+        Route::post('simulate-failure', [ApiGatewayMonitorController::class, 'simulateFailure'])->name('simulate-failure');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/apm')->name('admin.observability.apm.')->group(function () {
+        Route::get('/', [ApmObservabilityController::class, 'dashboard'])->name('index');
+        Route::get('trace', [ApmObservabilityController::class, 'simulateTrace'])->name('trace');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/security/rbac')->name('admin.security.rbac.')->group(function () {
+        Route::get('/', [RbacAuditController::class, 'index'])->name('index');
+        Route::post('verify-ledger', [RbacAuditController::class, 'verifyLedgerIntegrity'])->name('verify-ledger');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/security/privacy')->name('admin.security.privacy.')->group(function () {
+        Route::get('/', [PdplPrivacyController::class, 'index'])->name('index');
+        Route::post('preview', [PdplPrivacyController::class, 'anonymizePreview'])->name('preview');
+        Route::post('right-to-be-forgotten', [PdplPrivacyController::class, 'executeRightToBeForgotten'])->name('right-to-be-forgotten');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/system/feature-flags')->name('admin.system.feature-flags.')->group(function () {
+        Route::get('/', [FeatureFlagController::class, 'index'])->name('index');
+        Route::post('toggle/{flag}', [FeatureFlagController::class, 'toggle'])->name('toggle');
+        Route::post('update/{flag}', [FeatureFlagController::class, 'update'])->name('update');
     });
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/integration/sync')->name('admin.integration.sync.')->group(function () {

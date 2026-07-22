@@ -141,6 +141,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Simulated attribute for Enterprise MFA setup check.
+     */
+    public function getMfaEnabledAttribute(): bool
+    {
+        return !empty($this->two_factor_code);
+    }
+
+    /**
      * Relationship to Tahfidz logs.
      */
     public function tahfidzLogs()

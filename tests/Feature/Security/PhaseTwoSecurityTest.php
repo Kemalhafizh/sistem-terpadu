@@ -179,3 +179,88 @@ test('midtrans webhook rejects simulation bypass in production environment', fun
     // Expected 403 Forbidden because signature verification is required and signature_key was not sent/correct
     $response->assertStatus(403);
 });
+
+// ── ENTERPRISE HARDENING TESTS (NEW) ────────────────────────────────
+
+test('security headers are strictly enforced', function () {
+    $response = $this->get('/');
+
+    $response->assertHeader('X-Frame-Options', 'DENY');
+    $response->assertHeader('X-Content-Type-Options', 'nosniff');
+    $response->assertHeader('X-XSS-Protection', '1; mode=block');
+    $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    
+    // Bandingkan CSP secara manual
+    expect($response->headers->has('Content-Security-Policy'))->toBeTrue();
+});
+
+test('student address is encrypted in database but decrypted automatically', function () {
+    $plainAddress = 'Jalan Sultan Agung No. 1 Semarang';
+
+    $student = Student::factory()->create([
+        'user_id' => $this->studentA->id,
+        'classroom_id' => $this->classroomA->id,
+        'parent_id' => $this->parentA->id,
+        'address' => $plainAddress,
+    ]);
+
+    // Ambil data mentah langsung dari database untuk memverifikasi enkripsi
+    $rawDbRow = \Illuminate\Support\Facades\DB::table('students')->where('id', $student->id)->first();
+    
+    // Pastikan data di database tidak berupa plain text
+    expect($rawDbRow->address)->not->toBe($plainAddress);
+    
+    // Pastikan data didekripsi otomatis saat diakses melalui model Eloquent
+    expect($student->fresh()->address)->toBe($plainAddress);
+});
+
+test('verify mfa middleware redirects administrative user when mfa is not enabled', function () {
+    // Buat route temporer untuk menguji middleware VerifyMfa
+    Route::get('/test-mfa-protection', function () {
+        return 'success';
+    })->middleware(['web', 'mfa']);
+
+    $adminUser = User::factory()->create([
+        'role' => 'admin',
+        'two_factor_code' => null, // Mensimulasikan MFA belum aktif (two_factor_code kosong)
+    ]);
+
+    $response = $this->actingAs($adminUser)->get('/test-mfa-protection');
+    
+    // Harus dialihkan ke halaman setup/verify fallback yang ada
+    $response->assertRedirect(route('verify-2fa.index'));
+});
+
+test('admin ip whitelist middleware blocks non whitelisted ip addresses', function () {
+    Route::get('/admin/test-ip-protection', function () {
+        return 'admin secret data';
+    })->middleware(['web', 'admin.ip']);
+
+    // Force env to non-testing to trigger strict IP validation logic
+    app()->detectEnvironment(fn() => 'production');
+    
+    // Set allowed IP into env config
+    config(['app.env' => 'production']);
+    putenv('ADMIN_ALLOWED_IPS=192.168.1.100');
+
+    $response = $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.5'])
+        ->get('/admin/test-ip-protection');
+
+    $response->assertStatus(403);
+});
+
+test('security check dns command executes successfully', function () {
+    $this->artisan('security:check-dns', ['domain' => 'sultanagung1.sch.id'])
+        ->assertExitCode(0);
+});
+
+test('secure backup command executes 3-2-1 strategy successfully', function () {
+    $this->artisan('backup:secure', ['--destination' => 'local'])
+        ->assertExitCode(0);
+});
+
+test('disaster recovery test command executes restore drill successfully', function () {
+    $this->artisan('backup:restore-test')
+        ->assertExitCode(0);
+});
+

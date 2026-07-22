@@ -20,7 +20,7 @@ class SecurityHeaders
         // Make sure it's a response object we can modify headers on
         if (method_exists($response, 'header')) {
             $response->header('X-Content-Type-Options', 'nosniff');
-            $response->header('X-Frame-Options', 'SAMEORIGIN');
+            $response->header('X-Frame-Options', 'DENY');
             $response->header('X-XSS-Protection', '1; mode=block');
             $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
             $response->header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
@@ -37,7 +37,7 @@ class SecurityHeaders
             $response->header('Content-Security-Policy', $csp);
             
             // HSTS only in non-local environments to avoid localhost SSL loop issues
-            if (!app()->environment('local')) {
+            if (!app()->environment('local', 'testing')) {
                 $response->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
             }
         }
