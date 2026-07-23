@@ -32,8 +32,17 @@ return [
     'header_staff' => 'Modul Kepegawaian',
     'header_teacher' => 'Fitur Akademik Guru',
     'header_learning_resources' => 'Sumber Belajar',
-    
+    'header_enterprise' => 'Infrastruktur Sistem Enterprise',
+
     // Sidebar Links
+    'webhooks' => 'Webhook Hub Real-Time',
+    'bpa_rules' => 'Rule Engine BPA (No-Code)',
+    'vendor_sla' => 'Scorecard SLA Vendor',
+    'disaster_recovery' => 'Disaster Recovery & Snapshot',
+    'two_factor' => 'TOTP 2FA & Keamanan Sesi',
+    'edw_olap' => 'Data Warehouse Enterprise (EDW)',
+    'apm_observability' => 'APM Telemetri & Kesehatan',
+    'feature_flags' => 'Feature Flag Engine',
     'calendar' => 'Kalender Akademik',
     'journal' => 'Jurnal Harian Guru',
     'curriculum' => 'Kurikulum & Silabus',

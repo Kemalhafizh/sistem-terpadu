@@ -32,8 +32,17 @@ return [
     'header_staff' => 'Employment Module',
     'header_teacher' => 'Teacher Academic Features',
     'header_learning_resources' => 'Learning Resources',
-    
+    'header_enterprise' => 'Enterprise System Infrastructure',
+
     // Sidebar Links
+    'webhooks' => 'Real-Time Webhook Hub',
+    'bpa_rules' => 'No-Code BPA Rule Engine',
+    'vendor_sla' => 'Vendor SLA Scorecard',
+    'disaster_recovery' => 'Disaster Recovery & Snapshots',
+    'two_factor' => 'TOTP 2FA & Session Security',
+    'edw_olap' => 'Enterprise Data Warehouse (EDW)',
+    'apm_observability' => 'APM Telemetry & Health',
+    'feature_flags' => 'Feature Flag Engine',
     'calendar' => 'Academic Calendar',
     'journal' => 'Teacher Daily Journal',
     'curriculum' => 'Curriculum & Syllabi',

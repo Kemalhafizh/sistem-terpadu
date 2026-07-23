@@ -102,7 +102,8 @@
                 {{-- Teks Soal --}}
                 <div class="space-y-1.5">
                     <label for="question_text" class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Teks Pertanyaan *</label>
-                    <textarea name="question_text" id="question_text" rows="4" required placeholder="Tuliskan soal di sini..." class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-800 dark:text-white py-2.5 focus:border-blue-500 transition-all">{{ old('question_text') }}</textarea>
+                    <textarea name="question_text" id="question_text" rows="4" required placeholder="Tuliskan soal di sini (dukung notasi LaTeX $...$ atau $$...$)..." class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-800 dark:text-white py-2.5 focus:border-blue-500 transition-all">{{ old('question_text') }}</textarea>
+                    <x-latex-toolbar target-id="question_text" />
                 </div>
 
                 {{-- Gambar Soal --}}

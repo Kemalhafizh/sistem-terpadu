@@ -73,7 +73,8 @@
                 <h3 class="text-sm font-black text-slate-800 dark:text-white tracking-tight">Konten Soal</h3>
                 <div class="space-y-1.5">
                     <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Teks Pertanyaan *</label>
-                    <textarea name="question_text" rows="4" required class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-800 dark:text-white py-2.5 focus:border-blue-500 transition-all">{{ old('question_text', $questionBank->question_text) }}</textarea>
+                    <textarea name="question_text" id="question_text_edit" rows="4" required class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-800 dark:text-white py-2.5 focus:border-blue-500 transition-all">{{ old('question_text', $questionBank->question_text) }}</textarea>
+                    <x-latex-toolbar target-id="question_text_edit" />
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Gambar Soal (Opsional)</label>

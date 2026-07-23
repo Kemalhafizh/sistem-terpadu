@@ -32,8 +32,17 @@ return [
     'header_staff' => 'وحدة شؤون الموظفين',
     'header_teacher' => 'الميزات الأكاديمية للمعلم',
     'header_learning_resources' => 'مصادر التعلم',
-    
+    'header_enterprise' => 'البنية التحتية لنظام المؤسسات',
+
     // Sidebar Links
+    'webhooks' => 'مركز الويب هوك المباشر',
+    'bpa_rules' => 'محرك قواعد أتمتة العمليات (BPA)',
+    'vendor_sla' => 'لوحة اتفاقية مستوى الخدمة للموردين',
+    'disaster_recovery' => 'التعافي من الكوارث واللقطات',
+    'two_factor' => 'المصادقة الثنائية وأمان الجلسة',
+    'edw_olap' => 'مستودع بيانات المؤسسات (EDW)',
+    'apm_observability' => 'مراقبة الأداء والصحة (APM)',
+    'feature_flags' => 'محرك ميزات النظام',
     'calendar' => 'التقويم الأكاديمي',
     'journal' => 'اليومية للمعلم',
     'curriculum' => 'المنهج الدراسي والدليل الدراسي',

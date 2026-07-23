@@ -20,7 +20,7 @@ class PredictiveAnalyticsService
         $data = Cache::get($cacheKey);
 
         if ($data === null || $data instanceof \__PHP_Incomplete_Class) {
-            $query = Student::with('classroom')->where('status', 'active');
+            $query = Student::with(['classroom', 'user'])->where('status', 'active');
             
             if ($classroomId) {
                 $query->where('classroom_id', $classroomId);

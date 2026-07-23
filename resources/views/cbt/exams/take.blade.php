@@ -264,7 +264,12 @@
                 },
 
                 goToQuestion(idx) {
-                    if (idx >= 0 && idx < this.totalQuestions) this.currentQuestion = idx;
+                    if (idx >= 0 && idx < this.totalQuestions) {
+                        this.currentQuestion = idx;
+                        this.$nextTick(() => {
+                            window.dispatchEvent(new CustomEvent('render-latex'));
+                        });
+                    }
                 },
 
                 async saveAnswers() {
@@ -313,6 +318,37 @@
                 }
             };
         }
+    </script>
+
+    <!-- KaTeX LaTeX Math & Chemical Equation Renderer for Saintek -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderSistaLatex()"></script>
+    <script>
+        function renderSistaLatex(element = document.body) {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(element, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '\\[', right: '\\]', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) {
+                    console.error("KaTeX Auto-render Error:", e);
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSistaLatex();
+        });
+        window.addEventListener('render-latex', function() {
+            renderSistaLatex();
+        });
     </script>
 </body>
 </html>
