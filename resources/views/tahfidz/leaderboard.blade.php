@@ -16,7 +16,7 @@
     </x-slot>
 
     <div class="py-6 overflow-x-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
 
             {{-- Classroom Filter Card --}}
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

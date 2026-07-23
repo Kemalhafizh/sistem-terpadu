@@ -1,12 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800 leading-tight tracking-tight">
-            {{ __('Rekap Presensi Harian') }}
-        </h2>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
+                    {{ __('Rekap Presensi Harian & GPS Geofence') }}
+                </h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Sistem Absensi Terintegrasi Lokasi Fisik SMA Islam Sultan Agung 1 Semarang.</p>
+            </div>
+            <a href="https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-all">
+                <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span>Lokasi Sekolah (Google Maps)</span>
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Filter Section -->
             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">

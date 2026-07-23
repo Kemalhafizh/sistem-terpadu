@@ -25,7 +25,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto space-y-8">
+    <div class="py-6 w-full space-y-8">
         <!-- Dashboard Alert Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <!-- Stat 1 -->

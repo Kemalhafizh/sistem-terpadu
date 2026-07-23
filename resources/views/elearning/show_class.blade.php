@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-6 sm:py-10" x-data="{ activeTab: 'stream' }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
 
             <!-- Class Cover Banner -->
             <div class="bg-gradient-to-r {{ $elearningClass->is_archived ? 'from-slate-700 to-slate-900' : 'from-emerald-800 to-emerald-950' }} text-white rounded-[2rem] p-6 sm:p-10 shadow-lg relative overflow-hidden">

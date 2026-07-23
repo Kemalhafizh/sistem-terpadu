@@ -28,7 +28,7 @@
 
     <!-- Content Area -->
     <div class="py-8 bg-gray-50/50 dark:bg-slate-900/20 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">
             
             @if(session('success'))
                 <div class="bg-emerald-600 text-white p-4 rounded-2xl shadow-xl flex items-center animate-fade-in">

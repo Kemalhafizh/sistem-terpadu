@@ -91,7 +91,7 @@
 
     <!-- PWA Manifest & Meta -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#0d9488">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="/images/logo-kotak.png">
@@ -278,7 +278,7 @@
             <!-- Page Heading with Breadcrumb -->
             @isset($header)
                 <header class="bg-white dark:bg-gray-800 shadow border-b border-gray-200 dark:border-gray-700 z-10 relative">
-                    <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8 text-gray-800 dark:text-gray-100">
+                    <div class="w-full py-5 px-4 sm:px-6 lg:px-8 text-gray-800 dark:text-gray-100">
                         @isset($breadcrumbs)
                             <div class="mb-3">
                                 {{ $breadcrumbs }}

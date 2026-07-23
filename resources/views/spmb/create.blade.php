@@ -32,7 +32,7 @@
 
     <!-- Navbar -->
     <nav class="glass-nav border-b border-slate-200/50 py-4 shadow-sm fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-12">
+        <div class="w-full px-4 sm:px-6 lg:px-8 flex justify-between items-center h-12">
             <div class="flex items-center">
                 <a href="{{ route('spmb.welcome') }}" class="flex items-center text-slate-400 hover:text-emerald-600 transition-colors mr-6">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path></svg>

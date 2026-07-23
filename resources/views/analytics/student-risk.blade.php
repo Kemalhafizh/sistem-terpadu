@@ -32,7 +32,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
 
             <div class="bg-rose-50 dark:bg-rose-900/20 rounded-[2rem] p-6 shadow-sm border border-rose-100 dark:border-rose-800/50 flex items-start gap-4">
                 <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-800 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0">

@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
                 <!-- Hamburger for Sidebar -->
@@ -11,22 +11,22 @@
                 </button>
 
                 <!-- Desktop Sidebar Toggle -->
-                <button @click="toggleSidebarCollapse()" class="hidden md:inline-flex items-center justify-center p-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none transition-all duration-200 mr-4" aria-label="Toggle Lebar Sidebar">
-                    <svg class="h-6 w-6 transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 6h8M14 12h8M14 18h8" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l-7 7 7 7" />
+                <button @click="toggleSidebarCollapse()" class="hidden md:inline-flex items-center justify-center p-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 focus:outline-none transition-all duration-200" aria-label="Toggle Lebar Sidebar">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 6h9M11 12h9M11 18h9" />
+                        <path class="transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''" style="transform-box: fill-box; transform-origin: center;" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7l-5 5 5 5" />
                     </svg>
                 </button>
 
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <!-- Logo (Mobile Only) -->
+                <div class="shrink-0 flex items-center md:hidden ms-2">
                     <a href="{{ route('dashboard') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-4 sm:-my-px sm:ms-3 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('navigation.dashboard') }}
                     </x-nav-link>

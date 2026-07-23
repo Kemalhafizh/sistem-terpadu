@@ -23,7 +23,7 @@
     </x-slot>
 
     <div class="py-6 overflow-x-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             {{-- Progres Visual --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

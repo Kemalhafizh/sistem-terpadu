@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
             
             @if(!$activeYear)
                 <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl">

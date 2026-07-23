@@ -24,7 +24,7 @@
     @endphp
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">
 
             {{-- Audit Overview Banners --}}
             @if($totalCount === 0)

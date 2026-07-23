@@ -13,7 +13,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+    <div class="py-6 w-full sm:px-6 lg:px-8 space-y-8">
         
         <!-- Status Messages -->
         @if(session('success'))

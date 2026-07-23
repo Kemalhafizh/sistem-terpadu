@@ -13,7 +13,7 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="py-8 space-y-10 max-w-7xl mx-auto">
+    <div class="py-8 space-y-10 w-full">
         <!-- Stats Summary Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Total Alumni -->

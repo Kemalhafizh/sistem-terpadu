@@ -36,7 +36,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
             <!-- Filter & Search Bar -->
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <form action="{{ route('students.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3 w-full">

@@ -33,7 +33,7 @@
     </x-slot>
 
     <div class="py-6" x-data="{ lockdownModalOpen: false, blockIpModalOpen: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- System Lockdown Banner -->
             <div class="rounded-3xl p-6 border shadow-lg relative overflow-hidden transition-all duration-500 {{ $isLockdown ? 'bg-gradient-to-r from-rose-950 via-rose-900 to-rose-950 border-rose-500/50 text-white' : 'bg-gradient-to-r from-gray-900 via-gray-850 to-gray-900 border-gray-800 text-white' }}">

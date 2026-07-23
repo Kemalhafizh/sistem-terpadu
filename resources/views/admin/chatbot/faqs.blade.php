@@ -6,7 +6,7 @@
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Konfigurasi bank data tanya-jawab lokal asisten pintar SISTA.</p>
     </x-slot>
 
-    <div class="py-6 space-y-6 max-w-7xl mx-auto" x-data="{ showCreateModal: false, showEditModal: false, activeFaq: null }">
+    <div class="py-6 space-y-6 w-full" x-data="{ showCreateModal: false, showEditModal: false, activeFaq: null }">
         <!-- Dashboard Top Banner -->
         <div class="p-6 bg-gradient-to-r from-blue-900/40 via-indigo-900/40 to-purple-900/40 rounded-3xl border border-white/10 shadow-xl backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">

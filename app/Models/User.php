@@ -24,6 +24,9 @@ class User extends Authenticatable
         'must_change_password',
         'two_factor_code',
         'two_factor_expires_at',
+        'totp_secret',
+        'totp_enabled_at',
+        'totp_recovery_codes',
         'google_id',
         'google_token',
         'dashboard_layout',
@@ -34,6 +37,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'totp_secret',
     ];
 
     /**
@@ -48,8 +52,15 @@ class User extends Authenticatable
             'password' => 'hashed',
             'must_change_password' => 'boolean',
             'two_factor_expires_at' => 'datetime',
+            'totp_enabled_at' => 'datetime',
+            'totp_recovery_codes' => 'array',
             'dashboard_layout' => 'array',
         ];
+    }
+
+    public function hasTotpEnabled(): bool
+    {
+        return ! empty($this->totp_secret) && ! empty($this->totp_enabled_at);
     }
 
     public function employee()

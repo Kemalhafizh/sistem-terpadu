@@ -19,5 +19,9 @@ class SchoolBrandingSeeder extends Seeder
         Setting::set('principal_name', 'Drs. H. Ahmad Dahlan, M.Pd.');
         Setting::set('principal_nip', '196807151994031005');
         Setting::set('active_academic_year', '2026/2027 Semester Ganjil');
+        Setting::set('school_maps_url', 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA');
+        Setting::set('school_latitude', '-6.9859');
+        Setting::set('school_longitude', '110.4398');
+        Setting::set('school_geofence_radius', '200');
     }
 }

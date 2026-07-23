@@ -73,6 +73,12 @@ class DatabaseSeeder extends Seeder
                 ImmutableAuditLedgerSeeder::class,
                 PdplPrivacySeeder::class,
                 FeatureFlagSeeder::class,
+                DisasterRecoverySeeder::class,
+                TwoFactorSecuritySeeder::class,
+                EdwOlapSeeder::class,
+                VendorSlaSeeder::class,
+                WebhookHubSeeder::class,
+                BpaRuleEngineSeeder::class,
             ]);
         });
     }

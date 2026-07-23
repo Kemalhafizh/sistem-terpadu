@@ -54,7 +54,7 @@
             this.updateStudent();
         }
     }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             
             <!-- Validation Errors -->
             @if ($errors->any())

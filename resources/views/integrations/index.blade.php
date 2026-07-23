@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12 bg-gray-950 text-gray-100 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full sm:px-6 lg:px-8 space-y-8">
             <!-- Alert Messages -->
             @if(session('success'))
                 <div class="p-4 mb-4 text-sm text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 rounded-xl backdrop-blur-md shadow-lg shadow-emerald-950/20 flex items-center space-x-2">

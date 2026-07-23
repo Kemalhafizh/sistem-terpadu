@@ -28,6 +28,10 @@ class SchoolBrandingDomainService
                 'principal_nip' => Setting::get('principal_nip', '196807151994031005'),
                 'academic_year' => Setting::get('active_academic_year', '2026/2027 Semester Ganjil'),
                 'logo_url' => Setting::get('school_logo_url', '/images/logo-ybwsa.png'),
+                'maps_url' => Setting::get('school_maps_url', 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA'),
+                'latitude' => Setting::get('school_latitude', '-6.9859'),
+                'longitude' => Setting::get('school_longitude', '110.4398'),
+                'geofence_radius' => Setting::get('school_geofence_radius', '200'),
             ];
         });
     }

@@ -39,7 +39,7 @@
             this.showEditModal = true;
         }
     }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">
             
             <!-- Banner Dashboard -->
             <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-[2rem] p-8 border border-indigo-500/10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">

@@ -18,7 +18,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
             
             <!-- Statistics Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

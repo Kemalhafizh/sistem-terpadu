@@ -14,7 +14,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- Welcome Recommendation Box (Glassmorphic) -->
             <div class="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 text-white relative overflow-hidden shadow-lg shadow-emerald-100 flex flex-col md:flex-row items-center justify-between gap-6">

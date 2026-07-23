@@ -10,7 +10,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto space-y-6">
+    <div class="py-6 w-full space-y-6">
         <!-- Back Link -->
         <div class="mb-2">
             <a href="{{ route('admin.assets.maintenance.index') }}" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-teal-600 dark:text-gray-400 dark:hover:text-teal-400 transition-all">

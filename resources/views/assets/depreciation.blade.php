@@ -15,7 +15,7 @@
     </x-slot>
 
     <div class="py-8 bg-gray-50/50 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Summary Stat Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

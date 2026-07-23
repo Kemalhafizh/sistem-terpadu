@@ -22,8 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'mfa' => \App\Http\Middleware\VerifyMfa::class,
             'admin.ip' => \App\Http\Middleware\AdminIpWhitelistMiddleware::class,
+            'elevated' => \App\Http\Middleware\EnsureElevatedSessionMiddleware::class,
         ]);
 
+        $middleware->prepend(\App\Http\Middleware\InvisibleHoneypotMiddleware::class);
+        $middleware->prepend(\App\Http\Middleware\HoneypotTrapMiddleware::class);
         $middleware->append(SecurityHeaders::class);
 
         $middleware->appendToGroup('web', [
@@ -35,6 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\PerformanceLogger::class,
             \App\Http\Middleware\SystemLockdownMiddleware::class,
             \App\Http\Middleware\CorrelationIdMiddleware::class,
+            \App\Http\Middleware\SessionFingerprintMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

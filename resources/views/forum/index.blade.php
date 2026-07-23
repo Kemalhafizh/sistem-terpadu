@@ -16,7 +16,7 @@
     </x-slot>
 
     <div class="py-6 sm:py-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
             
             <!-- Welcome glassmorphic panel -->
             <div class="relative overflow-hidden rounded-[2rem] p-6 sm:p-8 border border-white/20 dark:border-slate-800/30 shadow-xl backdrop-blur-md bg-gradient-to-br from-indigo-900/80 via-primary-950/80 to-slate-950/90 text-white">

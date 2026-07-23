@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-<div class="max-w-7xl mx-auto px-6">
+<div class="w-full px-6">
     <!-- Header Section -->
     <div class="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
         <h1 class="text-primary-600 font-black tracking-[0.2em] uppercase text-xs mb-4">Warta Sultan Agung</h1>

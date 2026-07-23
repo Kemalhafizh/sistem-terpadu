@@ -24,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">
 
             <!-- Drill-Down Navigation Block -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">

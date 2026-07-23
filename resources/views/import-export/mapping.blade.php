@@ -23,7 +23,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto" x-data="{ loading: false }">
+    <div class="py-6 w-full" x-data="{ loading: false }">
         <!-- Main Form -->
         <form action="{{ route('import-export.execute') }}" method="POST" @submit="loading = true">
             @csrf

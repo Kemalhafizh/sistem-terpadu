@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             {{-- Large welcome section --}}
             <div class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-950 to-violet-950 text-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-indigo-800/40">

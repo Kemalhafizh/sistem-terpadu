@@ -264,3 +264,32 @@ test('disaster recovery test command executes restore drill successfully', funct
         ->assertExitCode(0);
 });
 
+test('honeypot trap middleware intercepts access to canary decoy routes and blacklists ip', function () {
+    $response = $this->withServerVariables(['REMOTE_ADDR' => '198.51.100.42'])
+        ->get('/.env');
+
+    $response->assertStatus(403);
+    $response->assertSee('CYBER THREAT INTERCEPTION NOTICE');
+    $response->assertSee('198.51.100.42');
+
+    // Subsequent access to any normal route should also be blocked due to IP ban
+    $subsequentResponse = $this->withServerVariables(['REMOTE_ADDR' => '198.51.100.42'])
+        ->get('/');
+    $subsequentResponse->assertStatus(403);
+});
+
+test('invisible honeypot middleware intercepts automated bot form submission', function () {
+    Route::post('/test-form-submit', function () {
+        return 'success';
+    });
+
+    $response = $this->withServerVariables(['REMOTE_ADDR' => '198.51.100.99'])
+        ->post('/test-form-submit', [
+            'name' => 'John Doe',
+            '_hp_verification_name' => 'Automated Bot Input', // Honeypot field filled by bot
+        ]);
+
+    $response->assertStatus(403);
+    $response->assertSee('CYBER THREAT INTERCEPTION NOTICE');
+});
+

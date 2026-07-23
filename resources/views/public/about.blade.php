@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-<div class="max-w-7xl mx-auto px-6">
+<div class="w-full px-6">
 
     {{-- Breadcrumb --}}
     <nav class="flex items-center space-x-2 text-xs font-bold uppercase tracking-widest mb-12 animate-fade-in-up">

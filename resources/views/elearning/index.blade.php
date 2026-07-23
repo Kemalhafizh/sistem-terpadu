@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6 sm:py-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
             
             <!-- Welcome Info Box / Install Banner -->
             <div class="bg-gray-900 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden shadow-xl">

@@ -25,7 +25,7 @@
             });
         }
     }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             @if(session('error'))
                 <div class="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-500 p-4 rounded-r-2xl shadow-sm mb-6">

@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-6" x-data="{ modalOpen: false, modalImgSrc: '', modalTitle: '' }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Informasi Status -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">

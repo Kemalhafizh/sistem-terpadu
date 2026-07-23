@@ -44,7 +44,7 @@
     @endphp
 
     <div class="py-8 bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-900 dark:text-slate-100">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-8 animate-fade-in-up">
             
             <!-- Navigation Bar -->
             <nav class="flex flex-wrap gap-2 p-1.5 bg-white dark:bg-slate-800 rounded-[1.5rem] border border-slate-200/50 dark:border-slate-700/50 shadow-sm">

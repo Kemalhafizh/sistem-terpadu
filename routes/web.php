@@ -41,6 +41,12 @@ use App\Http\Controllers\Admin\ApmObservabilityController;
 use App\Http\Controllers\Admin\RbacAuditController;
 use App\Http\Controllers\Admin\PdplPrivacyController;
 use App\Http\Controllers\Admin\FeatureFlagController;
+use App\Http\Controllers\Admin\DisasterRecoveryController;
+use App\Http\Controllers\Admin\SecurityTwoFactorController;
+use App\Http\Controllers\Admin\EdwOlapController;
+use App\Http\Controllers\Admin\VendorSlaController;
+use App\Http\Controllers\Admin\WebhookHubController;
+use App\Http\Controllers\Admin\BpaRuleEngineController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
@@ -1397,6 +1403,50 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [FeatureFlagController::class, 'index'])->name('index');
         Route::post('toggle/{flag}', [FeatureFlagController::class, 'toggle'])->name('toggle');
         Route::post('update/{flag}', [FeatureFlagController::class, 'update'])->name('update');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/disaster-recovery')->name('admin.disaster-recovery.')->group(function () {
+        Route::get('/', [DisasterRecoveryController::class, 'index'])->name('index');
+        Route::post('create', [DisasterRecoveryController::class, 'createSnapshot'])->name('create');
+        Route::post('verify', [DisasterRecoveryController::class, 'verifySnapshot'])->name('verify');
+        Route::post('restore', [DisasterRecoveryController::class, 'restoreSnapshot'])->name('restore');
+        Route::delete('delete', [DisasterRecoveryController::class, 'deleteSnapshot'])->name('delete');
+        Route::post('audit', [DisasterRecoveryController::class, 'runAudit'])->name('audit');
+    });
+
+    Route::middleware(['auth'])->prefix('admin/security/2fa')->name('admin.security.2fa.')->group(function () {
+        Route::get('/', [SecurityTwoFactorController::class, 'index'])->name('index');
+        Route::post('confirm', [SecurityTwoFactorController::class, 'confirm'])->name('confirm');
+        Route::post('disable', [SecurityTwoFactorController::class, 'disable'])->name('disable');
+        Route::get('elevate', [SecurityTwoFactorController::class, 'showElevateForm'])->name('elevate_form');
+        Route::post('elevate', [SecurityTwoFactorController::class, 'elevate'])->name('elevate');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin,kepala_sekolah'])->prefix('admin/analytics/edw')->name('admin.analytics.edw.')->group(function () {
+        Route::get('/', [EdwOlapController::class, 'index'])->name('index');
+        Route::post('refresh', [EdwOlapController::class, 'refreshMarts'])->name('refresh');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/vendor-sla')->name('admin.vendor-sla.')->group(function () {
+        Route::get('/', [VendorSlaController::class, 'index'])->name('index');
+        Route::post('probe', [VendorSlaController::class, 'probeNow'])->name('probe');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/webhooks')->name('admin.webhooks.')->group(function () {
+        Route::get('/', [WebhookHubController::class, 'index'])->name('index');
+        Route::post('store', [WebhookHubController::class, 'store'])->name('store');
+        Route::post('toggle/{subscription}', [WebhookHubController::class, 'toggle'])->name('toggle');
+        Route::delete('delete/{subscription}', [WebhookHubController::class, 'destroy'])->name('delete');
+        Route::post('replay/{deliveryId}', [WebhookHubController::class, 'replay'])->name('replay');
+        Route::post('test-dispatch', [WebhookHubController::class, 'testDispatch'])->name('test-dispatch');
+    });
+
+    Route::middleware(['auth', 'role:admin,superadmin,kepala_sekolah'])->prefix('admin/bpa/rules')->name('admin.bpa.rules.')->group(function () {
+        Route::get('/', [BpaRuleEngineController::class, 'index'])->name('index');
+        Route::post('store', [BpaRuleEngineController::class, 'store'])->name('store');
+        Route::post('toggle/{rule}', [BpaRuleEngineController::class, 'toggle'])->name('toggle');
+        Route::delete('delete/{rule}', [BpaRuleEngineController::class, 'destroy'])->name('delete');
+        Route::post('test-execute', [BpaRuleEngineController::class, 'testExecute'])->name('test-execute');
     });
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/integration/sync')->name('admin.integration.sync.')->group(function () {

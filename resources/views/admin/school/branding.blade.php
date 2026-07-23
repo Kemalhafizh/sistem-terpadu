@@ -16,7 +16,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Kop Surat Preview Card -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-4">
@@ -64,6 +64,30 @@
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Alamat Lengkap Sekolah</label>
                             <input type="text" name="school_address" value="{{ old('school_address', $profile['address']) }}" required class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5 focus:ring-2 focus:ring-emerald-500">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Link Tautan Google Maps Sekolah</label>
+                            <div class="flex gap-2">
+                                <input type="url" name="school_maps_url" value="{{ old('school_maps_url', $profile['maps_url'] ?? 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA') }}" required class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5 font-mono focus:ring-2 focus:ring-emerald-500">
+                                <a href="{{ $profile['maps_url'] ?? 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA' }}" target="_blank" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shrink-0 flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    Buka Maps
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Koordinat GPS Latitude</label>
+                            <input type="text" name="school_latitude" value="{{ old('school_latitude', $profile['latitude'] ?? '-6.9859') }}" required class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5 font-mono focus:ring-2 focus:ring-emerald-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Koordinat GPS Longitude & Radius (Meter)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" name="school_longitude" value="{{ old('school_longitude', $profile['longitude'] ?? '110.4398') }}" required class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5 font-mono focus:ring-2 focus:ring-emerald-500">
+                                <input type="number" name="school_geofence_radius" value="{{ old('school_geofence_radius', $profile['geofence_radius'] ?? '200') }}" required placeholder="Radius (Meter)" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5 font-mono focus:ring-2 focus:ring-emerald-500">
+                            </div>
                         </div>
 
                         <div>

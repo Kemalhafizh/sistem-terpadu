@@ -19,7 +19,7 @@
     </x-slot>
 
     <div class="py-12 bg-gray-50/50 min-h-[calc(100vh-4rem)]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
             
             <!-- Tab Navigasi Premium -->
             <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex flex-wrap gap-2">

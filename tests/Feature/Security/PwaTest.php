@@ -26,7 +26,7 @@ class PwaTest extends TestCase
         $this->assertEquals('Sistem Terpadu SMA Islam Sultan Agung 1', $data['name']);
         $this->assertEquals('SISTA', $data['short_name']);
         $this->assertEquals('standalone', $data['display']);
-        $this->assertEquals('#3b82f6', $data['theme_color']);
+        $this->assertEquals('#0d9488', $data['theme_color']);
     }
 
     /**
@@ -69,7 +69,7 @@ class PwaTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('<link rel="manifest" href="/manifest.json">', false);
-        $response->assertSee('<meta name="theme-color" content="#3b82f6">', false);
+        $response->assertSee('<meta name="theme-color" content="#0d9488">', false);
         $response->assertSee('navigator.serviceWorker.register(\'/service-worker.js\')', false);
         $response->assertSee('showPwaBanner', false);
     }

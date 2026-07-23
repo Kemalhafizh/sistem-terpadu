@@ -28,7 +28,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- Search & Filter Bar -->
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100">

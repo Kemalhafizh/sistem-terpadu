@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
             
             <!-- Breadcrumb / Back button -->
             <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-bold text-primary-600 hover:text-primary-800 transition-colors">

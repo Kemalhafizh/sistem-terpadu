@@ -23,7 +23,7 @@
 
     <!-- Content Area -->
     <div class="py-8 bg-gray-50/50 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
 
             <!-- Alerts -->
             @if(session('success'))

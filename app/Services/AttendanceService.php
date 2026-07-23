@@ -70,4 +70,49 @@ class AttendanceService
             }
         });
     }
+
+    /**
+     * Calculate distance between two GPS coordinates in meters (Haversine Formula).
+     */
+    public function calculateDistanceInMeters(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $earthRadius = 6371000;
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLng = deg2rad($lng2 - $lng1);
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+             sin($dLng / 2) * sin($dLng / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
+    }
+
+    /**
+     * Verify if given GPS location is within SMA Islam Sultan Agung 1 Semarang Geofence radius.
+     */
+    public function verifySchoolGeofence(float $latitude, float $longitude): array
+    {
+        $brandingService = app(\App\Domains\School\Services\SchoolBrandingDomainService::class);
+        $profile = $brandingService->getSchoolProfile();
+
+        $schoolLat = (float) ($profile['latitude'] ?? -6.9859);
+        $schoolLng = (float) ($profile['longitude'] ?? 110.4398);
+        $allowedRadius = (float) ($profile['geofence_radius'] ?? 200);
+
+        $distance = $this->calculateDistanceInMeters($latitude, $longitude, $schoolLat, $schoolLng);
+        $isWithinGeofence = $distance <= $allowedRadius;
+
+        return [
+            'is_valid' => $isWithinGeofence,
+            'distance_meters' => round($distance, 2),
+            'allowed_radius_meters' => $allowedRadius,
+            'school_name' => $profile['school_name'],
+            'maps_url' => $profile['maps_url'] ?? 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA',
+            'latitude' => $schoolLat,
+            'longitude' => $schoolLng,
+        ];
+    }
 }

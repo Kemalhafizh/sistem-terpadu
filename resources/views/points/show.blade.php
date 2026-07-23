@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-full sm:px-6 lg:px-8">
             
             <!-- Student Header Profile -->
             <div class="bg-gradient-to-br from-primary-800 to-primary-600 rounded-[2.5rem] p-8 shadow-xl text-white mb-8 flex flex-wrap items-center justify-between gap-6">

@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Penalty vs Rewards Bar Chart -->
                 <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700">

@@ -24,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                 <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6">Tren Historis Kehadiran</h4>
                 <div id="attendanceLongTrendChart" class="w-full h-[400px]"></div>

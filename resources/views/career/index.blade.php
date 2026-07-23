@@ -16,7 +16,7 @@
         </div>
     </x-slot>
 
-    <div class="py-8 max-w-7xl mx-auto space-y-8">
+    <div class="py-8 w-full space-y-8">
         <!-- Search & Filter Card -->
         <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-4 items-center justify-between">
             <!-- Filter Tabs -->

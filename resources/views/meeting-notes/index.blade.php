@@ -18,7 +18,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             <!-- Filter Panel -->
             <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xs border border-gray-250 dark:border-slate-700/80">

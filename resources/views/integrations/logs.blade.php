@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-12 bg-gray-950 text-gray-100 min-h-screen" x-data="{ showDetailModal: false, activeLogErrors: [] }">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full sm:px-6 lg:px-8 space-y-8">
 
             <div class="backdrop-blur-xl bg-gray-900/40 border border-gray-800/80 rounded-3xl p-6 shadow-xl">
                 <div class="overflow-x-auto">

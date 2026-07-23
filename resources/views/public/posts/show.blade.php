@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-<div class="max-w-7xl mx-auto px-6">
+<div class="w-full px-6">
     <!-- Breadcrumb -->
     <nav class="flex mb-8 text-xs font-semibold uppercase tracking-wider text-slate-400" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">

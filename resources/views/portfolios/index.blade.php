@@ -13,7 +13,7 @@
         </div>
     </x-slot>
 
-    <div class="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div class="py-8 w-full px-4 sm:px-6 lg:px-8 space-y-6">
         
         {{-- Glassmorphic Dashboard Panel --}}
         <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm overflow-hidden">

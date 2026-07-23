@@ -14,7 +14,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             <!-- Main Edit Form Layout Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

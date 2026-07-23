@@ -50,7 +50,7 @@
             : 'bg-transparent border-b border-transparent py-5'"
         class="fixed w-full z-50 transition-all duration-300 left-0 right-0"
     >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Branding -->
                 <div class="flex items-center group flex-nowrap">
@@ -161,7 +161,7 @@
             <div class="absolute inset-0 opacity-[0.035] bg-[radial-gradient(#059669_1.5px,transparent_1.5px)] [background-size:28px_28px]"></div>
         </div>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <div class="relative w-full px-4 sm:px-6 lg:px-8 text-center z-10">
             <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 mb-6 shadow-inner animate-fade-in">
                 <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-ping"></span>
                 {{ __('spmb.hero_badge') }}
@@ -246,7 +246,7 @@
 
     <!-- Step Flow Section (Alur Pendaftaran) -->
     <div id="alur-pendaftaran" class="py-24 sm:py-32 bg-gradient-to-b from-white to-slate-50/70">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-20">
                 <span class="text-[10px] font-black tracking-widest text-emerald-600 uppercase">4 Langkah Mudah</span>
                 <h2 class="text-3xl sm:text-4xl font-black text-slate-950 tracking-tight mt-1">{{ __('spmb.flow_title') }}</h2>
@@ -391,7 +391,7 @@
 
     <!-- Premium Footer -->
     <footer class="bg-slate-50 text-slate-550 py-16 border-t border-slate-200/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <div class="h-10 w-auto flex items-center justify-center filter grayscale opacity-60 mx-auto">
                 <img src="{{ asset('images/logo-kotak.png') }}" alt="Sultan Agung 1" class="h-full object-contain">
             </div>

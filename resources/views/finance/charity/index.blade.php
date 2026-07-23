@@ -19,7 +19,7 @@
         </div>
     </x-slot>
 
-    <div class="space-y-8 max-w-7xl mx-auto">
+    <div class="space-y-8 w-full">
         <!-- Session Flash Messages -->
         @if(session('success'))
             <div class="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 p-4 rounded-2xl shadow-sm text-emerald-800 dark:text-emerald-300 font-bold text-sm flex items-center space-x-3">

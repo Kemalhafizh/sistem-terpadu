@@ -16,7 +16,7 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8" x-data="{ selectedEkskulId: localStorage.getItem('last_managed_ekskul') || '' }">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8" x-data="{ selectedEkskulId: localStorage.getItem('last_managed_ekskul') || '' }">
             
             <!-- Alert Session Messages -->
             @if(session('success'))

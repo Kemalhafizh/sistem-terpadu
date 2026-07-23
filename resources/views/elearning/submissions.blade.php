@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-6 sm:py-10 animate-fade-in">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- Assignment Summary Card -->
             <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-700 relative overflow-hidden group">

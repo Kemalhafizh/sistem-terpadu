@@ -21,7 +21,7 @@
     </x-slot>
 
     <div class="py-6" x-data="{ payloadModalOpen: false, activePayload: null }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Filter Toolbar -->
             <div class="bg-white dark:bg-gray-800 p-4 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">

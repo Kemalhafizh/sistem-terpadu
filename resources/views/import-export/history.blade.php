@@ -25,7 +25,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto">
+    <div class="py-6 w-full">
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-100 dark:border-gray-700 shadow-2xl p-6 md:p-8 overflow-hidden">
             
             <div class="overflow-x-auto">

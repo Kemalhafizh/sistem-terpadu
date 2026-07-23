@@ -27,7 +27,7 @@
     </x-slot>
 
     <div class="py-6 overflow-x-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             @if(session('success'))
                 <div class="bg-emerald-50 border border-emerald-100 text-emerald-700 px-5 py-4 rounded-2xl relative" role="alert">

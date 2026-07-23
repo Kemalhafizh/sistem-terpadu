@@ -22,7 +22,7 @@
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             <!-- Metrics Overview -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

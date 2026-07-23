@@ -13,7 +13,7 @@
     </x-slot>
 
     <div class="py-8 bg-gray-50/50 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- Child Profile Summary -->
             <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col md:flex-row justify-between gap-6">

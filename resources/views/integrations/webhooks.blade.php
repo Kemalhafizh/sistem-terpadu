@@ -17,7 +17,7 @@
         editWebhook: { id: '', name: '', url: '', secret: '', events: [], is_active: true },
         testResult: { status: 200, latency: 0, body: '', successful: true, loading: false }
     }">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+        <div class="w-full sm:px-6 lg:px-8 space-y-8">
             
             <!-- Alert Messages -->
             @if(session('success'))

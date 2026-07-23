@@ -166,7 +166,7 @@
     <!-- Navigation -->
     <nav :class="{'py-3 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200/50': scrolled, 'py-5 bg-transparent': !scrolled}" 
          class="fixed top-0 w-full z-50 transition-all duration-300">
-         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+         <div class="w-full px-6 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <div class="h-12 w-auto flex items-center justify-center p-1.5 rounded-xl bg-white shadow-sm border border-slate-100">
                     <img src="{{ asset('images/logo-lonjong.png') }}" alt="Sultan Agung 1" class="h-full object-contain" 
@@ -268,7 +268,7 @@
 
     <!-- 1. Hero Section -->
     <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 px-6 overflow-hidden">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+        <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             <!-- Left Content -->
             <div class="space-y-8 z-10">
@@ -378,7 +378,7 @@
     </section>
 
     <!-- 2. Interactive Counter Section -->
-    <section class="max-w-7xl mx-auto px-6 pb-20">
+    <section class="w-full px-6 pb-20">
         <div class="glass rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-slate-200/60">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
                 
@@ -417,7 +417,7 @@
 
     <!-- 3. Enterprise Features (Bento Grid) -->
     <section id="fitur" class="py-24 bg-white relative">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="w-full px-6">
             <div class="text-center max-w-3xl mx-auto mb-20">
                 <h2 class="text-teal-600 font-black tracking-[0.2em] uppercase text-xs mb-4">Enterprise Ecosystem</h2>
                 <h3 class="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Solusi Digital Terintegrasi</h3>
@@ -482,7 +482,7 @@
 
     <!-- 4. Dynamic News & Announcements Section -->
     <section id="berita" class="py-24 bg-slate-50 border-t border-b border-slate-200/60 relative">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="w-full px-6">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
                     <h2 class="text-teal-600 font-black tracking-[0.2em] uppercase text-xs mb-4">Warta Sultan Agung</h2>
@@ -549,7 +549,7 @@
 
     <!-- 5. Dynamic School Gallery Section -->
     <section id="galeri" class="py-24 bg-white relative">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="w-full px-6">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
                     <h2 class="text-teal-600 font-black tracking-[0.2em] uppercase text-xs mb-4">Galeri Dokumentasi</h2>
@@ -586,7 +586,7 @@
 
     <!-- 6. SPMB Flow Section -->
     <section id="spmb" class="py-24 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="w-full px-6">
             <div class="flex flex-col lg:flex-row items-center gap-16">
                 <!-- Left: Info -->
                 <div class="lg:w-1/3">
@@ -637,12 +637,12 @@
     <!-- 7. Dynamic Testimonial Slider -->
     <section class="py-24 bg-teal-900 text-white overflow-hidden relative">
         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-15"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center mb-12">
+        <div class="w-full px-6 relative z-10 text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-black mb-4">Apa Kata Mereka?</h2>
             <p class="text-teal-200">Suara dari alumni, guru, dan wali murid tentang SMA Islam Sultan Agung 1.</p>
         </div>
 
-        <div x-data="testimonialCarousel()" class="relative max-w-7xl mx-auto px-6">
+        <div x-data="testimonialCarousel()" class="relative w-full px-6">
             <!-- Testimonial Wrapper -->
             <div x-ref="container" class="flex overflow-x-auto gap-6 pb-12 snap-x snap-mandatory hide-scrollbar max-w-5xl mx-auto" style="scroll-padding-left: 1.5rem;">
                 @if(isset($testimonials) && $testimonials->count() > 0)
@@ -725,7 +725,7 @@
 
     <!-- 8. Premium Footer -->
     <footer class="bg-slate-950 border-t border-slate-900 pt-24 pb-12">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="w-full px-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20">
                 <!-- Branding -->
                 <div class="space-y-8">

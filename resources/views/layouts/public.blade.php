@@ -148,7 +148,7 @@
     <!-- Navigation -->
     <nav :class="{'py-3 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200': scrolled, 'py-5 bg-transparent': !scrolled}" 
          class="fixed top-0 w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <div class="w-full px-6 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <a href="{{ route('home') }}" class="flex items-center space-x-3">
                     <div class="h-12 w-auto flex items-center justify-center p-1.5 rounded-xl bg-white shadow-sm border border-slate-100">
@@ -256,7 +256,7 @@
 
     <!-- Premium Footer -->
     <footer class="bg-slate-950 border-t border-slate-900 pt-24 pb-12">
-        <div class="max-w-7xl mx-auto px-6">
+        <div class="w-full px-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-20">
                 <!-- Branding -->
                 <div class="space-y-8">
