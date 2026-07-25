@@ -107,6 +107,7 @@ use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
 
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
+Route::get('/verify-document/{code}', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'verifyPublic'])->name('documents.verify_public');
 Route::get('/tentang-kami', [PublicSiteController::class, 'about'])->name('public.about');
 Route::get('/kontak', [PublicSiteController::class, 'contact'])->name('public.contact');
 Route::get('/fasilitas', [PublicSiteController::class, 'facilities'])->name('public.facilities');
@@ -220,10 +221,137 @@ Route::middleware('auth')->group(function () {
     // Impersonate Leave (Accessible by any auth user who is currently impersonating)
     Route::get('admin/impersonate-leave', [ImpersonateController::class, 'leave'])->name('admin.impersonate.leave');
 
-    // In-App Notifications
-    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
-    Route::get('notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
+    // Unified Notification Center & Enterprise Inbox
+    Route::get('notifications', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/preferences', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'preferences'])->name('notifications.preferences');
+    Route::post('notifications/preferences', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'updatePreferences'])->name('notifications.preferences.update');
+    Route::post('notifications/read-all', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'markAllAsRead'])->name('notifications.read_all');
+    Route::post('notifications/mark-all-read', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+    Route::post('notifications/{id}/read', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('notifications/test-dispatch', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'testDispatch'])->name('notifications.test_dispatch');
+    Route::get('notifications/unread-count', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'unreadCount'])->name('notifications.unread_count');
+    // Internal Messaging & Threaded Discussion System
+    Route::get('messages', [\App\Http\Controllers\Communication\MessagingController::class, 'index'])->name('messages.index');
+    Route::get('messages/compose', [\App\Http\Controllers\Communication\MessagingController::class, 'compose'])->name('messages.compose');
+    Route::post('messages', [\App\Http\Controllers\Communication\MessagingController::class, 'store'])->name('messages.store');
+    Route::post('messages/{conversation}/reply', [\App\Http\Controllers\Communication\MessagingController::class, 'reply'])->name('messages.reply');
+    Route::get('messages/search-users', [\App\Http\Controllers\Communication\MessagingController::class, 'searchUsers'])->name('messages.search_users');
+
+    // Digital Signature & E-Stamp Document Workflow
+    Route::get('documents/pending-signatures', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'pendingDocuments'])->name('documents.pending_signatures');
+    Route::get('documents/signatures/{id}/sign', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'signForm'])->name('documents.sign_form');
+    Route::post('documents/signatures/{id}/sign', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'signDocument'])->name('documents.sign');
+    Route::post('documents/test-request', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'testRequest'])->name('documents.test_request');
+    Route::get('documents/signature-history', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'signatureHistory'])->name('documents.signature_history');
+    // Enterprise Calendar & Resource Booking System
+    Route::get('calendar-hub', [\App\Http\Controllers\Communication\CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('calendar-hub/events-json', [\App\Http\Controllers\Communication\CalendarController::class, 'eventsJson'])->name('calendar.events_json');
+    Route::post('calendar-hub/events', [\App\Http\Controllers\Communication\CalendarController::class, 'store'])->name('calendar.store');
+    Route::put('calendar-hub/events/{id}', [\App\Http\Controllers\Communication\CalendarController::class, 'update'])->name('calendar.update');
+    Route::delete('calendar-hub/events/{id}', [\App\Http\Controllers\Communication\CalendarController::class, 'destroy'])->name('calendar.destroy');
+    Route::post('calendar-hub/events/{id}/rsvp', [\App\Http\Controllers\Communication\CalendarController::class, 'rsvp'])->name('calendar.rsvp');
+
+    Route::get('resource-bookings', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'index'])->name('resource_bookings.index');
+    Route::post('resource-bookings', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
+    Route::post('resource-bookings/{id}/approve', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');
+    Route::post('resource-bookings/{id}/reject', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
+    Route::get('resource-bookings/check', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
+
+    // Centralized Digital Asset Management (DAM)
+    Route::get('media', [\App\Http\Controllers\Content\MediaAssetController::class, 'index'])->name('media.index');
+    Route::post('media/upload', [\App\Http\Controllers\Content\MediaAssetController::class, 'upload'])->name('media.upload');
+    Route::post('media/folders', [\App\Http\Controllers\Content\MediaAssetController::class, 'createFolder'])->name('media.create_folder');
+    Route::post('media/{id}/move', [\App\Http\Controllers\Content\MediaAssetController::class, 'moveToFolder'])->name('media.move');
+    Route::delete('media/{id}', [\App\Http\Controllers\Content\MediaAssetController::class, 'destroy'])->name('media.destroy');
+    Route::get('media/storage-stats', [\App\Http\Controllers\Content\MediaAssetController::class, 'storageStats'])->name('media.storage_stats');
+
+    // Intelligent Document Processing (IDP) & OCR Engine
+    Route::get('ocr', [\App\Http\Controllers\Content\OcrDocumentController::class, 'index'])->name('ocr.index');
+    Route::post('ocr/upload', [\App\Http\Controllers\Content\OcrDocumentController::class, 'upload'])->name('ocr.upload');
+    Route::get('ocr/{id}/review', [\App\Http\Controllers\Content\OcrDocumentController::class, 'reviewExtraction'])->name('ocr.review');
+    Route::post('ocr/{id}/apply', [\App\Http\Controllers\Content\OcrDocumentController::class, 'applyToRegistration'])->name('ocr.apply');
+
+    // Multi-Format Export Engine & Data Interoperability
+    Route::get('exports', [\App\Http\Controllers\Content\ExportEngineController::class, 'selectFormat'])->name('exports.index');
+    Route::post('exports/generate', [\App\Http\Controllers\Content\ExportEngineController::class, 'generateExport'])->name('exports.generate');
+    Route::get('exports/{id}/download', [\App\Http\Controllers\Content\ExportEngineController::class, 'downloadExport'])->name('exports.download');
+    Route::get('exports/history', [\App\Http\Controllers\Content\ExportEngineController::class, 'exportHistory'])->name('exports.history');
+
+    // BAN-SM Accreditation Readiness Dashboard & Evidence Collector
+    Route::get('accreditation', [\App\Http\Controllers\Grc\AccreditationController::class, 'dashboard'])->name('accreditation.dashboard');
+    Route::get('accreditation/standards/{id}', [\App\Http\Controllers\Grc\AccreditationController::class, 'standardDetail'])->name('accreditation.standard_detail');
+    Route::post('accreditation/evidences', [\App\Http\Controllers\Grc\AccreditationController::class, 'uploadEvidence'])->name('accreditation.upload_evidence');
+    Route::post('accreditation/evidences/{id}/verify', [\App\Http\Controllers\Grc\AccreditationController::class, 'verifyEvidence'])->name('accreditation.verify_evidence');
+    Route::get('accreditation/report', [\App\Http\Controllers\Grc\AccreditationController::class, 'report'])->name('accreditation.report');
+
+    // Internal Quality Assurance (SPMI) & School Self-Evaluation (EDS) Engine
+    Route::get('quality/cycles', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'cycles'])->name('quality.cycles');
+    Route::post('quality/cycles', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'createCycle'])->name('quality.create_cycle');
+    Route::get('quality/cycles/{id}/evaluation', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'fillEvaluation'])->name('quality.fill_evaluation');
+    Route::post('quality/cycles/{id}/evaluation', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'submitEvaluation'])->name('quality.submit_evaluation');
+    Route::get('quality/cycles/{id}/results', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'results'])->name('quality.results');
+    Route::get('quality/cycles/{id}/compare', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'compareReport'])->name('quality.compare');
+
+    // Risk Assessment Matrix & Incident Response Workflow
+    Route::get('risk/register', [\App\Http\Controllers\Grc\RiskManagementController::class, 'riskRegister'])->name('risk.register');
+    Route::post('risk/register', [\App\Http\Controllers\Grc\RiskManagementController::class, 'createRisk'])->name('risk.create');
+    Route::get('risk/matrix', [\App\Http\Controllers\Grc\RiskManagementController::class, 'riskMatrix'])->name('risk.matrix');
+    Route::get('risk/incidents', [\App\Http\Controllers\Grc\RiskManagementController::class, 'incidents'])->name('risk.incidents');
+    Route::post('risk/incidents', [\App\Http\Controllers\Grc\RiskManagementController::class, 'createIncident'])->name('risk.create_incident');
+    Route::post('risk/incidents/{id}/resolve', [\App\Http\Controllers\Grc\RiskManagementController::class, 'resolveIncident'])->name('risk.resolve_incident');
+
+    // Policy & SOP Document Governance System
+    Route::get('sop', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'index'])->name('sop.index');
+    Route::get('sop/create', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'create'])->name('sop.create');
+    Route::post('sop', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'store'])->name('sop.store');
+    Route::get('sop/{id}', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'show'])->name('sop.show');
+    Route::post('sop/{id}/publish', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'publish'])->name('sop.publish');
+    Route::post('sop/{id}/acknowledge', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'acknowledge'])->name('sop.acknowledge');
+    Route::get('sop-compliance', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'complianceReport'])->name('sop.compliance');
+
+    // 31.1 GraphQL API Federation & Gateway
+    Route::match(['get', 'post'], 'graphql', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'graphqlEndpoint'])->name('api.graphql');
+    Route::get('api-clients', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'clientManagement'])->name('api.clients');
+    Route::post('api-clients', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'registerClient'])->name('api.register_client');
+    Route::get('api-stats', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'apiUsageStats'])->name('api.stats');
+
+    // 31.2 Enterprise ETL Pipeline & Migration Toolkit
+    Route::get('etl', [\App\Http\Controllers\Integration\EtlController::class, 'index'])->name('etl.index');
+    Route::post('etl/jobs', [\App\Http\Controllers\Integration\EtlController::class, 'createJob'])->name('etl.create_job');
+    Route::get('etl/jobs/{id}/mapping', [\App\Http\Controllers\Integration\EtlController::class, 'configureMapping'])->name('etl.configure_mapping');
+    Route::post('etl/jobs/{id}/execute', [\App\Http\Controllers\Integration\EtlController::class, 'execute'])->name('etl.execute');
+    Route::get('etl/jobs/{id}/progress', [\App\Http\Controllers\Integration\EtlController::class, 'progress'])->name('etl.progress');
+    Route::post('etl/jobs/{id}/rollback', [\App\Http\Controllers\Integration\EtlController::class, 'rollback'])->name('etl.rollback');
+
+    // 31.3 Third-Party Plugin Architecture & Marketplace
+    Route::get('plugins', [\App\Http\Controllers\Integration\PluginController::class, 'index'])->name('plugins.index');
+    Route::get('plugins/marketplace', [\App\Http\Controllers\Integration\PluginController::class, 'marketplace'])->name('plugins.marketplace');
+    Route::post('plugins/install', [\App\Http\Controllers\Integration\PluginController::class, 'install'])->name('plugins.install');
+    Route::post('plugins/{id}/toggle', [\App\Http\Controllers\Integration\PluginController::class, 'toggle'])->name('plugins.toggle');
+
+    // 31.4 Public API Documentation Portal (OpenAPI 3.0)
+    Route::get('api-docs', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'index'])->name('api_docs.index');
+    Route::get('api-docs/openapi.json', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'openApiJson'])->name('api_docs.openapi_json');
+    Route::get('api-docs/swagger', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'swaggerUi'])->name('api_docs.swagger_ui');
+    Route::get('api-docs/postman', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'postmanExport'])->name('api_docs.postman');
+
+    // 32.1 Database Query Optimizer & N+1 Sentinel
+    Route::get('query-performance', [\App\Http\Controllers\Performance\QueryPerformanceController::class, 'dashboard'])->name('query_performance.dashboard');
+    Route::get('query-performance/slow', [\App\Http\Controllers\Performance\QueryPerformanceController::class, 'slowQueries'])->name('query_performance.slow');
+    Route::get('query-performance/suggestions', [\App\Http\Controllers\Performance\QueryPerformanceController::class, 'optimizationSuggestions'])->name('query_performance.suggestions');
+
+    // 32.2 Lazy Loading, Code Splitting & Asset Optimization
+    Route::get('asset-performance', [\App\Http\Controllers\Performance\AssetPerformanceController::class, 'assetReport'])->name('asset_performance.report');
+
+    // 32.3 Automated Stress Test & Load Testing Suite
+    Route::get('load-test', [\App\Http\Controllers\Performance\LoadTestController::class, 'dashboard'])->name('load_test.dashboard');
+    Route::post('load-test/run', [\App\Http\Controllers\Performance\LoadTestController::class, 'runTest'])->name('load_test.run');
+    Route::get('load-test/{id}/results', [\App\Http\Controllers\Performance\LoadTestController::class, 'results'])->name('load_test.results');
+    Route::get('load-test/{id}/compare', [\App\Http\Controllers\Performance\LoadTestController::class, 'compareBaseline'])->name('load_test.compare');
+
+    // 32.4 Horizontal Scaling Architecture Blueprint & Read Replicas
+    Route::get('scaling', [\App\Http\Controllers\Performance\ScalingController::class, 'dashboard'])->name('scaling.dashboard');
+    Route::get('scaling/configuration', [\App\Http\Controllers\Performance\ScalingController::class, 'configuration'])->name('scaling.configuration');
 
     // =========================================================
     // EKSTRAKURIKULER & OSIS — Pengembangan Non-Akademik

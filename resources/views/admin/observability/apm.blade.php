@@ -172,7 +172,7 @@
                 <div x-show="traceModalOpen" x-transition.scale class="inline-block align-bottom bg-gray-900 text-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gray-800 p-6 space-y-4">
                     <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                         <h3 class="text-sm font-black uppercase text-indigo-400 tracking-wider">Distributed Trace Result (X-Correlation-ID)</h3>
-                        <button @click="traceModalOpen = false" class="text-gray-400 hover:text-white">✕</button>
+                        <button @click="traceModalOpen = false" class="text-gray-400 hover:text-white">&times;</button>
                     </div>
 
                     <template x-if="activeTrace">

@@ -17,7 +17,7 @@
                 <form action="{{ route('admin.observability.cache.warmup') }}" method="POST">
                     @csrf
                     <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md shadow-emerald-500/20 flex items-center gap-2 transition-all">
-                        ⚡ Warmup Cache System
+                        <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Warmup Cache System
                     </button>
                 </form>
             </div>

@@ -10,7 +10,7 @@ class SubjectFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'code' => strtoupper($this->faker->bothify('SUB-###')),
+            'code' => 'SUB-' . strtoupper($this->faker->unique()->bothify('??####')),
             'category' => 'Nasional',
             'kkm' => 75,
         ];

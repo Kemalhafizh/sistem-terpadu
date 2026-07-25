@@ -3391,92 +3391,1586 @@ Kepatuhan terhadap Undang-Undang Perlindungan Data Pribadi (UU PDP No. 27 Tahun 
 - **Data Anonymization & Pseudonymization**: Fitur otomatis untuk menyamarkan nama dan identitas siswa saat mengekspor data untuk keperluan riset/statistik eksternal.
 - **Automated Data Archival Policy**: Kebijakan otomatis mengarsipkan data histori > 5 tahun ke tabel arsip dingin (*Cold Storage Tables*) untuk menjaga ukuran database utama tetap efisien.
 
+## FASE 27: Enterprise Operational Intelligence, Data Governance & Automated Disaster Resilience
+
+**Fokus Utama:** Menyempurnakan ekosistem Sistem Terpadu (SISTA) SMA Islam Sultan Agung 1 Semarang dengan kapabilitas operasional kelas enterprise tingkat lanjut (Enterprise Suite Edition). Mencakup Data Warehousing & OLAP Reporting Engine, Real-Time Event Streaming & Webhook Hub, Business Process Automation (BPA) No-Code Rule Engine, Disaster Recovery Automated Simulator, serta Keamanan MFA & Hijacking Prevention.
+
 ---
 
-## 📋 Urutan Prioritas Implementasi (Updated Juli 2026)
+### 27.1: Automated Database Snapshot, Point-In-Time Recovery (PITR) & Disaster Recovery Simulator (Selesai ✅)
+
+Menyediakan ketahanan bencana data (*Disaster Recovery & Data Integrity*) tingkat enterprise. Fitur backup pipeline otomatis berjalan di background queue, dilengkapi verifikasi integritas SHA-256 dan mekanisme pemulihan *point-in-time* sekali klik.
+
+#### Skema Migrasi
+
+```php
+Schema::create('data_snapshots', function (Blueprint $table) {
+    $table->id();
+    $table->string('label')->index();
+    $table->string('file_path');
+    $table->unsignedBigInteger('file_size_bytes');
+    $table->string('checksum_sha256')->nullable();
+    $table->enum('type', ['full', 'incremental'])->default('full');
+    $table->enum('status', ['pending', 'completed', 'failed', 'verified'])->default('pending');
+    $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+    $table->json('metadata')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service (`DisasterRecoveryService`)
+
+```php
+namespace App\Services;
+
+class DisasterRecoveryService
+{
+    public function createSnapshot(string $label, string $type, int $userId): \App\Models\DataSnapshot;
+    public function verifyChecksum(\App\Models\DataSnapshot $snapshot): bool;
+    public function restoreSnapshot(int $snapshotId): bool;
+    public function runIntegrityAudit(): array;
+    public function listSnapshots(array $filters): \Illuminate\Pagination\LengthAwarePaginator;
+    public function purgeExpiredSnapshots(int $retentionDays = 30): int;
+}
+```
+
+#### Spesifikasi Controller (`DisasterRecoveryController`)
+
+```php
+namespace App\Http\Controllers\Admin;
+
+class DisasterRecoveryController extends Controller
+{
+    public function dashboard();
+    public function createSnapshot(Request $request);
+    public function downloadSnapshot(int $snapshotId);
+    public function verifySnapshot(int $snapshotId);
+    public function restoreSnapshot(Request $request, int $snapshotId);
+    public function integrityAudit();
+}
+```
+
+#### Struktur View
+
+```
+resources/views/disaster-recovery/
+├── dashboard.blade.php          # Dasbor manajemen backup & restore
+└── snapshots-list.blade.php     # Daftar snapshot dengan status & aksi
+```
+
+---
+
+### 27.2: Enterprise Data Warehouse (EDW) Schema & OLAP Aggregation Engine (Selesai ✅)
+
+Memisahkan kueri transaksi harian (OLTP) dari kueri analitik eksekutif (OLAP) melalui tabel agregasi pra-kalkulasi (*Materialized Data Marts*) untuk menjamin latensi dasbor analisis eksekutif tetap instan tanpa membebani tabel operasional utama.
+
+#### Skema Migrasi
+
+```php
+Schema::create('analytical_daily_financials', function (Blueprint $table) {
+    $table->id();
+    $table->date('date')->unique();
+    $table->decimal('total_spp_received', 15, 2)->default(0);
+    $table->decimal('total_wadiah_deposits', 15, 2)->default(0);
+    $table->decimal('total_wadiah_withdrawals', 15, 2)->default(0);
+    $table->decimal('total_zis_donations', 15, 2)->default(0);
+    $table->decimal('cash_balance', 15, 2)->default(0);
+    $table->integer('records_count')->default(0);
+    $table->timestamps();
+});
+
+Schema::create('analytical_student_kpi', function (Blueprint $table) {
+    $table->id();
+    $table->date('date');
+    $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+    $table->decimal('attendance_percentage', 5, 2)->default(0);
+    $table->decimal('average_grade', 5, 2)->default(0);
+    $table->decimal('mutabaah_score', 5, 2)->default(0);
+    $table->integer('tahfidz_pages_memorized')->default(0);
+    $table->integer('violation_points')->default(0);
+    $table->integer('counseling_sessions')->default(0);
+    $table->timestamps();
+    $table->unique(['date', 'student_id']);
+});
+
+Schema::create('analytical_employee_performance', function (Blueprint $table) {
+    $table->id();
+    $table->date('date');
+    $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+    $table->decimal('attendance_score', 5, 2)->default(0);
+    $table->decimal('punctuality_score', 5, 2)->default(0);
+    $table->integer('tasks_completed')->default(0);
+    $table->integer('tasks_pending')->default(0);
+    $table->integer('leave_days_used')->default(0);
+    $table->timestamps();
+    $table->unique(['date', 'employee_id']);
+});
+```
+
+#### Spesifikasi Service (`EdwService`)
+
+```php
+namespace App\Services;
+
+class EdwService
+{
+    public function aggregateDailyFinancials(\Carbon\Carbon $date): void;
+    public function aggregateStudentKpis(\Carbon\Carbon $date): void;
+    public function aggregateEmployeePerformance(\Carbon\Carbon $date): void;
+    public function refreshAllMarts(\Carbon\Carbon $date): array;
+    public function getExecutiveFinancialSummary(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate): array;
+}
+```
+
+#### Artisan Command & Scheduled Job
+
+```php
+// app/Console/Commands/RefreshAnalyticalMarts.php
+class RefreshAnalyticalMarts extends Command
+{
+    protected $signature = 'edw:refresh-marts {--date=}';
+    // Dijadwalkan berjalan setiap tengah malam via $schedule->command('edw:refresh-marts')->daily();
+}
+```
+
+#### Spesifikasi Controller (`EdwDashboardController`)
+
+```php
+namespace App\Http\Controllers\Admin;
+
+class EdwDashboardController extends Controller
+{
+    public function executiveDashboard(Request $request);    // Rekap finansial & KPI eksekutif
+    public function studentAnalytics(Request $request);      // Analitik per siswa / per kelas
+    public function financialAnalytics(Request $request);    // Trend penerimaan SPP, Wadiah, ZIS
+}
+```
+
+#### Struktur View
+
+```
+resources/views/edw/
+├── executive-dashboard.blade.php   # Dasbor eksekutif Kepala Sekolah
+├── student-analytics.blade.php     # Visualisasi KPI akademik siswa
+└── financial-analytics.blade.php   # Grafik trend keuangan harian/bulanan
+```
+
+---
+
+### 27.3: Real-Time Event Streaming Bus & Webhook Management Hub (Selesai ✅)
+
+Infrastruktur integrasi acara (*Event-Driven Outbound Webhook*) kelas enterprise untuk menghubungkan SISTA dengan sistem eksternal (yayasan YBWSA Pusat, portal Kemenag, gateway perbankan). Payload JSON terenkripsi dilengkapi tanda tangan kriptografi HMAC-SHA256 (`X-Sista-Signature`).
+
+#### Skema Migrasi
+
+```php
+Schema::create('webhook_subscriptions', function (Blueprint $table) {
+    $table->id();
+    $table->string('url');
+    $table->string('secret_key');
+    $table->json('events');         // ["student.registered", "billing.paid", "grade.published"]
+    $table->boolean('is_active')->default(true);
+    $table->timestamp('last_triggered_at')->nullable();
+    $table->integer('failure_count')->default(0);
+    $table->timestamps();
+});
+
+Schema::create('webhook_delivery_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('webhook_subscription_id')->constrained()->onDelete('cascade');
+    $table->string('event_type');
+    $table->json('payload');
+    $table->integer('response_status_code')->nullable();
+    $table->text('response_body')->nullable();
+    $table->timestamp('delivered_at')->nullable();
+    $table->integer('duration_ms')->nullable();
+    $table->integer('attempts')->default(1);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service (`WebhookManager`)
+
+```php
+namespace App\Services;
+
+class WebhookManager
+{
+    public function registerSubscription(array $data): \App\Models\WebhookSubscription;
+    public function dispatchEvent(string $eventName, array $payload): void;
+    public function generateSignature(string $payload, string $secret): string;  // HMAC-SHA256
+    public function logDelivery(...): void;
+}
+```
+
+#### Spesifikasi Controller (`WebhookController`)
+
+```php
+namespace App\Http\Controllers\Admin;
+
+class WebhookController extends Controller
+{
+    public function index();                           // Daftar webhook terdaftar
+    public function create();                          // Form registrasi webhook baru
+    public function store(Request $request);
+    public function edit(int $id);
+    public function update(Request $request, int $id);
+    public function destroy(int $id);
+    public function testWebhook(Request $request, int $id);   // Kirim test payload
+    public function replayDelivery(int $logId);               // Replay pengiriman gagal
+    public function deliveryLogs(int $id);                    // Log pengiriman per webhook
+}
+```
+
+#### Struktur View
+
+```
+resources/views/webhooks/
+├── index.blade.php     # Manajemen webhook subscriptions
+├── create.blade.php    # Form registrasi URL & event filter
+└── logs.blade.php      # Log pengiriman & replay console
+```
+
+---
+
+### 27.4: Advanced Multi-Factor Security (MFA/2FA) & Session Hijacking Prevention (Selesai ✅)
+
+Peningkatan lapisan keamanan identitas kelas enterprise: TOTP Two-Factor Authentication, Session Fingerprinting untuk deteksi hijacking, dan Step-Up Elevation Safeguard untuk tindakan berdampak tinggi.
+
+#### Skema Migrasi
+
+```php
+Schema::create('user_two_factor_secrets', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+    $table->text('secret_key');           // Encrypted
+    $table->text('recovery_codes');       // JSON Encrypted
+    $table->boolean('is_enabled')->default(false);
+    $table->timestamp('confirmed_at')->nullable();
+    $table->timestamp('last_used_at')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('session_fingerprints', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+    $table->string('session_id')->index();
+    $table->string('ip_address');
+    $table->string('ip_subnet_hash')->nullable();
+    $table->string('user_agent_hash');
+    $table->string('device_fingerprint')->nullable();
+    $table->string('location_approximation')->nullable();
+    $table->boolean('is_trusted')->default(false);
+    $table->timestamp('flagged_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service (`TwoFactorAuthService` & `SessionFingerprintService`)
+
+```php
+namespace App\Services;
+
+class TwoFactorAuthService
+{
+    public function generateSecret(int $userId): array;
+    public function verifyCode(int $userId, string $code): bool;
+    public function generateRecoveryCodes(int $userId): array;
+    public function enable(int $userId, string $code): bool;
+    public function disable(int $userId): bool;
+}
+
+class SessionFingerprintService
+{
+    public function createFingerprint(int $userId, string $sessionId, Request $request): SessionFingerprint;
+    public function validateFingerprint(string $sessionId, Request $request): bool;
+    public function detectAnomaly(int $userId, Request $request): bool;
+    public function freezeSession(string $sessionId): void;
+    public function trustDevice(int $fingerprintId): bool;
+}
+```
+
+#### Spesifikasi Controller
+
+```php
+// app/Http/Controllers/Auth/TwoFactorController.php
+class TwoFactorController extends Controller
+{
+    public function setup();                       // Halaman setup QR Code TOTP
+    public function confirm(Request $request);     // Konfirmasi kode pertama kali
+    public function verify(Request $request);      // Verifikasi kode saat login
+    public function disable(Request $request);     // Nonaktifkan 2FA
+    public function showRecoveryCodes();            // Tampilkan recovery codes
+}
+
+// app/Http/Controllers/Auth/SessionSecurityController.php
+class SessionSecurityController extends Controller
+{
+    public function activeSessions();                          // Daftar sesi aktif
+    public function revokeSession(Request $request, int $id);  // Paksa logout sesi
+    public function trustDevice(Request $request, int $id);    // Tandai perangkat terpercaya
+}
+```
+
+#### Middleware: `StepUpAuthMiddleware`
+Verifikasi ulang kata sandi / 2FA untuk tindakan berdampak tinggi: Pencairan Saldo Wadiah, Finalisasi Nilai Rapor, Perubahan Peran User, System Lockdown.
+
+#### Struktur View
+
+```
+resources/views/auth/
+├── two-factor-setup.blade.php       # Setup 2FA dengan QR Code
+└── two-factor-challenge.blade.php   # Halaman verifikasi kode TOTP saat login
+
+resources/views/security/
+└── active-sessions.blade.php        # Daftar sesi aktif dengan info perangkat & lokasi
+```
+
+---
+
+### 27.5: Enterprise Business Process Automation (BPA) & Dynamic Rule Engine (Selesai ✅)
+
+Mesin otomatisasi aturan bisnis tanpa kode (*No-Code Business Rule Engine*) yang memungkinkan manajemen sekolah mengonfigurasi alur kerja otomatis berbasis kondisi di 5 domain: Academic, Finance, HR, Kesiswaan, Keislaman.
+
+#### Skema Migrasi
+
+```php
+Schema::create('business_rules', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->text('description')->nullable();
+    $table->enum('domain', ['academic', 'finance', 'hr', 'kesiswaan', 'keislaman']);
+    $table->string('trigger_event');
+    $table->json('conditions');
+    $table->json('actions');
+    $table->boolean('is_active')->default(true);
+    $table->integer('priority')->default(0);
+    $table->integer('execution_count')->default(0);
+    $table->timestamp('last_triggered_at')->nullable();
+    $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+    $table->timestamps();
+});
+
+Schema::create('business_rule_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('business_rule_id')->constrained()->onDelete('cascade');
+    $table->json('trigger_data');
+    $table->json('actions_executed');
+    $table->enum('result', ['success', 'partial', 'failed']);
+    $table->text('error_message')->nullable();
+    $table->timestamp('executed_at');
+    $table->timestamps();
+});
+```
+
+#### Contoh Aturan Bisnis Otomatis
+
+| Kondisi | Aksi Otomatis |
+| :--- | :--- |
+| Presensi Siswa < 80% DAN Status Tahfidz == Behind | Terbitkan Tiket BK & Kirim WA ke Orang Tua |
+| Keterlambatan Pegawai > 3x/Bulan | Terapkan Potongan Penyesuaian di Payroll |
+| Poin Pelanggaran Siswa > 50 | Terbitkan SP-1 & Notifikasi Wali Kelas |
+| Tunggakan SPP > 30 Hari | Kirim WA Pengingat & Flag Dashboard Keuangan |
+
+#### Spesifikasi Service (`BusinessRuleEngine`)
+
+```php
+namespace App\Services;
+
+class BusinessRuleEngine
+{
+    public function evaluate(string $triggerEvent, array $payload): void;
+    public function executeActions(array $actions, array $payload): array;
+    public function matchConditions(array $conditions, array $payload): bool;
+    public function logExecution(int $ruleId, array $triggerData, array $actionsExecuted, string $result, ?string $errorMsg): void;
+}
+```
+
+#### Spesifikasi Controller (`BusinessRuleController`)
+
+```php
+namespace App\Http\Controllers\Admin;
+
+class BusinessRuleController extends Controller
+{
+    public function index(Request $request);
+    public function create();
+    public function store(Request $request);
+    public function edit(int $id);
+    public function update(Request $request, int $id);
+    public function toggleActive(int $id);
+    public function executionLogs(int $id);
+    public function testRule(Request $request, int $id);   // Simulasi eksekusi aturan
+}
+```
+
+#### Struktur View
+
+```
+resources/views/business-rules/
+├── index.blade.php     # Daftar aturan bisnis aktif/nonaktif
+├── create.blade.php    # Builder kondisi & aksi (UI form dinamis)
+└── logs.blade.php      # Log eksekusi aturan dengan detail hasil
+```
+
+---
+
+### 27.6: Enterprise Vendor SLA Monitor & Service Level Tracker (Selesai ✅)
+
+Sistem pemantauan kualitas layanan penyedia pihak ketiga (*Vendor SLA Tracking*) untuk memastikan kepatuhan kontrak ketersediaan layanan eksternal.
+
+#### Skema Migrasi
+
+```php
+Schema::create('vendor_services', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('base_url');
+    $table->string('health_check_endpoint')->nullable();
+    $table->integer('expected_status_code')->default(200);
+    $table->decimal('sla_target_uptime_percent', 5, 2)->default(99.90);
+    $table->enum('category', ['payment', 'messaging', 'government', 'integration']);
+    $table->boolean('is_monitored')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('vendor_health_checks', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('vendor_service_id')->constrained()->onDelete('cascade');
+    $table->enum('status', ['up', 'down', 'degraded']);
+    $table->integer('response_time_ms')->nullable();
+    $table->integer('status_code')->nullable();
+    $table->text('error_message')->nullable();
+    $table->timestamp('checked_at');
+    $table->timestamps();
+});
+```
+
+#### Vendor Terpantau
+
+| Vendor | Kategori | Health Endpoint |
+| :--- | :--- | :--- |
+| Fonnte WhatsApp Gateway | Messaging | `/api/health` |
+| Midtrans Payment Gateway | Payment | `/v2/ping` |
+| Kemendikbud Dapodik | Government | `/api/v1/status` |
+| Kemenag EMIS | Government | `/api/health` |
+
+#### Spesifikasi Service (`VendorSlaService`)
+
+```php
+namespace App\Services;
+
+class VendorSlaService
+{
+    public function checkHealth(\App\Models\VendorService $vendor): void;
+    public function calculateUptime(int $vendorId, Carbon $startDate, Carbon $endDate): float;
+    public function calculateP95Latency(int $vendorId, Carbon $startDate, Carbon $endDate): int;
+    public function calculateP99Latency(int $vendorId, Carbon $startDate, Carbon $endDate): int;
+    public function generateMonthlyReport(int $month, int $year): array;
+}
+```
+
+#### Spesifikasi Controller (`VendorSlaController`)
+
+```php
+namespace App\Http\Controllers\Admin;
+
+class VendorSlaController extends Controller
+{
+    public function dashboard();                              // Scorecard semua vendor
+    public function addVendor(Request $request);
+    public function editVendor(Request $request, int $id);
+    public function healthHistory(int $id);                   // Riwayat uptime per vendor
+    public function monthlyReport(Request $request);          // Laporan SLA bulanan
+}
+```
+
+#### Struktur View
+
+```
+resources/views/vendor-sla/
+├── dashboard.blade.php       # Scorecard uptime & latency semua vendor
+├── vendor-detail.blade.php   # Grafik riwayat kesehatan per vendor
+└── monthly-report.blade.php  # Laporan kepatuhan SLA bulanan
+```
+
+---
+
+## FASE 28: Enterprise Communication, Collaboration & Digital Workspace
+
+**Fokus Utama:** Membangun platform komunikasi dan kolaborasi digital internal kelas enterprise untuk seluruh warga sekolah. Mengadopsi arsitektur Event-Driven untuk pengiriman pesan real-time dan notifikasi asinkron.
+
+---
+
+### 28.1: Unified Notification Center & Enterprise Inbox (Selesai ✅)
+
+Multi-channel notification hub terpusat (In-App Bell, Push Notification, Email Digest, WhatsApp) dengan preferensi per pengguna dan pola Publish-Subscribe via Background Queue.
+
+#### Skema Migrasi
+
+```php
+Schema::create('notification_preferences', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->string('event_category');
+    $table->boolean('channel_inapp')->default(true);
+    $table->boolean('channel_email')->default(true);
+    $table->boolean('channel_whatsapp')->default(false);
+    $table->boolean('channel_push')->default(false);
+    $table->timestamps();
+    $table->unique(['user_id', 'event_category']);
+});
+
+Schema::create('notification_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->string('title');
+    $table->text('body');
+    $table->enum('channel', ['inapp', 'email', 'whatsapp', 'push']);
+    $table->string('event_type');
+    $table->timestamp('read_at')->nullable();
+    $table->string('action_url')->nullable();
+    $table->json('metadata')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service (`NotificationDispatchService`)
+
+```php
+namespace App\Services\Communication;
+
+class NotificationDispatchService
+{
+    public function dispatch(int $userId, string $eventType, string $title, string $body, array $metadata = []): void;
+    public function dispatchBulk(array $userIds, string $eventType, string $title, string $body): void;
+    public function markAsRead(int $notificationId, int $userId): bool;
+    public function markAllRead(int $userId): int;
+    public function getUserPreferences(int $userId): Collection;
+    public function updatePreferences(int $userId, array $preferences): void;
+}
+```
+
+#### Spesifikasi Controller (`NotificationCenterController`)
+
+```php
+namespace App\Http\Controllers\Communication;
+
+class NotificationCenterController extends Controller
+{
+    public function inbox(Request $request);                 // Daftar notifikasi dengan filter
+    public function markRead(Request $request, int $id);     // Mark single as read (AJAX)
+    public function markAllRead(Request $request);           // Mark all as read
+    public function preferences(Request $request);           // Halaman pengaturan preferensi
+    public function updatePreferences(Request $request);     // Simpan preferensi
+    public function unreadCount(Request $request);           // API: badge counter via Alpine.js polling
+}
+```
+
+#### Struktur View
+
+```
+resources/views/notifications/
+├── inbox.blade.php          # Daftar notifikasi dengan filter unread/all
+└── preferences.blade.php    # Toggle switch UI preferensi channel per event
+```
+
+---
+
+### 28.2: Internal Messaging & Threaded Discussion System (Selesai ✅)
+
+Sistem pesan internal dengan model percakapan berulir (threaded conversation), mendukung komunikasi langsung Guru-Guru, Guru-WaliMurid, Admin-Anyone, dilengkapi read receipts dan lampiran file.
+
+#### Skema Migrasi
+
+```php
+Schema::create('conversations', function (Blueprint $table) {
+    $table->id();
+    $table->enum('type', ['direct', 'group']);
+    $table->string('subject')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('conversation_participants', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->timestamp('last_read_at')->nullable();
+    $table->boolean('is_muted')->default(false);
+    $table->timestamps();
+    $table->unique(['conversation_id', 'user_id']);
+});
+
+Schema::create('messages', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('sender_id')->nullable()->constrained('users');
+    $table->text('body');
+    $table->string('attachment_path')->nullable();
+    $table->boolean('is_system_message')->default(false);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`MessagingService`**: `createConversation`, `sendMessage`, `getConversations`, `getMessages`, `markAsRead`
+- **`MessagingController`**: `index` (split-panel UI), `show`, `createConversation`, `sendMessage`, `search`
+
+#### Struktur View
+
+```
+resources/views/messaging/
+├── index.blade.php      # Split-panel: sidebar conversation list + message thread
+└── compose.blade.php    # Form pesan baru dengan user autocomplete
+```
+
+---
+
+### 28.3: Digital Signature & E-Stamp Document Workflow (Selesai ✅)
+
+Sistem tanda tangan digital terenkripsi (E-Stamp) untuk dokumen resmi institusi dengan verifikasi QR Code publik.
+
+#### Skema Migrasi
+
+```php
+Schema::create('document_templates', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('category');
+    $table->string('blade_template_path');
+    $table->json('required_signers');
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('document_signatures', function (Blueprint $table) {
+    $table->id();
+    $table->string('document_type');
+    $table->unsignedBigInteger('document_id');
+    $table->foreignId('signer_id')->constrained('users');
+    $table->string('signer_role');
+    $table->string('signature_image_path')->nullable();
+    $table->timestamp('signed_at')->nullable();
+    $table->string('qr_verification_code')->unique();
+    $table->string('ip_address')->nullable();
+    $table->timestamps();
+    $table->index(['document_type', 'document_id']);
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`DigitalSignatureService`**: `requestSignature`, `sign`, `verify`, `generateVerificationQR`, `getSignatureHistory`
+- **`DocumentSignatureController`**: `pendingDocuments`, `signDocument`, `verifySignature` (public), `signatureHistory`
+
+#### Struktur View
+
+```
+resources/views/documents/
+├── pending-signatures.blade.php   # Antrean dokumen menunggu tanda tangan
+├── sign.blade.php                 # Preview dokumen + tombol Sign
+└── verify-public.blade.php        # Halaman publik verifikasi QR (tanpa auth)
+```
+
+---
+
+### 28.4: Enterprise Calendar & Resource Booking System (Selesai ✅)
+
+Unified Calendar System dan Resource Manager untuk mencegah bentrok jadwal penggunaan aset sekolah (Lab, Aula, Ruang Meeting, Masjid).
+
+#### Skema Migrasi
+
+```php
+Schema::create('calendar_events', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('description')->nullable();
+    $table->enum('event_type', ['academic', 'meeting', 'ceremony', 'holiday', 'exam', 'extracurricular']);
+    $table->dateTime('start_datetime');
+    $table->dateTime('end_datetime');
+    $table->boolean('is_all_day')->default(false);
+    $table->string('location')->nullable();
+    $table->foreignId('organizer_id')->constrained('users');
+    $table->enum('visibility', ['public', 'staff', 'private'])->default('public');
+    $table->string('recurrence_rule')->nullable();
+    $table->string('color_hex', 7)->default('#3B82F6');
+    $table->timestamps();
+});
+
+Schema::create('calendar_event_attendees', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('calendar_event_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->enum('rsvp_status', ['pending', 'accepted', 'declined'])->default('pending');
+    $table->timestamps();
+});
+
+Schema::create('bookable_resources', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->enum('type', ['room', 'facility', 'equipment']);
+    $table->integer('capacity')->nullable();
+    $table->string('location')->nullable();
+    $table->text('description')->nullable();
+    $table->boolean('is_available')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('resource_bookings', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('bookable_resource_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('booked_by')->constrained('users');
+    $table->string('purpose');
+    $table->dateTime('start_datetime');
+    $table->dateTime('end_datetime');
+    $table->enum('status', ['pending', 'approved', 'rejected', 'cancelled'])->default('pending');
+    $table->foreignId('approved_by')->nullable()->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`CalendarService`**: `createEvent`, `updateEvent`, `getEventsForRange`, `checkConflicts`, `syncToGoogleCalendar`
+- **`ResourceBookingService`**: `checkAvailability`, `createBooking`, `approveBooking`, `rejectBooking`, `getBookingSchedule`
+- **`CalendarController`**: `index` (FullCalendar.js), `createEvent`, `editEvent`, `deleteEvent`
+- **`ResourceBookingController`**: `index`, `availabilityCheck`, `createBooking`, `approveBooking`, `myBookings`
+
+#### Struktur View
+
+```
+resources/views/calendar/
+├── index.blade.php              # Integrasi FullCalendar.js navigasi bulanan/mingguan
+└── create-event.blade.php       # Form event dengan Alpine.js recurrence options
+
+resources/views/resources/
+├── booking-index.blade.php      # Daftar resource dengan ketersediaan visual
+└── availability.blade.php       # Timeline view per ruangan
+```
+
+---
+
+## FASE 29: Enterprise Content Delivery, Media Management & Custom Report Engine
+
+**Fokus Utama:** Infrastruktur pengelolaan konten, aset media digital (DAM), ekstraksi data cerdas (IDP/OCR), dan mesin laporan kustom drag-and-drop kelas enterprise.
+
+---
+
+### 29.1: Centralized Digital Asset Management (DAM) (Selesai ✅)
+
+Repositori aset digital tersentralisasi dengan versioning, metadata JSON, tagging hirarkis, dan folder management.
+
+#### Skema Migrasi
+
+```php
+Schema::create('media_folders', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->foreignId('parent_id')->nullable()->constrained('media_folders')->cascadeOnDelete();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('media_assets', function (Blueprint $table) {
+    $table->id();
+    $table->string('filename');
+    $table->string('original_filename');
+    $table->string('mime_type');
+    $table->unsignedBigInteger('file_size_bytes');
+    $table->string('storage_path');
+    $table->string('thumbnail_path')->nullable();
+    $table->foreignId('uploaded_by')->constrained('users');
+    $table->foreignId('folder_id')->nullable()->constrained('media_folders');
+    $table->json('tags')->nullable();
+    $table->json('metadata')->nullable();
+    $table->integer('version')->default(1);
+    $table->boolean('is_public')->default(false);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`MediaAssetService`**: `upload`, `delete`, `moveToFolder`, `createFolder`, `generateThumbnail`, `getByTag`, `search`, `getStorageUsage`
+- **`MediaAssetController`**: `index`, `upload` (Dropzone), `delete`, `createFolder`, `moveToFolder`, `search`, `storageStats`
+
+#### Struktur View
+
+```
+resources/views/media/
+├── library.blade.php          # File manager UI grid/list view (mirip Google Drive)
+├── upload.blade.php           # Komponen dropzone drag-and-drop
+└── folder-browser.blade.php   # Sidebar tree-view navigasi folder
+```
+
+---
+
+### 29.2: Enterprise Report Builder & Custom Report Designer (Selesai ✅)
+
+Builder laporan drag-and-drop untuk manajemen tingkat atas (Kepala Sekolah, Bendahara) dengan kapabilitas penjadwalan otomatis dan multi-format export.
+
+#### Skema Migrasi
+
+```php
+Schema::create('custom_reports', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->text('description')->nullable();
+    $table->string('data_source');
+    $table->json('columns_config');
+    $table->json('filters_config');
+    $table->json('sort_config');
+    $table->enum('chart_type', ['table', 'bar', 'line', 'pie', 'none'])->default('table');
+    $table->foreignId('created_by')->constrained('users');
+    $table->boolean('is_shared')->default(false);
+    $table->string('schedule_cron')->nullable();
+    $table->timestamp('last_generated_at')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('report_exports', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('custom_report_id')->nullable()->constrained()->nullOnDelete();
+    $table->enum('format', ['pdf', 'xlsx', 'csv']);
+    $table->string('file_path');
+    $table->foreignId('generated_by')->nullable()->constrained('users');
+    $table->unsignedBigInteger('file_size_bytes');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ReportBuilderService`**: `buildQuery`, `executeReport`, `exportToPdf`, `exportToExcel`, `exportToCsv`, `scheduleReport`
+- **`ReportBuilderController`**: `index`, `create`, `store`, `preview`, `export`, `scheduleReport`, `sharedReports`
+
+#### Struktur View
+
+```
+resources/views/reports/
+├── builder-index.blade.php    # Daftar laporan tersimpan & template
+├── designer.blade.php         # Drag-and-drop kolom (Alpine.js / SortableJS)
+├── preview.blade.php          # Pratinjau data tabular dan chart instan
+└── export-history.blade.php   # Log unduhan/generasi arsip
+```
+
+---
+
+### 29.3: Intelligent Document Processing (IDP) & OCR Engine (Selesai ✅)
+
+Ekstraksi semi-otomatis informasi identitas dari dokumen ter-scan (KTP, KK, Ijazah) untuk akselerasi entri data PPDB/SPMB.
+
+#### Skema Migrasi
+
+```php
+Schema::create('ocr_documents', function (Blueprint $table) {
+    $table->id();
+    $table->string('original_file_path');
+    $table->enum('document_type', ['ktp', 'kk', 'akta', 'ijazah', 'other']);
+    $table->json('extracted_data')->nullable();
+    $table->float('confidence_score')->nullable();
+    $table->enum('status', ['pending', 'processing', 'completed', 'failed'])->default('pending');
+    $table->foreignId('processed_by')->constrained('users');
+    $table->timestamp('processed_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`OcrProcessingService`**: `processDocument`, `extractFields`, `mapToStudentProfile`, `validateExtraction`
+- **`OcrDocumentController`**: `upload`, `process`, `reviewExtraction`, `applyToRegistration`
+
+#### Struktur View
+
+```
+resources/views/ocr/
+├── upload.blade.php              # Batch upload dokumen pendaftaran
+└── review-extraction.blade.php   # Side-by-side: gambar di kiri, form auto-filled di kanan
+```
+
+---
+
+### 29.4: Multi-Format Export Engine & Data Interoperability (Selesai ✅)
+
+Mesin ekspor batch universal mendukung PDF/A, Excel XLSX, CSV, JSON-LD, dan XML (Dapodik/EMIS compatible) dengan background queue untuk dataset besar.
+
+#### Spesifikasi Service & Controller
+
+- **`ExportEngineService`**: `exportToPdfA`, `exportToXlsx`, `exportToCsv`, `exportToJsonLd`, `exportToXml`, `queueLargeExport`
+- **`ExportController`**: `selectFormat`, `generateExport`, `downloadExport`, `exportHistory`
+
+#### Struktur View
+
+```
+resources/views/exports/
+├── format-selector.blade.php   # Modal pemilihan format & rentang data
+└── history.blade.php           # Monitoring progres ekspor dengan auto-refresh
+```
+
+---
+
+## FASE 30: Enterprise Governance, Risk & Compliance (GRC) & Accreditation Readiness
+
+**Fokus Utama:** Kerangka kerja tata kelola, manajemen risiko, kepatuhan regulasi, dan kesiapan akreditasi sekolah kelas enterprise berdasarkan 8 Standar Nasional Pendidikan (SNP) BAN-SM.
+
+---
+
+### 30.1: BAN-SM Accreditation Readiness Dashboard & Evidence Collector (Selesai ✅)
+
+Sistem pemantauan otomatis kesiapan akreditasi BAN-SM berdasarkan 8 SNP: Standar Isi, Proses, Kompetensi Lulusan, Pendidik & Tenaga Kependidikan, Sarana Prasarana, Pengelolaan, Pembiayaan, Penilaian.
+
+#### Skema Migrasi
+
+```php
+Schema::create('accreditation_standards', function (Blueprint $table) {
+    $table->id();
+    $table->string('code')->unique();
+    $table->string('standard_name');
+    $table->string('category');
+    $table->text('description')->nullable();
+    $table->float('weight')->default(1.0);
+    $table->timestamps();
+});
+
+Schema::create('accreditation_indicators', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('accreditation_standard_id')->constrained()->cascadeOnDelete();
+    $table->string('indicator_code');
+    $table->string('indicator_name');
+    $table->text('description')->nullable();
+    $table->enum('data_source', ['auto', 'manual'])->default('manual');
+    $table->string('auto_query')->nullable();
+    $table->string('target_value');
+    $table->timestamps();
+});
+
+Schema::create('accreditation_evidences', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('accreditation_indicator_id')->constrained()->cascadeOnDelete();
+    $table->enum('evidence_type', ['document', 'data', 'photo']);
+    $table->string('file_path');
+    $table->text('description')->nullable();
+    $table->string('academic_year');
+    $table->foreignId('uploaded_by')->constrained('users');
+    $table->foreignId('verified_by')->nullable()->constrained('users');
+    $table->timestamp('verified_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`AccreditationService`**: `calculateStandardScore`, `calculateOverallScore`, `mapAutoIndicators`, `getReadinessPercentage`, `generateReport`
+- **`AccreditationController`**: `dashboard` (Spider/Radar chart 8 SNP), `standardDetail`, `uploadEvidence`, `verifyEvidence`, `generateReport`, `indicatorMapping`
+
+#### Struktur View
+
+```
+resources/views/accreditation/
+├── dashboard.blade.php          # Spider/radar chart 8 Standar Nasional
+├── standard-detail.blade.php    # Detail indikator per standar
+├── upload-evidence.blade.php    # Upload bukti fisik/digital
+└── report.blade.php             # Laporan kesiapan akreditasi PDF
+```
+
+---
+
+### 30.2: Internal Quality Assurance (IQA) & School Self-Evaluation (EDS) Engine (Selesai ✅)
+
+Platform Evaluasi Diri Sekolah (EDS) digital berbasis siklus untuk evaluasi kinerja internal dan perencanaan perbaikan mutu berkelanjutan.
+
+#### Skema Migrasi
+
+```php
+Schema::create('self_evaluation_cycles', function (Blueprint $table) {
+    $table->id();
+    $table->string('academic_year');
+    $table->enum('semester', ['ganjil', 'genap']);
+    $table->enum('status', ['draft', 'active', 'completed'])->default('draft');
+    $table->date('start_date');
+    $table->date('end_date');
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('self_evaluation_responses', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('cycle_id')->constrained('self_evaluation_cycles')->cascadeOnDelete();
+    $table->foreignId('standard_id')->constrained('accreditation_standards');
+    $table->text('question_text');
+    $table->text('response_text')->nullable();
+    $table->integer('score');  // 1-4 scale
+    $table->text('evidence_notes')->nullable();
+    $table->foreignId('respondent_id')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`QualityAssuranceService`**: `createCycle`, `submitResponse`, `calculateResults`, `generateEdsReport`, `compareWithPrevious`
+- **`QualityAssuranceController`**: `cycles`, `createCycle`, `fillEvaluation`, `results`, `compareReport`
+
+#### Struktur View
+
+```
+resources/views/quality/
+├── cycles.blade.php             # Daftar siklus EDS
+├── evaluation-form.blade.php    # Formulir pengisian evaluasi per standar
+└── results.blade.php            # Hasil evaluasi & perbandingan antar periode
+```
+
+---
+
+### 30.3: Risk Assessment Matrix & Incident Response Workflow (Selesai ✅)
+
+Manajemen risiko berbasis Enterprise Risk Management (ERM) dengan register risiko, matriks 5x5, dan alur respons insiden.
+
+#### Skema Migrasi
+
+```php
+Schema::create('risk_registers', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('description');
+    $table->enum('category', ['Academic', 'Financial', 'Safety', 'IT/Cyber', 'Reputational', 'Regulatory']);
+    $table->enum('likelihood', ['rare', 'unlikely', 'possible', 'likely', 'almost_certain']);
+    $table->enum('impact', ['insignificant', 'minor', 'moderate', 'major', 'catastrophic']);
+    $table->text('mitigation_plan')->nullable();
+    $table->foreignId('owner_id')->constrained('users');
+    $table->enum('status', ['identified', 'mitigating', 'resolved', 'accepted'])->default('identified');
+    $table->date('review_date')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('incidents', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('description');
+    $table->string('category');
+    $table->enum('severity', ['low', 'medium', 'high', 'critical']);
+    $table->foreignId('reported_by')->constrained('users');
+    $table->foreignId('assigned_to')->nullable()->constrained('users');
+    $table->text('resolution_notes')->nullable();
+    $table->enum('status', ['reported', 'investigating', 'resolved', 'closed'])->default('reported');
+    $table->timestamp('reported_at');
+    $table->timestamp('resolved_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`RiskManagementService`**: `assessRisk`, `calculateRiskScore`, `createIncident`, `resolveIncident`, `generateRiskMatrix`
+- **`RiskManagementController`**: `riskRegister`, `createRisk`, `editRisk`, `incidentReport`, `createIncident`, `resolveIncident`, `riskMatrix` (5x5 heat map)
+
+#### Struktur View
+
+```
+resources/views/risk/
+├── register.blade.php       # Register risiko sekolah
+├── matrix.blade.php         # Matriks risiko 5x5 color-coded heat map
+├── incidents.blade.php      # Daftar insiden terlaporkan
+└── incident-detail.blade.php # Detail insiden & resolusi
+```
+
+---
+
+### 30.4: Policy & SOP Document Governance System (Selesai ✅)
+
+Repositori SOP dengan manajemen versi dan acknowledgement tracking untuk memastikan kepatuhan seluruh staf.
+
+#### Skema Migrasi
+
+```php
+Schema::create('sop_documents', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->string('code')->unique();
+    $table->enum('category', ['academic', 'administrative', 'financial', 'safety', 'it']);
+    $table->longText('content_html');
+    $table->integer('version')->default(1);
+    $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+    $table->date('effective_date');
+    $table->date('review_date');
+    $table->foreignId('author_id')->constrained('users');
+    $table->foreignId('approved_by')->nullable()->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('sop_acknowledgements', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('sop_document_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->timestamp('acknowledged_at');
+    $table->string('ip_address')->nullable();
+    $table->timestamps();
+    $table->unique(['sop_document_id', 'user_id']);
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`SopGovernanceService`**: `publish`, `archive`, `createVersion`, `requireAcknowledgement`, `getUnacknowledgedUsers`, `getComplianceRate`
+- **`SopGovernanceController`**: `index`, `show`, `create`, `store`, `publish`, `acknowledge`, `complianceReport`
+
+#### Struktur View
+
+```
+resources/views/sop/
+├── index.blade.php          # Searchable SOP library
+├── show.blade.php           # Reader interface + tombol Acknowledge
+└── compliance.blade.php     # Dashboard persentase kepatuhan per role
+```
+
+---
+
+## FASE 31: Enterprise Integration & Interoperability Layer
+
+**Fokus Utama:** Lapisan integrasi dan interoperabilitas sistem untuk menghubungkan SISTA dengan ekosistem teknologi pendidikan nasional dan pihak ketiga secara aman.
+
+---
+
+### 31.1: GraphQL API Federation & API Versioning Strategy (Selesai ✅)
+
+Kapabilitas GraphQL di samping REST API (API coexistence) dengan manajemen API Client, rate limiting, dan versioning v1/v2.
+
+#### Skema Migrasi
+
+```php
+Schema::create('api_clients', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('client_id')->unique();
+    $table->string('client_secret');
+    $table->json('allowed_scopes');
+    $table->integer('rate_limit_per_minute')->default(60);
+    $table->boolean('is_active')->default(true);
+    $table->timestamp('last_used_at')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`GraphqlService`**: `resolveQuery`, `resolveMutation`, `validateSchema`, `introspection`
+- **`ApiGatewayController`**: `graphqlEndpoint`, `registerClient`, `revokeClient`, `apiUsageStats`
+
+#### Struktur View
+
+```
+resources/views/api/
+├── documentation.blade.php      # Dokumentasi API interaktif
+├── client-management.blade.php  # Manajemen API clients & keys
+└── usage-stats.blade.php        # Statistik penggunaan API
+```
+
+---
+
+### 31.2: Enterprise ETL Pipeline & Data Migration Toolkit (Selesai ✅)
+
+Pipeline ETL (Extract-Transform-Load) untuk migrasi data massal dan sinkronisasi sistem eksternal (Dapodik, EMIS, Excel legacy) dengan validasi bertingkat dan rollback.
+
+#### Skema Migrasi
+
+```php
+Schema::create('etl_jobs', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->enum('source_type', ['dapodik_xml', 'emis_json', 'excel', 'csv']);
+    $table->string('source_file_path');
+    $table->string('target_table');
+    $table->json('mapping_config');
+    $table->json('validation_errors')->nullable();
+    $table->enum('status', ['pending', 'extracting', 'transforming', 'loading', 'completed', 'failed'])->default('pending');
+    $table->integer('records_total')->default(0);
+    $table->integer('records_processed')->default(0);
+    $table->integer('records_failed')->default(0);
+    $table->timestamp('started_at')->nullable();
+    $table->timestamp('completed_at')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`EtlPipelineService`**: `createJob`, `extract`, `transform`, `load`, `validate`, `rollback`, `getProgress`
+- **`EtlController`**: `index`, `createJob`, `uploadSource`, `configureMapping` (visual column mapper), `execute`, `progress`, `rollback`, `history`
+
+#### Struktur View
+
+```
+resources/views/etl/
+├── index.blade.php              # Daftar ETL jobs & history
+├── configure-mapping.blade.php  # Visual column mapper
+├── progress.blade.php           # Progress bar real-time
+└── history.blade.php            # Riwayat eksekusi ETL
+```
+
+---
+
+### 31.3: Third-Party Plugin Architecture & Extension Registry (Selesai ✅)
+
+Arsitektur plugin-based modular dengan event-driven hooks untuk menambahkan fungsionalitas tanpa mengubah core codebase.
+
+#### Skema Migrasi
+
+```php
+Schema::create('plugins', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('slug')->unique();
+    $table->text('description')->nullable();
+    $table->string('version');
+    $table->string('author');
+    $table->string('entry_class');
+    $table->json('config')->nullable();
+    $table->boolean('is_enabled')->default(false);
+    $table->timestamp('installed_at');
+    $table->timestamps();
+});
+
+Schema::create('plugin_hooks', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('plugin_id')->constrained()->cascadeOnDelete();
+    $table->enum('hook_name', ['sidebar.menu', 'dashboard.widget', 'student.profile.tab', 'settings.panel']);
+    $table->integer('priority')->default(10);
+    $table->string('handler_class');
+    $table->string('handler_method');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`PluginManagerService`**: `install`, `uninstall`, `enable`, `disable`, `discoverPlugins`, `executeHook`, `getRegisteredHooks`
+- **`PluginController`**: `index`, `install`, `uninstall`, `enable`, `disable`, `configure`, `marketplace`
+
+#### Struktur View
+
+```
+resources/views/plugins/
+├── index.blade.php          # Installed plugins manager
+├── marketplace.blade.php    # Plugin marketplace browser
+└── configure.blade.php      # Konfigurasi per plugin
+```
+
+---
+
+### 31.4: Public API Documentation Portal (OpenAPI 3.0) (Selesai ✅)
+
+Portal dokumentasi API otomatis berstandar OpenAPI 3.0 (Swagger UI) dengan API Playground untuk testing interaktif.
+
+#### Spesifikasi Service & Controller
+
+- **`ApiDocumentationService`**: `generateOpenApiSpec`, `renderSwaggerUi`, `generatePostmanCollection`
+- **`ApiDocumentationController`**: `index`, `openApiJson`, `swaggerUi`, `postmanExport`
+
+#### Struktur View
+
+```
+resources/views/api-docs/
+├── swagger-ui.blade.php    # Swagger UI embedded
+└── index.blade.php         # Portal dokumentasi API
+```
+
+---
+
+## FASE 32: Enterprise Performance Engineering & Scalability Hardening
+
+**Fokus Utama:** Optimasi performa aplikasi, pengerasan arsitektur untuk skalabilitas horizontal, dan pengujian beban otomatis kelas enterprise.
+
+---
+
+### 32.1: Advanced Database Query Optimizer & N+1 Query Sentinel (Selesai ✅)
+
+Deteksi dan pencegahan N+1 Query secara proaktif menggunakan middleware sentinel, dilengkapi Slow Query Analyzer dan saran optimasi indeks otomatis.
+
+#### Skema Migrasi
+
+```php
+Schema::create('query_performance_logs', function (Blueprint $table) {
+    $table->id();
+    $table->string('route');
+    $table->text('query_sql');
+    $table->float('execution_time_ms');
+    $table->json('bindings');
+    $table->boolean('is_slow')->default(false);
+    $table->text('stack_trace')->nullable();
+    $table->timestamp('created_at')->useCurrent();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`QueryOptimizerService`**: `detectNPlusOne`, `logSlowQuery`, `suggestIndexes`, `analyzeQueryPlan`, `generateOptimizationReport`
+- **`QueryPerformanceController`**: `dashboard`, `slowQueries`, `nPlusOneReport`, `optimizationSuggestions`
+- **Middleware**: Auto-detection yang mencatat query > 200ms
+
+#### Struktur View
+
+```
+resources/views/performance/
+├── query-dashboard.blade.php            # Dashboard performa query
+├── slow-queries.blade.php               # Daftar slow queries
+└── optimization-suggestions.blade.php   # Saran optimasi indeks & eager loading
+```
+
+---
+
+### 32.2: Lazy Loading, Code Splitting & Asset Pipeline Optimization (Selesai ✅)
+
+Peningkatan Core Web Vitals (LCP, FID, CLS) dan Time-to-Interactive (TTI) melalui Vite code splitting, lazy-loaded Blade components, konversi WebP, dan PurgeCSS.
+
+#### Spesifikasi Service
+
+- **`AssetOptimizationService`**: `analyzeBundle`, `generateReport`, `optimizeImages`, `purgeUnusedCss`
+- **Konfigurasi**: Penyesuaian `vite.config.js` untuk chunk optimization & kompresi Brotli/Gzip
+
+#### Struktur View
+
+```
+resources/views/performance/
+└── asset-report.blade.php   # Laporan ukuran bundle & rekomendasi optimasi
+```
+
+---
+
+### 32.3: Automated Stress Test & Load Testing Suite (Selesai ✅)
+
+Kerangka pengujian beban terintegrasi (terinspirasi k6/Artillery) untuk memastikan keandalan saat beban puncak (PPDB, Ujian).
+
+#### Skema Migrasi
+
+```php
+Schema::create('load_test_results', function (Blueprint $table) {
+    $table->id();
+    $table->string('scenario_name');
+    $table->integer('concurrent_users');
+    $table->integer('duration_seconds');
+    $table->integer('total_requests');
+    $table->float('requests_per_second');
+    $table->float('p50_latency_ms');
+    $table->float('p95_latency_ms');
+    $table->float('p99_latency_ms');
+    $table->float('error_rate_percent');
+    $table->enum('status', ['running', 'completed', 'failed'])->default('running');
+    $table->timestamp('started_at');
+    $table->timestamp('completed_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Skenario Pengujian Pra-konfigurasi
+
+| Skenario | Deskripsi | Target Endpoint |
+| :--- | :--- | :--- |
+| Login Flow | Simulasi login massal | `/login` |
+| Dashboard Load | Beban dashboard admin | `/admin/dashboard` |
+| Grade Entry | Input nilai rapor massal | `/academic/grades/store` |
+| SPP Payment | Pembayaran SPP concurrent | `/finance/spp/pay` |
+| Report Generation | Ekspor laporan PDF berat | `/reports/export` |
+| PPDB Registration | Pendaftaran PPDB massal | `/ppdb/register` |
+
+#### Spesifikasi Service & Controller
+
+- **`LoadTestService`**: `runScenario`, `generateReport`, `compareResults`, `getBaseline`
+- **`LoadTestController`**: `dashboard`, `runTest`, `results`, `compareBaseline`, `scenarios`
+
+#### Struktur View
+
+```
+resources/views/load-test/
+├── dashboard.blade.php     # Dashboard overview hasil load test
+├── run.blade.php           # Form eksekusi skenario baru
+├── results.blade.php       # Detail hasil: latensi P50/P95/P99, error rate
+└── comparison.blade.php    # Perbandingan baseline vs test terbaru
+```
+
+---
+
+### 32.4: Horizontal Scaling Architecture Blueprint & Read Replica Strategy (Selesai ✅)
+
+Blueprint infrastruktur berskala besar: Read Replicas, Connection Pooling, Session Externalization (Redis), dan kesiapan CDN.
+
+#### Skema Migrasi
+
+```php
+Schema::create('system_scaling_config', function (Blueprint $table) {
+    $table->id();
+    $table->string('config_key')->unique();
+    $table->text('config_value');
+    $table->string('description')->nullable();
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ScalingConfigService`**: `getReadReplicaConfig`, `getConnectionPoolConfig`, `getSessionConfig`, `getCdnConfig`, `healthCheck`
+- **`ScalingController`**: `dashboard` (architecture diagram), `configureReadReplica`, `configureSessionStorage`, `cdnSetup`
+
+#### Struktur View
+
+```
+resources/views/scaling/
+├── dashboard.blade.php       # Diagram arsitektur & status node
+└── configuration.blade.php   # Panel konfigurasi scaling
+```
+
+---
+
+## Rencana Verifikasi Fase 27-32
+
+### 1. Automated Tests
+
+```
+tests/Feature/DisasterRecovery/SnapshotTest.php:
+- Verifikasi pembuatan snapshot menghasilkan file valid dengan checksum SHA-256.
+- Verifikasi restore snapshot mengembalikan data ke state yang benar.
+
+tests/Feature/Edw/AnalyticalMartsTest.php:
+- Verifikasi agregasi harian menghasilkan data mart yang akurat.
+- Verifikasi endpoint executive dashboard mengembalikan data OLAP tanpa query OLTP.
+
+tests/Feature/Webhook/WebhookDeliveryTest.php:
+- Verifikasi signature HMAC-SHA256 terverifikasi dengan benar.
+- Verifikasi replay delivery mengirim ulang payload yang sama.
+
+tests/Feature/Auth/TwoFactorAuthTest.php:
+- Verifikasi setup TOTP menghasilkan secret key valid.
+- Verifikasi step-up auth memblokir aksi sensitif tanpa re-authentication.
+
+tests/Feature/BusinessRule/RuleEngineTest.php:
+- Verifikasi evaluasi kondisi memicu aksi yang tepat.
+- Verifikasi aturan non-aktif tidak tereksekusi.
+
+tests/Feature/Communication/MessagingTest.php:
+- Verifikasi pembuatan percakapan dan pengiriman pesan.
+- Verifikasi read receipts tercatat dengan benar.
+
+tests/Feature/Accreditation/AccreditationReadinessTest.php:
+- Verifikasi perhitungan skor standar akreditasi.
+- Verifikasi auto-mapping indikator dari data existing.
+
+tests/Feature/Integration/GraphqlApiTest.php:
+- Verifikasi resolusi query GraphQL untuk Student, Grade, Attendance.
+- Verifikasi rate limiting per API client.
+
+tests/Feature/Performance/QuerySentinelTest.php:
+- Verifikasi deteksi N+1 query pada route yang dimonitor.
+- Verifikasi slow query (>200ms) tercatat ke log.
+```
+
+### 2. Manual Verification
+
+- Verifikasi visual Spider/Radar Chart 8 Standar Akreditasi (Fase 30).
+- Simulasi pemasangan dan pelepasan Plugin: pastikan Hooks sidebar muncul/hilang tanpa error (Fase 31).
+- Cek tab Network di Developer Tools: pastikan ukuran asset lebih kecil berkat code splitting & WebP (Fase 32).
+- Jalankan skenario Load Test PPDB: pastikan tidak ada memory leak atau degradasi respons (Fase 32).
+
+---
+
+## Urutan Prioritas Implementasi (Updated Juli 2026)
 
 | Prioritas | Modul | Estimasi | Status |
 | :---: | :--- | :--- | :---: |
-| 🔴 **P0** | 11.3: Penilaian Harian & Remedial | 3-4 hari | ✅ Selesai |
-| 🔴 **P0** | 12.1: Penguatan Dashboard per Role | 3-4 hari | ✅ Selesai |
-| 🔴 **P0** | 13.1: Mega Seeder — Data Realistis | 3-4 hari | ✅ Selesai |
-| 🟠 **P1** | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | ✅ Selesai |
-| 🟠 **P1** | 11.1: Tahfidz Komprehensif | 2-3 hari | ✅ Selesai |
-| 🟠 **P1** | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | ✅ Selesai |
-| 🟠 **P1** | 12.2: Penguatan Jadwal | 2 hari | ✅ Selesai |
-| 🟡 **P2** | 11.4: Item Analysis CBT | 2-3 hari | ✅ Selesai |
-| 🟡 **P2** | 12.3: Penguatan E-Learning | 2 hari | ✅ Selesai |
-| 🟡 **P2** | 12.4: Penguatan Perpustakaan | 2 hari | ✅ Selesai |
-| 🟡 **P2** | 12.5: Penguatan Keuangan | 2 hari | ✅ Selesai |
-| 🟡 **P2** | 15.1: Notulensi Rapat | 2-3 hari | ✅ Selesai |
-| 🟢 **P3** | 15.2: Pengumuman Rich | 1-2 hari | ✅ Selesai |
-| 🟢 **P3** | 15.3: Todo List Guru | 1-2 hari | ✅ Selesai |
-| 🟢 **P3** | 14.1: UI Consistency Audit | 3-4 hari | ✅ Selesai |
-| 🟢 **P3** | 14.2: Animasi & Micro-Interactions | 2 hari | ✅ Selesai |
-| 🟢 **P3** | 14.3: Error & Empty State Pages | 1-2 hari | ✅ Selesai |
-| 🟢 **P3** | 14.4: Factory & Test Expansion | 3-4 hari | ✅ Selesai |
-| 🔴 **P0** | **16.1: Sistem SPMB Online Komprehensif** | **5-7 hari** | ✅ Selesai |
-| 🔴 **P0** | **16.2: Overhaul Alumni & Tracer Study** | **3-4 hari** | ✅ Selesai |
-| 🟠 **P1** | **16.3: Penguatan HRD & Kepegawaian** | **4-5 hari** | ✅ Selesai |
-| 🟠 **P1** | **16.4: Penguatan Ekskul & Kesiswaan** | **3-4 hari** | ✅ Selesai |
-| 🟠 **P1** | **16.5: Penguatan OSIS & MPK** | **3-4 hari** | ✅ Selesai |
-| 🟡 **P2** | **17.1: Analytics & Predictive Intelligence** | **4-5 hari** | ✅ Selesai |
-| 🟡 **P2** | **17.2: AI Chatbot Enhancement** | **2-3 hari** | ✅ Selesai |
-| 🟡 **P2** | **17.3: Penguatan UKS & Rekam Medis** | **3-4 hari** | ✅ Selesai |
-| 🟡 **P2** | **17.4: Penguatan CMS & Website Publik** | **3-4 hari** | ✅ Selesai |
-| 🟠 **P1** | **18.1: WhatsApp Automation & Broadcast** | **3-4 hari** | ✅ Selesai |
-| 🟢 **P3** | **18.2: Penguatan Workflow** | **2-3 hari** | ✅ Selesai |
-| 🟢 **P3** | **18.3: Penguatan Smart Alert** | **2 hari** | ✅ Selesai |
-| 🟡 **P2** | **19.1: Mega Seeder v2** | **3-4 hari** | ✅ Selesai |
-| 🟡 **P2** | **19.2: Test Coverage Expansion** | **4-5 hari** | ✅ Selesai |
-| 🟢 **P3** | **19.3: Performance Optimization** | **2-3 hari** | ✅ Selesai |
-| 🟢 **P3** | **20.1: Landing Page Polish** | **2-3 hari** | ✅ Selesai |
-| 🟢 **P3** | **20.2: PWA Enhancement** | **2 hari** | ✅ Selesai |
-| 🟢 **P3** | **20.3: Documentation & Dev Portal** | **2-3 hari** | ✅ Selesai |
-| 🔴 **P0** | **21.1: Tabungan Wadiah & Cashless Kantin** | **4-5 hari** | ✅ Selesai |
-| 🟠 **P1** | **21.2: Portal ZIS & Wakaf YBWSA** | **3-4 hari** | ✅ Selesai |
-| 🔴 **P0** | **22.1: Dapodik & EMIS Sync Mapper** | **3-4 hari** | ✅ Selesai |
-| 🟠 **P1** | **22.2: AI Teacher Copilot (RPP & CBT)** | **4-5 hari** | ✅ Selesai |
-| 🟡 **P2** | **23.1: IoT QR Code Asset Tracking** | **3-4 hari** | ✅ Selesai |
-| 🟡 **P2** | **23.2: Barcode & NFC Integrasi Library** | **2-3 hari** | ✅ Selesai |
-| 🔴 **P0** | **24.1: Double-Entry Ledger Auditor** | **3-4 hari** | ✅ Selesai |
-| 🟢 **P3** | **24.2: Security Dashboard & Intrusion Alert** | **3-4 hari** | ✅ Selesai |
-| 🔴 **P0** | **25.1: Purifikasi UI/UX — Eliminasi Total Emoji** | **2-3 hari** | ✅ Selesai |
-| 🔴 **P0** | **26.1: Modular Domain Boundaries (Single-School Enterprise Core)** | **3-4 hari** | ✅ Selesai |
-| 🟠 **P1** | **26.2: Event-Driven Queue & Background Bus** | **3-4 hari** | ✅ Selesai |
-| 🟡 **P2** | **26.3: Distributed Multi-Layer Cache Strategy** | **2-3 hari** | ✅ Selesai |
-| 🔴 **P0** | **26.4: API Gateway, Rate Limit & Circuit Breakers**| **3-4 hari** | ✅ Selesai |
-| 🟢 **P3** | **26.5: APM Observability, Tracing & Health Dashboard**| **3-4 hari** | ✅ Selesai |
-| 🔴 **P0** | **26.6: Immutable Audit Ledger & Enterprise RBAC** | **4-5 hari** | ✅ Selesai |
-| 🟢 **P3** | **26.7: Zero-Downtime Feature Flag Engine** | **2-3 hari** | ✅ Selesai |
-| 🟠 **P1** | **26.8: PDPL Privacy & Data Anonymization Engine** | **3-4 hari** | ✅ Selesai |
+| P0 | 11.3: Penilaian Harian & Remedial | 3-4 hari | Selesai |
+| P0 | 12.1: Penguatan Dashboard per Role | 3-4 hari | Selesai |
+| P0 | 13.1: Mega Seeder Data Realistis | 3-4 hari | Selesai |
+| P1 | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | Selesai |
+| P1 | 11.1: Tahfidz Komprehensif | 2-3 hari | Selesai |
+| P1 | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | Selesai |
+| P1 | 12.2: Penguatan Jadwal | 2 hari | Selesai |
+| P2 | 11.4: Item Analysis CBT | 2-3 hari | Selesai |
+| P2 | 12.3-12.5: Penguatan E-Learning, Perpustakaan, Keuangan | 6 hari | Selesai |
+| P3 | 14.1-14.4: UI Consistency, Animasi, Error Pages, Tests | 10 hari | Selesai |
+| P3 | 15.1-15.3: Notulensi, Pengumuman, Todo List | 5 hari | Selesai |
+| P0 | 16.1: Sistem SPMB Online Komprehensif | 5-7 hari | Selesai |
+| P0 | 16.2: Overhaul Alumni & Tracer Study | 3-4 hari | Selesai |
+| P1 | 16.3-16.5: HRD, Ekskul, OSIS & MPK | 10-13 hari | Selesai |
+| P2 | 17.1-17.4: Analytics, AI Chatbot, UKS, CMS | 12-16 hari | Selesai |
+| P1 | 18.1: WhatsApp Automation & Broadcast | 3-4 hari | Selesai |
+| P3 | 18.2-18.3: Workflow & Smart Alert | 4-5 hari | Selesai |
+| P2 | 19.1-19.2: Mega Seeder v2 & Test Coverage | 7-9 hari | Selesai |
+| P3 | 19.3-20.3: Performance, Landing Page, PWA, Docs | 8-11 hari | Selesai |
+| P0 | 21.1: Tabungan Wadiah & Cashless Kantin | 4-5 hari | Selesai |
+| P1 | 21.2: Portal ZIS & Wakaf YBWSA | 3-4 hari | Selesai |
+| P0 | 22.1: Dapodik & EMIS Sync Mapper | 3-4 hari | Selesai |
+| P1 | 22.2: AI Teacher Copilot (RPP & CBT) | 4-5 hari | Selesai |
+| P2 | 23.1-23.2: IoT QR Code Asset & Barcode Library | 5-7 hari | Selesai |
+| P0 | 24.1: Double-Entry Ledger Auditor | 3-4 hari | Selesai |
+| P3 | 24.2: Security Dashboard & Intrusion Alert | 3-4 hari | Selesai |
+| P0 | 25.1: Purifikasi UI/UX Eliminasi Total Emoji | 2-3 hari | Selesai |
+| P0 | 26.1: Modular Domain Boundaries (Single-School Core) | 3-4 hari | Selesai |
+| P1 | 26.2: Event-Driven Queue & Background Bus | 3-4 hari | Selesai |
+| P2 | 26.3: Distributed Multi-Layer Cache Strategy | 2-3 hari | Selesai |
+| P0 | 26.4: API Gateway, Rate Limit & Circuit Breakers | 3-4 hari | Selesai |
+| P3 | 26.5: APM Observability, Tracing & Health Dashboard | 3-4 hari | Selesai |
+| P0 | 26.6: Immutable Audit Ledger & Enterprise RBAC | 4-5 hari | Selesai |
+| P3 | 26.7: Zero-Downtime Feature Flag Engine | 2-3 hari | Selesai |
+| P1 | 26.8: PDPL Privacy & Data Anonymization Engine | 3-4 hari | Selesai |
+| **P0** | **27.1: Disaster Recovery & Automated Snapshot** | **3-4 hari** | Selesai ✅ |
+| **P1** | **27.2: Enterprise Data Warehouse & OLAP Engine** | **4-5 hari** | Selesai ✅ |
+| **P2** | **27.3: Event Streaming Bus & Webhook Hub** | **3-4 hari** | Selesai ✅ |
+| **P0** | **27.4: Advanced TOTP 2FA & Session Hijacking Safeguard** | **3-4 hari** | Selesai ✅ |
+| **P3** | **27.5: Business Process Automation (BPA) Rule Engine** | **4-5 hari** | Selesai ✅ |
+| **P1** | **27.6: Enterprise Vendor SLA Scorecard Monitor** | **2-3 hari** | Selesai ✅ |
+| **P1** | **28.1: Unified Notification Center & Enterprise Inbox** | **3-4 hari** | Selesai ✅ |
+| **P2** | **28.2: Internal Messaging & Threaded Discussion** | **4-5 hari** | Selesai ✅ |
+| **P1** | **28.3: Digital Signature & E-Stamp Workflow** | **3-4 hari** | Selesai ✅ |
+| **P2** | **28.4: Enterprise Calendar & Resource Booking** | **4-5 hari** | Selesai ✅ |
+| **P2** | **29.1: Centralized Digital Asset Management (DAM)** | **3-4 hari** | Selesai ✅ |
+| **P1** | **29.2: Enterprise Report Builder & Designer** | **4-5 hari** | Selesai ✅ |
+| **P3** | **29.3: Intelligent Document Processing & OCR** | **3-4 hari** | Selesai ✅ |
+| **P2** | **29.4: Multi-Format Export Engine** | **2-3 hari** | Selesai ✅ |
+| **P0** | **30.1: BAN-SM Accreditation Readiness Dashboard** | **4-5 hari** | Selesai ✅ |
+| **P1** | **30.2: Internal Quality Assurance & EDS Engine** | **3-4 hari** | Selesai ✅ |
+| **P2** | **30.3: Risk Assessment Matrix & Incident Response** | **3-4 hari** | Selesai ✅ |
+| **P1** | **30.4: Policy & SOP Document Governance** | **3-4 hari** | Selesai ✅ |
+| **P2** | **31.1: GraphQL API Federation & Versioning** | **4-5 hari** | Selesai ✅ |
+| **P1** | **31.2: Enterprise ETL Pipeline & Migration Toolkit** | **4-5 hari** | Selesai ✅ |
+| **P3** | **31.3: Third-Party Plugin Architecture** | **3-4 hari** | Selesai ✅ |
+| **P2** | **31.4: Public API Documentation Portal (OpenAPI)** | **2-3 hari** | Selesai ✅ |
+| **P0** | **32.1: Database Query Optimizer & N+1 Sentinel** | **3-4 hari** | Selesai ✅ |
+| **P2** | **32.2: Lazy Loading, Code Splitting & Asset Optimization** | **2-3 hari** | Selesai ✅ |
+| **P1** | **32.3: Automated Stress Test & Load Testing Suite** | **3-4 hari** | Selesai ✅ |
+| **P3** | **32.4: Horizontal Scaling Architecture Blueprint** | **2-3 hari** | Selesai ✅ |
 
 ---
 
-## 📊 Statistik Codebase Setelah Semua Fase Selesai (Target Akhir Enterprise Edition)
+## Statistik Codebase Setelah Semua Fase Selesai (Target Enterprise Ultimate Edition)
 
-| Metrik | Sekarang | Target Akhir (Fase 24) | **Target Akhir Enterprise (Fase 26)** |
-| :--- | :---: | :---: | :---: |
-| **Model Eloquent** | 119 | ~158 | **~175** |
-| **Controller** | ~77 | ~105 | **~120** |
-| **Service Class** | 39 | ~54 | **~68** |
-| **Migration** | 99 | ~118 | **~132** |
-| **View Directory** | 61 | ~85 | **~95** |
-| **Blade Templates** | ~350 | ~480 | **~540** |
-| **Test Files** | ~90 | ~135 | **~160** |
-| **Seeder Files** | 30 | ~45 | **~55** |
-| **Factory Files** | 29 | ~45 | **~55** |
-| **Demo Records** | ~3000 | ~7500+ | **~10.000+** |
+| Metrik | Sekarang | Target Enterprise (Fase 26) | Target Suite (Fase 27) | **Target Ultimate (Fase 32)** |
+| :--- | :---: | :---: | :---: | :---: |
+| **Model Eloquent** | 119 | ~175 | ~195 | **~245** |
+| **Controller** | ~77 | ~120 | ~135 | **~175** |
+| **Service Class** | 39 | ~68 | ~82 | **~115** |
+| **Migration** | 99 | ~132 | ~148 | **~195** |
+| **View Directory** | 61 | ~95 | ~108 | **~145** |
+| **Blade Templates** | ~350 | ~540 | ~610 | **~780** |
+| **Test Files** | ~90 | ~160 | ~185 | **~240** |
+| **Seeder Files** | 30 | ~55 | ~65 | **~80** |
+| **Factory Files** | 29 | ~55 | ~65 | **~80** |
+| **Demo Records** | ~3000 | ~10.000+ | ~15.000+ | **~25.000+** |
 
 ---
 
 > [!IMPORTANT]
-> Seluruh adopsi arsitektur enterprise di atas dirancang **Enterprise Lite Edition (Localhost Ready)** — dapat dijalankan 100% menggunakan `php artisan serve` + SQLite/Database lokal, tanpa mengharuskan server fisik multi-node atau Kubernetes, namun memiliki kesiapan struktur (architecture readiness) tingkat tinggi untuk portofolio teknologi berstandar industri.
+> Seluruh adopsi arsitektur enterprise di atas dirancang **Enterprise Ultimate Edition (Localhost Ready)** -- dapat dijalankan 100% menggunakan `php artisan serve` + SQLite/Database lokal, tanpa mengharuskan server fisik multi-node atau Kubernetes, namun memiliki kesiapan struktur (architecture readiness) tingkat tinggi untuk portofolio teknologi berstandar industri.
 
 > [!TIP]
-> **Urutan Implementasi Fase 26 (Rekomendasi Enterprise):**
-> 1. **Modul 26.2 (Event-Driven Queue & Background Bus)** — memisahkan tugas berat dari HTTP Request lifecycle.
-> 2. **Modul 26.4 (API Gateway & Rate Limiting)** — mengamankan API endpoint dan mengintegrasikan Circuit Breaker.
-> 3. **Modul 26.6 (Immutable Audit Ledger)** — menjamin keamanan dan anti-tamper log transaksi keuangan & akademik.
-> 4. **Modul 26.5 (Enterprise Observability & APM)** — menyediakan visibilitas P99 latency dan query slow log.
-> 5. **Modul 26.7 (Feature Flag Engine)** — manajemen peluncuran modul baru tanpa redeploy.
+> **Urutan Implementasi Rekomendasi (Fase 27-32):**
+> 1. **Fase 27** -- Disaster Recovery, 2FA/MFA, dan Data Warehouse sebagai fondasi keamanan & analitik.
+> 2. **Fase 30** -- Akreditasi BAN-SM & GRC sebagai kepatuhan regulasi pendidikan nasional.
+> 3. **Fase 28** -- Komunikasi & Kolaborasi untuk meningkatkan produktivitas warga sekolah.
+> 4. **Fase 32** -- Performance Engineering untuk menjamin kecepatan & stabilitas sistem.
+> 5. **Fase 29** -- Content Delivery & Report Builder untuk kebutuhan manajerial eksekutif.
+> 6. **Fase 31** -- Integration Layer untuk kesiapan interoperabilitas ekosistem eksternal.
+

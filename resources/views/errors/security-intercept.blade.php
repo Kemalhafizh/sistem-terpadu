@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚠️ SECURITY ALERT - ACCESS TERMINATED | SISTA Cyber Command</title>
+    <title>SECURITY ALERT - ACCESS TERMINATED | SISTA Cyber Command</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -69,7 +69,7 @@
 
         <!-- Warning Disclaimer -->
         <div class="bg-red-950/20 border border-red-500/20 rounded-2xl p-4 text-xs text-red-300/90 leading-relaxed mb-8 flex gap-3">
-            <span class="text-lg">⚖️</span>
+            <span class="text-lg"><svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg></span>
             <div>
                 <strong class="text-red-400 font-bold block mb-1">LEGAL NOTICE & THREAT LOGGING</strong>
                 This incident, device fingerprint, and network connection parameters have been cryptographically signed and stored in the SISTA Security Operations Center (SOC) audit vault. Unauthorized system access or scanning is prohibited under Law No. 11/2008 (ITE) Article 30.

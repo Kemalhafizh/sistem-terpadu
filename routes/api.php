@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\ApiAuthController;
 use App\Http\Controllers\Api\v1\ApiStudentController;
 use App\Http\Controllers\Api\v1\ApiParentController;
 use App\Http\Controllers\Api\v1\ApiTeacherController;
+use App\Http\Controllers\Api\v1\ApiGeneralController;
 use App\Http\Controllers\Api\V1\StudentApiController;
 use App\Http\Controllers\Api\V1\ExternalIntegrationApiController;
 use App\Http\Middleware\ApiVersion;

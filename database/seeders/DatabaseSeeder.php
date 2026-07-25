@@ -79,6 +79,19 @@ class DatabaseSeeder extends Seeder
                 VendorSlaSeeder::class,
                 WebhookHubSeeder::class,
                 BpaRuleEngineSeeder::class,
+                NotificationCenterSeeder::class,
+                InternalMessagingSeeder::class,
+                DigitalSignatureSeeder::class,
+                EnterpriseCalendarSeeder::class,
+                DigitalAssetSeeder::class,
+                OcrDocumentSeeder::class,
+                ExportEngineSeeder::class,
+                AccreditationSeeder::class,
+                QualityAssuranceSeeder::class,
+                RiskManagementSeeder::class,
+                SopGovernanceSeeder::class,
+                EnterpriseIntegrationSeeder::class,
+                EnterprisePerformanceSeeder::class,
             ]);
         });
     }

@@ -343,7 +343,7 @@
 
                 <!-- Floating Elements -->
                 <!-- Float 1: Tagihan -->
-                <div class="absolute top-10 -left-10 md:-left-20 glass p-4 rounded-2xl shadow-xl border border-white animate-float z-20">
+                <div class="absolute top-16 -left-4 md:-left-8 glass p-3 rounded-2xl shadow-xl border border-white animate-float z-20">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 bg-teal-50 rounded-full flex items-center justify-center text-teal-600">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -356,7 +356,7 @@
                 </div>
 
                 <!-- Float 2: Prestasi -->
-                <div class="absolute bottom-16 -right-5 md:-right-16 glass p-4 rounded-2xl shadow-xl border border-white animate-float-delayed z-20">
+                <div class="absolute bottom-20 -right-2 md:-right-6 glass p-3 rounded-2xl shadow-xl border border-white animate-float-delayed z-20">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center text-amber-500">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
@@ -369,7 +369,7 @@
                 </div>
 
                 <!-- Float 3: Kehadiran -->
-                <div class="absolute -top-5 right-5 glass px-4 py-2 rounded-full shadow-lg border border-white animate-float-fast z-20 flex items-center">
+                <div class="absolute top-2 right-2 md:right-0 glass px-4 py-2 rounded-full shadow-lg border border-white animate-float-fast z-20 flex items-center">
                     <span class="w-2 h-2 bg-teal-500 rounded-full mr-2 animate-pulse"></span>
                     <span class="text-xs font-bold text-slate-700">Presensi Real-time</span>
                 </div>

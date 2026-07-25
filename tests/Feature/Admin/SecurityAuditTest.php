@@ -32,7 +32,7 @@ test('response contains required security headers', function () {
     $response = $this->actingAs($user)->get(route('admin.security.audit'));
     
     $response->assertHeader('X-Content-Type-Options', 'nosniff');
-    $response->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+    $response->assertHeader('X-Frame-Options', 'DENY');
     $response->assertHeader('X-XSS-Protection', '1; mode=block');
     $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     $response->assertHeader('Permissions-Policy');
