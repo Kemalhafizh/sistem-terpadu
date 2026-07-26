@@ -257,6 +257,151 @@ Route::middleware('auth')->group(function () {
     Route::post('resource-bookings/{id}/reject', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
     Route::get('resource-bookings/check', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
 
+    // FASE 33: Enterprise Financial Governance & Budgetary Control Suite
+    // 33.1: RAPBS Multi-Year Budget Planning & Variance
+    Route::get('financial/budget', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'dashboard'])->name('financial.budget.dashboard');
+    Route::get('financial/budget/create', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'create'])->name('financial.budget.create');
+    Route::post('financial/budget', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'store'])->name('financial.budget.store');
+    Route::get('financial/budget/{id}', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'show'])->name('financial.budget.show');
+    Route::post('financial/budget/{id}/line-items', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'storeLineItem'])->name('financial.budget.store_line_item');
+    Route::post('financial/budget/{id}/submit', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'submitApproval'])->name('financial.budget.submit');
+    Route::post('financial/budget/{id}/approve', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'approve'])->name('financial.budget.approve');
+    Route::get('financial/budget/{id}/variance', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
+    Route::get('financial/budget/{id}/forecast', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
+
+    // 33.2: Procurement & Purchase Order Workflow
+    Route::get('financial/procurement', [\App\Http\Controllers\Financial\ProcurementController::class, 'dashboard'])->name('financial.procurement.dashboard');
+    Route::get('financial/procurement/request', [\App\Http\Controllers\Financial\ProcurementController::class, 'createRequest'])->name('financial.procurement.create_request');
+    Route::post('financial/procurement/request', [\App\Http\Controllers\Financial\ProcurementController::class, 'storeRequest'])->name('financial.procurement.store_request');
+    Route::post('financial/procurement/{id}/submit', [\App\Http\Controllers\Financial\ProcurementController::class, 'submitApproval'])->name('financial.procurement.submit');
+    Route::post('financial/procurement/{id}/approve', [\App\Http\Controllers\Financial\ProcurementController::class, 'approve'])->name('financial.procurement.approve');
+    Route::post('financial/procurement/{id}/reject', [\App\Http\Controllers\Financial\ProcurementController::class, 'reject'])->name('financial.procurement.reject');
+    Route::get('financial/procurement/{id}/po', [\App\Http\Controllers\Financial\ProcurementController::class, 'createPO'])->name('financial.procurement.create_po');
+    Route::post('financial/procurement/{id}/po', [\App\Http\Controllers\Financial\ProcurementController::class, 'storePO'])->name('financial.procurement.store_po');
+    Route::post('financial/procurement/po/{poId}/grn', [\App\Http\Controllers\Financial\ProcurementController::class, 'recordGRN'])->name('financial.procurement.record_grn');
+    Route::get('financial/procurement/history', [\App\Http\Controllers\Financial\ProcurementController::class, 'history'])->name('financial.procurement.history');
+
+    // 33.3: Scholarship & Grant Management Portal
+    Route::get('financial/scholarships', [\App\Http\Controllers\Financial\ScholarshipController::class, 'programs'])->name('financial.scholarships.programs');
+    Route::get('financial/scholarships/create', [\App\Http\Controllers\Financial\ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program');
+    Route::post('financial/scholarships', [\App\Http\Controllers\Financial\ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program');
+    Route::post('financial/scholarships/{id}/open', [\App\Http\Controllers\Financial\ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open');
+    Route::get('financial/scholarships/{programId}/apply', [\App\Http\Controllers\Financial\ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form');
+    Route::post('financial/scholarships/{programId}/apply', [\App\Http\Controllers\Financial\ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application');
+    Route::get('financial/scholarships/{programId}/review', [\App\Http\Controllers\Financial\ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review');
+    Route::post('financial/scholarships/applications/{appId}/review', [\App\Http\Controllers\Financial\ScholarshipController::class, 'review'])->name('financial.scholarships.review_action');
+    Route::get('financial/scholarships/applications/{appId}/disburse', [\App\Http\Controllers\Financial\ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form');
+    Route::post('financial/scholarships/applications/{appId}/disburse', [\App\Http\Controllers\Financial\ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
+    Route::get('financial/scholarships/report', [\App\Http\Controllers\Financial\ScholarshipController::class, 'report'])->name('financial.scholarships.report');
+
+    // 33.4: Cost Center Accounting & Budget Allocation
+    Route::get('financial/cost-centers', [\App\Http\Controllers\Financial\CostCenterController::class, 'dashboard'])->name('financial.cost-centers.dashboard');
+    Route::get('financial/cost-centers/allocate', [\App\Http\Controllers\Financial\CostCenterController::class, 'allocateForm'])->name('financial.cost-centers.allocate_form');
+    Route::post('financial/cost-centers', [\App\Http\Controllers\Financial\CostCenterController::class, 'storeCostCenter'])->name('financial.cost-centers.store');
+    Route::post('financial/cost-centers/{id}/allocate', [\App\Http\Controllers\Financial\CostCenterController::class, 'storeAllocation'])->name('financial.cost-centers.store_allocation');
+    Route::post('financial/cost-centers/{id}/expense', [\App\Http\Controllers\Financial\CostCenterController::class, 'storeExpense'])->name('financial.cost-centers.store_expense');
+    Route::get('financial/cost-centers/{id}/transactions', [\App\Http\Controllers\Financial\CostCenterController::class, 'transactions'])->name('financial.cost-centers.transactions');
+
+    // FASE 34: Student Growth Ecosystem -- Wellbeing, Positive Behavior & Parent Conference
+    // 34.1: Student Mental Health & Wellbeing Screening
+    Route::get('growth/wellbeing', [\App\Http\Controllers\Growth\WellbeingController::class, 'screenings'])->name('growth.wellbeing.screenings');
+    Route::get('growth/wellbeing/create', [\App\Http\Controllers\Growth\WellbeingController::class, 'createScreening'])->name('growth.wellbeing.create');
+    Route::post('growth/wellbeing', [\App\Http\Controllers\Growth\WellbeingController::class, 'storeScreening'])->name('growth.wellbeing.store');
+    Route::get('growth/wellbeing/{id}/fill', [\App\Http\Controllers\Growth\WellbeingController::class, 'fillScreening'])->name('growth.wellbeing.fill');
+    Route::post('growth/wellbeing/{id}/fill', [\App\Http\Controllers\Growth\WellbeingController::class, 'submitScreening'])->name('growth.wellbeing.submit');
+    Route::get('growth/wellbeing/results', [\App\Http\Controllers\Growth\WellbeingController::class, 'results'])->name('growth.wellbeing.results');
+    Route::get('growth/wellbeing/mood-journal', [\App\Http\Controllers\Growth\WellbeingController::class, 'moodJournal'])->name('growth.wellbeing.mood_journal');
+    Route::post('growth/wellbeing/mood-journal', [\App\Http\Controllers\Growth\WellbeingController::class, 'storeMoodJournal'])->name('growth.wellbeing.store_mood_journal');
+
+    // 34.2: Positive Behavior & Character Report Card (P5)
+    Route::get('growth/character/dimensions', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
+    Route::get('growth/character/assess', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
+    Route::post('growth/character/assess', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'storeAssessment'])->name('growth.character.store_assessment');
+    Route::get('growth/character/student/{studentId}', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'studentReport'])->name('growth.character.student_report');
+    Route::get('growth/character/leaderboard', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'leaderboard'])->name('growth.character.leaderboard');
+    Route::post('growth/character/merit', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
+
+    // 34.3: Parent-Teacher Conference (PTC) Scheduler
+    Route::get('growth/ptc/sessions', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'sessions'])->name('growth.ptc.sessions');
+    Route::post('growth/ptc/sessions', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'storeSession'])->name('growth.ptc.store_session');
+    Route::get('growth/ptc/sessions/{sessionId}/slots', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
+    Route::post('growth/ptc/slots/{slotId}/book', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
+    Route::get('growth/ptc/teacher-schedule', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'teacherSchedule'])->name('growth.ptc.teacher_schedule');
+
+    // 34.4: Student Lifecycle Orchestration Engine
+    Route::get('growth/lifecycle/student/{studentId}', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'timeline'])->name('growth.lifecycle.timeline');
+    Route::post('growth/lifecycle/student/{studentId}/event', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'storeEvent'])->name('growth.lifecycle.store_event');
+    Route::get('growth/lifecycle/retention', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'retentionDashboard'])->name('growth.lifecycle.retention');
+    Route::get('growth/lifecycle/at-risk', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'atRiskStudents'])->name('growth.lifecycle.at_risk');
+
+    // FASE 35: Enterprise Academic Intelligence -- Kurikulum Merdeka & LMS 2.0
+    // 35.1: Competency Mapping (CP/TP/ATP)
+    Route::get('academic/competency/outcomes', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'outcomes'])->name('academic.competency.outcomes');
+    Route::post('academic/competency/outcomes', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'storeOutcome'])->name('academic.competency.store_outcome');
+    Route::post('academic/competency/outcomes/{outcomeId}/objectives', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'storeObjective'])->name('academic.competency.store_objective');
+    Route::get('academic/competency/objectives/{objectiveId}/atp', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'atpMapping'])->name('academic.competency.atp_mapping');
+    Route::post('academic/competency/objectives/{objectiveId}/atp', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'storeAtp'])->name('academic.competency.store_atp');
+    Route::get('academic/competency/subjects/{subjectId}/heatmap', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'classHeatmap'])->name('academic.competency.class_heatmap');
+
+    // 35.2: Multi-Year Academic Planning & Graduation Pathway
+    Route::get('academic/pathways', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'pathways'])->name('academic.pathways.index');
+    Route::post('academic/pathways/enroll', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'storeEnrollment'])->name('academic.pathways.store_enrollment');
+    Route::get('academic/pathways/student/{studentId}/progress', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'progressDashboard'])->name('academic.pathways.progress_dashboard');
+    Route::get('academic/pathways/graduation-readiness', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'graduationReadiness'])->name('academic.pathways.graduation_readiness');
+
+    // 35.3: SCORM/xAPI Learning Content Interoperability
+    Route::get('academic/scorm/packages', [\App\Http\Controllers\Academic\ScormController::class, 'packages'])->name('academic.scorm.packages');
+    Route::post('academic/scorm/packages', [\App\Http\Controllers\Academic\ScormController::class, 'storePackage'])->name('academic.scorm.store_package');
+    Route::get('academic/scorm/packages/{id}/launch', [\App\Http\Controllers\Academic\ScormController::class, 'launch'])->name('academic.scorm.launch');
+    Route::post('academic/scorm/packages/{id}/track', [\App\Http\Controllers\Academic\ScormController::class, 'recordTracking'])->name('academic.scorm.record_tracking');
+
+    // 35.4: Virtual Classroom & Video Conferencing Hub
+    Route::get('academic/virtual', [\App\Http\Controllers\Academic\VirtualClassroomController::class, 'index'])->name('academic.virtual.index');
+    Route::post('academic/virtual', [\App\Http\Controllers\Academic\VirtualClassroomController::class, 'storeMeeting'])->name('academic.virtual.store_meeting');
+    Route::get('academic/virtual/{id}/join', [\App\Http\Controllers\Academic\VirtualClassroomController::class, 'joinLobby'])->name('academic.virtual.join_lobby');
+
+    // FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
+    // 36.1: 360-Degree Teacher Evaluation & EDOM
+    Route::get('hc/evaluation/cycles', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'cycles'])->name('hc.evaluation.cycles');
+    Route::post('hc/evaluation/cycles', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'storeCycle'])->name('hc.evaluation.store_cycle');
+    Route::get('hc/evaluation/cycles/{cycleId}/fill', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'fillForm'])->name('hc.evaluation.fill_form');
+    Route::post('hc/evaluation/cycles/{cycleId}/fill', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'submitEvaluation'])->name('hc.evaluation.submit');
+    Route::get('hc/evaluation/teacher/{teacherId}/results', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'results'])->name('hc.evaluation.results');
+    Route::get('hc/evaluation/ranking', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
+
+    // 36.2: CPD/PKB Credit Tracker
+    Route::get('hc/cpd/dashboard', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'dashboard'])->name('hc.cpd.dashboard');
+    Route::post('hc/cpd/log', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'logActivity'])->name('hc.cpd.log_activity');
+    Route::get('hc/cpd/team-overview', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'teamOverview'])->name('hc.cpd.team_overview');
+    Route::post('hc/cpd/verify/{id}', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'verifyActivity'])->name('hc.cpd.verify');
+
+    // 36.3: School Leadership Succession Planning
+    Route::get('hc/succession/positions', [\App\Http\Controllers\HumanCapital\SuccessionPlanningController::class, 'positions'])->name('hc.succession.positions');
+    Route::post('hc/succession/candidates', [\App\Http\Controllers\HumanCapital\SuccessionPlanningController::class, 'storeCandidate'])->name('hc.succession.store_candidate');
+    Route::get('hc/succession/pipeline-report', [\App\Http\Controllers\HumanCapital\SuccessionPlanningController::class, 'pipelineReport'])->name('hc.succession.pipeline_report');
+
+    // 36.4: Teacher Workload Balancing & Capacity Dashboard
+    Route::get('hc/workload/dashboard', [\App\Http\Controllers\HumanCapital\WorkloadBalancingController::class, 'dashboard'])->name('hc.workload.dashboard');
+    Route::post('hc/workload', [\App\Http\Controllers\HumanCapital\WorkloadBalancingController::class, 'storeWorkload'])->name('hc.workload.store');
+    Route::get('hc/workload/capacity-report', [\App\Http\Controllers\HumanCapital\WorkloadBalancingController::class, 'capacityReport'])->name('hc.workload.capacity_report');
+
+    // FASE 37: Enterprise UX Mastery -- Accessibility, Internationalization & Design System
+    // 37.1: WCAG 2.2 AA+ Accessibility Hardening
+    Route::get('ux/accessibility/dashboard', [\App\Http\Controllers\UX\AccessibilityController::class, 'dashboard'])->name('ux.accessibility.dashboard');
+    Route::get('ux/accessibility/report', [\App\Http\Controllers\UX\AccessibilityController::class, 'auditReport'])->name('ux.accessibility.report');
+
+    // 37.2: Advanced i18n & Full Arabic (RTL) Support
+    Route::get('ux/i18n/manager', [\App\Http\Controllers\UX\TranslationController::class, 'index'])->name('ux.i18n.manager');
+    Route::post('ux/i18n/override', [\App\Http\Controllers\UX\TranslationController::class, 'override'])->name('ux.i18n.override');
+    Route::get('ux/i18n/report', [\App\Http\Controllers\UX\TranslationController::class, 'completionReport'])->name('ux.i18n.report');
+
+    // 37.3: Enterprise Design System Component Library
+    Route::get('ux/design-system/showcase', [\App\Http\Controllers\UX\DesignSystemController::class, 'showcase'])->name('ux.design_system.showcase');
+    Route::get('ux/design-system/documentation', [\App\Http\Controllers\UX\DesignSystemController::class, 'documentation'])->name('ux.design_system.documentation');
+
+    // 37.4: Print-Optimized Stylesheet Engine
+    Route::get('ux/print/preview', [\App\Http\Controllers\UX\PrintEngineController::class, 'preview'])->name('ux.print.preview');
+
     // Centralized Digital Asset Management (DAM)
     Route::get('media', [\App\Http\Controllers\Content\MediaAssetController::class, 'index'])->name('media.index');
     Route::post('media/upload', [\App\Http\Controllers\Content\MediaAssetController::class, 'upload'])->name('media.upload');

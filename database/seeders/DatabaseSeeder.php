@@ -92,6 +92,11 @@ class DatabaseSeeder extends Seeder
                 SopGovernanceSeeder::class,
                 EnterpriseIntegrationSeeder::class,
                 EnterprisePerformanceSeeder::class,
+                EnterpriseFinancialSeeder::class,
+                StudentGrowthSeeder::class,
+                AcademicIntelligenceSeeder::class,
+                HumanCapitalSeeder::class,
+                UxMasterySeeder::class,
             ]);
         });
     }

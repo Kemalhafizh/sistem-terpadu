@@ -291,7 +291,8 @@
 
             <!-- Page Content -->
             <main id="main-content" class="flex-1 overflow-y-auto bg-gray-50/50 dark:bg-gray-900/50 p-4 md:p-6 lg:p-10 transition-all duration-300 page-enter">
-                {{ $slot }}
+                {{ $slot ?? '' }}
+                @yield('content')
             </main>
         </div>
         <!-- Chatbot Floating Widget -->

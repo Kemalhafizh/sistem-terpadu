@@ -4877,7 +4877,1353 @@ tests/Feature/Performance/QuerySentinelTest.php:
 
 ---
 
-## Urutan Prioritas Implementasi (Updated Juli 2026)
+## FASE 33: Enterprise Financial ERP -- RAPBS Budget Planning, Procurement & Scholarship Management
+
+**Fokus Utama:** Melengkapi ekosistem keuangan sekolah dengan modul perencanaan anggaran multi-tahun (RAPBS), alur pengadaan barang/jasa, dan manajemen beasiswa/bantuan (PIP, BOS, Internal) berbasis Domain-Driven Design untuk tata kelola finansial yang transparan dan akuntabel.
+
+---
+
+### 33.1: RAPBS Multi-Year Budget Planning & Variance Analysis Engine
+
+Modul perencanaan fiskal Enterprise untuk menyusun Rencana Anggaran Pendapatan & Belanja Sekolah (RAPBS) secara digital. Mendukung proyeksi multi-year (3 tahun), hierarki kategori anggaran, serta sistem Variance Analysis secara real-time yang membandingkan planned budget versus actual expense.
+
+#### Skema Migrasi
+
+```php
+Schema::create('budget_plans', function (Blueprint $table) {
+    $table->id();
+    $table->string('fiscal_year', 9);
+    $table->string('title');
+    $table->enum('status', ['draft', 'submitted', 'approved', 'revised'])->default('draft');
+    $table->decimal('total_revenue_planned', 15, 2)->default(0);
+    $table->decimal('total_expense_planned', 15, 2)->default(0);
+    $table->foreignId('approved_by')->nullable()->constrained('users');
+    $table->timestamp('approved_at')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('budget_line_items', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('budget_plan_id')->constrained('budget_plans')->cascadeOnDelete();
+    $table->enum('category', ['revenue', 'expense']);
+    $table->string('sub_category');
+    $table->string('account_code', 50)->index();
+    $table->string('description');
+    $table->decimal('planned_amount', 15, 2);
+    $table->decimal('actual_amount', 15, 2)->default(0);
+    $table->decimal('variance_amount', 15, 2)->virtualAs('planned_amount - actual_amount');
+    $table->enum('quarter', ['Q1', 'Q2', 'Q3', 'Q4', 'annual'])->default('annual');
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('budget_revisions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('budget_plan_id')->constrained('budget_plans')->cascadeOnDelete();
+    $table->integer('revision_number');
+    $table->text('reason');
+    $table->foreignId('revised_by')->constrained('users');
+    $table->decimal('old_total', 15, 2);
+    $table->decimal('new_total', 15, 2);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`BudgetPlanningService`**: `createPlan`, `addLineItem`, `calculateVariance`, `submitForApproval`, `approvePlan`, `revisePlan`, `generateRapbsReport`, `forecastNextYear`
+- **`BudgetPlanningController`**: `dashboard` (donut chart revenue vs expense), `create`, `store`, `show`, `edit`, `lineItems`, `submitApproval`, `approve`, `varianceReport`, `forecastReport`
+
+#### Struktur View
+
+```
+resources/views/budget/
+|-- dashboard.blade.php          # OLAP donut chart revenue vs expense
+|-- create.blade.php
+|-- line-items.blade.php
+|-- variance-report.blade.php
+|-- forecast.blade.php
+```
+
+---
+
+### 33.2: Procurement & Purchase Order Workflow
+
+Sistem Pengadaan Barang dan Jasa terpadu dengan approval workflow bertingkat. Mengelola siklus end-to-end: Procurement Request -> Approval -> Purchase Order (PO) -> Goods Received Note (GRN).
+
+#### Skema Migrasi
+
+```php
+Schema::create('procurement_requests', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('description');
+    $table->enum('department', ['academic', 'administrative', 'facilities', 'it']);
+    $table->foreignId('requested_by')->constrained('users');
+    $table->enum('urgency', ['low', 'normal', 'high', 'critical'])->default('normal');
+    $table->decimal('estimated_budget', 15, 2);
+    $table->enum('status', ['draft', 'submitted', 'approved', 'rejected', 'ordered', 'received', 'completed'])->default('draft');
+    $table->foreignId('approved_by')->nullable()->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('purchase_orders', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('procurement_request_id')->constrained('procurement_requests');
+    $table->string('po_number')->unique();
+    $table->string('vendor_name');
+    $table->string('vendor_contact')->nullable();
+    $table->json('items');
+    $table->decimal('subtotal', 15, 2);
+    $table->decimal('tax_amount', 15, 2)->default(0);
+    $table->decimal('total_amount', 15, 2);
+    $table->date('delivery_date');
+    $table->enum('status', ['issued', 'partial_delivery', 'delivered', 'completed', 'cancelled'])->default('issued');
+    $table->foreignId('issued_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('goods_received_notes', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('purchase_order_id')->constrained('purchase_orders');
+    $table->string('grn_number')->unique();
+    $table->foreignId('received_by')->constrained('users');
+    $table->date('received_date');
+    $table->json('items_received');
+    $table->text('condition_notes')->nullable();
+    $table->boolean('is_complete')->default(true);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ProcurementService`**: `createRequest`, `submitForApproval`, `approveRequest`, `rejectRequest`, `createPurchaseOrder`, `recordDelivery`, `completeProcurement`
+- **`ProcurementController`**: `dashboard`, `createRequest`, `submitApproval`, `approve`, `reject`, `createPO`, `recordGRN`, `history`
+
+#### Struktur View
+
+```
+resources/views/procurement/
+|-- dashboard.blade.php
+|-- create-request.blade.php
+|-- purchase-order.blade.php
+|-- grn.blade.php
+|-- history.blade.php
+```
+
+---
+
+### 33.3: Scholarship & Grant Management Portal
+
+Portal terpusat untuk mengelola beasiswa dan bantuan pendidikan: PIP, BOS, dan beasiswa internal yayasan (Merit/Need-Based). Terintegrasi dengan proses administrasi untuk aplikasi, peninjauan, hingga penyaluran (disbursement).
+
+#### Skema Migrasi
+
+```php
+Schema::create('scholarship_programs', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->enum('type', ['pip', 'bos', 'internal_merit', 'internal_need', 'external']);
+    $table->enum('source', ['government', 'yayasan', 'corporate', 'individual']);
+    $table->string('academic_year', 9);
+    $table->integer('total_quota');
+    $table->decimal('amount_per_student', 15, 2);
+    $table->json('eligibility_criteria');
+    $table->date('application_start_date');
+    $table->date('application_end_date');
+    $table->enum('status', ['draft', 'open', 'closed', 'disbursed'])->default('draft');
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('scholarship_applications', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('scholarship_program_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('users');
+    $table->json('application_data');
+    $table->json('supporting_documents');
+    $table->decimal('gpa_score', 4, 2)->nullable();
+    $table->decimal('family_income', 15, 2)->nullable();
+    $table->string('recommendation_letter_path')->nullable();
+    $table->enum('status', ['pending', 'shortlisted', 'approved', 'rejected', 'disbursed'])->default('pending');
+    $table->foreignId('reviewed_by')->nullable()->constrained('users');
+    $table->text('review_notes')->nullable();
+    $table->timestamp('disbursed_at')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('scholarship_disbursements', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('scholarship_application_id')->constrained();
+    $table->decimal('amount', 15, 2);
+    $table->enum('disbursement_method', ['bank_transfer', 'cash', 'wadiah_credit']);
+    $table->string('reference_number')->nullable();
+    $table->foreignId('disbursed_by')->constrained('users');
+    $table->timestamp('disbursed_at')->useCurrent();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ScholarshipService`**: `createProgram`, `openApplications`, `submitApplication`, `reviewApplication`, `approveApplication`, `disburse`, `generateReport`, `calculateEligibility`
+- **`ScholarshipController`**: `programs`, `createProgram`, `openApplications`, `applications`, `reviewApplication`, `approve`, `reject`, `disburse`, `report`
+
+#### Struktur View
+
+```
+resources/views/scholarship/
+|-- programs.blade.php
+|-- apply.blade.php
+|-- review.blade.php
+|-- disbursement.blade.php
+|-- report.blade.php
+```
+
+---
+
+### 33.4: Cost Center Accounting & Departmental Budget Allocation
+
+Sistem Cost Center untuk melacak efisiensi pusat biaya per departemen (Kurikulum, Kesiswaan, Humas, Sarpras, dsb).
+
+#### Skema Migrasi
+
+```php
+Schema::create('cost_centers', function (Blueprint $table) {
+    $table->id();
+    $table->string('code')->unique();
+    $table->string('name');
+    $table->enum('department', ['kurikulum', 'kesiswaan', 'humas', 'sarpras', 'tu', 'keuangan', 'keislaman']);
+    $table->foreignId('head_id')->nullable()->constrained('users');
+    $table->decimal('annual_budget_allocation', 15, 2);
+    $table->decimal('spent_amount', 15, 2)->default(0);
+    $table->timestamps();
+});
+
+Schema::create('cost_center_transactions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('cost_center_id')->constrained()->cascadeOnDelete();
+    $table->enum('transaction_type', ['allocation', 'expense', 'adjustment']);
+    $table->decimal('amount', 15, 2);
+    $table->string('description');
+    $table->string('reference_type')->nullable();
+    $table->unsignedBigInteger('reference_id')->nullable();
+    $table->foreignId('recorded_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`CostCenterService`**: `allocateBudget`, `recordExpense`, `getUtilization`, `transferBudget`, `generateDepartmentReport`
+- **`CostCenterController`**: `dashboard`, `allocate`, `recordExpense`, `utilization`, `departmentReport`
+
+#### Struktur View
+
+```
+resources/views/cost-center/
+|-- dashboard.blade.php          # Departmental budget utilization bars
+|-- allocate.blade.php
+|-- transactions.blade.php
+```
+
+---
+
+## FASE 34: Student Growth Ecosystem -- Wellbeing, Positive Behavior & Parent Conference
+
+**Fokus Utama:** Memperkuat ekosistem pertumbuhan siswa secara holistik dengan platform kesehatan mental terukur, pengenalan perilaku positif berbasis Profil Pelajar Pancasila (P5) dan Akhlak Mahmudah, serta simplifikasi kolaborasi penjadwalan konsultasi orang tua-guru.
+
+---
+
+### 34.1: Student Mental Health & Emotional Wellbeing Screening Platform
+
+Platform instrumen skrining kesehatan mental dan kesejahteraan emosional (mengadaptasi instrumen SRQ-20 dan PHQ-9). Dilengkapi fitur Private Mood Journal untuk analitik dini risiko mental siswa.
+
+#### Skema Migrasi
+
+```php
+Schema::create('wellbeing_screenings', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->enum('screening_type', ['srq20', 'phq9', 'custom']);
+    $table->string('academic_year', 9);
+    $table->enum('semester', ['odd', 'even']);
+    $table->string('target_grade')->nullable();
+    $table->enum('status', ['draft', 'active', 'completed'])->default('draft');
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('wellbeing_screening_responses', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('wellbeing_screening_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('users');
+    $table->json('responses');
+    $table->integer('total_score');
+    $table->enum('risk_level', ['low', 'moderate', 'high', 'critical']);
+    $table->timestamp('screened_at');
+    $table->boolean('followup_required')->default(false);
+    $table->text('followup_notes')->nullable();
+    $table->foreignId('counselor_id')->nullable()->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('wellbeing_journals', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users');
+    $table->tinyInteger('mood_level');
+    $table->text('journal_entry')->nullable();
+    $table->json('activities')->nullable();
+    $table->float('sleep_hours')->nullable();
+    $table->boolean('is_private')->default(true);
+    $table->timestamp('created_at')->useCurrent();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`WellbeingService`**: `createScreening`, `submitResponse`, `calculateRiskLevel`, `flagHighRisk`, `generateClassReport`, `getStudentHistory`, `getMoodTrends`
+- **`WellbeingController`**: `screenings`, `createScreening`, `activateScreening`, `fillScreening` (student), `results` (counselor heatmap), `studentDetail`, `moodJournal` (student private), `classReport`
+
+#### Struktur View
+
+```
+resources/views/wellbeing/
+|-- screenings.blade.php
+|-- fill-screening.blade.php         # Student view
+|-- results.blade.php                # Counselor heatmap
+|-- student-detail.blade.php
+|-- mood-journal.blade.php           # Student private mood tracker
+|-- class-report.blade.php
+```
+
+---
+
+### 34.2: Positive Behavior Recognition & Character Report Card (Profil Pelajar Pancasila / P5)
+
+Engine asesmen karakter mencakup 6 dimensi P5 nasional (Beriman, Berkebinekaan Global, Bergotong-royong, Mandiri, Bernalar Kritis, Kreatif) dan dimensi karakter Islam (Akhlak Mahmudah: Jujur, Amanah, Istiqomah, Tawadhu, Ta'awun).
+
+#### Skema Migrasi
+
+```php
+Schema::create('character_dimensions', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->enum('category', ['p5', 'islamic']);
+    $table->text('description');
+    $table->string('icon_name');
+    $table->integer('display_order');
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('character_assessments', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('assessor_id')->constrained('users');
+    $table->foreignId('character_dimension_id')->constrained();
+    $table->string('academic_year', 9);
+    $table->enum('semester', ['odd', 'even']);
+    $table->tinyInteger('score');
+    $table->text('evidence_notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('merit_points', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('awarded_by')->constrained('users');
+    $table->foreignId('character_dimension_id')->nullable()->constrained();
+    $table->integer('points');
+    $table->string('reason');
+    $table->string('event_context')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`P5AssessmentService`**: `assessStudent`, `calculateDimensionAverage`, `generateP5ReportCard`, `getLeaderboard`, `awardMeritPoints`, `generateClassP5Summary`
+- **`P5AssessmentController`**: `dimensions`, `assess`, `studentReport` (radar chart), `classReport`, `leaderboard`, `awardMerit`, `reportCard`
+
+#### Struktur View
+
+```
+resources/views/character/
+|-- dimensions.blade.php
+|-- assess.blade.php                 # Rubric form per student
+|-- student-report.blade.php         # Radar chart 6+5 dimensions
+|-- class-report.blade.php
+|-- leaderboard.blade.php
+|-- report-card.blade.php
+```
+
+---
+
+### 34.3: Parent-Teacher Conference (PTC) Appointment Scheduler
+
+Modul penjadwalan mandiri (Self-Service Scheduling) untuk konsultasi antara wali murid dan wali kelas dengan limitasi slot durasi dan pencegahan double-booking.
+
+#### Skema Migrasi
+
+```php
+Schema::create('ptc_sessions', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->string('academic_year', 9);
+    $table->enum('semester', ['odd', 'even']);
+    $table->date('date');
+    $table->time('start_time');
+    $table->time('end_time');
+    $table->integer('slot_duration_minutes')->default(15);
+    $table->string('location');
+    $table->foreignId('organizer_id')->constrained('users');
+    $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
+    $table->integer('max_slots_per_teacher');
+    $table->timestamps();
+});
+
+Schema::create('ptc_slots', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('ptc_session_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('teacher_id')->constrained('users');
+    $table->time('start_time');
+    $table->time('end_time');
+    $table->foreignId('parent_id')->nullable()->constrained('users');
+    $table->foreignId('student_id')->nullable()->constrained('users');
+    $table->text('topic')->nullable();
+    $table->enum('status', ['available', 'booked', 'completed', 'cancelled', 'no_show'])->default('available');
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`PtcSchedulerService`**: `createSession`, `generateSlots`, `bookSlot`, `cancelBooking`, `markCompleted`, `markNoShow`, `getTeacherSchedule`, `getParentBookings`, `generateAttendanceReport`
+- **`PtcSchedulerController`**: `sessions`, `createSession`, `generateSlots`, `availableSlots` (parent view), `bookSlot`, `cancelBooking`, `teacherSchedule`, `attendanceReport`
+
+#### Struktur View
+
+```
+resources/views/ptc/
+|-- sessions.blade.php
+|-- create-session.blade.php
+|-- available-slots.blade.php        # Parent: visual time picker
+|-- teacher-schedule.blade.php       # Teacher: timeline view
+|-- attendance-report.blade.php
+```
+
+---
+
+### 34.4: Student Lifecycle Orchestration Engine
+
+Mesin pelacakan lifecycle terpusat: Prospective -> Applicant -> Enrolled -> Active -> Graduated -> Alumni. Mengimplementasikan milestone tracking, kalkulasi retensi cohort, dan deteksi risiko dropout.
+
+#### Skema Migrasi
+
+```php
+Schema::create('student_lifecycle_events', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->enum('event_type', ['prospective', 'applied', 'accepted', 'enrolled', 'promoted', 'retained', 'transferred_in', 'transferred_out', 'suspended', 'graduated', 'dropped_out']);
+    $table->string('from_status')->nullable();
+    $table->string('to_status');
+    $table->string('academic_year', 9);
+    $table->enum('semester', ['odd', 'even']);
+    $table->foreignId('triggered_by')->constrained('users');
+    $table->json('metadata')->nullable();
+    $table->text('notes')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('student_lifecycle_milestones', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->enum('milestone_type', ['first_day', 'first_exam', 'first_achievement', 'tahfidz_30juz', 'graduated', 'alumni_registered']);
+    $table->timestamp('achieved_at');
+    $table->string('description');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`StudentLifecycleService`**: `recordEvent`, `getTimeline`, `getCurrentPhase`, `calculateRetentionRate`, `getDropoutRiskStudents`, `generateCohortAnalysis`, `getMilestones`
+- **`StudentLifecycleController`**: `timeline` (vertical timeline), `cohortAnalysis`, `retentionDashboard`, `atRiskStudents`, `milestones`
+
+#### Struktur View
+
+```
+resources/views/lifecycle/
+|-- student-timeline.blade.php       # Vertical timeline UI
+|-- cohort-analysis.blade.php
+|-- retention-dashboard.blade.php
+|-- at-risk.blade.php
+```
+
+---
+
+## FASE 35: Enterprise Academic Intelligence -- Kurikulum Merdeka Competency Mapping & LMS 2.0
+
+**Fokus Utama:** Membangun kerangka kerja Kurikulum Merdeka yang komprehensif (Capaian Pembelajaran, Tujuan Pembelajaran, Alur Tujuan Pembelajaran) serta meningkatkan LMS ke standar interoperabilitas internasional.
+
+---
+
+### 35.1: Kurikulum Merdeka Competency Mapping Engine (CP/TP/ATP Framework)
+
+Pemetaan hierarkis arsitektur pedagogis: Elemen CP -> Capaian Pembelajaran (CP) -> Tujuan Pembelajaran (TP) -> Alur Tujuan Pembelajaran (ATP). Fase E (Kelas X) dan Fase F (Kelas XI-XII) dengan evaluasi berbasis Taksonomi Bloom.
+
+#### Skema Migrasi
+
+```php
+Schema::create('learning_outcomes', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+    $table->enum('phase', ['E', 'F']);
+    $table->string('element');
+    $table->string('cp_code')->unique();
+    $table->text('cp_description');
+    $table->timestamps();
+});
+
+Schema::create('learning_objectives', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('learning_outcome_id')->constrained()->cascadeOnDelete();
+    $table->string('tp_code');
+    $table->text('tp_description');
+    $table->enum('semester', ['ganjil', 'genap']);
+    $table->integer('sequence_order');
+    $table->enum('assessment_type', ['formatif', 'sumatif']);
+    $table->enum('bloom_taxonomy_level', ['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']);
+    $table->timestamps();
+});
+
+Schema::create('atp_mappings', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('learning_objective_id')->constrained()->cascadeOnDelete();
+    $table->integer('week_number');
+    $table->integer('teaching_hours');
+    $table->text('learning_activities');
+    $table->text('assessment_method');
+    $table->text('resources')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('competency_achievements', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('learning_objective_id')->constrained()->cascadeOnDelete();
+    $table->string('academic_year');
+    $table->enum('status', ['not_started', 'in_progress', 'achieved', 'exceeded']);
+    $table->text('evidence_notes')->nullable();
+    $table->foreignId('assessed_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamp('assessed_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`CompetencyMappingService`**: `createLearningOutcome`, `createObjective`, `mapToAtp`, `assessStudentCompetency`, `getStudentCompetencyProfile`, `getClassCompetencyHeatmap`, `generateCompetencyReport`
+- **`CompetencyMappingController`**: `outcomes` (per subject), `createOutcome`, `objectives`, `createObjective`, `atpMapping` (Gantt-like week planner), `assessCompetency`, `studentProfile` (mastery radar chart), `classHeatmap` (green/yellow/red matrix), `competencyReport`
+
+#### Struktur View
+
+```
+resources/views/competency/
+|-- outcomes.blade.php               # CP tree view per mata pelajaran
+|-- objectives.blade.php             # TP list per CP
+|-- atp-mapping.blade.php            # Gantt-like week planner
+|-- assess.blade.php
+|-- student-profile.blade.php        # Mastery radar chart
+|-- class-heatmap.blade.php          # Green/yellow/red cell matrix
+```
+
+---
+
+### 35.2: Multi-Year Academic Planning & Graduation Pathway Tracker
+
+Perencanaan akademik 3 tahun SMA (Kelas X -> XI -> XII), tracking peminatan (IPA/IPS/Bahasa/Keagamaan), dan Graduation Readiness Checker.
+
+#### Skema Migrasi
+
+```php
+Schema::create('academic_pathways', function (Blueprint $table) {
+    $table->id();
+    $table->enum('name', ['IPA', 'IPS', 'Bahasa', 'Keagamaan']);
+    $table->string('description');
+    $table->json('required_subjects');
+    $table->integer('required_credits');
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('student_pathway_enrollments', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('academic_pathway_id')->constrained()->cascadeOnDelete();
+    $table->timestamp('enrolled_at');
+    $table->enum('status', ['active', 'completed', 'changed']);
+    $table->timestamps();
+});
+
+Schema::create('graduation_requirements', function (Blueprint $table) {
+    $table->id();
+    $table->enum('requirement_type', ['subject_credit', 'attendance_minimum', 'tahfidz_minimum', 'community_service', 'thesis', 'exam_pass']);
+    $table->string('description');
+    $table->string('threshold_value');
+    $table->boolean('is_mandatory')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('student_graduation_progress', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('graduation_requirement_id')->constrained()->cascadeOnDelete();
+    $table->string('current_value');
+    $table->boolean('is_fulfilled')->default(false);
+    $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamp('verified_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`AcademicPathwayService`**: `enrollStudent`, `trackProgress`, `checkGraduationReadiness`, `generateTranscript`, `switchPathway`, `getPathwayAnalytics`
+- **`AcademicPathwayController`**: `pathways`, `enrollStudent`, `progressDashboard`, `graduationReadiness` (checklist), `transcriptPreview`, `pathwayAnalytics`
+
+#### Struktur View
+
+```
+resources/views/pathway/
+|-- index.blade.php                  # Pathway cards
+|-- enroll.blade.php
+|-- progress-dashboard.blade.php     # Credit tracking progress bars
+|-- graduation-readiness.blade.php   # Validation checklist
+|-- transcript-preview.blade.php
+```
+
+---
+
+### 35.3: SCORM/xAPI Learning Content Interoperability Layer
+
+Import dan playback konten SCORM 1.2/2004 serta xAPI (Tin Can) statement recording sebagai Learning Record Store (LRS) lite.
+
+#### Skema Migrasi
+
+```php
+Schema::create('scorm_packages', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->enum('version', ['scorm12', 'scorm2004', 'xapi']);
+    $table->string('file_path');
+    $table->json('manifest_data')->nullable();
+    $table->string('entry_point');
+    $table->foreignId('elearning_class_id')->nullable()->constrained()->nullOnDelete();
+    $table->foreignId('uploaded_by')->constrained('users')->cascadeOnDelete();
+    $table->enum('status', ['processing', 'ready', 'error']);
+    $table->timestamps();
+});
+
+Schema::create('scorm_tracking', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('scorm_package_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->enum('lesson_status', ['not_attempted', 'incomplete', 'completed', 'passed', 'failed']);
+    $table->float('score_raw')->nullable();
+    $table->float('score_max')->nullable();
+    $table->integer('total_time_seconds')->default(0);
+    $table->text('suspend_data')->nullable();
+    $table->timestamp('last_accessed_at')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('xapi_statements', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('actor_id')->constrained('users')->cascadeOnDelete();
+    $table->string('verb');
+    $table->string('object_type');
+    $table->string('object_id');
+    $table->json('result')->nullable();
+    $table->json('context')->nullable();
+    $table->timestamp('timestamp_at');
+    $table->timestamp('stored_at');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ScormService`**: `uploadPackage`, `parseManifest`, `launchContent`, `recordTracking`, `getProgress`, `syncXapiStatements`
+- **`ScormController`**: `packages`, `upload`, `launch` (iframe player), `tracking`, `progress`, `xapiEndpoint` (LRS endpoint)
+
+#### Struktur View
+
+```
+resources/views/scorm/
+|-- packages.blade.php
+|-- upload.blade.php
+|-- player.blade.php                 # Iframe SCORM player wrapper
+|-- progress.blade.php
+```
+
+---
+
+### 35.4: Virtual Classroom & Video Conferencing Integration Hub
+
+Integrasi dengan Zoom / Google Meet / Jitsi Meet. One-click meeting creation dari jadwal pelajaran dengan pemantauan kehadiran otomatis.
+
+#### Skema Migrasi
+
+```php
+Schema::create('virtual_classrooms', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->enum('provider', ['zoom', 'google_meet', 'jitsi']);
+    $table->string('meeting_id')->nullable();
+    $table->string('meeting_url');
+    $table->string('meeting_password')->nullable();
+    $table->foreignId('host_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('schedule_id')->nullable()->constrained()->nullOnDelete();
+    $table->foreignId('elearning_class_id')->nullable()->constrained()->nullOnDelete();
+    $table->dateTime('start_time');
+    $table->dateTime('end_time')->nullable();
+    $table->integer('duration_minutes');
+    $table->enum('status', ['scheduled', 'live', 'ended', 'cancelled']);
+    $table->string('recording_url')->nullable();
+    $table->integer('attendees_count')->default(0);
+    $table->timestamps();
+});
+
+Schema::create('virtual_classroom_attendances', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('virtual_classroom_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->timestamp('joined_at');
+    $table->timestamp('left_at')->nullable();
+    $table->integer('duration_minutes')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`VirtualClassroomService`**: `createMeeting`, `startMeeting`, `endMeeting`, `recordAttendance`, `getMeetingHistory`, `generateAttendanceReport`
+- **`VirtualClassroomController`**: `index` (upcoming/live/past tabs), `create`, `start`, `join` (lobby), `end`, `attendanceReport`, `history`
+
+#### Struktur View
+
+```
+resources/views/virtual-classroom/
+|-- index.blade.php                  # Upcoming/Live/Past Tabs
+|-- create.blade.php
+|-- join.blade.php                   # Pre-meeting lobby
+|-- attendance.blade.php
+```
+
+---
+
+## FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
+
+**Fokus Utama:** Membangun instrumen holistik untuk penilaian guru berbasis 360 derajat, dokumentasi Continuing Professional Development (CPD), pengelolaan talenta eksekutif pendidikan, serta analisis dan pemerataan beban kerja.
+
+---
+
+### 36.1: 360-Degree Teacher Evaluation & EDOM
+
+Penilaian holistik dari 5 perspektif: Kepala Sekolah (supervisor), Rekan Sejawat (peer), Siswa (EDOM), Orang Tua, dan Self-Assessment. Data dikonsolidasikan dalam Radar Chart untuk menghasilkan Development Plan spesifik.
+
+#### Skema Migrasi
+
+```php
+Schema::create('evaluation_360_cycles', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->string('academic_year');
+    $table->string('semester');
+    $table->enum('status', ['draft', 'active', 'collecting', 'analyzing', 'completed']);
+    $table->date('start_date');
+    $table->date('end_date');
+    $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+    $table->timestamps();
+});
+
+Schema::create('evaluation_360_instruments', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('cycle_id')->constrained('evaluation_360_cycles')->cascadeOnDelete();
+    $table->enum('evaluator_type', ['supervisor', 'peer', 'student', 'parent', 'self']);
+    $table->json('questions');
+    $table->enum('scale_type', ['likert5', 'likert4', 'descriptive']);
+    $table->boolean('is_anonymous')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('evaluation_360_responses', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('instrument_id')->constrained('evaluation_360_instruments')->cascadeOnDelete();
+    $table->foreignId('evaluatee_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('evaluator_id')->nullable()->constrained('users')->nullOnDelete();
+    $table->json('scores');
+    $table->text('comments')->nullable();
+    $table->timestamp('submitted_at');
+    $table->timestamps();
+});
+
+Schema::create('evaluation_360_summaries', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('cycle_id')->constrained('evaluation_360_cycles')->cascadeOnDelete();
+    $table->foreignId('evaluatee_id')->constrained('users')->cascadeOnDelete();
+    $table->float('supervisor_avg')->nullable();
+    $table->float('peer_avg')->nullable();
+    $table->float('student_avg')->nullable();
+    $table->float('parent_avg')->nullable();
+    $table->float('self_score')->nullable();
+    $table->float('overall_score')->nullable();
+    $table->json('strengths');
+    $table->json('improvements');
+    $table->timestamp('generated_at');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`Evaluation360Service`**: `createCycle`, `createInstrument`, `submitResponse`, `generateSummary`, `calculateScores`, `getRanking`, `generateDevelopmentPlan`
+- **`Evaluation360Controller`**: `cycles`, `createCycle`, `instruments`, `fillEvaluation` (Likert form), `results` (spider chart 5 perspectives), `summaryReport`, `developmentPlan`, `ranking`
+
+#### Struktur View
+
+```
+resources/views/evaluation-360/
+|-- cycles.blade.php
+|-- fill-evaluation.blade.php        # Likert scaling form
+|-- results.blade.php                # Radar/spider chart 5 perspectives
+|-- summary-report.blade.php
+|-- development-plan.blade.php
+|-- ranking.blade.php
+```
+
+---
+
+### 36.2: Continuing Professional Development (CPD/PKB) Credit Tracker
+
+Pelacakan PKB (Pengembangan Keprofesian Berkelanjutan) guru sesuai Permendikbud: Pengembangan Diri, Publikasi Ilmiah, Karya Inovatif, Pelatihan/Workshop, Sertifikasi.
+
+#### Skema Migrasi
+
+```php
+Schema::create('cpd_categories', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('description');
+    $table->float('credit_weight');
+    $table->integer('max_credits_per_year')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('cpd_activities', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+    $table->foreignId('cpd_category_id')->constrained()->cascadeOnDelete();
+    $table->string('title');
+    $table->text('description');
+    $table->string('provider')->nullable();
+    $table->date('start_date');
+    $table->date('end_date');
+    $table->integer('hours');
+    $table->float('credits_earned');
+    $table->string('certificate_path')->nullable();
+    $table->enum('status', ['pending', 'verified', 'rejected']);
+    $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamp('verified_at')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('cpd_targets', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+    $table->string('academic_year');
+    $table->float('target_credits');
+    $table->float('achieved_credits')->default(0);
+    $table->enum('status', ['on_track', 'behind', 'exceeded']);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`CpdTrackerService`**: `logActivity`, `verifyActivity`, `calculateCredits`, `getProgress`, `checkCompliance`, `generateCpdReport`, `suggestActivities`
+- **`CpdTrackerController`**: `dashboard` (progress bar & credit breakdown), `logActivity`, `verifyActivity`, `myProgress`, `complianceReport`, `teamOverview`
+
+#### Struktur View
+
+```
+resources/views/cpd/
+|-- dashboard.blade.php              # Target vs achieved progress bar
+|-- log-activity.blade.php
+|-- my-progress.blade.php
+|-- compliance-report.blade.php
+|-- team-overview.blade.php          # Managerial/Principal view
+```
+
+---
+
+### 36.3: School Leadership Succession Planning & Talent Pipeline
+
+Manajemen Human Capital untuk suksesi pimpinan sekolah (Kepala Sekolah, Waka, Koordinator) dengan readiness assessment dan development plan.
+
+#### Skema Migrasi
+
+```php
+Schema::create('leadership_positions', function (Blueprint $table) {
+    $table->id();
+    $table->enum('title', ['kepala_sekolah', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'koordinator_bk', 'koordinator_tahfidz']);
+    $table->foreignId('current_holder_id')->nullable()->constrained('users')->nullOnDelete();
+    $table->enum('succession_priority', ['critical', 'high', 'medium']);
+    $table->date('review_date');
+    $table->timestamps();
+});
+
+Schema::create('succession_candidates', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('leadership_position_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('candidate_id')->constrained('users')->cascadeOnDelete();
+    $table->enum('readiness_level', ['ready_now', 'ready_1yr', 'ready_3yr', 'developing']);
+    $table->json('strengths');
+    $table->json('development_areas');
+    $table->text('development_plan')->nullable();
+    $table->foreignId('endorsed_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`SuccessionPlanningService`**: `identifyPosition`, `addCandidate`, `assessReadiness`, `createDevelopmentPlan`, `generatePipelineReport`
+- **`SuccessionPlanningController`**: `positions` (org chart), `addCandidate`, `assessReadiness`, `developmentPlan`, `pipelineReport`
+
+#### Struktur View
+
+```
+resources/views/succession/
+|-- positions.blade.php              # Org chart with succession status
+|-- candidates.blade.php
+|-- assess.blade.php
+|-- pipeline-report.blade.php
+```
+
+---
+
+### 36.4: Teacher Workload Balancing & Capacity Dashboard
+
+Analisis dan pemerataan beban kerja guru: jam mengajar, tugas tambahan, bimbingan, dan beban ekstrakurikuler.
+
+#### Skema Migrasi
+
+```php
+Schema::create('teacher_workloads', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+    $table->string('academic_year');
+    $table->string('semester');
+    $table->integer('teaching_hours_per_week');
+    $table->foreignId('homeroom_class_id')->nullable()->constrained('classrooms')->nullOnDelete();
+    $table->json('additional_duties');
+    $table->json('extracurricular_duties');
+    $table->float('total_workload_score');
+    $table->enum('status', ['under', 'balanced', 'over']);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`WorkloadBalancingService`**: `calculateWorkload`, `getWorkloadDistribution`, `suggestRebalancing`, `getCapacityReport`
+- **`WorkloadBalancingController`**: `dashboard` (bar chart workload comparison), `teacherDetail`, `rebalancingSuggestions`, `capacityReport`
+
+#### Struktur View
+
+```
+resources/views/workload/
+|-- dashboard.blade.php              # Bar chart: teacher workload comparison
+|-- teacher-detail.blade.php
+|-- rebalancing.blade.php
+|-- capacity-report.blade.php
+```
+
+---
+
+## FASE 37: Enterprise UX Mastery -- Accessibility, Internationalization & Design System
+
+**Fokus Utama:** Memastikan platform SISTA memenuhi standar aksesibilitas internasional WCAG 2.2 AA+, dukungan penuh konten Arab (RTL), dan membangun Design System Component Library yang terdokumentasi.
+
+---
+
+### 37.1: WCAG 2.2 AA+ Accessibility Hardening & Screen Reader Optimization
+
+Audit dan hardening aksesibilitas untuk seluruh 145+ view directories: color contrast (4.5:1 minimum), focus indicators, ARIA labels/landmarks, keyboard navigation.
+
+#### Skema Migrasi
+
+```php
+Schema::create('accessibility_audit_logs', function (Blueprint $table) {
+    $table->id();
+    $table->string('page_route');
+    $table->string('audit_type');
+    $table->integer('issues_found')->default(0);
+    $table->integer('issues_resolved')->default(0);
+    $table->string('wcag_level');
+    $table->string('audited_by')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`AccessibilityService`**: `runAudit`, `generateReport`, `getComplianceScore`, `trackResolution`
+- **`AccessibilityController`**: `dashboard` (compliance score gauge), `audit`, `report`, `resolveIssue`
+- **Artisan Command**: `php artisan accessibility:audit --route=*`
+
+#### Checklist Implementasi Utama
+
+- Semua form inputs wajib memiliki associated `<label>` dan error announcements via `aria-describedby`
+- Interactive elements wajib memiliki visible focus indicators (2px solid ring)
+- Gambar wajib atribut `alt` deskriptif atau `aria-hidden="true"` untuk dekoratif
+- Modal dialog wajib menerapkan focus trapping dan closeable via Escape
+- Tabel data wajib `scope="row"` / `scope="col"` pada header dan elemen `<caption>`
+- Skip navigation link di setiap halaman
+- Live region (`aria-live="polite"`) untuk notifikasi dinamis
+- Touch target minimal 44x44px untuk mobile
+
+#### Struktur View
+
+```
+resources/views/accessibility/
+|-- dashboard.blade.php              # Compliance score gauge
+|-- audit-report.blade.php
+```
+
+---
+
+### 37.2: Advanced Internationalization (i18n) & Full Arabic (RTL) Content Support
+
+Penguatan dukungan bahasa Arab dengan layout RTL, CSS logical properties, dan kalender Hijriah.
+
+#### Skema Migrasi
+
+```php
+Schema::create('translation_overrides', function (Blueprint $table) {
+    $table->id();
+    $table->string('locale');
+    $table->string('key');
+    $table->text('value');
+    $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamps();
+    $table->unique(['locale', 'key']);
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`TranslationService`**: `getTranslation`, `overrideTranslation`, `exportTranslations`, `importTranslations`, `getCompletionPercentage`
+- **`TranslationController`**: `index` (translation manager), `override`, `export`, `import`, `completionReport`
+
+#### Checklist Implementasi Utama
+
+- CSS logical properties (`margin-inline-start` menggantikan `margin-left`)
+- Elemen `<bdi>` dan `<bdo>` untuk teks campuran Arab/Latin
+- Deteksi otomatis `dir="rtl"` pada `<html>` berdasarkan active locale
+- Font rendering: Noto Sans Arabic / Amiri untuk konten Arab
+- Penomoran Arabic-Indic numerals
+- Dukungan konversi penanggalan ke kalender Hijriah
+
+#### Struktur View
+
+```
+resources/views/i18n/
+|-- translation-manager.blade.php
+|-- completion-report.blade.php
+```
+
+---
+
+### 37.3: Enterprise Design System Component Library (Blade Component Kit)
+
+Pustaka komponen Blade terdokumentasi dan terstandarisasi untuk konsistensi visual di seluruh platform.
+
+#### Daftar Komponen Utama
+
+- **Layout:** `x-page-header`, `x-section-card`, `x-stat-card`, `x-empty-state`, `x-two-column-layout`
+- **Navigation:** `x-sidebar-nav`, `x-breadcrumb`, `x-tab-group`, `x-pagination`
+- **Data Display:** `x-data-table`, `x-status-badge`, `x-avatar`, `x-timeline`, `x-chart-container`
+- **Forms:** `x-form-input`, `x-form-select`, `x-form-textarea`, `x-form-checkbox`, `x-form-toggle`, `x-form-file-upload`, `x-form-date-picker`, `x-form-search`
+- **Feedback:** `x-toast`, `x-alert-banner`, `x-progress-bar`, `x-loading-skeleton`, `x-confirm-dialog`
+- **Overlays:** `x-modal`, `x-slide-over`, `x-dropdown-menu`, `x-tooltip`
+
+#### Spesifikasi Controller
+
+- **`DesignSystemController`**: `showcase` (component gallery per kategori), `documentation`
+
+#### Struktur View
+
+```
+resources/views/design-system/
+|-- showcase.blade.php               # Visual component gallery
+|-- documentation.blade.php
+```
+
+---
+
+### 37.4: Print-Optimized Stylesheet Engine for All Reports
+
+Sistem pencetakan enterprise yang menjamin semua cetakan (Rapor, Surat, Tagihan, Presensi) memiliki format sempurna di atas kertas.
+
+#### Spesifikasi Service
+
+- **`PrintStylesheetService`**: `generatePrintLayout`, `configurePaperSize`, `setMargins`, `addWatermark`, `addHeaderFooter`
+
+#### Checklist Implementasi Utama
+
+- File stylesheet khusus (`print.css`) dengan rules `@media print`
+- Kontrol page break: `break-before: page`, `break-after: page`, `break-inside: avoid`
+- Hidden UI elements (sidebar, navbar, action buttons) via `.no-print`
+- Preset dimensi kertas A4 dan Legal
+- Watermark kop surat resmi SMA Islam Sultan Agung 1 Semarang
+- Penomoran halaman dinamis via CSS counters
+- Posisi QR code verifikasi tanda tangan digital
+- Color-safe mode untuk cetak grayscale
+
+---
+
+## FASE 38: Enterprise Deployment & Production Hardening Blueprint
+
+**Fokus Utama:** Menyiapkan blueprint lengkap untuk deployment produksi, termasuk konfigurasi environment, strategi versioning, dan pengujian end-to-end otomatis.
+
+---
+
+### 38.1: Production Environment Configuration & Secret Management
+
+Sentralisasi pengelolaan environment variable untuk tahapan deployment: development, staging, production.
+
+#### Skema Migrasi
+
+```php
+Schema::create('system_configurations', function (Blueprint $table) {
+    $table->id();
+    $table->string('environment');
+    $table->string('config_group');
+    $table->string('config_key');
+    $table->text('config_value_encrypted');
+    $table->text('description')->nullable();
+    $table->boolean('is_sensitive')->default(false);
+    $table->string('last_updated_by')->nullable();
+    $table->timestamps();
+    $table->unique(['environment', 'config_key']);
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`EnvironmentConfigService`**: `getConfig`, `setConfig`, `validateEnvironment`, `generateEnvFile`, `rotateSecrets`, `healthCheck`
+- **`EnvironmentConfigController`**: `dashboard` (environment health status), `configure`, `validateEnv`, `generateEnv`, `secretRotation`
+
+#### Checklist Implementasi Utama
+
+- Dokumentasi `.env.example` untuk 50+ variabel
+- Secret Rotation strategy untuk API keys, DB passwords, Application Key
+- Validasi otomatis saat application boot
+- Database Connection Pooling configuration
+- Queue Worker supervisor configuration (Supervisor/systemd)
+- Centralized Log Rotation (monolog daily, retensi 30 hari)
+
+#### Struktur View
+
+```
+resources/views/environment/
+|-- dashboard.blade.php
+|-- configure.blade.php
+```
+
+---
+
+### 38.2: Automated Database Seeding Strategy & Data Anonymization for Staging
+
+Strategi pengisian data berdasarkan target environment.
+
+#### Spesifikasi Service
+
+- **`DatabaseSeedingService`**: `seedDevelopment`, `seedStaging`, `seedProduction`, `anonymizeData`
+
+#### Konfigurasi Environment
+
+- **Development:** Full Mega Seeder (~25.000 records) dengan penamaan lokal Indonesia
+- **Staging:** Data anonymized (nama -> faker, NIK -> hashed, foto -> placeholder)
+- **Production:** Hanya lookup data esensial (Tahun Ajaran, Master Mapel, Ruangan, Setting Default)
+
+#### Custom Artisan Commands
+
+- `php artisan db:seed-dev`
+- `php artisan db:seed-staging`
+- `php artisan db:seed-production`
+- `php artisan db:anonymize`
+
+---
+
+### 38.3: Release Versioning, Semantic Changelog & Rollback Strategy
+
+Tata kelola SemVer (Semantic Versioning) dan rekam jejak perilisan untuk platform SISTA.
+
+#### Skema Migrasi
+
+```php
+Schema::create('release_versions', function (Blueprint $table) {
+    $table->id();
+    $table->string('version')->unique();
+    $table->string('release_type');
+    $table->text('changelog_summary');
+    $table->json('breaking_changes')->nullable();
+    $table->integer('migration_count')->default(0);
+    $table->string('released_by');
+    $table->timestamp('released_at');
+    $table->boolean('rollback_tested')->default(false);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ReleaseManagerService`**: `createRelease`, `generateChangelog`, `tagVersion`, `validateMigrations`, `testRollback`
+- **`ReleaseManagerController`**: `index` (version timeline), `createRelease`, `changelog`, `rollbackTest`
+
+#### Checklist Implementasi Utama
+
+- Automated changelog dari Conventional Commits
+- Validasi graf dependensi migration
+- Pre-release checklist (tests pass, no breaking API, Blue-Green readiness)
+- Rollback Playbook: `php artisan migrate:rollback --step=N`
+- Backup database sebelum setiap rilis
+
+#### Struktur View
+
+```
+resources/views/releases/
+|-- index.blade.php                  # Version timeline
+|-- changelog.blade.php
+|-- rollback-test.blade.php
+```
+
+---
+
+### 38.4: Comprehensive End-to-End (E2E) Testing Suite Blueprint
+
+Pengujian E2E menggunakan Laravel Dusk / Playwright untuk memastikan skenario bisnis berjalan tanpa hambatan.
+
+#### Skema Migrasi
+
+```php
+Schema::create('e2e_test_runs', function (Blueprint $table) {
+    $table->id();
+    $table->string('suite_name');
+    $table->string('browser');
+    $table->integer('total_tests')->default(0);
+    $table->integer('passed')->default(0);
+    $table->integer('failed')->default(0);
+    $table->integer('skipped')->default(0);
+    $table->float('duration_seconds')->default(0);
+    $table->string('status');
+    $table->string('triggered_by');
+    $table->timestamp('started_at')->nullable();
+    $table->timestamp('completed_at')->nullable();
+    $table->string('report_path')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`E2eTestService`**: `runSuite`, `generateReport`, `compareWithBaseline`, `getFlakeyTests`
+- **`E2eTestController`**: `dashboard` (test run history), `runSuite`, `results`, `flakeyTests`, `compareBaseline`
+
+#### 10 Skenario Uji Prioritas
+
+| No | Skenario | Endpoint |
+| :---: | :--- | :--- |
+| 1 | Login & Authentication (12 Role) | `/login` |
+| 2 | Student Registration (SPMB Full Flow) | `/spmb/register` |
+| 3 | Grade Entry & Report Card Generation | `/grades/store` |
+| 4 | SPP Payment & Receipt Download | `/finance/spp/pay` |
+| 5 | Attendance Marking (Student + Employee) | `/attendance/store` |
+| 6 | Tahfidz Assessment Submission | `/tahfidz/store` |
+| 7 | E-Learning Material Upload & Viewing | `/elearning/upload` |
+| 8 | WhatsApp Notification Trigger | `/whatsapp/send` |
+| 9 | Budget Planning Workflow (Create -> Approve) | `/budget/approve` |
+| 10 | Digital Signature Document Flow | `/documents/sign` |
+
+#### Struktur View
+
+```
+resources/views/e2e/
+|-- dashboard.blade.php              # Test run history
+|-- results.blade.php
+|-- flakey-tests.blade.php
+```
+
+---
+
+## Rencana Verifikasi Fase 33-38
+
+### 1. Automated Tests
+
+```
+tests/Feature/Budget/RapbsPlanningTest.php:
+- Verifikasi pembuatan RAPBS menghasilkan line items terstruktur.
+- Verifikasi variance calculation akurat (planned vs actual).
+
+tests/Feature/Procurement/PurchaseOrderTest.php:
+- Verifikasi alur approval procurement request.
+- Verifikasi GRN tercatat setelah delivery.
+
+tests/Feature/Scholarship/ScholarshipApplicationTest.php:
+- Verifikasi eligibility check berdasarkan GPA dan income.
+- Verifikasi disbursement tercatat ke wadiah account.
+
+tests/Feature/Wellbeing/WellbeingScreeningTest.php:
+- Verifikasi kalkulasi risk level dari SRQ-20 score.
+- Verifikasi high-risk alert dispatch ke counselor.
+
+tests/Feature/Character/P5AssessmentTest.php:
+- Verifikasi assessment 6 dimensi P5 menghasilkan radar chart data.
+- Verifikasi merit points terakumulasi per student.
+
+tests/Feature/Academic/CompetencyMappingTest.php:
+- Verifikasi hierarki CP -> TP -> ATP terbentuk dengan benar.
+- Verifikasi student competency heatmap menghasilkan data akurat.
+
+tests/Feature/HumanCapital/Evaluation360Test.php:
+- Verifikasi multi-rater scoring menghasilkan summary yang benar.
+- Verifikasi anonymous evaluation tidak mengekspos evaluator_id.
+
+tests/Feature/Deployment/ReleaseVersioningTest.php:
+- Verifikasi migration rollback berjalan tanpa error.
+- Verifikasi changelog generation dari conventional commits.
+```
+
+### 2. Manual Verification
+
+- Verifikasi RAPBS variance report menampilkan donut chart yang akurat (Fase 33).
+- Simulasi booking slot PTC oleh parent dan validasi timeline view di sisi guru (Fase 34).
+- Verifikasi SCORM player dapat memutar konten interaktif dalam iframe (Fase 35).
+- Verifikasi radar chart evaluasi 360 menampilkan 5 perspektif dengan benar (Fase 36).
+- Lighthouse Accessibility Score harus mencapai 100 (Fase 37).
+- Eksekusi E2E full suite harus selesai kurang dari 15 menit dengan 100% pass rate (Fase 38).
+
+---
+
+## Urutan Prioritas Implementasi (Updated Juli 2026 -- Ultimate Suite Edition)
 
 | Prioritas | Modul | Estimasi | Status |
 | :---: | :--- | :--- | :---: |
@@ -4916,61 +6262,85 @@ tests/Feature/Performance/QuerySentinelTest.php:
 | P0 | 26.6: Immutable Audit Ledger & Enterprise RBAC | 4-5 hari | Selesai |
 | P3 | 26.7: Zero-Downtime Feature Flag Engine | 2-3 hari | Selesai |
 | P1 | 26.8: PDPL Privacy & Data Anonymization Engine | 3-4 hari | Selesai |
-| **P0** | **27.1: Disaster Recovery & Automated Snapshot** | **3-4 hari** | Selesai ✅ |
-| **P1** | **27.2: Enterprise Data Warehouse & OLAP Engine** | **4-5 hari** | Selesai ✅ |
-| **P2** | **27.3: Event Streaming Bus & Webhook Hub** | **3-4 hari** | Selesai ✅ |
-| **P0** | **27.4: Advanced TOTP 2FA & Session Hijacking Safeguard** | **3-4 hari** | Selesai ✅ |
-| **P3** | **27.5: Business Process Automation (BPA) Rule Engine** | **4-5 hari** | Selesai ✅ |
-| **P1** | **27.6: Enterprise Vendor SLA Scorecard Monitor** | **2-3 hari** | Selesai ✅ |
-| **P1** | **28.1: Unified Notification Center & Enterprise Inbox** | **3-4 hari** | Selesai ✅ |
-| **P2** | **28.2: Internal Messaging & Threaded Discussion** | **4-5 hari** | Selesai ✅ |
-| **P1** | **28.3: Digital Signature & E-Stamp Workflow** | **3-4 hari** | Selesai ✅ |
-| **P2** | **28.4: Enterprise Calendar & Resource Booking** | **4-5 hari** | Selesai ✅ |
-| **P2** | **29.1: Centralized Digital Asset Management (DAM)** | **3-4 hari** | Selesai ✅ |
-| **P1** | **29.2: Enterprise Report Builder & Designer** | **4-5 hari** | Selesai ✅ |
-| **P3** | **29.3: Intelligent Document Processing & OCR** | **3-4 hari** | Selesai ✅ |
-| **P2** | **29.4: Multi-Format Export Engine** | **2-3 hari** | Selesai ✅ |
-| **P0** | **30.1: BAN-SM Accreditation Readiness Dashboard** | **4-5 hari** | Selesai ✅ |
-| **P1** | **30.2: Internal Quality Assurance & EDS Engine** | **3-4 hari** | Selesai ✅ |
-| **P2** | **30.3: Risk Assessment Matrix & Incident Response** | **3-4 hari** | Selesai ✅ |
-| **P1** | **30.4: Policy & SOP Document Governance** | **3-4 hari** | Selesai ✅ |
-| **P2** | **31.1: GraphQL API Federation & Versioning** | **4-5 hari** | Selesai ✅ |
-| **P1** | **31.2: Enterprise ETL Pipeline & Migration Toolkit** | **4-5 hari** | Selesai ✅ |
-| **P3** | **31.3: Third-Party Plugin Architecture** | **3-4 hari** | Selesai ✅ |
-| **P2** | **31.4: Public API Documentation Portal (OpenAPI)** | **2-3 hari** | Selesai ✅ |
-| **P0** | **32.1: Database Query Optimizer & N+1 Sentinel** | **3-4 hari** | Selesai ✅ |
-| **P2** | **32.2: Lazy Loading, Code Splitting & Asset Optimization** | **2-3 hari** | Selesai ✅ |
-| **P1** | **32.3: Automated Stress Test & Load Testing Suite** | **3-4 hari** | Selesai ✅ |
-| **P3** | **32.4: Horizontal Scaling Architecture Blueprint** | **2-3 hari** | Selesai ✅ |
+| P0 | 27.1: Disaster Recovery & Automated Snapshot | 3-4 hari | Selesai |
+| P1 | 27.2: Enterprise Data Warehouse & OLAP Engine | 4-5 hari | Selesai |
+| P2 | 27.3: Event Streaming Bus & Webhook Hub | 3-4 hari | Selesai |
+| P0 | 27.4: Advanced TOTP 2FA & Session Hijacking Safeguard | 3-4 hari | Selesai |
+| P3 | 27.5: Business Process Automation Rule Engine | 4-5 hari | Selesai |
+| P1 | 27.6: Enterprise Vendor SLA Scorecard Monitor | 2-3 hari | Selesai |
+| P1 | 28.1: Unified Notification Center & Enterprise Inbox | 3-4 hari | Selesai |
+| P2 | 28.2: Internal Messaging & Threaded Discussion | 4-5 hari | Selesai |
+| P1 | 28.3: Digital Signature & E-Stamp Workflow | 3-4 hari | Selesai |
+| P2 | 28.4: Enterprise Calendar & Resource Booking | 4-5 hari | Selesai |
+| P2 | 29.1: Centralized Digital Asset Management (DAM) | 3-4 hari | Selesai |
+| P1 | 29.2: Enterprise Report Builder & Designer | 4-5 hari | Selesai |
+| P3 | 29.3: Intelligent Document Processing & OCR | 3-4 hari | Selesai |
+| P2 | 29.4: Multi-Format Export Engine | 2-3 hari | Selesai |
+| P0 | 30.1: BAN-SM Accreditation Readiness Dashboard | 4-5 hari | Selesai |
+| P1 | 30.2: Internal Quality Assurance & EDS Engine | 3-4 hari | Selesai |
+| P2 | 30.3: Risk Assessment Matrix & Incident Response | 3-4 hari | Selesai |
+| P1 | 30.4: Policy & SOP Document Governance | 3-4 hari | Selesai |
+| P2 | 31.1: GraphQL API Federation & Versioning | 4-5 hari | Selesai |
+| P1 | 31.2: Enterprise ETL Pipeline & Migration Toolkit | 4-5 hari | Selesai |
+| P3 | 31.3: Third-Party Plugin Architecture | 3-4 hari | Selesai |
+| P2 | 31.4: Public API Documentation Portal (OpenAPI) | 2-3 hari | Selesai |
+| P0 | 32.1: Database Query Optimizer & N+1 Sentinel | 3-4 hari | Selesai |
+| P2 | 32.2: Lazy Loading, Code Splitting & Asset Optimization | 2-3 hari | Selesai |
+| P1 | 32.3: Automated Stress Test & Load Testing Suite | 3-4 hari | Selesai |
+| P3 | 32.4: Horizontal Scaling Architecture Blueprint | 2-3 hari | Selesai |
+| P0 | 33.1: RAPBS Multi-Year Budget Planning & Variance | 4-5 hari | Selesai ✅ |
+| P1 | 33.2: Procurement & Purchase Order Workflow | 3-4 hari | Selesai ✅ |
+| P0 | 33.3: Scholarship & Grant Management Portal | 3-4 hari | Selesai ✅ |
+| P2 | 33.4: Cost Center Accounting & Budget Allocation | 2-3 hari | Selesai ✅ |
+| P0 | 34.1: Student Mental Health & Wellbeing Screening | 4-5 hari | Selesai ✅ |
+| P0 | 34.2: Positive Behavior & Character Report Card (P5) | 3-4 hari | Selesai ✅ |
+| P1 | 34.3: Parent-Teacher Conference (PTC) Scheduler | 2-3 hari | Selesai ✅ |
+| P2 | 34.4: Student Lifecycle Orchestration Engine | 3-4 hari | Selesai ✅ |
+| P0 | 35.1: Kurikulum Merdeka Competency Mapping (CP/TP/ATP) | 4-5 hari | Selesai ✅ |
+| P1 | 35.2: Multi-Year Academic Planning & Graduation Pathway | 3-4 hari | Selesai ✅ |
+| P2 | 35.3: SCORM/xAPI Learning Content Interoperability | 3-4 hari | Selesai ✅ |
+| P2 | 35.4: Virtual Classroom & Video Conferencing Hub | 3-4 hari | Selesai ✅ |
+| P1 | 36.1: 360-Degree Teacher Evaluation & EDOM | 4-5 hari | Selesai ✅ |
+| P1 | 36.2: CPD/PKB Credit Tracker | 3-4 hari | Selesai ✅ |
+| P3 | 36.3: School Leadership Succession Planning | 2-3 hari | Selesai ✅ |
+| P2 | 36.4: Teacher Workload Balancing & Capacity Dashboard | 2-3 hari | Selesai ✅ |
+| P1 | 37.1: WCAG 2.2 AA+ Accessibility Hardening | 3-4 hari | Selesai ✅ |
+| P2 | 37.2: Advanced i18n & Arabic (RTL) Support | 3-4 hari | Selesai ✅ |
+| P2 | 37.3: Enterprise Design System Component Library | 3-4 hari | Selesai ✅ |
+| P3 | 37.4: Print-Optimized Stylesheet Engine | 2-3 hari | Selesai ✅ |
+| **P1** | **38.1: Production Environment & Secret Management** | **2-3 hari** | Belum |
+| **P2** | **38.2: Database Seeding Strategy & Anonymization** | **2-3 hari** | Belum |
+| **P1** | **38.3: Release Versioning & Rollback Strategy** | **2-3 hari** | Belum |
+| **P0** | **38.4: Comprehensive E2E Testing Suite** | **3-4 hari** | Belum |
 
 ---
 
-## Statistik Codebase Setelah Semua Fase Selesai (Target Enterprise Ultimate Edition)
+## Statistik Codebase Setelah Semua Fase Selesai (Target Enterprise Ultimate Suite Edition)
 
-| Metrik | Sekarang | Target Enterprise (Fase 26) | Target Suite (Fase 27) | **Target Ultimate (Fase 32)** |
+| Metrik | Sekarang | Target Enterprise (Fase 26) | Target Suite (Fase 32) | **Target Ultimate Suite (Fase 38)** |
 | :--- | :---: | :---: | :---: | :---: |
-| **Model Eloquent** | 119 | ~175 | ~195 | **~245** |
-| **Controller** | ~77 | ~120 | ~135 | **~175** |
-| **Service Class** | 39 | ~68 | ~82 | **~115** |
-| **Migration** | 99 | ~132 | ~148 | **~195** |
-| **View Directory** | 61 | ~95 | ~108 | **~145** |
-| **Blade Templates** | ~350 | ~540 | ~610 | **~780** |
-| **Test Files** | ~90 | ~160 | ~185 | **~240** |
-| **Seeder Files** | 30 | ~55 | ~65 | **~80** |
-| **Factory Files** | 29 | ~55 | ~65 | **~80** |
-| **Demo Records** | ~3000 | ~10.000+ | ~15.000+ | **~25.000+** |
+| **Model Eloquent** | 193 | ~220 | ~245 | **~310** |
+| **Controller** | 139 | ~165 | ~175 | **~215** |
+| **Service Class** | 84 | ~100 | ~115 | **~150** |
+| **Migration** | 137 | ~170 | ~195 | **~250** |
+| **View Directory** | 72 | ~108 | ~145 | **~185** |
+| **Blade Templates** | ~500 | ~610 | ~780 | **~950** |
+| **Test Files** | ~120 | ~185 | ~240 | **~300** |
+| **Seeder Files** | 30 | ~65 | ~80 | **~100** |
+| **Factory Files** | 29 | ~65 | ~80 | **~100** |
+| **Demo Records** | ~5000 | ~15.000+ | ~25.000+ | **~35.000+** |
 
 ---
 
 > [!IMPORTANT]
-> Seluruh adopsi arsitektur enterprise di atas dirancang **Enterprise Ultimate Edition (Localhost Ready)** -- dapat dijalankan 100% menggunakan `php artisan serve` + SQLite/Database lokal, tanpa mengharuskan server fisik multi-node atau Kubernetes, namun memiliki kesiapan struktur (architecture readiness) tingkat tinggi untuk portofolio teknologi berstandar industri.
+> Seluruh adopsi arsitektur enterprise di atas dirancang **Enterprise Ultimate Suite Edition (Localhost Ready)** -- dapat dijalankan 100% menggunakan `php artisan serve` + SQLite/Database lokal, tanpa mengharuskan server fisik multi-node atau Kubernetes, namun memiliki kesiapan struktur (architecture readiness) tingkat tinggi untuk portofolio teknologi berstandar industri.
 
 > [!TIP]
-> **Urutan Implementasi Rekomendasi (Fase 27-32):**
-> 1. **Fase 27** -- Disaster Recovery, 2FA/MFA, dan Data Warehouse sebagai fondasi keamanan & analitik.
-> 2. **Fase 30** -- Akreditasi BAN-SM & GRC sebagai kepatuhan regulasi pendidikan nasional.
-> 3. **Fase 28** -- Komunikasi & Kolaborasi untuk meningkatkan produktivitas warga sekolah.
-> 4. **Fase 32** -- Performance Engineering untuk menjamin kecepatan & stabilitas sistem.
-> 5. **Fase 29** -- Content Delivery & Report Builder untuk kebutuhan manajerial eksekutif.
-> 6. **Fase 31** -- Integration Layer untuk kesiapan interoperabilitas ekosistem eksternal.
+> **Urutan Implementasi Rekomendasi (Fase 33-38):**
+> 1. **Fase 33** -- Financial ERP (RAPBS, Procurement, Scholarship) sebagai fondasi tata kelola keuangan transparan.
+> 2. **Fase 34** -- Student Growth (Wellbeing, P5, PTC) untuk penguatan dimensi pertumbuhan holistik siswa.
+> 3. **Fase 35** -- Academic Intelligence (Kurikulum Merdeka, SCORM, Virtual Classroom) untuk kepatuhan regulasi pendidikan nasional.
+> 4. **Fase 36** -- Human Capital Excellence (360-Eval, CPD, Succession) untuk pengembangan profesionalisme guru.
+> 5. **Fase 37** -- UX Mastery (Accessibility, i18n, Design System) untuk standar kualitas antarmuka berstandar internasional.
+> 6. **Fase 38** -- Deployment Blueprint (Environment, Versioning, E2E Testing) untuk kesiapan deployment produksi.
 
