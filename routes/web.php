@@ -402,6 +402,24 @@ Route::middleware('auth')->group(function () {
     // 37.4: Print-Optimized Stylesheet Engine
     Route::get('ux/print/preview', [\App\Http\Controllers\UX\PrintEngineController::class, 'preview'])->name('ux.print.preview');
 
+    // FASE 38: Enterprise Deployment & Production Hardening Blueprint
+    // 38.1: Production Environment & Secret Management
+    Route::get('deploy/environment', [\App\Http\Controllers\Deployment\EnvironmentConfigController::class, 'dashboard'])->name('deploy.environment.dashboard');
+    Route::get('deploy/environment/configure', [\App\Http\Controllers\Deployment\EnvironmentConfigController::class, 'configureForm'])->name('deploy.environment.configure_form');
+    Route::post('deploy/environment', [\App\Http\Controllers\Deployment\EnvironmentConfigController::class, 'storeConfig'])->name('deploy.environment.store_config');
+
+    // 38.3: Release Versioning, Semantic Changelog & Rollback Strategy
+    Route::get('deploy/releases', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'index'])->name('deploy.releases.index');
+    Route::post('deploy/releases', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'storeRelease'])->name('deploy.releases.store');
+    Route::get('deploy/releases/{id}/changelog', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'changelog'])->name('deploy.releases.changelog');
+    Route::get('deploy/releases/{id}/rollback', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'rollbackTest'])->name('deploy.releases.rollback');
+
+    // 38.4: Comprehensive E2E Testing Suite Blueprint
+    Route::get('deploy/e2e', [\App\Http\Controllers\Deployment\E2eTestController::class, 'dashboard'])->name('deploy.e2e.dashboard');
+    Route::post('deploy/e2e/trigger', [\App\Http\Controllers\Deployment\E2eTestController::class, 'triggerRun'])->name('deploy.e2e.trigger');
+    Route::get('deploy/e2e/results/{id}', [\App\Http\Controllers\Deployment\E2eTestController::class, 'results'])->name('deploy.e2e.results');
+    Route::get('deploy/e2e/flakey', [\App\Http\Controllers\Deployment\E2eTestController::class, 'flakeyTests'])->name('deploy.e2e.flakey');
+
     // Centralized Digital Asset Management (DAM)
     Route::get('media', [\App\Http\Controllers\Content\MediaAssetController::class, 'index'])->name('media.index');
     Route::post('media/upload', [\App\Http\Controllers\Content\MediaAssetController::class, 'upload'])->name('media.upload');

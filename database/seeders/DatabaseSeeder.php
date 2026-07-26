@@ -97,6 +97,7 @@ class DatabaseSeeder extends Seeder
                 AcademicIntelligenceSeeder::class,
                 HumanCapitalSeeder::class,
                 UxMasterySeeder::class,
+                DeploymentReadinessSeeder::class,
             ]);
         });
     }
