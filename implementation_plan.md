@@ -6288,30 +6288,30 @@ tests/Feature/Deployment/ReleaseVersioningTest.php:
 | P2 | 32.2: Lazy Loading, Code Splitting & Asset Optimization | 2-3 hari | Selesai |
 | P1 | 32.3: Automated Stress Test & Load Testing Suite | 3-4 hari | Selesai |
 | P3 | 32.4: Horizontal Scaling Architecture Blueprint | 2-3 hari | Selesai |
-| P0 | 33.1: RAPBS Multi-Year Budget Planning & Variance | 4-5 hari | Selesai ✅ |
-| P1 | 33.2: Procurement & Purchase Order Workflow | 3-4 hari | Selesai ✅ |
-| P0 | 33.3: Scholarship & Grant Management Portal | 3-4 hari | Selesai ✅ |
-| P2 | 33.4: Cost Center Accounting & Budget Allocation | 2-3 hari | Selesai ✅ |
-| P0 | 34.1: Student Mental Health & Wellbeing Screening | 4-5 hari | Selesai ✅ |
-| P0 | 34.2: Positive Behavior & Character Report Card (P5) | 3-4 hari | Selesai ✅ |
-| P1 | 34.3: Parent-Teacher Conference (PTC) Scheduler | 2-3 hari | Selesai ✅ |
-| P2 | 34.4: Student Lifecycle Orchestration Engine | 3-4 hari | Selesai ✅ |
-| P0 | 35.1: Kurikulum Merdeka Competency Mapping (CP/TP/ATP) | 4-5 hari | Selesai ✅ |
-| P1 | 35.2: Multi-Year Academic Planning & Graduation Pathway | 3-4 hari | Selesai ✅ |
-| P2 | 35.3: SCORM/xAPI Learning Content Interoperability | 3-4 hari | Selesai ✅ |
-| P2 | 35.4: Virtual Classroom & Video Conferencing Hub | 3-4 hari | Selesai ✅ |
-| P1 | 36.1: 360-Degree Teacher Evaluation & EDOM | 4-5 hari | Selesai ✅ |
-| P1 | 36.2: CPD/PKB Credit Tracker | 3-4 hari | Selesai ✅ |
-| P3 | 36.3: School Leadership Succession Planning | 2-3 hari | Selesai ✅ |
-| P2 | 36.4: Teacher Workload Balancing & Capacity Dashboard | 2-3 hari | Selesai ✅ |
-| P1 | 37.1: WCAG 2.2 AA+ Accessibility Hardening | 3-4 hari | Selesai ✅ |
-| P2 | 37.2: Advanced i18n & Arabic (RTL) Support | 3-4 hari | Selesai ✅ |
-| P2 | 37.3: Enterprise Design System Component Library | 3-4 hari | Selesai ✅ |
-| P3 | 37.4: Print-Optimized Stylesheet Engine | 2-3 hari | Selesai ✅ |
-| P1 | 38.1: Production Environment & Secret Management | 2-3 hari | Selesai ✅ |
-| P2 | 38.2: Database Seeding Strategy & Anonymization | 2-3 hari | Selesai ✅ |
-| P1 | 38.3: Release Versioning & Rollback Strategy | 2-3 hari | Selesai ✅ |
-| P0 | 38.4: Comprehensive E2E Testing Suite | 3-4 hari | Selesai ✅ |
+| P0 | 33.1: RAPBS Multi-Year Budget Planning & Variance | 4-5 hari | Selesai |
+| P1 | 33.2: Procurement & Purchase Order Workflow | 3-4 hari | Selesai |
+| P0 | 33.3: Scholarship & Grant Management Portal | 3-4 hari | Selesai |
+| P2 | 33.4: Cost Center Accounting & Budget Allocation | 2-3 hari | Selesai |
+| P0 | 34.1: Student Mental Health & Wellbeing Screening | 4-5 hari | Selesai |
+| P0 | 34.2: Positive Behavior & Character Report Card (P5) | 3-4 hari | Selesai |
+| P1 | 34.3: Parent-Teacher Conference (PTC) Scheduler | 2-3 hari | Selesai |
+| P2 | 34.4: Student Lifecycle Orchestration Engine | 3-4 hari | Selesai |
+| P0 | 35.1: Kurikulum Merdeka Competency Mapping (CP/TP/ATP) | 4-5 hari | Selesai |
+| P1 | 35.2: Multi-Year Academic Planning & Graduation Pathway | 3-4 hari | Selesai |
+| P2 | 35.3: SCORM/xAPI Learning Content Interoperability | 3-4 hari | Selesai |
+| P2 | 35.4: Virtual Classroom & Video Conferencing Hub | 3-4 hari | Selesai |
+| P1 | 36.1: 360-Degree Teacher Evaluation & EDOM | 4-5 hari | Selesai |
+| P1 | 36.2: CPD/PKB Credit Tracker | 3-4 hari | Selesai |
+| P3 | 36.3: School Leadership Succession Planning | 2-3 hari | Selesai |
+| P2 | 36.4: Teacher Workload Balancing & Capacity Dashboard | 2-3 hari | Selesai |
+| P1 | 37.1: WCAG 2.2 AA+ Accessibility Hardening | 3-4 hari | Selesai |
+| P2 | 37.2: Advanced i18n & Arabic (RTL) Support | 3-4 hari | Selesai |
+| P2 | 37.3: Enterprise Design System Component Library | 3-4 hari | Selesai |
+| P3 | 37.4: Print-Optimized Stylesheet Engine | 2-3 hari | Selesai |
+| P1 | 38.1: Production Environment & Secret Management | 2-3 hari | Selesai |
+| P2 | 38.2: Database Seeding Strategy & Anonymization | 2-3 hari | Selesai |
+| P1 | 38.3: Release Versioning & Rollback Strategy | 2-3 hari | Selesai |
+| P0 | 38.4: Comprehensive E2E Testing Suite | 3-4 hari | Selesai |
 
 ---
 
@@ -6344,3 +6344,1223 @@ tests/Feature/Deployment/ReleaseVersioningTest.php:
 > 5. **Fase 37** -- UX Mastery (Accessibility, i18n, Design System) untuk standar kualitas antarmuka berstandar internasional.
 > 6. **Fase 38** -- Deployment Blueprint (Environment, Versioning, E2E Testing) untuk kesiapan deployment produksi.
 
+---
+
+## FASE 39: Advanced Analytics & Business Intelligence
+
+**Fokus Utama:** Membangun kapabilitas analitik prediktif dan intelijen bisnis yang memungkinkan pengambilan keputusan berbasis data (data-driven decision making) di seluruh level manajemen sekolah.
+
+---
+
+### 39.1: Predictive Student Performance Engine
+
+Modul machine learning untuk memprediksi performa akademik dan risiko kegagalan siswa berdasarkan data historis. Memberikan early warning kepada guru BK dan wali kelas untuk intervensi dini.
+
+#### Skema Migrasi
+
+```php
+Schema::create('ml_performance_predictions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('term_id')->nullable()->constrained('academic_years')->nullOnDelete();
+    $table->decimal('predicted_gpa', 4, 2);
+    $table->enum('risk_level', ['low', 'medium', 'high']);
+    $table->json('factors');
+    $table->date('prediction_date');
+    $table->timestamps();
+});
+
+Schema::create('ml_intervention_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('prediction_id')->constrained('ml_performance_predictions')->cascadeOnDelete();
+    $table->foreignId('counselor_id')->constrained('users')->cascadeOnDelete();
+    $table->text('action_taken');
+    $table->string('status');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`PredictivePerformanceService`**: `generatePredictions`, `getRiskFactors`, `logIntervention`, `evaluateAccuracy`, `getHighRiskStudents`
+- **`PredictivePerformanceController`**: `dashboard` (ringkasan risiko per kelas), `showStudentRisk`, `storeIntervention`, `accuracyReport`
+
+#### Struktur View
+
+```
+resources/views/analytics/predictive/
+|-- dashboard.blade.php              # Ringkasan risiko per tingkat/kelas
+|-- student-risk.blade.php           # Detail faktor risiko per siswa
+|-- intervention-log.blade.php       # Form tindakan preventif konselor
+```
+
+---
+
+### 39.2: Parent Engagement Analytics Dashboard
+
+Analisis tingkat keterlibatan orang tua berdasarkan frekuensi login, kehadiran PTC, dan interaksi pesan. Identifikasi orang tua pasif untuk komunikasi proaktif.
+
+#### Skema Migrasi
+
+```php
+Schema::create('engagement_metrics', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('parent_user_id')->constrained('users')->cascadeOnDelete();
+    $table->date('period_start');
+    $table->date('period_end');
+    $table->integer('login_count')->default(0);
+    $table->integer('message_replies')->default(0);
+    $table->integer('event_attendance')->default(0);
+    $table->decimal('engagement_score', 5, 2)->default(0);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ParentEngagementService`**: `calculateEngagementScore`, `getLowEngagementParents`, `trackInteraction`, `generateEngagementReport`, `sendNudgeNotification`
+- **`ParentEngagementController`**: `dashboard` (distribusi keterlibatan), `show` (detail per orang tua), `exportReport`, `sendNudge`
+
+#### Struktur View
+
+```
+resources/views/analytics/engagement/
+|-- dashboard.blade.php              # Grafik distribusi engagement orang tua
+|-- detail.blade.php                 # Rincian metrik interaksi historis
+```
+
+---
+
+### 39.3: Financial Forecasting & Cash Flow Projection
+
+Intelijen bisnis untuk simulasi arus kas masa depan dan proyeksi pendapatan sekolah berdasarkan tren historis pembayaran SPP dan dana BOS. Krusial untuk perencanaan RAPBS jangka panjang.
+
+#### Skema Migrasi
+
+```php
+Schema::create('financial_forecasts', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('academic_year_id')->nullable()->constrained('academic_years')->nullOnDelete();
+    $table->string('scenario_name');
+    $table->decimal('projected_revenue', 15, 2);
+    $table->decimal('projected_expense', 15, 2);
+    $table->decimal('confidence_interval', 5, 2);
+    $table->json('parameters');
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`FinancialForecastingService`**: `runSimulation`, `calculateExpectedCashflow`, `compareWithActuals`, `saveScenario`, `getOptimisticPessimisticScenarios`
+- **`FinancialForecastingController`**: `dashboard` (visualisasi tren), `createScenario`, `storeScenario`, `showSimulation`
+
+#### Struktur View
+
+```
+resources/views/analytics/finance/
+|-- forecast.blade.php               # Chart arus kas yang diproyeksikan
+|-- scenario-builder.blade.php       # Form parameter simulasi
+```
+
+---
+
+### 39.4: Academic Benchmarking & National Comparison Engine
+
+Perbandingan pencapaian akademik internal dengan standar kompetensi nasional atau data agregat wilayah. Membantu kepala sekolah mengukur daya saing institusi.
+
+#### Skema Migrasi
+
+```php
+Schema::create('academic_benchmarks', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+    $table->string('exam_type');
+    $table->decimal('school_average', 5, 2);
+    $table->decimal('national_average', 5, 2)->nullable();
+    $table->integer('percentile_rank')->nullable();
+    $table->year('year');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`AcademicBenchmarkService`**: `aggregateInternalScores`, `importNationalData`, `calculatePercentiles`, `generateComparisonReport`
+- **`AcademicBenchmarkController`**: `dashboard` (radar chart perbandingan), `uploadNationalData`, `report`
+
+#### Struktur View
+
+```
+resources/views/analytics/benchmarking/
+|-- dashboard.blade.php              # Radar & bar chart perbandingan per mapel
+|-- import.blade.php                 # Upload dataset statistik nasional
+```
+
+---
+
+## FASE 40: Advanced Student Experience Platform
+
+**Fokus Utama:** Meningkatkan pengalaman digital siswa dengan portal self-service, identitas digital, dan sistem penerbitan sertifikat otomatis.
+
+---
+
+### 40.1: Student Self-Service Portal
+
+Portal terpadu bagi siswa untuk mengakses semua layanan administratif secara mandiri: request dokumen, transkrip, dan pembaruan biodata. Mengurangi beban tata usaha.
+
+#### Skema Migrasi
+
+```php
+Schema::create('student_requests', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->enum('request_type', ['transcript', 'certificate', 'recommendation_letter', 'profile_update', 'document_copy']);
+    $table->enum('status', ['pending', 'processing', 'completed', 'rejected'])->default('pending');
+    $table->json('details')->nullable();
+    $table->text('admin_notes')->nullable();
+    $table->foreignId('processed_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamp('resolved_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`StudentSelfService`**: `submitRequest`, `getPendingRequests`, `processRequest`, `autoGenerateDocument`, `getRequestHistory`
+- **`StudentPortalController`**: `dashboard` (quick links), `createRequest`, `storeRequest`, `history`, `trackStatus`
+
+#### Struktur View
+
+```
+resources/views/student/portal/
+|-- dashboard.blade.php              # Self-service home dengan quick links
+|-- request-form.blade.php           # Form pengajuan dinamis
+|-- history.blade.php                # Status tracking pengajuan
+```
+
+---
+
+### 40.2: Digital Student ID Card (QR & NFC)
+
+Kartu pelajar digital dengan QR code dinamis dan dukungan NFC untuk presensi tap-in/tap-out, akses perpustakaan, dan pembayaran cashless kantin.
+
+#### Skema Migrasi
+
+```php
+Schema::create('digital_id_cards', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->string('card_hash')->unique();
+    $table->string('nfc_uid')->nullable()->unique();
+    $table->date('issue_date');
+    $table->date('expiry_date');
+    $table->boolean('is_active')->default(true);
+    $table->timestamps();
+});
+
+Schema::create('digital_id_scans', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('card_id')->constrained('digital_id_cards')->cascadeOnDelete();
+    $table->string('location');
+    $table->string('scan_type');
+    $table->timestamp('scanned_at');
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`DigitalIDService`**: `generateSecureQR`, `validateScan`, `registerNFC`, `revokeCard`, `renewCard`
+- **`DigitalIDController`**: `showMyCard` (student view), `verifyQR` (scanner), `manageCards` (admin), `scanHistory`
+
+#### Struktur View
+
+```
+resources/views/student/idcard/
+|-- virtual-card.blade.php           # Kartu pelajar digital responsif
+|-- scanner.blade.php                # Web-based QR scanner via webcam
+|-- manage.blade.php                 # Admin: manajemen kartu
+```
+
+---
+
+### 40.3: Student Achievement Certificate Generator
+
+Engine otomatis untuk menghasilkan sertifikat digital (PDF ber-watermark dan QR code validasi) ketika siswa menyelesaikan tahapan, menang lomba, atau lulus ujian khusus.
+
+#### Skema Migrasi
+
+```php
+Schema::create('certificate_templates', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('background_image')->nullable();
+    $table->json('placeholders');
+    $table->boolean('is_active')->default(true);
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('issued_certificates', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->foreignId('template_id')->constrained('certificate_templates');
+    $table->string('verification_code')->unique();
+    $table->json('metadata');
+    $table->string('pdf_path')->nullable();
+    $table->timestamp('issued_at');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`CertificateService`**: `designTemplate`, `issueCertificate`, `verifyAuthenticity`, `bulkGenerate`, `downloadPdf`
+- **`CertificateController`**: `templates`, `createTemplate`, `issue`, `verifyPage` (public), `bulkIssue`
+
+#### Struktur View
+
+```
+resources/views/certificates/
+|-- templates.blade.php              # Manajemen template sertifikat
+|-- designer.blade.php               # Canvas editor placeholder
+|-- verify.blade.php                 # Halaman publik verifikasi keabsahan
+|-- issue.blade.php                  # Form penerbitan sertifikat
+```
+
+---
+
+### 40.4: Student Feedback & Course Evaluation System
+
+Sistem evaluasi akhir semester di mana siswa memberikan umpan balik terhadap materi pelajaran, fasilitas, dan metode pengajaran guru.
+
+#### Skema Migrasi
+
+```php
+Schema::create('course_evaluations', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('subject_id')->constrained('subjects');
+    $table->foreignId('teacher_id')->constrained('users');
+    $table->string('academic_year');
+    $table->string('semester');
+    $table->date('start_date');
+    $table->date('end_date');
+    $table->boolean('is_published')->default(false);
+    $table->timestamps();
+});
+
+Schema::create('course_evaluation_responses', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('evaluation_id')->constrained('course_evaluations')->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->integer('rating');
+    $table->text('comments')->nullable();
+    $table->boolean('is_anonymous')->default(true);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`CourseEvaluationService`**: `createEvaluationPeriod`, `submitResponse`, `aggregateResults`, `getTeacherFeedbackSummary`, `publishResults`
+- **`CourseEvaluationController`**: `index`, `fillForm` (student view), `storeResponse`, `results` (teacher/admin view)
+
+#### Struktur View
+
+```
+resources/views/evaluations/
+|-- index.blade.php                  # Daftar evaluasi aktif
+|-- form.blade.php                   # Kuesioner interaktif siswa
+|-- report.blade.php                 # Laporan agregat sentimen & rating
+```
+
+---
+
+## FASE 41: Advanced Parent & Community Engagement
+
+**Fokus Utama:** Memperdalam keterlibatan orang tua, membangun jejaring kemitraan komunitas, dan memfasilitasi program mentorship alumni.
+
+---
+
+### 41.1: Parent Mobile App API Gateway
+
+Infrastruktur backend khusus dan API endpoints yang dioptimalkan untuk aplikasi mobile Android/iOS orang tua. Token-based authentication dan push notification registry.
+
+#### Skema Migrasi
+
+```php
+Schema::create('mobile_devices', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('parent_user_id')->constrained('users')->cascadeOnDelete();
+    $table->string('device_token')->unique();
+    $table->enum('platform', ['android', 'ios', 'web']);
+    $table->string('app_version')->nullable();
+    $table->timestamp('last_active')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`MobileApiService`**: `registerDevice`, `dispatchPushNotification`, `aggregateDashboardData`, `removeStaleTokens`
+- **`MobileAppGatewayController`**: `login`, `syncData`, `registerToken`, `getNotifications`, `childSummary`
+
+#### Struktur View
+
+- Tidak ada view HTML (Pure JSON API endpoint).
+
+---
+
+### 41.2: School-Community Partnership Management
+
+Modul untuk mengelola hubungan kemitraan dengan universitas, perusahaan (magang/studi banding), dan lembaga masyarakat. Dokumentasi MoU, kontak, dan riwayat kegiatan bersama.
+
+#### Skema Migrasi
+
+```php
+Schema::create('partnerships', function (Blueprint $table) {
+    $table->id();
+    $table->string('organization_name');
+    $table->enum('partner_type', ['university', 'corporate', 'government', 'ngo', 'community']);
+    $table->string('mou_document_path')->nullable();
+    $table->string('contact_person')->nullable();
+    $table->string('contact_email')->nullable();
+    $table->enum('status', ['active', 'expired', 'pending']);
+    $table->date('valid_until')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('partnership_activities', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('partnership_id')->constrained()->cascadeOnDelete();
+    $table->string('title');
+    $table->text('description')->nullable();
+    $table->date('event_date');
+    $table->integer('participant_count')->default(0);
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`PartnershipService`**: `registerPartner`, `trackActivity`, `checkExpiringMoU`, `generatePartnershipReport`, `sendRenewalAlert`
+- **`PartnershipController`**: `index` (direktori mitra), `create`, `store`, `show` (profil & timeline), `addActivity`
+
+#### Struktur View
+
+```
+resources/views/partnerships/
+|-- index.blade.php                  # Direktori mitra dengan status MoU
+|-- show.blade.php                   # Profil institusi mitra & timeline kolaborasi
+|-- create.blade.php                 # Form registrasi mitra baru
+```
+
+---
+
+### 41.3: Volunteer Management & Hour Tracking
+
+Sistem untuk mengorganisir komite sekolah dan orang tua sukarelawan dalam acara sekolah. Pencatatan jam kerja sukarela dan apresiasi digital.
+
+#### Skema Migrasi
+
+```php
+Schema::create('volunteer_opportunities', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('description')->nullable();
+    $table->integer('required_volunteers')->default(1);
+    $table->integer('required_hours');
+    $table->date('event_date');
+    $table->string('location')->nullable();
+    $table->enum('status', ['open', 'closed', 'completed'])->default('open');
+    $table->foreignId('organizer_id')->constrained('users');
+    $table->timestamps();
+});
+
+Schema::create('volunteer_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('opportunity_id')->constrained('volunteer_opportunities')->cascadeOnDelete();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+    $table->integer('hours_logged');
+    $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+    $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`VolunteerService`**: `createOpportunity`, `registerVolunteer`, `logHours`, `approveHours`, `getLeaderboard`
+- **`VolunteerController`**: `opportunities` (papan pengumuman), `show`, `apply`, `approve`, `myDashboard`
+
+#### Struktur View
+
+```
+resources/views/volunteers/
+|-- opportunities.blade.php          # Papan peluang sukarelawan
+|-- dashboard.blade.php              # Dashboard akumulasi jam kontribusi
+```
+
+---
+
+### 41.4: Alumni Mentorship Program Platform
+
+Platform jejaring alumni-mentor untuk siswa aktif terkait bimbingan karir, persiapan kuliah, dan motivasi. Fitur pencocokan profil otomatis.
+
+#### Skema Migrasi
+
+```php
+Schema::create('mentor_profiles', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('alumni_id')->constrained('users')->cascadeOnDelete();
+    $table->json('expertise_areas');
+    $table->integer('max_mentees')->default(3);
+    $table->boolean('is_available')->default(true);
+    $table->text('bio')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('mentorship_pairs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('mentor_profile_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->text('goals')->nullable();
+    $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
+    $table->date('started_at');
+    $table->date('ended_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`MentorshipService`**: `registerMentor`, `requestMentor`, `matchPair`, `logSession`, `endMentorship`
+- **`MentorshipController`**: `directory` (katalog mentor), `apply`, `managePairs`, `myMentorship`
+
+#### Struktur View
+
+```
+resources/views/mentorship/
+|-- directory.blade.php              # Katalog profil alumni mentor
+|-- workspace.blade.php              # Ruang virtual mentor-mentee
+```
+
+---
+
+## FASE 42: Advanced Facility & Operations Management
+
+**Fokus Utama:** Mendigitalisasi manajemen fasilitas fisik sekolah, pemantauan konsumsi utilitas, manajemen armada transportasi, dan pelacakan inventaris barang habis pakai.
+
+---
+
+### 42.1: Smart Facility Management (IoT Integration)
+
+Dashboard monitoring data lingkungan dari sensor IoT di kelas (suhu, kelembapan, kualitas udara CO2) untuk meningkatkan kenyamanan belajar secara proaktif.
+
+#### Skema Migrasi
+
+```php
+Schema::create('iot_devices', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('room_id')->nullable()->constrained('rooms')->nullOnDelete();
+    $table->string('device_mac')->unique();
+    $table->enum('device_type', ['temperature', 'humidity', 'co2', 'motion', 'noise']);
+    $table->enum('status', ['online', 'offline', 'maintenance'])->default('offline');
+    $table->timestamps();
+});
+
+Schema::create('sensor_telemetry', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('device_id')->constrained('iot_devices')->cascadeOnDelete();
+    $table->string('metric');
+    $table->decimal('value', 8, 2);
+    $table->timestamp('recorded_at');
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`IoTFacilityService`**: `registerDevice`, `ingestTelemetry`, `getRoomConditions`, `triggerAlert`, `getDeviceHealth`
+- **`IoTFacilityController`**: `dashboard` (floor plan), `deviceList`, `apiIngestWebhook`, `roomDetail`
+
+#### Struktur View
+
+```
+resources/views/facilities/iot/
+|-- dashboard.blade.php              # Floor plan dengan indikator warna
+|-- devices.blade.php                # Manajemen perangkat sensor
+```
+
+---
+
+### 42.2: Energy & Utility Consumption Tracker
+
+Pencatatan dan analisis penggunaan listrik, air, dan internet bulanan untuk melacak inefisiensi dan merencanakan penghematan anggaran utilitas.
+
+#### Skema Migrasi
+
+```php
+Schema::create('utility_meters', function (Blueprint $table) {
+    $table->id();
+    $table->enum('type', ['electricity', 'water', 'internet', 'gas']);
+    $table->string('location');
+    $table->string('meter_number')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('utility_readings', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('meter_id')->constrained('utility_meters')->cascadeOnDelete();
+    $table->date('reading_date');
+    $table->decimal('value', 12, 2);
+    $table->decimal('cost', 15, 2)->nullable();
+    $table->foreignId('recorded_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`UtilityTrackerService`**: `recordReading`, `calculateUsage`, `generateCostReport`, `detectAnomalies`, `getMonthlyComparison`
+- **`UtilityTrackerController`**: `dashboard` (chart perbandingan), `storeReading`, `reports`, `anomalies`
+
+#### Struktur View
+
+```
+resources/views/facilities/utilities/
+|-- dashboard.blade.php              # Chart penggunaan bulan ini vs bulan lalu
+|-- input-reading.blade.php          # Form entry angka meteran
+```
+
+---
+
+### 42.3: Transportation & School Bus Routing
+
+Manajemen armada transportasi sekolah, penjadwalan rute bus, dan penugasan penumpang siswa untuk efisiensi dan keamanan perjalanan.
+
+#### Skema Migrasi
+
+```php
+Schema::create('vehicles', function (Blueprint $table) {
+    $table->id();
+    $table->string('plate_number')->unique();
+    $table->string('vehicle_type');
+    $table->integer('capacity');
+    $table->foreignId('driver_id')->nullable()->constrained('users')->nullOnDelete();
+    $table->enum('status', ['active', 'maintenance', 'retired'])->default('active');
+    $table->timestamps();
+});
+
+Schema::create('bus_routes', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
+    $table->string('route_name');
+    $table->json('waypoints');
+    $table->time('departure_time');
+    $table->time('arrival_time');
+    $table->enum('direction', ['to_school', 'from_school']);
+    $table->timestamps();
+});
+
+Schema::create('route_passengers', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('bus_route_id')->constrained('bus_routes')->cascadeOnDelete();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->string('pickup_point');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`TransportationService`**: `manageFleet`, `assignRoute`, `generateManifest`, `trackMaintenance`, `getRouteEfficiency`
+- **`TransportationController`**: `fleet` (daftar kendaraan), `routes` (visualisasi), `manifest` (daftar penumpang), `assignStudent`
+
+#### Struktur View
+
+```
+resources/views/transportation/
+|-- fleet.blade.php                  # Daftar kendaraan & jadwal servis
+|-- routes.blade.php                 # Visualisasi rute & penumpang
+|-- manifest.blade.php               # Manifest penumpang harian
+```
+
+---
+
+### 42.4: Inventory & Consumable Tracking System
+
+Manajemen gudang terpusat untuk stok barang habis pakai (kertas, tinta, alat kebersihan, bahan lab) dengan peringatan reorder point.
+
+#### Skema Migrasi
+
+```php
+Schema::create('inventory_items', function (Blueprint $table) {
+    $table->id();
+    $table->string('sku')->unique();
+    $table->string('name');
+    $table->string('category');
+    $table->integer('current_stock')->default(0);
+    $table->integer('reorder_level')->default(10);
+    $table->string('unit');
+    $table->decimal('unit_price', 15, 2)->default(0);
+    $table->timestamps();
+});
+
+Schema::create('stock_movements', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('item_id')->constrained('inventory_items')->cascadeOnDelete();
+    $table->enum('type', ['in', 'out', 'adjustment']);
+    $table->integer('quantity');
+    $table->string('reference_type')->nullable();
+    $table->unsignedBigInteger('reference_id')->nullable();
+    $table->string('remarks')->nullable();
+    $table->foreignId('recorded_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`InventoryService`**: `checkStock`, `processMovement`, `getLowStockItems`, `generateValuation`, `importFromPO`
+- **`InventoryController`**: `catalog` (katalog barang), `movementForm`, `storeMovement`, `lowStockReport`
+
+#### Struktur View
+
+```
+resources/views/inventory/
+|-- catalog.blade.php                # Katalog barang dengan indikator stok
+|-- movement.blade.php               # Form transaksi barang masuk/keluar
+|-- low-stock.blade.php              # Laporan barang yang menipis
+```
+
+---
+
+## FASE 43: Advanced Compliance & Regulatory Technology
+
+**Fokus Utama:** Mengotomatisasi pelaporan regulasi pemerintah, mengelola kebijakan retensi data, dan menyediakan konsol investigasi audit forensik.
+
+---
+
+### 43.1: Automated Regulatory Reporting (Dapodik/EMIS Auto-Export)
+
+Pemetaan dan ekspor data internal SISTA ke format kompatibel Dapodik (Kemdikbud) dan EMIS (Kemenag). Meminimalkan entry data ganda.
+
+#### Skema Migrasi
+
+```php
+Schema::create('regulatory_mappings', function (Blueprint $table) {
+    $table->id();
+    $table->string('local_table');
+    $table->string('local_column');
+    $table->string('target_system');
+    $table->string('target_field');
+    $table->string('default_value')->nullable();
+    $table->string('transform_rule')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('regulatory_sync_logs', function (Blueprint $table) {
+    $table->id();
+    $table->enum('target_system', ['dapodik', 'emis']);
+    $table->enum('status', ['pending', 'validating', 'exporting', 'completed', 'failed']);
+    $table->integer('record_count')->default(0);
+    $table->integer('error_count')->default(0);
+    $table->json('errors')->nullable();
+    $table->string('export_file_path')->nullable();
+    $table->foreignId('executed_by')->constrained('users');
+    $table->timestamp('executed_at');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`RegulatorySyncService`**: `extractData`, `transformToFormat`, `validateRules`, `generatePayload`, `exportFile`, `getValidationErrors`
+- **`RegulatorySyncController`**: `dashboard`, `runValidation`, `export`, `logs`, `fieldMapper`
+
+#### Struktur View
+
+```
+resources/views/compliance/dapodik/
+|-- mapper.blade.php                 # Antarmuka mapping field lokal ke kementerian
+|-- validator.blade.php              # Pre-flight check data sebelum export
+|-- logs.blade.php                   # Riwayat export
+```
+
+---
+
+### 43.2: Data Retention & Archival Policy Engine
+
+Otomatisasi kebijakan siklus hidup data (arsip alumni setelah 5 tahun, hapus log setelah 1 tahun) untuk kepatuhan PDPL/UU PDP dan penghematan storage.
+
+#### Skema Migrasi
+
+```php
+Schema::create('retention_policies', function (Blueprint $table) {
+    $table->id();
+    $table->string('target_table');
+    $table->text('condition_sql')->nullable();
+    $table->enum('action', ['archive', 'delete', 'anonymize']);
+    $table->integer('days_threshold');
+    $table->boolean('is_active')->default(true);
+    $table->string('description')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('archival_jobs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('policy_id')->constrained('retention_policies')->cascadeOnDelete();
+    $table->integer('records_affected')->default(0);
+    $table->enum('status', ['running', 'completed', 'failed']);
+    $table->text('error_message')->nullable();
+    $table->timestamp('completed_at')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`DataRetentionService`**: `evaluatePolicies`, `executeArchival`, `anonymizeRecords`, `restoreArchive`, `getRetentionReport`
+- **`DataRetentionController`**: `policies`, `createPolicy`, `runManually`, `history`, `restoreArchive`
+
+#### Struktur View
+
+```
+resources/views/compliance/retention/
+|-- policies.blade.php               # Daftar aturan retensi data
+|-- history.blade.php                # Log riwayat job pengarsipan
+```
+
+---
+
+### 43.3: Audit Trail Forensics & Investigation Console
+
+Konsol investigasi tingkat lanjut untuk auditor internal. Pencarian log kompleks berdasarkan IP, jenis tindakan, atau ID entitas lintas tabel.
+
+#### Skema Migrasi
+
+```php
+Schema::create('investigation_cases', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('description')->nullable();
+    $table->foreignId('target_user_id')->nullable()->constrained('users')->nullOnDelete();
+    $table->enum('status', ['open', 'investigating', 'resolved', 'closed'])->default('open');
+    $table->text('resolution')->nullable();
+    $table->foreignId('investigator_id')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`ForensicService`**: `queryAuditLedger`, `reconstructTimeline`, `exportEvidences`, `flagSuspiciousActivities`, `createCase`
+- **`ForensicController`**: `dashboard`, `search` (advanced log search), `timelineView`, `export`, `caseManagement`
+
+#### Struktur View
+
+```
+resources/views/compliance/forensics/
+|-- search.blade.php                 # Form pencarian log tingkat lanjut
+|-- timeline.blade.php               # Visual timeline tindakan per user/IP
+|-- cases.blade.php                  # Manajemen kasus investigasi
+```
+
+---
+
+### 43.4: Legal Document & Contract Management
+
+Penyimpanan terpusat dokumen hukum sekolah, kontrak vendor, sewa aset, dan lisensi. Pengingat otomatis sebelum masa berlaku habis.
+
+#### Skema Migrasi
+
+```php
+Schema::create('legal_documents', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->enum('document_type', ['contract', 'mou', 'license', 'lease', 'policy', 'other']);
+    $table->string('party_name');
+    $table->string('file_path');
+    $table->date('start_date');
+    $table->date('expiry_date')->nullable();
+    $table->enum('status', ['active', 'expiring_soon', 'expired', 'renewed'])->default('active');
+    $table->decimal('contract_value', 15, 2)->nullable();
+    $table->foreignId('uploaded_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`LegalDocumentService`**: `uploadDocument`, `checkExpiringContracts`, `sendRenewalAlerts`, `archiveDocument`, `getContractValue`
+- **`LegalDocumentController`**: `index` (tabel kontrak), `upload`, `download`, `updateStatus`, `expiringReport`
+
+#### Struktur View
+
+```
+resources/views/compliance/legal/
+|-- index.blade.php                  # Tabel kontrak dengan highlight expiring
+|-- form.blade.php                   # Form upload metadata & file PDF
+```
+
+---
+
+## FASE 44: Platform Maturity & Future-Proofing
+
+**Fokus Utama:** Mengunci status platform sebagai ekosistem sejati dengan Developer SDK, Dashboard Builder kustom, AI Recommendation Engine, dan Digital Twin Simulation.
+
+---
+
+### 44.1: Comprehensive API SDK & Developer Ecosystem
+
+Software Development Kit (SDK) resmi dan portal developer agar pihak ketiga dapat berintegrasi dengan API SISTA secara aman.
+
+#### Skema Migrasi
+
+```php
+Schema::create('developer_api_keys', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+    $table->string('name');
+    $table->string('api_key')->unique();
+    $table->string('api_secret');
+    $table->json('scopes');
+    $table->integer('rate_limit_per_minute')->default(60);
+    $table->boolean('is_active')->default(true);
+    $table->timestamp('last_used_at')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('api_usage_logs', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('api_key_id')->constrained('developer_api_keys')->cascadeOnDelete();
+    $table->string('endpoint');
+    $table->string('method');
+    $table->integer('response_code');
+    $table->integer('response_time_ms');
+    $table->timestamp('requested_at');
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`DeveloperEcosystemService`**: `generateApiKey`, `manageScopes`, `trackApiUsage`, `revokeAccess`, `getUsageStatistics`
+- **`DeveloperEcosystemController`**: `portal` (dashboard developer), `docs` (Swagger embed), `keys`, `usageStatistics`, `revokeKey`
+
+#### Struktur View
+
+```
+resources/views/developer/
+|-- portal.blade.php                 # Dashboard manajemen API keys
+|-- docs.blade.php                   # Dokumentasi Swagger/OpenAPI embed
+|-- usage.blade.php                  # Statistik penggunaan API
+```
+
+---
+
+### 44.2: Advanced Data Visualization & Dashboard Builder
+
+Kemampuan bagi pimpinan (Kepsek, Yayasan) untuk membuat dashboard kustom drag-and-drop tanpa bantuan IT, menarik data real-time dari berbagai modul.
+
+#### Skema Migrasi
+
+```php
+Schema::create('custom_dashboards', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+    $table->string('name');
+    $table->json('layout_json');
+    $table->boolean('is_default')->default(false);
+    $table->boolean('is_shared')->default(false);
+    $table->timestamps();
+});
+
+Schema::create('dashboard_widgets', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('dashboard_id')->constrained('custom_dashboards')->cascadeOnDelete();
+    $table->enum('type', ['line_chart', 'bar_chart', 'pie_chart', 'stat_card', 'table', 'gauge']);
+    $table->string('data_source');
+    $table->json('config_json');
+    $table->json('position');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`DashboardBuilderService`**: `saveLayout`, `fetchWidgetData`, `getAvailableSources`, `shareDashboard`, `cloneDashboard`
+- **`DashboardBuilderController`**: `index`, `view`, `editMode` (drag-and-drop canvas), `getData` (AJAX widget data)
+
+#### Struktur View
+
+```
+resources/views/platform/builder/
+|-- canvas.blade.php                 # Drag-and-drop grid layout editor
+|-- viewer.blade.php                 # Render final custom dashboard
+```
+
+---
+
+### 44.3: AI-Powered Recommendation Engine
+
+Mesin cerdas yang memproses data akademik, minat/bakat, dan nilai ekstrakurikuler untuk merekomendasikan jurusan kuliah (SNBP/SNBT), buku perpustakaan, atau ekstrakurikuler yang cocok.
+
+#### Skema Migrasi
+
+```php
+Schema::create('ai_recommendations', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+    $table->enum('type', ['career', 'university', 'book', 'extracurricular', 'learning_path']);
+    $table->string('suggested_item');
+    $table->decimal('confidence_score', 5, 2);
+    $table->text('reasoning')->nullable();
+    $table->boolean('was_helpful')->nullable();
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`RecommendationEngineService`**: `generateCareerPath`, `suggestResources`, `analyzeStudentProfile`, `collectFeedback`, `retrainModel`
+- **`RecommendationEngineController`**: `studentView` (rekomendasi personal), `counselorView`, `regenerate`, `feedback`
+
+#### Struktur View
+
+```
+resources/views/platform/ai/
+|-- career-suggestions.blade.php     # Karir & jurusan ideal berdasarkan profil
+|-- resource-suggestions.blade.php   # Rekomendasi bahan bacaan
+```
+
+---
+
+### 44.4: Digital Twin School Simulation Engine
+
+Lingkungan simulasi sandbox untuk menjalankan tes "What-If" (ubah kurikulum, kebijakan bobot nilai, jam pelajaran) dan melihat dampaknya sebelum diterapkan di data produksi.
+
+#### Skema Migrasi
+
+```php
+Schema::create('simulation_environments', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->date('base_snapshot_date');
+    $table->json('scenario_config')->nullable();
+    $table->enum('status', ['preparing', 'running', 'completed', 'failed'])->default('preparing');
+    $table->json('results')->nullable();
+    $table->foreignId('created_by')->constrained('users');
+    $table->timestamps();
+});
+```
+
+#### Spesifikasi Service & Controller
+
+- **`DigitalTwinService`**: `createSandboxDatabase`, `runSimulationScenario`, `compareWithProduction`, `destroySandbox`, `exportResults`
+- **`DigitalTwinController`**: `index` (manajemen sandbox), `createScenario`, `viewResults`, `applyToProduction`
+
+#### Struktur View
+
+```
+resources/views/platform/simulation/
+|-- manager.blade.php                # Kontrol database sandbox
+|-- reports.blade.php                # Laporan dampak skenario simulasi
+```
+
+---
+
+## Rencana Verifikasi Fase 39-44
+
+### 1. Automated Tests
+
+```
+tests/Feature/Analytics/PredictivePerformanceTest.php:
+- Verifikasi prediksi model menghasilkan risk level yang valid.
+- Verifikasi intervention log tercatat dengan benar.
+
+tests/Feature/Analytics/ParentEngagementTest.php:
+- Verifikasi kalkulasi engagement score berdasarkan metrik interaksi.
+- Verifikasi identifikasi parent dengan skor rendah.
+
+tests/Feature/Student/DigitalIDTest.php:
+- Verifikasi QR code generation dan validasi scan.
+- Verifikasi card revocation membatalkan akses.
+
+tests/Feature/Student/CertificateTest.php:
+- Verifikasi penerbitan sertifikat menghasilkan PDF valid.
+- Verifikasi kode verifikasi unik per sertifikat.
+
+tests/Feature/Facility/InventoryTest.php:
+- Verifikasi stock movement mengurangi/menambah current_stock.
+- Verifikasi alert low stock terpicu pada reorder level.
+
+tests/Feature/Compliance/RegulatorySyncTest.php:
+- Verifikasi mapping field lokal ke format Dapodik.
+- Verifikasi validasi data mendeteksi record yang tidak valid.
+
+tests/Feature/Compliance/DataRetentionTest.php:
+- Verifikasi archival job memindahkan data sesuai policy.
+- Verifikasi anonymization tidak merusak foreign key.
+
+tests/Feature/Platform/DashboardBuilderTest.php:
+- Verifikasi layout JSON tersimpan dan terender dengan benar.
+- Verifikasi widget data fetch dari berbagai data source.
+```
+
+### 2. Manual Verification
+
+- Verifikasi prediksi student risk menampilkan faktor-faktor yang relevan (Fase 39).
+- Simulasi scan QR kartu pelajar digital via webcam (Fase 40).
+- Verifikasi sertifikat digital dapat diverifikasi melalui halaman publik (Fase 40).
+- Verifikasi export Dapodik menghasilkan file yang sesuai skema kementerian (Fase 43).
+- Verifikasi dashboard builder drag-and-drop berfungsi responsif (Fase 44).
+- Verifikasi Digital Twin simulation tidak mempengaruhi data produksi (Fase 44).
+
+---
+
+## Urutan Prioritas Implementasi (Updated Agustus 2026 -- Ultimate Suite Extended Edition)
+
+| Prioritas | Modul | Estimasi | Status |
+| :---: | :--- | :--- | :---: |
+| P0 | 11.3: Penilaian Harian & Remedial | 3-4 hari | Selesai |
+| P0 | 12.1: Penguatan Dashboard per Role | 3-4 hari | Selesai |
+| P0 | 13.1: Mega Seeder Data Realistis | 3-4 hari | Selesai |
+| P1 | 11.2: Mutaba'ah Ibadah Lengkap | 2-3 hari | Selesai |
+| P1 | 11.1: Tahfidz Komprehensif | 2-3 hari | Selesai |
+| P1 | 11.5: Presensi Kegiatan Sekolah | 2-3 hari | Selesai |
+| P1 | 12.2: Penguatan Jadwal | 2 hari | Selesai |
+| P2 | 11.4: Item Analysis CBT | 2-3 hari | Selesai |
+| P2 | 12.3-12.5: Penguatan E-Learning, Perpustakaan, Keuangan | 6 hari | Selesai |
+| P3 | 14.1-14.4: UI Consistency, Animasi, Error Pages, Tests | 10 hari | Selesai |
+| P3 | 15.1-15.3: Notulensi, Pengumuman, Todo List | 5 hari | Selesai |
+| P0 | 16.1: Sistem SPMB Online Komprehensif | 5-7 hari | Selesai |
+| P0 | 16.2: Overhaul Alumni & Tracer Study | 3-4 hari | Selesai |
+| P1 | 16.3-16.5: HRD, Ekskul, OSIS & MPK | 10-13 hari | Selesai |
+| P2 | 17.1-17.4: Analytics, AI Chatbot, UKS, CMS | 12-16 hari | Selesai |
+| P1 | 18.1: WhatsApp Automation & Broadcast | 3-4 hari | Selesai |
+| P3 | 18.2-18.3: Workflow & Smart Alert | 4-5 hari | Selesai |
+| P2 | 19.1-19.2: Mega Seeder v2 & Test Coverage | 7-9 hari | Selesai |
+| P3 | 19.3-20.3: Performance, Landing Page, PWA, Docs | 8-11 hari | Selesai |
+| P0 | 21.1: Tabungan Wadiah & Cashless Kantin | 4-5 hari | Selesai |
+| P1 | 21.2: Portal ZIS & Wakaf YBWSA | 3-4 hari | Selesai |
+| P0 | 22.1: Dapodik & EMIS Sync Mapper | 3-4 hari | Selesai |
+| P1 | 22.2: AI Teacher Copilot (RPP & CBT) | 4-5 hari | Selesai |
+| P2 | 23.1-23.2: IoT QR Code Asset & Barcode Library | 5-7 hari | Selesai |
+| P0 | 24.1: Double-Entry Ledger Auditor | 3-4 hari | Selesai |
+| P3 | 24.2: Security Dashboard & Intrusion Alert | 3-4 hari | Selesai |
+| P0 | 25.1: Purifikasi UI/UX Eliminasi Total Emoji | 2-3 hari | Selesai |
+| P0 | 26.1: Modular Domain Boundaries (Single-School Core) | 3-4 hari | Selesai |
+| P1 | 26.2: Event-Driven Queue & Background Bus | 3-4 hari | Selesai |
+| P2 | 26.3: Distributed Multi-Layer Cache Strategy | 2-3 hari | Selesai |
+| P0 | 26.4: API Gateway, Rate Limit & Circuit Breakers | 3-4 hari | Selesai |
+| P3 | 26.5: APM Observability, Tracing & Health Dashboard | 3-4 hari | Selesai |
+| P0 | 26.6: Immutable Audit Ledger & Enterprise RBAC | 4-5 hari | Selesai |
+| P3 | 26.7: Zero-Downtime Feature Flag Engine | 2-3 hari | Selesai |
+| P1 | 26.8: PDPL Privacy & Data Anonymization Engine | 3-4 hari | Selesai |
+| P0 | 27.1: Disaster Recovery & Automated Snapshot | 3-4 hari | Selesai |
+| P1 | 27.2: Enterprise Data Warehouse & OLAP Engine | 4-5 hari | Selesai |
+| P2 | 27.3: Event Streaming Bus & Webhook Hub | 3-4 hari | Selesai |
+| P0 | 27.4: Advanced TOTP 2FA & Session Hijacking Safeguard | 3-4 hari | Selesai |
+| P3 | 27.5: Business Process Automation Rule Engine | 4-5 hari | Selesai |
+| P1 | 27.6: Enterprise Vendor SLA Scorecard Monitor | 2-3 hari | Selesai |
+| P1 | 28.1: Unified Notification Center & Enterprise Inbox | 3-4 hari | Selesai |
+| P2 | 28.2: Internal Messaging & Threaded Discussion | 4-5 hari | Selesai |
+| P1 | 28.3: Digital Signature & E-Stamp Workflow | 3-4 hari | Selesai |
+| P2 | 28.4: Enterprise Calendar & Resource Booking | 4-5 hari | Selesai |
+| P2 | 29.1: Centralized Digital Asset Management (DAM) | 3-4 hari | Selesai |
+| P1 | 29.2: Enterprise Report Builder & Designer | 4-5 hari | Selesai |
+| P3 | 29.3: Intelligent Document Processing & OCR | 3-4 hari | Selesai |
+| P2 | 29.4: Multi-Format Export Engine | 2-3 hari | Selesai |
+| P0 | 30.1: BAN-SM Accreditation Readiness Dashboard | 4-5 hari | Selesai |
+| P1 | 30.2: Internal Quality Assurance & EDS Engine | 3-4 hari | Selesai |
+| P2 | 30.3: Risk Assessment Matrix & Incident Response | 3-4 hari | Selesai |
+| P1 | 30.4: Policy & SOP Document Governance | 3-4 hari | Selesai |
+| P2 | 31.1: GraphQL API Federation & Versioning | 4-5 hari | Selesai |
+| P1 | 31.2: Enterprise ETL Pipeline & Migration Toolkit | 4-5 hari | Selesai |
+| P3 | 31.3: Third-Party Plugin Architecture | 3-4 hari | Selesai |
+| P2 | 31.4: Public API Documentation Portal (OpenAPI) | 2-3 hari | Selesai |
+| P0 | 32.1: Database Query Optimizer & N+1 Sentinel | 3-4 hari | Selesai |
+| P2 | 32.2: Lazy Loading, Code Splitting & Asset Optimization | 2-3 hari | Selesai |
+| P1 | 32.3: Automated Stress Test & Load Testing Suite | 3-4 hari | Selesai |
+| P3 | 32.4: Horizontal Scaling Architecture Blueprint | 2-3 hari | Selesai |
+| P0 | 33.1: RAPBS Multi-Year Budget Planning & Variance | 4-5 hari | Selesai |
+| P1 | 33.2: Procurement & Purchase Order Workflow | 3-4 hari | Selesai |
+| P0 | 33.3: Scholarship & Grant Management Portal | 3-4 hari | Selesai |
+| P2 | 33.4: Cost Center Accounting & Budget Allocation | 2-3 hari | Selesai |
+| P0 | 34.1: Student Mental Health & Wellbeing Screening | 4-5 hari | Selesai |
+| P0 | 34.2: Positive Behavior & Character Report Card (P5) | 3-4 hari | Selesai |
+| P1 | 34.3: Parent-Teacher Conference (PTC) Scheduler | 2-3 hari | Selesai |
+| P2 | 34.4: Student Lifecycle Orchestration Engine | 3-4 hari | Selesai |
+| P0 | 35.1: Kurikulum Merdeka Competency Mapping (CP/TP/ATP) | 4-5 hari | Selesai |
+| P1 | 35.2: Multi-Year Academic Planning & Graduation Pathway | 3-4 hari | Selesai |
+| P2 | 35.3: SCORM/xAPI Learning Content Interoperability | 3-4 hari | Selesai |
+| P2 | 35.4: Virtual Classroom & Video Conferencing Hub | 3-4 hari | Selesai |
+| P1 | 36.1: 360-Degree Teacher Evaluation & EDOM | 4-5 hari | Selesai |
+| P1 | 36.2: CPD/PKB Credit Tracker | 3-4 hari | Selesai |
+| P3 | 36.3: School Leadership Succession Planning | 2-3 hari | Selesai |
+| P2 | 36.4: Teacher Workload Balancing & Capacity Dashboard | 2-3 hari | Selesai |
+| P1 | 37.1: WCAG 2.2 AA+ Accessibility Hardening | 3-4 hari | Selesai |
+| P2 | 37.2: Advanced i18n & Arabic (RTL) Support | 3-4 hari | Selesai |
+| P2 | 37.3: Enterprise Design System Component Library | 3-4 hari | Selesai |
+| P3 | 37.4: Print-Optimized Stylesheet Engine | 2-3 hari | Selesai |
+| P1 | 38.1: Production Environment & Secret Management | 2-3 hari | Selesai |
+| P2 | 38.2: Database Seeding Strategy & Anonymization | 2-3 hari | Selesai |
+| P1 | 38.3: Release Versioning & Rollback Strategy | 2-3 hari | Selesai |
+| P0 | 38.4: Comprehensive E2E Testing Suite | 3-4 hari | Selesai |
+| P0 | 43.1: Automated Regulatory Reporting (Dapodik/EMIS) | 3-4 hari | Selesai |
+| P1 | 39.1: Predictive Student Performance Engine | 4-5 hari | Selesai |
+| P1 | 40.2: Digital Student ID Card (QR & NFC) | 3-4 hari | Selesai |
+| P1 | 43.2: Data Retention & Archival Policy Engine | 3-4 hari | Selesai |
+| P1 | 40.1: Student Self-Service Portal | 3-4 hari | Selesai |
+| P1 | 43.3: Audit Trail Forensics & Investigation Console | 3-4 hari | Selesai |
+| P2 | 39.2: Parent Engagement Analytics Dashboard | 2-3 hari | Selesai |
+| P2 | 39.3: Financial Forecasting & Cash Flow Projection | 3-4 hari | Selesai |
+| P2 | 39.4: Academic Benchmarking & National Comparison | 2-3 hari | Selesai |
+| P2 | 40.3: Student Achievement Certificate Generator | 3-4 hari | Selesai |
+| P2 | 40.4: Student Feedback & Course Evaluation | 2-3 hari | Selesai |
+| P2 | 41.2: School-Community Partnership Management | 2-3 hari | Selesai |
+| P2 | 42.1: Smart Facility Management (IoT) | 3-4 hari | Selesai |
+| P2 | 42.4: Inventory & Consumable Tracking | 3-4 hari | Selesai |
+| P2 | 43.4: Legal Document & Contract Management | 2-3 hari | Selesai |
+| P2 | 44.1: API SDK & Developer Ecosystem | 3-4 hari | Selesai |
+| P2 | 44.3: AI-Powered Recommendation Engine | 4-5 hari | Selesai |
+| P3 | 41.1: Parent Mobile App API Gateway | 3-4 hari | Selesai |
+| P3 | 41.3: Volunteer Management & Hour Tracking | 2-3 hari | Selesai |
+| P3 | 41.4: Alumni Mentorship Program Platform | 2-3 hari | Selesai |
+| P3 | 42.2: Energy & Utility Consumption Tracker | 2-3 hari | Selesai |
+| P3 | 42.3: Transportation & School Bus Routing | 3-4 hari | Selesai |
+| P3 | 44.2: Advanced Dashboard Builder | 3-4 hari | Selesai |
+| P3 | 44.4: Digital Twin School Simulation | 4-5 hari | Selesai |
+
+---
+
+## Statistik Codebase Setelah Semua Fase Selesai (Target Enterprise Ultimate Suite Extended Edition)
+
+| Metrik | Sekarang | Target Suite (Fase 32) | Target Ultimate (Fase 38) | **Target Extended (Fase 44)** |
+| :--- | :---: | :---: | :---: | :---: |
+| **Model Eloquent** | 242 | ~245 | ~310 | **~360** |
+| **Controller** | 171 | ~175 | ~215 | **~260** |
+| **Service Class** | 107 | ~115 | ~150 | **~195** |
+| **Migration** | 158 | ~195 | ~250 | **~310** |
+| **View Directory** | 95 | ~145 | ~185 | **~225** |
+| **Blade Templates** | ~650 | ~780 | ~950 | **~1.150** |
+| **Test Files** | ~160 | ~240 | ~300 | **~380** |
+| **Seeder Files** | ~40 | ~80 | ~100 | **~130** |
+| **Factory Files** | ~35 | ~80 | ~100 | **~130** |
+| **Demo Records** | ~8.000 | ~25.000+ | ~35.000+ | **~50.000+** |
+
+---
+
+> [!IMPORTANT]
+> Seluruh adopsi arsitektur enterprise di atas dirancang **Enterprise Ultimate Suite Extended Edition (Localhost Ready)** -- dapat dijalankan 100% menggunakan `php artisan serve` + SQLite/Database lokal. Untuk fitur analitik berat (Fase 39) dan forensik audit (Fase 43), disarankan migrasi ke **PostgreSQL** untuk menghindari bottleneck SQLite pada query analitik dan transaksional bersamaan.
+
+> [!TIP]
+> **Urutan Implementasi Rekomendasi (Fase 39-44):**
+> 1. **Fase 43** -- Compliance & RegTech (Dapodik Auto-Export, Data Retention) memberikan ROI instan dengan menghemat ratusan jam kerja tata usaha per semester.
+> 2. **Fase 39** -- Analytics & BI (Predictive Performance, Financial Forecasting) membutuhkan data bersih dari Fase 43 terlebih dahulu.
+> 3. **Fase 40** -- Student Experience (Self-Service Portal, Digital ID, Certificates) meningkatkan pengalaman pengguna siswa secara langsung.
+> 4. **Fase 42** -- Facility & Operations (IoT, Inventory, Transportation) memerlukan sinkronisasi dengan pengadaan hardware fisik.
+> 5. **Fase 41** -- Parent & Community (Mobile API, Partnerships, Mentorship) memperluas jangkauan ekosistem di luar sekolah.
+> 6. **Fase 44** -- Platform Maturity (Developer SDK, AI Engine, Digital Twin) mengunci status platform sebagai ekosistem sejati.

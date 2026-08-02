@@ -420,6 +420,100 @@ Route::middleware('auth')->group(function () {
     Route::get('deploy/e2e/results/{id}', [\App\Http\Controllers\Deployment\E2eTestController::class, 'results'])->name('deploy.e2e.results');
     Route::get('deploy/e2e/flakey', [\App\Http\Controllers\Deployment\E2eTestController::class, 'flakeyTests'])->name('deploy.e2e.flakey');
 
+    // FASE 39: Advanced Analytics & Business Intelligence
+    // 39.1: Predictive Student Performance Engine
+    Route::get('analytics/predictive/dashboard', [\App\Http\Controllers\Analytics\PredictivePerformanceController::class, 'dashboard'])->name('analytics.predictive.dashboard');
+    Route::get('analytics/predictive/risk/{id}', [\App\Http\Controllers\Analytics\PredictivePerformanceController::class, 'showStudentRisk'])->name('analytics.predictive.student_risk');
+    Route::post('analytics/predictive/intervention', [\App\Http\Controllers\Analytics\PredictivePerformanceController::class, 'storeIntervention'])->name('analytics.predictive.store_intervention');
+
+    // 39.2: Parent Engagement Analytics Dashboard
+    Route::get('analytics/engagement/dashboard', [\App\Http\Controllers\Analytics\ParentEngagementController::class, 'dashboard'])->name('analytics.engagement.dashboard');
+    Route::get('analytics/engagement/{id}', [\App\Http\Controllers\Analytics\ParentEngagementController::class, 'show'])->name('analytics.engagement.detail');
+
+    // 39.3: Financial Forecasting & Cash Flow Projection
+    Route::get('analytics/finance/forecast', [\App\Http\Controllers\Analytics\FinancialForecastingController::class, 'dashboard'])->name('analytics.finance.dashboard');
+    Route::get('analytics/finance/scenario-builder', [\App\Http\Controllers\Analytics\FinancialForecastingController::class, 'createScenario'])->name('analytics.finance.create_scenario');
+    Route::post('analytics/finance/scenario', [\App\Http\Controllers\Analytics\FinancialForecastingController::class, 'storeScenario'])->name('analytics.finance.store_scenario');
+
+    // 39.4: Academic Benchmarking & National Comparison Engine
+    Route::get('analytics/benchmarking/dashboard', [\App\Http\Controllers\Analytics\AcademicBenchmarkController::class, 'dashboard'])->name('analytics.benchmarking.dashboard');
+    Route::get('analytics/benchmarking/import', [\App\Http\Controllers\Analytics\AcademicBenchmarkController::class, 'importForm'])->name('analytics.benchmarking.import');
+
+    // FASE 40: Advanced Student Experience Platform
+    // 40.1: Student Self-Service Portal
+    Route::get('student/portal/dashboard', [\App\Http\Controllers\Student\StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
+    Route::get('student/portal/request', [\App\Http\Controllers\Student\StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
+    Route::post('student/portal/request', [\App\Http\Controllers\Student\StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
+
+    // 40.2: Digital Student ID Card (QR & NFC)
+    Route::get('student/idcard/my-card', [\App\Http\Controllers\Student\DigitalIDController::class, 'showMyCard'])->name('student.idcard.my_card');
+    Route::get('student/idcard/scanner', [\App\Http\Controllers\Student\DigitalIDController::class, 'scanner'])->name('student.idcard.scanner');
+
+    // 40.3: Student Achievement Certificate Generator
+    Route::get('certificates/templates', [\App\Http\Controllers\Student\CertificateController::class, 'index'])->name('certificates.templates');
+    Route::get('certificates/verify/{code}', [\App\Http\Controllers\Student\CertificateController::class, 'verifyPage'])->name('certificates.verify');
+
+    // 40.4: Student Feedback & Course Evaluation System
+    Route::get('evaluations', [\App\Http\Controllers\Student\CourseEvaluationController::class, 'index'])->name('evaluations.index');
+    Route::get('evaluations/{id}/fill', [\App\Http\Controllers\Student\CourseEvaluationController::class, 'fillForm'])->name('evaluations.fill');
+    Route::post('evaluations/response', [\App\Http\Controllers\Student\CourseEvaluationController::class, 'storeResponse'])->name('evaluations.store_response');
+
+    // FASE 41: Advanced Parent & Community Engagement
+    // 41.1: Parent Mobile App API Gateway
+    Route::post('api/mobile/token', [\App\Http\Controllers\Community\MobileAppGatewayController::class, 'registerToken'])->name('api.mobile.token');
+
+    // 41.2: School-Community Partnership Management
+    Route::get('partnerships', [\App\Http\Controllers\Community\PartnershipController::class, 'index'])->name('partnerships.index');
+    Route::get('partnerships/create', [\App\Http\Controllers\Community\PartnershipController::class, 'create'])->name('partnerships.create');
+    Route::post('partnerships', [\App\Http\Controllers\Community\PartnershipController::class, 'store'])->name('partnerships.store');
+
+    // 41.3: Volunteer Management & Hour Tracking
+    Route::get('volunteers/opportunities', [\App\Http\Controllers\Community\VolunteerController::class, 'opportunities'])->name('volunteers.opportunities');
+    Route::get('volunteers/dashboard', [\App\Http\Controllers\Community\VolunteerController::class, 'dashboard'])->name('volunteers.dashboard');
+
+    // 41.4: Alumni Mentorship Program Platform
+    Route::get('mentorship/directory', [\App\Http\Controllers\Community\MentorshipController::class, 'directory'])->name('mentorship.directory');
+    Route::get('mentorship/workspace', [\App\Http\Controllers\Community\MentorshipController::class, 'workspace'])->name('mentorship.workspace');
+
+    // FASE 42: Advanced Facility & Operations Management
+    // 42.1: IoT Smart Facility & Energy Monitor Hub
+    Route::get('facility/iot/dashboard', [\App\Http\Controllers\Operations\IotFacilityController::class, 'dashboard'])->name('facility.iot.dashboard');
+
+    // 42.2: Utility Expense & Carbon Footprint Tracker
+    Route::get('facility/utility/dashboard', [\App\Http\Controllers\Operations\UtilityTrackerController::class, 'dashboard'])->name('facility.utility.dashboard');
+
+    // 42.3: Transportation & Bus Routing System
+    Route::get('facility/transport/routes', [\App\Http\Controllers\Operations\BusRoutingController::class, 'routes'])->name('facility.transport.routes');
+
+    // 42.4: Asset Maintenance & Preventive Service Scheduler
+    Route::get('facility/maintenance/schedule', [\App\Http\Controllers\Operations\AssetMaintenanceController::class, 'schedule'])->name('facility.maintenance.schedule');
+
+    // FASE 43: Advanced Compliance & Regulatory Technology
+    // 43.1: Dapodik/EMIS Auto-Export & Validation Engine
+    Route::get('compliance/dapodik/index', [\App\Http\Controllers\Compliance\DapodikExportController::class, 'index'])->name('compliance.dapodik.index');
+
+    // 43.2: Automated Data Retention & PDP Purge Engine
+    Route::get('compliance/retention/index', [\App\Http\Controllers\Compliance\DataRetentionController::class, 'index'])->name('compliance.retention.index');
+
+    // 43.3: Digital Forensics & Compliance Audit Console
+    Route::get('compliance/audit/console', [\App\Http\Controllers\Compliance\AuditConsoleController::class, 'console'])->name('compliance.audit.console');
+
+    // 43.4: Legal Contract & Vendor Compliance Manager
+    Route::get('compliance/contracts/index', [\App\Http\Controllers\Compliance\LegalContractController::class, 'index'])->name('compliance.contracts.index');
+
+    // FASE 44: Platform Maturity & Future-Proofing
+    // 44.1: Developer API Gateway & Webhook Engine
+    Route::get('developer/api/dashboard', [\App\Http\Controllers\Platform\DeveloperApiController::class, 'dashboard'])->name('developer.api.dashboard');
+
+    // 44.2: Drag-and-Drop Executive Dashboard Builder
+    Route::get('developer/dashboards/index', [\App\Http\Controllers\Platform\DashboardBuilderController::class, 'index'])->name('developer.dashboards.index');
+
+    // 44.3: AI Recommendation & Personalization Engine
+    Route::get('developer/ai/recommendations', [\App\Http\Controllers\Platform\AiRecommendationController::class, 'recommendations'])->name('developer.ai.recommendations');
+
+    // 44.4: Digital Twin School Infrastructure Simulation Engine
+    Route::get('developer/twin/simulation', [\App\Http\Controllers\Platform\DigitalTwinController::class, 'simulation'])->name('developer.twin.simulation');
+
     // Centralized Digital Asset Management (DAM)
     Route::get('media', [\App\Http\Controllers\Content\MediaAssetController::class, 'index'])->name('media.index');
     Route::post('media/upload', [\App\Http\Controllers\Content\MediaAssetController::class, 'upload'])->name('media.upload');

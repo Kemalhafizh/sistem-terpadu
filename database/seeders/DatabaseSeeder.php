@@ -98,6 +98,12 @@ class DatabaseSeeder extends Seeder
                 HumanCapitalSeeder::class,
                 UxMasterySeeder::class,
                 DeploymentReadinessSeeder::class,
+                AdvancedAnalyticsSeeder::class,
+                StudentExperienceSeeder::class,
+                ParentCommunitySeeder::class,
+                FacilityOperationsSeeder::class,
+                ComplianceRegulatorySeeder::class,
+                PlatformMaturitySeeder::class,
             ]);
         });
     }

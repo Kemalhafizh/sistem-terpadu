@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WebhookSubscription extends Model
 {
@@ -12,20 +13,20 @@ class WebhookSubscription extends Model
     protected $table = 'webhook_subscriptions';
 
     protected $fillable = [
-        'name',
+        'user_id',
         'target_url',
-        'secret_key',
-        'events',
+        'event_types',
+        'secret',
         'is_active',
     ];
 
     protected $casts = [
-        'events' => 'array',
+        'event_types' => 'array',
         'is_active' => 'boolean',
     ];
 
-    public function deliveries()
+    public function user(): BelongsTo
     {
-        return $this->hasMany(WebhookDelivery::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
