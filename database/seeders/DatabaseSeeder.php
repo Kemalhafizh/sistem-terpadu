@@ -104,6 +104,8 @@ class DatabaseSeeder extends Seeder
                 FacilityOperationsSeeder::class,
                 ComplianceRegulatorySeeder::class,
                 PlatformMaturitySeeder::class,
+                FamilyEngagementSeeder::class,
+                GreenSchoolSeeder::class,
             ]);
         });
     }

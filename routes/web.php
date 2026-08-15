@@ -1869,7 +1869,22 @@ require __DIR__.'/knowledge.php';
 require __DIR__.'/treasury.php';
 require __DIR__.'/adaptive.php';
 require __DIR__.'/foundation.php';
+require __DIR__.'/recruitment.php';
+require __DIR__.'/omnichannel.php';
+require __DIR__.'/data_engineering.php';
+require __DIR__.'/microlearning.php';
+require __DIR__.'/career_readiness.php';
+require __DIR__.'/school_safety.php';
+
+require __DIR__.'/islamic_tech.php';
+require __DIR__.'/alumni_relations.php';
 require __DIR__.'/auth.php';
 
 require __DIR__.'/crisis.php';
 
+
+require __DIR__.'/campus_ops.php';
+
+require __DIR__.'/family_engagement.php';
+require __DIR__.'/inclusive_education.php';
+require __DIR__.'/green_school.php';
