@@ -1,13 +1,25 @@
 <?php
+
 return [
     'failed' => 'Kredensial tersebut tidak cocok dengan data kami.',
     'password' => 'Kata sandi yang dimasukkan salah.',
     'throttle' => 'Terlalu banyak percobaan masuk. Silakan coba lagi dalam :seconds detik.',
     'login' => 'Masuk Akun',
+    'register' => 'Daftar Akun Baru',
     'email' => 'Alamat Email',
+    'username' => 'Nama Pengguna / NIS / NIP',
     'pass_label' => 'Kata Sandi',
+    'password_confirmation' => 'Konfirmasi Kata Sandi',
+    'forgot_password' => 'Lupa Kata Sandi?',
+    'reset_password' => 'Atur Ulang Kata Sandi',
     'remember_me' => 'Ingat Saya',
     'submit' => 'Masuk Sekarang',
     'two_factor_title' => 'Verifikasi Dua Faktor (2FA)',
-    'two_factor_desc' => 'Silakan masukkan kode OTP yang telah dikirim ke alamat email Anda.',
+    'two_factor_desc' => 'Silakan masukkan 6-digit kode OTP dari aplikasi authenticator atau yang dikirim ke email Anda.',
+    'two_factor_code' => 'Kode Otentikasi OTP',
+    'two_factor_submit' => 'Verifikasi & Masuk',
+    'use_recovery_code' => 'Gunakan Kode Pemulihan Darurat',
+    'recovery_code_label' => 'Kode Pemulihan',
+    'logged_in_as' => 'Masuk sebagai',
+    'session_expired' => 'Sesi Anda telah kedaluwarsa. Silakan masuk kembali.',
 ];

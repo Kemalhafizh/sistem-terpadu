@@ -1638,8 +1638,8 @@ Route::middleware('guest')->group(function () {
 });
 
 // --- User Preferences (i18n & Theme Switches) ---
-Route::post('preferences/locale/{locale}', [UserPreferenceController::class, 'setLocale'])->name('preferences.locale');
-Route::post('preferences/theme/{theme}', [UserPreferenceController::class, 'setTheme'])->name('preferences.theme');
+Route::match(['get', 'post'], 'preferences/locale/{locale}', [UserPreferenceController::class, 'setLocale'])->name('preferences.locale');
+Route::match(['get', 'post'], 'preferences/theme/{theme}', [UserPreferenceController::class, 'setTheme'])->name('preferences.theme');
 
 // --- AI Chatbot Sekolah (Modul 1) ---
 Route::middleware(['auth'])->prefix('chatbot')->name('chatbot.')->group(function () {

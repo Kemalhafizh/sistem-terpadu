@@ -1,4 +1,5 @@
 <?php
+
 return [
     // General & Top Nav
     'dashboard' => 'Dashboard',
@@ -17,8 +18,14 @@ return [
     'settings' => 'Pengaturan',
     'dev_portal' => 'Developer Portal',
     'logout' => 'Keluar',
+    'profile' => 'Profil Pengguna',
     'language' => 'Bahasa',
-    'theme' => 'Tema',
+    'theme' => 'Tema Visual',
+    'notifications' => 'Notifikasi',
+    'mark_all_read' => 'Tandai Semua Dibaca',
+    'view_all' => 'Lihat Semua',
+    'no_notifications' => 'Tidak ada notifikasi baru.',
+    'gamification' => 'Pusat Gamifikasi',
 
     // Sidebar Headers
     'header_master_data' => 'Master Data',
@@ -33,18 +40,25 @@ return [
     'header_teacher' => 'Fitur Akademik Guru',
     'header_learning_resources' => 'Sumber Belajar',
     'header_enterprise' => 'Infrastruktur Sistem Enterprise',
+    'header_enterprise_gold' => 'Enterprise Gold',
+    'header_enterprise_platinum' => 'Enterprise Platinum',
+    'header_enterprise_diamond' => 'Enterprise Diamond',
 
-    // Sidebar Links
-    'webhooks' => 'Webhook Hub Real-Time',
-    'bpa_rules' => 'Rule Engine BPA (No-Code)',
-    'vendor_sla' => 'Scorecard SLA Vendor',
-    'disaster_recovery' => 'Disaster Recovery & Snapshot',
-    'two_factor' => 'TOTP 2FA & Keamanan Sesi',
-    'edw_olap' => 'Data Warehouse Enterprise (EDW)',
-    'apm_observability' => 'APM Telemetri & Kesehatan',
-    'feature_flags' => 'Feature Flag Engine',
+    // Sidebar Links - Foundation & Master
+    'users' => 'Pengguna & Akses',
+    'audit_logs' => 'Jejak Digital (Audit)',
+    'system_settings' => 'Pengaturan Sistem',
+    'academic_years' => 'Tahun Ajaran',
+    'student_mutations' => 'Mutasi Siswa',
+    'alumni' => 'Database Alumni',
+    'schedule_plotting' => 'Plotting Jadwal',
+    'schedule_presets' => 'Preset Waktu',
+    'schedule_teacher' => 'Jadwal Guru',
+    'schedule_room' => 'Jadwal Ruangan',
+    'schedule_conflicts' => 'Audit Bentrok',
     'calendar' => 'Kalender Akademik',
     'journal' => 'Jurnal Harian Guru',
+    'meeting_notes' => 'Notulensi Rapat',
     'curriculum' => 'Kurikulum & Silabus',
     'eds' => 'Raport Mutu (EDS)',
     'hrd_portal' => 'Portal HRD Saya',
@@ -57,17 +71,6 @@ return [
     'assets_depreciation' => 'Penyusutan Aset',
     'tahfidz' => 'Jurnal Tahfidz',
     'mutabaah' => "Mutaba'ah Harian",
-    'users' => 'Pengguna & Akses',
-    'audit_logs' => 'Jejak Digital (Audit)',
-    'system_settings' => 'Pengaturan Sistem',
-    'academic_years' => 'Tahun Ajaran',
-    'student_mutations' => 'Mutasi Siswa',
-    'alumni' => 'Database Alumni',
-    'schedule_plotting' => 'Plotting Jadwal',
-    'schedule_presets' => 'Preset Waktu',
-    'schedule_teacher' => 'Jadwal Guru',
-    'schedule_room' => 'Jadwal Ruangan',
-    'schedule_conflicts' => 'Audit Bentrok',
     'points' => 'Poin & Kedisiplinan',
     'point_categories' => 'Master Kategori Poin',
     'uks' => 'UKS Digital',
@@ -91,5 +94,39 @@ return [
     'daily_assessments' => 'Penilaian Harian',
     'remedial_list' => 'Daftar Remedial',
     'event_attendance' => 'Presensi Kegiatan',
-    'meeting_notes' => 'Notulensi Rapat',
+    'todo_agenda' => 'Agenda & Todo',
+
+    // Enterprise Infrastructure
+    'webhooks' => 'Webhook Hub Real-Time',
+    'bpa_rules' => 'Rule Engine BPA (No-Code)',
+    'vendor_sla' => 'Scorecard SLA Vendor',
+    'disaster_recovery' => 'Disaster Recovery & Snapshot',
+    'two_factor' => 'TOTP 2FA & Keamanan Sesi',
+    'edw_olap' => 'Data Warehouse Enterprise (EDW)',
+    'apm_observability' => 'APM Telemetri & Kesehatan',
+    'feature_flags' => 'Feature Flag Engine',
+
+    // Enterprise Gold Modules (Fase 45-50)
+    'crisis_management' => 'Manajemen Krisis & Insiden',
+    'strategic_planning' => 'Perencanaan Strategis & Renstra',
+    'knowledge_hub' => 'Manajemen Pengetahuan Guru',
+    'treasury' => 'Treasury & Rekonsiliasi Bank',
+    'adaptive_learning' => 'Adaptive Learning & IRT CAT',
+    'foundation_governance' => 'Tata Kelola Yayasan YBWSA',
+
+    // Enterprise Platinum Modules (Fase 51-56)
+    'microlearning' => 'Microlearning & Gamifikasi',
+    'recruitment' => 'HR & Karir Guru',
+    'smart_campus' => 'Smart Campus & Kunjungan',
+    'omnichannel' => 'Omnichannel & Humas',
+    'data_intelligence' => 'Data Intelligence & NLQ',
+    'career_readiness' => 'Karir Siswa & Mini Bank',
+
+    // Enterprise Diamond Modules (Fase 57-62)
+    'islamic_tech' => 'Islamic Tech & Tahsin',
+    'inclusive_education' => 'Pendidikan Inklusif & IEP',
+    'green_school' => 'Green School Program',
+    'school_safety' => 'Keamanan Fisik & CCTV',
+    'alumni_relations' => 'Alumni & Dana Abadi',
+    'family_engagement' => 'Kolaborasi Ortu 2.0',
 ];

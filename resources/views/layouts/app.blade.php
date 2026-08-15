@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" {!! app()->getLocale() === 'ar' ? 'dir="rtl"' : '' !!}>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" {!! app()->getLocale() === 'ar' ? 'dir="rtl"' : 'dir="ltr"' !!}>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,11 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family={{ str_replace(' ', '+', $appearance->font_family) }}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @if(app()->getLocale() === 'ar')
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    @else
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family={{ str_replace(' ', '+', $appearance->font_family) }}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @endif
 
     <!-- Dynamic Appearance Branding Styles -->
     <style>
@@ -27,11 +31,28 @@
             --color-primary-900: {{ $appearance->sidebar_color }} !important;
             --color-primary-950: {{ $appearance->sidebar_color }} !important;
             
-            --font-sans: '{{ $appearance->font_family }}', 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+            @if(app()->getLocale() === 'ar')
+                --font-sans: 'Cairo', 'Amiri', ui-sans-serif, system-ui, sans-serif !important;
+            @else
+                --font-sans: '{{ $appearance->font_family }}', 'Inter', ui-sans-serif, system-ui, sans-serif !important;
+            @endif
         }
         
         body {
             font-family: var(--font-sans) !important;
+        }
+
+        [dir="rtl"] {
+            text-align: right;
+        }
+        [dir="rtl"] .dropdown-menu-end {
+            right: auto !important;
+            left: 0 !important;
+        }
+        [dir="rtl"] select {
+            background-position: left 0.5rem center !important;
+            padding-left: 2rem !important;
+            padding-right: 0.75rem !important;
         }
     </style>
 

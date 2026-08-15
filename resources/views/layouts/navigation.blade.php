@@ -70,10 +70,10 @@
           </button>
 
           <!-- Dropdown Panel -->
-          <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden" style="display:none">
+          <div x-show="open" @click.away="open = false" class="absolute end-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden" style="display:none">
             <div class="p-4 border-b border-gray-50 dark:border-gray-700 flex justify-between items-center">
-              <h3 class="font-black text-gray-800 dark:text-gray-100 text-sm uppercase tracking-widest">Notifikasi</h3>
-              <a href="#" x-show="unreadCount > 0" onclick="event.preventDefault(); document.getElementById('mark-all-read-form').submit();" class="text-[10px] font-bold text-primary-600 hover:underline uppercase" style="display: none;">Tandai semua dibaca</a>
+              <h3 class="font-black text-gray-800 dark:text-gray-100 text-sm uppercase tracking-widest">{{ __('navigation.notifications') }}</h3>
+              <a href="#" x-show="unreadCount > 0" onclick="event.preventDefault(); document.getElementById('mark-all-read-form').submit();" class="text-[10px] font-bold text-primary-600 hover:underline uppercase" style="display: none;">{{ __('navigation.mark_all_read') }}</a>
               <form id="mark-all-read-form" action="{{ route('notifications.markAllRead') }}" method="POST" style="display: none;">
                 @csrf
               </form>
@@ -87,10 +87,10 @@
               </template>
               <div x-show="notifications.length === 0" class="p-10 text-center">
                 <svg class="w-10 h-10 text-gray-200 dark:text-gray-700 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                <p class="text-xs text-gray-400 italic">Tidak ada notifikasi baru.</p>
+                <p class="text-xs text-gray-400 italic">{{ __('navigation.no_notifications') }}</p>
               </div>
             </div>
-            <a href="{{ route('notifications.index') }}" class="block p-3 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest border-t border-gray-50 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">Lihat Semua</a>
+            <a href="{{ route('notifications.index') }}" class="block p-3 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest border-t border-gray-50 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">{{ __('navigation.view_all') }}</a>
           </div>
         </div>
 
@@ -99,7 +99,7 @@
           <button @click="open = !open" 
               class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 flex items-center space-x-1" 
               title="{{ __('navigation.language') }}"
-              aria-label="Pilih Bahasa">
+              aria-label="{{ __('navigation.language') }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5c-.006 2.16-.452 4.28-1.313 6.25L9.302 6.83a17.965 17.965 0 002.39-2.203H12.75z"></path>
             </svg>
@@ -115,13 +115,13 @@
              x-transition:leave="transition ease-in duration-75"
              x-transition:leave-start="transform opacity-100 scale-100"
              x-transition:leave-end="transform opacity-0 scale-95"
-             class="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden" 
+             class="absolute end-0 mt-2 w-44 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden" 
              style="display:none">
             <div class="p-1.5 space-y-1">
               <form action="{{ route('preferences.locale', 'id') }}" method="POST" class="block">
                 @csrf
-                <button type="submit" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'id' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
-                  <span> Indonesia</span>
+                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'id' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
+                  <span>Indonesia</span>
                   @if(app()->getLocale() === 'id')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                   @endif
@@ -129,8 +129,8 @@
               </form>
               <form action="{{ route('preferences.locale', 'en') }}" method="POST" class="block">
                 @csrf
-                <button type="submit" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
-                  <span> English</span>
+                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
+                  <span>English (US)</span>
                   @if(app()->getLocale() === 'en')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                   @endif
@@ -138,8 +138,8 @@
               </form>
               <form action="{{ route('preferences.locale', 'ar') }}" method="POST" class="block">
                 @csrf
-                <button type="submit" class="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
-                  <span> العربية</span>
+                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
+                  <span>العربية (Arabic)</span>
                   @if(app()->getLocale() === 'ar')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                   @endif
@@ -155,8 +155,8 @@
           x-data="{ isDark: document.documentElement.classList.contains('dark') }"
           @theme-changed.window="isDark = $event.detail"
           class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-          title="Toggle Dark Mode"
-          aria-label="Toggle Dark Mode"
+          title="{{ __('navigation.theme') }}"
+          aria-label="{{ __('navigation.theme') }}"
         >
           <!-- Sun Icon (visible in dark) -->
           <svg x-show="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none" aria-hidden="true">
@@ -186,7 +186,7 @@
 
           <x-slot name="content">
             <x-dropdown-link :href="route('profile.edit')">
-              {{ __('Profile') }}
+              {{ __('navigation.profile') }}
             </x-dropdown-link>
 
             <!-- Authentication -->
@@ -196,7 +196,7 @@
               <x-dropdown-link :href="route('logout')"
                   onclick="event.preventDefault();
                         this.closest('form').submit();">
-                {{ __('Log Out') }}
+                {{ __('navigation.logout') }}
               </x-dropdown-link>
             </form>
           </x-slot>

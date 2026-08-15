@@ -47,7 +47,11 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  @if(app()->getLocale() === 'ar')
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  @else
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  @endif
 
   <!-- Vite -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -66,7 +70,7 @@
 
   <style>
     body { 
-      font-family: 'Inter', sans-serif; 
+      font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', 'Amiri', sans-serif" : "'Inter', sans-serif" }}; 
       background-color: #f8fafc; /* Tailwind slate-50 */
     }
     

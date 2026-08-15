@@ -65,14 +65,14 @@
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.calendar') }}</div>
         </a>
 
-        <a href="{{ auth()->user()->role === 'student' ? route('gamification.my-progress') : route('gamification.leaderboard') }}" class="{{ $linkClass }} {{ request()->routeIs('gamification.*') ? $activeClass : $inactiveClass }}" title="Pusat Gamifikasi">
+        <a href="{{ auth()->user()->role === 'student' ? route('gamification.my-progress') : route('gamification.leaderboard') }}" class="{{ $linkClass }} {{ request()->routeIs('gamification.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.gamification') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.504-1.125-1.125-1.125h-.375m-1.5 5.625v-3.375c0-.621.504-1.125 1.125-1.125h.375m-1.5 1.5H9m3-9h.008v.008H12V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM12 15.75h.007v.008H12v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM9.75 4.5h4.5M9.75 4.5h-.75M14.25 4.5h.75M9 4.5h.75m4.5 0h-.75m-4.5 0v10.5m4.5-10.5v10.5M4.5 7.875a3.375 3.375 0 003.375 3.375h.75V4.5h-.75A3.375 3.375 0 004.5 7.875zm15 0a3.375 3.375 0 01-3.375 3.375h-.75V4.5h.75a3.375 3.375 0 013.375 3.375z"></path>
                 </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Pusat Gamifikasi</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.gamification') }}</span>
             </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Pusat Gamifikasi</div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.gamification') }}</div>
         </a>
 
         @if(!in_array(auth()->user()->role, ['student', 'parent']))
@@ -659,12 +659,12 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ledger_report') }}</div>
         </a>
-        <a href="{{ route('todos.index') }}" class="{{ $linkClass }} {{ request()->routeIs('todos.*') ? $activeClass : $inactiveClass }}" title="Agenda & Todo List">
+        <a href="{{ route('todos.index') }}" class="{{ $linkClass }} {{ request()->routeIs('todos.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.todo_agenda') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Agenda & Todo</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.todo_agenda') }}</span>
             </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Agenda & Todo</div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.todo_agenda') }}</div>
         </a>
         @endif
 
@@ -732,105 +732,113 @@
         {{-- Enterprise Platinum Ecosystem (Fase 51-56) --}}
         @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin', 'staff', 'bk']))
         <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
-            <p class="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">Enterprise Platinum</p>
+            <p class="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">{{ __('navigation.header_enterprise_platinum') }}</p>
         </div>
         <div class="mt-8 mb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
-            <p class="text-[10px] font-bold text-amber-400 uppercase tracking-widest opacity-80" title="Enterprise Platinum">•</p>
+            <p class="text-[10px] font-bold text-amber-400 uppercase tracking-widest opacity-80" title="{{ __('navigation.header_enterprise_platinum') }}">•</p>
         </div>
 
         {{-- Microlearning & Quiz Arena --}}
-        <a href="{{ route('micro-lessons.index') }}" class="{{ $linkClass }} {{ request()->routeIs('micro-lessons.*') || request()->routeIs('gamified-quizzes.*') || request()->routeIs('spaced-repetition.*') || request()->routeIs('transcripts.*') ? $activeClass : $inactiveClass }}" title="Microlearning & Gamifikasi">
+        <a href="{{ route('micro-lessons.index') }}" class="{{ $linkClass }} {{ request()->routeIs('micro-lessons.*') || request()->routeIs('gamified-quizzes.*') || request()->routeIs('spaced-repetition.*') || request()->routeIs('transcripts.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.microlearning') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-amber-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Microlearning & Quiz</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.microlearning') }}</span>
             </div>
         </a>
 
         {{-- Advanced HR & Wellbeing --}}
-        <a href="{{ route('recruitment.kanban') }}" class="{{ $linkClass }} {{ request()->routeIs('recruitment.*') || request()->routeIs('compensation.*') || request()->routeIs('wellness.*') || request()->routeIs('turnover.*') ? $activeClass : $inactiveClass }}" title="HR & Employee Wellbeing">
+        <a href="{{ route('recruitment.kanban') }}" class="{{ $linkClass }} {{ request()->routeIs('recruitment.*') || request()->routeIs('compensation.*') || request()->routeIs('wellness.*') || request()->routeIs('turnover.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.recruitment') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-emerald-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">HR & Karir Guru</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.recruitment') }}</span>
             </div>
         </a>
 
         {{-- Smart Campus & Visitor Ops --}}
-        <a href="{{ route('visitors.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('visitors.*') || request()->routeIs('store.*') || request()->routeIs('canteen.*') || request()->routeIs('events.*') ? $activeClass : $inactiveClass }}" title="Smart Campus & Kunjungan">
+        <a href="{{ route('visitors.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('visitors.*') || request()->routeIs('store.*') || request()->routeIs('canteen.*') || request()->routeIs('events.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.smart_campus') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-cyan-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Smart Campus & Ops</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.smart_campus') }}</span>
             </div>
         </a>
 
         {{-- Omnichannel Hub & PR --}}
-        <a href="{{ route('omnichannel.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('omnichannel.*') || request()->routeIs('drip_campaigns.*') || request()->routeIs('nps.*') || request()->routeIs('pr.*') ? $activeClass : $inactiveClass }}" title="Omnichannel & Public Relations">
+        <a href="{{ route('omnichannel.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('omnichannel.*') || request()->routeIs('drip_campaigns.*') || request()->routeIs('nps.*') || request()->routeIs('pr.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.omnichannel') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-indigo-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Omnichannel & Humas</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.omnichannel') }}</span>
             </div>
         </a>
 
         {{-- Data Engineering & NLQ Intelligence --}}
-        <a href="{{ route('data_engineering.streams') }}" class="{{ $linkClass }} {{ request()->routeIs('data_engineering.*') || request()->routeIs('nlq.*') || request()->routeIs('report_scheduler.*') || request()->routeIs('data_quality.*') ? $activeClass : $inactiveClass }}" title="Data Engineering & AI Analytics">
+        <a href="{{ route('data_engineering.streams') }}" class="{{ $linkClass }} {{ request()->routeIs('data_engineering.*') || request()->routeIs('nlq.*') || request()->routeIs('report_scheduler.*') || request()->routeIs('data_quality.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.data_intelligence') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-purple-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Data Intelligence & NLQ</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.data_intelligence') }}</span>
+            </div>
+        </a>
+
+        {{-- Career Readiness & Mini Banking --}}
+        <a href="{{ route('internships.portal') }}" class="{{ $linkClass }} {{ request()->routeIs('internships.*') || request()->routeIs('college_counseling.*') || request()->routeIs('showcase.*') || request()->routeIs('mini_bank.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.career_readiness') }}">
+            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
+                <svg class="w-5 h-5 shrink-0 text-rose-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.career_readiness') }}</span>
             </div>
         </a>
 
         {{-- Enterprise Diamond Ecosystem (Fase 57-62) --}}
         <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
-            <p class="text-[10px] font-black text-cyan-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">Enterprise Diamond</p>
+            <p class="text-[10px] font-black text-cyan-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">{{ __('navigation.header_enterprise_diamond') }}</p>
         </div>
         <div class="mt-8 mb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
-            <p class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest opacity-80" title="Enterprise Diamond">•</p>
+            <p class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest opacity-80" title="{{ __('navigation.header_enterprise_diamond') }}">•</p>
         </div>
 
         {{-- Islamic EdTech & Tahsin --}}
-        <a href="{{ route('tahsin.index') }}" class="{{ $linkClass }} {{ request()->routeIs('tahsin.*') || request()->routeIs('islamic_events.*') || request()->routeIs('spiritual.*') || request()->routeIs('dawah.*') ? $activeClass : $inactiveClass }}" title="Islamic EdTech & Tahsin">
+        <a href="{{ route('tahsin.index') }}" class="{{ $linkClass }} {{ request()->routeIs('tahsin.*') || request()->routeIs('islamic_events.*') || request()->routeIs('spiritual.*') || request()->routeIs('dawah.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.islamic_tech') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-emerald-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332-.477-4.5 1.253"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Islamic Tech & Tahsin</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.islamic_tech') }}</span>
             </div>
         </a>
 
         {{-- Inclusive Education & IEP --}}
-        <a href="{{ route('iep.index') }}" class="{{ $linkClass }} {{ request()->routeIs('iep.*') || request()->routeIs('screening.*') || request()->routeIs('differentiation.*') || request()->routeIs('accommodations.*') ? $activeClass : $inactiveClass }}" title="Pendidikan Inklusif & IEP">
+        <a href="{{ route('iep.index') }}" class="{{ $linkClass }} {{ request()->routeIs('iep.*') || request()->routeIs('screening.*') || request()->routeIs('differentiation.*') || request()->routeIs('accommodations.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.inclusive_education') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-sky-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Pendidikan Inklusif</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.inclusive_education') }}</span>
             </div>
         </a>
 
         {{-- Green School & Sustainability --}}
-        <a href="{{ route('carbon.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('carbon.*') || request()->routeIs('waste.*') || request()->routeIs('eco_projects.*') || request()->routeIs('eco_challenges.*') ? $activeClass : $inactiveClass }}" title="Green School & Karbon">
+        <a href="{{ route('carbon.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('carbon.*') || request()->routeIs('waste.*') || request()->routeIs('eco_projects.*') || request()->routeIs('eco_challenges.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.green_school') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-lime-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Green School Program</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.green_school') }}</span>
             </div>
         </a>
 
         {{-- Advanced School Safety & CCTV --}}
-        <a href="{{ route('cctv.index') }}" class="{{ $linkClass }} {{ request()->routeIs('cctv.*') || request()->routeIs('emergency_alerts.*') || request()->routeIs('safety_drills.*') || request()->routeIs('geofencing.*') ? $activeClass : $inactiveClass }}" title="Keamanan Kampus & CCTV">
+        <a href="{{ route('cctv.index') }}" class="{{ $linkClass }} {{ request()->routeIs('cctv.*') || request()->routeIs('emergency_alerts.*') || request()->routeIs('safety_drills.*') || request()->routeIs('geofencing.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.school_safety') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-red-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Keamanan Fisik & CCTV</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.school_safety') }}</span>
             </div>
         </a>
 
         {{-- Alumni Relations & Endowment --}}
-        <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') || request()->routeIs('crowdfunding.*') || request()->routeIs('hall_of_fame.*') || request()->routeIs('endowment.*') ? $activeClass : $inactiveClass }}" title="Alumni & Dana Abadi">
+        <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') || request()->routeIs('crowdfunding.*') || request()->routeIs('hall_of_fame.*') || request()->routeIs('endowment.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.alumni_relations') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-teal-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Alumni & Dana Abadi</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.alumni_relations') }}</span>
             </div>
         </a>
 
         {{-- Parent Collaboration 2.0 --}}
-        <a href="{{ route('homework_copilot.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('homework_copilot.*') || request()->routeIs('class_feed.*') || request()->routeIs('family_plan.*') || request()->routeIs('parent_skills.*') ? $activeClass : $inactiveClass }}" title="Keluarga & Kolaborasi Ortu">
+        <a href="{{ route('homework_copilot.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('homework_copilot.*') || request()->routeIs('class_feed.*') || request()->routeIs('family_plan.*') || request()->routeIs('parent_skills.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.family_engagement') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-violet-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Kolaborasi Ortu 2.0</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.family_engagement') }}</span>
             </div>
         </a>
         @endif

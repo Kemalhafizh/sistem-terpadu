@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" {!! app()->getLocale() === 'ar' ? 'dir="rtl"' : 'dir="ltr"' !!} class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,10 +10,14 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ $appearance->favicon_path ? asset('storage/' . $appearance->favicon_path) : asset('images/logo-kotak.png') }}">
 
-    <!-- Fonts - Outfit & Inter -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;850;900&family=Inter:wght@300;400;500;600;750;800&family={{ str_replace(' ', '+', $appearance->font_family) }}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @if(app()->getLocale() === 'ar')
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    @else
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;850;900&family=Inter:wght@300;400;500;600;750;800&family={{ str_replace(' ', '+', $appearance->font_family) }}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @endif
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -30,10 +34,10 @@
             --color-primary-800: {$appearance->sidebar_color} !important;
             --color-primary-900: {$appearance->sidebar_color} !important;
             --color-primary-950: {$appearance->sidebar_color} !important;
-            --font-sans: '{$appearance->font_family}', 'Outfit', 'Inter', sans-serif !important;
+            --font-sans: " . (app()->getLocale() === 'ar' ? "'Cairo', 'Amiri', sans-serif" : "'{$appearance->font_family}', 'Outfit', 'Inter', sans-serif") . " !important;
         }
         body { font-family: var(--font-sans) !important; }
-        .font-inter { font-family: 'Inter', sans-serif; }
+        .font-inter { font-family: " . (app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif") . "; }
         .islamic-pattern {
             background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0 L45 15 L60 30 L45 45 L30 60 L15 45 L0 30 L15 15 Z' fill='none' stroke='%23059669' stroke-width='0.4' stroke-opacity='0.08'/%3E%3Cpath d='M30 10 L40 20 L50 30 L40 40 L30 50 L20 40 L10 30 L20 20 Z' fill='none' stroke='%23d97706' stroke-width='0.3' stroke-opacity='0.08'/%3E%3Ccircle cx='30' cy='30' r='5' fill='none' stroke='%23059669' stroke-width='0.4' stroke-opacity='0.08'/%3E%3C/svg%3E\");
         }
@@ -48,6 +52,45 @@
 </head>
 <body class="font-sans text-slate-800 antialiased min-h-screen bg-slate-50/40 flex items-center justify-center p-4 sm:p-6 md:p-8 relative">
     
+    <!-- Language Switcher Bar (Top Float) -->
+    <div class="fixed top-4 end-4 z-50" x-data="{ langOpen: false }">
+        <div class="relative">
+            <button @click="langOpen = !langOpen" class="px-3 py-1.5 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-md border border-slate-200/80 dark:border-gray-700 text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-white flex items-center gap-1.5 transition-all duration-200">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5c-.006 2.16-.452 4.28-1.313 6.25L9.302 6.83a17.965 17.965 0 002.39-2.203H12.75z"/></svg>
+                <span class="uppercase tracking-wider">{{ app()->getLocale() }}</span>
+            </button>
+            <div x-show="langOpen" @click.away="langOpen = false" class="absolute end-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-slate-100 dark:border-gray-700 py-1.5 z-50 overflow-hidden" style="display:none;">
+                <form action="{{ route('preferences.locale', 'id') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 flex items-center justify-between {{ app()->getLocale() === 'id' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-gray-300' }}">
+                        <span>Indonesia</span>
+                        @if(app()->getLocale() === 'id')
+                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        @endif
+                    </button>
+                </form>
+                <form action="{{ route('preferences.locale', 'en') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 flex items-center justify-between {{ app()->getLocale() === 'en' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-gray-300' }}">
+                        <span>English</span>
+                        @if(app()->getLocale() === 'en')
+                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        @endif
+                    </button>
+                </form>
+                <form action="{{ route('preferences.locale', 'ar') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-gray-300' }}">
+                        <span>العربية</span>
+                        @if(app()->getLocale() === 'ar')
+                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        @endif
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Background Islamic pattern overlay -->
     <div class="absolute inset-0 islamic-pattern opacity-[0.06] pointer-events-none"></div>
 
@@ -155,9 +198,9 @@
             <!-- Form content area -->
             <div class="my-auto space-y-6">
                 <!-- Greeting Header (Desktop) -->
-                <div class="hidden lg:block text-left mb-6">
-                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Selamat Datang</h2>
-                    <p class="text-xs text-slate-400 font-medium leading-none">Silakan masuk untuk mengakses layanan portal akademik.</p>
+                <div class="hidden lg:block text-start mb-6">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">{{ __('Masuk Akun') }}</h2>
+                    <p class="text-xs text-slate-400 font-medium leading-normal">{{ __('Silakan masuk untuk mengakses layanan portal akademik.') }}</p>
                 </div>
  
                 <!-- Slot containing the login form -->

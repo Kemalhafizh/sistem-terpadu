@@ -17,12 +17,16 @@ class SetLocale
     {
         $locale = null;
 
-        if (auth()->check()) {
+        if (auth()->check() && !empty(auth()->user()->preferred_locale)) {
             $locale = auth()->user()->preferred_locale;
         }
 
-        if (!$locale) {
-            $locale = session('locale', $request->hasSession() ? session('locale', config('app.locale', 'id')) : config('app.locale', 'id'));
+        if (!$locale && $request->hasSession()) {
+            $locale = session('locale');
+        }
+
+        if (!$locale || !in_array($locale, ['id', 'en', 'ar'])) {
+            $locale = config('app.locale', 'id');
         }
 
         app()->setLocale($locale);

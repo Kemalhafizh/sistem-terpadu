@@ -12,6 +12,9 @@ class UserPreferenceController extends Controller
     public function setLocale(Request $request, string $locale)
     {
         if (!in_array($locale, ['id', 'en', 'ar'])) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Language not supported'], 400);
+            }
             return back()->with('error', 'Bahasa tidak didukung / Language not supported.');
         }
 
@@ -20,8 +23,19 @@ class UserPreferenceController extends Controller
         }
 
         session(['locale' => $locale]);
+        app()->setLocale($locale);
 
-        return back()->with('success', $locale === 'ar' ? 'تم تغيير اللغة بنجاح.' : ($locale === 'en' ? 'Language changed successfully.' : 'Bahasa berhasil diubah.'));
+        $message = match ($locale) {
+            'ar' => 'تم تغيير اللغة بنجاح.',
+            'en' => 'Language changed successfully.',
+            default => 'Bahasa berhasil diubah.',
+        };
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'locale' => $locale, 'message' => $message]);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
