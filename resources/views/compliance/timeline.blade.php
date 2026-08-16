@@ -46,7 +46,7 @@
                 <span>{{ $milestonesProgress }}% Terpenuhi</span>
             </div>
             <div class="w-full bg-gray-100 dark:bg-gray-900 h-3 rounded-full overflow-hidden mt-2.5">
-                <div class="h-full bg-gradient-to-r from-primary-500 to-indigo-500 rounded-full transition-all duration-500" style="width: {{ $milestonesProgress }}%"></div>
+                <div class="h-full bg-gradient-to-r from-primary-500 to-indigo-500 rounded-full transition-all duration-500" :style="'width: ' + {{ $milestonesProgress }} + '%'"></div>
             </div>
         </div>
 
@@ -105,7 +105,6 @@
                                     ↩ Batal Selesai
                                 @else
                                      Tandai Selesai
-                                @else
                                 @endif
                             </button>
                         </form>

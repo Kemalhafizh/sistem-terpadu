@@ -1,7 +1,7 @@
 <?php
 $baseDir = __DIR__;
 
-function makeFile($path, $content) {
+function makeFile(string $path, string $content): void {
     global $baseDir;
     $fullPath = $baseDir . '/' . $path;
     $dir = dirname($fullPath);
@@ -770,10 +770,10 @@ EOT
 );
 
 // modify web.php
-\$webphp = file_get_contents('routes/web.php');
-if (strpos(\$webphp, 'routes/microlearning.php') === false) {
-    \$webphp = str_replace("require __DIR__.'/auth.php';", "require __DIR__.'/microlearning.php';\nrequire __DIR__.'/auth.php';", \$webphp);
-    file_put_contents('routes/web.php', \$webphp);
+$webphp = file_get_contents('routes/web.php');
+if (strpos($webphp, 'routes/microlearning.php') === false) {
+    $webphp = str_replace("require __DIR__.'/auth.php';", "require __DIR__.'/microlearning.php';\nrequire __DIR__.'/auth.php';", $webphp);
+    file_put_contents('routes/web.php', $webphp);
 }
 
 echo "Done\n";

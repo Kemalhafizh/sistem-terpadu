@@ -852,14 +852,14 @@ class GreenSchoolSuiteTest extends TestCase
 EOT
 ];
 
-foreach (\$files as \$path => \$content) {
-    \$fullPath = \$basePath . "/" . \$path;
-    \$dir = dirname(\$fullPath);
-    if (!is_dir(\$dir)) {
-        mkdir(\$dir, 0777, true);
+foreach ($files as $path => $content) {
+    $fullPath = $basePath . "/" . $path;
+    $dir = dirname($fullPath);
+    if (!is_dir($dir)) {
+        mkdir($dir, 0777, true);
     }
-    file_put_contents(\$fullPath, \$content);
-    echo "Created: \$path\n";
+    file_put_contents($fullPath, $content);
+    echo "Created: $path\n";
 }
 
 ?>

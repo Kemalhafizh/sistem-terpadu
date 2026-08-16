@@ -2,7 +2,7 @@
 
 $base_dir = "c:\\project\\portofolio\\project-super-web\\sistem-terpadu";
 
-function write_file($path, $content) {
+function write_file(string $path, string $content): void {
     global $base_dir;
     $full_path = $base_dir . "\\" . str_replace("/", "\\", $path);
     $dir = dirname($full_path);
@@ -391,7 +391,7 @@ class AccreditationTrackerController extends Controller {
 EOT
 );
 
-\$blades = [
+$blades = [
     'dashboard' => "Dashboard Foundation",
     'units/index' => "Unit Foundation",
     'units/show' => "Detail Unit",
@@ -413,8 +413,8 @@ EOT
     'accreditation/detail' => "Detail Akreditasi"
 ];
 
-foreach (\$blades as \$blade => \$title) {
-    write_file("resources/views/foundation/{\$blade}.blade.php", <<<EOT
+foreach ($blades as $blade => $title) {
+    write_file("resources/views/foundation/{$blade}.blade.php", <<<EOT
 @extends('layouts.app')
 @section('content')
 <div class="rounded-3xl card border border-gray-150 dark:border-gray-700 shadow-sm p-6">
