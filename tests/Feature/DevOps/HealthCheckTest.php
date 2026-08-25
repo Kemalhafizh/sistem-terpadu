@@ -35,7 +35,7 @@ it('mengembalikan status warning atau critical jika terjadi kesalahan pada cache
     expect($exitCode)->toBe(1);
 
     $output = Artisan::output();
-    expect($output)->toContain('🔴 CRITICAL')
+    expect($output)->toContain('CRITICAL')
         ->toContain('Cache store connection lost')
         ->toContain('SYSTEM WARNING');
 });

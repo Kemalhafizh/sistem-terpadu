@@ -79,6 +79,23 @@ class ApiTeacherController extends Controller
     }
 
     /**
+     * Get Students in Classroom
+     *
+     * Mengambil daftar seluruh siswa aktif di suatu kelas untuk absensi atau penilaian.
+     *
+     * @authenticated
+     */
+    public function classStudents(Request $request, $classroomId)
+    {
+        $students = Student::where('classroom_id', $classroomId)
+            ->select('id', 'name', 'nis', 'nisn', 'gender')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return $this->successResponse($students, 'Daftar siswa rombel kelas berhasil diambil');
+    }
+
+    /**
      * Store Bulk Attendance
      *
      * Menginput absensi kehadiran siswa secara massal untuk kelas tertentu.

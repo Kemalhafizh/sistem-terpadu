@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,26 +12,27 @@ class UserDeviceToken extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_device_tokens';
-
     protected $fillable = [
         'user_id',
         'device_id',
+        'device_token',
+        'device_type',
         'device_name',
         'platform',
         'fcm_token',
         'apns_token',
         'os_version',
         'app_version',
-        'is_active',
         'badge_count',
+        'is_active',
         'last_active_at',
+        'last_used_at',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'badge_count' => 'integer',
         'last_active_at' => 'datetime',
+        'last_used_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

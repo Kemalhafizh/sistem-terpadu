@@ -41,7 +41,7 @@
                         @foreach($snapshot->academic_timeline ?? [] as $step)
                             <div class="relative flex items-start space-x-3">
                                 <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shadow-md z-10">
-                                    ✓
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
                                 <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 flex-1">
                                     <div class="flex justify-between items-center text-xs">

@@ -30,22 +30,47 @@ class ApiAuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|string',
             'password' => 'required',
             'device_name' => 'required|string|max:255',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $identifier = trim($request->email);
+        $deviceName = $request->input('device_name', 'Android Device');
+
+        // 1. Try finding by email
+        $user = User::where('email', $identifier)->first();
+
+        // 2. If not found, try finding by phone_number
+        if (!$user) {
+            $user = User::where('phone_number', $identifier)->first();
+        }
+
+        // 3. If not found, try finding by student NIS / NISN
+        if (!$user) {
+            $student = \App\Models\Student::where('nis', $identifier)->orWhere('nisn', $identifier)->first();
+            if ($student && $student->user) {
+                $user = $student->user;
+            }
+        }
+
+        // 4. If not found, try finding by employee NIP
+        if (!$user) {
+            $employee = \App\Models\Employee::where('nip', $identifier)->first();
+            if ($employee && $employee->user) {
+                $user = $employee->user;
+            }
+        }
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->errorResponse('Kredensial tidak valid', 401);
+            return $this->errorResponse('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.', 401);
         }
 
         // --- TOKEN ROTATION ---
         // Bersihkan token lama dengan nama perangkat yang sama sebelum membuat token baru
-        $user->tokens()->where('name', $request->device_name)->delete();
+        $user->tokens()->where('name', $deviceName)->delete();
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+        $token = $user->createToken($deviceName)->plainTextToken;
 
         return $this->successResponse([
             'token' => $token,
@@ -54,6 +79,7 @@ class ApiAuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
+                'phone_number' => $user->phone_number,
             ],
         ], 'Login berhasil');
     }

@@ -45,8 +45,14 @@ Broadcast::channel('cbt.exam.{examId}', function (User $user, int $examId) {
     if (!$exam) {
         return false;
     }
-
-    // Exam creator, admin, or superadmin can listen to the proctor channel
     return (int) $exam->created_by === (int) $user->id ||
            in_array($user->role, ['admin', 'superadmin', 'waka_kurikulum', 'kepala_sekolah']);
+});
+
+Broadcast::channel('school.announcements', function (User $user) {
+    return true; // Any authenticated user can listen
+});
+
+Broadcast::channel('campus.emergency', function (User $user) {
+    return true; // Any authenticated user can listen to emergency alerts
 });

@@ -20,6 +20,7 @@ use App\Http\Controllers\AssetMaintenanceController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\ForceChangePasswordController;
 use App\Http\Controllers\Auth\GoogleSsoController;
+use App\Http\Controllers\Auth\MobileSsoBridgeController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\CareerOpportunityController;
 use App\Http\Controllers\ClassroomController;
@@ -1631,7 +1632,8 @@ Route::middleware('auth')->group(function () {
     Route::get('verify-2fa/resend', [TwoFactorController::class, 'resend'])->name('verify-2fa.resend');
 });
 
-// --- Google SSO (Single Sign-On) ---
+// --- Google SSO & Mobile App SSO Bridge (Single Sign-On) ---
+Route::get('sso/auto-login', [MobileSsoBridgeController::class, 'autoLogin'])->name('sso.auto_login');
 Route::middleware('guest')->group(function () {
     Route::get('auth/google', [GoogleSsoController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('auth/google/callback', [GoogleSsoController::class, 'handleGoogleCallback']);

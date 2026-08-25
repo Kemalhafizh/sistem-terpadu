@@ -79,7 +79,13 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::get('grades', [ApiStudentController::class, 'grades']);
       Route::get('attendance', [ApiStudentController::class, 'attendance']);
       Route::get('billings', [ApiStudentController::class, 'billings']);
+      Route::post('billings/{id}/pay', [ApiStudentController::class, 'payBilling']);
       Route::get('points', [ApiStudentController::class, 'points']);
+      Route::get('tahfidz', [ApiStudentController::class, 'tahfidz']);
+      Route::get('mutabaah', [ApiStudentController::class, 'mutabaah']);
+      Route::get('cbt/exams', [ApiStudentController::class, 'cbtExams']);
+      Route::get('cbt/exams/{id}/questions', [ApiStudentController::class, 'cbtExamQuestions']);
+      Route::post('cbt/exams/{id}/submit', [ApiStudentController::class, 'cbtSubmitExam']);
       Route::get('notifications', [ApiStudentController::class, 'notifications']);
       Route::post('notifications/{id}/read', [ApiStudentController::class, 'markNotificationRead']);
     });
@@ -100,6 +106,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     Route::prefix('teacher')->middleware('role:guru,bk')->group(function () {
       Route::get('schedule', [ApiTeacherController::class, 'schedule']);
       Route::get('classes', [ApiTeacherController::class, 'classes']);
+      Route::get('classes/{id}/students', [ApiTeacherController::class, 'classStudents']);
       Route::post('attendance', [ApiTeacherController::class, 'storeAttendance']);
       Route::get('journals', [ApiTeacherController::class, 'journals']);
       Route::post('journals', [ApiTeacherController::class, 'storeJournal']);
@@ -130,5 +137,68 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::get('student/me', [StudentApiController::class, 'profile'])->name('api.v1.student.me');
       Route::post('whatsapp/send', [ExternalIntegrationApiController::class, 'sendWhatsapp'])->name('api.v1.whatsapp.send');
     });
+
+    // =====================================================================
+    // FASE 69: SUPER APP ENTERPRISE API & MOBILE GATEWAY
+    // =====================================================================
+    Route::prefix('mobile')->group(function () {
+      Route::post('geofence/checkin', [\App\Http\Controllers\Api\V1\Mobile\GeofenceController::class, 'checkin']);
+    });
+
+    // =====================================================================
+    // FASE 70: GENERATIVE AI & AUTONOMOUS LEARNING ENGINE
+    // =====================================================================
+    Route::prefix('ai')->group(function () {
+      Route::post('tutor/session', [\App\Http\Controllers\Ai\AiTutorController::class, 'startSession']);
+      Route::post('tutor/session/{id}/message', [\App\Http\Controllers\Ai\AiTutorController::class, 'sendMessage']);
+      Route::get('tutor/session/{id}', [\App\Http\Controllers\Ai\AiTutorController::class, 'getHistory']);
+      Route::post('essay/grade', [\App\Http\Controllers\Ai\NlpEssayGraderController::class, 'submitEssay']);
+      Route::get('essay/{id}', [\App\Http\Controllers\Ai\NlpEssayGraderController::class, 'getSubmission']);
+      Route::post('lesson-plan/generate', [\App\Http\Controllers\Ai\AiLessonPlanController::class, 'generate']);
+      Route::get('lesson-plans', [\App\Http\Controllers\Ai\AiLessonPlanController::class, 'getPlans']);
+    });
+
+    // =====================================================================
+    // FASE 71: IMMUTABLE BLOCKCHAIN CREDENTIALING (WEB3)
+    // =====================================================================
+    Route::prefix('blockchain')->group(function () {
+      Route::post('credentials/issue', [\App\Http\Controllers\Blockchain\BlockchainCredentialController::class, 'issue']);
+      Route::get('credentials/my', [\App\Http\Controllers\Blockchain\BlockchainCredentialController::class, 'myCredentials']);
+      Route::get('did/me', [\App\Http\Controllers\Blockchain\StudentDidController::class, 'getMyDid']);
+      Route::get('did/passport', [\App\Http\Controllers\Blockchain\StudentDidController::class, 'getPassport']);
+    });
+
+    // =====================================================================
+    // FASE 72: SMART CAMPUS IOT 2.0 & FACIAL RECOGNITION
+    // =====================================================================
+    Route::prefix('iot')->group(function () {
+      Route::post('face/enroll', [\App\Http\Controllers\Iot\FacialRecognitionAttendanceController::class, 'enroll']);
+      Route::post('face/match', [\App\Http\Controllers\Iot\FacialRecognitionAttendanceController::class, 'matchGate']);
+      Route::post('energy/sensor', [\App\Http\Controllers\Iot\EnergyManagementController::class, 'updateSensor']);
+      Route::get('energy/dashboard', [\App\Http\Controllers\Iot\EnergyManagementController::class, 'getDashboard']);
+    });
+
+    // =====================================================================
+    // FASE 73: BIG DATA PREDICTIVE ANALYTICS
+    // =====================================================================
+    Route::prefix('analytics')->group(function () {
+      Route::get('student/{id}/risk', [\App\Http\Controllers\Analytics\AtRiskStudentPredictionController::class, 'analyzeStudent']);
+      Route::get('at-risk/dashboard', [\App\Http\Controllers\Analytics\AtRiskStudentPredictionController::class, 'getAtRiskDashboard']);
+      Route::post('treasury/forecast', [\App\Http\Controllers\Analytics\TreasuryForecastController::class, 'generate']);
+      Route::get('treasury/forecasts', [\App\Http\Controllers\Analytics\TreasuryForecastController::class, 'getForecasts']);
+    });
+
+    // =====================================================================
+    // FASE 74: DEDICATED HIGH-AVAILABILITY INFRASTRUCTURE
+    // =====================================================================
+    Route::prefix('infrastructure')->group(function () {
+      Route::get('cluster/health', [\App\Http\Controllers\Infrastructure\CloudClusterController::class, 'getHealth']);
+      Route::post('cluster/metrics', [\App\Http\Controllers\Infrastructure\CloudClusterController::class, 'reportMetric']);
+      Route::post('cdn/resolve', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'resolveAsset']);
+      Route::get('cdn/nodes', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'getNodes']);
+    });
   });
+
+  // Public Web3 Credential Verification Endpoint
+  Route::get('blockchain/credentials/verify/{certificateNumber}', [\App\Http\Controllers\Blockchain\BlockchainCredentialController::class, 'verifyPublic']);
 });
