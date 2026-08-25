@@ -104,6 +104,11 @@ class QuestionBankController extends Controller
      */
     public function edit(QuestionBank $questionBank)
     {
+        $user = auth()->user();
+        if (in_array($user->role, ['guru', 'staf_tu']) && $questionBank->created_by !== $user->id) {
+            abort(403, 'Anda hanya dapat mengedit butir soal yang Anda buat sendiri.');
+        }
+
         $subjects = Subject::all();
         return view('cbt.question-bank.edit', compact('questionBank', 'subjects'));
     }
@@ -113,6 +118,11 @@ class QuestionBankController extends Controller
      */
     public function update(Request $request, QuestionBank $questionBank)
     {
+        $user = auth()->user();
+        if (in_array($user->role, ['guru', 'staf_tu']) && $questionBank->created_by !== $user->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk mengubah butir soal ini.');
+        }
+
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
             'question_text' => 'required|string',
@@ -163,6 +173,11 @@ class QuestionBankController extends Controller
      */
     public function destroy(QuestionBank $questionBank)
     {
+        $user = auth()->user();
+        if (in_array($user->role, ['guru', 'staf_tu']) && $questionBank->created_by !== $user->id) {
+            abort(403, 'Anda hanya dapat menghapus butir soal yang Anda buat sendiri.');
+        }
+
         if ($questionBank->question_image) {
             Storage::disk('public')->delete($questionBank->question_image);
         }

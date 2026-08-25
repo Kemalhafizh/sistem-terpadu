@@ -298,6 +298,12 @@ class ElearningController extends Controller
      */
     public function viewSubmissions(ElearningAssignment $elearningAssignment)
     {
+        $user = auth()->user();
+        $classTeacherId = $elearningAssignment->elearningClass->teacher_id ?? null;
+        if (in_array($user->role, ['guru', 'staf_tu']) && $classTeacherId !== $user->id) {
+            abort(403, 'Anda hanya dapat melihat pengumpulan tugas dari kelas yang Anda ampu.');
+        }
+
         $submissions = $elearningAssignment->submissions()->with('student.user')->get();
 
         return view('elearning.submissions', compact('elearningAssignment', 'submissions'));
@@ -308,6 +314,12 @@ class ElearningController extends Controller
      */
     public function gradeSubmission(Request $request, ElearningSubmission $elearningSubmission)
     {
+        $user = auth()->user();
+        $classTeacherId = $elearningSubmission->assignment->elearningClass->teacher_id ?? null;
+        if (in_array($user->role, ['guru', 'staf_tu']) && $classTeacherId !== $user->id) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menilai pengumpulan tugas ini.');
+        }
+
         $validated = $request->validate([
             'score' => 'required|numeric|min:0|max:100',
             'feedback' => 'nullable|string',

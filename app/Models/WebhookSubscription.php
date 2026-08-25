@@ -13,20 +13,25 @@ class WebhookSubscription extends Model
     protected $table = 'webhook_subscriptions';
 
     protected $fillable = [
-        'user_id',
+        'name',
         'target_url',
-        'event_types',
-        'secret',
+        'secret_key',
+        'events',
         'is_active',
     ];
 
     protected $casts = [
-        'event_types' => 'array',
+        'events' => 'array',
         'is_active' => 'boolean',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function deliveries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WebhookDelivery::class, 'webhook_subscription_id');
     }
 }

@@ -1888,3 +1888,10 @@ require __DIR__.'/campus_ops.php';
 require __DIR__.'/family_engagement.php';
 require __DIR__.'/inclusive_education.php';
 require __DIR__.'/green_school.php';
+require __DIR__.'/extended_diamond.php';
+
+// --- Mobile Universal Links & Android App Links (.well-known) ---
+Route::get('/.well-known/assetlinks.json', [\App\Http\Controllers\WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');
+Route::get('/.well-known/apple-app-site-association', [\App\Http\Controllers\WellKnownController::class, 'appleAppSiteAssociation'])->name('well-known.apple-app-site-association');
+
+

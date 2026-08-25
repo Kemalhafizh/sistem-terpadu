@@ -11,6 +11,10 @@ use App\Http\Controllers\Api\v1\ApiTeacherController;
 use App\Http\Controllers\Api\v1\ApiGeneralController;
 use App\Http\Controllers\Api\V1\StudentApiController;
 use App\Http\Controllers\Api\V1\ExternalIntegrationApiController;
+use App\Http\Controllers\Api\V1\Mobile\MobileAuthController;
+use App\Http\Controllers\Api\V1\Mobile\MobileConfigController;
+use App\Http\Controllers\Api\V1\Mobile\MobileAttendanceController;
+use App\Http\Controllers\Api\V1\Mobile\MobileSyncController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -37,8 +41,12 @@ Route::post('/midtrans/webhook', [MidtransWebhookController::class, 'handleWebho
 // =========================================================================
 Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(function () {
 
-  // === PUBLIC AUTH ===
+  // === PUBLIC AUTH & APP CONFIG ===
   Route::post('login', [ApiAuthController::class, 'login'])->middleware('throttle:login');
+  Route::get('mobile/config', [MobileConfigController::class, 'getConfig']);
+  Route::post('mobile/auth/login', [MobileAuthController::class, 'login'])->middleware('throttle:login');
+  Route::post('mobile/auth/biometric/challenge', [MobileAuthController::class, 'biometricChallenge']);
+  Route::post('mobile/auth/biometric/verify', [MobileAuthController::class, 'biometricVerify']);
 
   // === PROTECTED ENDPOINTS ===
   Route::middleware('auth:sanctum')->group(function () {
@@ -47,6 +55,19 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     Route::post('logout', [ApiAuthController::class, 'logout']);
     Route::post('refresh-token', [ApiAuthController::class, 'refreshToken']);
     Route::get('me', [ApiAuthController::class, 'me']);
+
+    // Mobile Multi-Device & Biometrics
+    Route::post('mobile/auth/biometric/register', [MobileAuthController::class, 'registerBiometric']);
+    Route::get('mobile/devices', [MobileAuthController::class, 'getActiveDevices']);
+    Route::delete('mobile/devices/{deviceId}', [MobileAuthController::class, 'revokeDevice']);
+
+    // Mobile GPS Attendance & Dynamic QR
+    Route::post('mobile/attendance/gps-checkin', [MobileAttendanceController::class, 'gpsCheckin']);
+    Route::get('mobile/attendance/dynamic-qr', [MobileAttendanceController::class, 'generateDynamicQr']);
+    Route::post('mobile/attendance/verify-qr', [MobileAttendanceController::class, 'verifyDynamicQr']);
+
+    // Mobile Delta-Sync Engine
+    Route::get('mobile/sync/pull', [MobileSyncController::class, 'pullDelta']);
     
     // General Profile (Backward Compatibility)
     Route::get('profile', [AuthController::class, 'profile'])->middleware('throttle:30,1');

@@ -43,7 +43,7 @@ class CharityController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:150',
             'type' => 'required|in:zakat,infaq,shodaqoh,wakaf',
             'description' => 'required|string',
@@ -51,7 +51,7 @@ class CharityController extends Controller
             'end_date' => 'nullable|date|after_or_equal:today',
         ]);
 
-        $this->charityService->createCampaign($request->all());
+        $this->charityService->createCampaign($validated);
 
         return redirect()->route('admin.finance.charity.index')
             ->with('success', 'Kampanye donasi baru berhasil dibuat.');
@@ -71,7 +71,7 @@ class CharityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:150',
             'type' => 'required|in:zakat,infaq,shodaqoh,wakaf',
             'description' => 'required|string',
@@ -81,7 +81,7 @@ class CharityController extends Controller
         ]);
 
         $campaign = CharityCampaign::findOrFail($id);
-        $campaign->update($request->all());
+        $campaign->update($validated);
 
         return redirect()->route('admin.finance.charity.index')
             ->with('success', 'Kampanye donasi berhasil diperbarui.');

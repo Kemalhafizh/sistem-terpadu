@@ -46,7 +46,7 @@ test('system renders arabic translation and rtl direction when locale is ar', fu
     app()->setLocale('ar');
 
     $this->assertEquals('لوحة التحكم', __('navigation.dashboard'));
-    $this->assertEquals('ناقل الأحداث المباشر ومركز الويب هوك', __('system.webhooks.title'));
+    $this->assertEquals('مركز الربط الفوري وتدفق الأحداث Webhook Hub', __('system.webhooks.title'));
     $this->assertEquals('حفظ', __('Simpan'));
     $this->assertEquals('حذف', __('Hapus'));
     $this->assertEquals('طباعة PDF', __('Cetak PDF'));
