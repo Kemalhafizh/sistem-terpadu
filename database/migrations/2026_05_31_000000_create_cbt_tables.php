@@ -81,7 +81,7 @@ return new class extends Migration
             $table->integer('unanswered_count')->default(0);
             $table->timestamp('started_at')->nullable();
             $table->timestamp('submitted_at')->nullable();
-            $table->enum('status', ['in_progress', 'submitted', 'graded', 'blocked_violation', 'timeout'])->default('in_progress');
+            $table->enum('status', ['in_progress', 'submitted', 'graded', 'blocked_violation', 'timeout', 'force_closed'])->default('in_progress');
             $table->integer('violation_count')->default(0);
             $table->json('violation_logs')->nullable(); // [{"time": "...", "type": "blur"}]
             $table->boolean('is_auto_submitted')->default(false);

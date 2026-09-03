@@ -32,19 +32,27 @@ class Exam extends Model
         'max_violations',
         'passing_score',
         'status',
+        // Fase 87: Token-Gated Mobile-Only (Berlaku 5 Menit)
+        'access_token',
+        'token_expires_at',
+        'mobile_only',
+        'operator_id',
     ];
 
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'token_expires_at' => 'datetime',
         'shuffle_questions' => 'boolean',
         'shuffle_options' => 'boolean',
         'is_secure_mode' => 'boolean',
+        'mobile_only' => 'boolean',
         'duration_minutes' => 'integer',
         'total_questions' => 'integer',
         'max_violations' => 'integer',
         'passing_score' => 'decimal:2',
     ];
+
 
     public function subject(): BelongsTo
     {
@@ -65,6 +73,15 @@ class Exam extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    /**
+     * Fase 87: Guru Operator Ujian (untuk UTS/UAS).
+     */
+    public function operator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'operator_id');
+    }
+
 
     public function questions(): BelongsToMany
     {
@@ -97,5 +114,42 @@ class Exam extends Model
     {
         $now = now();
         return $this->isPublished() && $now->between($this->start_time, $this->end_time);
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function ($exam) {
+            if (!empty($exam->access_token) && empty($exam->token_expires_at)) {
+                $exam->token_expires_at = now()->addMinutes(5);
+            }
+        });
+    }
+
+    /**
+     * Cek apakah token ujian sudah kedaluwarsa (> 5 menit).
+     */
+    public function isTokenExpired(): bool
+    {
+        if (empty($this->access_token)) {
+            return true;
+        }
+        if (empty($this->token_expires_at)) {
+            if ($this->updated_at) {
+                return now()->gt($this->updated_at->copy()->addMinutes(5));
+            }
+            return false;
+        }
+        return now()->gt($this->token_expires_at);
+    }
+
+    /**
+     * Hitung sisa detik masa berlaku token (dari total 300 detik / 5 menit).
+     */
+    public function getTokenRemainingSeconds(): int
+    {
+        if (empty($this->token_expires_at)) {
+            return 300;
+        }
+        return max(0, (int) now()->diffInSeconds($this->token_expires_at, false));
     }
 }

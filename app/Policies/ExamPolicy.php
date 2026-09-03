@@ -12,7 +12,7 @@ class ExamPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['guru', 'siswa', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']);
+        return in_array($user->role, ['guru', 'siswa', 'student', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']);
     }
 
     /**
@@ -28,7 +28,7 @@ class ExamPolicy
             return $exam->created_by === $user->id;
         }
 
-        if ($user->role === 'siswa') {
+        if (in_array($user->role, ['siswa', 'student'])) {
             // Null classroom means open to all, or classroom matches student classroom
             return is_null($exam->classroom_id) || $exam->classroom_id === $user->student?->classroom_id;
         }
@@ -85,7 +85,7 @@ class ExamPolicy
      */
     public function take(User $user, Exam $exam): bool
     {
-        if ($user->role !== 'siswa') {
+        if (!in_array($user->role, ['siswa', 'student'])) {
             return false;
         }
 

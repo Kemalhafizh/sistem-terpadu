@@ -1,0 +1,299 @@
+<?php
+
+namespace App\Services;
+
+use App\Events\ProctorInterventionEvent;
+use App\Models\CbtEssaySubmission;
+use App\Models\CbtProctorLog;
+use App\Models\Exam;
+use App\Models\ExamAttempt;
+use App\Models\QuestionBank;
+use App\Models\Student;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+class CbtEnterpriseService
+{
+    protected CbtService $cbtService;
+
+    public function __construct(CbtService $cbtService)
+    {
+        $this->cbtService = $cbtService;
+    }
+
+    /**
+     * Generate an AES-256-CBC encrypted payload of exam questions for zero-downtime pre-fetching.
+     */
+    public function generateEncryptedPayload(Exam $exam, Student $student): array
+    {
+        $attempt = ExamAttempt::firstOrCreate(
+            ['exam_id' => $exam->id, 'student_id' => $student->id],
+            [
+                'uuid' => (string) Str::uuid(),
+                'status' => 'in_progress',
+                'started_at' => now(),
+            ]
+        );
+
+        $orderedIds = $this->cbtService->getOrInitializeQuestionOrder($exam, $student, $attempt);
+        $questions = $exam->questions->keyBy('id');
+
+        $payload = [];
+        $number = 1;
+        foreach ($orderedIds as $qId) {
+            if (isset($questions[$qId])) {
+                $q = $questions[$qId];
+                $shuffledOptions = $this->cbtService->getShuffledOptions($q, $student->id, $exam->id);
+                
+                $optionsFormatted = [];
+                if (is_array($shuffledOptions)) {
+                    foreach ($shuffledOptions as $key => $val) {
+                        $optionsFormatted[] = [
+                            'key' => (string) $key,
+                            'text' => (string) $val,
+                        ];
+                    }
+                }
+
+                $payload[] = [
+                    'id' => $q->id,
+                    'number' => $number++,
+                    'type' => $q->type,
+                    'question_text' => $q->question_text,
+                    'image_url' => $q->question_image ? url($q->question_image) : null,
+                    'options' => $optionsFormatted,
+                ];
+            }
+        }
+
+        $jsonPayload = json_encode([
+            'exam_id' => $exam->id,
+            'title' => $exam->title,
+            'subject' => $exam->subject->name ?? 'Mata Pelajaran',
+            'duration_minutes' => (int) $exam->duration_minutes,
+            'total_questions' => count($payload),
+            'questions' => $payload,
+        ]);
+
+        $key = $this->deriveExamKey($exam);
+        $iv = openssl_random_pseudo_bytes(16);
+        $encrypted = openssl_encrypt($jsonPayload, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+
+        return [
+            'exam_id' => $exam->id,
+            'encrypted_data' => base64_encode($encrypted),
+            'iv' => base64_encode($iv),
+            'format' => 'aes-256-cbc',
+            'fetched_at' => now()->toIso8601String(),
+        ];
+    }
+
+    /**
+     * Get the decryption key for an exam if the scheduled time has arrived.
+     */
+    public function getDecryptionKey(Exam $exam, Student $student): array
+    {
+        // Allow decryption starting 10 minutes before exam start up until exam end
+        $graceStart = $exam->start_time ? $exam->start_time->copy()->subMinutes(10) : now()->subMinutes(10);
+        $isAccessible = now()->gte($graceStart);
+
+        if (!$isAccessible) {
+            return [
+                'accessible' => false,
+                'message' => 'Ujian belum dimulai. Kunci dekripsi akan dibagikan saat waktu ujian tiba.',
+                'starts_at' => $exam->start_time ? $exam->start_time->toIso8601String() : null,
+            ];
+        }
+
+        $key = $this->deriveExamKey($exam);
+
+        return [
+            'accessible' => true,
+            'exam_id' => $exam->id,
+            'key' => base64_encode($key),
+            'valid_until' => $exam->end_time ? $exam->end_time->toIso8601String() : now()->addHours(3)->toIso8601String(),
+        ];
+    }
+
+    /**
+     * Process micro-batched student answers using fast Cache/Redis and update ExamAttempt.
+     */
+    public function processMicroBatchAnswers(Exam $exam, Student $student, array $answers): array
+    {
+        $cacheKey = "cbt_answers_{$exam->id}_{$student->id}";
+        $existing = Cache::get($cacheKey, []);
+        foreach ($answers as $qId => $ans) {
+            $existing[(string) $qId] = (string) $ans;
+        }
+        $merged = $existing;
+
+        // Store in Redis/Cache for 6 hours
+        Cache::put($cacheKey, $merged, now()->addHours(6));
+
+        // Asynchronously or directly persist in ExamAttempt
+        $attempt = ExamAttempt::firstOrCreate(
+            ['exam_id' => $exam->id, 'student_id' => $student->id],
+            [
+                'uuid' => (string) Str::uuid(),
+                'status' => 'in_progress',
+                'started_at' => now(),
+            ]
+        );
+
+        $attempt->update([
+            'answers' => $merged,
+            'status' => 'in_progress',
+        ]);
+
+        return [
+            'synced_count' => count($merged),
+            'synced_at' => now()->toIso8601String(),
+            'status' => 'saved',
+        ];
+    }
+
+    /**
+     * Handle student essay handwritten sheet photo upload with compression.
+     */
+    public function handleEssayUpload(Exam $exam, Student $student, int $questionId, UploadedFile $file, ?string $notes = null): CbtEssaySubmission
+    {
+        $attempt = ExamAttempt::firstOrCreate(
+            ['exam_id' => $exam->id, 'student_id' => $student->id],
+            [
+                'uuid' => (string) Str::uuid(),
+                'status' => 'in_progress',
+                'started_at' => now(),
+            ]
+        );
+
+        $filename = 'essay_' . $exam->id . '_' . $student->id . '_' . $questionId . '_' . time() . '.jpg';
+        $destinationPath = storage_path('app/public/cbt/essays/' . $exam->id);
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $targetFile = $destinationPath . '/' . $filename;
+        $fileSize = $file->getSize();
+
+        // Compress image using GD if available
+        if (function_exists('imagecreatefromstring') && function_exists('imagejpeg')) {
+            $sourceData = file_get_contents($file->getRealPath());
+            $image = @imagecreatefromstring($sourceData);
+            if ($image !== false) {
+                // Resize if width > 1200
+                $origWidth = imagesx($image);
+                $origHeight = imagesy($image);
+                if ($origWidth > 1200) {
+                    $newWidth = 1200;
+                    $newHeight = (int) ($origHeight * (1200 / $origWidth));
+                    $resized = imagecreatetruecolor($newWidth, $newHeight);
+                    imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+                    imagedestroy($image);
+                    $image = $resized;
+                }
+                // Save compressed with quality 75
+                imagejpeg($image, $targetFile, 75);
+                imagedestroy($image);
+                $fileSize = file_exists($targetFile) ? filesize($targetFile) : $fileSize;
+            } else {
+                $file->move($destinationPath, $filename);
+            }
+        } else {
+            $file->move($destinationPath, $filename);
+        }
+
+        $relativePath = 'uploads/cbt/essays/' . $exam->id . '/' . $filename;
+
+        return CbtEssaySubmission::updateOrCreate(
+            [
+                'exam_attempt_id' => $attempt->id,
+                'question_id' => $questionId,
+            ],
+            [
+                'file_path' => $relativePath,
+                'file_size' => $fileSize,
+                'mime_type' => 'image/jpeg',
+                'student_notes' => $notes,
+            ]
+        );
+    }
+
+    /**
+     * Proctor broadcasts a warning modal to student(s).
+     */
+    public function proctorBroadcastWarning(int $examId, ?int $studentId, string $message, int $proctorId): CbtProctorLog
+    {
+        $log = CbtProctorLog::create([
+            'exam_id' => $examId,
+            'student_id' => $studentId,
+            'proctor_id' => $proctorId,
+            'action_type' => 'warning_modal',
+            'reason' => $message,
+            'payload' => ['message' => $message],
+        ]);
+
+        broadcast(new ProctorInterventionEvent($examId, $studentId, 'WARNING_MODAL', $message));
+
+        return $log;
+    }
+
+    /**
+     * Proctor forces submit and locks an attempt for severe cheating.
+     */
+    public function proctorForceSubmit(int $examId, int $studentId, string $reason, int $proctorId): CbtProctorLog
+    {
+        $attempt = ExamAttempt::where('exam_id', $examId)
+            ->where('student_id', $studentId)
+            ->first();
+
+        if ($attempt) {
+            $attempt->update([
+                'status' => 'blocked_violation',
+                'submitted_at' => now(),
+                'is_auto_submitted' => true,
+            ]);
+        }
+
+        $log = CbtProctorLog::create([
+            'exam_id' => $examId,
+            'student_id' => $studentId,
+            'proctor_id' => $proctorId,
+            'action_type' => 'force_submit',
+            'reason' => $reason,
+            'payload' => ['reason' => $reason],
+        ]);
+
+        broadcast(new ProctorInterventionEvent($examId, $studentId, 'FORCE_SUBMIT', $reason));
+
+        return $log;
+    }
+
+    /**
+     * Proctor extends time for a student.
+     */
+    public function proctorExtendTime(int $examId, int $studentId, int $minutes, int $proctorId): CbtProctorLog
+    {
+        $log = CbtProctorLog::create([
+            'exam_id' => $examId,
+            'student_id' => $studentId,
+            'proctor_id' => $proctorId,
+            'action_type' => 'extend_time',
+            'reason' => "Tambahan waktu {$minutes} menit.",
+            'payload' => ['extra_minutes' => $minutes],
+        ]);
+
+        broadcast(new ProctorInterventionEvent($examId, $studentId, 'EXTEND_TIME', "Waktu ujian diperpanjang {$minutes} menit.", $minutes));
+
+        return $log;
+    }
+
+    /**
+     * Derive a deterministic 32-byte key for an exam.
+     */
+    protected function deriveExamKey(Exam $exam): string
+    {
+        return hash('sha256', "cbt_exam_secret_{$exam->id}_{$exam->created_at}", true);
+    }
+}

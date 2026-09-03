@@ -334,6 +334,7 @@ test('student cannot create exams', function () {
 });
 
 test('student can access take exam page for published ongoing exam', function () {
+    $this->exam->update(['mobile_only' => false]);
     $this->actingAs($this->studentUserA)->get(route('cbt.exams.take', $this->exam))->assertOk();
 });
 

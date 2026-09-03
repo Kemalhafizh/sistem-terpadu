@@ -73,7 +73,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     Route::get('profile', [AuthController::class, 'profile'])->middleware('throttle:30,1');
 
     // === NEW SISWA SCOPED ===
-    Route::prefix('student')->middleware('role:student')->group(function () {
+    Route::prefix('student')->middleware('role:student,siswa')->group(function () {
       Route::get('profile', [ApiStudentController::class, 'profile']);
       Route::get('schedule', [ApiStudentController::class, 'schedule']);
       Route::get('grades', [ApiStudentController::class, 'grades']);
@@ -86,6 +86,17 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::get('cbt/exams', [ApiStudentController::class, 'cbtExams']);
       Route::get('cbt/exams/{id}/questions', [ApiStudentController::class, 'cbtExamQuestions']);
       Route::post('cbt/exams/{id}/submit', [ApiStudentController::class, 'cbtSubmitExam']);
+      
+      // FASE 86: CBT Enterprise Maximization
+      Route::get('cbt/exams/{id}/encrypted-payload', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'encryptedPayload']);
+      Route::get('cbt/exams/{id}/decryption-key', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'decryptionKey']);
+      Route::post('cbt/exams/{id}/micro-sync', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'microSync']);
+      Route::post('cbt/exams/{id}/upload-essay', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'uploadEssay']);
+
+      // FASE 87: CBT Token-Gated & Force-Close
+      Route::post('cbt/exams/{id}/validate-token', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'validateToken']);
+      Route::post('cbt/exams/{id}/force-close', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'forceClose']);
+
       Route::get('notifications', [ApiStudentController::class, 'notifications']);
       Route::post('notifications/{id}/read', [ApiStudentController::class, 'markNotificationRead']);
     });
@@ -110,6 +121,16 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::post('attendance', [ApiTeacherController::class, 'storeAttendance']);
       Route::get('journals', [ApiTeacherController::class, 'journals']);
       Route::post('journals', [ApiTeacherController::class, 'storeJournal']);
+
+      // FASE 86: Proctor Live Interventions
+      Route::post('cbt/exams/{id}/proctor/warning', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'proctorWarning']);
+      Route::post('cbt/exams/{id}/proctor/force-submit', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'proctorForceSubmit']);
+      Route::post('cbt/exams/{id}/proctor/extend-time', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'proctorExtendTime']);
+
+      // FASE 87: CBT Token Distribution & Student Reset
+      Route::get('cbt/exams/{id}/token', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'getToken']);
+      Route::post('cbt/exams/{id}/token/regenerate', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'regenerateToken']);
+      Route::post('cbt/exams/{id}/token/reset-student', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'resetStudent']);
     });
 
     // === UNIVERSAL GENERAL ===
@@ -197,8 +218,22 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::post('cdn/resolve', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'resolveAsset']);
       Route::get('cdn/nodes', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'getNodes']);
     });
+
+    // =====================================================================
+    // FASE 85: DEBLOAT, PENYEDERHANAAN & PRAGMATISME ARSITEKTUR
+    // =====================================================================
+    Route::prefix('debloat')->group(function () {
+      Route::post('certificates/issue', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'issueCertificate']);
+      Route::get('students/{studentId}/at-risk', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'evaluateAtRisk']);
+      Route::post('sync/queue', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'syncQueue']);
+      Route::get('sync/pull', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'syncPull']);
+    });
   });
 
-  // Public Web3 Credential Verification Endpoint
+  // Public Web3 & Pragmatic Digital Verification Endpoints
   Route::get('blockchain/credentials/verify/{certificateNumber}', [\App\Http\Controllers\Blockchain\BlockchainCredentialController::class, 'verifyPublic']);
+  Route::get('certificates/verify/{documentNumber}', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'verifyCertificate']);
+  Route::get('debloat/module-catalog', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'getModuleCatalog']);
+  Route::get('debloat/vps/health', [\App\Http\Controllers\Debloat\PragmaticDebloatApiController::class, 'getVpsHealth']);
 });
+

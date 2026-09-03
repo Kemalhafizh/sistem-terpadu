@@ -27,6 +27,12 @@ class ExamAttempt extends Model
         'violation_count',
         'violation_logs',
         'is_auto_submitted',
+        // Fase 87: Token-Gated Mobile-Only
+        'access_platform',
+        'used_token',
+        'token_validated_at',
+        'force_closed',
+        'force_close_reason',
     ];
 
     protected $casts = [
@@ -39,7 +45,9 @@ class ExamAttempt extends Model
         'unanswered_count' => 'integer',
         'started_at' => 'datetime',
         'submitted_at' => 'datetime',
+        'token_validated_at' => 'datetime',
         'is_auto_submitted' => 'boolean',
+        'force_closed' => 'boolean',
         'violation_count' => 'integer',
     ];
 

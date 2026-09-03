@@ -4388,3 +4388,305 @@ resources/views/admin/security-audit/
 |-- data-privacy.blade.php        # Manajemen permintaan privasi data
 |-- compliance-report.blade.php   # Laporan kepatuhan
 ```
+
+---
+
+## 🧹 FASE 85: DEBLOAT, PENYEDERHANAAN & PRAGMATISME ARSITEKTUR `[SELESAI 100% ✅]`
+
+Karena SuperApp SISTA secara eksklusif dibangun hanya untuk **satu institusi spesifik** (SMA Islam Sultan Agung 1 Semarang), kita merampingkan kode dan menyederhanakan arsitektur level *Tech Startup/SaaS* yang berlebihan (overkill). Fase ini berfokus memangkas biaya server, meniadakan kompleksitas yang tidak perlu, dan menstabilkan alur kerja agar 100% pragmatis untuk kebutuhan sekolah.
+
+---
+
+### [x] 85.1: Penghapusan Sistem Blockchain / Web3 & Penggantian dengan Verifikasi Ijazah/Sertifikat Digital Statis
+Sistem sekolah menengah tidak memerlukan *Smart Contract* atau Ijazah berbasis *Ledger Kriptografi*.
+- [x] **Aksi Debloat & Pengganti:** Ijazah, transkrip nilai, dan e-sertifikat tahfidz digenerate dengan verifikasi SHA-256 dan tautan QR statis instan (`https://sista.sultanagung1.sch.id/verify/{nomor-dokumen}`).
+- [x] **Model & Migration:** `DigitalVerification.php`, migration `2026_08_27_000001_create_pragmatic_debloat_tables.php`.
+- [x] **Service & Controller:** `DigitalCertificateVerificationService.php`, `PragmaticDebloatApiController@verifyCertificate`, `PragmaticDebloatApiController@issueCertificate`.
+- [x] **Endpoints:**
+  - `GET /api/v1/certificates/verify/{documentNumber}` (Public)
+  - `POST /api/v1/debloat/certificates/issue` (Auth)
+
+---
+
+### [x] 85.2: Penghapusan CCTV Facial Recognition & AI Kompleks & Penggantian dengan Layanan Ringan & Rules-Based
+Pemrosesan *Facial Recognition* dari CCTV dan hosting model LLM Generative AI memakan biaya infrastruktur GPU yang masif dan tidak *feasible* untuk operasional IT sekolah.
+- [x] **Aksi Debloat & Pengganti:**
+  - **Presensi:** Standardisasi pada Geofence GPS (<250m) dan pemindai QR Code statis gerbang sekolah.
+  - **Deteksi Siswa Bermasalah (At-Risk):** Menggunakan evaluasi aturan deterministik transparan: `IF (alpha >= 3 OR poin_pelanggaran >= 40 OR gpa < 70.0) -> Buat AtRiskAlert & tugaskan Guru BK`.
+- [x] **Model & Migration:** `AtRiskAlert.php`.
+- [x] **Service & Controller:** `PragmaticAtRiskStudentService.php`, `PragmaticDebloatApiController@evaluateAtRisk`.
+- [x] **Endpoint:** `GET /api/v1/debloat/students/{studentId}/at-risk` (Auth).
+
+---
+
+### [x] 85.3: Penghapusan Infrastruktur Cloud Kubernetes & Standarisasi Single VPS Deployment
+Sekolah dengan populasi 1.000–2.000 siswa dan staf tidak membutuhkan *Private Cloud*, *Auto-Scaling Pods*, atau *Edge CDN*.
+- [x] **Aksi Debloat & Pengganti:** Standardisasi arsitektur pada **1 buah Virtual Private Server (VPS)** spesifikasi 8-Core vCPU / 16GB RAM (Nginx + PHP 8.4 + MySQL + Redis) dengan estimasi biaya Rp 650.000 - Rp 950.000 / bulan (hemat 90% dibanding cloud multi-cluster).
+- [x] **Model & Migration:** `VpsServerHealthLog.php`.
+- [x] **Service & Controller:** `SingleVpsInfrastructureService.php`, `PragmaticDebloatApiController@getVpsHealth`.
+- [x] **Endpoint:** `GET /api/v1/debloat/vps/health` (Public).
+
+---
+
+### [x] 85.4: Penyederhanaan Protokol Sinkronisasi Offline & Arsitektur Monolitik Modul
+Arsitektur penemuan modul ala WeChat dan protokol delta sync yang rumit (*vector clocks / conflict resolvers*) digantikan dengan sistem antrean transaksi FIFO yang deterministik dan katalog modul statis.
+- [x] **Aksi Debloat & Pengganti:**
+  - **FIFO Offline Sync Queue:** Memproses aksi presensi dan log mutabaah secara sekuensial dengan pengecekan idempoten berdasarkan `client_uuid`.
+  - **Quick Pull API:** Menarik ringkasan jadwal hari ini, nilai rapor terbaru, dan pengumuman sekolah dalam satu roundtrip ringan.
+  - **Static Monolithic Catalog:** Katalog 10 modul esensial SMA Islam Sultan Agung 1 Semarang.
+- [x] **Models & Migration:** `OfflineSyncQueue.php`, `StaticModuleCatalog.php`.
+- [x] **Services & Controller:** `PragmaticSyncService.php`, `PragmaticModuleCatalogService.php`, `PragmaticDebloatApiController@syncQueue`, `PragmaticDebloatApiController@syncPull`, `PragmaticDebloatApiController@getModuleCatalog`.
+- [x] **Endpoints:**
+  - `POST /api/v1/debloat/sync/queue` (Auth)
+  - `GET /api/v1/debloat/sync/pull` (Auth)
+  - `GET /api/v1/debloat/module-catalog` (Public)
+
+---
+
+### [x] 85.5: Pembersihan Database & Verifikasi Test Suite 100%
+- [x] **Migration:** `2026_08_27_000001_create_pragmatic_debloat_tables.php` sukses dijalankan.
+- [x] **Automated Tests:** `tests/Feature/SuperApp/Fase85DebloatPragmatismTest.php` (5 tests, 107 assertions, PASS).
+- [x] **Full SuperApp Suite:** 38 tests, 212 assertions lolos 100% tanpa regresi.
+- [x] **Hasil Akhir:** Backend Laravel SISTA menjadi platform yang cepat, ringan, hemat biaya operasional server, dan berfokus penuh pada operasional nyata SMA Islam Sultan Agung 1 Semarang.
+
+---
+
+## 🚀 FASE 86: CBT ENTERPRISE MAXIMIZATION & ZERO-DOWNTIME ARCHITECTURE `[SELESAI 100% ✅]`
+
+Untuk memastikan keandalan Ujian CBT (Computer-Based Test) di skala ribuan siswa secara bersamaan, sistem backend CBT yang sudah ada telah dimaksimalkan dengan standar enterprise dan fokus pada *Zero-Downtime* meskipun server mengalami lonjakan trafik (*spike*) saat ujian dimulai.
+
+### [x] 86.1: Zero-Downtime Encrypted Pre-Fetching
+- **Konsep:** Siswa mengunduh soal CBT secara terenkripsi AES-256-CBC pada H-1 jam sebelum ujian (Pre-Fetch) tanpa bisa membuka soalnya secara prematur.
+- **Mekanisme:** 
+  - Kunci dekripsi (AES Key) ditarik saat waktu ujian telah tiba via WebSocket atau API endpoint cepat.
+  - Menghilangkan ribuan request `GET /questions` di detik pertama ujian yang biasa menyebabkan server *down*.
+- **Endpoint:**
+  - `GET /api/v1/student/cbt/exams/{id}/encrypted-payload` (Mengembalikan JSON yang dienkripsi AES-256).
+  - `GET /api/v1/student/cbt/exams/{id}/decryption-key` (Mengembalikan kunci saat jadwal aktif).
+
+### [x] 86.2: Redis Micro-Batching Answer Sync
+- **Solusi:** Menyimpan jawaban berkala ke dalam cache berkinerja tinggi (Redis/Cache) dan memutakhirkan `ExamAttempt` secara idempoten tanpa membebani I/O MySQL.
+- **Endpoint:** `POST /api/v1/student/cbt/exams/{id}/micro-sync` (Menerima batch jawaban `{question_id: selected_key}`).
+
+### [x] 86.3: Upload Berkas Jawaban Essay (Auto-Compression)
+- Mendukung ujian Matematika/Fisika di mana siswa memfoto langkah-langkah rumus tulis tangan.
+- Endpoint upload dikonfigurasi dengan auto-compression (maksimal width 1200px, quality 75) sebelum disimpan untuk menghemat *storage* VPS.
+- **Model & Migration:** `CbtEssaySubmission.php`, `2026_09_03_000001_create_cbt_enterprise_tables.php`.
+- **Endpoint:** `POST /api/v1/student/cbt/exams/{id}/upload-essay`.
+
+### [x] 86.4: Proctor Live Interventions & Force Actions
+- Peningkatan pada Pengawasan Guru (Proctor Command Center):
+  - **Broadcast Warning:** Kirim peringatan spesifik ke 1 siswa yang akan memunculkan *Pop-Up Dialog* di layar Android siswa.
+  - **Force Submit:** Memaksa ujian siswa selesai dan tertutup otomatis jika terbukti melakukan kecurangan fatal.
+  - **Add Extra Time:** Memberikan kompensasi waktu tambahan untuk siswa tertentu jika perangkatnya bermasalah.
+- **Event & Model:** `ProctorInterventionEvent.php`, `CbtProctorLog.php`.
+- **Endpoints:**
+  - `POST /api/v1/teacher/cbt/exams/{id}/proctor/warning`
+  - `POST /api/v1/teacher/cbt/exams/{id}/proctor/force-submit`
+  - `POST /api/v1/teacher/cbt/exams/{id}/proctor/extend-time`
+
+### [x] 86.5: Verifikasi Pengujian Otomatis (100% PASS)
+- **Feature Tests:** `tests/Feature/Cbt/CbtEnterpriseMaximizationTest.php` (6 tests, 38 assertions, PASS).
+- **Seluruh CBT Test Suite:** `tests/Feature/Cbt/` (26 tests, 98 assertions, PASS 100%).
+
+---
+
+## 🔐 FASE 87: TOKEN-GATED MOBILE-ONLY CBT ACCESS CONTROL `[SELESAI 100% ✅]`
+
+Menerapkan kebijakan akses ujian CBT yang ketat: **siswa hanya bisa mengerjakan ujian dari Aplikasi Android SISTA**, bukan dari website. Akses ujian dikunci dengan **Token Masuk 6 Digit** yang dihasilkan secara unik per sesi ujian. Jika siswa meninggalkan aplikasi (minimize, close, split-screen) saat berada di modul CBT, **ujian otomatis ditutup paksa dan memerlukan token ulang**. Otorisasi token dibedakan berdasarkan jenis ujian.
+
+### 🎯 87.1: Filosofi Desain Akses 2 Lapis
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                     SUPER WEB (Browser)                         │
+  │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
+  │  │ Dashboard    │  │ Rapor/Nilai  │  │ CBT Admin (CRUD Soal)  │ │
+  │  │ Pengumuman   │  │ Presensi     │  │ ✅ Guru bisa kelola    │ │
+  │  │ Chat Guru    │  │ SPP Billing  │  │ ❌ Siswa TIDAK bisa    │ │
+  │  │ ✅ Siswa OK  │  │ ✅ Siswa OK  │  │    mengerjakan ujian!  │ │
+  │  └──────────────┘  └──────────────┘  └────────────────────────┘ │
+  └──────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                 SISTA ANDROID (Native App)                      │
+  │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
+  │  │ Dashboard    │  │ Rapor/Nilai  │  │ CBT Exam Room          │ │
+  │  │ Pengumuman   │  │ Presensi     │  │ ✅ Siswa bisa masuk    │ │
+  │  │ Chat Guru    │  │ SPP Billing  │  │ ✅ HANYA dari app ini  │ │
+  │  │ ✅ Siswa OK  │  │ ✅ Siswa OK  │  │ 🔑 Wajib Token Masuk  │ │
+  │  └──────────────┘  └──────────────┘  └────────────────────────┘ │
+  └──────────────────────────────────────────────────────────────────┘
+```
+
+### 📊 87.2: Skema Otorisasi Token Berdasarkan Jenis Ujian
+
+| Jenis Ujian | Siapa Pemegang Token | Mekanisme Distribusi |
+|---|---|---|
+| **UTS (Ujian Tengah Semester)** | **Operator Ujian** (guru yang ditunjuk panitia ujian) | Token di-generate otomatis per sesi ujian. Hanya terlihat di Dashboard Operator Ujian. Guru pengawas kelas **TIDAK** bisa melihat token. |
+| **UAS / PAS (Penilaian Akhir Semester)** | **Operator Ujian** (guru yang ditunjuk panitia ujian) | Sama dengan UTS. Token dikelola terpusat oleh panitia ujian. |
+| **Ulangan Harian / PHB** | **Guru Mata Pelajaran** yang membuat ujian | Token otomatis muncul di Dashboard Guru saat ujian aktif. Guru sendiri yang memberikan token ke siswanya secara lisan di kelas. |
+| **Try Out** | **Guru Mata Pelajaran** yang membuat ujian | Sama dengan Ulangan Harian. |
+
+### 🗄️ 87.3: Perubahan Database (Migration)
+
+**[NEW] `database/migrations/2026_09_03_000002_add_cbt_access_control_columns.php`**
+
+```php
+// Tabel exams — kolom baru:
+$table->string('access_token', 6)->nullable();           // Token 6 digit alfanumerik (UPPERCASE)
+$table->boolean('mobile_only')->default(true);           // Wajib akses dari app Android
+$table->foreignId('operator_id')->nullable()             // Guru operator ujian (untuk UTS/UAS)
+      ->constrained('users')->nullOnDelete();
+
+// Tabel exam_attempts — kolom baru:
+$table->string('access_platform')->nullable();           // 'android' | 'web' — mencatat dari mana siswa akses
+$table->string('used_token')->nullable();                // Token yang dipakai siswa saat masuk
+$table->timestamp('token_validated_at')->nullable();     // Waktu validasi token
+$table->boolean('force_closed')->default(false);         // Apakah ujian ditutup paksa karena keluar app
+$table->string('force_close_reason')->nullable();        // Alasan: 'app_minimized', 'app_closed', 'split_screen'
+```
+
+### 🔑 87.4: Mekanisme Generate & Validasi Token
+
+**A. Generate Token (Backend)**
+- Token di-generate otomatis saat `Exam` berstatus `published` dan `start_time` telah tiba.
+- Format: 6 karakter alfanumerik UPPERCASE, contoh: `K7X4M2`.
+- Token di-regenerate jika operator meminta reset (misalnya token bocor).
+- Token disimpan di kolom `exams.access_token`.
+
+**B. Siapa yang Bisa Melihat Token**
+- **UTS/UAS:** Hanya user dengan `id == exam.operator_id` yang bisa mengakses endpoint `GET /api/v1/teacher/cbt/exams/{id}/token`. Guru pengawas kelas **tidak bisa** melihat endpoint ini.
+- **Ulangan Harian / Try Out:** Hanya user dengan `id == exam.created_by` (guru pembuat ujian) yang bisa mengakses endpoint tersebut.
+
+**C. Validasi Token (Backend)**
+- Siswa mengirim `POST /api/v1/student/cbt/exams/{id}/validate-token` dengan body `{ "token": "K7X4M2" }`.
+- Backend memverifikasi:
+  1. Token cocok dengan `exams.access_token`.
+  2. Request berasal dari platform `android` (cek header `X-SISTA-Platform: android`).
+  3. Ujian sedang aktif (antara `start_time` dan `end_time`).
+  4. Siswa belum memiliki `exam_attempt` yang sudah `submitted` / `graded`.
+- Jika valid: mencatat `exam_attempts.used_token`, `token_validated_at`, `access_platform = 'android'` dan mengembalikan izin masuk.
+
+### 🚫 87.5: Blokir Akses CBT dari Website (Web Controller)
+
+**[MODIFY] `app/Http/Controllers/ExamController.php` → method `take()`**
+
+Saat ini method `take()` di `ExamController` (baris 231) langsung menampilkan Blade view `cbt.exams.take` tanpa pembatasan platform. Perubahan:
+
+```php
+public function take(Exam $exam)
+{
+    // FASE 87: Blokir akses ujian dari browser jika exam.mobile_only = true
+    if ($exam->mobile_only) {
+        return redirect()->route('cbt.exams.index')
+            ->with('error', 'Ujian ini hanya dapat dikerjakan melalui Aplikasi SISTA di HP Anda. Silakan buka aplikasi SISTA di ponsel Anda.');
+    }
+
+    // ... sisa kode existing tetap ada ...
+}
+```
+
+Dengan ini, seluruh ujian CBT yang `mobile_only = true` (default) **mustahil** dikerjakan siswa lewat browser website.
+
+### 💀 87.6: Auto-Close & Force Token Re-Entry (Mekanisme Inti)
+
+**Alur Ketika Siswa Meninggalkan Aplikasi Saat di Modul CBT:**
+
+```
+Siswa di CbtExamRoomScreen
+        │
+        ├──► Minimize App / Swipe Home → ON_PAUSE detected
+        ├──► Close App / Kill Process  → ON_STOP / ON_DESTROY detected
+        ├──► Split Screen              → isInMultiWindowMode detected
+        │
+        ▼
+  CbtAntiCheatEngine mendeteksi
+        │
+        ▼
+  Backend dikirim POST /cbt/exams/{id}/force-close
+  {
+    "reason": "app_minimized" | "app_closed" | "split_screen",
+    "answers_snapshot": { ... jawaban terakhir ... }
+  }
+        │
+        ▼
+  Backend memproses:
+  - exam_attempt.force_closed = true
+  - exam_attempt.force_close_reason = "app_minimized"
+  - exam_attempt.status = 'force_closed'   ← status baru
+  - exam_attempt.submitted_at = now()
+  - Jawaban snapshot disimpan (agar tidak hilang)
+        │
+        ▼
+  Android otomatis:
+  - stopLockTask() → keluar Kiosk Mode
+  - Navigate ke Dashboard
+  - Hapus CbtEncryptedVault
+        │
+        ▼
+  Siswa harus minta Token BARU ke Operator/Guru
+  untuk bisa masuk ulang ke ujian yang sama
+```
+
+**Catatan Penting:**
+- Jawaban terakhir siswa tetap **tersimpan** (snapshot) sehingga tidak hilang sia-sia.
+- Operator/Guru dapat memutuskan: reset `force_closed` menjadi `in_progress` dan generate token baru, atau membiarkan ujian tertutup permanen.
+- Status `force_closed` ditambahkan ke enum `exam_attempts.status`.
+
+### 📡 87.7: Endpoint API Baru
+
+| Method | Endpoint | Role | Deskripsi |
+|---|---|---|---|
+| `GET` | `/api/v1/teacher/cbt/exams/{id}/token` | `guru` (operator/pembuat) | Melihat token masuk ujian aktif |
+| `POST` | `/api/v1/teacher/cbt/exams/{id}/token/regenerate` | `guru` (operator/pembuat) | Regenerate token baru (jika bocor) |
+| `POST` | `/api/v1/teacher/cbt/exams/{id}/token/reset-student` | `guru` (operator/pembuat) | Reset status `force_closed` siswa agar bisa masuk ulang |
+| `POST` | `/api/v1/student/cbt/exams/{id}/validate-token` | `student` | Validasi token masuk ujian dari app Android |
+| `POST` | `/api/v1/student/cbt/exams/{id}/force-close` | `student` | Kirim laporan ujian ditutup paksa karena keluar app |
+
+### 🧱 87.8: Service Layer
+
+**[NEW] `app/Services/CbtAccessControlService.php`**
+
+```php
+class CbtAccessControlService
+{
+    // Token Generation & Visibility
+    public function generateToken(Exam $exam): string;
+    public function regenerateToken(Exam $exam): string;
+    public function canViewToken(User $user, Exam $exam): bool;
+
+    // Token Validation & Platform Check
+    public function validateStudentToken(Exam $exam, Student $student, string $token, string $platform): array;
+    public function isPlatformAllowed(Exam $exam, string $platform): bool;
+
+    // Force Close & Re-Entry
+    public function forceCloseAttempt(Exam $exam, Student $student, string $reason, ?array $answersSnapshot): ExamAttempt;
+    public function resetForceClose(Exam $exam, Student $student, User $operator): ExamAttempt;
+}
+```
+
+### 🧪 87.9: Rencana Pengujian
+
+**[NEW] `tests/Feature/Cbt/CbtAccessControlTest.php`**
+
+1. ✅ Siswa dapat memvalidasi token yang benar dari platform `android`.
+2. ✅ Siswa ditolak jika token salah.
+3. ✅ Siswa ditolak jika platform bukan `android` (misal `web`).
+4. ✅ Operator ujian dapat melihat token untuk ujian UTS/UAS.
+5. ✅ Guru pengawas kelas **TIDAK** bisa melihat token ujian UTS/UAS.
+6. ✅ Guru pembuat ujian dapat melihat token untuk Ulangan Harian.
+7. ✅ Force-close menyimpan snapshot jawaban dan mengubah status attempt.
+8. ✅ Operator dapat mereset status `force_closed` siswa.
+9. ✅ Token regenerate menghasilkan token baru yang berbeda.
+10. ✅ Siswa yang sudah `force_closed` tidak bisa masuk tanpa reset dari operator.
+11. ✅ Web controller `ExamController::take()` memblokir akses jika `mobile_only = true`.
+
+### [x] 87.10: Hasil Verifikasi & Pengujian (100% PASS)
+- **Feature Tests:** `tests/Feature/Cbt/CbtAccessControlTest.php` (11 tests, 34 assertions, **PASS 100%**).
+- **Seluruh CBT Test Suite:** `tests/Feature/Cbt/` (**37 tests, 132 assertions, PASS 100%**).
+  - `CbtAccessControlTest`: 11 passed
+  - `CbtEnterpriseMaximizationTest`: 6 passed
+  - `CbtSecurityTest`: 14 passed
+  - `ItemAnalysisTest`: 6 passed
+
