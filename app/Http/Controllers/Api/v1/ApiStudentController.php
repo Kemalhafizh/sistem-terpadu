@@ -20,6 +20,7 @@ use App\Models\QuestionBank;
 use App\Models\Schedule;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * @group Student Scoped Data v1
@@ -214,16 +215,52 @@ class ApiStudentController extends Controller
      */
     public function cbtExamQuestions(Request $request, $examId)
     {
+        $student = $request->user()->student;
+        if (!$student) {
+            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+        }
+
         $exam = Exam::with('questions')->findOrFail($examId);
 
+        // 1. Otorisasi kepesertaan siswa (kesesuaian kelas)
+        Gate::authorize('take', $exam);
+
+        // 2. Pastikan waktu ujian sedang berlangsung (mencegah kebocoran soal sebelum jadwal)
+        if (!$exam->isOngoing()) {
+            return $this->errorResponse('Ujian belum dibuka atau waktu ujian telah berakhir.', 403);
+        }
+
+        // 3. Pastikan attempt siswa tidak dalam status terkunci atau telah selesai
+        $attempt = ExamAttempt::where('exam_id', $exam->id)->where('student_id', $student->id)->first();
+        if ($attempt && in_array($attempt->status, ['submitted', 'blocked_violation', 'force_closed'], true)) {
+            return $this->errorResponse('Sesi ujian telah selesai atau akses ditutup oleh pengawas.', 403);
+        }
+
         $questions = $exam->questions->map(function ($q, $index) {
-            $options = is_array($q->options) ? array_values($q->options) : (json_decode($q->options, true) ?: []);
+            $rawOptions = is_array($q->options) ? $q->options : (json_decode($q->options, true) ?: []);
+            $formattedOptions = [];
+            foreach ($rawOptions as $key => $opt) {
+                if (is_array($opt)) {
+                    $formattedOptions[] = [
+                        'key' => $opt['key'] ?? (string) $key,
+                        'text' => $opt['text'] ?? '',
+                        'image_url' => $opt['image_url'] ?? $opt['image'] ?? null,
+                    ];
+                } else {
+                    $formattedOptions[] = [
+                        'key' => (string) $key,
+                        'text' => (string) $opt,
+                        'image_url' => null,
+                    ];
+                }
+            }
             return [
                 'id' => $q->id,
                 'number' => $index + 1,
                 'question_text' => $q->question_text,
+                'image_url' => $q->question_image,
                 'question_image' => $q->question_image,
-                'options' => $options,
+                'options' => $formattedOptions,
             ];
         });
 
@@ -249,6 +286,14 @@ class ApiStudentController extends Controller
         }
 
         $exam = Exam::with('questions')->findOrFail($examId);
+
+        Gate::authorize('take', $exam);
+
+        // Cegah manipulasi nilai / pengulangan submit jika status sudah diserahkan atau diblokir
+        $existingAttempt = ExamAttempt::where('exam_id', $exam->id)->where('student_id', $student->id)->first();
+        if ($existingAttempt && in_array($existingAttempt->status, ['submitted', 'blocked_violation', 'force_closed'], true)) {
+            return $this->errorResponse('Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.', 403);
+        }
         $answers = $request->input('answers', []); // [question_id => selected_option_index]
         $totalQuestions = $exam->questions->count();
         $correctCount = 0;
@@ -275,8 +320,9 @@ class ApiStudentController extends Controller
             ['exam_id' => $exam->id, 'student_id' => $student->id],
             [
                 'score' => $score,
-                'total_correct' => $correctCount,
-                'total_questions' => $totalQuestions,
+                'correct_count' => $correctCount,
+                'wrong_count' => max(0, $totalQuestions - $correctCount),
+                'unanswered_count' => max(0, $totalQuestions - count($answers)),
                 'answers' => $answers,
                 'status' => 'submitted',
                 'submitted_at' => now(),

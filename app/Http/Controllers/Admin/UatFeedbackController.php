@@ -26,27 +26,47 @@ class UatFeedbackController extends Controller
 
         $screenshotPath = null;
 
-        // Handle base64 screenshot upload from html2canvas
+        // Handle base64 screenshot upload from html2canvas with strict extension whitelist
         if (!empty($validated['screenshot']) && str_starts_with($validated['screenshot'], 'data:image')) {
             try {
                 $imageParts = explode(';base64,', $validated['screenshot']);
-                $imageTypeAux = explode('image/', $imageParts[0]);
-                $imageType = $imageTypeAux[1] ?? 'png';
-                $imageBase64 = base64_decode($imageParts[1]);
+                if (count($imageParts) === 2) {
+                    $imageTypeAux = explode('image/', $imageParts[0]);
+                    $rawType = strtolower(trim($imageTypeAux[1] ?? 'png'));
 
-                $filename = 'screenshot_' . time() . '_' . uniqid() . '.' . $imageType;
-                $path = 'uat_screenshots/' . $filename;
+                    // Strict whitelist: Only allow safe raster image formats
+                    $allowedExtensions = [
+                        'png' => 'png',
+                        'jpeg' => 'jpg',
+                        'jpg' => 'jpg',
+                        'webp' => 'webp',
+                    ];
 
-                Storage::disk('public')->put($path, $imageBase64);
-                $screenshotPath = $path;
+                    if (!isset($allowedExtensions[$rawType])) {
+                        throw new \InvalidArgumentException('Format gambar tidak didukung atau tidak aman.');
+                    }
+
+                    $imageType = $allowedExtensions[$rawType];
+                    $imageBase64 = base64_decode($imageParts[1]);
+
+                    if ($imageBase64 === false) {
+                        throw new \InvalidArgumentException('Data gambar base64 tidak valid.');
+                    }
+
+                    $filename = 'screenshot_' . time() . '_' . uniqid() . '.' . $imageType;
+                    $path = 'uat_screenshots/' . $filename;
+
+                    Storage::disk('public')->put($path, $imageBase64);
+                    $screenshotPath = $path;
+                }
             } catch (\Exception $e) {
-                // Ignore screenshot error to not block feedback submission
+                // Log screenshot error without blocking feedback submission
                 report($e);
             }
         } elseif ($request->hasFile('screenshot_file')) {
-            // Support standard file upload
+            // Support standard file upload with strict safe raster image whitelist
             $request->validate([
-                'screenshot_file' => 'nullable|image|max:5120', // Max 5MB
+                'screenshot_file' => 'nullable|file|mimes:jpeg,jpg,png,webp|max:5120', // Max 5MB
             ]);
             $screenshotPath = $request->file('screenshot_file')->store('uat_screenshots', 'public');
         }

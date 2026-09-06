@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Services\CbtEnterpriseService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CbtEnterpriseApiController extends Controller
 {
@@ -30,6 +31,8 @@ class CbtEnterpriseApiController extends Controller
         }
 
         $exam = Exam::with(['questions', 'subject'])->findOrFail($id);
+        Gate::authorize('take', $exam);
+
         $payload = $this->enterpriseService->generateEncryptedPayload($exam, $student);
 
         return $this->successResponse($payload, 'Paket soal terenkripsi berhasil dimuat');
@@ -46,6 +49,8 @@ class CbtEnterpriseApiController extends Controller
         }
 
         $exam = Exam::findOrFail($id);
+        Gate::authorize('take', $exam);
+
         $result = $this->enterpriseService->getDecryptionKey($exam, $student);
 
         if (!$result['accessible']) {
@@ -119,6 +124,8 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
+        Gate::authorize('monitor', $exam);
+
         $log = $this->enterpriseService->proctorBroadcastWarning(
             $exam->id,
             $request->input('student_id'),
@@ -140,6 +147,8 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
+        Gate::authorize('monitor', $exam);
+
         $log = $this->enterpriseService->proctorForceSubmit(
             $exam->id,
             (int) $request->input('student_id'),
@@ -161,6 +170,8 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
+        Gate::authorize('monitor', $exam);
+
         $log = $this->enterpriseService->proctorExtendTime(
             $exam->id,
             (int) $request->input('student_id'),

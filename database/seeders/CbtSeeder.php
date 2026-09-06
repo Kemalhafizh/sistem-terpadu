@@ -41,11 +41,16 @@ class CbtSeeder extends Seeder
                 'teacher' => $guruMtk,
                 'prefix' => 'MTK',
                 'questions' => [
-                    'Berapakah hasil dari 2^3 * 2^4?', 'Jika x + 5 = 12, berapakah nilai x?',
-                    'Berapakah turunan pertama dari f(x) = 3x^2 + 2x?', 'Tentukan nilai limit x mendekati 3 dari (x^2 - 9)/(x - 3).',
-                    'Berapakah nilai dari cos(60 derajat)?', 'Tentukan nilai sin(30 derajat) + cos(60 derajat).',
-                    'Jika matriks A = [1 2; 3 4], tentukan determinan A.', 'Berapakah luas segitiga dengan alas 10 cm dan tinggi 8 cm?',
-                    'Tentukan simpangan baku dari data: 2, 4, 6, 8.', 'Berapakah peluang munculnya mata dadu genap pada pelemparan sebuah dadu?',
+                    'Berapakah hasil dari $2^3 \\times 2^4 = 2^n$? Tentukan nilai $n$!',
+                    'Jika $x + 5 = 12$, berapakah nilai dari $\\sqrt{x^2 + 15}$?',
+                    'Berapakah turunan pertama dari fungsi $f(x) = 3x^2 + \\sqrt{4x}$?',
+                    'Tentukan nilai limit fungsi trigonometri: $$\\lim_{x \\to 0} \\frac{\\sin(4x)}{\\tan(2x)}$$',
+                    'Berapakah nilai dari $\\sin(30^\\circ) + \\cos(60^\\circ)$?',
+                    'Tentukan nilai eksak dari $\\tan(45^\\circ) \\times \\cos(0^\\circ)$!',
+                    'Jika matriks $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$, tentukan nilai dari determinan $\\det(A)$!',
+                    'Berapakah luas segitiga dengan panjang alas $a = 10\\text{ cm}$ dan tinggi $t = 8\\text{ cm}$?',
+                    'Tentukan nilai integral tentu: $$\\int_{0}^{2} (3x^2 + 2x) \\, dx$$',
+                    'Berapakah peluang munculnya mata dadu prima pada pelemparan sebuah dadu berkisi enam?',
                 ]
             ],
             [
@@ -53,11 +58,16 @@ class CbtSeeder extends Seeder
                 'teacher' => $guruFisika,
                 'prefix' => 'FIS',
                 'questions' => [
-                    'Apakah satuan dari gaya dalam Sistem Internasional?', 'Tentukan kecepatan benda yang menempuh 100 m dalam 5 detik.',
-                    'Hukum Newton keberapa yang menjelaskan tentang inersia?', 'Berapakah energi kinetik benda bermassa 2 kg dengan kecepatan 10 m/s?',
-                    'Tentukan besar gaya gravitasi jika massa bumi 6x10^24 kg.', 'Sebuah benda ditarik dengan gaya 20 N sehingga berpindah 5 m. Berapakah usaha?',
-                    'Manakah yang merupakan besaran vektor?', 'Berapakah frekuensi gelombang dengan periode 0.02 detik?',
-                    'Alat optik yang digunakan untuk melihat benda mikro adalah...', 'Tentukan hambatan pengganti jika dua resistor 10 ohm disusun seri.',
+                    'Apakah satuan dari besaran Gaya dalam Sistem Internasional (SI)?',
+                    'Tentukan kecepatan sesaat partikel $v(t) = \\frac{dx}{dt}$ jika posisi dirumuskan $x(t) = 5t^2 + 2t$ pada saat $t = 3\\text{ s}$!',
+                    'Hukum Newton keberapa yang menjelaskan prinsip inersia kelembaman $\\sum F = 0$?',
+                    'Berapakah besar energi kinetik $E_k = \\frac{1}{2} m v^2$ jika massa $m = 2\\text{ kg}$ dan kelajuan $v = 10\\text{ m/s}$?',
+                    'Perhatikan diagram rangkaian listrik. Jika dua resistor $R_1 = 10\\,\\Omega$ dan $R_2 = 20\\,\\Omega$ disusun seri, berapakah hambatan penggantinya $R_{\\text{total}}$?',
+                    'Sebuah benda ditarik gaya konstan $F = 20\\text{ N}$ membentuk sudut $\\theta = 60^\\circ$ sejauh $s = 5\\text{ m}$. Berapakah usaha $W = F s \\cos(\\theta)$?',
+                    'Manakah di antara besaran berikut yang merupakan besaran vektor?',
+                    'Berapakah frekuensi gelombang foton $f = \\frac{1}{T}$ jika periodenya $T = 0.02\\text{ detik}$?',
+                    'Alat optik yang menggunakan susunan lensa objektif dan okuler untuk melihat benda mikroskopis adalah...',
+                    'Tentukan panjang gelombang de Broglie $\\lambda = \\frac{h}{p}$ untuk partikel bermassa $m$ dan momentum $p$!',
                 ]
             ],
             [
@@ -81,23 +91,35 @@ class CbtSeeder extends Seeder
             // Create 30 questions for this subject by repeating/customizing templates
             for ($q = 1; $q <= 30; $q++) {
                 $baseIndex = ($q - 1) % count($sData['questions']);
-                $qText = $sData['questions'][$baseIndex] . ' [Soal No. ' . $q . ']';
+                $qText = $sData['questions'][$baseIndex];
+
+                // Add diagram image to some physics and math questions
+                $qImage = null;
+                if ($sData['prefix'] === 'FIS' && ($q % 3 == 0)) {
+                    $qImage = 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop&q=80';
+                } elseif ($sData['prefix'] === 'MTK' && ($q % 4 == 0)) {
+                    $qImage = 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=600&auto=format&fit=crop&q=80';
+                }
+
+                $options = [
+                    'A' => ['text' => 'Pilihan Jawaban A: $' . ($q * 2) . '$', 'image_url' => null],
+                    'B' => ['text' => 'Pilihan Jawaban B (Kunci): $\\frac{' . ($q + 1) . '}{2}$', 'image_url' => null],
+                    'C' => ['text' => 'Pilihan Jawaban C: $\\sqrt{' . ($q * 3) . '}$', 'image_url' => null],
+                    'D' => ['text' => 'Pilihan Jawaban D: $' . ($q * 5) . '^2$', 'image_url' => null],
+                    'E' => ['text' => 'Pilihan Jawaban E: $0$', 'image_url' => null],
+                ];
 
                 $qBank = QuestionBank::create([
                     'subject_id' => $sData['subject']->id,
                     'created_by' => $sData['teacher']->id,
                     'question_text' => $qText,
+                    'question_image' => $qImage,
                     'type' => 'multiple_choice',
-                    'options' => [
-                        'A' => 'Jawaban Pilihan A untuk pertanyaan nomor ' . $q,
-                        'B' => 'Jawaban Pilihan B (Kunci Jawaban) ' . $q,
-                        'C' => 'Jawaban Pilihan C untuk pertanyaan nomor ' . $q,
-                        'D' => 'Jawaban Pilihan D untuk pertanyaan nomor ' . $q,
-                    ],
+                    'options' => $options,
                     'correct_answer' => 'B',
                     'explanation' => 'Penjelasan untuk kunci jawaban B pada soal nomor ' . $q,
                     'difficulty' => ['easy', 'medium', 'hard'][$q % 3],
-                    'grade_level' => 'X',
+                    'grade_level' => 'XII',
                 ]);
                 $questionsMap[$sData['prefix']][] = $qBank;
             }

@@ -47,6 +47,13 @@ class PragmaticDebloatApiController extends Controller
         ]);
 
         $student = Student::with('user')->findOrFail($validated['student_id']);
+
+        // IDOR Protection: Siswa hanya dapat menerbitkan/mengklaim dokumen miliknya sendiri
+        $user = $request->user();
+        if ($user && in_array($user->role, ['student', 'siswa'], true) && $student->user_id !== $user->id) {
+            abort(403, 'Anda tidak berwenang menerbitkan dokumen untuk siswa lain.');
+        }
+
         $doc = $this->certificateService->issueCertificate(
             $student,
             $validated['document_type'],
@@ -65,6 +72,12 @@ class PragmaticDebloatApiController extends Controller
      */
     public function evaluateAtRisk(int $studentId): JsonResponse
     {
+        // IDOR Protection: Siswa hanya boleh melihat status risiko dirinya sendiri
+        $user = auth()->user();
+        if ($user && in_array($user->role, ['student', 'siswa'], true) && $user->student?->id !== $studentId) {
+            abort(403, 'Anda tidak berwenang mengakses status risiko siswa lain.');
+        }
+
         $alert = $this->atRiskService->evaluateStudentRisk($studentId);
 
         return response()->json([

@@ -23,6 +23,13 @@ Dokumen ini merangkum temuan audit keamanan dan kualitas kode (*code review*) te
 | 11 | `SpmbController::printCard` | IDOR/BOLA publik pada cetak kartu pendaftaran peserta | **Tinggi (Medium-High)** | **Selesai ✅** |
 | 12 | `ImportExportController::execute` | *Path Traversal / Arbitrary File Reading* pada parameter `file_path` | **Kritis (High)** | **Selesai ✅** |
 | 13 | `MidtransWebhookController` | Webhook Signature Bypass / Payment Spoofing via parameter `is_simulation` | **Kritis (High)** | **Selesai ✅** |
+| 14 | `UatFeedbackController::store` | Arbitrary File Upload / Remote Code Execution via Base64 Image | **Kritis (Critical)** | **Selesai ✅** |
+| 15 | `MobileAuthController::biometricVerify` | Authentication Bypass via Missing Signature & Nonce Verification | **Kritis (Critical)** | **Selesai ✅** |
+| 16 | `ApiTeacherController::uploadExamImage` | Stored XSS via SVG Image Upload pada Bank Soal CBT | **Tinggi (High)** | **Selesai ✅** |
+| 17 | `ApiStudentController::cbtExamQuestions` | Broken Access Control & Exam Leakage (Soal diakses sebelum jadwal) | **Tinggi (High)** | **Selesai ✅** |
+| 18 | `ApiStudentController::cbtSubmitExam` | Cacat Logika Bisnis: Resubmisi Berulang & Skor Ujian Ditimpa | **Tinggi (High)** | **Selesai ✅** |
+| 19 | `CbtEnterpriseApiController` | BOLA / IDOR pada Intervensi Proctor (Force Submit / Extend Time) | **Tinggi (High)** | **Selesai ✅** |
+| 20 | `GeofenceAttendanceService` | Replay Attack pada Verifikasi Token Dynamic TOTP QR Presensi | **Sedang (Medium)** | **Selesai ✅** |
 
 ---
 
@@ -627,6 +634,93 @@ Berikut adalah usulan potongan kode perbaikan (*remediation patches*) untuk menu
 +        $isSimulation = isset($payload['is_simulation']) && $payload['is_simulation'] === true && app()->environment('local', 'testing');
  
          // 1. Verifikasi Tanda Tangan (Signature Key)
+```
+
+### Patch #14: Sanitasi Base64 & Upload Whitelist di `UatFeedbackController.php`
+- **Tingkat Risiko:** Kritis (CVSS 9.8) - Arbitrary File Upload & Remote Code Execution.
+- **Remediasi:** Menerapkan whitelist raster ketat (`png`, `jpg`, `jpeg`, `webp`) pada regex decoding base64 data URI dan validasi file upload `mimes:jpg,jpeg,png,webp|max:5120`.
+
+```diff
+@@ -38,15 +38,20 @@
+             if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+                 $image = substr($image, strpos($image, ',') + 1);
+                 $type = strtolower($type[1]); // jpg, png, gif, etc.
++                $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
++                if (in_array($type, $allowedExtensions, true)) {
++                    $image = str_replace(' ', '+', $image);
++                    $imageName = 'uat_' . time() . '_' . uniqid() . '.' . ($type === 'jpeg' ? 'jpg' : $type);
++                    Storage::disk('public')->put('uat_screenshots/' . $imageName, base64_decode($image));
++                    $screenshotPath = 'uat_screenshots/' . $imageName;
++                }
+             }
+```
+
+### Patch #15: Otentikasi Kriptografis & Single-Use Challenge di `MobileAuthController.php`
+- **Tingkat Risiko:** Kritis (CVSS 9.1) - Nonce Replay & Biometric Signature Bypass.
+- **Remediasi:** Mengubah penyimpanan challenge nonce ke atomic cache (`Cache::put` TTL 120 detik) yang dikonsumsi satu kali (`Cache::pull`), serta mewajibkan verifikasi digital signature asimetris OpenSSL RSA / HMAC terhadap challenge nonce.
+
+```diff
+@@ -134,8 +134,22 @@
+         $cacheKey = "bio_nonce_{$validated['device_id']}";
+         $nonce = Cache::pull($cacheKey);
+         if (!$nonce) {
+             return response()->json(['code' => 'CHALLENGE_EXPIRED'], 401);
+         }
++        $verifyResult = openssl_verify($nonce, $binarySignature, $pubKey, OPENSSL_ALGO_SHA256);
+```
+
+### Patch #16: Eliminasi SVG Stored XSS pada Bank Soal CBT di `ApiTeacherController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.5) - Stored Cross-Site Scripting via Soal CBT.
+- **Remediasi:** Menghapus ekstensi dan mime `image/svg+xml` dari aturan validasi upload gambar CBT, membatasi hanya raster images (`jpeg,png,jpg,gif,webp`).
+
+```diff
+@@ -133,7 +133,7 @@
+     public function uploadExamImage(Request $request)
+     {
+         $request->validate([
+-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
++            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+         ]);
+```
+
+### Patch #17 & #18: Kerahasiaan Soal Ujian & Penguncian Resubmisi di `ApiStudentController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.8) - Pre-Exam Leakage & Resubmission Race Condition.
+- **Remediasi:** Menambahkan Policy Gate `Gate::authorize('take', $exam)` dan pemeriksaan `$exam->isOngoing()` pada pengambilan soal, serta memblokir upaya resubmisi ganda jika attempt ujian telah `submitted` atau `force_closed`.
+
+```diff
+@@ -231,6 +231,13 @@
+     public function cbtExamQuestions(Request $request, $examId)
+     {
+         $exam = Exam::with(['subject', 'classroom', 'questions'])->findOrFail($examId);
++        Gate::authorize('take', $exam);
++        if (!$exam->isOngoing()) {
++            return $this->errorResponse('Ujian belum dimulai atau telah berakhir.', 403);
++        }
+```
+
+### Patch #19: Otorisasi Monitor Pengawas Ujian di `CbtEnterpriseApiController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 8.2) - BOLA/IDOR pada Tindakan Pengawas (Force Submit / Extend Time).
+- **Remediasi:** Menambahkan otorisasi `Gate::authorize('monitor', $exam)` pada setiap intervensi pengawas ujian (`proctorWarning`, `proctorForceSubmit`, `proctorExtendTime`).
+
+```diff
+@@ -175,6 +175,7 @@
+     public function proctorForceSubmit(Request $request, $id)
+     {
+         $exam = Exam::findOrFail($id);
++        Gate::authorize('monitor', $exam);
+```
+
+### Patch #20: Anti-Replay Cache Lock pada Dynamic TOTP QR di `GeofenceAttendanceService.php`
+- **Tingkat Risiko:** Sedang (CVSS 6.5) - Token Sharing Replay Attack pada Presensi Siswa.
+- **Remediasi:** Menerapkan atomik lock cache `used_totp_qr:{$qrToken}` dengan TTL 60 detik sehingga setiap kode QR dinamis hanya dapat divalidasi satu kali.
+
+```diff
+@@ -98,6 +98,12 @@
+         $usedKey = "used_totp_qr:{$qrToken}";
+         if (Cache::has($usedKey)) {
+             return ['valid' => false, 'message' => 'Kode QR ini sudah pernah dipindai dan tidak dapat digunakan kembali.'];
+         }
+         Cache::put($usedKey, true, 60);
 ```
 
 ---

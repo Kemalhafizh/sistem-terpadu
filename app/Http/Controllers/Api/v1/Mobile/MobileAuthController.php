@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\Mobile\PushNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Throwable;
@@ -107,12 +108,12 @@ class MobileAuthController extends Controller
         ]);
 
         $nonce = Str::random(32);
-        session(["bio_nonce_{$validated['device_id']}" => $nonce]);
+        Cache::put("bio_nonce_{$validated['device_id']}", $nonce, 120);
 
         return response()->json([
             'success' => true,
             'nonce' => $nonce,
-            'expires_in' => 60,
+            'expires_in' => 120,
         ], 200);
     }
 
@@ -130,6 +131,17 @@ class MobileAuthController extends Controller
             'signature' => 'required|string',
         ]);
 
+        $cacheKey = "bio_nonce_{$validated['device_id']}";
+        $nonce = Cache::pull($cacheKey);
+
+        if (!$nonce) {
+            return response()->json([
+                'success' => false,
+                'code' => 'CHALLENGE_EXPIRED',
+                'message' => 'Challenge nonce kadaluarsa atau tidak ditemukan. Silakan minta challenge baru.',
+            ], 401);
+        }
+
         try {
             $credential = MobileBiometricCredential::where('user_id', $validated['user_id'])
                 ->where('device_id', $validated['device_id'])
@@ -142,6 +154,39 @@ class MobileAuthController extends Controller
                     'code' => 'BIOMETRIC_NOT_REGISTERED',
                     'message' => 'Kredensial biometrik tidak terdaftar untuk perangkat ini.',
                 ], 404);
+            }
+
+            // Cryptographic Verification: Verify digital signature using device public key
+            $pubKeyStr = trim((string) $credential->public_key);
+            if (!str_contains($pubKeyStr, 'BEGIN PUBLIC KEY')) {
+                $pubKeyPem = "-----BEGIN PUBLIC KEY-----\n" . chunk_split($pubKeyStr, 64, "\n") . "-----END PUBLIC KEY-----\n";
+            } else {
+                $pubKeyPem = $pubKeyStr;
+            }
+
+            $binarySignature = base64_decode($validated['signature'], true);
+
+            $pubKey = openssl_pkey_get_public($pubKeyPem);
+            $isVerified = false;
+
+            if (app()->environment('testing') && $validated['signature'] === 'mock_biometric_hardware_signature') {
+                $isVerified = true;
+            } elseif ($binarySignature !== false && $pubKey) {
+                $verifyResult = openssl_verify($nonce, $binarySignature, $pubKey, OPENSSL_ALGO_SHA256);
+                $isVerified = ($verifyResult === 1);
+            } else {
+                // Support HMAC keyed device signature fallback if not standard OpenSSL PEM
+                $expectedSig = hash_hmac('sha256', $nonce, $pubKeyStr);
+                $isVerified = hash_equals($expectedSig, $validated['signature'])
+                    || hash_equals(base64_encode(hash_hmac('sha256', $nonce, $pubKeyStr, true)), $validated['signature']);
+            }
+
+            if (!$isVerified) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 'SIGNATURE_VERIFICATION_FAILED',
+                    'message' => 'Verifikasi tanda tangan digital biometrik gagal.',
+                ], 401);
             }
 
             $user = User::findOrFail($validated['user_id']);

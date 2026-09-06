@@ -290,10 +290,11 @@ class CbtEnterpriseService
     }
 
     /**
-     * Derive a deterministic 32-byte key for an exam.
+     * Derive a cryptographic 32-byte key for an exam incorporating application secret.
      */
     protected function deriveExamKey(Exam $exam): string
     {
-        return hash('sha256', "cbt_exam_secret_{$exam->id}_{$exam->created_at}", true);
+        $appKey = (string) config('app.key', 'cbt_default_salt_super_web_2026');
+        return hash_hmac('sha256', "cbt_exam_{$exam->id}_{$exam->uuid}_{$exam->created_at}", $appKey, true);
     }
 }

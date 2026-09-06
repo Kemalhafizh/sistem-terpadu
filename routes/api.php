@@ -47,6 +47,14 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
   Route::post('mobile/auth/login', [MobileAuthController::class, 'login'])->middleware('throttle:login');
   Route::post('mobile/auth/biometric/challenge', [MobileAuthController::class, 'biometricChallenge']);
   Route::post('mobile/auth/biometric/verify', [MobileAuthController::class, 'biometricVerify']);
+  Route::get('rapor/verify/{hash}', [\App\Http\Controllers\Api\v1\ERaporApiController::class, 'verify']);
+
+  // === FASE 94: SPMB / PPDB MOBILE (PUBLIC) ===
+  Route::prefix('spmb')->group(function () {
+    Route::get('waves', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'spmbWaves']);
+    Route::post('register', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'spmbRegister']);
+    Route::get('status/{registrationNo}', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'spmbCheckStatus']);
+  });
 
   // === PROTECTED ENDPOINTS ===
   Route::middleware('auth:sanctum')->group(function () {
@@ -131,6 +139,89 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::get('cbt/exams/{id}/token', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'getToken']);
       Route::post('cbt/exams/{id}/token/regenerate', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'regenerateToken']);
       Route::post('cbt/exams/{id}/token/reset-student', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'resetStudent']);
+
+      // CBT Manual Authoring with LaTeX & Image Support
+      Route::post('cbt/exams', [ApiTeacherController::class, 'storeExamWithQuestions']);
+      Route::post('cbt/upload-image', [ApiTeacherController::class, 'uploadExamImage']);
+    });
+
+    // === FASE 88: BANK SOAL TERPUSAT & AUTO-GENERATE UJIAN CBT ===
+    Route::prefix('question-bank')->group(function () {
+      Route::get('categories', [\App\Http\Controllers\Api\v1\QuestionBankApiController::class, 'getCategories']);
+      Route::get('items', [\App\Http\Controllers\Api\v1\QuestionBankApiController::class, 'getItems']);
+      Route::post('items', [\App\Http\Controllers\Api\v1\QuestionBankApiController::class, 'store']);
+      Route::post('auto-generate', [\App\Http\Controllers\Api\v1\QuestionBankApiController::class, 'autoGenerate']);
+    });
+
+    // === FASE 89: E-RAPOR KURIKULUM MERDEKA ===
+    Route::prefix('rapor')->group(function () {
+      Route::get('current', [\App\Http\Controllers\Api\v1\ERaporApiController::class, 'getCurrentRapor']);
+      Route::get('child/{childId}', [\App\Http\Controllers\Api\v1\ERaporApiController::class, 'getChildRapor']);
+      Route::post('generate-pdf', [\App\Http\Controllers\Api\v1\ERaporApiController::class, 'generatePdf']);
+    });
+
+    // === FASE 91: PENILAIAN HARIAN & REMEDIAL WORKFLOW ===
+    Route::prefix('assessments')->group(function () {
+      Route::get('teacher', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'teacherAssessments']);
+      Route::post('teacher', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'storeAssessment']);
+      Route::post('{id}/batch-scores', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'batchScores']);
+      Route::post('{id}/auto-remedial', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'autoRemedial']);
+      Route::get('student', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'studentAssessments']);
+      Route::get('student/remedials', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'studentRemedials']);
+      Route::post('remedials/{sessionId}/score', [\App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController::class, 'submitRemedialScore']);
+    });
+
+    // === FASE 90: E-LEARNING MOBILE LMS TERPADU ===
+    Route::prefix('elearning')->group(function () {
+      Route::get('classes/student', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'studentClasses']);
+      Route::get('classes/{classId}/materials', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'studentMaterials']);
+      Route::get('classes/{classId}/assignments', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'studentAssignments']);
+      Route::post('assignments/{id}/submit', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'submitAssignment']);
+      Route::get('classes/teacher', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'teacherClasses']);
+      Route::post('classes/{classId}/materials', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'storeMaterial']);
+      Route::post('classes/{classId}/assignments', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'storeAssignment']);
+      Route::get('assignments/{id}/submissions', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'getSubmissions']);
+      Route::post('submissions/{id}/grade', [\App\Http\Controllers\Api\v1\ElearningMobileApiController::class, 'gradeSubmission']);
+    });
+
+    // === FASE 92: BIMBINGAN KONSELING (BK) MOBILE & AT-RISK MONITORING ===
+    Route::prefix('counseling')->group(function () {
+      Route::get('dashboard', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'dashboard']);
+      Route::post('sessions', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'storeSession']);
+      Route::post('appointments/request', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'requestAppointment']);
+      Route::get('appointments/my', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'studentAppointments']);
+      Route::get('at-risk', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'atRiskStudents']);
+      Route::post('sessions/{id}/follow-up', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'addFollowUp']);
+    });
+
+    // === FASE 95: PROFIL KOMPREHENSIF SISWA 360 DERAJAT ===
+    Route::prefix('profile/student')->group(function () {
+      Route::get('me', [\App\Http\Controllers\Api\v1\StudentProfileApiController::class, 'myProfile']);
+      Route::get('{id?}', [\App\Http\Controllers\Api\v1\StudentProfileApiController::class, 'show']);
+      Route::get('{id?}/academic', [\App\Http\Controllers\Api\v1\StudentProfileApiController::class, 'academic']);
+      Route::get('{id?}/ibadah', [\App\Http\Controllers\Api\v1\StudentProfileApiController::class, 'ibadah']);
+      Route::get('{id?}/discipline', [\App\Http\Controllers\Api\v1\StudentProfileApiController::class, 'discipline']);
+      Route::get('{id?}/health', [\App\Http\Controllers\Api\v1\StudentProfileApiController::class, 'health']);
+    });
+
+    // === FASE 93: KALENDER AKADEMIK & SYNC ICAL ===
+    Route::prefix('academic-calendar')->group(function () {
+      Route::get('/', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'calendarEvents']);
+      Route::get('export-ical', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'exportIcal']);
+    });
+
+
+    // === FASE 96: REKAM MEDIS UKS & SKRINING KESEHATAN ===
+    Route::prefix('uks')->group(function () {
+      Route::get('visits/my', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'uksVisits']);
+      Route::post('visits', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'recordUksVisit']);
+      Route::get('screening/{studentId?}', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'healthScreening']);
+    });
+
+    // === FASE 97: JURNAL MENGAJAR GURU & AGENDA KELAS ===
+    Route::prefix('teaching-journals')->group(function () {
+      Route::get('my', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'teacherJournals']);
+      Route::post('/', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'storeTeacherJournal']);
     });
 
     // === UNIVERSAL GENERAL ===
@@ -195,7 +286,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     Route::prefix('iot')->group(function () {
       Route::post('face/enroll', [\App\Http\Controllers\Iot\FacialRecognitionAttendanceController::class, 'enroll']);
       Route::post('face/match', [\App\Http\Controllers\Iot\FacialRecognitionAttendanceController::class, 'matchGate']);
-      Route::post('energy/sensor', [\App\Http\Controllers\Iot\EnergyManagementController::class, 'updateSensor']);
+      Route::post('energy/sensor', [\App\Http\Controllers\Iot\EnergyManagementController::class, 'updateSensor'])->middleware('role:admin,superadmin,staf_tu,operator');
       Route::get('energy/dashboard', [\App\Http\Controllers\Iot\EnergyManagementController::class, 'getDashboard']);
     });
 
@@ -203,20 +294,20 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     // FASE 73: BIG DATA PREDICTIVE ANALYTICS
     // =====================================================================
     Route::prefix('analytics')->group(function () {
-      Route::get('student/{id}/risk', [\App\Http\Controllers\Analytics\AtRiskStudentPredictionController::class, 'analyzeStudent']);
-      Route::get('at-risk/dashboard', [\App\Http\Controllers\Analytics\AtRiskStudentPredictionController::class, 'getAtRiskDashboard']);
-      Route::post('treasury/forecast', [\App\Http\Controllers\Analytics\TreasuryForecastController::class, 'generate']);
-      Route::get('treasury/forecasts', [\App\Http\Controllers\Analytics\TreasuryForecastController::class, 'getForecasts']);
+      Route::get('student/{id}/risk', [\App\Http\Controllers\Analytics\AtRiskStudentPredictionController::class, 'analyzeStudent'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah,bk,guru');
+      Route::get('at-risk/dashboard', [\App\Http\Controllers\Analytics\AtRiskStudentPredictionController::class, 'getAtRiskDashboard'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah,bk');
+      Route::post('treasury/forecast', [\App\Http\Controllers\Analytics\TreasuryForecastController::class, 'generate'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah');
+      Route::get('treasury/forecasts', [\App\Http\Controllers\Analytics\TreasuryForecastController::class, 'getForecasts'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah');
     });
 
     // =====================================================================
     // FASE 74: DEDICATED HIGH-AVAILABILITY INFRASTRUCTURE
     // =====================================================================
     Route::prefix('infrastructure')->group(function () {
-      Route::get('cluster/health', [\App\Http\Controllers\Infrastructure\CloudClusterController::class, 'getHealth']);
-      Route::post('cluster/metrics', [\App\Http\Controllers\Infrastructure\CloudClusterController::class, 'reportMetric']);
+      Route::get('cluster/health', [\App\Http\Controllers\Infrastructure\CloudClusterController::class, 'getHealth'])->middleware('role:admin,superadmin');
+      Route::post('cluster/metrics', [\App\Http\Controllers\Infrastructure\CloudClusterController::class, 'reportMetric'])->middleware('role:admin,superadmin');
       Route::post('cdn/resolve', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'resolveAsset']);
-      Route::get('cdn/nodes', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'getNodes']);
+      Route::get('cdn/nodes', [\App\Http\Controllers\Infrastructure\EdgeCdnController::class, 'getNodes'])->middleware('role:admin,superadmin');
     });
 
     // =====================================================================

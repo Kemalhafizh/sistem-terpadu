@@ -52,6 +52,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->dateTime('submitted_at');
             $table->string('file_path')->nullable(); // Foto lembar jawaban atau PDF
+            $table->text('content')->nullable();
             $table->decimal('score', 5, 2)->nullable();
             $table->text('feedback')->nullable();
             $table->enum('status', ['submitted', 'graded', 'locked_cheated'])->default('submitted');

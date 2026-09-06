@@ -243,4 +243,101 @@ class ApiTeacherController extends Controller
 
         return $this->successResponse(new TeachingJournalResource($journal), 'Jurnal mengajar berhasil disimpan', 201);
     }
+
+    /**
+     * Store CBT Exam with Manual Questions (supporting LaTeX & Images)
+     */
+    public function storeExamWithQuestions(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'subject_id' => 'nullable|exists:subjects,id',
+            'subject_name' => 'nullable|string',
+            'duration_minutes' => 'required|integer|min:1',
+            'passing_score' => 'nullable|numeric',
+            'token' => 'nullable|string',
+            'questions' => 'required|array|min:1',
+            'questions.*.question_text' => 'required|string',
+            'questions.*.options' => 'required|array',
+            'questions.*.correct_answer' => 'required|string',
+        ]);
+
+        $teacher = $request->user();
+        $activeYear = AcademicYear::where('is_active', true)->first() ?: AcademicYear::first();
+        $subjectId = $request->subject_id;
+        if (!$subjectId && $request->subject_name) {
+            $subject = \App\Models\Subject::where('name', 'like', '%' . $request->subject_name . '%')->first();
+            $subjectId = $subject ? $subject->id : 1;
+        }
+
+        $token = $request->token ?: 'SA1-' . rand(1000, 9999);
+
+        $exam = \App\Models\Exam::create([
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'title' => $request->title,
+            'subject_id' => $subjectId ?: 1,
+            'classroom_id' => $request->classroom_id ?: null,
+            'academic_year_id' => $activeYear ? $activeYear->id : 1,
+            'created_by' => $teacher->id,
+            'type' => 'ulangan_harian',
+            'start_time' => now(),
+            'end_time' => now()->addDays(7),
+            'duration_minutes' => (int) $request->duration_minutes,
+            'total_questions' => count($request->questions),
+            'token' => $token,
+            'passing_score' => (float) ($request->passing_score ?: 75.0),
+            'status' => 'published',
+            'shuffle_questions' => (bool) $request->input('shuffle_questions', true),
+            'shuffle_options' => (bool) $request->input('shuffle_options', true),
+            'is_secure_mode' => (bool) $request->input('require_kiosk_mode', true),
+        ]);
+
+        foreach ($request->questions as $index => $qData) {
+            $qBank = \App\Models\QuestionBank::create([
+                'subject_id' => $subjectId ?: 1,
+                'created_by' => $teacher->id,
+                'question_text' => $qData['question_text'],
+                'question_image' => $qData['image_url'] ?? $qData['question_image'] ?? null,
+                'type' => 'multiple_choice',
+                'options' => $qData['options'],
+                'correct_answer' => $qData['correct_answer'] ?? 'A',
+                'grade_level' => 'XII',
+            ]);
+
+            \DB::table('exam_questions')->insert([
+                'exam_id' => $exam->id,
+                'question_bank_id' => $qBank->id,
+                'order' => $index + 1,
+                'weight' => (float) ($qData['weight'] ?? 10.0),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        return $this->successResponse([
+            'exam_id' => $exam->id,
+            'uuid' => $exam->uuid,
+            'title' => $exam->title,
+            'token' => $token,
+            'total_questions' => count($request->questions),
+        ], 'Jadwal ujian dan bank soal berhasil diterbitkan', 201);
+    }
+
+    /**
+     * Upload Image for Question or Option
+     */
+    public function uploadExamImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|file|mimes:jpeg,jpg,png,webp|max:10240',
+        ]);
+
+        $path = $request->file('image')->store('uploads/cbt/questions', 'public');
+        $fullUrl = asset('storage/' . $path);
+
+        return $this->successResponse([
+            'path' => $path,
+            'image_url' => $fullUrl,
+        ], 'Gambar berhasil diunggah');
+    }
 }

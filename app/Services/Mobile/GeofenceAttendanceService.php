@@ -8,6 +8,7 @@ use App\Models\Attendance;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class GeofenceAttendanceService
@@ -192,6 +193,13 @@ class GeofenceAttendanceService
             if (substr($expectedHash, 0, 16) !== $decoded['sig']) {
                 return ['valid' => false, 'message' => 'Tanda tangan digital QR tidak valid'];
             }
+
+            // Anti-Replay Check: Ensure this QR token hasn't been scanned already
+            $replayCacheKey = 'used_totp_qr:' . $decoded['sig'];
+            if (Cache::has($replayCacheKey)) {
+                return ['valid' => false, 'message' => 'Token QR ini sudah pernah dipindai sebelumnya. Silakan refresh layar HP.'];
+            }
+            Cache::put($replayCacheKey, true, 60);
 
             $user = User::find($decoded['u']);
             if (!$user) {

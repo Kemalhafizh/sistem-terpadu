@@ -9,6 +9,7 @@ class ElearningSubmission extends Model
     protected $fillable = [
         'elearning_assignment_id',
         'student_id',
+        'content',
         'submitted_at',
         'file_path',
         'score',
