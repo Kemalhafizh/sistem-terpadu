@@ -82,6 +82,7 @@ class ApiParentController extends Controller
                 'name' => $student->user->name ?? 'N/A',
                 'classroom' => $student->classroom->name ?? 'N/A',
                 'grade_level' => $student->classroom->grade_level ?? 'N/A',
+                'homeroom_teacher' => $student->classroom->teacher->name ?? null,
             ],
             'statistics' => [
                 'average_grade' => $gradesAvg,
