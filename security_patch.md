@@ -1,6 +1,6 @@
 # 🛡️ Laporan Keamanan & Kualitas Kode: security_patch.md
 **Project:** Sistem Terpadu (SISTA) - SMA Islam Sultan Agung 1 Semarang
-**Tanggal Review:** 17 Juli 2026
+**Tanggal Review Terbaru:** 19 September 2026 (Audit Komprehensif Fase 98 - 114, Mobile Gateway & QC Standards)
 
 Dokumen ini merangkum temuan audit keamanan dan kualitas kode (*code review*) terhadap fungsionalitas baru yang baru saja diimplementasikan. Fokus utama audit adalah mendeteksi *edge cases*, kegagalan validasi input, cacat logika bisnis (*business logic flaws*), serta celah keamanan tingkat menengah hingga kritis.
 
@@ -30,6 +30,44 @@ Dokumen ini merangkum temuan audit keamanan dan kualitas kode (*code review*) te
 | 18 | `ApiStudentController::cbtSubmitExam` | Cacat Logika Bisnis: Resubmisi Berulang & Skor Ujian Ditimpa | **Tinggi (High)** | **Selesai ✅** |
 | 19 | `CbtEnterpriseApiController` | BOLA / IDOR pada Intervensi Proctor (Force Submit / Extend Time) | **Tinggi (High)** | **Selesai ✅** |
 | 20 | `GeofenceAttendanceService` | Replay Attack pada Verifikasi Token Dynamic TOTP QR Presensi | **Sedang (Medium)** | **Selesai ✅** |
+| 21 | `CbtAntiCheatEngine::unlockExamWithSupervisorPin` | CBT Anti-Cheat Unlock Bypass via Wildcard 6-Digit PIN Logic | **Kritis (Critical)** | **Selesai ✅** |
+| 22 | `AndroidManifest.xml` & `network_security_config.xml` | Cleartext HTTP Permitted & User CA Trust Injection (MITM & Backup Risk) | **Tinggi (High)** | **Selesai ✅** |
+| 23 | `DeepLinkRouter::resolveRoute` | Deep Link Domain Substring Spoofing via `host.contains()` | **Tinggi (High)** | **Selesai ✅** |
+| 24 | `ApiClient` | Sensitive Bearer Token & Credential Leakage via Full Body Logcat | **Sedang (Medium)** | **Selesai ✅** |
+| 25 | `eds/comparison.blade.php` | Stored/Reflected XSS dalam Tag `<script>` via Raw Unescaped Blade Output | **Tinggi (High)** | **Selesai ✅** |
+| 26 | `admin/chatbot/conversation-detail.blade.php` | Stored XSS via Bot Response Raw Echo di Admin Panel | **Sedang (Medium)** | **Selesai ✅** |
+| 27 | `StudentProfileApiController` | Massive IDOR / BOLA pada Profil Siswa 360 Derajat (Akademik/Ibadah/Disiplin/Medis) | **Kritis (Critical)** | **Selesai ✅** |
+| 28 | `SchoolOperationsApiController` | BOLA pada Rekam Medis UKS & Privilege Escalation Input Kunjungan UKS | **Kritis (Critical)** | **Selesai ✅** |
+| 29 | `routes/api.php (counseling & journals)` | Broken Access Control pada Bimbingan Konseling (BK) & Jurnal Guru | **Tinggi (High)** | **Selesai ✅** |
+| 30 | `routes/api.php (biometric)` | Ketiadaan Rate Limiting pada Tantangan & Verifikasi Biometrik (Brute Force / DoS) | **Sedang (Medium)** | **Selesai ✅** |
+| 31 | `AdminMobileDashboardController` & `routes/api.php` | Broken Access Control & Privilege Escalation pada Dashboard, Revenue KPI, dan Workflow Approval | **Kritis (Critical)** | **Selesai ✅** |
+| 32 | `ParentPortalController` & `routes/api.php` | Massive IDOR / BOLA pada Aktivitas Harian, Rapor Mingguan & Tolok Ukur Nilai Anak | **Kritis (Critical)** | **Selesai ✅** |
+| 33 | `VizController` | Insecure Direct Object Reference (BOLA) pada Radar Psikometrik & Tren Nilai Siswa | **Tinggi (High)** | **Selesai ✅** |
+| 34 | `LibraryMobileApiController::selfCheckout` | Insecure Direct Object Reference (IDOR) Peminjaman Buku via Parameter `student_id` | **Tinggi (High)** | **Selesai ✅** |
+| 35 | `AchievementMobileApiController::verify` | Insecure Role Blacklist Bypass pada Verifikasi Prestasi Siswa & Poin Portofolio | **Tinggi (High)** | **Selesai ✅** |
+| 36 | `PwaController::subscribe` & `routes/web.php` | Unauthenticated Web Push Hijacking & Insecure Super Admin Default Fallback | **Kritis (Critical)** | **Selesai ✅** |
+| 37 | `DocumentMobileApiController::ocrScan` | Unrestricted File Upload & Stored XSS via SVG Upload pada Direktori Publik | **Tinggi (High)** | **Selesai ✅** |
+| 38 | `EvaluationService::submitTeacherEvaluation` | Cacat Logika Anti-Spam / Bypass Pencegahan Double Submission pada Survei 360 Anonim | **Sedang (Medium)** | **Selesai ✅** |
+| 39 | `UtbkMobileApiController` | Unhandled Null Pointer Dereference pada Profil Non-Siswa (500 Server Error) | **Rendah (Low/Bug)** | **Selesai ✅** |
+| 40 | `DocumentMobileApiController::submitSignature` | Ketiadaan Batas Ukuran String Base64 Tanda Tangan Digital (Database Bloat / DoS) | **Sedang (Medium)** | **Selesai ✅** |
+| 41 | `CbtAntiCheatEngine.kt` (Android) | Hardcoded Plain-Text Supervisor Bypass PINs pada CBT Anti-Cheat Engine | **Tinggi (High)** | **Selesai ✅** |
+| 42 | `SsoWebViewScreen.kt` (Android) | Insecure WebView File Access & Open Redirect / Host Interception pada Portal SSO | **Tinggi (High)** | **Selesai ✅** |
+| 43 | `CbtLatexMathView.kt` (Android) | Script Tag Breakout / Stored XSS pada Embedded KaTeX WebView Renderer | **Sedang (Medium)** | **Selesai ✅** |
+| 44 | `CbtEnterpriseApiController` & `CbtEnterpriseService` | CBT Attempt State Machine Reversion & Missing Take Gate Authorization | **Kritis (Critical)** | **Selesai ✅** |
+| 45 | `SsrfGuardService` & Webhook Dispatchers | Server-Side Request Forgery (SSRF) & Cloud Metadata Pivoting pada Webhook | **Tinggi (High)** | **Selesai ✅** |
+| 46 | `MidtransWebhookController` | Cryptographic Timing Attack, Empty Secret Bypass & Zero-Amount Tampering | **Tinggi (High)** | **Selesai ✅** |
+| 47 | `SyncController` & `OfflineSyncService` | Unbounded Action Batch DoS & Missing Cross-Tenant User Context Binding | **Tinggi (High)** | **Selesai ✅** |
+| 48 | `ImpersonateController` & `RestrictImpersonation` | Session Fixation & Administrative Privilege Leak saat Account Impersonation | **Sedang (Medium)** | **Selesai ✅** |
+| 49 | `KeystoreManager.kt` (Android) | Biometric Challenge Hash Bypass & Missing Hardware Asymmetric Signing | **Tinggi (High)** | **Selesai ✅** |
+
+### 🧪 Ringkasan Eksekutif Audit Kualitas Kode (Quality Control & Architectural Governance)
+
+| No | Komponen / Berkas | Temuan Quality Control & Standard | Tindakan Remediasi | Status |
+| :--- | :--- | :--- | :--- | :---: |
+| QC-1 | `views`, `controllers`, `services`, `seeders` | Pelanggaran Standar Tata Kelola Kode: Emoji Unicode ditemukan pada 8 berkas (`NoEmojiGovernanceTest`) | Seluruh emoji Unicode diganti dengan SVG icons, teks formal, dan identifier string | **Selesai ✅** |
+| QC-2 | `public/manifest.json` | Inkonsistensi metadata spesifikasi PWA (`short_name` & `theme_color` tidak sinkron dengan `PwaTest`) | Diselaraskan kembali ke `"SISTA"` dan `"#0d9488"` | **Selesai ✅** |
+| QC-3 | `NotificationPreference.php` | Ketiadaan casting eksplisit boolean (`channel_*`) memicu kegagalan evaluasi SQLite (`NotificationCenterTest`) | Menambahkan casting eksplisit `boolean` pada model Eloquent | **Selesai ✅** |
+| QC-4 | `database/factories/LibraryBookFactory.php` | Inkonsistensi Enum (`pdf`, `video` vs `physical`, `digital`) memicu SQLite CHECK constraint failure | Menyelaraskan nilai generator randomElement dengan skema migrasi tabel | **Selesai ✅** |
 
 ---
 
@@ -723,7 +761,661 @@ Berikut adalah usulan potongan kode perbaikan (*remediation patches*) untuk menu
          Cache::put($usedKey, true, 60);
 ```
 
+### Patch #21: Eliminasi Wildcard PIN Bypass pada `CbtAntiCheatEngine.kt` (Android)
+- **Tingkat Risiko:** Kritis (CVSS 9.3) - Lock Task Anti-Cheat Bypass.
+- **Analisis:** Kondisi `cleanPin in supervisorPins || cleanPin.length == 6 && cleanPin.all { it.isDigit() }` meloloskan angka 6-digit sembarang (seperti `000000` atau `123456`) untuk membuka kunci ujian yang terkunci akibat pelanggaran.
+- **Remediasi:** Menghapus wildcard validator dan membatasi otentikasi PIN hanya mencocokkan PIN pengawas yang sah (`cleanPin in supervisorPins`).
+
+```diff
+@@ -183,3 +183,3 @@
+          val cleanPin = pin.trim().uppercase()
+-         val isValid = cleanPin in supervisorPins || cleanPin.length == 6 && cleanPin.all { it.isDigit() }
++         val isValid = cleanPin in supervisorPins
+```
+
+### Patch #22: Hardening Cleartext Traffic, Backup Rules, & User CA di Android
+- **Tingkat Risiko:** Tinggi (CVSS 7.4) - MITM & Unauthenticated Local Credential Extraction.
+- **Analisis:** `android:usesCleartextTraffic="true"` mengizinkan transmisi HTTP polos. `android:allowBackup="true"` mengizinkan ekstraksi token sesi via ADB backup. `<certificates src="user" />` dalam konfigurasi dasar mengizinkan MITM proxy.
+- **Remediasi:** Menyetel `android:usesCleartextTraffic="false"`, `android:allowBackup="false"`, dan memindahkan sertifikat `user` hanya di dalam `<debug-overrides>`.
+
+```diff
+@@ -22,2 +22,2 @@
+-        android:allowBackup="true"
++        android:allowBackup="false"
+@@ -31,2 +31,2 @@
+-        android:usesCleartextTraffic="true"
++        android:usesCleartextTraffic="false"
+```
+
+### Patch #23: Proteksi Substring Domain Spoofing pada `DeepLinkRouter.kt` (Android)
+- **Tingkat Risiko:** Tinggi (CVSS 7.1) - Phishing & Deep Link Hijacking.
+- **Analisis:** `host.contains("sultanagung1.sch.id")` meloloskan domain penyerang seperti `sultanagung1.sch.id.attacker.com` atau `phishingsultanagung1.sch.id`.
+- **Remediasi:** Mengubah pengecekan menjadi verifikasi domain presisi (`host.equals(...)` atau subdomain resmi berakhiran `.sultanagung1.sch.id` tanpa `@`).
+
+```diff
+@@ -57,2 +57,5 @@
+-        if (scheme == "https" && host.contains("sultanagung1.sch.id")) {
++        val isTrustedHost = host.equals("sista.sultanagung1.sch.id", ignoreCase = true) ||
++                host.equals("api.sultanagung1.sch.id", ignoreCase = true) ||
++                (host.endsWith(".sultanagung1.sch.id", ignoreCase = true) && !host.contains("@"))
++        if (scheme == "https" && isTrustedHost) {
+```
+
+### Patch #24: Redaksi Header Otorisasi pada Interceptor Logcat di `ApiClient.kt` (Android)
+- **Tingkat Risiko:** Sedang (CVSS 5.5) - Sensitive Token Exposure in System Logs.
+- **Analisis:** `HttpLoggingInterceptor.Level.BODY` mencetak header `Authorization: Bearer <token>` dan body kredensial langsung ke Android logcat.
+- **Remediasi:** Menyetel level ke `HEADERS` dengan `redactHeader("Authorization")` dan `redactHeader("Cookie")`.
+
+```diff
+@@ -17,3 +17,5 @@
+     private val loggingInterceptor = HttpLoggingInterceptor().apply {
+-        level = HttpLoggingInterceptor.Level.BODY
++        level = HttpLoggingInterceptor.Level.HEADERS
++        redactHeader("Authorization")
++        redactHeader("Cookie")
+     }
+```
+
+### Patch #25: Sanitasi XSS Tag `<script>` via `json_encode` di `eds/comparison.blade.php` (Web)
+- **Tingkat Risiko:** Tinggi (CVSS 7.5) - Stored / Reflected XSS in Script Context.
+- **Analisis:** Variabel `$comparisonData['previous_period_name']` dicetak mentah di dalam kutip JavaScript string tanpa encoding aman: `name: "{!! $comparisonData[...] !!}",`.
+- **Remediasi:** Mengganti dengan `{!! json_encode($comparisonData[...]) !!}` agar seluruh karakter tanda kutip dan tag penutup `<script>` di-escape secara aman.
+
+```diff
+@@ -244,2 +244,2 @@
+-        name: "{!! $comparisonData['previous_period_name'] !!}",
++        name: {!! json_encode($comparisonData['previous_period_name']) !!},
+```
+
+### Patch #26: Sanitasi Bot Response Echo di `conversation-detail.blade.php` (Web)
+- **Tingkat Risiko:** Sedang (CVSS 6.1) - Stored XSS in Admin Chatbot Review.
+- **Analisis:** `{!! $conversation->bot_response !!}` merender teks tanpa sanitasi karakter HTML di panel administrator.
+- **Remediasi:** Menggunakan helper `{!! nl2br(e($conversation->bot_response)) !!}` untuk mengenkripsi entitas HTML namun tetap mempertahankan format baris baru.
+
+```diff
+@@ -61,1 +61,1 @@
+-        {!! $conversation->bot_response !!}
++        {!! nl2br(e($conversation->bot_response)) !!}
+```
+
+### Patch #27: Eliminasi IDOR pada Profil Siswa 360 Derajat di `StudentProfileApiController.php`
+- **Tingkat Risiko:** Kritis (CVSS 8.8) - Massive Insecure Direct Object Reference (BOLA).
+- **Analisis:** Parameter `$id` pada rute `/api/v1/profile/student/{id?}` dapat diganti sembarang ID siswa oleh akun siswa lain untuk melihat berkas akademik, ibadah, pelanggaran, dan kesehatan secara penuh.
+- **Remediasi:** Menerapkan pembatas `resolveAuthorizedStudentId()`: akun siswa dipaksa hanya dapat mengakses ID akun miliknya sendiri; penyerang yang mencoba ID lain langsung dibalas HTTP 403 Forbidden.
+
+```diff
+@@ -19,3 +19,8 @@
++    protected function resolveAuthorizedStudentId(Request $request, $id): int {
++        $user = $request->user();
++        $targetId = ($id && is_numeric($id)) ? (int) $id : $user->id;
++        if (in_array($user->role, ['student', 'siswa'], true) && $targetId !== $user->id) {
++            abort(403, 'Akses ditolak. Anda hanya berhak mengakses profil Anda sendiri.');
++        }
+```
+
+### Patch #28: Proteksi Akses Rekam Medis UKS di `SchoolOperationsApiController.php`
+- **Tingkat Risiko:** Kritis (CVSS 8.5) - Medical Privacy Leak & Unauthorized Visit Recording.
+- **Analisis:** `/api/v1/uks/visits/my?student_id={id}` dan `/screening/{studentId?}` tidak memeriksa otorisasi antar-siswa. Rute `POST /uks/visits` terbuka tanpa filter peran tenaga medis.
+- **Remediasi:** Membatasi akses riwayat kunjungan dan skrining fisik hanya untuk siswa yang bersangkutan atau orang tua/tenaga medis sah, serta mengunci `POST /uks/visits` dengan middleware `role:admin,superadmin,petugas_uks,staf_tu,guru`.
+
+```diff
+@@ -200,3 +200,6 @@
++        if (in_array($user->role, ['student', 'siswa'], true) && $studentId !== $user->id) {
++            abort(403, 'Akses ditolak. Anda hanya berhak melihat riwayat kunjungan UKS Anda sendiri.');
++        }
+```
+
+### Patch #29: Role-Based Access Control pada Bimbingan Konseling & Jurnal Guru di `routes/api.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.6) - Broken Access Control & Privilege Escalation.
+- **Analisis:** Endpoint `/api/v1/counseling/dashboard`, `/at-risk`, dan `/sessions` dapat dibuka oleh siswa untuk membaca evaluasi psikologis siswa bermasalah. Endpoint `/teaching-journals` dapat disubmit oleh non-guru.
+- **Remediasi:** Mengelompokkan rute konseling staf di bawah middleware `role:admin,superadmin,bk,guru,kepala_sekolah`, serta membatasi jurnal mengajar dengan `role:admin,superadmin,guru`.
+
+```diff
+@@ -188,4 +188,9 @@
++      Route::middleware('role:admin,superadmin,bk,guru,kepala_sekolah')->group(function () {
++        Route::get('dashboard', ...);
++        Route::get('at-risk', ...);
++        Route::post('sessions', ...);
++      });
+```
+
+### Patch #30: Penerapan Rate Limiting pada Tantangan Biometrik di `routes/api.php`
+- **Tingkat Risiko:** Sedang (CVSS 5.3) - Denial of Service & Nonce Flooding.
+- **Analisis:** Rute `POST mobile/auth/biometric/challenge` dan `verify` tidak memiliki rate limiting sehingga rentan diserang banjir permintaan non-stop (*cache resource exhaustion*).
+- **Remediasi:** Memasangkan middleware `throttle:login` untuk membatasi frekuensi percobaan verifikasi biometrik secara ketat.
+
+```diff
+@@ -48,2 +48,2 @@
+-  Route::post('mobile/auth/biometric/challenge', ...);
+-  Route::post('mobile/auth/biometric/verify', ...);
++  Route::post('mobile/auth/biometric/challenge', ...)->middleware('throttle:login');
++  Route::post('mobile/auth/biometric/verify', ...)->middleware('throttle:login');
+```
+
 ---
+
+### Patch #31: Eliminasi Broken Access Control pada Admin Mobile Dashboard & Approval di `routes/api.php` & `AdminMobileDashboardController.php`
+- **Tingkat Risiko:** Kritis (CVSS 9.1) - Executive Broken Access Control & Privilege Escalation.
+- **Lokasi File:** [routes/api.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/routes/api.php) & [AdminMobileDashboardController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/AdminMobileDashboardController.php)
+- **Analisis:** Grup rute `mobile/admin` hanya dilindungi middleware umum `auth:sanctum` tanpa pemeriksaan role. Tidak ada verifikasi otorisasi di dalam controller (`dashboard`, `kpiDetail`, `processApproval`). Akibatnya, pengguna level siswa atau orang tua dapat melihat ringkasan keuangan sekolah, pendapatan SPP bulanan, dan memproses persetujuan alur kerja (workflow approval) untuk menyetujui atau menolak permohonan dana dan izin operasional sekolah secara sepihak.
+- **Remediasi:** Menerapkan middleware pembatas `role:admin,superadmin,kepsek,kepala_sekolah` pada grup rute `mobile/admin` di `routes/api.php` serta mengimplementasikan guard method `authorizeAdmin()` di dalam controller (`AdminMobileDashboardController.php`) sebagai mekanisme pertahanan berlapis (*defense-in-depth*).
+
+```diff
+@@ -288,3 +288,3 @@
+-    Route::prefix('mobile/admin')->middleware(['auth:sanctum'])->group(function () {
++    Route::prefix('mobile/admin')->middleware(['role:admin,superadmin,kepsek,kepala_sekolah'])->group(function () {
+```
+
+---
+
+### Patch #32: Eliminasi Massive BOLA / IDOR pada Parent Experience Portal di `routes/api.php` & `ParentPortalController.php`
+- **Tingkat Risiko:** Kritis (CVSS 8.6) - Massive Broken Object Level Authorization (BOLA / IDOR).
+- **Lokasi File:** [routes/api.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/routes/api.php) & [ParentPortalController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/ParentPortalController.php)
+- **Analisis:** Endpoint `/api/v1/parent/child/{childId}/feed`, `/digest`, dan `/benchmark` menerima parameter `childId` secara bebas tanpa memverifikasi apakah akun orang tua yang sedang terautentikasi adalah orang tua sah dari siswa yang bersangkutan (`Student::where('parent_id', $user->id)`). Selain itu, rute `parent` tidak memiliki middleware role sehingga siswa dapat mengakses portal orang tua dan mengintip riwayat siswa lain dengan memanipulasi parameter URL.
+- **Remediasi:** Memasangkan middleware `role:parent,orangtua,admin,superadmin,student,siswa` pada rute `parent`, serta membangun metode validasi kepemilikan `authorizeChildAccess(Request $request, ?int $childId)`. Jika orang tua mencoba mengakses anak dari orang tua lain, sistem secara tegas merespon HTTP 403 Forbidden.
+
+```diff
+@@ -382,3 +382,3 @@
+-    Route::prefix('parent')->group(function () {
++    Route::prefix('parent')->middleware('role:parent,orangtua,admin,superadmin,student,siswa')->group(function () {
+```
+
+---
+
+### Patch #33: Eliminasi BOLA pada Radar Psikometrik & Tren Nilai Siswa di `VizController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.5) - Insecure Direct Object Reference (BOLA) in Academic Analytics.
+- **Lokasi File:** [VizController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/VizController.php)
+- **Analisis:** Endpoint visualisasi analitik `/api/v1/viz/radar/student/{studentId}` dan `/trend/student/{studentId}` menerima sembarang ID siswa tanpa memvalidasi identitas pemanggil. Siswa A dapat melihat hasil grafik radar 6 dimensi (akademik, akhlak, ibadah, kehadiran, kedisiplinan, keaktifan) serta grafik tren nilai milik Siswa B.
+- **Remediasi:** Menambahkan fungsi otorisasi ketat `authorizeStudentAccess()`: jika pengguna adalah siswa, `$studentId` wajib cocok dengan ID akun profilnya sendiri. Jika pengguna adalah orang tua, harus terdaftar sebagai wali murid siswa tersebut. Staf guru, konselor BK, dan admin tetap memiliki akses monitoring pedagogis.
+
+```diff
+@@ -40,8 +40,2 @@
++        $this->authorizeStudentAccess($request, $studentId);
+         $radar = $this->vizService->getStudentRadarChart($studentId);
+```
+
+---
+
+### Patch #34: Eliminasi IDOR Self-Checkout Peminjaman Buku di `LibraryMobileApiController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.4) - Broken Object Level Authorization & Identity Spoofing.
+- **Lokasi File:** [LibraryMobileApiController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/LibraryMobileApiController.php)
+- **Analisis:** Pada metode `selfCheckout`, input `student_id` dipercayai mentah-mentah jika dikirimkan oleh pemanggil. Seorang siswa yang melakukan scan QR barcode buku dapat melampirkan parameter `student_id` milik siswa lain, sehingga buku dipinjam atas nama korban. Korban akan terblokir dari kuota peminjaman maksimal dan berisiko terkena denda keterlambatan buku yang tidak pernah ia pinjam.
+- **Remediasi:** Membatasi fleksibilitas parameter `student_id` hanya bagi staf perpustakaan/guru/admin (`isStaff`). Jika siswa mencoba mengirimkan `student_id` atau NIS orang lain, sistem menolak dengan HTTP 403 Forbidden.
+
+```diff
+@@ -114,3 +114,10 @@
++        $isStaff = in_array($user->role, ['admin', 'superadmin', 'guru', 'teacher', 'pustakawan', 'petugas_perpustakaan'], true);
++        if ($request->filled('student_id')) {
++            if (! $isStaff && $user->student && (string)$user->student->id !== (string)$request->student_id && (string)$user->student->nis !== (string)$request->student_id) {
++                return response()->json(['error' => 'Akses ditolak.', 'message' => 'Siswa dilarang melakukan peminjaman atas nama identitas siswa lain.'], 403);
++            }
++            if ($isStaff) { $student = Student::where('id', $request->student_id)->orWhere('nis', $request->student_id)->first(); }
++        }
+```
+
+---
+
+### Patch #35: Transisi dari Role Blacklist ke Strict Whitelist pada Verifikasi Prestasi di `AchievementMobileApiController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.1) - Insecure Authorization via Blacklisting.
+- **Lokasi File:** [AchievementMobileApiController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/AchievementMobileApiController.php)
+- **Analisis:** Metode `verify` memblokir pengguna menggunakan pendekatan blacklist: `if ($user->role === 'student' || $user->role === 'siswa') return 403;`. Pendekatan ini meloloskan akun dengan peran lain seperti orang tua (`parent`), alumni, atau calon siswa untuk menyetujui klaim prestasi, mengubah status ke `VALIDATED`, dan menambah poin penghargaan siswa secara tidak sah.
+- **Remediasi:** Mengubah logika otorisasi menjadi *strict whitelisting*: hanya peran resmi penilai (`guru`, `teacher`, `admin`, `superadmin`, `waka_kesiswaan`, `kepala_sekolah`, `kepsek`) yang memiliki wewenang untuk menyetujui atau menolak prestasi.
+
+```diff
+@@ -141,4 +141,6 @@
+-        if ($user->role === 'student' || $user->role === 'siswa') {
++        $authorizedRoles = ['guru', 'teacher', 'admin', 'superadmin', 'waka_kesiswaan', 'kepala_sekolah', 'kepsek'];
++        if (! $user || ! in_array($user->role, $authorizedRoles, true)) {
+             return response()->json([
+```
+
+---
+
+### Patch #36: Otorisasi & Pencegahan Web Push Hijacking di `routes/web.php` & `PwaController.php`
+- **Tingkat Risiko:** Kritis (CVSS 8.2) - Sensitive Notification Interception & Default Admin Fallback.
+- **Lokasi File:** [routes/web.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/routes/web.php) & [PwaController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/PwaController.php)
+- **Analisis:** Rute `POST /pwa/subscribe` terdaftar tanpa middleware otentikasi. Pada `PwaController::subscribe`, jika request dikirimkan oleh pengguna anonim (`$request->user() == null`), sistem secara otomatis menggunakan nilai bawaan `$userId = 1` (Super Admin). Penyerang luar dapat mendaftarkan endpoint push browser miliknya ke akun Admin #1 dan menerima seluruh notifikasi sensitif sekolah secara real-time.
+- **Remediasi:** Memasang middleware `auth` pada rute `POST /pwa/subscribe` dan menolak seluruh request tanpa sesi login aktif dengan HTTP 401 Unauthorized, menghapus fallback bawaan ke ID 1.
+
+```diff
+@@ -1902,1 +1902,1 @@
+-Route::post('/pwa/subscribe', [\App\Http\Controllers\PwaController::class, 'subscribe'])->name('pwa.subscribe');
++Route::post('/pwa/subscribe', [\App\Http\Controllers\PwaController::class, 'subscribe'])->middleware('auth')->name('pwa.subscribe');
+```
+
+---
+
+### Patch #37: Penguatan Validasi MIME Upload Dokumen OCR (Anti-SVG Stored XSS) di `DocumentMobileApiController.php`
+- **Tingkat Risiko:** Tinggi (CVSS 7.2) - Stored Cross-Site Scripting via SVG File Upload.
+- **Lokasi File:** [DocumentMobileApiController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/DocumentMobileApiController.php)
+- **Analisis:** Endpoint `/api/v1/documents/ocr/scan` menggunakan aturan validasi `'document_image' => 'required|image|max:5120'`. Aturan `image` bawaan Laravel meloloskan berkas format SVG (`image/svg+xml`) yang dapat disusupi skrip JavaScript jahat. Dokumen disimpan pada disk publik (`documents/ocr`) sehingga dapat dieksekusi saat dibuka langsung di peramban staf administrasi.
+- **Remediasi:** Mengubah validasi menjadi eksplisit whitelist ekstensi dan MIME type berkas citra bitmap: `'required|file|mimes:jpeg,jpg,png,pdf|max:5120'`.
+
+```diff
+@@ -62,1 +62,1 @@
+-            'document_image' => 'required|image|max:5120',
++            'document_image' => 'required|file|mimes:jpeg,jpg,png,pdf|max:5120',
+```
+
+---
+
+### Patch #38: Anti-Spam & Cryptographic Respondent Hash pada Evaluasi Guru 360 Anonim di `EvaluationService.php`
+- **Tingkat Risiko:** Sedang (CVSS 5.8) - Quality Control Flaw & Ballot Stuffing / Rating Manipulation.
+- **Lokasi File:** [EvaluationService.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Services/EvaluationService.php)
+- **Analisis:** Pada metode `submitTeacherEvaluation`, jika instrumen bersifat anonim (`$instrument->is_anonymous = true`), kolom `evaluator_id` disimpan bernilai `null`. Pada saat siswa mengirimkan evaluasi berikutnya, query pencegahan ganda `where('evaluator_id', $evaluatorId)->exists()` selalu bernilai `false` karena baris sebelumnya bernilai `null`. Akibatnya, seorang siswa dapat mengirimkan ribuan ulasan negatif atau positif palsu ke guru target.
+- **Remediasi:** Menghasilkan hash responden anonim kriptografis satu arah (`sha256(evaluatorId + instrumentId + evaluateeId + APP_KEY)`) dan menyimpannya di dalam atribut `scores['respondent_hash']`. Sistem memverifikasi duplikasi berdasarkan hash ini tanpa membocorkan identitas siswa asli, menjaga prinsip kerahasiaan sekaligus integritas data voting.
+
+```diff
+@@ -56,3 +56,12 @@
++            $respondentHash = $evaluatorId ? hash('sha256', $evaluatorId . '_' . $instrument->id . '_' . $evaluateeId . '_' . (config('app.key') ?: 'sista_eval_key')) : null;
++            if ($evaluatorId) {
++                $existingResponses = Evaluation360Response::where('instrument_id', $instrument->id)->where('evaluatee_id', $evaluateeId)->get();
++                $alreadySubmitted = $existingResponses->contains(function ($resp) use ($evaluatorId, $respondentHash) {
++                    if ($resp->evaluator_id === $evaluatorId) return true;
++                    $scores = is_array($resp->scores) ? $resp->scores : [];
++                    return isset($scores['respondent_hash']) && $scores['respondent_hash'] === $respondentHash;
++                });
++                if ($alreadySubmitted) throw new Exception("Anda sudah mengevaluasi guru ini.");
++            }
+```
+
+---
+
+### Patch #39: Penanganan Null Pointer Exception Profil Siswa pada Endpoint UTBK di `UtbkMobileApiController.php`
+- **Tingkat Risiko:** Rendah (Low / QC Resilience Bug) - Unhandled Exception & 500 Server Error.
+- **Lokasi File:** [UtbkMobileApiController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/UtbkMobileApiController.php)
+- **Analisis:** Baris `$studentId = $request->user()->student->id;` mengasumsikan relasi `student` selalu ada. Jika diakses oleh akun guru, orang tua, atau admin, pemanggilan atribut pada objek `null` memicu `Fatal Error: Attempt to read property "id" on null` yang menghasilkan HTTP 500 dan berpotensi mengekspos jejak pemanggilan fungsi (*stack trace*).
+- **Remediasi:** Menambahkan validasi keberadaan profil siswa sebelum mengakses relasi, dan mengembalikan respon JSON HTTP 422 yang informatif jika akun bukan akun siswa.
+
+```diff
+@@ -51,1 +51,4 @@
+-            $studentId = $request->user()->student->id;
++        $student = $request->user()?->student;
++        if (! $student) {
++            return response()->json(['success' => false, 'message' => 'Profil siswa tidak ditemukan untuk akun ini.'], 422);
++        }
+```
+
+---
+
+### Patch #40: Pembatasan Ukuran String Base64 Tanda Tangan Digital (Anti-DoS) di `DocumentMobileApiController.php`
+- **Tingkat Risiko:** Sedang (CVSS 5.3) - Denial of Service & Storage Exhaustion.
+- **Lokasi File:** [DocumentMobileApiController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/DocumentMobileApiController.php)
+- **Analisis:** Aturan validasi `'signature_data' => 'required|string'` tidak menyertakan batas panjang maksimal (*length bound*). Penyerang dapat mengirimkan string gambar base64 berukuran ratusan megabyte secara berulang, menyebabkan pembengkakan disk database (*database bloat*) dan kelaparan memori RAM (*memory exhaustion*).
+- **Remediasi:** Menambahkan batasan panjang maksimal pada input tanda tangan: `'signature_data' => 'required|string|max:500000'` (maksimal 500 KB base64).
+
+```diff
+@@ -97,1 +97,1 @@
+-            'signature_data' => 'required|string',
++            'signature_data' => 'required|string|max:500000',
+```
+
+---
+
+### Patch #41: Remediasi Hardcoded Plain-Text Supervisor PIN pada CBT Anti-Cheat di `CbtAntiCheatEngine.kt` (Android)
+- **Tingkat Risiko:** Tinggi (CVSS 7.4) - Hardcoded Credentials & Academic Integrity Breach.
+- **Lokasi File:** [CbtAntiCheatEngine.kt](file:///c:/project/portofolio/project-super-web/sista-android/app/src/main/java/com/sultanagung1/sista/core/security/CbtAntiCheatEngine.kt)
+- **Analisis:** Modul anti-cheat CBT menyimpan PIN buka kunci darurat pengawas dalam format teks biasa (*plain-text*) di dalam variabel `setOf("195026", "SA1CBT", "889900")`. Setiap siswa yang mengekstrak atau mendekompilasi file APK Android dapat dengan mudah membaca PIN tersebut dan membuka kunci ujian yang terkunci secara mandiri tanpa sepengetahuan pengawas guru. Selain itu, PIN yang diinput dicatat dalam log riwayat pelanggaran (`violationHistory`) yang memicu kebocoran informasi.
+- **Remediasi:** 
+  1. Mengganti penyimpanan plaintext PIN dengan representasi hash kriptografis SHA-256 (`supervisorPinHashes`).
+  2. Meng-hash input pengguna dengan SHA-256 sebelum diverifikasi.
+  3. Menghapus pencatatan string PIN pengawas dari log `details` agar tidak terekspos di UI atau logcat.
+
+```diff
+-    private val supervisorPins = setOf("195026", "SA1CBT", "889900")
++    private val supervisorPinHashes = setOf(
++        "b7654751edc0a8c9aca430a7b60f099e5986828dcfad2f4785ecd6301ffd06f7", // SA1-Primary
++        "52e1699c474ba69e0af142935c2345fc57885c668e8c41bbff85c549dc55ec1c", // SA1-Fallback
++        "05853cc8379476d8bb3d350625a3bc08b91214049be1847d4e5403cc44715e31"  // SA1-Emergency
++    )
+...
+-        val isValid = cleanPin in supervisorPins
++        val hashedPin = sha256(cleanPin)
++        val isValid = hashedPin in supervisorPinHashes
+```
+
+---
+
+### Patch #42: Remediasi Insecure WebView File Access & Open Navigation pada SSO Portal di `SsoWebViewScreen.kt` (Android)
+- **Tingkat Risiko:** Tinggi (CVSS 7.5) - Insecure WebView Configuration & Session Hijacking.
+- **Lokasi File:** [SsoWebViewScreen.kt](file:///c:/project/portofolio/project-super-web/sista-android/app/src/main/java/com/sultanagung1/sista/ui/portal/SsoWebViewScreen.kt)
+- **Analisis:** Layanan SSO WebView menyuntikkan header otorisasi sensitif `Authorization: Bearer $userToken`. Namun, `shouldOverrideUrlLoading` mengembalikan nilai `false` untuk semua request, memungkinkan WebView menavigasi ke domain pihak ketiga manapun secara internal jika terdapat pengalihan (*open redirect*) atau tautan eksternal. Selain itu, `allowFileAccess` dan `allowContentAccess` tidak dinonaktifkan secara eksplisit, menimbulkan risiko pembacaan file lokal aplikasi (CWE-200).
+- **Remediasi:** 
+  1. Menonaktifkan akses file internal: `settings.allowFileAccess = false` dan `settings.allowContentAccess = false`.
+  2. Menerapkan whitelist domain resmi (`sista.sultanagung1.sch.id`, `api.sultanagung1.sch.id`, dan IP lokal).
+  3. Seluruh URL di luar domain terdaftar secara otomatis dicegah dimuat dalam WebView internal dan dialihkan ke browser sistem eksternal pengguna via `Intent(Intent.ACTION_VIEW)`.
+
+```diff
++                        settings.allowFileAccess = false
++                        settings.allowContentAccess = false
+...
+-                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+-                            return false
+-                        }
++                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
++                            val reqUri = request?.url ?: return false
++                            val host = reqUri.host?.lowercase() ?: ""
++                            val isInternalHost = host == "sista.sultanagung1.sch.id" || host == "api.sultanagung1.sch.id" || ...
++                            if (isInternalHost) return false
++                            val intent = Intent(Intent.ACTION_VIEW, reqUri)
++                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++                            context.startActivity(intent)
++                            return true
++                        }
+```
+
+---
+
+### Patch #43: Remediasi Script Tag Breakout / XSS pada Embedded KaTeX Renderer di `CbtLatexMathView.kt` (Android)
+- **Tingkat Risiko:** Sedang (CVSS 6.1) - Cross-Site Scripting (XSS) in Local WebView.
+- **Lokasi File:** [CbtLatexMathView.kt](file:///c:/project/portofolio/project-super-web/sista-android/app/src/main/java/com/sultanagung1/sista/ui/cbt/components/CbtLatexMathView.kt)
+- **Analisis:** Komponen render LaTeX CBT menyisipkan teks soal langsung ke dalam string literal JavaScript template (`var rawText = \`$safeContent\`;`). Pengecekan sanitasi sederhana tidak menangani penutupan tag HTML (`</script>`). Jika teks soal atau formula berisi tag penutup script, parser HTML WebView akan mengakhiri blok skrip dan mengeksekusi script baru secara liar.
+- **Remediasi:**
+  1. Menonaktifkan `settings.allowFileAccess = false` dan `settings.allowContentAccess = false`.
+  2. Mengenkapsulasi konten teks LaTeX ke dalam representasi Base64 murni di sisi Android (`android.util.Base64.encodeToString`) sebelum disematkan ke HTML.
+  3. Mendekode teks secara aman di JavaScript via `decodeURIComponent(escape(window.atob(str)))`, sepenuhnya kebal terhadap injeksi kutip, backslash, atau tag `</script>`.
+
+```diff
++    val base64Latex = remember(latexText) {
++        android.util.Base64.encodeToString(latexText.toByteArray(Charsets.UTF_8), android.util.Base64.NO_WRAP)
++    }
+...
+-                    var rawText = `$safeContent`;
++                    function decodeBase64(str) {
++                        return decodeURIComponent(escape(window.atob(str)));
++                    }
++                    var rawText = decodeBase64("$base64Latex");
+```
+
+---
+
+### QC-4: Remediasi Database Factory Constraint & Model Integrity pada `LibraryBookFactory.php` (Backend)
+- **Kategori:** Arsitektur & Kualitas Pengujian Otomatis (Quality Control Standards).
+- **Lokasi File:** [LibraryBookFactory.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/database/factories/LibraryBookFactory.php)
+- **Analisis:** Factory model `LibraryBook` menghasilkan kolom `'type' => $this->faker->randomElement(['physical', 'pdf', 'video'])`. Namun, skema migrasi tabel `library_books` mendefinisikan kolom `type` dengan nilai enum `['digital', 'physical']`. Inkonsistensi ini melanggar *SQLite CHECK Constraint* saat pembuatan data tiruan pada saat pengujian, menyebabkan kegagalan uji acak (*flaky test*).
+- **Remediasi:** Menyelaraskan array nilai acak pada factory dengan skema resmi: `'type' => $this->faker->randomElement(['physical', 'digital'])`. Seluruh 41 pengujian perpustakaan kini lulus 100% konsisten.
+
+---
+
+### Patch #44: Remediasi CBT Attempt State Machine Reversion & Missing Gate Policy pada `CbtEnterpriseApiController.php` & `CbtEnterpriseService.php` (Backend)
+- **Tingkat Risiko:** Kritis (CVSS 9.3) - Broken Object Level Authorization & State Machine Reversion.
+- **Lokasi File:**
+  - [CbtEnterpriseApiController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/CbtEnterpriseApiController.php#L68-L118)
+  - [CbtEnterpriseService.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Services/CbtEnterpriseService.php#L130-L195)
+- **Analisis Zero Trust & Zero Day:**
+  - *Prinsip Zero Trust yang Dilanggar:* *"Never Trust, Always Verify"*. Sistem mempercayai bahwa request yang datang dari siswa terotentikasi berhak mengirimkan sinkronisasi jawaban atau mengunggah lembar esai tanpa mengevaluasi *Policy Gate* (`Gate::authorize('take', $exam)`) dan tanpa memvalidasi konsistensi state machine sesi ujian.
+  - *Celah Keamanan:*
+    1. Endpoint `microSync` dan `uploadEssay` sebelumnya tidak mengeksekusi `Gate::authorize('take', $exam)`. Siswa dari kelas lain (misal Siswa Kelas XII MIPA 2) dapat memanggil API untuk mengirim jawaban atau mengunggah esai ke paket ujian Kelas XII MIPA 1 (BOLA / IDOR).
+    2. Saat siswa telah menyelesaikan ujian (`submitted` / `completed`) atau saat ujiannya dikunci oleh pengawas karena terdeteksi curang (`blocked_violation`), pengiriman payload `microSync` lama secara sepihak menimpa status attempt kembali menjadi `in_progress` (`$attempt->update(['status' => 'in_progress'])`). Hal ini memungkinkan siswa membalikkan diskualifikasi pengawas atau mengubah jawaban pasca-ujian secara ilegal.
+    3. Unggah lembar jawaban esai tidak memvalidasi apakah `question_id` benar-benar terdaftar dalam paket ujian terkait (`$exam->questions()`), memungkinkan siswa menyuntikkan jawaban esai palsu ke soal di luar ujian.
+- **Remediasi:**
+  1. Menambahkan `Gate::authorize('take', $exam)` pada `microSync` dan `uploadEssay`.
+  2. Memeriksa status attempt: jika status adalah `submitted`, `completed`, atau `blocked_violation`, sistem segera menolak request dengan `abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.')`.
+  3. Memvalidasi kepemilikan soal: `$questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();`, melempar `abort(422)` jika soal bukan bagian dari paket ujian.
+
+```diff
+// CbtEnterpriseApiController.php
++        Gate::authorize('take', $exam);
+
+// CbtEnterpriseService.php
++        if ($attempt && in_array($attempt->status, ['submitted', 'completed', 'blocked_violation'])) {
++            abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
++        }
++        $questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();
++        if (!$questionBelongsToExam) {
++            abort(422, 'Soal tidak terdaftar dalam paket ujian ini.');
++        }
+```
+
+---
+
+### Patch #45: Remediasi Server-Side Request Forgery (SSRF) & Metadata Exfiltration via `SsrfGuardService.php` (Backend)
+- **Tingkat Risiko:** Tinggi (CVSS 8.6) - Server-Side Request Forgery (SSRF) & Cloud Lateral Movement.
+- **Lokasi File:**
+  - [SsrfGuardService.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Services/Security/SsrfGuardService.php)
+  - [WebhookManagerService.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Services/WebhookManagerService.php)
+  - [IntegrationController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Admin/IntegrationController.php)
+  - [WebhookHubController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Admin/WebhookHubController.php)
+- **Analisis Zero Trust & Zero Day:**
+  - *Prinsip Zero Trust yang Dilanggar:* *"Assume Breach & Verify Network Destinations Explicitly"*. Sistem mempercayai seluruh URL webhook yang didaftarkan oleh admin atau modul integrasi eksternal tanpa memverifikasi target IP level jaringan internal atau resolver DNS.
+  - *Celah Keamanan:*
+    - Fitur webhook dispatcher dan webhook testing memungkinkan penyerang (atau akun admin yang terkompromi) mendaftarkan URL yang mengarah ke:
+      1. Loopback addresses: `http://127.0.0.1`, `http://localhost`.
+      2. Private subnets (RFC 1918): `http://10.0.0.0/8`, `http://172.16.0.0/12`, `http://192.168.0.0/16`.
+      3. Cloud instance metadata endpoints: `http://169.254.169.254/latest/meta-data/` (AWS/GCP/Azure) atau `http://metadata.google.internal`.
+      4. Protokol berbahaya non-HTTP: `file:///etc/passwd`, `gopher://`, `dict://`.
+    - Server Laravel mengeksekusi request HTTP keluar secara langsung, memungkinkan ekstraksi *cloud IAM credentials*, *internal database credentials*, atau pemindaian port jaringan privat (*internal network port scanning*).
+- **Remediasi:**
+  - Diciptakan layanan pengaman terpusat `SsrfGuardService::validateUrl($url)`:
+    1. Membatasi skema URL secara eksklusif ke `http` dan `https`.
+    2. Memblokir port non-standar/berbahaya (SSH 22, Telnet 23, SMTP 25, Redis 6379, Memcached 11211, MySQL/PostgreSQL ports).
+    3. Mengidentifikasi dan memblokir seluruh alamat IP loopback, private IPv4/IPv6, multicast, dan link-local via filter bawaan PHP `FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE`.
+    4. Secara eksplisit memblokir hostname dan IP metadata cloud (`169.254.169.254`, `metadata.google.internal`, `instance-data`).
+    5. Mengintegrasikan validasi ini ke `WebhookManagerService` (`registerSubscription`, `deliver`, `replayFailedDelivery`), `IntegrationController`, dan `WebhookHubController`.
+
+```diff
+// SsrfGuardService.php
++        if (!in_array(strtolower($scheme), ['http', 'https'], true)) {
++            throw new \InvalidArgumentException("Protokol '{$scheme}' tidak diizinkan.");
++        }
++        if ($host === '169.254.169.254' || str_contains($host, 'metadata.google.internal')) {
++            throw new \InvalidArgumentException("Akses ke cloud metadata endpoint dilarang.");
++        }
++        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
++            throw new \InvalidArgumentException("Akses ke jaringan privat atau lokal dilarang.");
++        }
+```
+
+---
+
+### Patch #46: Remediasi Silent Signature Bypass, Timing Attack & Gross Amount Tampering pada `MidtransWebhookController.php` (Backend)
+- **Tingkat Risiko:** Tinggi (CVSS 7.8) - Payment Gateway Bypass & Cryptographic Flaw.
+- **Lokasi File:** [MidtransWebhookController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/MidtransWebhookController.php)
+- **Analisis Zero Trust & Zero Day:**
+  - *Prinsip Zero Trust yang Dilanggar:* *"Never Trust External Payment Notifications, Cryptographically Verify Everything"*.
+  - *Celah Keamanan:*
+    1. Jika konfigurasi `services.midtrans.server_key` kosong di environment production, kode sebelumnya melakukan *silent bypass* dan menganggap verifikasi signature selalu valid (`if (!$serverKey) { return true; }`).
+    2. Perbandingan string signature menggunakan operator `!==` standar yang rentan terhadap serangan *cryptographic timing attack* (panjang dan karakter cocok dapat dianalisis berdasarkan latensi respon milidetik).
+    3. Nilai `gross_amount` tidak divalidasi harus bernilai positif (`> 0`). Penyerang dapat mengirim webhook bernilai nol (`0`) atau negatif untuk merusak pembukuan kas sekolah atau memicu pelunasan tagihan SPP tanpa pembayaran nyata.
+- **Remediasi:**
+  1. Jika `server_key` kosong di environment production, controller langsung membatalkan request dengan status 500 (`Midtrans server key is not configured`).
+  2. Mengganti string comparison dengan fungsi *constant-time comparison* `hash_equals($expectedSignature, $signatureKey)`.
+  3. Memvalidasi bahwa `gross_amount` harus berupa angka positif `(float) $grossAmount <= 0 => abort(400)`.
+
+```diff
+// MidtransWebhookController.php
+-        if (!$serverKey) {
+-            return true;
+-        }
++        if (!$serverKey) {
++            if (app()->environment('production')) {
++                abort(500, 'Midtrans server key is not configured.');
++            }
++            return false;
++        }
+...
+-        if ($expectedSignature !== $signatureKey) {
++        if (!hash_equals($expectedSignature, (string) $signatureKey)) {
+             abort(403, 'Invalid signature key');
+         }
++        if ((float) $grossAmount <= 0) {
++            abort(400, 'Invalid gross amount: must be positive');
++        }
+```
+
+---
+
+### Patch #47: Remediasi Unbounded Batch Processing DoS & Missing User Identity Binding pada `SyncController.php` & `OfflineSyncService.php` (Backend)
+- **Tingkat Risiko:** Tinggi (CVSS 7.5) - Resource Exhaustion / Denial of Service & Broken Context Association.
+- **Lokasi File:**
+  - [SyncController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/Api/v1/SyncController.php)
+  - [OfflineSyncService.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Services/OfflineSyncService.php)
+- **Analisis Zero Trust & Zero Day:**
+  - *Prinsip Zero Trust yang Dilanggar:* *"Least Privilege & Enforce Strict Input Quotas"*.
+  - *Celah Keamanan:*
+    1. Endpoint sinkronisasi offline `/api/v1/sync/batch` menerima array `actions` tanpa batasan kuota jumlah item (`max items`). Penyerang internal dapat mengirimkan puluhan ribu item aksi offline dalam satu payload HTTP, memicu *PHP memory exhaustion* atau penguncian database transaksi berkepanjangan (*Denial of Service*).
+    2. `OfflineSyncService::processBatch` mengeksekusi aksi-aksi sinkronisasi tanpa meneruskan identitas otentikasi user (`$request->user()`), membuka celah pencatatan aktivitas atau draft mutaba'ah/tahfidz tanpa pengikatan identitas pemilik aksi yang sah.
+- **Remediasi:**
+  1. Menambahkan validasi ketat pada `SyncController`: `'actions' => 'required|array|max:100'`.
+  2. Membatasi pemrosesan di service menggunakan `array_slice($actions, 0, 100)` untuk menjamin *defense-in-depth*.
+  3. Mengikat konteks identitas pengguna `user_id => $user?->id` ke dalam setiap log hasil sinkronisasi batch.
+
+```diff
+// SyncController.php
+         $request->validate([
+-            'actions' => 'required|array',
++            'actions' => 'required|array|max:100',
+             'actions.*.id' => 'required|string',
+...
+-        $result = $this->syncService->processBatch($request->input('actions'));
++        $result = $this->syncService->processBatch($request->input('actions'), $request->user());
+
+// OfflineSyncService.php
+-    public function processBatch(array $actions): array
++    public function processBatch(array $actions, ?User $user = null): array
+     {
++        $safeActions = array_slice($actions, 0, 100);
+```
+
+---
+
+### Patch #48: Remediasi Session Fixation & Excessive Administrative Privilege Leak saat Impersonation pada `ImpersonateController.php` & `RestrictImpersonation.php` (Backend)
+- **Tingkat Risiko:** Sedang (CVSS 6.8) - Session Hijacking & Administrative Privilege Misuse.
+- **Lokasi File:**
+  - [ImpersonateController.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Controllers/ImpersonateController.php)
+  - [RestrictImpersonation.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/app/Http/Middleware/RestrictImpersonation.php)
+- **Analisis Zero Trust & Zero Day:**
+  - *Prinsip Zero Trust yang Dilanggar:* *"Never Trust Session Lifecycles Across Privilege Boundaries"*.
+  - *Celah Keamanan:*
+    1. Saat admin menyamar menjadi pengguna lain (`take()`) atau kembali ke akun aslinya (`leave()`), ID sesi PHP tidak diregenerasi (`session()->regenerate()`). Hal ini memungkinkan penyerang yang mengetahui Session ID pra-otentikasi membajak sesi pengguna yang disamar (*Session Fixation*).
+    2. Penyamaran akun tidak memblokir penyamaran antar sesama akun Admin atau Superadmin, sehingga berpotensi dimanfaatkan untuk menghindari audit jejak digital (*audit trail evasion*).
+    3. Middleware `RestrictImpersonation` sebelumnya hanya mengecek rute individual dan meloloskan aksi mutasi data finansial/integrasi kritis via HTTP `POST/PUT/DELETE` ke modul perbendaharaan (`treasury.*`), keuangan (`finance.*`), dan webhook (`admin.webhooks.*`).
+- **Remediasi:**
+  1. Menambahkan `session()->regenerate()` saat `take()` dan `leave()`.
+  2. Memblokir penyamaran ke sesama Admin/Superadmin (`$user->isAdmin() || in_array($user->role, ['admin', 'superadmin'])`).
+  3. Memperluas pemblokiran di middleware `RestrictImpersonation` untuk memblokir seluruh metode mutasi (`POST`, `PUT`, `PATCH`, `DELETE`) pada prefix rute sensitif: `admin.webhooks.`, `admin.integrations.`, `treasury.`, dan `finance.`.
+
+```diff
+// ImpersonateController.php
++        if ($user->isAdmin() || (method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin()) || in_array($user->role, ['admin', 'superadmin'])) {
++            return back()->with('error', 'Anda tidak dapat menyamar sebagai sesama Admin.');
++        }
+...
+         Auth::login($user);
++        session()->regenerate();
+
+// RestrictImpersonation.php
++            $restrictedPrefixes = [
++                'admin.webhooks.',
++                'admin.integrations.',
++                'treasury.',
++                'finance.',
++            ];
++            if ($currentRouteName) {
++                foreach ($restrictedPrefixes as $prefix) {
++                    if (str_starts_with($currentRouteName, $prefix) && in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
++                        abort(403, 'Aksi modifikasi data sensitif/finansial tidak diizinkan dalam mode impersonate.');
++                    }
++                }
++            }
+```
+
+---
+
+### Patch #49: Remediasi Artificial Hash Bypass via Android Hardware KeyStore RSA Asymmetric Signing pada `KeystoreManager.kt` (Android)
+- **Tingkat Risiko:** Tinggi (CVSS 7.4) - Cryptographic Verification Bypass & Identity Spoofing.
+- **Lokasi File:** [KeystoreManager.kt](file:///c:/project/portofolio/project-super-web/sista-android/app/src/main/java/com/sultanagung1/sista/core/security/KeystoreManager.kt)
+- **Analisis Zero Trust & Zero Day:**
+  - *Prinsip Zero Trust yang Dilanggar:* *"Cryptographic Hardware Root-of-Trust Must Never Be Emulated"*.
+  - *Celah Keamanan:*
+    - Implementasi `signChallenge(challenge)` sebelumnya menggunakan algoritma hash artifisial (`challenge.toByteArray().fold(0L) { acc, byte -> acc * 31 + byte }`) yang menghasilkan string `SIG_KEYSTORE_${hash}_${timestamp}`.
+    - Pendekatan ini tidak menggunakan kunci kriptografis hardware sama sekali, mudah ditebak dan direkayasa oleh penyerang (*signature forgery*), serta tidak memenuhi standar otentikasi biometrik FIDO2 / hardware-backed keystore.
+- **Remediasi:**
+  1. Menginisialisasi `KeyPairGenerator` RSA 2048-bit di dalam modul hardware `AndroidKeyStore` dengan tujuan `KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY`, digest `SHA256`/`SHA512`, dan padding `PKCS1`.
+  2. Menyediakan fungsi `getPublicKeyPem()` untuk mengekspor public key X.509 terformat PEM ke server backend.
+  3. Mengimplementasikan penandatanganan tantangan kriptografis berbasis hardware `SHA256withRSA` menggunakan `PrivateKey` dari `AndroidKeyStore`.
+
+```diff
+// KeystoreManager.kt
++        private const val KEY_ALIAS_RSA = "sulaone_auth_signing_key"
++        ...
++        val kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEYSTORE)
++        val spec = KeyGenParameterSpec.Builder(KEY_ALIAS_RSA, KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
++            .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
++            .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
++            .setKeySize(2048)
++            .build()
++        kpg.initialize(spec)
++        kpg.generateKeyPair()
+...
++        val privateKey = keyStore.getKey(KEY_ALIAS_RSA, null) as? PrivateKey
++        val signature = Signature.getInstance("SHA256withRSA")
++        signature.initSign(privateKey)
++        signature.update(challenge.toByteArray(Charsets.UTF_8))
++        val signatureBytes = signature.sign()
++        return Base64.encodeToString(signatureBytes, Base64.NO_WRAP)
+```
+
+---
+
+### 🧪 Verifikasi Pengujian Otomatis Keamanan (Automated Security & QC Test Suite)
+
+Seluruh celah keamanan VULN-031 s.d. VULN-040 dan standar kualitas kode telah diverifikasi dengan suite pengujian otomatis khusus:
+- **Lokasi Test Suite:** [MobileApiSecurityAndQcTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Security/MobileApiSecurityAndQcTest.php)
+- **Hasil Eksekusi:** **10 Passed, 0 Failed, 34 Assertions** (100% Lolos Uji).
+```bash
+php artisan test tests/Feature/Security/MobileApiSecurityAndQcTest.php
+   PASS  Tests\Feature\Security\MobileApiSecurityAndQcTest
+  ✓ non admin users are forbidden from mobile admin dashboard and approvals      1.28s  
+  ✓ parent portal prevents cross child inspection                                0.07s  
+  ✓ visualization student radar and trend prevent cross student inspection       0.07s  
+  ✓ library self checkout prevents student impersonation                         0.07s  
+  ✓ achievement verification enforces strict role whitelist                      0.07s  
+  ✓ web push subscribe requires authentication                                   0.08s  
+  ✓ ocr scan rejects svg uploads                                                 0.08s  
+  ✓ anonymous teacher evaluation prevents duplicate spam                         0.07s  
+  ✓ utbk submit handles null student cleanly                                     0.07s  
+  ✓ submit signature rejects oversized payload                                   0.08s  
+
+  Tests:    10 passed (34 assertions)
+  Duration: 2.17s
+```
+
+Verifikasi regresi pengujian modul perpustakaan pasca-perbaikan QC-4:
+```bash
+php artisan test --filter=Library
+  Tests:    41 passed (160 assertions)
+  Duration: 5.20s
+```
+
+#### 🛡️ Verifikasi Pengujian Otomatis Zero Trust & Zero Day (Patches #44 - #49)
+Seluruh mitigasi Zero Trust dan celah Zero Day (VULN-044 s.d. VULN-049) telah diverifikasi secara mendalam dengan automated test suite khusus:
+- **Lokasi Test Suite:** [ZeroTrustZeroDayRemediationTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Security/ZeroTrustZeroDayRemediationTest.php)
+- **Hasil Eksekusi:** **8 Passed, 0 Failed, 23 Assertions** (100% Lolos Uji).
+
+```bash
+php artisan test tests/Feature/Security/ZeroTrustZeroDayRemediationTest.php
+   PASS  Tests\Feature\Security\ZeroTrustZeroDayRemediationTest
+  ✓ cbt micro sync and essay upload enforce take policy                                                          1.29s  
+  ✓ cbt attempt state machine blocks reversion                                                                   0.07s  
+  ✓ cbt essay upload validates question belongs to exam                                                          0.07s  
+  ✓ ssrf guard blocks cloud metadata and invalid protocols                                                       0.07s  
+  ✓ ssrf guard blocks non http schemes                                                                           0.06s  
+  ✓ midtrans webhook requires positive gross amount and valid signature                                          0.07s  
+  ✓ offline sync validates batch count and binds user                                                            0.09s  
+  ✓ impersonation regenerates session and restricts sensitive routes                                             0.11s  
+
+  Tests:    8 passed (23 assertions)
+  Duration: 2.02s
+```
+
+#### 🚀 Verifikasi Pengujian Regresi Penuh Seluruh Modul Keamanan (Full Security Regression Suite)
+Seluruh rangkaian pengujian keamanan (`tests/Feature/Security`) dijalankan bersamaan untuk memastikan bahwa implementasi Zero Trust tidak menyebabkan regresi fungsional (*zero regression*):
+```bash
+php artisan test tests/Feature/Security
+  Tests:    140 passed (655 assertions)
+  Duration: 29.24s
+```
 
 ## 🏛️ Cetak Biru (Blueprint) Keamanan Web Sekolah Skala Enterprise
 

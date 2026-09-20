@@ -122,6 +122,25 @@ class CbtEnterpriseService
      */
     public function processMicroBatchAnswers(Exam $exam, Student $student, array $answers): array
     {
+        // Zero Trust: Enforce state machine integrity
+        $attempt = ExamAttempt::where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->first();
+
+        if ($attempt && in_array($attempt->status, ['submitted', 'completed', 'blocked_violation'])) {
+            abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
+        }
+
+        if (!$attempt) {
+            $attempt = ExamAttempt::create([
+                'exam_id' => $exam->id,
+                'student_id' => $student->id,
+                'uuid' => (string) Str::uuid(),
+                'status' => 'in_progress',
+                'started_at' => now(),
+            ]);
+        }
+
         $cacheKey = "cbt_answers_{$exam->id}_{$student->id}";
         $existing = Cache::get($cacheKey, []);
         foreach ($answers as $qId => $ans) {
@@ -131,16 +150,6 @@ class CbtEnterpriseService
 
         // Store in Redis/Cache for 6 hours
         Cache::put($cacheKey, $merged, now()->addHours(6));
-
-        // Asynchronously or directly persist in ExamAttempt
-        $attempt = ExamAttempt::firstOrCreate(
-            ['exam_id' => $exam->id, 'student_id' => $student->id],
-            [
-                'uuid' => (string) Str::uuid(),
-                'status' => 'in_progress',
-                'started_at' => now(),
-            ]
-        );
 
         $attempt->update([
             'answers' => $merged,
@@ -159,14 +168,29 @@ class CbtEnterpriseService
      */
     public function handleEssayUpload(Exam $exam, Student $student, int $questionId, UploadedFile $file, ?string $notes = null): CbtEssaySubmission
     {
-        $attempt = ExamAttempt::firstOrCreate(
-            ['exam_id' => $exam->id, 'student_id' => $student->id],
-            [
+        // Zero Trust: Enforce attempt state & question ownership
+        $attempt = ExamAttempt::where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->first();
+
+        if ($attempt && in_array($attempt->status, ['submitted', 'completed', 'blocked_violation'])) {
+            abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
+        }
+
+        if (!$attempt) {
+            $attempt = ExamAttempt::create([
+                'exam_id' => $exam->id,
+                'student_id' => $student->id,
                 'uuid' => (string) Str::uuid(),
                 'status' => 'in_progress',
                 'started_at' => now(),
-            ]
-        );
+            ]);
+        }
+
+        $questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();
+        if (!$questionBelongsToExam) {
+            abort(422, 'Soal tidak terdaftar dalam paket ujian ini.');
+        }
 
         $filename = 'essay_' . $exam->id . '_' . $student->id . '_' . $questionId . '_' . time() . '.jpg';
         $destinationPath = storage_path('app/public/cbt/essays/' . $exam->id);

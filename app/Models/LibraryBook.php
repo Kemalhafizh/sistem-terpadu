@@ -14,6 +14,7 @@ class LibraryBook extends Model
         'uuid',
         'title',
         'author',
+        'isbn',
         'category_id',
         'subject_id',
         'type',
@@ -21,8 +22,12 @@ class LibraryBook extends Model
         'nfc_uid',
         'file_path',
         'cover_path',
+        'shelf_location',
         'video_url',
         'is_physical_available',
+        'total_copies',
+        'available_copies',
+        'rating',
         'download_count',
         'description',
         'created_by',
@@ -30,6 +35,9 @@ class LibraryBook extends Model
 
     protected $casts = [
         'is_physical_available' => 'boolean',
+        'total_copies' => 'integer',
+        'available_copies' => 'integer',
+        'rating' => 'float',
     ];
 
     public function scopeByCode($query, string $code)
@@ -37,7 +45,8 @@ class LibraryBook extends Model
         return $query->where('barcode', $code)
             ->orWhere('nfc_uid', $code)
             ->orWhere('uuid', $code)
-            ->orWhere('id', $code);
+            ->orWhere('id', $code)
+            ->orWhere('isbn', $code);
     }
 
     public function category()
@@ -66,8 +75,41 @@ class LibraryBook extends Model
             return false;
         }
 
-        // Buku fisik bisa dipinjam jika kolom is_physical_available bernilai true
-        // DAN tidak ada data peminjaman aktif (belum dikembalikan)
-        return $this->is_physical_available && ! $this->loans()->active()->exists();
+        if (! $this->is_physical_available) {
+            return false;
+        }
+
+        if ($this->available_copies !== null && $this->available_copies <= 0) {
+            return false;
+        }
+
+        $activeLoansCount = $this->loans()->active()->count();
+        $total = $this->total_copies ?? 1;
+
+        return $activeLoansCount < $total;
+    }
+
+    /**
+     * Map model to Android BookItem schema
+     */
+    public function toMobileItemArray(): array
+    {
+        $available = $this->isAvailableForBorrow();
+        $availCopies = $this->available_copies ?? ($available ? 1 : 0);
+        $totCopies = $this->total_copies ?? max(1, $availCopies);
+
+        return [
+            'id' => (int) $this->id,
+            'title' => (string) $this->title,
+            'author' => (string) ($this->author ?? 'SMA Islam Sultan Agung 1'),
+            'isbn' => (string) ($this->isbn ?? $this->barcode ?? '-'),
+            'category' => (string) ($this->category ? $this->category->name : 'Umum'),
+            'shelf_location' => (string) ($this->shelf_location ?? 'Koleksi Perpustakaan'),
+            'synopsis' => (string) ($this->description ?? 'Tidak ada sinopsis tersedia.'),
+            'available_copies' => (int) max(0, $availCopies),
+            'total_copies' => (int) max(1, $totCopies),
+            'rating' => (float) ($this->rating ?? 4.8),
+            'is_available' => (bool) $available,
+        ];
     }
 }

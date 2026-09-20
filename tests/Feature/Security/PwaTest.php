@@ -23,7 +23,7 @@ class PwaTest extends TestCase
         $data = json_decode($content, true);
 
         $this->assertNotNull($data, 'manifest.json is not valid JSON');
-        $this->assertEquals('Sistem Terpadu SMA Islam Sultan Agung 1', $data['name']);
+        $this->assertEquals('SISTA — SMA Islam Sultan Agung 1 Semarang', $data['name']);
         $this->assertEquals('SISTA', $data['short_name']);
         $this->assertEquals('standalone', $data['display']);
         $this->assertEquals('#0d9488', $data['theme_color']);

@@ -16,11 +16,12 @@ class WebhookManagerService
      */
     public function registerSubscription(array $data): WebhookSubscription
     {
+        $targetUrl = \App\Services\Security\SsrfGuardService::validateUrl($data['target_url']);
         $secretKey = $data['secret_key'] ?? 'whsec_' . Str::random(24);
 
         return WebhookSubscription::create([
             'name' => $data['name'],
-            'target_url' => $data['target_url'],
+            'target_url' => $targetUrl,
             'secret_key' => $secretKey,
             'events' => (array) $data['events'],
             'is_active' => $data['is_active'] ?? true,
@@ -79,6 +80,8 @@ class WebhookManagerService
         $responseBody = '{"success": true}';
 
         try {
+            \App\Services\Security\SsrfGuardService::validateUrl($subscription->target_url);
+
             if (! app()->environment('testing')) {
                 $response = Http::timeout(5)
                     ->withHeaders([
@@ -135,6 +138,8 @@ class WebhookManagerService
         $responseBody = '{"replayed": true, "success": true}';
 
         try {
+            \App\Services\Security\SsrfGuardService::validateUrl($subscription->target_url);
+
             if (! app()->environment('testing')) {
                 $response = Http::timeout(5)
                     ->withHeaders([

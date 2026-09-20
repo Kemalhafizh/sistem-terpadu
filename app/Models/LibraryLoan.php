@@ -98,4 +98,41 @@ class LibraryLoan extends Model
         $daysLate = $this->due_at->diffInDays($endDate, false);
         return $daysLate > 0 ? (int) ceil($daysLate) : 0;
     }
+
+    /**
+     * Map model to Android BookLoanItem schema
+     */
+    public function toMobileItemArray(): array
+    {
+        $isReturned = $this->returned_at !== null;
+        $isOverdue = ! $isReturned && $this->due_at->isPast();
+
+        if ($isReturned) {
+            $mobileStatus = 'RETURNED';
+            $daysRemaining = 0;
+        } elseif ($isOverdue || $this->status === 'overdue') {
+            $mobileStatus = 'OVERDUE';
+            $daysRemaining = 0;
+        } else {
+            $mobileStatus = 'ACTIVE';
+            $daysRemaining = max(0, (int) ceil(now()->diffInDays($this->due_at, false)));
+        }
+
+        $fine = $this->calculateFine();
+        if ($this->fine_amount > 0 && $fine <= 0) {
+            $fine = (float) $this->fine_amount;
+        }
+
+        return [
+            'id' => (int) $this->id,
+            'book_id' => (int) $this->library_book_id,
+            'book_title' => (string) ($this->book ? $this->book->title : 'Buku Perpustakaan'),
+            'borrow_date' => $this->borrowed_at ? $this->borrowed_at->format('Y-m-d') : now()->format('Y-m-d'),
+            'due_date' => $this->due_at ? $this->due_at->format('Y-m-d') : now()->addDays(14)->format('Y-m-d'),
+            'days_remaining' => (int) $daysRemaining,
+            'status' => $mobileStatus,
+            'fine_amount' => (int) $fine,
+        ];
+    }
 }
+

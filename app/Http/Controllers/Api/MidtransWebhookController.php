@@ -27,8 +27,8 @@ class MidtransWebhookController extends Controller
         $transactionStatus = $payload['transaction_status'] ?? null;
         $paymentType = $payload['payment_type'] ?? 'bank_transfer';
 
-        if (! $orderId || ! $statusCode || ! $grossAmount) {
-            return response()->json(['message' => 'Invalid Payload'], 400);
+        if (! $orderId || ! $statusCode || ! $grossAmount || (float) $grossAmount <= 0) {
+            return response()->json(['message' => 'Invalid Payload: Order ID, status code, and positive gross amount are required'], 400);
         }
 
         // Tentukan apakah request berasal dari Simulator Portofolio
@@ -38,9 +38,14 @@ class MidtransWebhookController extends Controller
         // 1. Verifikasi Tanda Tangan (Signature Key)
         $serverKey = config('services.midtrans.server_key');
 
-        if (! $isSimulation && ! empty($serverKey)) {
+        if (! $isSimulation) {
+            if (empty($serverKey)) {
+                Log::error('Midtrans Webhook: Server key tidak terkonfigurasi pada server production!');
+                return response()->json(['message' => 'Payment gateway server key misconfigured'], 500);
+            }
+
             $expectedSignature = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
-            if ($signatureKey !== $expectedSignature) {
+            if (! hash_equals($expectedSignature, (string) $signatureKey)) {
                 Log::warning("Midtrans Webhook Signature Mismatch! Expected: $expectedSignature, Received: $signatureKey");
 
                 return response()->json(['message' => 'Invalid Signature'], 403);

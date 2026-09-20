@@ -1896,4 +1896,9 @@ require __DIR__.'/extended_diamond.php';
 Route::get('/.well-known/assetlinks.json', [\App\Http\Controllers\WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');
 Route::get('/.well-known/apple-app-site-association', [\App\Http\Controllers\WellKnownController::class, 'appleAppSiteAssociation'])->name('well-known.apple-app-site-association');
 
+// --- FASE 107: PWA (Progressive Web App) Routes ---
+Route::get('/manifest.json', [\App\Http\Controllers\PwaController::class, 'manifest'])->name('pwa.manifest');
+Route::get('/sw.js', [\App\Http\Controllers\PwaController::class, 'serviceWorker'])->name('pwa.service-worker');
+Route::post('/pwa/subscribe', [\App\Http\Controllers\PwaController::class, 'subscribe'])->middleware('auth')->name('pwa.subscribe');
+
 

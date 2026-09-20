@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 title Backend SISTA - SMA Islam Sultan Agung 1 Semarang
 color 0A
 

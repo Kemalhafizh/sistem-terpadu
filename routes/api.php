@@ -45,8 +45,8 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
   Route::post('login', [ApiAuthController::class, 'login'])->middleware('throttle:login');
   Route::get('mobile/config', [MobileConfigController::class, 'getConfig']);
   Route::post('mobile/auth/login', [MobileAuthController::class, 'login'])->middleware('throttle:login');
-  Route::post('mobile/auth/biometric/challenge', [MobileAuthController::class, 'biometricChallenge']);
-  Route::post('mobile/auth/biometric/verify', [MobileAuthController::class, 'biometricVerify']);
+  Route::post('mobile/auth/biometric/challenge', [MobileAuthController::class, 'biometricChallenge'])->middleware('throttle:login');
+  Route::post('mobile/auth/biometric/verify', [MobileAuthController::class, 'biometricVerify'])->middleware('throttle:login');
   Route::get('rapor/verify/{hash}', [\App\Http\Controllers\Api\v1\ERaporApiController::class, 'verify']);
 
   // === FASE 94: SPMB / PPDB MOBILE (PUBLIC) ===
@@ -186,12 +186,15 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
     // === FASE 92: BIMBINGAN KONSELING (BK) MOBILE & AT-RISK MONITORING ===
     Route::prefix('counseling')->group(function () {
-      Route::get('dashboard', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'dashboard']);
-      Route::post('sessions', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'storeSession']);
       Route::post('appointments/request', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'requestAppointment']);
       Route::get('appointments/my', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'studentAppointments']);
-      Route::get('at-risk', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'atRiskStudents']);
-      Route::post('sessions/{id}/follow-up', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'addFollowUp']);
+
+      Route::middleware('role:admin,superadmin,bk,guru,kepala_sekolah')->group(function () {
+        Route::get('dashboard', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'dashboard']);
+        Route::post('sessions', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'storeSession']);
+        Route::get('at-risk', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'atRiskStudents']);
+        Route::post('sessions/{id}/follow-up', [\App\Http\Controllers\Api\v1\CounselingMobileApiController::class, 'addFollowUp']);
+      });
     });
 
     // === FASE 95: PROFIL KOMPREHENSIF SISWA 360 DERAJAT ===
@@ -214,15 +217,182 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     // === FASE 96: REKAM MEDIS UKS & SKRINING KESEHATAN ===
     Route::prefix('uks')->group(function () {
       Route::get('visits/my', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'uksVisits']);
-      Route::post('visits', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'recordUksVisit']);
+      Route::post('visits', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'recordUksVisit'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru');
       Route::get('screening/{studentId?}', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'healthScreening']);
     });
 
     // === FASE 97: JURNAL MENGAJAR GURU & AGENDA KELAS ===
-    Route::prefix('teaching-journals')->group(function () {
+    Route::prefix('teaching-journals')->middleware('role:admin,superadmin,guru')->group(function () {
       Route::get('my', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'teacherJournals']);
       Route::post('/', [\App\Http\Controllers\Api\v1\SchoolOperationsApiController::class, 'storeTeacherJournal']);
     });
+
+    // =====================================================================
+    // FASE 108: PERPUSTAKAAN DIGITAL MOBILE API
+    // =====================================================================
+    Route::prefix('library')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+      Route::get('books', [\App\Http\Controllers\Api\v1\LibraryMobileApiController::class, 'index']);
+      Route::get('books/{id}', [\App\Http\Controllers\Api\v1\LibraryMobileApiController::class, 'show']);
+      Route::post('self-checkout', [\App\Http\Controllers\Api\v1\LibraryMobileApiController::class, 'selfCheckout']);
+      Route::get('my-loans', [\App\Http\Controllers\Api\v1\LibraryMobileApiController::class, 'myLoans']);
+    });
+
+    // =====================================================================
+    // FASE 109: EKSTRAKURIKULER & OSIS MOBILE API
+    // =====================================================================
+    Route::prefix('extracurricular')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+      Route::get('list', [\App\Http\Controllers\Api\v1\ExtracurricularMobileApiController::class, 'index']);
+      Route::post('{id}/register', [\App\Http\Controllers\Api\v1\ExtracurricularMobileApiController::class, 'register']);
+      Route::post('attendance/submit', [\App\Http\Controllers\Api\v1\ExtracurricularMobileApiController::class, 'submitAttendance']);
+      Route::get('osis-feed', [\App\Http\Controllers\Api\v1\ExtracurricularMobileApiController::class, 'osisFeed']);
+    });
+
+    // =====================================================================
+    // FASE 110: PRESTASI & PORTOFOLIO MOBILE API
+    // =====================================================================
+    Route::prefix('achievements')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+      Route::get('list', [\App\Http\Controllers\Api\v1\AchievementMobileApiController::class, 'index']);
+      Route::post('upload', [\App\Http\Controllers\Api\v1\AchievementMobileApiController::class, 'upload']);
+      Route::get('certificates', [\App\Http\Controllers\Api\v1\AchievementMobileApiController::class, 'certificates']);
+      Route::get('academic-cv-summary', [\App\Http\Controllers\Api\v1\AchievementMobileApiController::class, 'cvSummary']);
+      Route::post('{id}/verify', [\App\Http\Controllers\Api\v1\AchievementMobileApiController::class, 'verify']);
+    });
+
+    // FASE 111: EVALUASI GURU & E-VOTING OSIS MOBILE API
+    Route::prefix('evaluations')->middleware('auth:sanctum')->group(function () {
+      Route::get('teachers', [\App\Http\Controllers\Api\v1\EvaluationMobileApiController::class, 'teacherList']);
+      Route::post('teachers/submit', [\App\Http\Controllers\Api\v1\EvaluationMobileApiController::class, 'submitTeacherEval']);
+      Route::get('facilities', [\App\Http\Controllers\Api\v1\EvaluationMobileApiController::class, 'facilityList']);
+      Route::post('facilities/submit', [\App\Http\Controllers\Api\v1\EvaluationMobileApiController::class, 'submitFacilityEval']);
+      Route::get('osis-election', [\App\Http\Controllers\Api\v1\EvaluationMobileApiController::class, 'electionInfo']);
+      Route::post('osis-election/vote', [\App\Http\Controllers\Api\v1\EvaluationMobileApiController::class, 'castVote']);
+    });
+
+    // FASE 112: UTBK TRYOUT & REKOMENDASI PTN MOBILE API
+    Route::prefix('utbk')->middleware('auth:sanctum')->group(function () {
+      Route::get('tryouts', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'index']);
+      Route::get('tryouts/{id}/questions', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'questions']);
+      Route::post('tryouts/{id}/submit', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'submit']);
+      Route::get('recommendations', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'ptnRecommendations']);
+      Route::get('alumni-directory', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'alumniDirectory']);
+    });
+
+    // FASE 113: KEDISIPLINAN LENGKAP MOBILE API
+    Route::prefix('discipline')->middleware('auth:sanctum')->group(function () {
+        Route::get('/summary', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'summary']);
+        Route::get('/history', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'history']);
+        Route::get('/warning-letters', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'letters']);
+        Route::post('/warning-letters/{id}/sign', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'signLetter']);
+    });
+
+    // FASE 114: ADMIN DASHBOARD & DOCUMENT MANAGEMENT MOBILE API
+    Route::prefix('mobile/admin')->middleware(['role:admin,superadmin,kepsek,kepala_sekolah'])->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'dashboard']);
+        Route::get('/kpi', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'kpiDetail']);
+        Route::post('/approvals/{id}/action', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'processApproval']);
+    });
+
+    Route::prefix('documents')->middleware('auth:sanctum')->group(function () {
+        Route::get('/reports', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'reportList']);
+        Route::get('/certificates', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'certificateList']);
+        Route::post('/ocr/scan', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'ocrScan']);
+        Route::post('/signature/submit', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'submitSignature']);
+    });
+
+
+
+
+    // =====================================================================
+    // FASE 98: MODERN DESIGN SYSTEM API & THEMING ENGINE
+    // =====================================================================
+    Route::prefix('design')->group(function () {
+      Route::get('tokens', [\App\Http\Controllers\Api\v1\DesignSystemController::class, 'getTokens']);
+      Route::get('theme', [\App\Http\Controllers\Api\v1\DesignSystemController::class, 'getUserTheme']);
+      Route::put('theme/preferences', [\App\Http\Controllers\Api\v1\DesignSystemController::class, 'updatePreferences']);
+      Route::get('presets', [\App\Http\Controllers\Api\v1\DesignSystemController::class, 'getPresets']);
+    });
+
+    // =====================================================================
+    // FASE 99: CONTEXTUAL & PREDICTIVE HOME API
+    // =====================================================================
+    Route::prefix('home')->group(function () {
+      Route::get('contextual', [\App\Http\Controllers\Api\v1\ContextualHomeController::class, 'index']);
+      Route::get('suggestions', [\App\Http\Controllers\Api\v1\ContextualHomeController::class, 'suggestions']);
+      Route::post('dismiss-suggestion', [\App\Http\Controllers\Api\v1\ContextualHomeController::class, 'dismissSuggestion']);
+      Route::post('suggestions/{id}/dismiss', [\App\Http\Controllers\Api\v1\ContextualHomeController::class, 'dismissSuggestion']);
+    });
+
+    // =====================================================================
+    // FASE 100: MICRO-INTERACTION & ANIMATION CONFIG API
+    // =====================================================================
+    Route::prefix('config/animations')->group(function () {
+      Route::get('/', [\App\Http\Controllers\Api\v1\ConfigController::class, 'getAnimations']);
+      Route::put('preferences', [\App\Http\Controllers\Api\v1\ConfigController::class, 'updatePreferences']);
+    });
+
+    // =====================================================================
+    // FASE 101: GAMIFICATION & ENGAGEMENT ENGINE
+    // =====================================================================
+    Route::prefix('gamification')->group(function () {
+      Route::get('profile', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getProfile']);
+      Route::get('leaderboard', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getLeaderboard']);
+      Route::get('badges', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getBadges']);
+      Route::get('xp-history', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getXpHistory']);
+      Route::get('history', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getXpHistory']);
+      Route::get('streak-calendar', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getStreakCalendar']);
+      Route::get('streak', [\App\Http\Controllers\Api\v1\GamificationController::class, 'getStreakCalendar']);
+    });
+
+    // =====================================================================
+    // FASE 102: SMART NOTIFICATION SYSTEM — PRIORITY INBOX
+    // =====================================================================
+    Route::prefix('notifications')->group(function () {
+      Route::get('preferences', [\App\Http\Controllers\Api\v1\SmartNotificationController::class, 'getPreferences']);
+      Route::put('preferences', [\App\Http\Controllers\Api\v1\SmartNotificationController::class, 'updatePreferences']);
+      Route::get('digest', [\App\Http\Controllers\Api\v1\SmartNotificationController::class, 'getDigest']);
+    });
+    Route::prefix('notifications/preferences')->group(function () {
+      Route::get('/', [\App\Http\Controllers\Api\v1\SmartNotificationController::class, 'getPreferences']);
+      Route::put('/', [\App\Http\Controllers\Api\v1\SmartNotificationController::class, 'updatePreferences']);
+    });
+
+    // =====================================================================
+    // FASE 104: ADVANCED DATA VISUALIZATION WEB & API
+    // =====================================================================
+    Route::prefix('viz')->group(function () {
+      Route::get('heatmap/attendance', [\App\Http\Controllers\Api\v1\VizController::class, 'attendanceHeatmap']);
+      Route::get('distribution/grades/{examId}', [\App\Http\Controllers\Api\v1\VizController::class, 'gradeDistribution']);
+      Route::get('radar/student/{studentId}', [\App\Http\Controllers\Api\v1\VizController::class, 'studentRadar']);
+      Route::get('trend/student/{studentId}', [\App\Http\Controllers\Api\v1\VizController::class, 'studentTrend']);
+      Route::get('comparison/classes', [\App\Http\Controllers\Api\v1\VizController::class, 'classComparison']);
+      Route::get('counters/live', [\App\Http\Controllers\Api\v1\VizController::class, 'liveCounters']);
+    });
+
+    // =====================================================================
+    // FASE 105: OFFLINE-FIRST SYNC ENGINE 2.0 API
+    // =====================================================================
+    Route::prefix('sync')->group(function () {
+      Route::get('delta', [\App\Http\Controllers\Api\v1\SyncController::class, 'getDelta']);
+      Route::post('batch', [\App\Http\Controllers\Api\v1\SyncController::class, 'processBatch']);
+      Route::get('check-version', [\App\Http\Controllers\Api\v1\SyncController::class, 'checkVersion']);
+      Route::get('catch-up', [\App\Http\Controllers\Api\v1\SyncController::class, 'catchUp']);
+    });
+
+    // =====================================================================
+    // FASE 106: PARENT EXPERIENCE OVERHAUL API
+    // =====================================================================
+    Route::prefix('parent')->middleware('role:parent,orangtua,admin,superadmin,student,siswa')->group(function () {
+      Route::get('child/{childId}/feed', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'activityFeed']);
+      Route::get('feed', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'activityFeed']);
+      Route::get('child/{childId}/digest', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'weeklyDigest']);
+      Route::get('weekly-digest', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'weeklyDigest']);
+      Route::get('child/{childId}/benchmark', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'benchmarkClass']);
+      Route::get('comparison', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'benchmarkClass']);
+      Route::get('actions', [\App\Http\Controllers\Api\v1\ParentPortalController::class, 'quickActions']);
+    });
+
+    Route::get('ai/tutor/suggestions', [\App\Http\Controllers\Api\v1\MobileV2ApiController::class, 'getAiTutorSuggestions']);
+
 
     // === UNIVERSAL GENERAL ===
     Route::get('announcements', [ApiGeneralController::class, 'announcements']);

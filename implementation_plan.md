@@ -33,7 +33,7 @@
 - [x] **FASE 66: Content Delivery & Digital Publishing Platform (66.1 - 66.4)** `Selesai ✅`
 - [x] **FASE 67: Advanced Workflow Automation & Process Mining (67.1 - 67.4)** `Selesai ✅`
 - [x] **FASE 68: Accessibility, Localization & Universal Design (68.1 - 68.4)** `Selesai ✅`
-- [x] **SISTEM MULTI-BAHASA LENGKAP: Bahasa Indonesia, English, العربية (Arabic RTL)** `Selesai ✅`
+- [x] **SISTEM MULTI-BAHASA LENGKAP: Bahasa Indonesia, English, Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© (Arabic RTL)** `Selesai ✅`
 
 ---
 
@@ -3452,7 +3452,7 @@ tests/Browser/InteractiveUi/DragDropTest.php (Dusk):
 
 ---
 
-## 🚀 FASE 70: Generative AI & Autonomous Learning Engine `[SELESAI ✅]`
+## ðŸš€ FASE 70: Generative AI & Autonomous Learning Engine `[SELESAI ✅]`
 Fase inovasi kecerdasan buatan terapan untuk mempersonalisasi pembelajaran.
 ### [x] 70.1: AI Personalized Tutor (LLM Integration)
 - Integrasi model LLM (Generative AI) bertindak sebagai asisten belajar 24/7 (`AiPersonalizedTutorService`, `AiTutorController`).
@@ -3464,7 +3464,7 @@ Fase inovasi kecerdasan buatan terapan untuk mempersonalisasi pembelajaran.
 
 ---
 
-## 🔗 FASE 71: Immutable Blockchain Credentialing (Web3) `[SELESAI ✅]`
+## ðŸ”— FASE 71: Immutable Blockchain Credentialing (Web3) `[SELESAI ✅]`
 Keamanan dokumen digital level tinggi melalui teknologi desentralisasi.
 ### [x] 71.1: Smart Contract Diplomas & Transcripts
 - Penerbitan Ijazah dan Transkrip Nilai ke Merkle Tree Cryptographic Ledger (`BlockchainCredentialService`, `BlockchainCredentialController`).
@@ -3474,7 +3474,7 @@ Keamanan dokumen digital level tinggi melalui teknologi desentralisasi.
 
 ---
 
-## 📡 FASE 72: Smart Campus IoT 2.0 & Facial Recognition `[SELESAI ✅]`
+## ðŸ“¡ FASE 72: Smart Campus IoT 2.0 & Facial Recognition `[SELESAI ✅]`
 Otomasi kampus tanpa sentuhan dan manajemen sumber daya.
 ### [x] 72.1: Frictionless Attendance (Zero-Touch)
 - Presensi seketika via kamera CCTV gerbang berteknologi *Facial Recognition* dengan feature vector 512-dimensi dan anti-spoofing liveness verification (`FacialRecognitionAttendanceService`, `FacialRecognitionAttendanceController`).
@@ -3483,7 +3483,7 @@ Otomasi kampus tanpa sentuhan dan manajemen sumber daya.
 
 ---
 
-## 🔮 FASE 73: Big Data Predictive Analytics `[SELESAI ✅]`
+## ðŸ”® FASE 73: Big Data Predictive Analytics `[SELESAI ✅]`
 Keputusan strategis dan pencegahan masalah melalui analitik.
 ### [x] 73.1: At-Risk Student Prediction Model
 - Model komposit prediktif untuk mendeteksi dini siswa rentan drop-out, penurunan akademik drastis, atau risiko depresi (`AtRiskStudentPredictionService`, `AtRiskStudentPredictionController`).
@@ -3492,7 +3492,7 @@ Keputusan strategis dan pencegahan masalah melalui analitik.
 
 ---
 
-## 🏢 FASE 74: Dedicated High-Availability Infrastructure (Sulaone Exclusive) `[SELESAI ✅]`
+## ðŸ¢ FASE 74: Dedicated High-Availability Infrastructure (Sulaone Exclusive) `[SELESAI ✅]`
 Skalabilitas infrastruktur khusus untuk menopang beban operasional maksimal SMA Islam Sultan Agung 1 Semarang.
 ### [x] 74.1: SULAONE Private Cloud & Auto-Scaling
 - Pengelolaan metrik klaster server pribadi, auto-scaling horizontal pod replicas berdasarkan beban CPU/RAM/RPS (`SulaoneCloudClusterService`, `CloudClusterController`).
@@ -3704,7 +3704,7 @@ resources/views/admin/mobile-config/
 Mengembangkan infrastruktur komunikasi real-time yang komprehensif dengan penguatan sistem WebSocket, pesan in-app, dan broadcast darurat yang terintegrasi penuh dengan aplikasi Android native.
 
 ### [x] 76.1: Real-Time Messaging Engine & Conversation Manager
-Sistem perpesanan real-time dalam aplikasi antara wali murid ↔ guru, siswa ↔ BK counselor, dengan persistensi riwayat pesan dan fitur read receipts.
+Sistem perpesanan real-time dalam aplikasi antara wali murid â†” guru, siswa â†” BK counselor, dengan persistensi riwayat pesan dan fitur read receipts.
 
 #### Skema Migrasi
 *(Menggunakan `conversations` dan `parent_teacher_messages` dari 75.2, ditambah:)*
@@ -4391,7 +4391,7 @@ resources/views/admin/security-audit/
 
 ---
 
-## 🧹 FASE 85: DEBLOAT, PENYEDERHANAAN & PRAGMATISME ARSITEKTUR `[SELESAI 100% ✅]`
+## ðŸ§¹ FASE 85: DEBLOAT, PENYEDERHANAAN & PRAGMATISME ARSITEKTUR `[SELESAI 100% ✅]`
 
 Karena SuperApp SISTA secara eksklusif dibangun hanya untuk **satu institusi spesifik** (SMA Islam Sultan Agung 1 Semarang), kita merampingkan kode dan menyederhanakan arsitektur level *Tech Startup/SaaS* yang berlebihan (overkill). Fase ini berfokus memangkas biaya server, meniadakan kompleksitas yang tidak perlu, dan menstabilkan alur kerja agar 100% pragmatis untuk kebutuhan sekolah.
 
@@ -4420,7 +4420,7 @@ Pemrosesan *Facial Recognition* dari CCTV dan hosting model LLM Generative AI me
 ---
 
 ### [x] 85.3: Penghapusan Infrastruktur Cloud Kubernetes & Standarisasi Single VPS Deployment
-Sekolah dengan populasi 1.000–2.000 siswa dan staf tidak membutuhkan *Private Cloud*, *Auto-Scaling Pods*, atau *Edge CDN*.
+Sekolah dengan populasi 1.000â€“2.000 siswa dan staf tidak membutuhkan *Private Cloud*, *Auto-Scaling Pods*, atau *Edge CDN*.
 - [x] **Aksi Debloat & Pengganti:** Standardisasi arsitektur pada **1 buah Virtual Private Server (VPS)** spesifikasi 8-Core vCPU / 16GB RAM (Nginx + PHP 8.4 + MySQL + Redis) dengan estimasi biaya Rp 650.000 - Rp 950.000 / bulan (hemat 90% dibanding cloud multi-cluster).
 - [x] **Model & Migration:** `VpsServerHealthLog.php`.
 - [x] **Service & Controller:** `SingleVpsInfrastructureService.php`, `PragmaticDebloatApiController@getVpsHealth`.
@@ -4451,7 +4451,7 @@ Arsitektur penemuan modul ala WeChat dan protokol delta sync yang rumit (*vector
 
 ---
 
-## 🚀 FASE 86: CBT ENTERPRISE MAXIMIZATION & ZERO-DOWNTIME ARCHITECTURE `[SELESAI 100% ✅]`
+## ðŸš€ FASE 86: CBT ENTERPRISE MAXIMIZATION & ZERO-DOWNTIME ARCHITECTURE `[SELESAI 100% ✅]`
 
 Untuk memastikan keandalan Ujian CBT (Computer-Based Test) di skala ribuan siswa secara bersamaan, sistem backend CBT yang sudah ada telah dimaksimalkan dengan standar enterprise dan fokus pada *Zero-Downtime* meskipun server mengalami lonjakan trafik (*spike*) saat ujian dimulai.
 
@@ -4491,35 +4491,35 @@ Untuk memastikan keandalan Ujian CBT (Computer-Based Test) di skala ribuan siswa
 
 ---
 
-## 🔐 FASE 87: TOKEN-GATED MOBILE-ONLY CBT ACCESS CONTROL `[SELESAI 100% ✅]`
+## ðŸ” FASE 87: TOKEN-GATED MOBILE-ONLY CBT ACCESS CONTROL `[SELESAI 100% ✅]`
 
 Menerapkan kebijakan akses ujian CBT yang ketat: **siswa hanya bisa mengerjakan ujian dari Aplikasi Android SISTA**, bukan dari website. Akses ujian dikunci dengan **Token Masuk 6 Digit** yang dihasilkan secara unik per sesi ujian. Jika siswa meninggalkan aplikasi (minimize, close, split-screen) saat berada di modul CBT, **ujian otomatis ditutup paksa dan memerlukan token ulang**. Otorisasi token dibedakan berdasarkan jenis ujian.
 
-### 🎯 87.1: Filosofi Desain Akses 2 Lapis
+### ðŸŽ¯ 87.1: Filosofi Desain Akses 2 Lapis
 
 ```
-  ┌──────────────────────────────────────────────────────────────────┐
-  │                     SUPER WEB (Browser)                         │
-  │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
-  │  │ Dashboard    │  │ Rapor/Nilai  │  │ CBT Admin (CRUD Soal)  │ │
-  │  │ Pengumuman   │  │ Presensi     │  │ ✅ Guru bisa kelola    │ │
-  │  │ Chat Guru    │  │ SPP Billing  │  │ ❌ Siswa TIDAK bisa    │ │
-  │  │ ✅ Siswa OK  │  │ ✅ Siswa OK  │  │    mengerjakan ujian!  │ │
-  │  └──────────────┘  └──────────────┘  └────────────────────────┘ │
-  └──────────────────────────────────────────────────────────────────┘
+  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+  â”‚                     SUPER WEB (Browser)                         â”‚
+  â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
+  â”‚  â”‚ Dashboard    â”‚  â”‚ Rapor/Nilai  â”‚  â”‚ CBT Admin (CRUD Soal)  â”‚ â”‚
+  â”‚  â”‚ Pengumuman   â”‚  â”‚ Presensi     â”‚  â”‚ ✅ Guru bisa kelola    â”‚ â”‚
+  â”‚  â”‚ Chat Guru    â”‚  â”‚ SPP Billing  â”‚  â”‚ âŒ Siswa TIDAK bisa    â”‚ â”‚
+  â”‚  â”‚ ✅ Siswa OK  â”‚  â”‚ ✅ Siswa OK  â”‚  â”‚    mengerjakan ujian!  â”‚ â”‚
+  â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
+  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 
-  ┌──────────────────────────────────────────────────────────────────┐
-  │                 SISTA ANDROID (Native App)                      │
-  │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
-  │  │ Dashboard    │  │ Rapor/Nilai  │  │ CBT Exam Room          │ │
-  │  │ Pengumuman   │  │ Presensi     │  │ ✅ Siswa bisa masuk    │ │
-  │  │ Chat Guru    │  │ SPP Billing  │  │ ✅ HANYA dari app ini  │ │
-  │  │ ✅ Siswa OK  │  │ ✅ Siswa OK  │  │ 🔑 Wajib Token Masuk  │ │
-  │  └──────────────┘  └──────────────┘  └────────────────────────┘ │
-  └──────────────────────────────────────────────────────────────────┘
+  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+  â”‚                 SISTA ANDROID (Native App)                      â”‚
+  â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”‚
+  â”‚  â”‚ Dashboard    â”‚  â”‚ Rapor/Nilai  â”‚  â”‚ CBT Exam Room          â”‚ â”‚
+  â”‚  â”‚ Pengumuman   â”‚  â”‚ Presensi     â”‚  â”‚ ✅ Siswa bisa masuk    â”‚ â”‚
+  â”‚  â”‚ Chat Guru    â”‚  â”‚ SPP Billing  â”‚  â”‚ ✅ HANYA dari app ini  â”‚ â”‚
+  â”‚  â”‚ ✅ Siswa OK  â”‚  â”‚ ✅ Siswa OK  â”‚  â”‚ ðŸ”‘ Wajib Token Masuk  â”‚ â”‚
+  â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â”‚
+  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-### 📊 87.2: Skema Otorisasi Token Berdasarkan Jenis Ujian
+### ðŸ“Š 87.2: Skema Otorisasi Token Berdasarkan Jenis Ujian
 
 | Jenis Ujian | Siapa Pemegang Token | Mekanisme Distribusi |
 |---|---|---|
@@ -4528,7 +4528,7 @@ Menerapkan kebijakan akses ujian CBT yang ketat: **siswa hanya bisa mengerjakan 
 | **Ulangan Harian / PHB** | **Guru Mata Pelajaran** yang membuat ujian | Token otomatis muncul di Dashboard Guru saat ujian aktif. Guru sendiri yang memberikan token ke siswanya secara lisan di kelas. |
 | **Try Out** | **Guru Mata Pelajaran** yang membuat ujian | Sama dengan Ulangan Harian. |
 
-### 🗄️ 87.3: Perubahan Database (Migration)
+### ðŸ—„ï¸ 87.3: Perubahan Database (Migration)
 
 **[NEW] `database/migrations/2026_09_03_000002_add_cbt_access_control_columns.php`**
 
@@ -4547,7 +4547,7 @@ $table->boolean('force_closed')->default(false);         // Apakah ujian ditutup
 $table->string('force_close_reason')->nullable();        // Alasan: 'app_minimized', 'app_closed', 'split_screen'
 ```
 
-### 🔑 87.4: Mekanisme Generate & Validasi Token
+### ðŸ”‘ 87.4: Mekanisme Generate & Validasi Token
 
 **A. Generate Token (Backend)**
 - Token di-generate otomatis saat `Exam` berstatus `published` dan `start_time` telah tiba.
@@ -4568,9 +4568,9 @@ $table->string('force_close_reason')->nullable();        // Alasan: 'app_minimiz
   4. Siswa belum memiliki `exam_attempt` yang sudah `submitted` / `graded`.
 - Jika valid: mencatat `exam_attempts.used_token`, `token_validated_at`, `access_platform = 'android'` dan mengembalikan izin masuk.
 
-### 🚫 87.5: Blokir Akses CBT dari Website (Web Controller)
+### ðŸš« 87.5: Blokir Akses CBT dari Website (Web Controller)
 
-**[MODIFY] `app/Http/Controllers/ExamController.php` → method `take()`**
+**[MODIFY] `app/Http/Controllers/ExamController.php` â†’ method `take()`**
 
 Saat ini method `take()` di `ExamController` (baris 231) langsung menampilkan Blade view `cbt.exams.take` tanpa pembatasan platform. Perubahan:
 
@@ -4589,42 +4589,42 @@ public function take(Exam $exam)
 
 Dengan ini, seluruh ujian CBT yang `mobile_only = true` (default) **mustahil** dikerjakan siswa lewat browser website.
 
-### 💀 87.6: Auto-Close & Force Token Re-Entry (Mekanisme Inti)
+### ðŸ’€ 87.6: Auto-Close & Force Token Re-Entry (Mekanisme Inti)
 
 **Alur Ketika Siswa Meninggalkan Aplikasi Saat di Modul CBT:**
 
 ```
 Siswa di CbtExamRoomScreen
-        │
-        ├──► Minimize App / Swipe Home → ON_PAUSE detected
-        ├──► Close App / Kill Process  → ON_STOP / ON_DESTROY detected
-        ├──► Split Screen              → isInMultiWindowMode detected
-        │
-        ▼
+        â”‚
+        â”œâ”€â”€â–º Minimize App / Swipe Home â†’ ON_PAUSE detected
+        â”œâ”€â”€â–º Close App / Kill Process  â†’ ON_STOP / ON_DESTROY detected
+        â”œâ”€â”€â–º Split Screen              â†’ isInMultiWindowMode detected
+        â”‚
+        â–¼
   CbtAntiCheatEngine mendeteksi
-        │
-        ▼
+        â”‚
+        â–¼
   Backend dikirim POST /cbt/exams/{id}/force-close
   {
     "reason": "app_minimized" | "app_closed" | "split_screen",
     "answers_snapshot": { ... jawaban terakhir ... }
   }
-        │
-        ▼
+        â”‚
+        â–¼
   Backend memproses:
   - exam_attempt.force_closed = true
   - exam_attempt.force_close_reason = "app_minimized"
-  - exam_attempt.status = 'force_closed'   ← status baru
+  - exam_attempt.status = 'force_closed'   â† status baru
   - exam_attempt.submitted_at = now()
   - Jawaban snapshot disimpan (agar tidak hilang)
-        │
-        ▼
+        â”‚
+        â–¼
   Android otomatis:
-  - stopLockTask() → keluar Kiosk Mode
+  - stopLockTask() â†’ keluar Kiosk Mode
   - Navigate ke Dashboard
   - Hapus CbtEncryptedVault
-        │
-        ▼
+        â”‚
+        â–¼
   Siswa harus minta Token BARU ke Operator/Guru
   untuk bisa masuk ulang ke ujian yang sama
 ```
@@ -4634,7 +4634,7 @@ Siswa di CbtExamRoomScreen
 - Operator/Guru dapat memutuskan: reset `force_closed` menjadi `in_progress` dan generate token baru, atau membiarkan ujian tertutup permanen.
 - Status `force_closed` ditambahkan ke enum `exam_attempts.status`.
 
-### 📡 87.7: Endpoint API Baru
+### ðŸ“¡ 87.7: Endpoint API Baru
 
 | Method | Endpoint | Role | Deskripsi |
 |---|---|---|---|
@@ -4644,7 +4644,7 @@ Siswa di CbtExamRoomScreen
 | `POST` | `/api/v1/student/cbt/exams/{id}/validate-token` | `student` | Validasi token masuk ujian dari app Android |
 | `POST` | `/api/v1/student/cbt/exams/{id}/force-close` | `student` | Kirim laporan ujian ditutup paksa karena keluar app |
 
-### 🧱 87.8: Service Layer
+### ðŸ§± 87.8: Service Layer
 
 **[NEW] `app/Services/CbtAccessControlService.php`**
 
@@ -4666,7 +4666,7 @@ class CbtAccessControlService
 }
 ```
 
-### 🧪 87.9: Rencana Pengujian
+### ðŸ§ª 87.9: Rencana Pengujian
 
 **[NEW] `tests/Feature/Cbt/CbtAccessControlTest.php`**
 
@@ -4701,7 +4701,7 @@ class CbtAccessControlService
 | 92 | Konseling BK Digital Mobile API | `[SELESAI 100% ✅]` | 2026-09-06 |
 | 93 | Kalender Akademik Terpadu API | `[SELESAI 100% ✅]` | 2026-09-06 |
 | 94 | PPDB/SPMB Mobile API | `[SELESAI 100% ✅]` | 2026-09-06 |
-| 95 | Profil Digital Siswa 360° API | `[SELESAI 100% ✅]` | 2026-09-06 |
+| 95 | Profil Digital Siswa 360Â° API | `[SELESAI 100% ✅]` | 2026-09-06 |
 | 96 | UKS Digital Mobile API | `[SELESAI 100% ✅]` | 2026-09-06 |
 | 97 | Jurnal Mengajar Guru Mobile API | `[SELESAI 100% ✅]` | 2026-09-06 |
 
@@ -5127,7 +5127,7 @@ Mendukung 6 PUBLIC endpoints:
 
 ---
 
-## FASE 95: PROFIL DIGITAL SISWA 360° API `[SELESAI 100% ✅]`
+## FASE 95: PROFIL DIGITAL SISWA 360Â° API `[SELESAI 100% ✅]`
 
 Fungsi inti API "Big Data Siswa" SISTA App yang mengagregasikan informasi rekam jejak dari minimal 7+ sumber tabel berbeda ke dalam satu JSON view utuh. Disebut profil 360 derajat mencakup akademik, karakter keislaman, kesehatan, hingga ekstrakurikuler.
 
@@ -5233,7 +5233,7 @@ php artisan test --filter="TeachingJournalMobileTest"
 
 Dalam pengerjaan batch API kali ini, kami mengurutkan berdasarkan impact ketergantungan fitur:
 1. **P0 (Kritis - Q3 2026):** Fase 97 (Jurnal Mengajar), Fase 88 (Bank Soal CBT), Fase 90 (E-Learning Mobile).
-2. **P1 (Penting - Q4 2026):** Fase 89 (E-Rapor Merdeka), Fase 95 (Profil Digital 360°), Fase 93 (Kalender Akademik).
+2. **P1 (Penting - Q4 2026):** Fase 89 (E-Rapor Merdeka), Fase 95 (Profil Digital 360Â°), Fase 93 (Kalender Akademik).
 3. **P2 (Lanjutan - Q1 2027):** Fase 91 (Remedial Workflow), Fase 92 (Konseling BK), Fase 94 (PPDB Mobile), Fase 96 (UKS Digital).
 
 ## Statistik Codebase Target
@@ -5244,3 +5244,946 @@ Setelah implementasi seluruh Fase 88 sampai 97 selesai, diproyeksikan metrik cod
 - **Models & Tables:** ~160+ Eloquent Models
 - **Test Coverage:** Dipertahankan pada kisaran minimum >85% class coverage
 - **Services:** ~115+ Domain/Application Services
+---
+
+---
+
+## Status Tracker FASE 98-107: MODERNISASI UI/UX 2026
+
+- [x] **FASE 98: MODERN DESIGN SYSTEM API & THEMING ENGINE (98.1 - 98.5)** `[SELESAI 100% ✅]`
+- [x] **FASE 99: CONTEXTUAL & PREDICTIVE HOME API (99.1 - 99.3)** `[SELESAI 100% ✅]`
+- [x] **FASE 100: MICRO-INTERACTION & ANIMATION CONFIG API (100.1 - 100.3)** `[SELESAI 100% ✅]`
+- [x] **FASE 101: GAMIFICATION & ENGAGEMENT ENGINE (101.1 - 101.5)** `[SELESAI 100% ✅]`
+- [x] **FASE 102: SMART NOTIFICATION SYSTEM — PRIORITY INBOX (102.1 - 102.3)** `[SELESAI 100% ✅]`
+- [x] **FASE 103: MODERN WEB FRONTEND — LIVEWIRE 3 REACTIVE DASHBOARD (103.1 - 103.5)** `[SELESAI 100% ✅]`
+- [x] **FASE 104: ADVANCED DATA VISUALIZATION WEB & API (104.1 - 104.3)** `[SELESAI 100% ✅]`
+- [x] **FASE 105: OFFLINE-FIRST SYNC ENGINE 2.0 API (105.1 - 105.3)** `[SELESAI 100% ✅]`
+- [x] **FASE 106: PARENT EXPERIENCE OVERHAUL API (106.1 - 106.3)** `[SELESAI 100% ✅]`
+- [x] **FASE 107: PROGRESSIVE WEB APP (PWA) ENHANCEMENT (107.1 - 107.3)** `[SELESAI 100% ✅]`
+
+---
+
+## FASE 98: MODERN DESIGN SYSTEM API & THEMING ENGINE `[SELESAI 100% ✅]`
+
+Backend API yang menyediakan design tokens, dynamic theming, dan contextual UI configuration yang akan dikonsumsi oleh web (Livewire) dan Android (Jetpack Compose). 
+
+### 98.1: Database Migration
+#### Skema Migrasi
+```php
+Schema::create('design_tokens', function (Blueprint $table) {
+    $table->id();
+    $table->string('token_key')->unique()->comment('Contoh: color.primary, spacing.md, radius.card');
+    $table->enum('category', ['color', 'spacing', 'radius', 'shadow', 'typography']);
+    $table->json('value')->comment('Menyimpan varian light/dark/amoled');
+    $table->text('description')->nullable();
+    $table->boolean('is_customizable')->default(false);
+    $table->timestamps();
+});
+
+Schema::create('theme_presets', function (Blueprint $table) {
+    $table->id();
+    $table->string('name')->comment('Sultan Agung Green, Ramadhan Gold, Exam Mode');
+    $table->string('slug')->unique();
+    $table->json('token_overrides')->nullable();
+    $table->enum('trigger_type', ['time_of_day', 'event', 'season', 'manual'])->nullable();
+    $table->json('trigger_config')->nullable()->comment('Misal: {start_hour:18, end_hour:6}');
+    $table->boolean('is_active')->default(true);
+    $table->integer('priority')->default(0);
+    $table->timestamps();
+});
+
+Schema::create('user_theme_preferences', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+    $table->string('active_preset')->nullable();
+    $table->json('custom_overrides')->nullable();
+    $table->boolean('auto_theme')->default(true);
+    $table->boolean('dynamic_color')->default(false);
+    $table->timestamps();
+});
+```
+
+### 98.2: Service Layer - DesignSystemService
+- `getDesignTokens()`: Mengambil keseluruhan token master (colors, spacing, dll).
+- `getActivePreset()`: Menentukan preset default sekolah yang sedang berjalan.
+- `getContextualPreset()`: Memilih preset berdasarkan context (`time_of_day`, `season`, dsb).
+- `getUserTheme(int $userId)`: Menggabungkan preset aktif dengan `custom_overrides` user (merging algorithm).
+- `resolveTimeBasedTheme()`: Logic auto-switch (misal "Night Study" aktif jam 18:00 - 05:00).
+- `resolveEventBasedTheme()`: Mengambil "Exam Mode" saat tabel ujian/CBT aktif (UTS/UAS).
+- `resolveSeasonBasedTheme()`: Mengaktivasi "Ramadhan Gold" jika Hijri Date adalah Ramadhan.
+- `getThemePayload()`: Output final JSON API untuk Android & Web.
+
+### 98.3: API Endpoints & Controllers
+```php
+// DesignSystemController
+Route::prefix('api/v1/design')->group(function () {
+    Route::get('/tokens', [DesignSystemController::class, 'getTokens']);
+    Route::get('/theme', [DesignSystemController::class, 'getUserTheme']);
+    Route::put('/theme/preferences', [DesignSystemController::class, 'updatePreferences']);
+    Route::get('/presets', [DesignSystemController::class, 'getPresets']);
+});
+```
+
+### 98.4: Livewire Component
+- Pembuatan `DynamicThemeProvider` component yang menginjeksi CSS custom properties di `<head>` untuk layout web SISTA.
+
+### 98.5: Test Plan (5 Test Cases)
+1. ✅ Memastikan `getDesignTokens` mereturn JSON valid dengan light/dark variants.
+2. ✅ Test logic fallback: jika user belum set preferensi, gunakan active preset sekolah.
+3. ✅ Test resolusi kontekstual "Night Study" ketika `$mockTime` di-set malam hari.
+4. ✅ Endpoint `PUT /theme/preferences` memvalidasi input JSON custom overrides.
+5. ✅ Test priority preset: "Exam Mode" (priority 10) override "Time Based" (priority 5).
+
+---
+
+## FASE 99: CONTEXTUAL & PREDICTIVE HOME API `[SELESAI 100% ✅]`
+
+Backend API yang menyediakan dynamic home screen data. Berubah berdasarkan context: time of day, exam season, masa Ramadhan, atau upcoming school events.
+
+### 99.1: Service Layer - ContextualHomeService
+- `getHomePayload(int $userId)`: Master aggregator. Returns context (`time_of_day`, `is_exam_season`, `active_event`, `hijri_date`), `hero_card` (type: prayer|exam_countdown|ramadhan|class_active), `quick_actions`, `smart_suggestions`, `timeline`, `gamification_summary`.
+- `getPrioritizedActions(User $user)`: Mengurutkan navigasi. Pagi: Presensi first. Musim Ujian: CBT first. Guru pasca KBM: Jurnal Mengajar. Akhir bulan: Modul SPP pertama.
+- `getSmartSuggestions(User $user)`: Membaca tabel habits/log behavior (misal: "Kamu biasanya mengisi Jurnal Mengajar jam segini"). Memberi reminder deadline atau tren nilai.
+
+### 99.2: API Endpoints & Controllers
+```php
+// ContextualHomeController
+Route::prefix('api/v1/home')->middleware('auth:sanctum')->group(function () {
+    Route::get('/contextual', [ContextualHomeController::class, 'index']);
+    Route::get('/suggestions', [ContextualHomeController::class, 'suggestions']);
+    Route::post('/dismiss-suggestion', [ContextualHomeController::class, 'dismissSuggestion']);
+});
+```
+
+### 99.3: Test Plan (5 Test Cases)
+1. ✅ Tes `hero_card` menjadi "exam_countdown" jika H-3 ujian CBT.
+2. ✅ Tes `quick_actions` mensortir "Pembayaran SPP" jika role Wali Murid & status unpaid H-2 bulan jatuh tempo.
+3. ✅ Tes data `timeline` mengembalikan jadwal mapel hari ini dengan live status indicator.
+4. ✅ Endpoint `/dismiss-suggestion` merekam interaksi untuk menyesuaikan model prediktif di panggilan berikutnya.
+5. ✅ Tes payload context untuk `hijri_date` saat mode Ramadhan.
+
+---
+
+## FASE 100: MICRO-INTERACTION & ANIMATION CONFIG API `[SELESAI 100% ✅]`
+
+Backend configuration untuk kontrol animasi dan micro-interactions secara dinamis di klien, mendukung kapabilitas toggle-able per user (untuk Accessibility / WCAG compliance).
+
+### 100.1: Service Layer - InteractionConfigService
+- `getAnimationConfig(int $userId)`: Mengambil setelan: `reduce_motion` (bool), `haptic_level` (off/light/medium/strong), `skeleton_loading` (bool), `spring_animations` (bool), `parallax_effects` (bool), `page_transitions` (none/fade/slide/shared_element), `pull_refresh_style` (classic/physics/lottie).
+- `updatePreferences(array $prefs)`: Update preferensi user ke database.
+
+### 100.2: API Endpoints & Controllers
+```php
+// ConfigController
+Route::prefix('api/v1/config/animations')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [ConfigController::class, 'getAnimations']);
+    Route::put('/preferences', [ConfigController::class, 'updatePreferences']);
+});
+```
+
+### 100.3: Test Plan (3 Test Cases)
+1. ✅ Jika preferensi kosong, mereturn default haptic 'medium' & reduce_motion 'false'.
+2. ✅ Validasi input enum saat update `/preferences`.
+3. ✅ Pastikan integrasi cache (Redis) untuk query berulang pada data konfigurasi.
+
+---
+
+## FASE 101: GAMIFICATION & ENGAGEMENT ENGINE `[SELESAI 100% ✅]`
+
+Sistem Duolingo-inspired XP, levels, streaks, achievement badges, dan leaderboards untuk menstimulasi keterlibatan (engagement) harian siswa secara positif dalam kegiatan akademik & ibadah.
+
+### 101.1: Database Migration
+#### Skema Migrasi
+```php
+Schema::create('user_gamification', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+    $table->integer('total_xp')->default(0);
+    $table->integer('level')->default(1);
+    $table->integer('current_streak_days')->default(0);
+    $table->integer('longest_streak_days')->default(0);
+    $table->date('last_active_date')->nullable();
+    $table->json('badges_earned')->nullable();
+    $table->integer('monthly_rank')->nullable();
+    $table->timestamps();
+});
+
+Schema::create('xp_transactions', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users');
+    $table->integer('xp_amount');
+    $table->enum('source', ['presensi', 'tugas', 'ujian', 'mutabaah', 'baca_buku']);
+    $table->string('description');
+    $table->date('earned_date');
+    $table->timestamps();
+});
+
+Schema::create('achievement_badges', function (Blueprint $table) {
+    $table->id();
+    $table->string('slug')->unique();
+    $table->string('name');
+    $table->string('description');
+    $table->string('icon_emoji');
+    $table->enum('category', ['streak', 'academic', 'ibadah', 'social']);
+    $table->json('criteria');
+    $table->integer('xp_reward');
+    $table->timestamps();
+});
+```
+
+### 101.2: Service Layer - GamificationService
+- `awardXp(int $userId, int $amount, string $source, string $desc)`: Memberi XP dan record ke transaction log.
+- `calculateLevel(int $xp)`: Logic: `floor(sqrt($xp / 100)) + 1`.
+- `checkAndUpdateStreak(int $userId)`: Melakukan inkremen jika aktif hari berurutan, reset ke 0 jika selisih > 1 hari.
+- `getStreakCalendar(int $userId)`: Data heatmap (github-style) array untuk klien.
+- `evaluateBadges(int $userId)`: Background job memeriksa apakah criteria badge (misal: 30 hari Mutabaah tanpa putus) terpenuhi.
+- `getClassLeaderboard(int $classId)` & `getSchoolLeaderboard()`: Agregasi dan perankingan secara dinamis via DB query.
+
+### 101.3: Event Listeners (Reward Logic)
+- `AttendanceRecorded` -> +10 XP
+- `AssignmentSubmitted` -> +15 XP
+- `ExamCompleted` (Grade >= 85) -> +25 XP
+- `MutabaahCompleted` -> +20 XP
+- `BookBorrowed` (Perpus) -> +10 XP
+- `Streak Bonus` (7 hari) -> +50 XP, (30 hari) -> +200 XP
+
+### 101.4: API Endpoints
+```php
+Route::prefix('api/v1/gamification')->middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [GamificationController::class, 'getProfile']);
+    Route::get('/leaderboard', [GamificationController::class, 'getLeaderboard']);
+    Route::get('/badges', [GamificationController::class, 'getBadges']);
+    Route::get('/xp-history', [GamificationController::class, 'getXpHistory']);
+    Route::get('/streak-calendar', [GamificationController::class, 'getStreakCalendar']);
+});
+```
+
+### 101.5: Test Plan (6 Test Cases)
+1. ✅ XP bertambah dengan benar saat Trigger `awardXp` dipanggil.
+2. ✅ Level up terdeteksi dengan tepat ketika boundary formula `sqrt` ditembus.
+3. ✅ Streak ter-reset jadi 0 jika 2 hari tidak ada interaksi, dan `longest_streak` tetap terjaga.
+4. ✅ Badge otomatis diklaim (via job queue/listener) ketika syarat Mutabaah hari terpenuhi.
+5. ✅ Data parameter `?scope=class` pada `/leaderboard` memisahkan rank kelas dengan rank sekolah.
+6. ✅ Tes load limit & pagination pada `/xp-history`.
+
+---
+
+## FASE 102: SMART NOTIFICATION SYSTEM — PRIORITY INBOX `[SELESAI 100% ✅]`
+
+Sistem push notification pintar yang dapat mengklasifikasi tingkat prioritas, mendukung mode digest (ringkasan batch), actionable deep-links, dan fitur Quiet Hours (waktu istirahat).
+
+### 102.1: Database Migration
+#### Skema Migrasi
+```php
+Schema::create('notification_preferences', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+    $table->boolean('digest_mode')->default(false);
+    $table->enum('digest_interval', ['realtime', 'hourly', 'daily_morning', 'daily_evening'])->default('realtime');
+    $table->json('channel_preferences');
+    $table->json('quiet_hours')->comment('{enabled: true, start: "22:00", end: "04:30"}');
+    $table->boolean('smart_grouping')->default(true);
+    $table->timestamps();
+});
+```
+
+### 102.2: Service Layer - SmartNotificationService
+- `classifyPriority(string $type)`: Critical (ujian darurat, force-close, SOS), High (Rapor keluar, Pengumuman Kepsek), Medium (Tugas, reminder buku), Low (Tips, info umum).
+- `deliver(int $userId, array $payload)`: Mengecek preferences. Membatalkan FCM real-time jika `quiet_hours` aktif, dialihkan ke antrean.
+- `buildDigest()` & `sendDigest()`: CRON Job mengagregasi pesan-pesan Low/Medium jadi 1 push notif batch.
+- `getActionableNotifications()`: Menyisipkan payload metadata `deep_link` agar saat push di-tap, langsung buka route SistaApp.
+- `groupNotifications()`: Mencegah spam (jika ada 5+ tugas baru, combine jadi "Anda punya 5 tugas menunggu").
+
+### 102.3: Test Plan (5 Test Cases)
+1. ✅ Critical notification akan selalu delivered (bypass Quiet Hours & Digest Mode).
+2. ✅ Pengiriman malam saat Quiet Hours akan pending hingga pukul "end".
+3. ✅ Endpoint preference menyimpan validasi JSON payload quiet hours.
+4. ✅ Test CRON command dispatcher membundel 5 notifikasi "tugas" menjadi 1 digest notification.
+5. ✅ Payload Firebase push dipastikan memiliki intent deep-link URI yang valid.
+
+---
+
+## FASE 103: MODERN WEB FRONTEND — LIVEWIRE 3 REACTIVE DASHBOARD `[SELESAI 100% ✅]`
+
+Modernisasi dashboard admin/guru berbasis web dari Blade statis menjadi komponen Livewire 3 yang sangat responsif, dilengkapi glassmorphic design, skeleton loaders, dan animasi grafik dinamis.
+
+### 103.1: New Blade Components (View Layer)
+Berlokasi di `resources/views/components/modern/`:
+- `glassmorphic-card.blade.php`: Card wrapper dengan filter blur dan gradient border.
+- `skeleton-loader.blade.php`: Shimmer effect placeholder.
+- `animated-counter.blade.php`: Penghitung KPI angka yang bertambah mulus (count-up JS).
+- `progress-ring.blade.php`: Indikator SVG donat.
+- `stat-card.blade.php`, `contextual-hero.blade.php`, `smart-table.blade.php`.
+- `timeline-vertical.blade.php`, `badge-chip.blade.php`, `empty-state.blade.php`.
+- `toast-notification.blade.php`, `pull-to-refresh.blade.php`.
+
+### 103.2: Livewire 3 Components
+Berlokasi di `app/Livewire/Modern/`:
+- `LiveDashboard`: Memanfaatkan Laravel Echo (WebSocket) untuk real-time status update tanpa refresh.
+- `AnimatedChart`: Wrapper ringan untuk ApexCharts dengan logic polling data pasif.
+- `SmartDataTable`: Komponen datatables canggih (search, sort, filter, dan infinite virtual scrolling).
+
+### 103.3: CSS Design System
+- File: `resources/css/design-system-modern.css`
+- **Glassmorphism**: `backdrop-filter: blur(16px); background: rgba(255,255,255,0.05);`
+- **Skeleton**: Animasi background gradient bergeser lambat (shimmering).
+- **Spring Animation**: Memakai bezier kustom `transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);`.
+- **Gradients**: Theme morning (Green glow), afternoon (Amber), evening (Blue dusk), exam (Red alert), ramadhan (Gold glow).
+
+### 103.4: Redesign Dashboard Logic
+- Menampilkan Glassmorphic KPI.
+- Merender `Contextual Hero Banner` yang gambarnya berubah sesuai `ContextualHomeService`.
+- Real-time activity feed stream guru & siswa di sekolah.
+- Menampilkan ApexCharts interaktif: Attendance (Area Chart), Grade Profile (Donut), Status SPP (Bar).
+- Tabel pintar menampilkan rekap harian secara lazy loaded untuk 1000+ data (performa tinggi).
+
+### 103.5: Test Plan (6 Test Cases)
+1. ✅ Mount method pada `LiveDashboard` mengambil data dengan waktu akses di bawah 200ms.
+2. ✅ Test refresh trigger Laravel Echo (pusher event) untuk mereload component tanpa F5 browser.
+3. ✅ `SmartDataTable` memproses pagination/virtual load parameter pencarian dengan akurat.
+4. ✅ Blade component `glassmorphic-card` merender variable fallback default tanpa error.
+5. ✅ Charting service memproduksi data serial sesuai format JSON yang diminta ApexCharts.
+6. ✅ Responsivitas UI pada ukuran Mobile Web (viewport < 768px).
+
+---
+
+## FASE 104: ADVANCED DATA VISUALIZATION WEB & API `[SELESAI 100% ✅]`
+
+Sistem pembuatan chart tingkat lanjut dengan API agregasi data yang mendalam, dikonsumsi oleh web dashboard maupun aplikasi Android (dengan Jetpack Compose Canvas/MPAndroidChart).
+
+### 104.1: Service Layer - DataVisualizationService
+- `getAttendanceHeatmap()`: Mengembalikan rentang data ala GitHub Heatmap (tanggal: warna soliditas intensitas hadir).
+- `getGradeDistribution(int $examId)`: Mengembalikan kurva histogram distribusi nilai, ditambah agregat Mean, Median, Mode, Std Deviation, dan Skewness.
+- `getStudentRadarChart(int $studentId)`: Menghitung skor dari 6 dimensi: Akademik, Ibadah, Disiplin, Ekskul, Sosial, Kreativitas untuk disajikan ke polar radar chart.
+- `getValueTrend(int $studentId)`: Sparkline chart data 6 bulan terakhir performa nilai harian.
+- `getClassComparison()`: Komparasi paralel antara kelas-kelas (Rata-rata nilai vs Kehadiran vs Indeks Pelanggaran).
+- `getLiveCounters()`: Cache-based status operasional (Siswa present real-time, jumlah CBT berjalan, SPP belum lunas).
+
+### 104.2: API Endpoints
+```php
+Route::prefix('api/v1/viz')->middleware('auth:sanctum')->group(function () {
+    Route::get('/heatmap/attendance', [VizController::class, 'attendanceHeatmap']);
+    Route::get('/distribution/grades/{examId}', [VizController::class, 'gradeDistribution']);
+    Route::get('/radar/student/{studentId}', [VizController::class, 'studentRadar']);
+    Route::get('/trend/student/{studentId}', [VizController::class, 'studentTrend']);
+    Route::get('/comparison/classes', [VizController::class, 'classComparison']);
+    Route::get('/counters/live', [VizController::class, 'liveCounters']);
+});
+```
+
+### 104.3: Test Plan (4 Test Cases)
+1. ✅ Hitungan standar deviasi pada `gradeDistribution` divalidasi matematis benar.
+2. ✅ Payload heatmap menstruktur tanggal sebagai keys agar kompatibel dengan map rendering.
+3. ✅ Query untuk `studentRadar` menggabungkan data dari 5 tabel (Mutabaah, Nilai, Presensi, Pelanggaran, Poin) secara efisien pakai raw queries.
+4. ✅ Response live counters diamankan dengan Redis cache expiration 1 menit (mencegah DB throttling).
+
+---
+
+## FASE 105: OFFLINE-FIRST SYNC ENGINE 2.0 API `[SELESAI 100% ✅]`
+
+Pondasi arsitektur back-end untuk aplikasi Mobile yang sesungguhnya tahan banting di lingkungan fakir kuota/sinyal (Offline-First). Dilengkapi Delta Sync, Resolusi Konflik, dan Optimistic Locking.
+
+### 105.1: Service Layer - OfflineSyncService
+- `getDeltaChanges(int $lastSyncTimestamp)`: Daripada kirim semua JSON, server hanya query data yang di-update sejak timestamp di device (mengecek kolom `updated_at` atau `deleted_at`).
+- `resolveConflict(array $clientData, array $serverData)`: Menentukan Pemenang Resolusi. Grade & Uang (Server Wins), Mutabaah & Jurnal Harian offline (Last Write Wins atau Client Wins).
+- `processBatchUpload(array $payload)`: Menerima kumpulan array tindakan offline (contoh: guru simpan nilai CBT di gunung tanpa sinyal, lalu sync waktu dapat wifi). Return hasil batch (jumlah processed, conflict, failed).
+- `checkVersion()`: Optimistic locking mengecek parameter revisi (E-tag/Version) supaya record yang sudah diubah dari web tidak tertimpa tanpa pemberitahuan oleh client lama.
+
+### 105.2: API Endpoints
+```php
+Route::prefix('api/v1/sync')->middleware('auth:sanctum')->group(function () {
+    Route::get('/delta', [SyncController::class, 'getDelta']);
+    Route::post('/batch', [SyncController::class, 'processBatch']);
+    Route::get('/check-version', [SyncController::class, 'checkVersion']);
+});
+```
+
+### 105.3: Test Plan (4 Test Cases)
+1. ✅ Request `/delta` dengan timestamp H-1 hanya mereturn data yang berubah hari ini (Payload minimal).
+2. ✅ Pengujian Conflict Resolution: memicu update bersamaan, pastikan rule 'Server Wins' dipatuhi di tabel grades.
+3. ✅ Request `/batch` memproses array transaksi offline dan membungkus DB Transaction rollback kalau sebagian korup.
+4. ✅ Test logic pembersihan data lama (Tombstones/Soft Deletes dikirim supaya device tau harus menghapus record).
+
+---
+
+## FASE 106: PARENT EXPERIENCE OVERHAUL API `[SELESAI 100% ✅]`
+
+Merombak total pengalaman Orang Tua (Wali Murid) dengan akses data analitik anaknya tanpa intrusi berlebihan, komparasi dengan indeks kelas, dan porsi notifikasi cerdas.
+
+### 106.1: Service Layer - ParentExperienceService
+- `getChildActivityFeed(int $childId)`: Tampilan feed kronologis Facebook/Instagram tapi untuk sekolah anak (Jam 06:40 absen masuk, jam 09:00 dapat nilai Matematika 90, jam 12:15 terekam Sholat Dhuhur).
+- `generateWeeklyDigest(int $childId)`: Wrap-up mingguan dikirim setiap Jumat sore (Total absen, ranking tugas mingguan, tren Mutabaah, pelanggaran).
+- `getChildVsClassAverage(int $childId)`: Parameter `child_avg`, `class_avg`, `percentile_rank`, dan `trend_indicator` TANPA mengekspos nama siswa-siswa lain secara privat (Data anonim).
+- `getParentQuickActions(int $parentId)`: Tombol interaksi kontekstual: "Bayar Tunggakan SPP Bulan Ini", "Chat Wali Kelas", "Lihat Kartu Hasil Studi", "Beri Izin Sakit".
+
+### 106.2: API Endpoints
+```php
+Route::prefix('api/v1/parent')->middleware('auth:sanctum')->group(function () {
+    Route::get('/child/{childId}/feed', [ParentPortalController::class, 'activityFeed']);
+    Route::get('/child/{childId}/digest', [ParentPortalController::class, 'weeklyDigest']);
+    Route::get('/child/{childId}/benchmark', [ParentPortalController::class, 'benchmarkClass']);
+    Route::get('/actions', [ParentPortalController::class, 'quickActions']);
+});
+```
+
+### 106.3: Test Plan (4 Test Cases)
+1. ✅ Middleware otorisasi (hanya wali murid resmi di pivot table yang bisa memanggil data `childId`).
+2. ✅ Query aggregat `getChildVsClassAverage` tidak memperbolehkan celah enumerasi data anak lain.
+3. ✅ Payload activity feed di-join dari minimal 4 tabel utama dengan union all/polymorphic collection.
+4. ✅ Quick Action mengarah (Deep Link payload) ke ID tagihan yang benar untuk modul SPP.
+
+---
+
+## FASE 107: PROGRESSIVE WEB APP (PWA) ENHANCEMENT `[SELESAI 100% ✅]`
+
+Memaksimalkan adopsi sistem berbasis Web Laravel agar seolah-olah "App Native" di device guru/siswa. Dapat di-install langsung dari browser via manifest PWA.
+
+### 107.1: Service Layer - PwaService & Configurations
+- `getManifest()`: Konfigurasi `manifest.json` (Nama: SISTA App, theme_color, background_color, icon maskable, display: standalone).
+- `getServiceWorkerConfig()`: Setel Workbox routes. Cache strategies: `CacheFirst` untuk font, CSS, Icon; `NetworkFirst` untuk panggilan API Dashboard; `StaleWhileRevalidate` untuk feed page.
+- `registerWebPush()` & `sendWebPush()`: Mengintegrasikan Push API W3C bagi notifikasi browser. Menyiapkan VAPID Keys.
+
+### 107.2: File Manifest & Worker Updates
+- **Baru**: `public/manifest.json` (Berisi asset icons multi-size & parameter display).
+- **Baru**: `public/sw.js` (Script Service Worker, listen on install, fetch, and push).
+- **Ubah**: `resources/views/layouts/app.blade.php` (Tag injeksi `<link rel="manifest">` dan theme color meta tag iOS/Android browser).
+
+### 107.3: Test Plan (3 Test Cases)
+1. ✅ Mengukur Lighthouse Score pada PWA section dan mengincar 100/100 (Icon valid, installable).
+2. ✅ Simulasi offline mode Chrome DevTools: Asset page statis harus bisa dibuka lewat perantara cache worker.
+3. ✅ Endpoint verifikasi VAPID pendaftaran subscription (Push Notif Browser Desktop) bisa dikirim & diterima.
+
+---
+
+## Rencana Verifikasi Fase 98-107
+
+Tes unit untuk keseluruhan 10 Fase modernisasi ini akan dilakukan menggunakan Pest/PHPUnit:
+```bash
+php artisan test --filter="DesignSystemTest"
+php artisan test --filter="ContextualHomeTest"
+php artisan test --filter="InteractionConfigTest"
+php artisan test --filter="GamificationEngineTest"
+php artisan test --filter="SmartNotificationTest"
+php artisan test --filter="LivewireDashboardTest"
+php artisan test --filter="DataVizApiTest"
+php artisan test --filter="OfflineSyncEngineTest"
+php artisan test --filter="ParentExperienceTest"
+php artisan test --filter="PwaEnhancementTest"
+```
+
+## Urutan Prioritas Implementasi (FASE 98-107)
+
+Skala pengutamaan (Roadmap Q3-Q4 2026 dan Q1 2027):
+1. **P0 (Kritis UX - Core API):** Fase 98 (Design Tokens), Fase 99 (Contextual Home API), Fase 105 (Offline-First Sync Engine).
+2. **P1 (Penting Keterlibatan):** Fase 101 (Gamification), Fase 102 (Smart Notif), Fase 106 (Parent Experience API).
+3. **P2 (Lanjutan UI/Web):** Fase 103 (Livewire Reactive Web), Fase 104 (Data Viz), Fase 100 (Micro-interaction), Fase 107 (PWA).
+
+## Statistik Codebase Target (Akhir Modernisasi FASE 107)
+
+Setelah Fase 107 rampung, keseluruhan arsitektur SISTA Laravel diproyeksikan:
+- **Routes:** ~850+ Total Routes (Web & API gabungan)
+- **Controllers:** ~150+ Controllers
+- **Models & Tables:** ~175+ Eloquent Models
+- **Test Coverage:** Konsisten pada tingkat > 85% dengan ~350 Assertions
+- **Services:** ~130+ Domain/Application Services yang di-decouple sempurna.
+
+---
+
+## FASE 108-114: MOBILE API PARITY — BACKEND ENDPOINT UNTUK APLIKASI ANDROID `[SELESAI]`
+
+> **Tanggal Rancangan:** 18 September 2026
+> **Latar Belakang:** Audit komprehensif menemukan **7 orphaned API services** di aplikasi Android (Sulaone) yang memanggil endpoint REST yang **TIDAK ADA** di `routes/api.php`. Fase 108-114 membuat endpoint backend yang diperlukan agar fitur-fitur ini berfungsi di aplikasi mobile.
+> **Prioritas:** P0 (Kritis) — Target Oktober 2026
+> **Prerequisite:** Fase 107 selesai
+
+### Status Tracker Fase 108-114
+
+| No | Fase | Modul & Cakupan | Status |
+|:---:|---|---|:---:|
+| 1 | **FASE 108** | Perpustakaan Digital Mobile API | **SELESAI** |
+| 2 | **FASE 109** | Ekstrakurikuler & OSIS Mobile API | **SELESAI** |
+| 3 | **FASE 110** | Prestasi & Portofolio Mobile API | **SELESAI** |
+| 4 | **FASE 111** | Evaluasi Guru & E-Voting OSIS Mobile API | **SELESAI** |
+| 5 | **FASE 112** | UTBK Tryout & Rekomendasi PTN Mobile API | **SELESAI** |
+| 6 | **FASE 113** | Kedisiplinan Lengkap Mobile API | **SELESAI** |
+| 7 | **FASE 114** | Admin Dashboard & Document Management Mobile API | **SELESAI** |
+
+---
+
+## FASE 108: PERPUSTAKAAN DIGITAL MOBILE API `[SELESAI]`
+
+Membuat REST API endpoints untuk modul perpustakaan digital yang sudah memiliki UI lengkap di Android (`LibraryCatalogScreen`) dan Retrofit service (`LibraryApiService`) dengan 4 endpoint, namun backend `routes/api.php` belum memiliki satupun route perpustakaan.
+
+### 108.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\LibraryMobileApiController`
+- [x] Gunakan existing `LibraryService`, model `LibraryBook`, `LibraryLoan`, `LibraryCategory`
+- [x] Validasi bisnis: siswa maks 3 buku aktif, durasi pinjam 14 hari, notif H-1 jatuh tempo via queue `SendLibraryDueReminderJob`
+- [x] Migrasi kolom mobile `library_books`: `isbn`, `shelf_location`, `available_copies`, `total_copies`, `rating`
+
+### 108.2: API Endpoints
+```php
+Route::prefix('library')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+    Route::get('books', [LibraryMobileApiController::class, 'index']);          // Katalog buku (JSON array untuk Retrofit Android, support paginated)
+    Route::get('books/{id}', [LibraryMobileApiController::class, 'show']);      // Detail buku & status ketersediaan
+    Route::post('self-checkout', [LibraryMobileApiController::class, 'selfCheckout']); // Scan barcode/ISBN/QR, validasi stok
+    Route::get('my-loans', [LibraryMobileApiController::class, 'myLoans']);     // Daftar peminjaman aktif + riwayat
+});
+```
+
+### 108.3: Test Plan (13 Test Cases — Passed)
+- [x] Test endpoint auth & role (hanya siswa & guru yang bisa akses, parent 403, tamu 401)
+- [x] Test self-checkout: buku tersedia vs habis (stok 0), kuota 3 buku aktif, buku duplikat, verifikasi queue H-1
+- [x] Test response format: array root langsung untuk Retrofit Android, query search, filter kategori, dan mode paginasi
+
+
+---
+
+## FASE 109: EKSTRAKURIKULER & OSIS MOBILE API `[SELESAI]`
+
+Membuat REST API untuk modul ekstrakurikuler yang sudah memiliki `ExtracurricularApiService` (4 endpoint) dan `ExtracurricularScreen` di Android, namun belum ada route di backend.
+
+### 109.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\ExtracurricularMobileApiController`
+- [x] Model: `Extracurricular`, `ExtracurricularMember`, `ExtracurricularAttendance`, `OsisAnnouncement`
+- [x] Service: `App\Services\ExtracurricularService`
+- [x] Validasi: maks 2 ekskul per siswa, pendaftaran hanya saat periode aktif, kuota anggota, dan presensi hanya oleh pembina
+- [x] Migrasi: `category`, `coach_name`, `is_registration_open` pada `extracurriculars`, dan tabel `osis_announcements`
+
+### 109.2: API Endpoints
+```php
+Route::prefix('extracurricular')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+    Route::get('list', [ExtracurricularMobileApiController::class, 'index']);               // Daftar ekskul aktif + kuota tersisa
+    Route::post('{id}/register', [ExtracurricularMobileApiController::class, 'register']);  // Daftar ekskul (validasi kuota, batas 2, periode aktif)
+    Route::post('attendance/submit', [ExtracurricularMobileApiController::class, 'submitAttendance']); // Presensi latihan (otorisasi pembina)
+    Route::get('osis-feed', [ExtracurricularMobileApiController::class, 'osisFeed']);       // Pengumuman OSIS + aspirasi
+});
+```
+
+### 109.3: Test Plan (16 Test Cases — Passed)
+- [x] Test registrasi: kuota penuh, sudah terdaftar, kuota 2 ekskul terlampaui, periode tutup
+- [x] Test presensi: hanya pembina/pelatih yang bisa submit (siswa 403, guru lain 403, tamu 401)
+- [x] Test OSIS feed: urutan kronologis terbaru, format DTO Retrofit Android, dan dukungan paginasi
+
+
+---
+
+## FASE 110: PRESTASI & PORTOFOLIO MOBILE API `[SELESAI]`
+
+Membuat REST API untuk modul prestasi siswa yang sudah memiliki `AchievementApiService` (4 endpoint) dan `AchievementUploadScreen` di Android.
+
+### 110.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\AchievementMobileApiController`
+- [x] Model: `Achievement` dengan relasi `Student`, `User` (verifikator), query scopes, dan helper `toMobileItemArray()`
+- [x] Service: `App\Services\AchievementService` menangani dual-mode upload (Base64 & multipart), scoring level points, dan agregasi CV SNBP
+- [x] Flow approval: Upload → `PENDING_REVIEW` → Verifikasi Waka Kesiswaan/Guru → `VALIDATED` / `REJECTED` (dengan feedback)
+- [x] File upload: maks 5MB, format JPG/PNG/PDF, disimpan ke disk publik `achievements/`
+- [x] Database: Migrasi `achievements` dan seeder `AchievementMobileDataSeeder`
+
+### 110.2: API Endpoints
+```php
+Route::prefix('api/v1/achievements')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+    Route::get('/list', [AchievementMobileApiController::class, 'index']);                    // Daftar prestasi siswa (JSON array untuk Retrofit Android)
+    Route::post('/upload', [AchievementMobileApiController::class, 'upload']);                // Upload sertifikat/piagam (Base64 & multipart)
+    Route::get('/certificates', [AchievementMobileApiController::class, 'certificates']);     // E-sertifikat terverifikasi blockchain
+    Route::get('/academic-cv-summary', [AchievementMobileApiController::class, 'cvSummary']); // Ringkasan CV SNBP (IPK, reward points, ekskul)
+    Route::post('/{id}/verify', [AchievementMobileApiController::class, 'verify']);           // Verifikasi prestasi (khusus guru/kesiswaan)
+});
+```
+
+### 110.3: Test Plan (11 Test Cases — Passed)
+- [x] Test endpoint auth & role: siswa & guru diizinkan, parent 403, tamu 401
+- [x] Test upload via Base64 payload & multipart form-data (jpg, png, pdf) dengan validasi ukuran 5MB dan format berkas
+- [x] Test approval workflow: Waka kesiswaan approve (VALIDATED) & reject (REJECTED + feedback), siswa ditolak 403 verifikasi mandiri
+- [x] Test digital certificate listing & Academic CV Summary aggregation (IPK, total prestasi tervalidasi, reward points, ekskul)
+
+---
+
+## FASE 111: EVALUASI GURU & E-VOTING OSIS MOBILE API `[SELESAI]`
+
+Membuat REST API untuk evaluasi kinerja guru anonim dan e-voting OSIS yang sudah memiliki `EvaluationApiService` (6 endpoint) dan `TeacherEvaluationScreen` di Android.
+
+### 111.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\EvaluationMobileApiController`
+- [x] Model: `Evaluation360Cycle`, `Evaluation360Instrument`, `Evaluation360Response`, `FacilityEvaluation` (baru), `OsisElection`, `OsisCandidate`, `OsisVote`
+- [x] Evaluasi guru: anonim enforced (response diset `evaluator_id = null`), skala Likert 1-5, terikat pada cycle aktif.
+- [x] E-Voting OSIS: Pencegahan double-vote (1 siswa = 1 suara pada 1 pemilu), validasi payload biometrik.
+
+### 111.2: API Endpoints
+```php
+Route::prefix('evaluations')->middleware('auth:sanctum')->group(function () {
+    Route::get('/teachers', [EvaluationMobileApiController::class, 'teacherList']);         // Daftar guru yang bisa dievaluasi
+    Route::post('/teachers/submit', [EvaluationMobileApiController::class, 'submitTeacherEval']); // Submit evaluasi anonim
+    Route::get('/facilities', [EvaluationMobileApiController::class, 'facilityList']);      // Daftar sarpras untuk survey
+    Route::post('/facilities/submit', [EvaluationMobileApiController::class, 'submitFacilityEval']);
+    Route::get('/osis-election', [EvaluationMobileApiController::class, 'electionInfo']);   // Info kandidat & masa voting
+    Route::post('/osis-election/vote', [EvaluationMobileApiController::class, 'castVote']); // Cast vote (biometrik required)
+});
+```
+
+### 111.3: Test Plan (4 Test Cases — Passed)
+- [x] Test anonimitas: response evaluasi guru diverifikasi tersimpan dengan `evaluator_id = null`
+- [x] Test double-vote prevention pada e-voting OSIS (mengembalikan error 400 bila sudah vote)
+- [x] Test validasi periode evaluasi (hanya bisa submit saat cycle dibuka)
+- [x] Test osis vote ditolak jika di luar periode voting aktif
+
+---
+
+## FASE 112: UTBK TRYOUT & REKOMENDASI PTN MOBILE API `[SELESAI]`
+
+Membuat REST API untuk simulasi UTBK/SNBT yang sudah memiliki `UtbkApiService` (5 endpoint) dan `UtbkTryOutScreen` di Android.
+
+### 112.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\UtbkMobileApiController`
+- [x] Model: `Tryout`, `TryoutQuestion`, `TryoutAttempt`, `PtnProgram`, menggunakan alumni directory dari module Tracer Study
+- [x] Scoring menggunakan IRT Rasch model: `P(θ) = 1 / (1 + e^-(θ-b))`. Algoritma Maximum Likelihood Estimation (MLE) Newton-Raphson di `UtbkService` untuk estimasi ability θ, lalu dikonversi ke skala 300-1000.
+- [x] Rekomendasi PTN: rules-based matching nilai total estimasi UTBK vs passing grade prodi PTN. Termasuk tingkat chance (Tinggi, Sedang, Rendah).
+
+### 112.2: API Endpoints
+```php
+Route::prefix('utbk')->middleware('auth:sanctum')->group(function () {
+    Route::get('/tryouts', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'index']);
+    Route::get('/tryouts/{id}/questions', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'questions']);
+    Route::post('/tryouts/{id}/submit', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'submit']);
+    Route::get('/recommendations', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'ptnRecommendations']);
+    Route::get('/alumni-directory', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'alumniDirectory']);
+});
+```
+
+### 112.3: Test Plan (3 Test Cases — Passed)
+- [x] Test IRT Rasch scoring calculation accuracy (memverifikasi konversi skor logis berbasis butir soal yang benar/salah)
+- [x] Test rekomendasi PTN: filter berdasarkan skor minimum (prodi dengan target > skor tidak direkomendasikan)
+- [x] Test gagal submit tryout bila sudah mengerjakan (pencegahan double submit)
+
+---
+
+## FASE 113: KEDISIPLINAN LENGKAP MOBILE API `[SELESAI]`
+
+Melengkapi REST API kedisiplinan. Backend saat ini hanya mengekspos `/v1/student/points` (saldo poin), namun Android (`DisciplineApiService`) mengharapkan 4 endpoint detail termasuk riwayat pelanggaran dan tanda tangan digital surat peringatan.
+
+### 113.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\DisciplineMobileApiController` dan `DisciplineService`.
+- [x] Model: `StudentPointLog`, `PointCategory`, dan model baru `WarningLetter`.
+- [x] TTD digital: validasi keamanan memastikan bahwa yang _sign_ adalah akun orang tua siswa ybs (mencocokkan *foreign key* `parent_id`).
+- [x] Push notif ke orang tua sudah berjalan (lewat `StudentPointNotification` di observer bawaan backend).
+- [x] Auto-trigger SP berdasarkan ambang batas: ≥50 poin = SP1, ≥75 = SP2, ≥100 = SP3. Logika berjalan pasca insert pelanggaran pada Observer/Event (di metode `booted()` `StudentPointLog`).
+
+### 113.2: API Endpoints
+```php
+Route::prefix('discipline')->middleware('auth:sanctum')->group(function () {
+    Route::get('/summary', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'summary']);
+    Route::get('/history', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'history']);
+    Route::get('/warning-letters', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'letters']);
+    Route::post('/warning-letters/{id}/sign', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'signLetter']);
+});
+```
+
+### 113.3: Test Plan (3 Test Cases — Passed)
+- [x] Test penghitungan saldo poin akumulatif akurat (menjamin kalkulasi summary tepat berdasarkan relasi log)
+- [x] Test auto-trigger SP berdasarkan akumulasi poin (menjamin pembuatan SP level 1/2/3 berjenjang)
+- [x] Test TTD digital: hanya parent dari siswa ybs yang bisa sign SP (memblokir parent lain dengan kode 403 Forbidden)
+
+---
+
+## FASE 114: ADMIN DASHBOARD & DOCUMENT MANAGEMENT MOBILE API `[SELESAI]`
+
+Membuat REST API untuk dashboard eksekutif admin/kepala sekolah dan manajemen dokumen digital. Android memiliki `AdminApiService` (3 endpoint), `DocumentApiService` (4 endpoint), beserta layar `AdminDashboardScreen`, `DocumentScannerScreen`, `SignatureScreen` yang semuanya memanggil endpoint yang belum ada.
+
+### 114.1: Controller & Service Layer — Admin Dashboard
+- [x] Buat `App\Http\Controllers\Api\v1\AdminMobileDashboardController`
+- [x] Dashboard KPI: agregasi `Student::count()`, `Billing::where('status','unpaid')->sum('amount')`, tingkat kehadiran harian, dan agregasi `WorkflowRequest` yang tertunda.
+- [x] Approval endpoint: *state machine* pencatatan keputusan log (Pending → Approved/Rejected) tertaut ke `WorkflowApproval`.
+- [x] Middleware terpasang secara implisit dan eksplisit (Route Guarding `auth:sanctum`).
+
+### 114.2: Controller & Service Layer — Document Management
+- [x] Buat `App\Http\Controllers\Api\v1\DocumentMobileApiController`
+- [x] OCR: penerimaan gambar multipart, lalu _dispatch_ ke dalam antrean (Queue) via `ProcessOcrDocument` job.
+- [x] Digital signature: menyimpan tanda tangan berformat base64 kanvas ke dalam tabel khusus `digital_signatures`.
+- [x] Model Termasuk: Migrasi dan relasi `WorkflowRequest`, `WorkflowDefinition`, `DigitalSignature`, dan `OcrResult`.
+
+### 114.3: API Endpoints
+```php
+// Admin Dashboard
+Route::prefix('mobile/admin')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'dashboard']);
+    Route::get('/kpi', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'kpiDetail']);
+    Route::post('/approvals/{id}/action', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'processApproval']);
+});
+
+// Document Management
+Route::prefix('documents')->middleware('auth:sanctum')->group(function () {
+    Route::get('/reports', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'reportList']);
+    Route::get('/certificates', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'certificateList']);
+    Route::post('/ocr/scan', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'ocrScan']);
+    Route::post('/signature/submit', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'submitSignature']);
+});
+```
+
+### 114.4: Test Plan (4 Test Cases — Passed)
+- [x] Test RBAC: hanya admin/kepsek yang bisa akses dashboard (Data tersaji utuh saat otorisasi tercapai)
+- [x] Test approval workflow state machine (Alur mulus dari Pending → Approved, cegah overwrite status)
+- [x] Test OCR upload multipart image processing (Queue Job berhasil dikirim / di-*dispatch*)
+- [x] Test digital signature storage & retrieval (Database *assert has* entri base-64 berhasil masuk)
+
+---
+
+## Urutan Prioritas Implementasi (FASE 108-114)
+
+| Prioritas | Fase | Alasan |
+|:----------|:-----|:-------|
+| **P0 (Kritis)** | Fase 113 (Kedisiplinan) | Fitur harian — siswa & ortu butuh akses poin pelanggaran real-time |
+| **P0 (Kritis)** | Fase 108 (Perpustakaan) | Fitur harian — siswa perlu cek ketersediaan & pinjam buku mandiri |
+| **P0 (Kritis)** | Fase 109 (Ekskul) | Fitur operasional — pendaftaran & presensi ekskul reguler |
+| **P1 (Penting)** | Fase 110 (Prestasi) | Mendukung proses SNBP — upload portofolio sertifikat |
+| **P1 (Penting)** | Fase 114 (Admin & Dokumen) | Mobilitas kepsek — approval dari HP |
+| **P2 (Lanjutan)** | Fase 111 (Evaluasi & Voting) | Periodik — hanya aktif saat cycle evaluasi/pemilihan |
+| **P2 (Lanjutan)** | Fase 112 (UTBK) | Periodik — intensif menjelang musim SNBT |
+
+## Statistik Codebase Target (Akhir Fase 114)
+
+Setelah Fase 114 rampung, keseluruhan arsitektur SISTA Laravel diproyeksikan:
+- **Routes:** ~880+ Total Routes (Web & API gabungan, +30 API endpoints baru)
+- **Controllers:** ~157+ Controllers (+7 controller baru)
+- **Models & Tables:** ~175+ Eloquent Models (menggunakan model existing)
+### 109.2: API Endpoints
+```php
+Route::prefix('extracurricular')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+    Route::get('list', [ExtracurricularMobileApiController::class, 'index']);               // Daftar ekskul aktif + kuota tersisa
+    Route::post('{id}/register', [ExtracurricularMobileApiController::class, 'register']);  // Daftar ekskul (validasi kuota, batas 2, periode aktif)
+    Route::post('attendance/submit', [ExtracurricularMobileApiController::class, 'submitAttendance']); // Presensi latihan (otorisasi pembina)
+    Route::get('osis-feed', [ExtracurricularMobileApiController::class, 'osisFeed']);       // Pengumuman OSIS + aspirasi
+});
+```
+
+### 109.3: Test Plan (16 Test Cases — Passed)
+- [x] Test registrasi: kuota penuh, sudah terdaftar, kuota 2 ekskul terlampaui, periode tutup
+- [x] Test presensi: hanya pembina/pelatih yang bisa submit (siswa 403, guru lain 403, tamu 401)
+- [x] Test OSIS feed: urutan kronologis terbaru, format DTO Retrofit Android, dan dukungan paginasi
+
+
+---
+
+## FASE 110: PRESTASI & PORTOFOLIO MOBILE API `[SELESAI]`
+
+Membuat REST API untuk modul prestasi siswa yang sudah memiliki `AchievementApiService` (4 endpoint) dan `AchievementUploadScreen` di Android.
+
+### 110.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\AchievementMobileApiController`
+- [x] Model: `Achievement` dengan relasi `Student`, `User` (verifikator), query scopes, dan helper `toMobileItemArray()`
+- [x] Service: `App\Services\AchievementService` menangani dual-mode upload (Base64 & multipart), scoring level points, dan agregasi CV SNBP
+- [x] Flow approval: Upload → `PENDING_REVIEW` → Verifikasi Waka Kesiswaan/Guru → `VALIDATED` / `REJECTED` (dengan feedback)
+- [x] File upload: maks 5MB, format JPG/PNG/PDF, disimpan ke disk publik `achievements/`
+- [x] Database: Migrasi `achievements` dan seeder `AchievementMobileDataSeeder`
+
+### 110.2: API Endpoints
+```php
+Route::prefix('api/v1/achievements')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
+    Route::get('/list', [AchievementMobileApiController::class, 'index']);                    // Daftar prestasi siswa (JSON array untuk Retrofit Android)
+    Route::post('/upload', [AchievementMobileApiController::class, 'upload']);                // Upload sertifikat/piagam (Base64 & multipart)
+    Route::get('/certificates', [AchievementMobileApiController::class, 'certificates']);     // E-sertifikat terverifikasi blockchain
+    Route::get('/academic-cv-summary', [AchievementMobileApiController::class, 'cvSummary']); // Ringkasan CV SNBP (IPK, reward points, ekskul)
+    Route::post('/{id}/verify', [AchievementMobileApiController::class, 'verify']);           // Verifikasi prestasi (khusus guru/kesiswaan)
+});
+```
+
+### 110.3: Test Plan (11 Test Cases — Passed)
+- [x] Test endpoint auth & role: siswa & guru diizinkan, parent 403, tamu 401
+- [x] Test upload via Base64 payload & multipart form-data (jpg, png, pdf) dengan validasi ukuran 5MB dan format berkas
+- [x] Test approval workflow: Waka kesiswaan approve (VALIDATED) & reject (REJECTED + feedback), siswa ditolak 403 verifikasi mandiri
+- [x] Test digital certificate listing & Academic CV Summary aggregation (IPK, total prestasi tervalidasi, reward points, ekskul)
+
+---
+
+## FASE 111: EVALUASI GURU & E-VOTING OSIS MOBILE API `[SELESAI]`
+
+Membuat REST API untuk evaluasi kinerja guru anonim dan e-voting OSIS yang sudah memiliki `EvaluationApiService` (6 endpoint) dan `TeacherEvaluationScreen` di Android.
+
+### 111.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\EvaluationMobileApiController`
+- [x] Model: `Evaluation360Cycle`, `Evaluation360Instrument`, `Evaluation360Response`, `FacilityEvaluation` (baru), `OsisElection`, `OsisCandidate`, `OsisVote`
+- [x] Evaluasi guru: anonim enforced (response diset `evaluator_id = null`), skala Likert 1-5, terikat pada cycle aktif.
+- [x] E-Voting OSIS: Pencegahan double-vote (1 siswa = 1 suara pada 1 pemilu), validasi payload biometrik.
+
+### 111.2: API Endpoints
+```php
+Route::prefix('evaluations')->middleware('auth:sanctum')->group(function () {
+    Route::get('/teachers', [EvaluationMobileApiController::class, 'teacherList']);         // Daftar guru yang bisa dievaluasi
+    Route::post('/teachers/submit', [EvaluationMobileApiController::class, 'submitTeacherEval']); // Submit evaluasi anonim
+    Route::get('/facilities', [EvaluationMobileApiController::class, 'facilityList']);      // Daftar sarpras untuk survey
+    Route::post('/facilities/submit', [EvaluationMobileApiController::class, 'submitFacilityEval']);
+    Route::get('/osis-election', [EvaluationMobileApiController::class, 'electionInfo']);   // Info kandidat & masa voting
+    Route::post('/osis-election/vote', [EvaluationMobileApiController::class, 'castVote']); // Cast vote (biometrik required)
+});
+```
+
+### 111.3: Test Plan (4 Test Cases — Passed)
+- [x] Test anonimitas: response evaluasi guru diverifikasi tersimpan dengan `evaluator_id = null`
+- [x] Test double-vote prevention pada e-voting OSIS (mengembalikan error 400 bila sudah vote)
+- [x] Test validasi periode evaluasi (hanya bisa submit saat cycle dibuka)
+- [x] Test osis vote ditolak jika di luar periode voting aktif
+
+---
+
+## FASE 112: UTBK TRYOUT & REKOMENDASI PTN MOBILE API `[SELESAI]`
+
+Membuat REST API untuk simulasi UTBK/SNBT yang sudah memiliki `UtbkApiService` (5 endpoint) dan `UtbkTryOutScreen` di Android.
+
+### 112.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\UtbkMobileApiController`
+- [x] Model: `Tryout`, `TryoutQuestion`, `TryoutAttempt`, `PtnProgram`, menggunakan alumni directory dari module Tracer Study
+- [x] Scoring menggunakan IRT Rasch model: `P(θ) = 1 / (1 + e^-(θ-b))`. Algoritma Maximum Likelihood Estimation (MLE) Newton-Raphson di `UtbkService` untuk estimasi ability θ, lalu dikonversi ke skala 300-1000.
+- [x] Rekomendasi PTN: rules-based matching nilai total estimasi UTBK vs passing grade prodi PTN. Termasuk tingkat chance (Tinggi, Sedang, Rendah).
+
+### 112.2: API Endpoints
+```php
+Route::prefix('utbk')->middleware('auth:sanctum')->group(function () {
+    Route::get('/tryouts', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'index']);
+    Route::get('/tryouts/{id}/questions', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'questions']);
+    Route::post('/tryouts/{id}/submit', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'submit']);
+    Route::get('/recommendations', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'ptnRecommendations']);
+    Route::get('/alumni-directory', [\App\Http\Controllers\Api\v1\UtbkMobileApiController::class, 'alumniDirectory']);
+});
+```
+
+### 112.3: Test Plan (3 Test Cases — Passed)
+- [x] Test IRT Rasch scoring calculation accuracy (memverifikasi konversi skor logis berbasis butir soal yang benar/salah)
+- [x] Test rekomendasi PTN: filter berdasarkan skor minimum (prodi dengan target > skor tidak direkomendasikan)
+- [x] Test gagal submit tryout bila sudah mengerjakan (pencegahan double submit)
+
+---
+
+## FASE 113: KEDISIPLINAN LENGKAP MOBILE API `[SELESAI]`
+
+Melengkapi REST API kedisiplinan. Backend saat ini hanya mengekspos `/v1/student/points` (saldo poin), namun Android (`DisciplineApiService`) mengharapkan 4 endpoint detail termasuk riwayat pelanggaran dan tanda tangan digital surat peringatan.
+
+### 113.1: Controller & Service Layer
+- [x] Buat `App\Http\Controllers\Api\v1\DisciplineMobileApiController` dan `DisciplineService`.
+- [x] Model: `StudentPointLog`, `PointCategory`, dan model baru `WarningLetter`.
+- [x] TTD digital: validasi keamanan memastikan bahwa yang _sign_ adalah akun orang tua siswa ybs (mencocokkan *foreign key* `parent_id`).
+- [x] Push notif ke orang tua sudah berjalan (lewat `StudentPointNotification` di observer bawaan backend).
+- [x] Auto-trigger SP berdasarkan ambang batas: ≥50 poin = SP1, ≥75 = SP2, ≥100 = SP3. Logika berjalan pasca insert pelanggaran pada Observer/Event (di metode `booted()` `StudentPointLog`).
+
+### 113.2: API Endpoints
+```php
+Route::prefix('discipline')->middleware('auth:sanctum')->group(function () {
+    Route::get('/summary', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'summary']);
+    Route::get('/history', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'history']);
+    Route::get('/warning-letters', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'letters']);
+    Route::post('/warning-letters/{id}/sign', [\App\Http\Controllers\Api\v1\DisciplineMobileApiController::class, 'signLetter']);
+});
+```
+
+### 113.3: Test Plan (3 Test Cases — Passed)
+- [x] Test penghitungan saldo poin akumulatif akurat (menjamin kalkulasi summary tepat berdasarkan relasi log)
+- [x] Test auto-trigger SP berdasarkan akumulasi poin (menjamin pembuatan SP level 1/2/3 berjenjang)
+- [x] Test TTD digital: hanya parent dari siswa ybs yang bisa sign SP (memblokir parent lain dengan kode 403 Forbidden)
+
+---
+
+## FASE 114: ADMIN DASHBOARD & DOCUMENT MANAGEMENT MOBILE API `[SELESAI]`
+
+Membuat REST API untuk dashboard eksekutif admin/kepala sekolah dan manajemen dokumen digital. Android memiliki `AdminApiService` (3 endpoint), `DocumentApiService` (4 endpoint), beserta layar `AdminDashboardScreen`, `DocumentScannerScreen`, `SignatureScreen` yang semuanya memanggil endpoint yang belum ada.
+
+### 114.1: Controller & Service Layer — Admin Dashboard
+- [x] Buat `App\Http\Controllers\Api\v1\AdminMobileDashboardController`
+- [x] Dashboard KPI: agregasi `Student::count()`, `Billing::where('status','unpaid')->sum('amount')`, tingkat kehadiran harian, dan agregasi `WorkflowRequest` yang tertunda.
+- [x] Approval endpoint: *state machine* pencatatan keputusan log (Pending → Approved/Rejected) tertaut ke `WorkflowApproval`.
+- [x] Middleware terpasang secara implisit dan eksplisit (Route Guarding `auth:sanctum`).
+
+### 114.2: Controller & Service Layer — Document Management
+- [x] Buat `App\Http\Controllers\Api\v1\DocumentMobileApiController`
+- [x] OCR: penerimaan gambar multipart, lalu _dispatch_ ke dalam antrean (Queue) via `ProcessOcrDocument` job.
+- [x] Digital signature: menyimpan tanda tangan berformat base64 kanvas ke dalam tabel khusus `digital_signatures`.
+- [x] Model Termasuk: Migrasi dan relasi `WorkflowRequest`, `WorkflowDefinition`, `DigitalSignature`, dan `OcrResult`.
+
+### 114.3: API Endpoints
+```php
+// Admin Dashboard
+Route::prefix('mobile/admin')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'dashboard']);
+    Route::get('/kpi', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'kpiDetail']);
+    Route::post('/approvals/{id}/action', [\App\Http\Controllers\Api\v1\AdminMobileDashboardController::class, 'processApproval']);
+});
+
+// Document Management
+Route::prefix('documents')->middleware('auth:sanctum')->group(function () {
+    Route::get('/reports', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'reportList']);
+    Route::get('/certificates', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'certificateList']);
+    Route::post('/ocr/scan', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'ocrScan']);
+    Route::post('/signature/submit', [\App\Http\Controllers\Api\v1\DocumentMobileApiController::class, 'submitSignature']);
+});
+```
+
+### 114.4: Test Plan (4 Test Cases — Passed)
+- [x] Test RBAC: hanya admin/kepsek yang bisa akses dashboard (Data tersaji utuh saat otorisasi tercapai)
+- [x] Test approval workflow state machine (Alur mulus dari Pending → Approved, cegah overwrite status)
+- [x] Test OCR upload multipart image processing (Queue Job berhasil dikirim / di-*dispatch*)
+- [x] Test digital signature storage & retrieval (Database *assert has* entri base-64 berhasil masuk)
+
+---
+
+## Urutan Prioritas Implementasi (FASE 108-114)
+
+| Prioritas | Fase | Alasan |
+|:----------|:-----|:-------|
+| **P0 (Kritis)** | Fase 113 (Kedisiplinan) | Fitur harian — siswa & ortu butuh akses poin pelanggaran real-time |
+| **P0 (Kritis)** | Fase 108 (Perpustakaan) | Fitur harian — siswa perlu cek ketersediaan & pinjam buku mandiri |
+| **P0 (Kritis)** | Fase 109 (Ekskul) | Fitur operasional — pendaftaran & presensi ekskul reguler |
+| **P1 (Penting)** | Fase 110 (Prestasi) | Mendukung proses SNBP — upload portofolio sertifikat |
+| **P1 (Penting)** | Fase 114 (Admin & Dokumen) | Mobilitas kepsek — approval dari HP |
+| **P2 (Lanjutan)** | Fase 111 (Evaluasi & Voting) | Periodik — hanya aktif saat cycle evaluasi/pemilihan |
+| **P2 (Lanjutan)** | Fase 112 (UTBK) | Periodik — intensif menjelang musim SNBT |
+
+## Statistik Codebase Target (Akhir Fase 114)
+
+Setelah Fase 114 rampung, keseluruhan arsitektur SISTA Laravel diproyeksikan:
+- **Routes:** ~880+ Total Routes (Web & API gabungan, +30 API endpoints baru)
+- **Controllers:** ~157+ Controllers (+7 controller baru)
+- **Models & Tables:** ~175+ Eloquent Models (menggunakan model existing)
+- **Test Coverage:** Konsisten pada tingkat > 85% dengan ~370 Assertions (+20 test cases baru)
+- **Services:** ~130+ Domain/Application Services (menggunakan service existing)
+
+---
+
+## FASE 115: ADVANCED SYNC STATE CONSISTENCY (BUG FIXES) `[SELESAI]`
+
+Menangani *edge-cases* dan bug sinkronisasi data (Race Conditions, Millisecond Precision, dan Missed Events) antara aplikasi Android dan server Laravel. Fase ini krusial untuk mencapai *Zero-Data-Loss* saat pengguna mengalami *network drop* atau saat aplikasi berpindah ke *background* (Doze mode).
+
+### 115.1: Millisecond Precision & Tombstone Strategy
+- [x] **Skema Database:** Ubah resolusi kolom `updated_at` dari standar detik menjadi millisecond precision (`$table->timestamps(3)`). Hal ini mencegah hilangnya data (*missed update*) pada Delta Sync saat dua mutasi data terjadi di detik yang persis sama.
+- [x] **Tombstone Records (Soft Deletes):** Filter Delta Sync (misal: `/api/v1/sync/delta`) TIDAK BOLEH menghilangkan record yang di-*soft-delete*. Sertakan objek dengan flag `is_deleted = true` dan `deleted_at` dalam response JSON agar database lokal di Android (Room/SQLite) mendapat sinyal eksplisit untuk melakukan *purge* (penghapusan) data lokal.
+
+### 115.2: Idempotent Mutation API
+- [x] **Idempotency-Key Header:** Wajibkan header `Idempotency-Key` (UUIDv4) pada semua request mutasi kritis (`POST`, `PUT`, `DELETE`).
+- [x] **Cache Middleware:** Simpan hash request yang sukses (HTTP 2xx) ke dalam Redis (TTL 24 jam) dengan key `idempotency_{user_id}_{key}`. Jika Android mengirim ulang request yang sama akibat *network timeout* (meskipun data sudah masuk DB), server akan mengembalikan response JSON yang sama dari *cache* Redis tanpa menjalankan duplikasi query di database.
+
+### 115.3: WebSocket (Reverb) Catch-up Endpoint
+- [x] **Endpoint Baru:** Buat `GET /api/v1/sync/catch-up?last_event_id=...`
+- [x] **Fungsi Log Event:** Jika aplikasi Android kembali aktif dari *background* dan koneksi WebSocket Reverb terputus lama, aplikasi akan memanggil endpoint ini. Backend harus mengembalikan *array of events* (notifikasi, chat, status poin) yang terlewat, mengambil dari log sementara Redis Streams.
+
+### 115.4: Test Plan (4 Test Cases)
+- [x] Test submit ganda dengan `Idempotency-Key` yang sama (harus return 200/201 dari cache, database tidak boleh ada record ganda).
+- [x] Test *Tombstone sync*: Record yang di-soft-delete harus muncul di response delta dengan flag `is_deleted = true`.
+- [x] Test resolusi milidetik: Lakukan 2 *update* berbeda dalam interval < 100ms, query delta harus bisa menangkap perubahan update terakhir.
+- [x] Test catch-up log: Pastikan `last_event_id` yang tertinggal bisa di-resolve menjadi antrean event yang utuh dari Redis.
+
+---
+
+## FASE 116: PRAGMATIC INFRASTRUCTURE & ENTERPRISE READINESS `[RANCANGAN BARU]`
+
+Skema infrastruktur dan *deployment* yang dirancang spesifik untuk **skala 1 institusi (SMA Islam Sultan Agung 1 Semarang)**. Fokus pada ketahanan beban ujian (CBT) hingga 1.500 siswa bersamaan, biaya server rendah (*cost-effective*), dan kemudahan manajemen oleh *solo developer* atau tim IT sekolah berskala kecil.
+
+### 116.1: Server & Web Engine Optimization (CBT Concurrency)
+- [ ] **Nginx + Laravel Octane:** Menggunakan Laravel Octane (via FrankenPHP atau Swoole) pada 1 VPS mandiri (spesifikasi 4-8 Core, 8-16 GB RAM). Octane menjaga aplikasi tetap hidup di memori RAM, mempercepat waktu respons 10x lipat dan sanggup menahan ribuan klik "Simpan Jawaban" CBT per detik tanpa membuat server mogok.
+- [ ] **Redis Queue untuk CBT:** Seluruh submisi jawaban ujian tidak boleh ditembak langsung ke tabel `cbt_answers` MySQL. Gunakan **Redis** untuk menampung jawaban secara instan di memori, lalu biarkan *Laravel Queue Worker* `php artisan queue:work` menyimpannya perlahan di latar belakang (*Asynchronous write*).
+
+### 116.2: Automated Disaster Recovery (Zero-Cost Backup)
+- [ ] **Integrasi `spatie/laravel-backup`:** Konfigurasi *package* ini untuk mem-backup seluruh *database* MySQL dan *storage file* secara otomatis setiap hari (misalnya pada Pukul 02:00 AM).
+- [ ] **Google Drive Destination:** Hindari tagihan AWS S3 berbayar. Gunakan *Google Workspace for Education* milik SULAONE (Google Drive) sebagai destinasi *cloud backup* kapasitas besar/tak terbatas via API secara gratis. Semua *file* akan di-zip dan dilindungi *password* enkripsi.
+
+### 116.3: Observability (Mengatasi Blind-spot Bug)
+- [ ] **Laravel Telescope:** Aktifkan di lingkungan *production* (dibatasi dengan *middleware* khusus hanya untuk IP/Akun Admin IT). Berguna untuk melacak *Error 500*, mendeteksi N+1 *query* lambat di MySQL, dan memantau tumpukan antrean Redis.
+- [ ] **Slack/Telegram Log Alerts:** Ubah konfigurasi `config/logging.php` agar setiap kali terjadi `Log::critical()` atau `Log::error()` yang fatal, sistem backend otomatis mengirim pesan kewaspadaan (*alert*) langsung ke grup Telegram atau Slack Tim IT Sekolah.
+
+### 116.4: Pragmatic Deployment Strategy
+- [ ] **Simple Maintenance Mode:** Tidak membutuhkan *Zero-Downtime Pipeline* yang mahal dan berlebihan. Cukup buat skrip bash deployment (`deploy.sh`) yang secara terotomatisasi menjalankan `php artisan down` (*maintenance screen* bersahabat untuk siswa), melakukan `git pull`, `php artisan migrate`, `composer install`, lalu `php artisan up`.
+- [ ] **Jadwal Rilis Terencana:** Proses *deployment* ini biasanya hanya memakan waktu 1-3 menit dan dapat dijadwalkan secara aman pada malam hari (Pukul 22:00 ke atas) saat *traffic* KBM sekolah sedang libur/kosong.

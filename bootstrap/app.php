@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'mfa' => \App\Http\Middleware\VerifyMfa::class,
             'admin.ip' => \App\Http\Middleware\AdminIpWhitelistMiddleware::class,
             'elevated' => \App\Http\Middleware\EnsureElevatedSessionMiddleware::class,
+            'idempotency' => \App\Http\Middleware\IdempotencyMiddleware::class,
         ]);
 
         $middleware->prepend(\App\Http\Middleware\InvisibleHoneypotMiddleware::class);
@@ -39,6 +40,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SystemLockdownMiddleware::class,
             \App\Http\Middleware\CorrelationIdMiddleware::class,
             \App\Http\Middleware\SessionFingerprintMiddleware::class,
+        ]);
+
+        $middleware->appendToGroup('api', [
+            \App\Http\Middleware\IdempotencyMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

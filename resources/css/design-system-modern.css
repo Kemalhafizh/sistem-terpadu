@@ -1,0 +1,57 @@
+/**
+ * SISTA Modern Design System 2026
+ * SMA Islam Sultan Agung 1 Semarang
+ */
+
+:root {
+  --sista-emerald-950: #032416;
+  --sista-emerald-900: #063823;
+  --sista-emerald-800: #0A4D30;
+  --sista-emerald-700: #0D5C3A;
+  --sista-emerald-600: #107047;
+  --sista-emerald-500: #148554;
+  --sista-gold-600: #D4AF37;
+  --sista-gold-400: #F7D97B;
+  
+  --sista-spring-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Glassmorphism Styles */
+.sista-glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .sista-glass-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Spring interactive button */
+.sista-btn-spring {
+  transition: transform 0.25s var(--sista-spring-easing), box-shadow 0.25s ease;
+}
+
+.sista-btn-spring:active {
+  transform: scale(0.95);
+}
+
+/* Shimmer animation for skeletons */
+@keyframes sista-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.sista-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: sista-shimmer 1.5s infinite;
+}

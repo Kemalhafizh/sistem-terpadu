@@ -58,7 +58,7 @@
                 <!-- Bot Response -->
                 <div class="flex flex-col items-start">
                     <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 max-w-xl text-sm shadow-sm leading-relaxed">
-                        {!! $conversation->bot_response !!}
+                        {!! nl2br(e($conversation->bot_response)) !!}
                     </div>
                     <span class="text-[10px] text-gray-400 mt-1 font-bold">AI Chatbot</span>
                 </div>

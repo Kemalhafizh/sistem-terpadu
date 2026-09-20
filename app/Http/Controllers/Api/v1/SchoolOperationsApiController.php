@@ -197,7 +197,21 @@ class SchoolOperationsApiController extends Controller
 
     public function uksVisits(Request $request): JsonResponse
     {
-        $studentId = $request->query('student_id', $request->user()->id);
+        $user = $request->user();
+        $studentId = (int) $request->query('student_id', $user->id);
+
+        // Authorization check: student can only view their own UKS visits
+        if (in_array($user->role, ['student', 'siswa'], true) && $studentId !== $user->id) {
+            abort(403, 'Akses ditolak. Anda hanya berhak melihat riwayat kunjungan UKS Anda sendiri.');
+        }
+
+        // Parent can only view their child's UKS visits
+        if ($user->role === 'parent') {
+            $childIds = $user->children ? $user->children->pluck('id')->merge($user->children->pluck('user_id'))->filter()->toArray() : [];
+            if ($studentId !== $user->id && !in_array($studentId, $childIds, true)) {
+                abort(403, 'Akses ditolak. Anda hanya berhak melihat riwayat kunjungan UKS anak Anda.');
+            }
+        }
 
         $visits = UksVisit::with('medicines')
             ->where('student_id', $studentId)
@@ -255,7 +269,21 @@ class SchoolOperationsApiController extends Controller
 
     public function healthScreening(Request $request, ?int $studentId = null): JsonResponse
     {
-        $targetId = $studentId ?? $request->user()->id;
+        $user = $request->user();
+        $targetId = ($studentId && is_numeric($studentId)) ? (int) $studentId : $user->id;
+
+        // Authorization check: student can only view their own health screening
+        if (in_array($user->role, ['student', 'siswa'], true) && $targetId !== $user->id) {
+            abort(403, 'Akses ditolak. Anda hanya berhak melihat hasil skrining kesehatan Anda sendiri.');
+        }
+
+        // Parent can only view their child's health screening
+        if ($user->role === 'parent') {
+            $childIds = $user->children ? $user->children->pluck('id')->merge($user->children->pluck('user_id'))->filter()->toArray() : [];
+            if ($targetId !== $user->id && !in_array($targetId, $childIds, true)) {
+                abort(403, 'Akses ditolak. Anda hanya berhak melihat hasil skrining kesehatan anak Anda.');
+            }
+        }
 
         return response()->json([
             'success' => true,

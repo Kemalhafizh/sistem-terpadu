@@ -23,7 +23,6 @@ class RestrictImpersonation
                     ->with('error', 'Sesi impersonate Anda telah habis (timeout 60 menit).');
             }
 
-            // Define restricted route names or patterns
             $restrictedRoutes = [
                 'profile.edit',
                 'profile.update',
@@ -36,10 +35,25 @@ class RestrictImpersonation
                 // Add more sensitive routes here
             ];
 
+            $restrictedPrefixes = [
+                'admin.webhooks.',
+                'admin.integrations.',
+                'treasury.',
+                'finance.',
+            ];
+
             $currentRouteName = $request->route() ? $request->route()->getName() : null;
 
-            if ($currentRouteName && in_array($currentRouteName, $restrictedRoutes)) {
-                abort(403, 'Aksi ini tidak diizinkan saat sedang dalam mode menyamar (impersonate).');
+            if ($currentRouteName) {
+                if (in_array($currentRouteName, $restrictedRoutes)) {
+                    abort(403, 'Aksi ini tidak diizinkan saat sedang dalam mode menyamar (impersonate).');
+                }
+
+                foreach ($restrictedPrefixes as $prefix) {
+                    if (str_starts_with($currentRouteName, $prefix) && in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+                        abort(403, 'Aksi modifikasi data sensitif/finansial tidak diizinkan dalam mode impersonate.');
+                    }
+                }
             }
         }
 

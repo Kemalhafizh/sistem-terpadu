@@ -75,6 +75,8 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
+        Gate::authorize('take', $exam);
+
         $result = $this->enterpriseService->processMicroBatchAnswers($exam, $student, $request->input('answers'));
 
         return $this->successResponse($result, 'Jawaban berhasil disinkronisasi');
@@ -97,6 +99,8 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
+        Gate::authorize('take', $exam);
+
         $submission = $this->enterpriseService->handleEssayUpload(
             $exam,
             $student,

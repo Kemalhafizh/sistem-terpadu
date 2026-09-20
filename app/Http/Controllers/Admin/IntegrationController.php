@@ -243,9 +243,15 @@ class IntegrationController extends Controller
             'events' => 'required|array',
         ]);
 
+        try {
+            $validatedUrl = \App\Services\Security\SsrfGuardService::validateUrl($request->url);
+        } catch (\InvalidArgumentException $e) {
+            return back()->withInput()->with('error', 'URL Webhook ditolak demi keamanan (SSRF Protection): ' . $e->getMessage());
+        }
+
         Webhook::create([
             'name' => $request->name,
-            'url' => $request->url,
+            'url' => $validatedUrl,
             'secret' => $request->secret,
             'events' => $request->events,
             'is_active' => true,
@@ -263,9 +269,15 @@ class IntegrationController extends Controller
             'events' => 'required|array',
         ]);
 
+        try {
+            $validatedUrl = \App\Services\Security\SsrfGuardService::validateUrl($request->url);
+        } catch (\InvalidArgumentException $e) {
+            return back()->withInput()->with('error', 'URL Webhook ditolak demi keamanan (SSRF Protection): ' . $e->getMessage());
+        }
+
         $webhook->update([
             'name' => $request->name,
-            'url' => $request->url,
+            'url' => $validatedUrl,
             'secret' => $request->secret,
             'events' => $request->events,
             'is_active' => $request->has('is_active'),
@@ -300,6 +312,8 @@ class IntegrationController extends Controller
         $signature = $webhook->secret ? hash_hmac('sha256', json_encode($payload), $webhook->secret) : 'none';
 
         try {
+            \App\Services\Security\SsrfGuardService::validateUrl($webhook->url);
+
             $startTime = microtime(true);
             $response = Http::withHeaders([
                 'X-Sista-Signature' => $signature,

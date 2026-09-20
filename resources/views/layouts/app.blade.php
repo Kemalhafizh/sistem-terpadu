@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-theme" content="{{ auth()->check() ? auth()->user()->preferred_theme : 'system' }}">
     <meta name="user-authenticated" content="{{ auth()->check() ? 'true' : 'false' }}">
+    <meta name="theme-color" content="#0D5C3A">
+    <link rel="manifest" href="/manifest.json">
 
     <title>{{ isset($title) ? $title . ' — ' : '' }}{{ $appearance->app_name }}</title>
 

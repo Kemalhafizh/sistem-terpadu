@@ -46,13 +46,17 @@ class WebhookHubController extends Controller
             'secret_key' => 'nullable|string|max:100',
         ]);
 
-        $subscription = $webhookManager->registerSubscription([
-            'name' => $request->name,
-            'target_url' => $request->target_url,
-            'secret_key' => $request->secret_key,
-            'events' => $request->events,
-            'is_active' => true,
-        ]);
+        try {
+            $subscription = $webhookManager->registerSubscription([
+                'name' => $request->name,
+                'target_url' => $request->target_url,
+                'secret_key' => $request->secret_key,
+                'events' => $request->events,
+                'is_active' => true,
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return back()->withInput()->with('error', 'Target URL Webhook ditolak demi keamanan (SSRF Protection): ' . $e->getMessage());
+        }
 
         return back()->with('success', "Langganan Webhook [{$subscription->name}] berhasil mendaftar!");
     }

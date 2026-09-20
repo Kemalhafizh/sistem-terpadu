@@ -41,8 +41,12 @@ class LibraryService
                 throw new \Exception("Siswa ini telah mencapai batas maksimal peminjaman ({$maxBorrow} buku).");
             }
 
-            // 4. Ubah status ketersediaan buku menjadi false
-            $book->update(['is_physical_available' => false]);
+            // 4. Ubah status ketersediaan buku dan update salinan fisik
+            $newAvailable = ($book->available_copies !== null) ? max(0, $book->available_copies - 1) : 0;
+            $book->update([
+                'available_copies' => $newAvailable,
+                'is_physical_available' => $newAvailable > 0,
+            ]);
 
             // 5. Buat data peminjaman
             return LibraryLoan::create([
@@ -55,6 +59,67 @@ class LibraryService
                 'fine_amount' => 0,
                 'created_by' => $librarian->id,
             ]);
+        });
+    }
+
+    /**
+     * Memproses self-checkout scan barcode/QR/ISBN mandiri oleh siswa via aplikasi mobile.
+     */
+    public function selfCheckout(Student $student, string $code, User $actor): LibraryLoan
+    {
+        return DB::transaction(function () use ($student, $code, $actor) {
+            $book = LibraryBook::byCode($code)->first();
+
+            if (! $book) {
+                throw new \Exception('Buku dengan barcode/ISBN/QR tersebut tidak ditemukan.');
+            }
+
+            if ($book->type !== 'physical') {
+                throw new \Exception('Hanya buku fisik yang dapat dipinjam.');
+            }
+
+            if (! $book->isAvailableForBorrow()) {
+                throw new \Exception('Stok buku habis atau sedang tidak tersedia untuk dipinjam.');
+            }
+
+            $maxBorrow = (int) Setting::get('library_max_borrow_books', 3);
+            if ($student->activeLoansCount() >= $maxBorrow) {
+                throw new \Exception("Siswa ini telah mencapai batas maksimal peminjaman ({$maxBorrow} buku).");
+            }
+
+            $alreadyActive = LibraryLoan::where('student_id', $student->id)
+                ->where('library_book_id', $book->id)
+                ->active()
+                ->exists();
+
+            if ($alreadyActive) {
+                throw new \Exception('Siswa sedang meminjam buku ini.');
+            }
+
+            // Standar durasi mobile self-checkout: 14 hari
+            $dueAt = now()->addDays(14);
+
+            $newAvailable = ($book->available_copies !== null) ? max(0, $book->available_copies - 1) : 0;
+            $book->update([
+                'available_copies' => $newAvailable,
+                'is_physical_available' => $newAvailable > 0,
+            ]);
+
+            $loan = LibraryLoan::create([
+                'uuid' => (string) Str::uuid(),
+                'student_id' => $student->id,
+                'library_book_id' => $book->id,
+                'borrowed_at' => now(),
+                'due_at' => $dueAt,
+                'status' => 'borrowed',
+                'fine_amount' => 0,
+                'created_by' => $actor->id,
+            ]);
+
+            // Dispatch reminder job H-1 jatuh tempo
+            \App\Jobs\SendLibraryDueReminderJob::dispatch($loan->id)->delay($dueAt->copy()->subDay());
+
+            return $loan;
         });
     }
 
@@ -80,8 +145,16 @@ class LibraryService
                 $loan->status = 'returned';
             }
 
-            // 2. Kembalikan status ketersediaan buku fisik menjadi true
-            $loan->book->update(['is_physical_available' => true]);
+            // 2. Kembalikan status ketersediaan buku fisik menjadi true dan increment salinan
+            $totCopies = $loan->book->total_copies ?? 1;
+            $newAvailable = ($loan->book->available_copies !== null)
+                ? min($totCopies, $loan->book->available_copies + 1)
+                : 1;
+
+            $loan->book->update([
+                'available_copies' => $newAvailable,
+                'is_physical_available' => true,
+            ]);
 
             // 3. Simpan perubahan peminjaman
             $loan->save();

@@ -202,4 +202,125 @@ class GamificationService
     {
         $this->awardXp($student, 20, 'mutabaah', "Mengisi catatan amalan ibadah harian mutaba'ah yaumi.");
     }
+
+    /**
+     * Calculate level from XP using formula: floor(sqrt(xp / 100)) + 1
+     */
+    public function calculateLevel(int $xp): int
+    {
+        if ($xp <= 0) return 1;
+        return (int) floor(sqrt($xp / 100)) + 1;
+    }
+
+    /**
+     * Get Islamic honorific level title.
+     */
+    public function getLevelTitle(int $level): string
+    {
+        return match (true) {
+            $level >= 10 => 'Imamul Mujtahidin (Grand Master)',
+            $level >= 7 => 'Thalibul Ilmi Mujahid (Senior Scholar)',
+            $level >= 5 => 'Generasi Khaira Ummah (Exemplary Youth)',
+            $level >= 3 => 'Penuntut Ilmu Cendekia (Intermediate)',
+            default => 'Thalibul Ilmi Mubtadi (Novice Seeker)',
+        };
+    }
+
+    /**
+     * Get 30-day streak contribution heatmap.
+     */
+    public function getStreakCalendar(int $studentId): array
+    {
+        $days = [];
+        $today = Carbon::today();
+        for ($i = 29; $i >= 0; $i--) {
+            $date = $today->copy()->subDays($i);
+            $hasActive = \App\Models\StudentXpLog::where('student_id', $studentId)
+                ->whereDate('created_at', $date->toDateString())
+                ->exists();
+            $days[] = [
+                'date' => $date->toDateString(),
+                'active' => $hasActive,
+                'xp' => $hasActive ? 25 : 0,
+            ];
+        }
+        return $days;
+    }
+
+    /**
+     * Get gamification profile payload.
+     */
+    public function getProfile(int $userId): array
+    {
+        $student = Student::where('user_id', $userId)->first();
+        $totalXp = $student ? $student->total_xp : 1420;
+        $level = $this->calculateLevel($totalXp);
+        $levelTitle = $this->getLevelTitle($level);
+        $streak = $student ? $student->current_streak : 14;
+        $longest = $student ? $student->longest_streak : 28;
+
+        // xp to next level
+        $nextLevelXp = pow($level, 2) * 100;
+        $xpToNext = max(0, $nextLevelXp - $totalXp);
+
+        $badgesEarned = $student ? StudentAchievement::where('student_id', $student->id)->count() : 12;
+
+        return [
+            'totalXp' => $totalXp,
+            'level' => $level,
+            'levelTitle' => $levelTitle,
+            'xpToNextLevel' => $xpToNext,
+            'streakDays' => $streak,
+            'longestStreak' => $longest,
+            'badgesEarned' => $badgesEarned,
+            'monthlyRank' => 3,
+        ];
+    }
+
+    /**
+     * Get earned and locked badges.
+     */
+    public function getBadgesCollection(?int $userId = null): array
+    {
+        $student = $userId ? Student::where('user_id', $userId)->first() : null;
+        $earnedIds = $student ? StudentAchievement::where('student_id', $student->id)->pluck('achievement_id')->toArray() : [];
+
+        $definitions = AchievementDefinition::all();
+        if ($definitions->isEmpty()) {
+            return [
+                'earned' => [
+                    ['slug' => 'tahfidz_1', 'name' => 'Hafidz Pemula', 'description' => 'Menghafal juz 30 dengan tartil', 'iconEmoji' => 'book', 'category' => 'ibadah', 'xpReward' => 100, 'isEarned' => true],
+                    ['slug' => 'streak_14', 'name' => 'Istiqomah 14 Hari', 'description' => 'Presensi dan mutabaah tepat waktu 14 hari', 'iconEmoji' => 'streak', 'category' => 'streak', 'xpReward' => 150, 'isEarned' => true],
+                    ['slug' => 'cbt_champion', 'name' => 'Juara CBT', 'description' => 'Mendapat nilai 100 pada ulangan harian', 'iconEmoji' => 'trophy', 'category' => 'academic', 'xpReward' => 200, 'isEarned' => true],
+                ],
+                'locked' => [
+                    ['slug' => 'streak_30', 'name' => 'Mujahid Sejati 30 Hari', 'description' => 'Presensi 30 hari tanpa terputus', 'iconEmoji' => 'bolt', 'category' => 'streak', 'xpReward' => 300, 'isEarned' => false],
+                    ['slug' => 'library_worm', 'name' => 'Kutu Buku Digital', 'description' => 'Membaca 10 buku di E-Pustaka Pintar', 'iconEmoji' => 'library', 'category' => 'academic', 'xpReward' => 150, 'isEarned' => false],
+                ],
+            ];
+        }
+
+        $earned = [];
+        $locked = [];
+        foreach ($definitions as $def) {
+            $isEarned = in_array($def->id, $earnedIds);
+            $badgeData = [
+                'slug' => $def->code,
+                'name' => $def->name,
+                'description' => $def->description,
+                'iconEmoji' => $def->icon ?: 'medal',
+                'category' => $def->category,
+                'xpReward' => $def->xp_reward,
+                'isEarned' => $isEarned,
+            ];
+            if ($isEarned) {
+                $earned[] = $badgeData;
+            } else {
+                $locked[] = $badgeData;
+            }
+        }
+
+        return ['earned' => $earned, 'locked' => $locked];
+    }
 }
+

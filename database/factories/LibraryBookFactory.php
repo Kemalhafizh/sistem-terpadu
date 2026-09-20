@@ -19,7 +19,7 @@ class LibraryBookFactory extends Factory
             'author' => $this->faker->name(),
             'category_id' => LibraryCategory::factory(),
             'subject_id' => Subject::factory(),
-            'type' => $this->faker->randomElement(['physical', 'pdf', 'video']),
+            'type' => $this->faker->randomElement(['physical', 'digital']),
             'file_path' => null,
             'cover_path' => null,
             'video_url' => null,

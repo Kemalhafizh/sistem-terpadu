@@ -21,8 +21,8 @@ class ImpersonateController extends Controller
             abort(403, 'Akses ditolak.');
         }
 
-        // Prevent impersonating fellow admins for security stability
-        if ($user->isAdmin()) {
+        // Prevent impersonating fellow admins or superadmins for security stability
+        if ($user->isAdmin() || (method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin()) || in_array($user->role, ['admin', 'superadmin'])) {
             return back()->with('error', 'Anda tidak dapat menyamar sebagai sesama Admin.');
         }
 
@@ -42,8 +42,9 @@ class ImpersonateController extends Controller
             'user_agent' => request()->userAgent(),
         ]);
 
-        // Login as target user
+        // Login as target user and regenerate session to prevent session fixation
         Auth::login($user);
+        session()->regenerate();
 
         return redirect()->route('dashboard')->with('success', "Anda sekarang menyamar sebagai {$user->name}");
     }
@@ -72,6 +73,7 @@ class ImpersonateController extends Controller
 
             Auth::login($admin);
             session()->forget(['impersonate_by', 'impersonate_start_time']);
+            session()->regenerate();
 
             return redirect()->route('users.index')->with('success', 'Anda telah kembali ke akun Admin.');
         }

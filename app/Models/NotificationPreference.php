@@ -10,9 +10,16 @@ class NotificationPreference extends Model
 {
     use HasFactory;
 
+    protected $table = 'notification_preferences';
+
     protected $fillable = [
         'user_id',
         'event_category',
+        'digest_mode',
+        'digest_interval',
+        'channel_preferences',
+        'quiet_hours',
+        'smart_grouping',
         'channel_inapp',
         'channel_email',
         'channel_whatsapp',
@@ -20,6 +27,10 @@ class NotificationPreference extends Model
     ];
 
     protected $casts = [
+        'digest_mode' => 'boolean',
+        'channel_preferences' => 'array',
+        'quiet_hours' => 'array',
+        'smart_grouping' => 'boolean',
         'channel_inapp' => 'boolean',
         'channel_email' => 'boolean',
         'channel_whatsapp' => 'boolean',

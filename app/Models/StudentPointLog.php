@@ -50,6 +50,33 @@ class StudentPointLog extends Model
                     Log::error('Failed to trigger automatic counseling session: '.$e->getMessage());
                 }
             }
+
+            // Pemicu Auto-Generate SP
+            if ($student) {
+                $totalPoints = $student->total_points;
+                
+                $thresholds = [
+                    100 => 'SP3',
+                    75 => 'SP2',
+                    50 => 'SP1',
+                ];
+
+                foreach ($thresholds as $threshold => $level) {
+                    if ($totalPoints >= $threshold) {
+                        // Check if SP already exists for this level
+                        \App\Models\WarningLetter::firstOrCreate(
+                            ['student_id' => $student->id, 'level' => $level],
+                            [
+                                'point_threshold' => $threshold,
+                                'issued_at' => now(),
+                                'notes' => "Penerbitan otomatis $level karena poin mencapai/melewati $threshold.",
+                            ]
+                        );
+                        // Only trigger the highest applicable SP during this log event
+                        break;
+                    }
+                }
+            }
         });
     }
 }

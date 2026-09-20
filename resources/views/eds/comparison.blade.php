@@ -241,11 +241,11 @@
                         },
                         series: [
                             {
-                                name: "{!! $comparisonData['previous_period_name'] !!}",
+                                name: {!! json_encode($comparisonData['previous_period_name']) !!},
                                 data: previousData
                             },
                             {
-                                name: "{!! $comparisonData['current_period_name'] !!}",
+                                name: {!! json_encode($comparisonData['current_period_name']) !!},
                                 data: currentData
                             }
                         ],
