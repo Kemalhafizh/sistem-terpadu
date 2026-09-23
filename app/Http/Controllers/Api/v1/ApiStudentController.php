@@ -202,6 +202,7 @@ class ApiStudentController extends Controller
                 'total_questions' => (int) ($e->total_questions ?: $e->questions()->count()),
                 'passing_score' => (float) ($e->passing_score ?? 75.0),
                 'status' => $e->status ?? 'published',
+                'is_ongoing' => $e->isOngoing(),
                 'has_attempted' => $attempt !== null,
                 'score' => $attempt ? (float) $attempt->score : null,
             ];

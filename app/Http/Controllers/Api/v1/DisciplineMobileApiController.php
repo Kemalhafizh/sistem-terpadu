@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Services\DisciplineService;
+use App\Traits\ApiResponseTrait;
 use Exception;
 use Illuminate\Http\Request;
 
 class DisciplineMobileApiController extends Controller
 {
+    use ApiResponseTrait;
+
     protected DisciplineService $disciplineService;
 
     public function __construct(DisciplineService $disciplineService)
@@ -38,12 +41,12 @@ class DisciplineMobileApiController extends Controller
     {
         try {
             $student = $this->resolveStudent($request);
-            if (!$student) return response()->json(['success' => false, 'message' => 'Siswa tidak ditemukan.'], 404);
+            if (!$student) return $this->errorResponse('Siswa tidak ditemukan.', 404);
 
             $data = $this->disciplineService->getSummary($student);
-            return response()->json($data);
+            return $this->successResponse($data, 'Ringkasan poin kedisiplinan berhasil diambil');
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            return $this->errorResponse($e->getMessage(), 400);
         }
     }
 
@@ -51,12 +54,16 @@ class DisciplineMobileApiController extends Controller
     {
         try {
             $student = $this->resolveStudent($request);
-            if (!$student) return response()->json(['success' => false, 'message' => 'Siswa tidak ditemukan.'], 404);
+            if (!$student) return $this->errorResponse('Siswa tidak ditemukan.', 404);
 
-            $data = $this->disciplineService->getHistory($student, true);
-            return response()->json($data);
+            // Unpaginated — every other mobile list endpoint in this app returns
+            // a flat array, and Android's DisciplineApiService expects one too
+            // (a Laravel paginator's {current_page, data: [...], ...} shape
+            // would otherwise double-nest under the ApiEnvelope's own "data").
+            $data = $this->disciplineService->getHistory($student, false);
+            return $this->successResponse($data, 'Riwayat poin kedisiplinan berhasil diambil');
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            return $this->errorResponse($e->getMessage(), 400);
         }
     }
 
@@ -64,12 +71,12 @@ class DisciplineMobileApiController extends Controller
     {
         try {
             $student = $this->resolveStudent($request);
-            if (!$student) return response()->json(['success' => false, 'message' => 'Siswa tidak ditemukan.'], 404);
+            if (!$student) return $this->errorResponse('Siswa tidak ditemukan.', 404);
 
             $data = $this->disciplineService->getWarningLetters($student);
-            return response()->json($data);
+            return $this->successResponse($data, 'Daftar surat peringatan berhasil diambil');
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            return $this->errorResponse($e->getMessage(), 400);
         }
     }
 
@@ -82,16 +89,12 @@ class DisciplineMobileApiController extends Controller
         try {
             $user = $request->user();
             $letter = $this->disciplineService->signWarningLetter($id, $user, $request->digital_signature);
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Surat Peringatan berhasil ditandatangani.',
-                'data' => [
-                    'signed_at' => $letter->signed_at->format('Y-m-d H:i:s'),
-                ],
-            ]);
+
+            return $this->successResponse([
+                'signed_at' => $letter->signed_at->format('Y-m-d H:i:s'),
+            ], 'Surat Peringatan berhasil ditandatangani.');
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 403);
+            return $this->errorResponse($e->getMessage(), 403);
         }
     }
 }

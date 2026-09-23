@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CampusAnnouncementEvent;
 use App\Models\Announcement;
 use App\Models\Classroom;
 use App\Models\User;
@@ -58,7 +59,7 @@ class AnnouncementController extends Controller
             $attachmentPath = $request->file('attachment')->store('announcements/attachments', 'public');
         }
 
-        Announcement::create([
+        $announcement = Announcement::create([
             'title' => $validated['title'],
             'content' => $validated['content'],
             'image_path' => $imagePath,
@@ -73,6 +74,16 @@ class AnnouncementController extends Controller
             'created_by' => Auth::id(),
             'is_active' => true,
         ]);
+
+        // FASE 71: real-time push to every connected mobile app (Home/announcements feed).
+        event(new CampusAnnouncementEvent([
+            'id' => $announcement->id,
+            'title' => $announcement->title,
+            'summary' => \Illuminate\Support\Str::limit(strip_tags($announcement->content), 140),
+            'category' => $announcement->category,
+            'priority' => $announcement->priority,
+            'timestamp' => $announcement->created_at->toIso8601String(),
+        ]));
 
         return redirect()->route('announcements.index')->with('success', 'Pengumuman berhasil disebarkan.');
     }

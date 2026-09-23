@@ -250,6 +250,34 @@ class MobileAuthController extends Controller
     }
 
     /**
+     * Register (or refresh) this device's FCM token so push notifications
+     * can actually be targeted at it. PushNotificationService::sendToUser()
+     * already reads from UserDeviceToken — this was the missing HTTP
+     * entry point into that already-real service.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function registerDevice(Request $request): JsonResponse
+    {
+        $request->validate([
+            'device_id' => 'required|string|max:255',
+            'fcm_token' => 'required|string',
+            'platform' => 'nullable|string|in:android,ios',
+            'device_name' => 'nullable|string|max:255',
+            'app_version' => 'nullable|string|max:50',
+        ]);
+
+        $device = $this->pushService->registerDeviceToken($request->user(), $request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Perangkat berhasil didaftarkan untuk notifikasi push.',
+            'device' => $device,
+        ], 200);
+    }
+
+    /**
      * Retrieve all active devices currently registered to the authenticated user.
      *
      * @param Request $request

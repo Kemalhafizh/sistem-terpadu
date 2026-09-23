@@ -258,7 +258,23 @@ class CbtEnterpriseService
             'payload' => ['message' => $message],
         ]);
 
+        // Exam-wide channel (cbt.exam.{examId}) is proctor-only — a student
+        // taking the exam is never authorized on it (see routes/channels.php),
+        // since it also carries StudentCheatedEvent, which must stay private
+        // to proctors. So a "broadcast to everyone" (student_id null) still
+        // needs one event per student on their own private per-student
+        // channel to actually reach any exam-taker's screen — dispatching
+        // once with studentId=null would otherwise silently go nowhere.
         broadcast(new ProctorInterventionEvent($examId, $studentId, 'WARNING_MODAL', $message));
+
+        if ($studentId === null) {
+            ExamAttempt::where('exam_id', $examId)
+                ->where('status', 'in_progress')
+                ->pluck('student_id')
+                ->each(function (int $activeStudentId) use ($examId, $message) {
+                    broadcast(new ProctorInterventionEvent($examId, $activeStudentId, 'WARNING_MODAL', $message));
+                });
+        }
 
         return $log;
     }

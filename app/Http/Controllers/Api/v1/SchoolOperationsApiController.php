@@ -20,51 +20,67 @@ class SchoolOperationsApiController extends Controller
     // FASE 93: KALENDER AKADEMIK & EVENT SEKOLAH
     // ==========================================
 
+    /**
+     * Maps CalendarEvent's real columns (event_type/start_datetime/
+     * end_datetime) to the exact shape the Android app's
+     * AcademicCalendarEventItem expects (category/start_time/end_time) —
+     * the two never matched, so even before the fake-fallback was removed,
+     * real rows would have deserialized with null/wrong fields on Android.
+     */
+    private function calendarEventToArray(CalendarEvent $event): array
+    {
+        return [
+            'id' => $event->id,
+            'title' => $event->title,
+            'description' => $event->description,
+            'category' => $event->event_type,
+            'start_time' => $event->start_datetime?->toDateTimeString(),
+            'end_time' => $event->end_datetime?->toDateTimeString(),
+            'location' => $event->location,
+            'is_holiday' => $event->event_type === 'holiday',
+        ];
+    }
+
     public function calendarEvents(Request $request): JsonResponse
     {
-        $year = $request->query('year', now()->year);
+        $year = $request->query('year');
         $month = $request->query('month');
         $category = $request->query('category');
 
         $query = CalendarEvent::query();
 
         if ($month) {
-            $query->whereMonth('start_time', $month);
+            $query->whereMonth('start_datetime', $month);
         }
         if ($year) {
-            $query->whereYear('start_time', $year);
+            $query->whereYear('start_datetime', $year);
         }
         if ($category) {
-            $query->where('category', $category);
+            $query->where('event_type', $category);
         }
 
-        $events = $query->orderBy('start_time', 'asc')->get();
-
-        if ($events->isEmpty()) {
-            $events = $this->getSampleCalendarEvents();
-        }
+        $events = $query->orderBy('start_datetime', 'asc')->get();
 
         return response()->json([
             'success' => true,
-            'data' => $events,
+            'data' => $events->map(fn ($e) => $this->calendarEventToArray($e))->values(),
         ]);
     }
 
     public function exportIcal(Request $request)
     {
-        $events = CalendarEvent::whereYear('start_time', now()->year)->get();
-        if ($events->isEmpty()) {
-            $events = collect($this->getSampleCalendarEvents());
-        }
+        $events = CalendarEvent::whereYear('start_datetime', $request->query('year', now()->year))
+            ->orderBy('start_datetime')
+            ->get();
 
         $ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//SMA Islam Sultan Agung 1//Sula-One//ID\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Kalender Akademik SMA Islam Sultan Agung 1\r\n";
 
         foreach ($events as $event) {
-            $start = date('Ymd\THis\Z', strtotime($event->start_time ?? now()));
-            $end = date('Ymd\THis\Z', strtotime($event->end_time ?? now()->addHours(2)));
-            $title = $event->title ?? 'Agenda Sekolah';
+            $start = $event->start_datetime?->format('Ymd\THis\Z') ?? now()->format('Ymd\THis\Z');
+            $end = $event->end_datetime?->format('Ymd\THis\Z') ?? now()->addHours(2)->format('Ymd\THis\Z');
+            $title = $event->title;
             $desc = $event->description ?? '';
-            $uid = ($event->id ?? rand(100, 999)) . "@sultanagung1.sch.id";
+            $uid = $event->id . "@sultanagung1.sch.id";
 
             $ics .= "BEGIN:VEVENT\r\nUID:{$uid}\r\nDTSTART:{$start}\r\nDTEND:{$end}\r\nSUMMARY:{$title}\r\nDESCRIPTION:{$desc}\r\nEND:VEVENT\r\n";
         }
@@ -77,72 +93,38 @@ class SchoolOperationsApiController extends Controller
         ]);
     }
 
-    private function getSampleCalendarEvents(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'title' => 'Asesmen Sumatif Tengah Semester (ASTS) Ganjil',
-                'description' => 'Pelaksanaan ujian berbasis CBT untuk seluruh tingkat X, XI, dan XII',
-                'category' => 'ujian',
-                'start_time' => '2026-09-21 07:30:00',
-                'end_time' => '2026-09-26 14:00:00',
-                'location' => 'Laboratorium CBT & Ruang Kelas',
-                'is_holiday' => false,
-            ],
-            [
-                'id' => 2,
-                'title' => 'Peringatan Maulid Nabi Muhammad SAW 1448 H',
-                'description' => 'Kajian akbar dan lomba seni bernuansa Islami antarkelas',
-                'category' => 'keagamaan',
-                'start_time' => '2026-09-15 08:00:00',
-                'end_time' => '2026-09-15 13:00:00',
-                'location' => 'Masjid Utama SMA Islam Sultan Agung 1',
-                'is_holiday' => false,
-            ],
-            [
-                'id' => 3,
-                'title' => 'Libur Bersama Hari Santri Nasional',
-                'description' => 'Libur resmi kalender pendidikan Yayasan Badan Wakaf Sultan Agung',
-                'category' => 'libur',
-                'start_time' => '2026-10-22 00:00:00',
-                'end_time' => '2026-10-22 23:59:59',
-                'location' => '-',
-                'is_holiday' => true,
-            ],
-        ];
-    }
-
     // ==========================================
     // FASE 94: SPMB / PPDB MOBILE
     // ==========================================
 
     public function spmbWaves(): JsonResponse
     {
-        $waves = SpmbWave::with('period', 'tracks')->where('is_active', true)->get();
+        // Real columns: SpmbWave.status (enum), not the "is_active" boolean
+        // this used to filter on — that column never existed, so this
+        // always matched zero rows and fell through to fabricated data.
+        $waves = SpmbWave::with('period.tracks')->where('status', 'open')->get();
 
-        if ($waves->isEmpty()) {
-            $waves = [
-                [
-                    'id' => 1,
-                    'name' => 'Gelombang 1 (Jalur Prestasi & Tahfidz Unggulan)',
-                    'academic_year' => '2027/2028',
-                    'start_date' => '2026-10-01',
-                    'end_date' => '2026-12-31',
-                    'is_open' => true,
-                    'fee' => 250000,
-                    'tracks' => [
-                        ['id' => 1, 'name' => 'Jalur Tahfidz Quran (Min. 3 Juz)', 'quota' => 60],
-                        ['id' => 2, 'name' => 'Jalur Prestasi Akademik & Sains', 'quota' => 80],
-                        ['id' => 3, 'name' => 'Jalur Reguler Zonasi Mandiri', 'quota' => 140],
-                    ],
-                ]
+        $data = $waves->map(function ($wave) {
+            return [
+                'id' => $wave->id,
+                'name' => $wave->name,
+                'academic_year' => $wave->period?->academicYear?->name ?? '-',
+                'start_date' => $wave->registration_start?->toDateString(),
+                'end_date' => $wave->registration_end?->toDateString(),
+                'is_open' => $wave->status === 'open',
+                'fee' => (int) $wave->registration_fee,
+                // Tracks belong to the wave's period, not the wave itself.
+                'tracks' => $wave->period?->tracks->map(fn ($t) => [
+                    'id' => $t->id,
+                    'name' => $t->name,
+                    'quota' => $t->quota,
+                ])->values() ?? [],
             ];
-        }
+        });
 
         return response()->json([
             'success' => true,
-            'data' => $waves,
+            'data' => $data,
         ]);
     }
 
@@ -156,86 +138,228 @@ class SchoolOperationsApiController extends Controller
             'track_name' => 'nullable|string',
         ]);
 
-        $regNumber = 'SPMB-' . date('Ymd') . '-' . strtoupper(Str::random(5));
+        $openWave = SpmbWave::where('status', 'open')->with('period')->first();
+        if (!$openWave) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pendaftaran SPMB sedang ditutup. Tidak ada gelombang yang aktif saat ini.',
+            ], 422);
+        }
+
+        $track = $request->filled('track_name')
+            ? \App\Models\SpmbTrack::where('spmb_period_id', $openWave->spmb_period_id)
+                ->where('name', 'like', '%'.$request->input('track_name').'%')
+                ->first()
+            : null;
+
+        $academicYearId = $openWave->period?->academic_year_id
+            ?? \App\Models\AcademicYear::where('is_active', true)->first()?->id;
+
+        if (!$academicYearId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tahun ajaran aktif tidak ditemukan. Hubungi admin sekolah.',
+            ], 422);
+        }
+
+        $registration = \App\Models\Registration::create([
+            'registration_number' => \App\Models\Registration::generateRegistrationNumber(),
+            'full_name' => $request->input('full_name'),
+            'nisn' => $request->input('nisn'),
+            'previous_school' => $request->input('school_origin'),
+            'parent_phone' => $request->input('phone_number'),
+            'status' => 'pending',
+            'document_status' => 'incomplete',
+            'academic_year_id' => $academicYearId,
+            'spmb_wave_id' => $openWave->id,
+            'spmb_track_id' => $track?->id,
+            'user_id' => $request->user()?->id,
+        ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Pendaftaran SPMB berhasil dikirim. Simpan Nomor Pendaftaran Anda!',
             'data' => [
-                'registration_number' => $regNumber,
-                'full_name' => $request->full_name,
-                'nisn' => $request->nisn,
-                'school_origin' => $request->school_origin,
-                'track' => $request->track_name ?? 'Jalur Prestasi Akademik',
+                'registration_number' => $registration->registration_number,
+                'full_name' => $registration->full_name,
+                'nisn' => $registration->nisn,
+                'school_origin' => $registration->previous_school,
+                'track' => $track?->name ?? 'Belum ditentukan',
                 'status' => 'menunggu_verifikasi_berkas',
-                'submission_date' => now()->toIso8601String(),
-                'test_schedule' => 'Akan diumumkan via WhatsApp & SuperApp',
+                'submission_date' => $registration->created_at->toIso8601String(),
+                'test_schedule' => 'Akan diumumkan melalui SuperApp setelah berkas diverifikasi.',
             ],
         ], 201);
     }
 
     public function spmbCheckStatus(Request $request, string $registrationNo): JsonResponse
     {
+        $registration = \App\Models\Registration::where('registration_number', $registrationNo)
+            ->with('spmbTrack')
+            ->first();
+
+        if (!$registration) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nomor pendaftaran tidak ditemukan.',
+            ], 404);
+        }
+
+        $verificationStatusMap = [
+            'pending' => 'menunggu',
+            'reviewing' => 'menunggu',
+            'accepted' => 'terverifikasi',
+            'rejected' => 'ditolak',
+        ];
+        $finalStatusMap = [
+            'pending' => null,
+            'reviewing' => null,
+            'accepted' => 'diterima',
+            'rejected' => 'tidak_lulus',
+        ];
+
         return response()->json([
             'success' => true,
             'data' => [
-                'registration_number' => $registrationNo,
-                'full_name' => 'Calon Siswa Teladan',
-                'track' => 'Jalur Tahfidz & Prestasi',
-                'verification_status' => 'terverifikasi',
-                'cbt_test_date' => '2026-11-15 08:00 WIB',
-                'interview_date' => '2026-11-15 10:30 WIB',
-                'final_status' => 'menunggu_tes',
-                'notes' => 'Harap hadir 30 menit sebelum tes dengan membawa bukti pendaftaran.',
+                'registration_number' => $registration->registration_number,
+                'full_name' => $registration->full_name,
+                'track' => $registration->spmbTrack?->name ?? 'Belum ditentukan',
+                'verification_status' => $verificationStatusMap[$registration->status] ?? 'menunggu',
+                // No CBT/interview scheduling columns exist on this table —
+                // left honestly null rather than a fabricated fixed date.
+                'cbt_test_date' => null,
+                'interview_date' => null,
+                'final_status' => $finalStatusMap[$registration->status] ?? null,
+                'notes' => $registration->admin_notes,
             ],
         ]);
+    }
+
+    /**
+     * Real document upload against an already-created registration — the
+     * mobile registration flow collects documents in Step 3 before the
+     * record exists (Step 4 submits), so the Android side stores real
+     * picked files locally and uploads them here right after
+     * spmbRegister() succeeds, rather than needing the flow reordered.
+     */
+    public function spmbUploadDocument(Request $request, string $registrationNo): JsonResponse
+    {
+        $request->validate([
+            'document_type' => 'required|string|max:50',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $registration = \App\Models\Registration::where('registration_number', $registrationNo)->first();
+        if (!$registration) {
+            return response()->json(['success' => false, 'message' => 'Nomor pendaftaran tidak ditemukan.'], 404);
+        }
+
+        $path = $request->file('file')->store('spmb/mobile_documents', 'public');
+
+        $document = \App\Models\SpmbDocument::create([
+            'registration_id' => $registration->id,
+            'document_type' => $request->input('document_type'),
+            'file_path' => $path,
+            'verification_status' => 'pending',
+        ]);
+
+        // Once every one of the 4 documents the mobile form collects has
+        // arrived, the registration is no longer "incomplete".
+        $requiredTypes = ['photo', 'kk', 'rapor', 'sertifikat'];
+        $uploadedTypes = \App\Models\SpmbDocument::where('registration_id', $registration->id)
+            ->pluck('document_type')
+            ->unique();
+        if (collect($requiredTypes)->every(fn ($t) => $uploadedTypes->contains($t))) {
+            $registration->update(['document_status' => 'submitted']);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Dokumen berhasil diunggah.',
+            'data' => [
+                'id' => $document->id,
+                'document_type' => $document->document_type,
+                'file_url' => \Illuminate\Support\Facades\Storage::url($path),
+            ],
+        ], 201);
     }
 
     // ==========================================
     // FASE 96: REKAM MEDIS UKS & SKRINING
     // ==========================================
 
-    public function uksVisits(Request $request): JsonResponse
+    /**
+     * Resolves the target Student model for UKS/health-screening endpoints,
+     * enforcing that a student only ever sees their own records and a parent
+     * only their own children's — comparing against Student.id (not
+     * User.id, which the previous version of this method conflated: a
+     * student's users.id and students.id are different auto-increment
+     * sequences on different tables).
+     */
+    private function resolveUksTargetStudent(Request $request, ?int $requestedStudentId): \App\Models\Student
     {
         $user = $request->user();
-        $studentId = (int) $request->query('student_id', $user->id);
 
-        // Authorization check: student can only view their own UKS visits
-        if (in_array($user->role, ['student', 'siswa'], true) && $studentId !== $user->id) {
-            abort(403, 'Akses ditolak. Anda hanya berhak melihat riwayat kunjungan UKS Anda sendiri.');
-        }
-
-        // Parent can only view their child's UKS visits
-        if ($user->role === 'parent') {
-            $childIds = $user->children ? $user->children->pluck('id')->merge($user->children->pluck('user_id'))->filter()->toArray() : [];
-            if ($studentId !== $user->id && !in_array($studentId, $childIds, true)) {
-                abort(403, 'Akses ditolak. Anda hanya berhak melihat riwayat kunjungan UKS anak Anda.');
+        if (in_array($user->role, ['student', 'siswa'], true)) {
+            $own = $user->student;
+            if (!$own) {
+                abort(404, 'Data siswa untuk akun ini tidak ditemukan.');
             }
+            if ($requestedStudentId && $requestedStudentId !== $own->id) {
+                abort(403, 'Akses ditolak. Anda hanya berhak melihat data UKS Anda sendiri.');
+            }
+            return $own;
         }
 
-        $visits = UksVisit::with('medicines')
-            ->where('student_id', $studentId)
+        if ($user->role === 'parent') {
+            if (!$requestedStudentId) {
+                abort(422, 'Parameter student_id wajib diisi untuk melihat data UKS anak.');
+            }
+            $child = \App\Models\Student::where('id', $requestedStudentId)->where('parent_id', $user->id)->first();
+            if (!$child) {
+                abort(403, 'Akses ditolak. Anda hanya berhak melihat data UKS anak Anda.');
+            }
+            return $child;
+        }
+
+        // Staff/nurse/admin: must specify which student.
+        if (!$requestedStudentId) {
+            abort(422, 'Parameter student_id wajib diisi.');
+        }
+        $student = \App\Models\Student::find($requestedStudentId);
+        if (!$student) {
+            abort(404, 'Data siswa tidak ditemukan.');
+        }
+        return $student;
+    }
+
+    public function uksVisits(Request $request): JsonResponse
+    {
+        $requestedId = $request->filled('student_id') ? (int) $request->query('student_id') : null;
+        $student = $this->resolveUksTargetStudent($request, $requestedId);
+
+        $visits = UksVisit::with(['medicines', 'handler'])
+            ->where('student_id', $student->id)
             ->latest('visit_time')
-            ->get();
-
-        if ($visits->isEmpty()) {
-            $visits = [
-                [
-                    'id' => 1,
-                    'visit_time' => '2026-08-14 10:15:00',
-                    'complaints' => 'Pusing dan demam ringan saat upacara bendera',
-                    'diagnosis' => 'Kelelahan & Cephalgia Ringan',
-                    'treatment' => 'Istirahat 45 menit di ruang bed UKS, kompres hangat',
-                    'temperature' => '37.4 °C',
-                    'blood_pressure' => '110/75 mmHg',
-                    'medicines' => [
-                        ['name' => 'Paracetamol 500mg', 'dose' => '1 tablet sesudah makan']
-                    ],
-                    'action' => 'kembali_ke_kelas',
-                    'handler_name' => 'dr. Siti Rahmawati (Dokter Jaga UKS)',
-                ]
-            ];
-        }
+            ->get()
+            ->map(function (UksVisit $v) {
+                return [
+                    'id' => $v->id,
+                    'visit_time' => $v->visit_time->toDateTimeString(),
+                    'complaints' => $v->complaint,
+                    'diagnosis' => $v->diagnosis,
+                    'treatment' => $v->treatment,
+                    'temperature' => $v->temperature !== null ? (string) $v->temperature : null,
+                    'blood_pressure' => $v->blood_pressure,
+                    'medicines' => $v->medicines->map(fn ($m) => [
+                        'name' => $m->name,
+                        'dose' => $m->pivot->quantity.'x',
+                    ])->values(),
+                    'action' => $v->disposition,
+                    'handler_name' => $v->handler?->name,
+                    'parent_notified' => (bool) $v->parent_notified,
+                ];
+            });
 
         return response()->json([
             'success' => true,
@@ -246,60 +370,175 @@ class SchoolOperationsApiController extends Controller
     public function recordUksVisit(Request $request): JsonResponse
     {
         $request->validate([
-            'student_id' => 'required|integer',
-            'complaints' => 'required|string',
+            'student_id' => 'required|integer|exists:students,id',
+            'complaint' => 'required|string',
             'diagnosis' => 'nullable|string',
-            'treatment' => 'nullable|string',
-            'temperature' => 'nullable|string',
+            'temperature' => 'nullable|numeric|min:30|max:45',
+            'blood_pressure' => 'nullable|string|max:20',
+            'actions' => 'nullable|array',
+            'actions.*' => 'string',
+            'medicines' => 'nullable|array',
+            'medicines.*.id' => 'required_with:medicines|integer|exists:uks_medicines,id',
+            'medicines.*.quantity' => 'nullable|integer|min:1',
+            'notes' => 'nullable|string',
         ]);
+
+        $visit = \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+            $visit = UksVisit::create([
+                'student_id' => $request->input('student_id'),
+                'handled_by' => $request->user()->id,
+                'visit_time' => now(),
+                'complaint' => $request->input('complaint'),
+                'diagnosis' => $request->input('diagnosis'),
+                'treatment' => collect($request->input('actions', []))->implode(', ') ?: null,
+                'temperature' => $request->input('temperature'),
+                'blood_pressure' => $request->input('blood_pressure'),
+                'severity' => 'ringan',
+                'disposition' => 'istirahat_uks',
+                'parent_notified' => false,
+                'notes' => $request->input('notes'),
+            ]);
+
+            foreach ($request->input('medicines', []) as $med) {
+                $medicine = \App\Models\UksMedicine::find($med['id']);
+                if (!$medicine) {
+                    continue;
+                }
+                $qty = (int) ($med['quantity'] ?? 1);
+                $visit->medicines()->attach($medicine->id, ['quantity' => $qty]);
+                $medicine->decrement('stock', min($qty, $medicine->stock));
+            }
+
+            $student = $visit->load('student.parent')->student;
+            if ($student?->parent) {
+                $student->parent->notify(new \App\Notifications\UksVisitNotification($visit));
+                $visit->update(['parent_notified' => true]);
+            }
+
+            return $visit->load('medicines', 'handler');
+        });
 
         return response()->json([
             'success' => true,
-            'message' => 'Kunjungan UKS berhasil dicatat & orang tua telah diberi notifikasi',
+            'message' => $visit->parent_notified
+                ? 'Kunjungan UKS berhasil dicatat & notifikasi terkirim ke Orang Tua.'
+                : 'Kunjungan UKS berhasil dicatat. Siswa tidak memiliki kontak orang tua terdaftar untuk notifikasi.',
             'data' => [
-                'id' => rand(100, 999),
-                'student_id' => $request->student_id,
-                'complaints' => $request->complaints,
-                'diagnosis' => $request->diagnosis ?? 'Observasi UKS',
-                'visit_time' => now()->toIso8601String(),
-                'status' => 'dalam_perawatan',
-            ]
+                'id' => $visit->id,
+                'visit_time' => $visit->visit_time->toDateTimeString(),
+                'complaints' => $visit->complaint,
+                'diagnosis' => $visit->diagnosis,
+                'treatment' => $visit->treatment,
+                'temperature' => $visit->temperature !== null ? (string) $visit->temperature : null,
+                'blood_pressure' => $visit->blood_pressure,
+                'medicines' => $visit->medicines->map(fn ($m) => [
+                    'name' => $m->name,
+                    'dose' => $m->pivot->quantity.'x',
+                ])->values(),
+                'action' => $visit->disposition,
+                'handler_name' => $visit->handler?->name,
+                'parent_notified' => (bool) $visit->parent_notified,
+            ],
         ], 201);
+    }
+
+    /**
+     * Real student-name/NISN search — the mobile "Catat Pasien UKS" form
+     * previously took a free-text student name with no way to resolve a
+     * real student_id, which is exactly why recordUksVisit() never actually
+     * had one to save against.
+     */
+    public function searchUksStudents(Request $request): JsonResponse
+    {
+        $query = trim((string) $request->query('q', ''));
+        if (mb_strlen($query) < 2) {
+            return response()->json(['success' => true, 'data' => []]);
+        }
+
+        // Student.name is a computed accessor proxying User.name (no real
+        // "name" column on students), so matching by name needs a relation
+        // constraint rather than a direct where().
+        $students = \App\Models\Student::with(['classroom', 'user'])
+            ->where(function ($q) use ($query) {
+                $q->whereHas('user', function ($uq) use ($query) {
+                    $uq->where('name', 'like', "%{$query}%");
+                })
+                    ->orWhere('nisn', 'like', "%{$query}%")
+                    ->orWhere('nis', 'like', "%{$query}%");
+            })
+            ->limit(10)
+            ->get()
+            ->map(fn ($s) => [
+                'id' => $s->id,
+                'name' => $s->name,
+                'nisn' => $s->nisn,
+                'classroom_name' => $s->classroom?->name,
+            ]);
+
+        return response()->json(['success' => true, 'data' => $students]);
+    }
+
+    /**
+     * Real medicine inventory — the mobile form previously showed a
+     * hardcoded stock list that never actually deducted anything server-side.
+     */
+    public function uksMedicines(Request $request): JsonResponse
+    {
+        $medicines = \App\Models\UksMedicine::orderBy('name')->get()->map(fn ($m) => [
+            'id' => (string) $m->id,
+            'name' => $m->name,
+            'quantity' => $m->stock,
+        ]);
+
+        return response()->json(['success' => true, 'data' => $medicines]);
     }
 
     public function healthScreening(Request $request, ?int $studentId = null): JsonResponse
     {
-        $user = $request->user();
-        $targetId = ($studentId && is_numeric($studentId)) ? (int) $studentId : $user->id;
+        $student = $this->resolveUksTargetStudent($request, $studentId);
 
-        // Authorization check: student can only view their own health screening
-        if (in_array($user->role, ['student', 'siswa'], true) && $targetId !== $user->id) {
-            abort(403, 'Akses ditolak. Anda hanya berhak melihat hasil skrining kesehatan Anda sendiri.');
-        }
+        $latestResult = \App\Models\HealthScreeningResult::where('student_id', $student->id)
+            ->with('screening')
+            ->latest('id')
+            ->first();
 
-        // Parent can only view their child's health screening
-        if ($user->role === 'parent') {
-            $childIds = $user->children ? $user->children->pluck('id')->merge($user->children->pluck('user_id'))->filter()->toArray() : [];
-            if ($targetId !== $user->id && !in_array($targetId, $childIds, true)) {
-                abort(403, 'Akses ditolak. Anda hanya berhak melihat hasil skrining kesehatan anak Anda.');
-            }
-        }
+        $heightCm = $latestResult?->height_cm;
+        $weightKg = $latestResult?->weight_kg;
+        $bmi = ($heightCm && $weightKg && (float) $heightCm > 0)
+            ? round((float) $weightKg / (((float) $heightCm / 100) ** 2), 1)
+            : null;
+        $bmiCategory = match (true) {
+            $bmi === null => null,
+            $bmi < 18.5 => 'Kurus / Underweight',
+            $bmi < 25 => 'Normal / Ideal',
+            $bmi < 30 => 'Gemuk / Overweight',
+            default => 'Obesitas',
+        };
+
+        $allergies = $student->allergies
+            ? array_values(array_filter(array_map('trim', explode(',', $student->allergies))))
+            : [];
 
         return response()->json([
             'success' => true,
             'data' => [
-                'student_id' => $targetId,
-                'blood_type' => 'O+',
-                'height_cm' => 172,
-                'weight_kg' => 63,
-                'bmi' => 21.3,
-                'bmi_category' => 'Normal / Ideal',
-                'vision_right' => 'Normal (6/6)',
-                'vision_left' => 'Normal (6/6)',
-                'dental_health' => 'Sehat (Bebas Karies Berat)',
-                'hearing' => 'Normal',
-                'last_screened_at' => '2026-07-28',
-                'screener' => 'Puskesmas Gayamsari & Tim Medis UKS Sula-One',
+                'student_id' => $student->id,
+                'student_name' => $student->name,
+                'nisn' => $student->nisn,
+                'blood_type' => $student->blood_type,
+                'allergies' => $allergies,
+                'height_cm' => $heightCm !== null ? (int) round((float) $heightCm) : null,
+                'weight_kg' => $weightKg !== null ? (int) round((float) $weightKg) : null,
+                'bmi' => $bmi,
+                'bmi_category' => $bmiCategory,
+                'vision_right' => $latestResult?->vision_right,
+                'vision_left' => $latestResult?->vision_left,
+                'dental_health' => $latestResult?->dental_status,
+                // No hearing-test column exists anywhere in the schema —
+                // left honestly null rather than fabricated.
+                'hearing' => null,
+                'last_screened_at' => $latestResult?->screening?->screening_date?->toDateString(),
+                'screener' => $latestResult ? ($latestResult->screening?->title ?? 'Tim UKS Sekolah') : null,
             ],
         ]);
     }

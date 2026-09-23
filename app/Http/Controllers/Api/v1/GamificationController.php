@@ -34,17 +34,30 @@ class GamificationController extends Controller
     public function getLeaderboard(Request $request)
     {
         $scope = $request->query('scope', 'school');
-        $period = $request->query('period', 'monthly');
+        // No time-windowed XP aggregate exists in the schema yet — every
+        // scope is really all-time. Accepted but not applied, rather than
+        // silently pretending a "monthly" cut actually happened.
+        $user = $request->user();
 
-        $leaderboard = [
-            ['rank' => 1, 'name' => 'Ahmad Dahlan Z.', 'className' => 'XII MIPA 1', 'xp' => 1850, 'isCurrentUser' => false],
-            ['rank' => 2, 'name' => 'Fatimah Az-Zahra', 'className' => 'XII MIPA 1', 'xp' => 1640, 'isCurrentUser' => false],
-            ['rank' => 3, 'name' => 'Muhammad Kemal H.', 'className' => 'XII MIPA 1', 'xp' => 1420, 'isCurrentUser' => true],
-            ['rank' => 4, 'name' => 'Salma Nur Azizah', 'className' => 'XII MIPA 2', 'xp' => 1290, 'isCurrentUser' => false],
-            ['rank' => 5, 'name' => 'Rizky Ramadhan', 'className' => 'XII IPS 1', 'xp' => 1150, 'isCurrentUser' => false],
-            ['rank' => 6, 'name' => 'Zahra Aulia Putri', 'className' => 'XII MIPA 2', 'xp' => 1080, 'isCurrentUser' => false],
-            ['rank' => 7, 'name' => 'Dimas Arya Pratama', 'className' => 'XII IPS 2', 'xp' => 990, 'isCurrentUser' => false],
-        ];
+        $query = \App\Models\Student::with(['user', 'classroom'])
+            ->orderByDesc('total_xp');
+
+        if ($scope === 'class') {
+            $requester = \App\Models\Student::where('user_id', $user->id)->first();
+            if ($requester?->classroom_id) {
+                $query->where('classroom_id', $requester->classroom_id);
+            }
+        }
+
+        $leaderboard = $query->limit(20)->get()->values()->map(function ($student, $index) use ($user) {
+            return [
+                'rank' => $index + 1,
+                'name' => $student->name,
+                'className' => $student->classroom?->name ?? '-',
+                'xp' => $student->total_xp,
+                'isCurrentUser' => (int) $student->user_id === (int) $user->id,
+            ];
+        });
 
         return $this->successResponse($leaderboard, 'Leaderboard data retrieved successfully');
     }

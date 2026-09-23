@@ -9,6 +9,7 @@ class OsisCandidate extends Model
     protected $fillable = [
         'election_id',
         'student_id',
+        'vice_student_id',
         'candidate_number',
         'vision',
         'mission',
@@ -24,5 +25,10 @@ class OsisCandidate extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function viceStudent()
+    {
+        return $this->belongsTo(Student::class, 'vice_student_id');
     }
 }

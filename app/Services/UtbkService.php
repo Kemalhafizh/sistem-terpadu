@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\AlumniProfile;
+use App\Models\AlumniData;
 use App\Models\PtnProgram;
 use App\Models\Tryout;
 use App\Models\TryoutAttempt;
@@ -13,13 +13,56 @@ use Illuminate\Support\Facades\DB;
 class UtbkService
 {
     /**
-     * Get available tryouts.
+     * Get available tryouts, annotated with the requesting student's own
+     * attempt (score/percentile) when one exists. Never fabricates a score
+     * for a tryout the student hasn't taken.
      */
-    public function getAvailableTryouts()
+    public function getAvailableTryouts(?int $studentId = null)
     {
-        return Tryout::whereIn('status', ['active', 'upcoming'])
+        $tryouts = Tryout::whereIn('status', ['active', 'upcoming'])
+            ->withCount('questions')
+            ->with(['questions:id,tryout_id,sub_test'])
             ->orderBy('start_time')
             ->get();
+
+        $attemptsByTryout = collect();
+        if ($studentId && $tryouts->isNotEmpty()) {
+            $attemptsByTryout = TryoutAttempt::where('student_id', $studentId)
+                ->whereIn('tryout_id', $tryouts->pluck('id'))
+                ->get()
+                ->keyBy('tryout_id');
+        }
+
+        return $tryouts->map(function (Tryout $tryout) use ($attemptsByTryout) {
+            $subtestNames = $tryout->questions->pluck('sub_test')->unique()->values();
+            $attempt = $attemptsByTryout->get($tryout->id);
+
+            $status = strtoupper($tryout->status);
+            $irtScore = null;
+            $nationalPercentile = null;
+
+            if ($attempt) {
+                $status = 'COMPLETED';
+                $irtScore = $attempt->total_score;
+
+                $allScores = TryoutAttempt::where('tryout_id', $tryout->id)->pluck('total_score');
+                if ($allScores->count() > 0) {
+                    $lowerCount = $allScores->filter(fn ($s) => $s < $attempt->total_score)->count();
+                    $nationalPercentile = round(($lowerCount / $allScores->count()) * 100, 1);
+                }
+            }
+
+            return [
+                'id' => $tryout->id,
+                'title' => $tryout->title,
+                'subtest_name' => $subtestNames->implode(', '),
+                'total_questions' => $tryout->questions_count,
+                'duration_minutes' => $tryout->duration_minutes,
+                'status' => $status,
+                'irt_score' => $irtScore,
+                'national_percentile' => $nationalPercentile,
+            ];
+        })->values();
     }
 
     /**
@@ -183,6 +226,7 @@ class UtbkService
                 return [
                     'university' => $p->university_name,
                     'program' => $p->program_name,
+                    'category' => $p->cluster,
                     'passing_grade' => $p->passing_grade,
                     'acceptance_chance' => $chance
                 ];
@@ -195,19 +239,26 @@ class UtbkService
     }
 
     /**
-     * Get Alumni Directory by University.
+     * Get Alumni Directory of alumni currently studying at a PTN, sourced
+     * from real tracer-study data (alumni_data + tracer_responses).
      */
     public function getAlumniDirectory()
     {
-        // For demonstration, fetch all alumni profiles and group by institution
-        if (class_exists(AlumniProfile::class)) {
-            // Note: In real app, we use AlumniProfile or AlumniData
-            return AlumniProfile::select('full_name', 'current_university', 'current_major')
-                ->whereNotNull('current_university')
-                ->get()
-                ->groupBy('current_university');
-        }
-
-        return collect();
+        return AlumniData::with(['student.user', 'tracerResponse'])
+            ->where('current_activity', 'study')
+            ->whereNotNull('institution_name')
+            ->get()
+            ->map(function (AlumniData $alumni) {
+                return [
+                    'id' => $alumni->id,
+                    'name' => $alumni->student?->name,
+                    'graduation_year' => (string) $alumni->graduation_year,
+                    'university' => $alumni->institution_name,
+                    'major' => $alumni->tracerResponse?->study_major,
+                    'admission_path' => null,
+                    'contact_available' => filled($alumni->phone_number) || filled($alumni->email) || filled($alumni->contact_info),
+                ];
+            })
+            ->values();
     }
 }

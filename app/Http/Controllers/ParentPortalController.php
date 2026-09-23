@@ -497,6 +497,9 @@ class ParentPortalController extends Controller
             'is_read' => false,
         ]);
 
+        // Sender di-attach langsung dari user yang sudah diautentikasi agar payload
+        // broadcast punya sender_name yang nyata, bukan ditebak di sisi client.
+        $message->setRelation('sender', auth()->user());
         broadcast(new ChatMessageSent($message))->toOthers();
 
         if ($request->wantsJson()) {

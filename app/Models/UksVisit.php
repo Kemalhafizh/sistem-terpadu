@@ -14,13 +14,14 @@ class UksVisit extends Model
 
     protected $fillable = [
         'student_id', 'handled_by', 'visit_time', 'leave_time',
-        'complaint', 'diagnosis', 'treatment', 'severity',
+        'complaint', 'diagnosis', 'treatment', 'temperature', 'blood_pressure', 'severity',
         'disposition', 'parent_notified', 'notes',
     ];
 
     protected $casts = [
         'visit_time' => 'datetime',
         'leave_time' => 'datetime',
+        'temperature' => 'decimal:1',
         'parent_notified' => 'boolean',
     ];
 

@@ -14,8 +14,18 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
-        channels: __DIR__.'/../routes/channels.php',
         health: '/up',
+    )
+    // Registered separately (instead of passing `channels:` to withRouting())
+    // so /broadcasting/auth is guarded by auth:sanctum, not the default `web`
+    // (session-cookie) middleware group — the mobile app authenticates with a
+    // Sanctum bearer token, which the `web` group's session guard can't see,
+    // so private-channel WebSocket subscriptions (a student's own attendance
+    // channel, a parent-child chat channel) would 401 under the framework's
+    // default wiring.
+    ->withBroadcasting(
+        __DIR__.'/../routes/channels.php',
+        ['middleware' => ['auth:sanctum']],
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([

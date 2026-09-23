@@ -21,7 +21,8 @@ class UtbkMobileApiController extends Controller
      */
     public function index(Request $request)
     {
-        $tryouts = $this->utbkService->getAvailableTryouts();
+        $studentId = $request->user()?->student?->id;
+        $tryouts = $this->utbkService->getAvailableTryouts($studentId);
         return response()->json($tryouts);
     }
 

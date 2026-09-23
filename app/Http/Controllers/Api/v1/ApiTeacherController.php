@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Events\ChatMessageSent;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ParentMessageResource;
 use App\Http\Resources\ScheduleResource;
 use App\Http\Resources\TeachingJournalResource;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classroom;
+use App\Models\ParentMessage;
 use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\TeachingJournal;
@@ -87,10 +90,24 @@ class ApiTeacherController extends Controller
      */
     public function classStudents(Request $request, $classroomId)
     {
+        // name is a getNameAttribute() accessor proxying the related User,
+        // not a real column — selecting/ordering by it directly against the
+        // students table silently returned the literal string "name" for
+        // every row. user_id must be selected (for the accessor to resolve)
+        // and the relation eager-loaded, then sorted in PHP.
         $students = Student::where('classroom_id', $classroomId)
-            ->select('id', 'name', 'nis', 'nisn', 'gender')
-            ->orderBy('name', 'asc')
-            ->get();
+            ->select('id', 'user_id', 'nis', 'nisn', 'gender')
+            ->with('user:id,name')
+            ->get()
+            ->sortBy('name')
+            ->values()
+            ->map(fn ($s) => [
+                'id' => $s->id,
+                'name' => $s->name,
+                'nis' => $s->nis,
+                'nisn' => $s->nisn,
+                'gender' => $s->gender,
+            ]);
 
         return $this->successResponse($students, 'Daftar siswa rombel kelas berhasil diambil');
     }
@@ -242,6 +259,100 @@ class ApiTeacherController extends Controller
         ]);
 
         return $this->successResponse(new TeachingJournalResource($journal), 'Jurnal mengajar berhasil disimpan', 201);
+    }
+
+    /**
+     * Get Messages (Parent Consultations)
+     *
+     * Mengambil seluruh riwayat pesan konsultasi guru dengan wali murid,
+     * lintas seluruh siswa. Mirror dari ApiParentController::messages() —
+     * baris log yang sama (ParentMessage), dilihat dari sisi guru.
+     *
+     * @authenticated
+     */
+    public function messages(Request $request)
+    {
+        $user = $request->user();
+
+        $messages = ParentMessage::where('sender_id', $user->id)
+            ->orWhere('recipient_id', $user->id)
+            ->with(['sender', 'recipient', 'student.user'])
+            ->latest()
+            ->take(100)
+            ->get();
+
+        return $this->successResponse(ParentMessageResource::collection($messages), 'Riwayat pesan berhasil diambil');
+    }
+
+    /**
+     * Reply to Parent
+     *
+     * Membalas/memulai pesan konsultasi ke wali murid dari siswa tertentu.
+     * Penerima (parent_id siswa) ditentukan otomatis di server — guru cukup
+     * menyebut siswa yang dimaksud, bukan id akun wali muridnya. Diizinkan
+     * untuk wali kelas siswa tersebut, atau siapa pun yang sudah punya
+     * percakapan berjalan dengan siswa ini (mis. guru BK yang dihubungi
+     * lebih dulu oleh orang tua).
+     *
+     * @authenticated
+     *
+     * @bodyParam student_uuid string required UUID Siswa. Example: 9c1b3e2a-...
+     * @bodyParam message string Isi balasan (boleh kosong jika ada lampiran). Example: Baik, akan saya pantau ananda.
+     * @bodyParam attachment file Lampiran gambar/PDF (maks 5MB).
+     */
+    public function sendMessage(Request $request)
+    {
+        $request->validate([
+            'student_uuid' => 'required|string|exists:students,uuid',
+            'message' => 'required_without:attachment|nullable|string|max:5000',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+        ]);
+
+        $user = $request->user();
+        $student = Student::where('uuid', $request->student_uuid)->first();
+        if (!$student) {
+            return $this->errorResponse('Siswa tidak ditemukan', 404);
+        }
+
+        $isHomeroomTeacher = (int) $student->classroom?->teacher_id === (int) $user->id;
+        $hasExistingThread = ParentMessage::where('student_id', $student->id)
+            ->where(function ($q) use ($user) {
+                $q->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
+            })
+            ->exists();
+
+        if (!$isHomeroomTeacher && !$hasExistingThread) {
+            return $this->errorResponse('Anda tidak memiliki akses untuk mengirim pesan mengenai siswa ini.', 403);
+        }
+
+        if (!$student->parent_id) {
+            return $this->errorResponse('Siswa ini belum memiliki akun wali murid terdaftar.', 400);
+        }
+
+        $attachmentPath = null;
+        $attachmentType = null;
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentPath = $file->store('chat_attachments', 'public');
+            $attachmentType = $file->getClientOriginalExtension() === 'pdf' ? 'pdf' : 'image';
+        }
+
+        $message = ParentMessage::create([
+            'sender_id' => $user->id,
+            'recipient_id' => $student->parent_id,
+            'student_id' => $student->id,
+            'message' => $request->message ?? '',
+            'attachment_path' => $attachmentPath,
+            'attachment_type' => $attachmentType,
+            'is_read' => false,
+        ]);
+
+        // Sender di-attach langsung dari user yang sudah diautentikasi agar
+        // payload broadcast punya sender_name yang nyata.
+        $message->setRelation('sender', $user);
+        event(new ChatMessageSent($message));
+
+        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 210);
     }
 
     /**

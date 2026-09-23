@@ -6,6 +6,7 @@ use App\Models\ReportCardTemplate;
 use App\Models\ReportCardEntry;
 use App\Models\ReportCardCharacter;
 use App\Models\ReportCardPdf;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Str;
 
@@ -42,7 +43,14 @@ class ERaporPdfService
             $template = ReportCardTemplate::with('academicYear')->latest()->first();
         }
 
+        // report_card_entries/characters/pdfs.student_id genuinely
+        // references users.id (see migration), so $studentId is correct
+        // there — but nisn/class_name live on the linked Student record,
+        // not on User, so they need a separate real lookup instead of the
+        // hardcoded literals this used to silently fall back to for
+        // every single student.
         $student = User::find($studentId);
+        $studentProfile = Student::with('classroom')->where('user_id', $studentId)->first();
 
         $entries = ReportCardEntry::with('subject')
             ->where('student_id', $studentId)
@@ -65,8 +73,8 @@ class ERaporPdfService
             'student' => [
                 'id' => $student->id ?? $studentId,
                 'name' => $student->name ?? 'Siswa SISTA',
-                'nisn' => $student->nisn ?? '1058291048',
-                'class_name' => $student->class_name ?? 'XII MIPA 1',
+                'nisn' => $studentProfile->nisn ?? null,
+                'class_name' => $studentProfile->classroom->name ?? null,
             ],
             'academic_summary' => [
                 'average_score' => $averageScore,

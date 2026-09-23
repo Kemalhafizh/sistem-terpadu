@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Student;
+use App\Models\ParentMessage;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -24,12 +25,19 @@ Broadcast::channel('chat.{studentId}', function (User $user, int $studentId) {
     if (!$student) {
         return false;
     }
-    
-    // Wald kelas (teacher) or parent of the student can access the chat channel
-    return (int) $student->parent_id === (int) $user->id || 
+
+    // Parent of the student, the homeroom teacher, admin/superadmin, or —
+    // covering BK/other staff a parent messaged who aren't the homeroom
+    // teacher — anyone who already has a message thread about this student.
+    return (int) $student->parent_id === (int) $user->id ||
            (int) $student->classroom?->teacher_id === (int) $user->id ||
            $user->role === 'admin' ||
-           $user->role === 'superadmin';
+           $user->role === 'superadmin' ||
+           ParentMessage::where('student_id', $studentId)
+               ->where(function ($q) use ($user) {
+                   $q->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
+               })
+               ->exists();
 });
 
 Broadcast::channel('forum.thread.{threadId}', function (User $user, int $threadId) {
@@ -47,6 +55,28 @@ Broadcast::channel('cbt.exam.{examId}', function (User $user, int $examId) {
     }
     return (int) $exam->created_by === (int) $user->id ||
            in_array($user->role, ['admin', 'superadmin', 'waka_kurikulum', 'kepala_sekolah']);
+});
+
+// FASE 72.2: per-student proctor-intervention channel. Distinct from
+// cbt.exam.{examId} above (proctor/admin only, also carries StudentCheatedEvent)
+// — this is what lets the exam-taker themselves receive ProctorInterventionEvent
+// (warnings, force-submit, extend-time, and per-student "broadcast to all"
+// fan-out from CbtEnterpriseService::proctorBroadcastWarning()).
+Broadcast::channel('cbt.exam.{examId}.student.{studentId}', function (User $user, int $examId, int $studentId) {
+    $student = Student::find($studentId);
+    if (!$student) {
+        return false;
+    }
+
+    if ((int) $student->user_id === (int) $user->id) {
+        return true;
+    }
+
+    $exam = \App\Models\Exam::find($examId);
+    return $exam && (
+        (int) $exam->created_by === (int) $user->id ||
+        in_array($user->role, ['admin', 'superadmin', 'waka_kurikulum', 'kepala_sekolah'])
+    );
 });
 
 Broadcast::channel('school.announcements', function (User $user) {

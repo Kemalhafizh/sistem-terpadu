@@ -211,15 +211,20 @@ class ApiParentController extends Controller
      * @authenticated
      *
      * @bodyParam recipient_id integer required ID Guru (User ID). Example: 5
-     * @bodyParam student_id integer required ID Siswa (Anak). Example: 3
-     * @bodyParam message string required Isi teks pesan obrolan. Example: Assalamu'alaikum wr. wb.
+     * @bodyParam student_uuid string required UUID Siswa (Anak). Example: 9c1b3e2a-...
+     * @bodyParam message string Isi teks pesan obrolan (boleh kosong jika ada lampiran). Example: Assalamu'alaikum wr. wb.
+     * @bodyParam attachment file Lampiran gambar/PDF (maks 5MB).
      */
     public function sendMessage(Request $request)
     {
         $request->validate([
             'recipient_id' => 'required|exists:users,id',
-            'student_id' => 'required|exists:students,id',
-            'message' => 'required|string|max:5000',
+            // uuid, not the numeric PK — the mobile app only ever learns a
+            // child's uuid (parent/children), never the raw id, so this
+            // matches every other child-scoped endpoint on this controller.
+            'student_uuid' => 'required|string|exists:students,uuid',
+            'message' => 'required_without:attachment|nullable|string|max:5000',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         $user = $request->user();
@@ -231,9 +236,18 @@ class ApiParentController extends Controller
         }
 
         // 2. Verifikasi relasi anak
-        $student = Student::findOrFail($request->student_id);
-        if ($student->parent_id !== $user->id) {
-            return $this->errorResponse('Anda tidak memiliki akses otorisasi untuk siswa ini', 403);
+        $student = $this->verifyChildRelation($user, $request->student_uuid);
+        if ($student instanceof \Illuminate\Http\JsonResponse) {
+            return $student;
+        }
+
+        // 2b. Simpan lampiran jika ada
+        $attachmentPath = null;
+        $attachmentType = null;
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentPath = $file->store('chat_attachments', 'public');
+            $attachmentType = $file->getClientOriginalExtension() === 'pdf' ? 'pdf' : 'image';
         }
 
         // 3. Buat dan simpan pesan
@@ -241,11 +255,16 @@ class ApiParentController extends Controller
             'sender_id' => $user->id,
             'recipient_id' => $teacher->id,
             'student_id' => $student->id,
-            'message' => $request->message,
+            'message' => $request->message ?? '',
+            'attachment_path' => $attachmentPath,
+            'attachment_type' => $attachmentType,
             'is_read' => false,
         ]);
 
-        // 4. Memicu WebSocket Broadcast Real-time
+        // 4. Memicu WebSocket Broadcast Real-time (sender di-attach langsung dari
+        // user yang sudah diautentikasi agar payload broadcast punya sender_name
+        // yang nyata, bukan ditebak di sisi Android).
+        $message->setRelation('sender', $user);
         event(new ChatMessageSent($message));
 
         return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 210);

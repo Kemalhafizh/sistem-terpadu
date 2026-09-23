@@ -120,25 +120,35 @@ class EvaluationService
     /**
      * Get active election info.
      */
-    public function getActiveElection()
+    public function getActiveElection($studentId = null)
     {
-        $election = OsisElection::where('status', 'active')->with('candidates')->first();
+        $election = OsisElection::where('status', 'active')
+            ->with(['candidates.student.user', 'candidates.viceStudent.user'])
+            ->first();
         if (!$election) {
             return null;
         }
+
+        $votedCandidateId = $studentId
+            ? OsisVote::where('election_id', $election->id)->where('voter_id', $studentId)->value('candidate_id')
+            : null;
 
         return [
             'id' => $election->id,
             'title' => $election->title,
             'voting_start' => $election->voting_start->format('Y-m-d'),
             'voting_end' => $election->voting_end->format('Y-m-d'),
-            'candidates' => $election->candidates->map(function ($candidate) {
+            'candidates' => $election->candidates->map(function ($candidate) use ($votedCandidateId) {
                 return [
                     'id' => $candidate->id,
                     'candidate_number' => $candidate->candidate_number,
+                    'president_name' => optional(optional($candidate->student)->user)->name,
+                    'vice_president_name' => optional(optional($candidate->viceStudent)->user)->name,
                     'vision' => $candidate->vision,
                     'mission' => $candidate->mission,
                     'photo_url' => $candidate->photo_path ? asset('storage/' . $candidate->photo_path) : null,
+                    'total_votes' => $candidate->vote_count,
+                    'is_voted' => $votedCandidateId === $candidate->id,
                 ];
             }),
         ];

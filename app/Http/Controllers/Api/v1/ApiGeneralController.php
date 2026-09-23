@@ -36,11 +36,39 @@ class ApiGeneralController extends Controller
                 $query->whereNull('target_role')
                     ->orWhere('target_role', $user->role);
             })
+            ->when($request->filled('category'), function ($query) use ($request) {
+                $query->where('category', $request->input('category'));
+            })
             ->latest()
             ->take(20)
             ->get();
 
         return $this->successResponse(AnnouncementResource::collection($announcements), 'Pengumuman sekolah berhasil diambil');
+    }
+
+    /**
+     * Get Announcement Detail
+     *
+     * Mengambil rincian satu pengumuman, dengan validasi peran yang sama seperti daftar pengumuman.
+     *
+     * @authenticated
+     */
+    public function announcementDetail(Request $request, int $id)
+    {
+        $user = $request->user();
+
+        $announcement = Announcement::where('is_active', true)
+            ->where(function ($query) use ($user) {
+                $query->whereNull('target_role')
+                    ->orWhere('target_role', $user->role);
+            })
+            ->find($id);
+
+        if (!$announcement) {
+            return $this->errorResponse('Pengumuman tidak ditemukan', 404);
+        }
+
+        return $this->successResponse(new AnnouncementResource($announcement), 'Detail pengumuman berhasil diambil');
     }
 
     /**

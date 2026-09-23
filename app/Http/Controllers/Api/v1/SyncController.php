@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\OfflineSyncService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class SyncController extends Controller
 {
@@ -25,7 +26,13 @@ class SyncController extends Controller
     {
         $since = (int) $request->query('since', 0);
         $delta = $this->syncService->getDeltaChanges($since);
-        return $this->successResponse($delta, 'Delta changes retrieved successfully');
+
+        // FASE 74.2: Last-Modified reflects this delta's own real
+        // "as of" instant (sync_timestamp is Carbon::now() at compute
+        // time — see OfflineSyncService::getDeltaChanges()), not a
+        // fabricated value.
+        $lastModified = Carbon::createFromTimestampMs($delta['sync_timestamp']);
+        return $this->successResponseWithValidators($delta, $lastModified, 'Delta changes retrieved successfully');
     }
 
     /**
@@ -60,7 +67,14 @@ class SyncController extends Controller
     public function catchUp(Request $request)
     {
         $lastEventId = $request->query('last_event_id', '0');
+        // NOTE (found while wiring FASE 74.2 network validation): the
+        // underlying stream here is still a hardcoded placeholder — see
+        // OfflineSyncService::getCatchUpEvents() — so in practice this
+        // event id is always distinct only for that one hardcoded test
+        // id. The ETag below is still real (hashed off whatever this
+        // call actually returns), it just won't vary much until the
+        // Redis Streams backing store is implemented.
         $events = $this->syncService->getCatchUpEvents($lastEventId);
-        return $this->successResponse($events, 'Catch-up events retrieved successfully');
+        return $this->successResponseWithValidators($events, null, 'Catch-up events retrieved successfully');
     }
 }

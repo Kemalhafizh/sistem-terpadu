@@ -170,12 +170,13 @@ class AchievementService
     public function getAcademicCvSummary(Student $student): array
     {
         $studentUser = $student->user;
-        $studentName = $studentUser?->name ?: 'Siswa Sultan Agung';
-        $nisn = (string) ($student->nisn ?: $student->nis ?: '0061234567');
+        $studentName = $studentUser?->name;
+        $nisn = $student->nisn ?: $student->nis;
 
-        // Kalkulasi rata-rata nilai rapor / GPA
+        // Kalkulasi rata-rata nilai rapor / GPA — null (bukan angka rekaan)
+        // kalau siswa memang belum punya nilai tercatat.
         $avgScore = Grade::where('student_id', $student->id)->avg('score');
-        $gpaAverage = $avgScore ? round((float) $avgScore, 1) : 92.4;
+        $gpaAverage = $avgScore ? round((float) $avgScore, 1) : null;
 
         // Total prestasi terverifikasi (VALIDATED)
         $validatedQuery = Achievement::where('student_id', $student->id)->validated();
@@ -195,7 +196,7 @@ class AchievementService
         return [
             'student_name' => $studentName,
             'nisn' => $nisn,
-            'gpa_average' => (float) $gpaAverage,
+            'gpa_average' => $gpaAverage,
             'total_achievements' => (int) $totalAchievements,
             'total_reward_points' => (int) $totalRewardPoints,
             'extracurriculars' => $ekskuls,

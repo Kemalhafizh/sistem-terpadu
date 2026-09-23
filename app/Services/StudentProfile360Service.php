@@ -2,124 +2,264 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use App\Models\Achievement;
+use App\Models\AcademicYear;
+use App\Models\ExtracurricularMember;
 use App\Models\Grade;
 use App\Models\MutabaahLog;
+use App\Models\ReportCard;
+use App\Models\Student;
+use App\Models\StudentPointLog;
 use App\Models\TahfidzLog;
-use App\Models\DisciplinePointLog;
-use App\Models\Achievement;
-use App\Models\ExtracurricularMember;
+use App\Models\TahfidzTarget;
 use App\Models\UksVisit;
+use App\Models\User;
+use App\Models\WarningLetter;
 
+/**
+ * Every method here used to ignore $studentId entirely and return the same
+ * hardcoded numbers ("Ahmad Faiz Abdullah", 88.4, etc.) for every single
+ * student in the school — the imports above (Grade, MutabaahLog, TahfidzLog,
+ * ...) were already there, just never actually queried. Real aggregation
+ * only, honest zero/null defaults when a student has no linked data yet.
+ */
 class StudentProfile360Service
 {
+    private function resolveStudent(int $userId): ?Student
+    {
+        return Student::with(['classroom', 'healthRecord'])->where('user_id', $userId)->first();
+    }
+
     public function getComprehensiveProfile(int $studentId): array
     {
-        $student = User::find($studentId);
-
-        $akademik = $this->getAcademicSummary($studentId);
-        $ibadah = $this->getIbadahSummary($studentId);
-        $disiplin = $this->getDisciplineSummary($studentId);
-        $ekskul = $this->getExtracurriculars($studentId);
-        $prestasi = $this->getAchievements($studentId);
-        $kesehatan = $this->getHealthSummary($studentId);
+        $user = User::find($studentId);
+        $student = $this->resolveStudent($studentId);
 
         return [
             'biodata' => [
-                'id' => $student->id ?? $studentId,
-                'name' => $student->name ?? 'Ahmad Faiz Abdullah',
-                'nisn' => $student->nisn ?? '1058291048',
-                'class_name' => $student->class_name ?? 'XII MIPA 1',
-                'avatar_url' => $student->avatar ?? null,
-                'email' => $student->email ?? 'faiz@sultanagung1.sch.id',
+                'id' => $user->id ?? $studentId,
+                'name' => $user->name ?? 'Siswa',
+                'nisn' => $student->nisn ?? null,
+                'class_name' => $student?->classroom?->name ?? null,
+                'avatar_url' => null,
+                'email' => $user->email ?? null,
             ],
-            'akademik_summary' => $akademik,
-            'ibadah_summary' => $ibadah,
-            'disiplin_summary' => $disiplin,
-            'ekskul_list' => $ekskul,
-            'prestasi_list' => $prestasi,
-            'kesehatan_summary' => $kesehatan,
+            'akademik_summary' => $this->getAcademicSummary($studentId),
+            'ibadah_summary' => $this->getIbadahSummary($studentId),
+            'disiplin_summary' => $this->getDisciplineSummary($studentId),
+            'ekskul_list' => $this->getExtracurriculars($studentId),
+            'prestasi_list' => $this->getAchievements($studentId),
+            'kesehatan_summary' => $this->getHealthSummary($studentId),
         ];
     }
 
     public function getAcademicSummary(int $studentId): array
     {
+        $student = $this->resolveStudent($studentId);
+        if (!$student) {
+            return [
+                'average_score' => 0.0, 'rank_in_class' => 0, 'total_class_students' => 0,
+                'strongest_subject' => null, 'improvement_needed' => null, 'trend' => [],
+            ];
+        }
+
+        $currentYear = AcademicYear::current();
+        $grades = Grade::where('student_id', $student->id)
+            ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id))
+            ->with('subject')
+            ->get();
+
+        $averageScore = $grades->isNotEmpty() ? round((float) $grades->avg('score'), 1) : 0.0;
+
+        $classSize = 0;
+        $rank = 0;
+        if ($student->classroom) {
+            $classmateIds = $student->classroom->students()->pluck('id');
+            $classSize = $classmateIds->count();
+            if ($averageScore > 0) {
+                $classmateAverages = Grade::whereIn('student_id', $classmateIds)
+                    ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id))
+                    ->selectRaw('student_id, AVG(score) as avg_score')
+                    ->groupBy('student_id')
+                    ->pluck('avg_score', 'student_id');
+                $rank = $classmateAverages->filter(fn ($avg) => (float) $avg > $averageScore)->count() + 1;
+            }
+        }
+
+        $bySubject = $grades->groupBy('subject_id')->filter(fn ($g) => $g->first()->subject !== null)
+            ->map(fn ($g) => ['name' => $g->first()->subject->name, 'avg' => $g->avg('score')]);
+        $strongest = $bySubject->sortByDesc('avg')->first();
+        $weakest = $bySubject->sortBy('avg')->first();
+
+        $trend = ReportCard::where('student_id', $student->id)
+            ->orderBy('academic_year_id')
+            ->pluck('average_score')
+            ->map(fn ($v) => round((float) $v, 1))
+            ->values()
+            ->toArray();
+
         return [
-            'average_score' => 88.4,
-            'rank_in_class' => 3,
-            'total_class_students' => 36,
-            'strongest_subject' => 'Pendidikan Agama Islam',
-            'improvement_needed' => 'Kimia',
-            'trend' => [84.2, 86.0, 87.5, 88.4],
+            'average_score' => $averageScore,
+            'rank_in_class' => $rank,
+            'total_class_students' => $classSize,
+            'strongest_subject' => $strongest['name'] ?? null,
+            'improvement_needed' => $weakest['name'] ?? null,
+            'trend' => $trend,
         ];
     }
 
     public function getIbadahSummary(int $studentId): array
     {
+        $student = $this->resolveStudent($studentId);
+        if (!$student) {
+            return [
+                'tahfidz_juz_completed' => 0, 'target_juz' => 0, 'tahfidz_progress_percent' => 0,
+                'current_surah' => null, 'mutabaah_weekly_streak' => 0, 'sholat_jamaah_percent' => 0.0,
+            ];
+        }
+
+        $currentYear = AcademicYear::current();
+        $target = $currentYear
+            ? TahfidzTarget::where('student_id', $student->id)->where('academic_year_id', $currentYear->id)->first()
+            : null;
+        $achievedJuz = (int) ($target->achieved_juz ?? 0);
+        $targetJuz = (int) ($target->target_juz ?? 0);
+        $progress = $targetJuz > 0 ? min(100, (int) round(($achievedJuz / $targetJuz) * 100)) : 0;
+
+        $latestLog = TahfidzLog::where('student_id', $student->id)->latest('date')->first();
+
+        // Consecutive real Mutaba'ah log days counting back from today.
+        $streak = 0;
+        $cursor = now()->startOfDay();
+        while (MutabaahLog::where('student_id', $student->id)->whereDate('date', $cursor->toDateString())->exists()) {
+            $streak++;
+            $cursor = $cursor->copy()->subDay();
+        }
+
+        $recentLogs = MutabaahLog::where('student_id', $student->id)->orderByDesc('date')->limit(30)->get();
+        $sholatFields = ['sholat_subuh', 'sholat_dzuhur', 'sholat_ashar', 'sholat_maghrib', 'sholat_isya'];
+        $totalRecorded = 0;
+        $jamaahCount = 0;
+        foreach ($recentLogs as $log) {
+            foreach ($sholatFields as $field) {
+                $value = (int) $log->{$field};
+                if ($value > 0) {
+                    $totalRecorded++;
+                    if ($value === 2) {
+                        $jamaahCount++;
+                    }
+                }
+            }
+        }
+        $jamaahPercent = $totalRecorded > 0 ? round(($jamaahCount / $totalRecorded) * 100, 1) : 0.0;
+
         return [
-            'tahfidz_juz_completed' => 3,
-            'target_juz' => 5,
-            'tahfidz_progress_percent' => 60,
-            'current_surah' => 'Al-Mulk (Ayat 1-30)',
-            'mutabaah_weekly_streak' => 18,
-            'sholat_jamaah_percent' => 96.5,
+            'tahfidz_juz_completed' => $achievedJuz,
+            'target_juz' => $targetJuz,
+            'tahfidz_progress_percent' => $progress,
+            'current_surah' => $latestLog->surah_name ?? null,
+            'mutabaah_weekly_streak' => $streak,
+            'sholat_jamaah_percent' => $jamaahPercent,
         ];
     }
 
+    /**
+     * Mirrors DisciplineService::getSummary()'s exact thresholds/labels so
+     * this profile screen and the dedicated Discipline screen never
+     * disagree about the same student's status.
+     */
     public function getDisciplineSummary(int $studentId): array
     {
+        $student = $this->resolveStudent($studentId);
+        if (!$student) {
+            return [
+                'total_positive_points' => 0, 'total_violation_points' => 0, 'net_points' => 0,
+                'category' => 'Aman', 'active_sanctions' => 0,
+            ];
+        }
+
+        $logs = StudentPointLog::where('student_id', $student->id)->get();
+        $positive = (int) $logs->where('points', '>', 0)->sum('points');
+        $violation = (int) abs($logs->where('points', '<', 0)->sum('points'));
+        $net = $student->total_points;
+
+        $status = 'Aman';
+        if ($net >= 100) $status = 'SP3 (Sangat Kritis)';
+        elseif ($net >= 75) $status = 'SP2 (Kritis)';
+        elseif ($net >= 50) $status = 'SP1 (Waspada)';
+        elseif ($net >= 30) $status = 'Perlu Perhatian';
+
+        $activeSanctions = WarningLetter::where('student_id', $student->id)->whereNull('signed_at')->count();
+
         return [
-            'total_positive_points' => 45,
-            'total_violation_points' => 5,
-            'net_points' => 40,
-            'category' => 'Teladan',
-            'active_sanctions' => 0,
+            'total_positive_points' => $positive,
+            'total_violation_points' => $violation,
+            'net_points' => $net,
+            'category' => $status,
+            'active_sanctions' => $activeSanctions,
         ];
     }
 
     public function getExtracurriculars(int $studentId): array
     {
-        return [
-            [
-                'name' => 'Rohis Karisma',
-                'role' => 'Ketua Divisi Syiar',
-                'joined_year' => '2024',
-            ],
-            [
-                'name' => 'Klub Robotik & Coding',
-                'role' => 'Anggota Aktif',
-                'joined_year' => '2025',
-            ]
-        ];
+        $student = $this->resolveStudent($studentId);
+        if (!$student) {
+            return [];
+        }
+
+        return ExtracurricularMember::where('student_id', $student->id)
+            ->with('extracurricular')
+            ->get()
+            ->filter(fn ($m) => $m->extracurricular !== null)
+            ->map(fn ($m) => [
+                'name' => $m->extracurricular->name,
+                'role' => $m->role ?: 'Anggota',
+                'joined_year' => $m->joined_at ? $m->joined_at->format('Y') : null,
+            ])
+            ->values()
+            ->toArray();
     }
 
     public function getAchievements(int $studentId): array
     {
-        return [
-            [
-                'title' => 'Juara 1 Olimpiade Sains Matematika Kota Semarang',
-                'level' => 'Kota/Kabupaten',
-                'year' => 2025,
-                'category' => 'Akademik',
-            ],
-            [
-                'title' => 'Medali Emas MHQ (Musabaqah Hifzhil Quran) 3 Juz',
-                'level' => 'Provinsi Jawa Tengah',
-                'year' => 2026,
-                'category' => 'Keagamaan',
-            ]
-        ];
+        $student = $this->resolveStudent($studentId);
+        if (!$student) {
+            return [];
+        }
+
+        return Achievement::where('student_id', $student->id)
+            ->validated()
+            ->get()
+            ->map(fn ($a) => [
+                'title' => $a->title,
+                'level' => $a->level,
+                'year' => $a->event_date?->year,
+                'category' => $a->field,
+            ])
+            ->values()
+            ->toArray();
     }
 
     public function getHealthSummary(int $studentId): array
     {
+        $student = $this->resolveStudent($studentId);
+        if (!$student) {
+            return [
+                'blood_type' => null, 'height_cm' => null, 'weight_kg' => null,
+                'allergies' => [], 'total_uks_visits' => 0, 'last_visit_date' => null,
+            ];
+        }
+
+        $record = $student->healthRecord;
+        $lastVisit = UksVisit::where('student_id', $student->id)->latest('visit_time')->first();
+
         return [
-            'blood_type' => 'O+',
-            'height_cm' => 172,
-            'weight_kg' => 63,
-            'allergies' => ['Tidak ada alergi berat'],
-            'total_uks_visits' => 1,
-            'last_visit_date' => '2026-08-14',
+            'blood_type' => $record->blood_type ?? $student->blood_type ?? null,
+            'height_cm' => $record?->height_cm !== null ? (float) $record->height_cm : null,
+            'weight_kg' => $record?->weight_kg !== null ? (float) $record->weight_kg : null,
+            'allergies' => $record->allergies ?? ($student->allergies ? array_map('trim', explode(',', $student->allergies)) : []),
+            'total_uks_visits' => UksVisit::where('student_id', $student->id)->count(),
+            'last_visit_date' => $lastVisit?->visit_time?->format('Y-m-d'),
         ];
     }
 }

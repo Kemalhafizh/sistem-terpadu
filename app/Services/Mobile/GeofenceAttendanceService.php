@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Mobile;
 
+use App\Events\AttendanceLoggedEvent;
 use App\Models\Attendance;
 use App\Models\Student;
 use App\Models\User;
@@ -93,6 +94,26 @@ class GeofenceAttendanceService
                     'notes' => 'Absensi Mobile Geofence GPS (Radius: ' . round($distance) . 'm)',
                 ]
             );
+
+            // FASE 71.3: notify the parent's own channel in real time ("Status Gerbang
+            // Real-time") — only meaningful when this check-in belongs to a student
+            // with a registered parent account.
+            if ($student->parent_id) {
+                event(new AttendanceLoggedEvent(
+                    userId: (int) $student->parent_id,
+                    attendanceRecord: [
+                        // uuid (not the numeric PK) so the parent app can match this
+                        // against ParentChildItem.uuid, the same identifier every
+                        // other parent-facing endpoint already uses for a student.
+                        'student_id' => $student->uuid,
+                        'student_name' => $user->name,
+                        'status' => $attendance->status,
+                        'check_in_time' => $attendance->updated_at?->toIso8601String() ?? now()->toIso8601String(),
+                        'gate' => 'Gerbang Utama Kampus',
+                        'distance_meters' => round($distance, 1),
+                    ]
+                ));
+            }
 
             return [
                 'success' => true,

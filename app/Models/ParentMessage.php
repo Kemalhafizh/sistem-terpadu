@@ -14,6 +14,8 @@ class ParentMessage extends Model
         'recipient_id',
         'student_id',
         'message',
+        'attachment_path',
+        'attachment_type',
         'is_read',
     ];
 

@@ -33,6 +33,8 @@ class ExamAttempt extends Model
         'token_validated_at',
         'force_closed',
         'force_close_reason',
+        // Fase 72.2: Live Proctoring
+        'last_heartbeat_at',
     ];
 
     protected $casts = [
@@ -49,6 +51,7 @@ class ExamAttempt extends Model
         'is_auto_submitted' => 'boolean',
         'force_closed' => 'boolean',
         'violation_count' => 'integer',
+        'last_heartbeat_at' => 'datetime',
     ];
 
     public function exam(): BelongsTo

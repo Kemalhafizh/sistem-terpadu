@@ -235,13 +235,13 @@ class GamificationService
         $today = Carbon::today();
         for ($i = 29; $i >= 0; $i--) {
             $date = $today->copy()->subDays($i);
-            $hasActive = \App\Models\StudentXpLog::where('student_id', $studentId)
+            $dayXp = (int) \App\Models\StudentXpLog::where('student_id', $studentId)
                 ->whereDate('created_at', $date->toDateString())
-                ->exists();
+                ->sum('xp_amount');
             $days[] = [
                 'date' => $date->toDateString(),
-                'active' => $hasActive,
-                'xp' => $hasActive ? 25 : 0,
+                'active' => $dayXp > 0,
+                'xp' => $dayXp,
             ];
         }
         return $days;
@@ -253,17 +253,28 @@ class GamificationService
     public function getProfile(int $userId): array
     {
         $student = Student::where('user_id', $userId)->first();
-        $totalXp = $student ? $student->total_xp : 1420;
+        // Honest zeros when this account has no linked Student row (e.g. a
+        // non-student role hitting this by mistake), instead of a fabricated
+        // "1420 XP, level 7, streak 14" that made every such account look
+        // identically, suspiciously accomplished.
+        $totalXp = $student ? $student->total_xp : 0;
         $level = $this->calculateLevel($totalXp);
         $levelTitle = $this->getLevelTitle($level);
-        $streak = $student ? $student->current_streak : 14;
-        $longest = $student ? $student->longest_streak : 28;
+        $streak = $student ? $student->current_streak : 0;
+        $longest = $student ? $student->longest_streak : 0;
 
         // xp to next level
         $nextLevelXp = pow($level, 2) * 100;
         $xpToNext = max(0, $nextLevelXp - $totalXp);
 
-        $badgesEarned = $student ? StudentAchievement::where('student_id', $student->id)->count() : 12;
+        $badgesEarned = $student ? StudentAchievement::where('student_id', $student->id)->count() : 0;
+
+        // Real all-time XP rank among all students — the schema has no
+        // time-windowed XP aggregate yet, so this is an honest all-time
+        // rank rather than a fabricated "monthly" number.
+        $rank = $student
+            ? Student::where('total_xp', '>', $student->total_xp)->count() + 1
+            : 0;
 
         return [
             'totalXp' => $totalXp,
@@ -273,7 +284,7 @@ class GamificationService
             'streakDays' => $streak,
             'longestStreak' => $longest,
             'badgesEarned' => $badgesEarned,
-            'monthlyRank' => 3,
+            'monthlyRank' => $rank,
         ];
     }
 

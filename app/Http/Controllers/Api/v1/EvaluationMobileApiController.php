@@ -104,7 +104,8 @@ class EvaluationMobileApiController extends Controller
      */
     public function electionInfo(Request $request)
     {
-        $election = $this->evaluationService->getActiveElection();
+        $studentId = $request->user()->student->id ?? null;
+        $election = $this->evaluationService->getActiveElection($studentId);
         if (!$election) {
             return response()->json([
                 'success' => false,
