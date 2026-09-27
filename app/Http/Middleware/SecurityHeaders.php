@@ -17,6 +17,14 @@ class SecurityHeaders
     {
         $response = $next($request);
 
+        // PHP adds "X-Powered-By: PHP/x.y.z" when expose_php is on (the Docker
+        // image turns it off, a plain server install may not). Don't advertise
+        // the exact runtime version to scanners.
+        if (! headers_sent()) {
+            header_remove('X-Powered-By');
+        }
+        $response->headers->remove('X-Powered-By');
+
         // Make sure it's a response object we can modify headers on
         if (method_exists($response, 'header')) {
             $response->header('X-Content-Type-Options', 'nosniff');
@@ -32,7 +40,15 @@ class SecurityHeaders
                  ."font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; "
                  ."img-src 'self' data: https:; "
                  ."frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; "
-                 ."connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com;";
+                 ."connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com; "
+                 // Directives that don't fall back to default-src (ZAP 10055):
+                 // no <base> hijacking, forms only post back to this app, the
+                 // app can't be framed (same as X-Frame-Options: DENY), and no
+                 // plugins (<object>/<embed>).
+                 ."base-uri 'self'; "
+                 ."form-action 'self'; "
+                 ."frame-ancestors 'none'; "
+                 ."object-src 'none';";
 
             $response->header('Content-Security-Policy', $csp);
 
