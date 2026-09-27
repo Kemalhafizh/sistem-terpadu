@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Registration extends Model
 {
-    use \App\Traits\LogsActivity, HasFactory, HasUuid, SoftDeletes;
+    use HasFactory, HasUuid, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'registration_number',
