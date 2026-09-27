@@ -236,7 +236,7 @@
 
     <!-- Script for ApexCharts Rendering -->
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <x-vendor.script lib="apexcharts" />
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             

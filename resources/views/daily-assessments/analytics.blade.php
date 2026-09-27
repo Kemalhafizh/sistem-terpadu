@@ -88,8 +88,8 @@
     </div>
 
     @if($analytics['has_data'])
-        <!-- ApexCharts JS CDN -->
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <!-- ApexCharts JS -->
+        <x-vendor.script lib="apexcharts" />
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // 1. Distribution Histogram Options

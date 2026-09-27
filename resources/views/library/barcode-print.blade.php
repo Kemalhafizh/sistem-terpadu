@@ -7,7 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Libre+Barcode+128&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css'])
+    <x-vendor.script lib="tailwind-browser" />
+    <style type="text/tailwindcss">
+        /* Designed on Tailwind v3: keep its default border color. */
+        @layer base {
+            *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
+        }
+    </style>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -58,7 +64,7 @@
     <div class="max-w-6xl mx-auto">
         <div class="sticker-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             @forelse($books as $book)
-                <div class="bg-white p-4 rounded-2xl border-2 border-gray-300 shadow-sm flex flex-col justify-between space-y-3 relative overflow-hidden">
+                <div class="bg-white p-4 rounded-2xl border-2 border-gray-300 shadow-xs flex flex-col justify-between space-y-3 relative overflow-hidden">
                     <!-- Header -->
                     <div class="border-b border-gray-200 pb-2 flex items-center justify-between">
                         <div>
@@ -97,7 +103,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('vendor/qrcodejs-1.0.0/qrcode.min.js') }}"></script>
+    <x-vendor.script lib="qrcodejs" />
     <script>
         document.querySelectorAll('.book-qr').forEach(function (el) {
             new QRCode(el, { text: el.dataset.code, width: 64, height: 64, colorDark: '#111827', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });

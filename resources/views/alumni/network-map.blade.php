@@ -3,7 +3,7 @@
 
     <!-- Leaflet.js CSS -->
     <x-slot name="styles">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <x-vendor.style lib="leaflet" />
         <style>
             .leaflet-container {
                 font-family: inherit;
@@ -50,7 +50,17 @@
 
     <!-- Leaflet.js Script -->
     <x-slot name="scripts">
-        <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <x-vendor.script lib="leaflet" />
+        <script>
+            // Leaflet finds its default marker images by parsing the CSS file
+            // name, which Vite hashes, so point it at the built files directly.
+            L.Icon.Default.imagePath = '';
+            L.Icon.Default.mergeOptions({
+                iconUrl: @json(\App\Support\VendorAsset::imageUrl('leaflet-marker-icon')),
+                iconRetinaUrl: @json(\App\Support\VendorAsset::imageUrl('leaflet-marker-icon-2x')),
+                shadowUrl: @json(\App\Support\VendorAsset::imageUrl('leaflet-marker-shadow')),
+            });
+        </script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 // Initialize map centered at Indonesia

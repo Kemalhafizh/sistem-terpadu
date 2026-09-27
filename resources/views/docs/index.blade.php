@@ -9,10 +9,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
-    @vite(['resources/css/app.css'])
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .font-outfit { font-family: 'Outfit', sans-serif; }
+    <x-vendor.script lib="tailwind-browser" />
+    <style type="text/tailwindcss">
+        /* Designed on Tailwind v3: keep its default border color. */
+        @layer base {
+            *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
+        }
+        @custom-variant dark (&:where(.dark, .dark *));
+        @theme {
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-outfit: 'Outfit', sans-serif;
+        }
     </style>
     <style>
         .glass {
@@ -70,7 +77,7 @@
     </header>
 
     <!-- Main Container -->
-    <div class="flex-grow flex w-full relative z-10">
+    <div class="grow flex w-full relative z-10">
         
         <!-- Sidebar Navigation -->
         <aside class="w-80 sidebar-glass flex flex-col p-6 overflow-y-auto max-h-[calc(100vh-5rem)] sticky top-20 select-none">
@@ -81,7 +88,7 @@
                 </p>
             </div>
 
-            <nav class="space-y-8 flex-grow">
+            <nav class="space-y-8 grow">
                 @foreach($navigation as $groupName => $links)
                     <div>
                         <h4 class="text-xs font-bold font-outfit uppercase tracking-widest text-gray-500 mb-3 px-3">
@@ -107,7 +114,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-grow p-10 max-w-5xl mx-auto overflow-x-hidden">
+        <main class="grow p-10 max-w-5xl mx-auto overflow-x-hidden">
             <div class="glass p-12 rounded-3xl relative overflow-hidden shadow-2xl">
                 <!-- Watermark Background -->
                 <div class="absolute top-0 right-0 translate-x-12 -translate-y-12 w-96 h-96 rounded-full bg-blue-600/5 blur-[100px] pointer-events-none"></div>

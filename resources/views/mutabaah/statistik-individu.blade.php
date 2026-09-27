@@ -84,7 +84,7 @@
     </div>
 
     @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <x-vendor.script lib="chartjs" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($scoreTrend->count() > 0)

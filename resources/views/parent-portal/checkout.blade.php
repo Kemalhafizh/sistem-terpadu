@@ -135,10 +135,10 @@
   </div>
 
   @push('scripts')
-  <!-- Integrasi SDK Snap JS Midtrans Sandbox -->
-  <script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+  <!-- Integrasi SDK Snap JS Midtrans -->
+  <x-midtrans-snap />
   <!-- SweetAlert2 untuk Notifikasi Premium -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <x-vendor.script lib="sweetalert2" />
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const payButton = document.getElementById('pay-button');

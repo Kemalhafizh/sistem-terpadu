@@ -232,10 +232,9 @@
         </div>
     </div>
 
-    <!-- Scripts CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/id.global.min.js"></script>
+    <!-- FullCalendar v6 injects its own CSS; the Indonesian locale ships in @fullcalendar/core. -->
+    <x-vendor.script lib="fullcalendar" />
+    <x-vendor.script lib="fullcalendar-locale-id" />
 
     <script>
         function calendarApp() {

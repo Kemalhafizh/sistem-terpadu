@@ -237,10 +237,10 @@
         </div>
     </div>
 
-    <!-- Html5-Qrcode CDN -->
-    <script src="{{ asset('vendor/html5-qrcode-2.3.8/html5-qrcode.min.js') }}"></script>
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Html5-Qrcode -->
+    <x-vendor.script lib="html5-qrcode" />
+    <!-- SweetAlert2 -->
+    <x-vendor.script lib="sweetalert2" />
 
     <script>
         let html5QrcodeScanner = null;

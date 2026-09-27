@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\ContentSecurityPolicy;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,24 +34,7 @@ class SecurityHeaders
             $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
             $response->header('Permissions-Policy', 'camera=(self), microphone=(), geolocation=(self)');
 
-            // Content-Security-Policy configuration
-            $csp = "default-src 'self'; "
-                 ."script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://app.sandbox.midtrans.com; "
-                 ."style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
-                 ."font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; "
-                 ."img-src 'self' data: https:; "
-                 ."frame-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com; "
-                 ."connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com; "
-                 // Directives that don't fall back to default-src (ZAP 10055):
-                 // no <base> hijacking, forms only post back to this app, the
-                 // app can't be framed (same as X-Frame-Options: DENY), and no
-                 // plugins (<object>/<embed>).
-                 ."base-uri 'self'; "
-                 ."form-action 'self'; "
-                 ."frame-ancestors 'none'; "
-                 ."object-src 'none';";
-
-            $response->header('Content-Security-Policy', $csp);
+            $response->header('Content-Security-Policy', ContentSecurityPolicy::header());
 
             // HSTS only in non-local environments to avoid localhost SSL loop issues
             if (! app()->environment('local', 'testing')) {

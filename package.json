@@ -21,7 +21,20 @@
     },
     "dependencies": {
         "@alpinejs/intersect": "^3.15.12",
+        "@highlightjs/cdn-assets": "^11.12.0",
+        "@tailwindcss/browser": "^4.3.3",
         "apexcharts": "^5.11.0",
-        "axios": "^1.15.1"
+        "axios": "^1.15.1",
+        "chart.js": "^4.5.1",
+        "fullcalendar": "~6.1.21",
+        "html2canvas": "^1.4.1",
+        "html5-qrcode": "^2.3.8",
+        "jets": "^0.14.1",
+        "katex": "^0.16.47",
+        "leaflet": "^1.9.4",
+        "lodash": "^4.18.1",
+        "marked": "^18.0.14",
+        "qrcodejs": "^1.0.0",
+        "sweetalert2": "^11.26.25"
     }
 }

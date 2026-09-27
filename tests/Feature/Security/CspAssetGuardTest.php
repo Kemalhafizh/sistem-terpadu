@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\ContentSecurityPolicy;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -7,8 +8,9 @@ use Illuminate\Support\Str;
  * Every external script or stylesheet a view loads must be allowed by the
  * Content-Security-Policy the app actually sends. Otherwise the browser
  * silently blocks it in production: this is how the library QR labels, the
- * circulation scanner, the alumni map, the Midtrans popup and five
- * Tailwind-CDN pages ended up broken while every test stayed green.
+ * circulation scanner, the alumni map and five Tailwind-CDN pages ended up
+ * broken while every test stayed green. Libraries belong in
+ * <x-vendor.script>/<x-vendor.style> (App\Support\VendorAsset).
  */
 
 function cspSources(string $header, string $directive): array
@@ -72,21 +74,11 @@ test('every external script and stylesheet in the views is allowed by the CSP', 
 test('the Midtrans Snap popup and the web QR scanner are not blocked by headers', function () {
     $response = $this->get('/login');
     $csp = $response->headers->get('Content-Security-Policy');
+    $snapHost = ContentSecurityPolicy::midtransAppHost();
 
-    foreach (['https://app.midtrans.com', 'https://app.sandbox.midtrans.com'] as $snapHost) {
-        expect(cspSources($csp, 'script-src'))->toContain($snapHost)
-            ->and(cspSources($csp, 'frame-src'))->toContain($snapHost);
-    }
-    // library/circulation scans book QR codes with the device camera.
+    expect(cspSources($csp, 'script-src'))->toContain($snapHost)
+        ->and(cspSources($csp, 'frame-src'))->toContain($snapHost);
+    // library/circulation scans book QR codes with the device camera;
+    // camera=() switched it off for the whole site.
     expect($response->headers->get('Permissions-Policy'))->toContain('camera=(self)');
-});
-
-test('self-hosted libraries the views load actually exist', function () {
-    foreach ([
-        'vendor/qrcodejs-1.0.0/qrcode.min.js',
-        'vendor/html5-qrcode-2.3.8/html5-qrcode.min.js',
-        'vendor/html2canvas-1.4.1/html2canvas.min.js',
-    ] as $asset) {
-        expect(public_path($asset))->toBeFile();
-    }
 });

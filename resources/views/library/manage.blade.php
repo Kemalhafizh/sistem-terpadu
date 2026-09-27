@@ -77,11 +77,10 @@
         </div>
     </div>
 
-    <!-- QRCode.js & SweetAlert2 CDN -->
-    <script src="{{ asset('vendor/qrcodejs-1.0.0/qrcode.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- QRCode.js & SweetAlert2 -->
+    <x-vendor.script lib="qrcodejs" />
+    <x-vendor.script lib="sweetalert2" />
     <script>
-        const qrLibUrl = @js(asset('vendor/qrcodejs-1.0.0/qrcode.min.js'));
         const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
         function showBookBarcode(rawUuid, rawTitle, rawAuthor) {
@@ -118,7 +117,7 @@
                                 .uuid { font-size: 8px; color: #10b981; font-weight: 900; letter-spacing: 2px; margin-top: 12px; font-family: monospace; }
                                 #print-qrcode { display: flex; justify-content: center; }
                             </style>
-                            <script src="${qrLibUrl}"><\/script>
+                            <script src="{{ \App\Support\VendorAsset::url('qrcodejs') }}"><\/script>
                         </head>
                         <body>
                             <div class="label-card">

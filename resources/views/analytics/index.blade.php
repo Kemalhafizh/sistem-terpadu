@@ -20,8 +20,8 @@
         </div>
     </x-slot>
 
-    <!-- load ApexCharts CDN directly to guarantee standalone stability -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- ApexCharts as a classic script, available to the inline chart code below -->
+    <x-vendor.script lib="apexcharts" />
 
     <div class="py-12">
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">

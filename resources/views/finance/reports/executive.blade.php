@@ -165,7 +165,7 @@
     </div>
 
     <!-- Chart Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <x-vendor.script lib="chartjs" />
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('revenueTrendChart').getContext('2d');

@@ -26,6 +26,7 @@
         </div>
     </x-slot>
 
+    <x-vendor.script lib="apexcharts" />
     @php
         $summary = $heatmap['summary'];
         $toneOf = fn (?float $rate) => match (true) {

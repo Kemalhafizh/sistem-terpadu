@@ -420,10 +420,10 @@
   </div>
 
   <!-- KaTeX LaTeX Math & Chemical Equation Renderer for Saintek -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderSistaLatex()"></script>
+  <x-vendor.style lib="katex" />
+  <x-vendor.script lib="katex" defer />
+  <x-vendor.script lib="katex-mhchem" defer />
+  <x-vendor.script lib="katex-auto-render" defer onload="renderSistaLatex()" />
   <script>
     function renderSistaLatex(element = document.body) {
       if (typeof renderMathInElement === 'function') {
