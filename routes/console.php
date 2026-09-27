@@ -15,6 +15,9 @@ Schedule::command('backup:run')->daily()->at('02:00');
 Schedule::command('billing:send-reminders')->monthlyOn(1, '08:00');
 Schedule::command('app:send-event-reminders')->dailyAt('07:00');
 
+// FASE 117: tutup otomatis sesi kelas yang lupa diakhiri guru (jam selesai + 5 menit)
+Schedule::command('class-sessions:auto-close')->everyMinute()->withoutOverlapping();
+
 // WhatsApp Broadcast & Automation Triggers
 Schedule::command('whatsapp:process-broadcasts')->everyMinute();
 Schedule::command('whatsapp:process-broadcasts --run-triggers')->dailyAt('06:00');

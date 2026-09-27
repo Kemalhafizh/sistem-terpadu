@@ -1405,12 +1405,6 @@ parameters:
 			path: app/Http/Controllers/ParentPortalController.php
 
 		-
-			message: '#^Relation ''times'' is not found in App\\Models\\SchedulePreset model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ParentPortalController.php
-
-		-
 			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1522,12 +1516,6 @@ parameters:
 			message: '#^Relation ''teacher'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 5
-			path: app/Http/Controllers/ScheduleController.php
-
-		-
-			message: '#^Relation ''times'' is not found in App\\Models\\SchedulePreset model\.$#'
-			identifier: larastan.relationExistence
-			count: 7
 			path: app/Http/Controllers/ScheduleController.php
 
 		-

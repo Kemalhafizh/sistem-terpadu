@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\HealthCheckController;
 use App\Http\Controllers\Api\MidtransWebhookController;
 use App\Http\Controllers\Api\MobileDataController;
 use App\Http\Controllers\Api\v1\AchievementMobileApiController;
+use App\Http\Controllers\Api\v1\AdminClassSessionController;
 use App\Http\Controllers\Api\v1\AdminMobileDashboardController;
 use App\Http\Controllers\Api\v1\ApiAuthController;
 use App\Http\Controllers\Api\v1\ApiGeneralController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Api\v1\ApiStudentController;
 use App\Http\Controllers\Api\v1\ApiTeacherController;
 use App\Http\Controllers\Api\v1\CbtAccessControlApiController;
 use App\Http\Controllers\Api\v1\CbtEnterpriseApiController;
+use App\Http\Controllers\Api\v1\ClassSessionController;
 use App\Http\Controllers\Api\v1\ConfigController;
 use App\Http\Controllers\Api\v1\ContextualHomeController;
 use App\Http\Controllers\Api\v1\CounselingMobileApiController;
@@ -46,6 +48,7 @@ use App\Http\Controllers\Api\v1\SchoolOperationsApiController;
 use App\Http\Controllers\Api\v1\SmartNotificationController;
 use App\Http\Controllers\Api\v1\StudentApiController;
 use App\Http\Controllers\Api\v1\StudentProfileApiController;
+use App\Http\Controllers\Api\v1\StudentSessionAttendanceController;
 use App\Http\Controllers\Api\v1\SyncController;
 use App\Http\Controllers\Api\v1\TahsinSubmissionApiController;
 use App\Http\Controllers\Api\v1\UtbkMobileApiController;
@@ -157,6 +160,12 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
             Route::get('notifications', [ApiStudentController::class, 'notifications']);
             Route::post('notifications/{id}/read', [ApiStudentController::class, 'markNotificationRead']);
+
+            // FASE 117: presensi per-sesi kelas via QR berputar dari layar guru
+            Route::prefix('class-session')->group(function () {
+                Route::post('scan-qr', [StudentSessionAttendanceController::class, 'scanQr'])->middleware('throttle:20,1');
+                Route::get('active', [StudentSessionAttendanceController::class, 'activeSession']);
+            });
         });
 
         // === NEW ORANG TUA SCOPED ===
@@ -197,6 +206,25 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             // CBT Manual Authoring with LaTeX & Image Support
             Route::post('cbt/exams', [ApiTeacherController::class, 'storeExamWithQuestions']);
             Route::post('cbt/upload-image', [ApiTeacherController::class, 'uploadExamImage']);
+
+            // FASE 117: sesi kelas hidup (mulai/akhiri kelas, QR berputar, absensi manual)
+            Route::prefix('class-sessions')->group(function () {
+                Route::get('today', [ClassSessionController::class, 'todaySessions']);
+                Route::post('{scheduleId}/start', [ClassSessionController::class, 'startSession'])->whereNumber('scheduleId');
+                Route::post('{sessionId}/end', [ClassSessionController::class, 'endSession'])->whereNumber('sessionId');
+                Route::get('{sessionId}/qr', [ClassSessionController::class, 'getActiveQr'])->whereNumber('sessionId');
+                Route::get('{sessionId}/students', [ClassSessionController::class, 'sessionStudentList'])->whereNumber('sessionId');
+                Route::post('{sessionId}/attendance/manual', [ClassSessionController::class, 'manualAttendance'])->whereNumber('sessionId');
+                Route::post('{sessionId}/attendance/bulk', [ClassSessionController::class, 'bulkManualAttendance'])->whereNumber('sessionId');
+            });
+        });
+
+        // === FASE 117: KOREKSI & REKAP PRESENSI SESI KELAS (WAKA KURIKULUM / TU / ADMIN) ===
+        Route::prefix('admin/class-sessions')->middleware('role:admin,superadmin,waka_kurikulum,staf_tu')->group(function () {
+            Route::get('/', [AdminClassSessionController::class, 'index']);
+            Route::get('reports', [AdminClassSessionController::class, 'attendanceReport']);
+            Route::get('{sessionId}/attendances', [AdminClassSessionController::class, 'sessionAttendances'])->whereNumber('sessionId');
+            Route::put('attendances/{attendanceId}/override', [AdminClassSessionController::class, 'overrideAttendance'])->whereNumber('attendanceId');
         });
 
         // === FASE 88: BANK SOAL TERPUSAT & AUTO-GENERATE UJIAN CBT ===
