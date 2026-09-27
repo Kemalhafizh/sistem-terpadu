@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="{{ asset("/vendor/scribe/css/theme-default.style.css") }}" media="screen">
   <link rel="stylesheet" href="{{ asset("/vendor/scribe/css/theme-default.print.css") }}" media="print">
 
-  {{-- Served from our build, not public CDNs (see App\Support\VendorAsset).
-       `php artisan scribe:generate` restores the CDN links; redo this after regenerating. --}}
+  {{-- Served from our build, not public CDNs (see App\Support\VendorAsset). Generated from
+       resources/views/vendor/scribe/themes/default/index.blade.php, so scribe:generate keeps this. --}}
   <x-vendor.script lib="lodash" />
 
   <x-vendor.style lib="highlightjs-obsidian" />

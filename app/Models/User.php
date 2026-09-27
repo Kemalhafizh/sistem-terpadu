@@ -7,6 +7,7 @@ use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -119,6 +120,22 @@ class User extends Authenticatable
     public function hasRole(string $role): bool
     {
         return $this->role === $role;
+    }
+
+    /**
+     * Parent accounts exist under both role names.
+     */
+    public function isParent(): bool
+    {
+        return in_array($this->role, ['parent', 'orang_tua'], true);
+    }
+
+    /**
+     * Wellbeing screening results of this user as a student.
+     */
+    public function wellbeingResponses(): HasMany
+    {
+        return $this->hasMany(WellbeingScreeningResponse::class, 'student_id');
     }
 
     /**

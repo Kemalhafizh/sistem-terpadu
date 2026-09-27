@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AnnualWorkplan extends Model
@@ -20,6 +21,11 @@ class AnnualWorkplan extends Model
         'prepared_by',
         'approved_by',
     ];
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(StrategicPlan::class, 'strategic_plan_id');
+    }
 
     public function programs(): HasMany
     {

@@ -1039,12 +1039,6 @@ parameters:
 			path: app/Http/Controllers/ForumController.php
 
 		-
-			message: '#^Relation ''wellbeingResponses'' is not found in App\\Models\\User model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Growth/StudentLifecycleController.php
-
-		-
 			message: '#^Relation ''attendances'' is not found in App\\Models\\Employee model\.$#'
 			identifier: larastan.relationExistence
 			count: 1

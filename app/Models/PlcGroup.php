@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PlcGroup extends Model
 {
@@ -13,17 +15,17 @@ class PlcGroup extends Model
 
     protected $casts = ['is_active' => 'boolean'];
 
-    public function coordinator()
+    public function coordinator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'coordinator_id');
     }
 
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(PlcGroupMember::class);
     }
 
-    public function discussions()
+    public function discussions(): HasMany
     {
         return $this->hasMany(PlcDiscussion::class);
     }

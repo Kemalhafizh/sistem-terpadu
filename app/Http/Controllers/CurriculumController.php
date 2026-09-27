@@ -73,6 +73,10 @@ class CurriculumController extends Controller
         $this->authorize('downloadReport', LessonPlan::class);
         $activeYear = AcademicYear::current();
 
+        if (! $activeYear) {
+            return redirect()->route('dashboard')->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
+
         $subjects = Subject::all();
         $syllabiData = [];
         foreach ($subjects as $sub) {
@@ -83,7 +87,7 @@ class CurriculumController extends Controller
                 'code' => $sub->code,
                 'name' => $sub->name,
                 'status' => $syllabus ? $syllabus->status : 'belum_unggah',
-                'uploader' => $syllabus ? $syllabus->uploader->name : '-',
+                'uploader' => $syllabus?->uploader?->name ?? '-',
                 'notes' => $syllabus ? $syllabus->notes : '',
             ];
         }
@@ -116,6 +120,10 @@ class CurriculumController extends Controller
         $this->authorize('manageSyllabus', Syllabus::class);
         $activeYear = AcademicYear::current();
 
+        if (! $activeYear) {
+            return redirect()->route('dashboard')->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
+
         $subjects = Subject::all();
         $syllabi = Syllabus::with(['subject', 'uploader', 'approver'])
             ->where('academic_year_id', $activeYear->id)
@@ -128,6 +136,10 @@ class CurriculumController extends Controller
     {
         $this->authorize('manageSyllabus', Syllabus::class);
         $activeYear = AcademicYear::current();
+
+        if (! $activeYear) {
+            return back()->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
 
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
@@ -182,6 +194,21 @@ class CurriculumController extends Controller
         return back()->with('success', $message);
     }
 
+    public function syllabusDownload(Syllabus $syllabus)
+    {
+        $this->authorize('manageSyllabus', Syllabus::class);
+
+        abort_unless($syllabus->file_path && Storage::disk('public')->exists($syllabus->file_path), 404, 'Berkas silabus tidak ditemukan.');
+
+        $extension = pathinfo($syllabus->file_path, PATHINFO_EXTENSION);
+        $name = str($syllabus->subject?->name ?? 'Silabus')
+            ->append(' Kelas '.$syllabus->grade_level.' '.ucfirst((string) $syllabus->semester))
+            ->slug('_')
+            ->append($extension ? '.'.$extension : '');
+
+        return Storage::disk('public')->download($syllabus->file_path, 'Silabus_'.$name);
+    }
+
     public function syllabusDestroy(Syllabus $syllabus)
     {
         $this->authorize('manageSyllabus', Syllabus::class);
@@ -208,6 +235,10 @@ class CurriculumController extends Controller
         $this->authorize('viewLessonPlanList', LessonPlan::class);
         $user = auth()->user();
         $activeYear = AcademicYear::current();
+
+        if (! $activeYear) {
+            return redirect()->route('dashboard')->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
 
         $query = LessonPlan::with(['subject', 'classroom', 'user'])
             ->where('academic_year_id', $activeYear->id);
@@ -242,6 +273,10 @@ class CurriculumController extends Controller
     {
         $this->authorize('createLessonPlan', LessonPlan::class);
         $activeYear = AcademicYear::current();
+
+        if (! $activeYear) {
+            return back()->with('error', 'Tahun akademik aktif tidak ditemukan.');
+        }
 
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',

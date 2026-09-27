@@ -177,8 +177,9 @@
                                         Rp {{ number_format($trx->amount, 0, ',', '.') }}
                                     </td>
                                     @if(auth()->user()->role !== 'student')
-                                        <td class="py-4 px-4 text-center">
-                                            <form action="{{ route('osis.transactions.destroy', $trx->id) }}" method="POST" onsubmit="return confirm('Hapus transaksi ini?')">
+                                        <td class="py-4 px-4 text-center whitespace-nowrap">
+                                            <a href="{{ route('osis.transactions.edit', $trx->id) }}" class="text-indigo-600 hover:text-indigo-700 font-bold mr-3">Edit</a>
+                                            <form action="{{ route('osis.transactions.destroy', $trx->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus transaksi ini?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-rose-600 hover:text-rose-700 font-bold">Hapus</button>

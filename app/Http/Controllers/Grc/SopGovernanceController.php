@@ -35,7 +35,8 @@ class SopGovernanceController extends Controller
      */
     public function create()
     {
-        return view('sop.index');
+        // The creation form lives on the library page itself.
+        return redirect()->route('sop.index');
     }
 
     /**

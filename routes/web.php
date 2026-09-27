@@ -41,6 +41,7 @@ use App\Http\Controllers\Analytics\PredictivePerformanceController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AnalyticsExportController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\ApiDocsController;
 use App\Http\Controllers\AssetCategoryController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetLoanController;
@@ -176,8 +177,17 @@ use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
 use Illuminate\Support\Facades\Route;
+use Knuckles\Scribe\ScribeServiceProvider;
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
+
+// Scribe API docs. Scribe is a dev dependency, so production (composer
+// install --no-dev) serves no docs, same as before.
+if (class_exists(ScribeServiceProvider::class)) {
+    Route::get('docs', [ApiDocsController::class, 'index'])->name('scribe');
+    Route::get('docs.postman', [ApiDocsController::class, 'postman'])->name('scribe.postman');
+    Route::get('docs.openapi', [ApiDocsController::class, 'openapi'])->name('scribe.openapi');
+}
 Route::get('/verify-document/{code}', [DocumentSignatureController::class, 'verifyPublic'])->name('documents.verify_public');
 Route::get('/tentang-kami', [PublicSiteController::class, 'about'])->name('public.about');
 Route::get('/kontak', [PublicSiteController::class, 'contact'])->name('public.contact');
@@ -724,6 +734,7 @@ Route::middleware('auth')->group(function () {
             // Kas OSIS
             Route::post('transactions', [OsisController::class, 'storeTransaction'])->name('transactions.store');
             Route::get('transactions/{id}/edit', [OsisController::class, 'editTransaction'])->name('transactions.edit');
+            Route::put('transactions/{id}', [OsisController::class, 'updateTransaction'])->name('transactions.update');
             Route::delete('transactions/{id}', [OsisController::class, 'deleteTransaction'])->name('transactions.destroy');
 
             // Kepengurusan
@@ -945,7 +956,7 @@ Route::middleware('auth')->group(function () {
         Route::post('letters/bulk', [LetterController::class, 'bulkStore'])->name('letters.bulk.store');
 
         // Operasi CRUD & Transisi Status Surat
-        Route::resource('letters', LetterController::class);
+        Route::resource('letters', LetterController::class)->except(['edit', 'update']);
         Route::post('letters/{letter}/issue', [LetterController::class, 'issue'])->name('letters.issue');
         Route::get('letters/{letter}/pdf', [LetterController::class, 'downloadPdf'])->name('letters.pdf');
     });
@@ -1032,17 +1043,18 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware('role:waka_kurikulum,staf_tu,admin,superadmin,kepala_sekolah')->group(function () {
         // Kalender Akademik CRUD
-        Route::resource('calendar/events', AcademicEventController::class)->except(['index']);
+        // Events are created/edited from the calendar page itself (modal + JSON).
+        Route::resource('calendar/events', AcademicEventController::class)->only(['store', 'update', 'destroy']);
 
         // Tahun Ajaran
         Route::post('academic-years/{academicYear}/activate', [AcademicYearController::class, 'activate'])->name('academic-years.activate');
-        Route::resource('academic-years', AcademicYearController::class);
+        Route::resource('academic-years', AcademicYearController::class)->except(['show']);
 
         // Mapel, Kelas, Siswa
-        Route::resource('subjects', SubjectController::class);
-        Route::resource('classrooms', ClassroomController::class);
+        Route::resource('subjects', SubjectController::class)->except(['show']);
+        Route::resource('classrooms', ClassroomController::class)->except(['show']);
         Route::get('students/{student}/pdf', [StudentController::class, 'exportPdf'])->name('students.pdf');
-        Route::resource('students', StudentController::class);
+        Route::resource('students', StudentController::class)->except(['show']);
         Route::post('students/import', [StudentController::class, 'import'])->name('students.import');
 
         // Penjadwalan
@@ -1210,7 +1222,7 @@ Route::middleware('auth')->group(function () {
         Route::post('payrolls/generate', [PayrollController::class, 'store'])->name('payrolls.generate');
         Route::post('payrolls/approve-bulk', [PayrollController::class, 'approveBulk'])->name('payrolls.approve-bulk');
         Route::post('payrolls/pay-bulk', [PayrollController::class, 'payBulk'])->name('payrolls.pay-bulk');
-        Route::resource('payrolls', PayrollController::class)->except(['store']);
+        Route::resource('payrolls', PayrollController::class)->except(['store', 'edit']);
     });
 
     // =========================================================
@@ -1325,9 +1337,9 @@ Route::middleware('auth')->group(function () {
 
         // Queue Monitoring
         Route::get('admin/queue-monitor', [QueueMonitorController::class, 'index'])->name('admin.queue.index');
-        Route::post('admin/queue-monitor/retry/{id}', [QueueMonitorController::class, 'retry'])->name('admin.queue.retry');
-        Route::post('admin/queue-monitor/retry-all', [QueueMonitorController::class, 'retryAll'])->name('admin.queue.retry-all');
-        Route::post('admin/queue-monitor/flush', [QueueMonitorController::class, 'flush'])->name('admin.queue.flush');
+        Route::post('admin/queue-monitor/retry/{id}', [QueueMonitorController::class, 'retryFailedJob'])->name('admin.queue.retry');
+        Route::post('admin/queue-monitor/retry-all', [QueueMonitorController::class, 'retryAllFailedJobs'])->name('admin.queue.retry-all');
+        Route::post('admin/queue-monitor/flush', [QueueMonitorController::class, 'flushFailedJobs'])->name('admin.queue.flush');
 
         // Security Monitoring & Audit Trail (SIEM)
         Route::middleware('role:admin,superadmin')->prefix('admin/security')->name('admin.security.')->group(function () {
@@ -1438,6 +1450,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/syllabi', [CurriculumController::class, 'syllabiIndex'])->name('syllabi.index');
         Route::post('/syllabi', [CurriculumController::class, 'syllabusStore'])->name('syllabi.store');
         Route::post('/syllabi/{syllabus}/review', [CurriculumController::class, 'syllabusReview'])->name('syllabi.review');
+        Route::get('/syllabi/{syllabus}/download', [CurriculumController::class, 'syllabusDownload'])->name('syllabi.download');
         Route::delete('/syllabi/{syllabus}', [CurriculumController::class, 'syllabusDestroy'])->name('syllabi.destroy');
 
         // Rencana Pelaksanaan Pembelajaran (RPP)
@@ -1608,7 +1621,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin,superadmin,staf_tu')->prefix('import-export')->name('import-export.')->group(function () {
         Route::get('/', [ImportExportController::class, 'index'])->name('index');
         Route::post('upload', [ImportExportController::class, 'upload'])->name('upload');
-        Route::post('map', [ImportExportController::class, 'map'])->name('map');
         Route::post('execute', [ImportExportController::class, 'execute'])->name('execute');
         Route::post('export', [ImportExportController::class, 'exportData'])->name('export');
         Route::get('history', [ImportExportController::class, 'history'])->name('history');

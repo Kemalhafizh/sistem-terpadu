@@ -51,6 +51,21 @@ class QueueMonitorController extends Controller
     }
 
     /**
+     * Retry every failed job in the Dead Letter Queue.
+     */
+    public function retryAllFailedJobs()
+    {
+        try {
+            $count = DB::table('failed_jobs')->count();
+            Artisan::call('queue:retry', ['id' => ['all']]);
+
+            return back()->with('success', "{$count} pekerjaan gagal berhasil dikirim ulang ke queue worker!");
+        } catch (Exception $e) {
+            return back()->with('error', "Gagal mengulang pekerjaan: {$e->getMessage()}");
+        }
+    }
+
+    /**
      * Delete a specific failed job from Dead Letter Queue.
      */
     public function deleteFailedJob($id)
