@@ -11,13 +11,14 @@
   <link rel="stylesheet" href="{{ asset("/vendor/scribe/css/theme-default.style.css") }}" media="screen">
   <link rel="stylesheet" href="{{ asset("/vendor/scribe/css/theme-default.print.css") }}" media="print">
 
-  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  {{-- Served from our build, not public CDNs (see App\Support\VendorAsset).
+       `php artisan scribe:generate` restores the CDN links; redo this after regenerating. --}}
+  <x-vendor.script lib="lodash" />
 
-  <link rel="stylesheet"
-     href="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/obsidian.min.css">
-  <script src="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js"></script>
+  <x-vendor.style lib="highlightjs-obsidian" />
+  <x-vendor.script lib="highlightjs" />
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"></script>
+  <x-vendor.script lib="jets" />
 
   <style id="language-style">
     /* starts out as display none and is replaced with js later */

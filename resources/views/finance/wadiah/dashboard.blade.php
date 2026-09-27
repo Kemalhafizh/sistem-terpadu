@@ -207,8 +207,8 @@
         </div>
     </div>
 
-    <!-- ApexCharts CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- ApexCharts -->
+    <x-vendor.script lib="apexcharts" />
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const chartData = @json($chartData);

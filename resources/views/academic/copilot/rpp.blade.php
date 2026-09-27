@@ -13,7 +13,7 @@
     </x-slot>
 
     {{-- Markdown Compiler --}}
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <x-vendor.script lib="marked" />
 
     <div class="py-8" x-data="{
         provider: '{{ old('provider', 'local_fallback') }}',

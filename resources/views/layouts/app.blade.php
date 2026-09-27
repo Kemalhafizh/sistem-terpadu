@@ -132,6 +132,10 @@
     
     <!-- Offline Queue & Sync Manager -->
     <script src="/offline-queue.js" defer></script>
+
+    {{-- Page-level assets: <x-slot name="styles"> and @push('styles') --}}
+    {{ $styles ?? '' }}
+    @stack('styles')
 </head>
 <body class="font-sans antialiased text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 flex h-screen overflow-hidden flex-col" 
     x-data="{ 
@@ -328,10 +332,10 @@
     </div>
 
     <!-- KaTeX LaTeX Math & Chemical Equation Renderer for Saintek -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderSistaLatex()"></script>
+    <x-vendor.style lib="katex" />
+    <x-vendor.script lib="katex" defer />
+    <x-vendor.script lib="katex-mhchem" defer />
+    <x-vendor.script lib="katex-auto-render" defer onload="renderSistaLatex()" />
     <script>
         function renderSistaLatex(element = document.body) {
             if (typeof renderMathInElement === 'function') {
@@ -357,5 +361,9 @@
             renderSistaLatex();
         });
     </script>
+
+    {{-- Page-level scripts: <x-slot name="scripts"> and @push('scripts') --}}
+    {{ $scripts ?? '' }}
+    @stack('scripts')
 </body>
 </html>

@@ -129,8 +129,8 @@
         </div>
     </div>
 
-    <!-- ChartJS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ChartJS -->
+    <x-vendor.script lib="chartjs" />
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // 1. Activity Distribution Chart

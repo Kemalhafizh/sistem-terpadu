@@ -4,8 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Perpustakaan | {{ $student->user->name }}</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS (standalone page, compiled in the browser) -->
+    <x-vendor.script lib="tailwind-browser" />
+    <style type="text/tailwindcss">
+        /* Designed on Tailwind v3: keep its default border color. */
+        @layer base {
+            *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
+        }
+        @theme {
+            /* Same primary palette as resources/css/app.css */
+            --color-primary-200: #a7f3d0;
+            --color-primary-600: #059669;
+            --color-primary-700: #047857;
+        }
+    </style>
     <style>
         /* Gaya Khusus Cetak Kartu */
         @media print {
@@ -55,7 +67,7 @@
 
     <!-- Tombol Cetak & Navigasi (Tidak Ikut Dicetak) -->
     <div class="no-print mb-8 flex gap-3">
-        <a href="{{ route('library.index') }}" class="px-5 py-3 bg-white text-gray-800 rounded-2xl font-black text-xs hover:bg-gray-50 border border-gray-200 shadow-sm transition-all flex items-center gap-2">
+        <a href="{{ route('library.index') }}" class="px-5 py-3 bg-white text-gray-800 rounded-2xl font-black text-xs hover:bg-gray-50 border border-gray-200 shadow-xs transition-all flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Katalog
         </a>
@@ -72,7 +84,7 @@
         <div class="card-container glass-card w-[350px] h-[220px] rounded-[1.5rem] shadow-xl border border-emerald-100 flex flex-col justify-between p-5 relative select-none">
             <!-- Kop Sekolah -->
             <div class="flex items-center gap-2.5 border-b border-emerald-100/50 pb-2.5 z-10">
-                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center font-black text-white text-base shadow-sm">
+                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center font-black text-white text-base shadow-xs">
                     A
                 </div>
                 <div>
@@ -124,7 +136,7 @@
 
                 <!-- QR Code (Kanan) -->
                 <div class="flex flex-col items-center justify-center pr-2">
-                    <div id="qrcode" class="p-1.5 bg-white border border-gray-200 rounded-xl shadow-sm"></div>
+                    <div id="qrcode" class="p-1.5 bg-white border border-gray-200 rounded-xl shadow-xs"></div>
                     <div class="text-[7px] font-black text-gray-800 tracking-widest mt-1.5">{{ $student->nis }}</div>
                 </div>
             </div>
@@ -138,8 +150,8 @@
 
     </div>
 
-    <!-- QRCode.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nOMILqofLYLT3ILRSJKfxTMc13YJLOKIyVU9Yu0WaqtVzRTtO9aOPLRODtNy8WMTGs1TLyeeIEGA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- QRCode.js -->
+    <x-vendor.script lib="qrcodejs" />
     <script>
         // Generate QR Code untuk NIS Siswa
         window.addEventListener('DOMContentLoaded', () => {

@@ -4,25 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Book Reader | {{ $libraryBook->title }}</title>
-    <!-- Tailwind CSS (via CDN karena ini standalone page) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                        }
-                    }
-                }
-            }
+    <!-- Tailwind CSS (standalone page, compiled in the browser) -->
+    <x-vendor.script lib="tailwind-browser" />
+    <style type="text/tailwindcss">
+        /* Designed on Tailwind v3: keep its default border color. */
+        @layer base {
+            *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
         }
-    </script>
+        @theme {
+            --color-primary-50: #f0fdf4;
+            --color-primary-100: #dcfce7;
+            --color-primary-500: #22c55e;
+            --color-primary-600: #16a34a;
+            --color-primary-700: #15803d;
+        }
+    </style>
     <style>
         /* Mencegah seleksi teks global */
         body {
@@ -80,7 +76,7 @@
     </footer>
 
     <!-- JavaScript Proteksi Keamanan Premium -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <x-vendor.script lib="sweetalert2" />
     <script>
         // Mencegah Klik Kanan di seluruh halaman
         document.addEventListener('contextmenu', function(e) {
