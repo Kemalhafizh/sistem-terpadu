@@ -73,11 +73,10 @@ jobs:
         nohup php artisan serve --host=127.0.0.1 --port=8000 > storage/logs/serve.log 2>&1 &
         curl -sf --retry 30 --retry-connrefused --retry-delay 1 http://127.0.0.1:8000/up > /dev/null
 
-    - name: Allow ZAP to write its report
-      run: chmod a+w "$GITHUB_WORKSPACE"
-
     - name: OWASP ZAP Baseline Scan
-      uses: zaproxy/action-baseline@v0.12.0
+      # >= v0.14.0: v0.12.0 used the retired artifact API and failed with
+      # "Create Artifact Container failed: The artifact name zap_scan is not valid".
+      uses: zaproxy/action-baseline@v0.15.0
       with:
         target: 'http://127.0.0.1:8000'
         rules_file_name: '.zap/rules.tsv'
