@@ -6457,5 +6457,8 @@ Kontrak API lengkap untuk tim Android: [`docs/modules/class_sessions.md`](docs/m
 7. **Koreksi admin** mengikuti 77.6.3: kehadiran yang sudah tercatat tidak bisa dihapus. Setiap koreksi dicatat di `activity_logs`.
 8. **Integrasi opsional 77.10:** sesi yang diakhiri dengan topik otomatis membuat draf `TeachingJournal`.
 
-**Belum dikerjakan:** push pengingat 5 menit sebelum mulai/selesai dan rangkuman harian orang tua (77.7.1). Push yang sudah ada memakai `FcmNotificationService`, yang job-nya saat ini masih mock.
+**Susulan 77.7.1:**
+- Pengingat guru 5 menit sebelum mulai/selesai (`class-sessions:remind`, setiap menit).
+- Rangkuman harian orang tua (`class-sessions:parent-digest`, 17:00).
+- `SendFcmNotificationJob` kini benar-benar mengirim lewat FCM HTTP v1 (`FcmHttpV1Client`, aktif bila `FCM_CREDENTIALS` diisi). Job ini dulu hanya mock dan membaca kolom `device_token`, padahal aplikasi menyimpan token di `fcm_token`.
 

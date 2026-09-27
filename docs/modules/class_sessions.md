@@ -174,12 +174,32 @@ Isi `qr_token` di-encode **apa adanya** ke QR. Token sama untuk semua perangkat 
 
 ## 6. Notifikasi Push
 
-Dikirim lewat `FcmNotificationService`, channel `channel_class_session`. Saat ini job FCM di repo masih berupa mock yang hanya menulis log.
+Dikirim lewat FCM HTTP v1 (`SendFcmNotificationJob` + `FcmHttpV1Client`) ke semua token aktif pengguna, yaitu token yang didaftarkan aplikasi lewat `POST mobile/devices`. Semua notifikasi sesi kelas memakai channel Android **`attendance_alerts`**.
 
-| Kapan | Penerima | `data.type` |
-|---|---|---|
-| Kelas dimulai | Seluruh siswa kelas | `class_session_started` |
-| Sesi ditutup (manual/otomatis) | Siswa yang alpha | `class_session_alpha` |
-| Sesi auto-close | Guru pengampu | `class_session_auto_closed` |
+**Isi pesan.** Pesan FCM berisi `notification { title, body }` dan `data`. `data` selalu memuat `title`, `body`, dan `channel`, ditambah key di tabel bawah. Semua nilai `data` berupa string.
 
-Belum diimplementasikan: pengingat 5 menit sebelum mulai/selesai dan rangkuman harian orang tua (77.7.1).
+| Kapan | Penerima | `data.type` | Data tambahan |
+|---|---|---|---|
+| 5 menit sebelum jadwal mulai | Guru pengampu | `class_session_start_reminder` | `session_id`, `schedule_id` |
+| Kelas dimulai | Seluruh siswa kelas | `class_session_started` | `session_id` |
+| 5 menit sebelum jadwal selesai (sesi aktif) | Guru pengampu | `class_session_end_reminder` | `session_id` |
+| Sesi ditutup (manual/otomatis) | Siswa yang alpha | `class_session_alpha` | `session_id` |
+| Sesi auto-close | Guru pengampu | `class_session_auto_closed` | `session_id` |
+| Setiap hari pukul 17:00 | Orang tua (`students.parent_id`), satu pesan per anak | `class_session_daily_digest` | `student_id`, `date` |
+
+**Contoh isi.**
+- Pengingat mulai: "Sesi Matematika X-1 (IPA) dimulai 5 menit lagi" / "Tap untuk memulai kelas."
+- Pengingat selesai: "… berakhir 5 menit lagi" / "6 siswa belum absen."
+- Rangkuman orang tua: "Kehadiran Andi hari ini" / "6/7 sesi hadir. Alpha: Matematika (Jam ke-3). Terlambat: 1. Sakit/izin: 1."
+- Rangkuman hanya menghitung sesi yang benar-benar terlaksana. Anak tanpa sesi hari itu tidak dikirimi.
+
+**Jadwal & pengaturan.**
+- `class-sessions:remind` berjalan setiap menit. Tiap pengingat terkirim sekali, dikunci lewat kolom `start_reminder_sent_at` / `end_reminder_sent_at`.
+- `class-sessions:parent-digest` berjalan sekali sehari. Opsi `--date=Y-m-d` untuk tanggal lain, `--force` untuk kirim ulang.
+- Env: `CLASS_SESSION_REMINDER_LEAD_MINUTES` (default 5) dan `CLASS_SESSION_PARENT_DIGEST_TIME` (default `17:00`).
+
+**Pengaktifan FCM.**
+- Isi `FCM_CREDENTIALS` dengan path file JSON service account dari Firebase Console → Project settings → Service accounts. Isi JSON-nya langsung juga bisa.
+- `FCM_PROJECT_ID` opsional; default-nya diambil dari file tersebut.
+- Tanpa kredensial, push hanya dicatat di log.
+- Token yang ditolak FCM sebagai tidak terdaftar otomatis dinonaktifkan. Error 429/5xx diulang (maksimal 3 percobaan) hanya untuk perangkat yang gagal.
