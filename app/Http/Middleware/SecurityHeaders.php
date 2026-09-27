@@ -32,7 +32,7 @@ class SecurityHeaders
             $response->header('X-Frame-Options', 'DENY');
             $response->header('X-XSS-Protection', '1; mode=block');
             $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
-            $response->header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
+            $response->header('Permissions-Policy', 'camera=(self), microphone=(), geolocation=(self)');
 
             $response->header('Content-Security-Policy', ContentSecurityPolicy::header());
 

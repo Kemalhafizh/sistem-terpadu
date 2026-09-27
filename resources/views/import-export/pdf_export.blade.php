@@ -95,6 +95,9 @@
     <div class="doc-meta">
         Diekspor pada: {{ now()->format('d M Y, H:i') }} | Total Data: {{ count($data) }} Baris
     </div>
+    @if (! empty($note))
+        <div class="doc-meta" style="color: #b45309; font-weight: bold;">{{ $note }}</div>
+    @endif
 
     <!-- Data Table -->
     <table>

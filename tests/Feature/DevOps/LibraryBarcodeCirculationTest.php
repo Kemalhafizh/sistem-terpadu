@@ -5,6 +5,7 @@ use App\Models\LibraryCategory;
 use App\Models\LibraryLoan;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\VendorAsset;
 use Illuminate\Support\Str;
 
 beforeEach(function () {
@@ -122,4 +123,9 @@ test('librarian can access barcode printable page', function () {
     $response->assertStatus(200);
     $response->assertSee('Fisika Kuantum Praktis');
     $response->assertSee('BK-999000111');
+    // A real, scannable QR of the code the circulation scanner looks up, not decorative bars.
+    $response->assertSee('data-code="BK-999000111"', false);
+    $response->assertSee(VendorAsset::url('qrcodejs'), false);
+    $response->assertDontSee('Simulated Barcode');
+    expect(LibraryBook::byCode('BK-999000111')->value('id'))->toBe($this->book->id);
 });

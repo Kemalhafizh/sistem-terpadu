@@ -333,8 +333,8 @@ class LibraryCirculationController extends Controller
      */
     public function printBarcodeLabels()
     {
-        $books = LibraryBook::where('type', 'physical')
-            ->orWhereNotNull('barcode')
+        $books = LibraryBook::with('category')
+            ->where(fn ($q) => $q->where('type', 'physical')->orWhereNotNull('barcode'))
             ->orderBy('title')
             ->get();
 

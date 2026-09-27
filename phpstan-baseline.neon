@@ -342,11 +342,6 @@ parameters:
 			count: 2
 			path: app/Http/Controllers/Api/v1/LibraryMobileApiController.php
 
-		-
-			message: '#^Relation ''category'' is not found in App\\Models\\LibraryBook model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/Api/v1/LibraryMobileApiController.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\LibraryLoan model\.$#'
@@ -1152,11 +1147,6 @@ parameters:
 			count: 3
 			path: app/Http/Controllers/LibraryCirculationController.php
 
-		-
-			message: '#^Relation ''category'' is not found in App\\Models\\LibraryBook model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/LibraryController.php
 
 		-
 			message: '#^Relation ''creator'' is not found in App\\Models\\LibraryBook model\.$#'
@@ -2154,11 +2144,6 @@ parameters:
 			count: 6
 			path: app/Services/LibraryService.php
 
-		-
-			message: '#^Relation ''category'' is not found in App\\Models\\LibraryBook model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: app/Services/LibraryService.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\LibraryLoan model\.$#'

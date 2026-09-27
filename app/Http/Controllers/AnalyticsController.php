@@ -99,10 +99,10 @@ class AnalyticsController extends Controller
 
     public function heatmap(Request $request)
     {
-        // Dummy data for heatmap demonstration
-        $heatmapData = [];
+        $days = in_array((int) $request->input('days'), [7, 14, 30], true) ? (int) $request->input('days') : 14;
+        $heatmap = $this->analyticsService->getClassroomAbsenceHeatmap($days);
 
-        return view('analytics.heatmap', compact('heatmapData'));
+        return view('analytics.heatmap', compact('heatmap', 'days'));
     }
 
     public function customReport(Request $request)
