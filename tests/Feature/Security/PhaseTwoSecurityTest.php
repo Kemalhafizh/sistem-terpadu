@@ -243,9 +243,8 @@ test('admin ip whitelist middleware blocks non whitelisted ip addresses', functi
     // Force env to non-testing to trigger strict IP validation logic
     app()->detectEnvironment(fn () => 'production');
 
-    // Set allowed IP into env config
-    config(['app.env' => 'production']);
-    putenv('ADMIN_ALLOWED_IPS=192.168.1.100');
+    // Set allowed IP via config (env() is empty once config is cached)
+    config(['app.env' => 'production', 'app.admin_allowed_ips' => '192.168.1.100']);
 
     $response = $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.5'])
         ->get('/admin/test-ip-protection');

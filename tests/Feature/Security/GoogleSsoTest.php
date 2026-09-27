@@ -63,8 +63,12 @@ it('gagal login via google sso jika email tidak terdaftar di sistem', function (
 });
 
 it('menolak login google sso jika email tidak cocok dengan domain sekolah yang diwajibkan', function () {
-    // Set domain wajib ke smaisultanagung1.sch.id
-    putenv('GOOGLE_SSO_DOMAIN=smaisultanagung1.sch.id');
+    // Set domain wajib ke smaisultanagung1.sch.id (lewat config, bukan env:
+    // env() kosong di produksi setelah `config:cache`)
+    config(['services.google.sso_domain' => 'smaisultanagung1.sch.id']);
+
+    // The account exists, so only the domain rule can stop this login.
+    User::factory()->create(['email' => 'siswa.nakal@gmail.com']);
 
     // Mocking user google dengan domain personal gmail.com
     $googleUser = Mockery::mock('Laravel\Socialite\Two\User');
@@ -83,6 +87,4 @@ it('menolak login google sso jika email tidak cocok dengan domain sekolah yang d
     $response->assertSessionHasErrors('email');
     $this->assertGuest();
 
-    // Hapus environment variable setelah tes selesai
-    putenv('GOOGLE_SSO_DOMAIN=');
 });
