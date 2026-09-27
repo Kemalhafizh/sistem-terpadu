@@ -106,4 +106,4 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
-        run: php -d memory_limit=-1 artisan test --parallel
+        run: php -d memory_limit=-1 artisan test
