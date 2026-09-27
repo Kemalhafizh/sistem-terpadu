@@ -10,8 +10,8 @@
         </div>
     </x-slot>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js -->
+    <x-vendor.script lib="chartjs" />
 
     <div class="py-8 space-y-10 w-full">
         <!-- Stats Summary Grid -->

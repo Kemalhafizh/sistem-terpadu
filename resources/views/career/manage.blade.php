@@ -17,8 +17,8 @@
         </div>
     </x-slot>
 
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 -->
+    <x-vendor.script lib="sweetalert2" />
 
     <div class="py-8 w-full space-y-8">
         @if(session('success'))

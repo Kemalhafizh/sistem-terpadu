@@ -237,10 +237,10 @@
         </div>
     </div>
 
-    <!-- Html5-Qrcode CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" integrity="sha512-r6rDA7W6ZeQhvl8S7yRV0VUkyIEw3wQe5KAD1Y5421Y14MpHtV9cxHfZudzECFde0zTy5r4a76tKz+dIBAO3+g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Html5-Qrcode -->
+    <x-vendor.script lib="html5-qrcode" />
+    <!-- SweetAlert2 -->
+    <x-vendor.script lib="sweetalert2" />
 
     <script>
         let html5QrcodeScanner = null;

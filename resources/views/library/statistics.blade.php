@@ -141,7 +141,7 @@
     </div>
 
     <!-- ApexCharts JS -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <x-vendor.script lib="apexcharts" />
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // 1. Line/Area Chart: Trend Peminjaman

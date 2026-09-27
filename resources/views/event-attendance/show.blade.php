@@ -215,8 +215,8 @@
         </div>
     </div>
 
-    {{-- ApexCharts CDN & Initializer --}}
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    {{-- ApexCharts & Initializer --}}
+    <x-vendor.script lib="apexcharts" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const stats = {

@@ -158,7 +158,7 @@
     </div>
 </div>
 
-<!-- Load html2canvas from CDN dynamically -->
+<!-- html2canvas is loaded on demand, only when a screenshot is taken -->
 <script>
     function uatFeedbackForm() {
         return {
@@ -205,7 +205,7 @@
                         return;
                     }
                     const script = document.createElement('script');
-                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    script.src = @json(\App\Support\VendorAsset::url('html2canvas'));
                     script.async = true;
                     script.onload = () => resolve(window.html2canvas);
                     script.onerror = (err) => reject(err);

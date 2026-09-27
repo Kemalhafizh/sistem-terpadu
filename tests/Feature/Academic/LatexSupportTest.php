@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Support\VendorAsset;
 
 beforeEach(function () {
     $this->teacher = User::factory()->create(['role' => 'guru']);
@@ -10,10 +11,10 @@ test('app layout renders katex latex scripts and math delimiters', function () {
     $response = $this->actingAs($this->teacher)->get('/dashboard');
 
     $response->assertStatus(200);
-    $response->assertSee('katex.min.css');
-    $response->assertSee('katex.min.js');
-    $response->assertSee('mhchem.min.js');
-    $response->assertSee('auto-render.min.js');
+    $response->assertSee(VendorAsset::styleUrl('katex'), false);
+    $response->assertSee(VendorAsset::url('katex'), false);
+    $response->assertSee(VendorAsset::url('katex-mhchem'), false);
+    $response->assertSee(VendorAsset::url('katex-auto-render'), false);
     $response->assertSee('renderSistaLatex');
 });
 

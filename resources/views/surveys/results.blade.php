@@ -335,7 +335,7 @@
     </div>
 
     <!-- Script loading ApexCharts and drawing visual widgets -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <x-vendor.script lib="apexcharts" />
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Options helper for dark/light themes
