@@ -9,6 +9,7 @@ class DatabaseSeedingService
     public function seedDevelopment(): array
     {
         Artisan::call('db:seed');
+
         return ['status' => 'success', 'environment' => 'development', 'records' => 25000];
     }
 

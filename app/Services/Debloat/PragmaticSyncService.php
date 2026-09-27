@@ -2,15 +2,17 @@
 
 namespace App\Services\Debloat;
 
+use App\Models\AcademicYear;
 use App\Models\Announcement;
 use App\Models\Attendance;
 use App\Models\Grade;
 use App\Models\OfflineSyncQueue;
 use App\Models\Schedule;
 use App\Models\Student;
-use App\Models\TahfidzRecord;
+use App\Models\TahfidzLog;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PragmaticSyncService
 {
@@ -23,7 +25,7 @@ class PragmaticSyncService
         $results = [];
 
         foreach ($actions as $action) {
-            $clientUuid = $action['client_uuid'] ?? (string) \Illuminate\Support\Str::uuid();
+            $clientUuid = $action['client_uuid'] ?? (string) Str::uuid();
             $actionType = $action['action_type'] ?? 'UNKNOWN';
             $payload = $action['payload'] ?? [];
 
@@ -36,14 +38,15 @@ class PragmaticSyncService
                     'status' => $existing->status,
                     'message' => 'Action already processed previously (Idempotent).',
                 ];
+
                 continue;
             }
 
             try {
                 DB::beginTransaction();
 
-                $academicYearId = \App\Models\AcademicYear::where('is_active', true)->first()?->id
-                    ?? \App\Models\AcademicYear::first()?->id
+                $academicYearId = AcademicYear::where('is_active', true)->first()?->id
+                    ?? AcademicYear::first()?->id
                     ?? 1;
 
                 switch ($actionType) {
@@ -83,9 +86,9 @@ class PragmaticSyncService
                         if ($student) {
                             $teacherId = $user->role === 'teacher'
                                 ? $user->id
-                                : (\App\Models\User::where('role', 'teacher')->first()?->id ?? $user->id);
+                                : (User::where('role', 'teacher')->first()?->id ?? $user->id);
 
-                            \App\Models\TahfidzLog::create([
+                            TahfidzLog::create([
                                 'student_id' => $student->id,
                                 'teacher_id' => $teacherId,
                                 'surah_number' => $payload['surah_number'] ?? 67,
@@ -145,7 +148,7 @@ class PragmaticSyncService
 
         return [
             'total_submitted' => count($actions),
-            'processed_count' => count(array_filter($results, fn($r) => $r['status'] === 'PROCESSED')),
+            'processed_count' => count(array_filter($results, fn ($r) => $r['status'] === 'PROCESSED')),
             'results' => $results,
             'synced_at' => now()->toIso8601String(),
         ];
@@ -171,18 +174,18 @@ class PragmaticSyncService
                 'nisn' => $student?->nisn,
                 'classroom' => $student?->classroom?->name,
             ],
-            'schedules' => $schedules->map(fn($s) => [
+            'schedules' => $schedules->map(fn ($s) => [
                 'id' => $s->id,
                 'subject' => $s->subject?->name ?? 'Mata Pelajaran',
                 'day' => $s->day_of_week ?? 'Senin',
                 'time' => "{$s->start_time} - {$s->end_time}",
             ]),
-            'grades' => $grades->map(fn($g) => [
+            'grades' => $grades->map(fn ($g) => [
                 'subject' => $g->subject?->name ?? 'Pelajaran',
                 'score' => $g->score,
                 'letter' => $g->score >= 90 ? 'A' : ($g->score >= 80 ? 'B' : 'C'),
             ]),
-            'announcements' => $announcements->map(fn($a) => [
+            'announcements' => $announcements->map(fn ($a) => [
                 'id' => $a->id,
                 'title' => $a->title,
                 'date' => $a->created_at->format('d M Y'),

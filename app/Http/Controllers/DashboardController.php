@@ -23,8 +23,8 @@ use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TahfidzLog;
-use App\Models\TeachingJournal;
 use App\Models\TeacherTodo;
+use App\Models\TeachingJournal;
 use App\Models\User;
 use App\Models\WorkflowRequest;
 use Carbon\Carbon;
@@ -45,7 +45,7 @@ class DashboardController extends Controller
         $cacheKey = 'dashboard_stats_general_'.$user->id;
         $stats = Cache::get($cacheKey);
 
-        if ($stats === null || $stats instanceof \__PHP_Incomplete_Class || !is_array($stats)) {
+        if ($stats === null || $stats instanceof \__PHP_Incomplete_Class || ! is_array($stats)) {
             $stats = [
                 'total_students' => Student::count(),
                 'total_teachers' => User::where('role', 'guru')->count(),
@@ -145,7 +145,7 @@ class DashboardController extends Controller
         $cacheKey = 'admin_dashboard_stats_v3_'.$user->id;
         $stats = Cache::get($cacheKey);
 
-        if ($stats === null || $stats instanceof \__PHP_Incomplete_Class || !is_array($stats)) {
+        if ($stats === null || $stats instanceof \__PHP_Incomplete_Class || ! is_array($stats)) {
             // Data SPMB
             $spmb_stats = Registration::selectRaw('status, count(*) as total')
                 ->groupBy('status')
@@ -174,10 +174,10 @@ class DashboardController extends Controller
             // --- 2. Status Keuangan Bulan Ini ---
             $indonesianMonths = [
                 1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
-                7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+                7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
             ];
             $currentMonthName = $indonesianMonths[now()->month] ?? 'Juni';
-            if (!Billing::where('month', $currentMonthName)->exists()) {
+            if (! Billing::where('month', $currentMonthName)->exists()) {
                 $currentMonthName = Billing::latest('id')->value('month') ?? 'Juni';
             }
             $totalBillings = Billing::where('month', $currentMonthName)->sum('amount');
@@ -190,7 +190,7 @@ class DashboardController extends Controller
             $totalTeachers = User::where('role', 'guru')->count();
             $journalFilledCount = TeachingJournal::whereDate('teaching_date', $latestJournalDate)->distinct('user_id')->count('user_id');
             $journalFilledRate = $totalTeachers > 0 ? round(($journalFilledCount / $totalTeachers) * 100, 1) : 0;
-            
+
             $filledTeacherIds = TeachingJournal::whereDate('teaching_date', $latestJournalDate)->pluck('user_id');
             $unfilledTeachers = User::where('role', 'guru')->whereNotIn('id', $filledTeacherIds)->take(5)->get(['id', 'name'])->toArray();
             $journalDateFormatted = Carbon::parse($latestJournalDate)->translatedFormat('d F Y');
@@ -203,7 +203,7 @@ class DashboardController extends Controller
                     ->whereHas('student.classroom', function ($q) {
                         $q->where('grade_level', 'X');
                     })->avg('score') ?? 0;
-                
+
                 $avgXI = Grade::where('subject_id', $subj->id)
                     ->whereHas('student.classroom', function ($q) {
                         $q->where('grade_level', 'XI');
@@ -274,7 +274,7 @@ class DashboardController extends Controller
                     ->toArray(),
                 'payment_trend' => $payment_trend->toArray(),
                 'dashboard_recent_payments' => $recent_payments->toArray(),
-                
+
                 // NEW stats fields
                 'todayAttendanceRate' => $todayAttendanceRate,
                 'todayAttendanceDateFormatted' => $todayAttendanceDateFormatted,
@@ -307,6 +307,7 @@ class DashboardController extends Controller
             if (isset($obj->created_at)) {
                 $obj->created_at = Carbon::parse($obj->created_at);
             }
+
             return $obj;
         });
 
@@ -320,7 +321,7 @@ class DashboardController extends Controller
     private function getTeacherData(User $user)
     {
         $dayNamesIndonesian = [
-            0 => 'Minggu', 1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu'
+            0 => 'Minggu', 1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu',
         ];
         $todayDayName = $dayNamesIndonesian[now()->dayOfWeek] ?? 'Senin';
         $isWeekend = in_array(now()->dayOfWeek, [0, 6]);
@@ -343,7 +344,7 @@ class DashboardController extends Controller
             $attendanceExists = Attendance::where('classroom_id', $sched->classroom_id)
                 ->where('date', today()->format('Y-m-d'))
                 ->exists();
-            if (!$attendanceExists) {
+            if (! $attendanceExists) {
                 $pendingAttendanceAlerts[] = [
                     'classroom_id' => $sched->classroom_id,
                     'classroom_name' => $sched->classroom?->name ?? 'Kelas',
@@ -369,7 +370,7 @@ class DashboardController extends Controller
         $tahfidzLogsCount = TahfidzLog::where('teacher_id', $user->id)
             ->where('date', '>=', now()->subDays(7)->format('Y-m-d'))
             ->count();
-        
+
         $tahfidzTrend = TahfidzLog::where('teacher_id', $user->id)
             ->where('date', '>=', now()->subDays(7)->format('Y-m-d'))
             ->selectRaw('date, count(*) as total')
@@ -379,7 +380,7 @@ class DashboardController extends Controller
 
         // 6. Recent notifications
         $recentNotifications = [];
-        
+
         $pendingApprovals = WorkflowRequest::whereIn('status', ['pending', 'in_review'])
             ->whereHas('currentApproval', function ($q) use ($user) {
                 $q->where('role', $user->role);
@@ -388,12 +389,12 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
-        
+
         foreach ($pendingApprovals as $pa) {
             $recentNotifications[] = (object) [
                 'type' => 'workflow',
-                'title' => 'Persetujuan: ' . $pa->definition->name,
-                'desc' => 'Diajukan oleh ' . $pa->requester->name,
+                'title' => 'Persetujuan: '.$pa->definition->name,
+                'desc' => 'Diajukan oleh '.$pa->requester->name,
                 'time' => $pa->created_at->diffForHumans(),
             ];
         }
@@ -407,11 +408,11 @@ class DashboardController extends Controller
                 ->latest()
                 ->take(5)
                 ->get();
-            
+
             foreach ($smartAlerts as $sa) {
                 $recentNotifications[] = (object) [
                     'type' => 'alert',
-                    'title' => 'Smart Alert: ' . $sa->title,
+                    'title' => 'Smart Alert: '.$sa->title,
                     'desc' => $sa->description,
                     'time' => $sa->created_at->diffForHumans(),
                 ];
@@ -432,7 +433,7 @@ class DashboardController extends Controller
             'isBK' => $user->subjects()->whereIn('name', ['BK', 'Bimbingan Konseling'])->exists(),
             'isWaliKelas' => $user->classrooms()->exists(),
             'my_classrooms' => $user->classrooms()->withCount('students')->get(),
-            
+
             // NEW fields
             'schedules' => $schedules,
             'todayDayName' => $todayDayName,
@@ -470,7 +471,7 @@ class DashboardController extends Controller
 
         // 1. Pelajaran hari ini
         $dayNamesIndonesian = [
-            0 => 'Minggu', 1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu'
+            0 => 'Minggu', 1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu',
         ];
         $todayDayName = $dayNamesIndonesian[now()->dayOfWeek] ?? 'Senin';
         $isWeekend = in_array(now()->dayOfWeek, [0, 6]);
@@ -541,7 +542,7 @@ class DashboardController extends Controller
         if ($studentProfile) {
             $studentForumThreads = ForumThread::where(function ($q) use ($studentProfile) {
                 $q->whereNull('classroom_id')
-                  ->orWhere('classroom_id', $studentProfile->classroom_id);
+                    ->orWhere('classroom_id', $studentProfile->classroom_id);
             })->with('author')->latest()->take(3)->get();
         }
 
@@ -551,7 +552,7 @@ class DashboardController extends Controller
             'recent_logs' => $studentProfile ? $studentProfile->pointLogs : [],
             'unpaid_billings_count' => $billingStats->count ?? 0,
             'total_unpaid_amount' => $billingStats->total ?? 0,
-            
+
             // NEW fields
             'studentSchedulesToday' => $studentSchedulesToday,
             'todayDayName' => $todayDayName,
@@ -621,7 +622,7 @@ class DashboardController extends Controller
                 ->count();
             $childPossibleLogs = $totalActiveItems * 7;
             $childMutabaahScore = $childPossibleLogs > 0 ? round(($childMutabaahLogsCount / $childPossibleLogs) * 100) : 0;
-            
+
             $childMutabaahGrade = match (true) {
                 $childMutabaahScore >= 85 => 'A (Istimewa)',
                 $childMutabaahScore >= 70 => 'B (Baik)',
@@ -647,7 +648,7 @@ class DashboardController extends Controller
                 'unpaid_billings_count' => $child->unpaid_count,
                 'total_unpaid_amount' => $child->total_unpaid ?? 0,
                 'recent_logs' => $child->pointLogs,
-                
+
                 // NEW fields
                 'childAttendanceToday' => $childAttendanceToday,
                 'latestAttendanceDate' => $latestAttendanceDate ? Carbon::parse($latestAttendanceDate)->translatedFormat('d M Y') : null,

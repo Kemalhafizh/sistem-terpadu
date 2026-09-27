@@ -2,16 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\VisitorLog;
+use App\Models\CanteenMenu;
+use App\Models\EventTicket;
+use App\Models\MealPlan;
 use App\Models\MerchandiseItem;
 use App\Models\MerchandiseOrder;
-use App\Models\CanteenMenu;
-use App\Models\MealPlan;
 use App\Models\TicketedEvent;
-use App\Models\EventTicket;
+use App\Models\User;
+use App\Models\VisitorLog;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class SmartCampusSeeder extends Seeder
 {
@@ -19,7 +18,7 @@ class SmartCampusSeeder extends Seeder
     {
         // Make sure a user exists for testing
         $user = User::firstOrCreate([
-            'email' => 'admin@sultanagung1.sch.id'
+            'email' => 'admin@sultanagung1.sch.id',
         ], [
             'name' => 'Admin Sekolah',
             'password' => bcrypt('password'),

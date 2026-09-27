@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\ContractRenewal;
 use App\Models\DapodikExport;
-use App\Models\DapodikSyncError;
 use App\Models\ForensicEvent;
 use App\Models\LegalContract;
 use App\Models\PurgeLog;

@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\CanteenMerchant;
+use App\Models\CanteenTransaction;
 use App\Models\Student;
 use App\Models\WadiahAccount;
 use App\Models\WadiahTransaction;
-use App\Models\CanteenMerchant;
-use App\Models\CanteenTransaction;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class WadiahService
 {
@@ -27,8 +27,8 @@ class WadiahService
             }
 
             // Generate account number: WDH-YYYYMM-NNNN
-            $prefix = 'WDH-' . date('Ym') . '-';
-            $latest = WadiahAccount::where('account_number', 'like', $prefix . '%')
+            $prefix = 'WDH-'.date('Ym').'-';
+            $latest = WadiahAccount::where('account_number', 'like', $prefix.'%')
                 ->orderBy('account_number', 'desc')
                 ->first();
 
@@ -38,7 +38,7 @@ class WadiahService
                 $nextNumber = (int) end($parts) + 1;
             }
 
-            $accountNumber = $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+            $accountNumber = $prefix.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
             return WadiahAccount::create([
                 'student_id' => $student->id,
@@ -74,7 +74,7 @@ class WadiahService
             ]);
 
             // Generate reference: DEP-YYYYMMDD-RAND
-            $refNumber = 'DEP-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+            $refNumber = 'DEP-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
             return WadiahTransaction::create([
                 'wadiah_account_id' => $account->id,
@@ -116,7 +116,7 @@ class WadiahService
                 'balance' => $currBalance,
             ]);
 
-            $refNumber = 'WTH-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+            $refNumber = 'WTH-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
             return WadiahTransaction::create([
                 'wadiah_account_id' => $account->id,
@@ -180,7 +180,7 @@ class WadiahService
                 'balance' => $currBalance,
             ]);
 
-            $refNumber = 'PUR-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+            $refNumber = 'PUR-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
             $wadiahTx = WadiahTransaction::create([
                 'wadiah_account_id' => $account->id,
@@ -189,7 +189,7 @@ class WadiahService
                 'previous_balance' => $prevBalance,
                 'current_balance' => $currBalance,
                 'reference_number' => $refNumber,
-                'description' => 'Pembayaran cashless di ' . $merchant->name,
+                'description' => 'Pembayaran cashless di '.$merchant->name,
                 'processed_by' => $merchantUserId,
             ]);
 
@@ -215,7 +215,7 @@ class WadiahService
 
         // Check if already refunded
         $alreadyRefunded = WadiahTransaction::where('type', 'refund')
-            ->where('description', 'like', '%' . $purchaseTx->reference_number . '%')
+            ->where('description', 'like', '%'.$purchaseTx->reference_number.'%')
             ->exists();
 
         if ($alreadyRefunded) {
@@ -233,7 +233,7 @@ class WadiahService
                 'balance' => $currBalance,
             ]);
 
-            $refNumber = 'RFD-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+            $refNumber = 'RFD-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
             return WadiahTransaction::create([
                 'wadiah_account_id' => $account->id,

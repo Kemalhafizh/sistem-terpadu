@@ -12,6 +12,7 @@ class FinancialForecastingController extends Controller
     public function dashboard()
     {
         $forecasts = FinancialForecast::with('creator')->latest()->get();
+
         return view('analytics.finance.forecast', compact('forecasts'));
     }
 

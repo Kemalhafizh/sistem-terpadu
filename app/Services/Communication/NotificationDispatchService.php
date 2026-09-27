@@ -125,7 +125,8 @@ class NotificationDispatchService
 
             return true;
         } catch (\Throwable $e) {
-            Log::error("Failed to deliver notification #{$log->id} via channel {$log->channel}: " . $e->getMessage());
+            Log::error("Failed to deliver notification #{$log->id} via channel {$log->channel}: ".$e->getMessage());
+
             return false;
         }
     }

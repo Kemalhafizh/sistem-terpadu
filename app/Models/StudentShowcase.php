@@ -16,7 +16,7 @@ class StudentShowcase extends Model
     public const STUDENT_ROLES = ['student', 'siswa'];
 
     protected $fillable = [
-        'student_id', 'project_title', 'description', 'cover_image_url', 'media_urls', 'is_public', 'view_count'
+        'student_id', 'project_title', 'description', 'cover_image_url', 'media_urls', 'is_public', 'view_count',
     ];
 
     protected $casts = [

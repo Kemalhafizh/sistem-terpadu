@@ -4,7 +4,6 @@ use App\Models\BlockedIp;
 use App\Models\SecurityThreatLog;
 use App\Models\Setting;
 use App\Models\User;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);

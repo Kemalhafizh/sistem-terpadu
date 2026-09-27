@@ -12,6 +12,7 @@ class ReleaseManagerController extends Controller
     public function index()
     {
         $releases = ReleaseVersion::latest('released_at')->get();
+
         return view('releases.index', compact('releases'));
     }
 
@@ -37,12 +38,14 @@ class ReleaseManagerController extends Controller
     public function changelog(int $id)
     {
         $release = ReleaseVersion::findOrFail($id);
+
         return view('releases.changelog', compact('release'));
     }
 
     public function rollbackTest(int $id)
     {
         $release = ReleaseVersion::findOrFail($id);
+
         return view('releases.rollback-test', compact('release'));
     }
 }

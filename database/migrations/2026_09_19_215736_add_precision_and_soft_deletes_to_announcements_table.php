@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('announcements', function (Blueprint $table) {
             $table->softDeletes('deleted_at', 3);
         });
-        
+
         // Altering existing timestamps to have precision 3 is not straightforward in SQLite via Schema::table
         // So we will just add soft deletes for the tombstone test.
     }

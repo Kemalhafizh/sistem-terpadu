@@ -16,7 +16,7 @@ class EcoParticipation extends Model
         'points_awarded',
         'evidence_url',
         'is_verified',
-        'verified_by'
+        'verified_by',
     ];
 
     protected $casts = [

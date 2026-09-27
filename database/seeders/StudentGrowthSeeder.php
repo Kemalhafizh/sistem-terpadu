@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\CharacterDimension;
-
-use App\Models\PtcSession;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
 use App\Services\Growth\PtcSchedulerService;
@@ -50,7 +48,7 @@ class StudentGrowthSeeder extends Seeder
         $wellbeingService->activateScreening($sc);
 
         $wellbeingService->submitResponse($sc, $student->id, [
-            'responses' => ['q0' => 1, 'q1' => 0, 'q2' => 0, 'q3' => 1, 'q4' => 0, 'q5' => 0, 'q6' => 0, 'q7' => 0]
+            'responses' => ['q0' => 1, 'q1' => 0, 'q2' => 0, 'q3' => 1, 'q4' => 0, 'q5' => 0, 'q6' => 0, 'q7' => 0],
         ]);
 
         $wellbeingService->addMoodJournalEntry($student->id, [

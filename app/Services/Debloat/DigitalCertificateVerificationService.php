@@ -4,7 +4,6 @@ namespace App\Services\Debloat;
 
 use App\Models\DigitalVerification;
 use App\Models\Student;
-use Illuminate\Support\Str;
 
 class DigitalCertificateVerificationService
 {
@@ -61,7 +60,7 @@ class DigitalCertificateVerificationService
             ->orWhere('sha256_hash', $documentNumber)
             ->first();
 
-        if (!$doc) {
+        if (! $doc) {
             return [
                 'is_valid' => false,
                 'message' => 'Dokumen tidak ditemukan dalam arsip resmi SMA Islam Sultan Agung 1 Semarang.',
@@ -98,8 +97,10 @@ class DigitalCertificateVerificationService
                 'is_valid' => false,
                 'metadata' => $metadata,
             ]);
+
             return true;
         }
+
         return false;
     }
 }

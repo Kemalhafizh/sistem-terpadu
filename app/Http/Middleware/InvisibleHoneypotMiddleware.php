@@ -19,17 +19,16 @@ class InvisibleHoneypotMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         // Only evaluate form submission methods
         if (in_array($request->method(), ['POST', 'PUT', 'PATCH'])) {
-            if ($request->has(self::HONEYPOT_FIELD) && !empty($request->input(self::HONEYPOT_FIELD))) {
+            if ($request->has(self::HONEYPOT_FIELD) && ! empty($request->input(self::HONEYPOT_FIELD))) {
                 $clientIp = $request->ip();
-                $incidentId = 'SEC-SA1-BOT-' . date('Ymd') . '-' . strtoupper(Str::random(6));
-                $banKey = 'banned_ip_' . md5($clientIp);
+                $incidentId = 'SEC-SA1-BOT-'.date('Ymd').'-'.strtoupper(Str::random(6));
+                $banKey = 'banned_ip_'.md5($clientIp);
 
                 // Auto ban bot IP for 30 days
                 Cache::put($banKey, [
@@ -40,14 +39,14 @@ class InvisibleHoneypotMiddleware
                     'banned_at' => now()->toDateTimeString(),
                 ], now()->addDays(30));
 
-                Log::channel('siem')->warning("AUTOMATED BOT TRAPPED: Invisible Form Field Filled", [
+                Log::channel('siem')->warning('AUTOMATED BOT TRAPPED: Invisible Form Field Filled', [
                     'incident_id' => $incidentId,
                     'client_ip' => $clientIp,
                     'user_agent' => $request->userAgent(),
                     'form_url' => $request->fullUrl(),
                 ]);
 
-                if (!app()->environment('testing')) {
+                if (! app()->environment('testing')) {
                     sleep(2);
                 }
 

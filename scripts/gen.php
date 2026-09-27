@@ -138,14 +138,14 @@ $views = [
     'swot/create.blade.php' => '@extends("layouts.app") @section("content") <h1>Buat SWOT</h1> @endsection',
     'swot/show.blade.php' => '@extends("layouts.app") @section("content") <h1>Detail SWOT</h1> @endsection',
 ];
-foreach($views as $file => $content) {
-    file_put_contents('resources/views/strategic/' . $file, $content);
+foreach ($views as $file => $content) {
+    file_put_contents('resources/views/strategic/'.$file, $content);
 }
 
 // active scope
 if (file_exists('app/Models/StrategicPlan.php')) {
     $model = file_get_contents('app/Models/StrategicPlan.php');
-    if(strpos($model, 'scopeActive') === false) {
+    if (strpos($model, 'scopeActive') === false) {
         $model = str_replace('}', "\n    public function scopeActive(\$query) { return \$query->where('status', 'active'); }\n}", $model);
         file_put_contents('app/Models/StrategicPlan.php', $model);
     }

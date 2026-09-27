@@ -191,7 +191,7 @@ test('webhook verification accepts valid signature and confirms payment when non
     $orderId = 'BILL-'.$billing->id.'-RANDOM';
     $statusCode = '200';
     $grossAmount = '500000.00';
-    
+
     // Correct signature key calculation
     $validSignature = hash('sha512', $orderId.$statusCode.$grossAmount.$serverKey);
 
@@ -216,4 +216,3 @@ test('webhook verification accepts valid signature and confirms payment when non
     expect($billing->status)->toBe('paid');
     expect($billing->remaining_balance)->toEqual(0);
 });
-

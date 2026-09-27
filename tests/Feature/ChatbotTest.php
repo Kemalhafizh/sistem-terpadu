@@ -1,12 +1,9 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Attendance;
-use App\Models\Billing;
-use App\Models\ChatbotFaq;
 use App\Models\ChatbotConversation;
-use Illuminate\Support\Facades\Schema;
+use App\Models\ChatbotFaq;
+use App\Models\Student;
+use App\Models\User;
 
 beforeEach(function () {
     //
@@ -22,7 +19,7 @@ test('unauthenticated users are blocked from sending chatbot messages', function
 
 test('authenticated users can send message and receive chatbot response', function () {
     $user = User::factory()->create(['role' => 'guru']);
-    
+
     // Seed a quick FAQ
     $faq = ChatbotFaq::create([
         'question' => 'Bagaimana aturan seragam sekolah?',
@@ -78,7 +75,7 @@ test('natural language queries are resolved into secure eloquent counts', functi
 
 test('users can submit helpful feedback on chatbot conversation', function () {
     $user = User::factory()->create(['role' => 'student']);
-    
+
     $convo = ChatbotConversation::create([
         'user_id' => $user->id,
         'user_message' => 'Tanya SPP',

@@ -3,13 +3,13 @@
 /** @var TestCase|stdClass $this */
 
 use App\Models\Classroom;
+use App\Models\Extracurricular;
+use App\Models\ExtracurricularActivity;
+use App\Models\ExtracurricularAttendance;
+use App\Models\ExtracurricularMember;
+use App\Models\OsisTransaction;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\Extracurricular;
-use App\Models\ExtracurricularMember;
-use App\Models\ExtracurricularAttendance;
-use App\Models\ExtracurricularActivity;
-use App\Models\OsisTransaction;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -20,12 +20,12 @@ beforeEach(function () {
     $this->waka = User::factory()->create(['role' => 'waka_kesiswaan']);
     $this->teacher = User::factory()->create(['role' => 'guru']);
     $this->studentUser = User::factory()->create(['role' => 'student']);
-    
+
     $this->classroom = Classroom::factory()->create();
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
         'classroom_id' => $this->classroom->id,
-        'nis' => '12345'
+        'nis' => '12345',
     ]);
 });
 
@@ -49,7 +49,7 @@ test('students and authorized roles can view detailed extracurricular profile', 
 
     $response = $this->actingAs($this->studentUser)
         ->get(route('ekskul.show', $ekskul->id));
-    
+
     $response->assertStatus(200);
     $response->assertViewIs('extracurricular.show');
     $response->assertViewHas('extracurricular');
@@ -124,7 +124,7 @@ test('advisor and admin can submit batch attendance', function () {
         'advisor_id' => $this->teacher->id,
         'is_active' => true,
     ]);
-    
+
     ExtracurricularMember::create([
         'extracurricular_id' => $ekskul->id,
         'student_id' => $this->student->id,
@@ -140,8 +140,8 @@ test('advisor and admin can submit batch attendance', function () {
                 'student_id' => $this->student->id,
                 'status' => 'H',
                 'notes' => 'Hadir tepat waktu dan aktif',
-            ]
-        ]
+            ],
+        ],
     ];
 
     $response = $this->actingAs($this->teacher)
@@ -172,8 +172,8 @@ test('other roles cannot submit batch attendance for extracurricular they do not
             [
                 'student_id' => $this->student->id,
                 'status' => 'H',
-            ]
-        ]
+            ],
+        ],
     ];
 
     $response = $this->actingAs($otherTeacher)
@@ -184,7 +184,7 @@ test('other roles cannot submit batch attendance for extracurricular they do not
 
 test('advisor and admin can submit extracurricular activity logs with image uploads', function () {
     Storage::fake('public');
-    
+
     $ekskul = Extracurricular::create([
         'name' => 'Seni Musik',
         'advisor_id' => $this->teacher->id,
@@ -199,7 +199,7 @@ test('advisor and admin can submit extracurricular activity logs with image uplo
         'title' => 'Latihan Rutin Karawitan',
         'description' => 'Mempelajari gending Ladrang Wilujeng pelog pathet barang.',
         'activity_date' => now()->toDateString(),
-        'images' => [$file1, $file2]
+        'images' => [$file1, $file2],
     ];
 
     $response = $this->actingAs($this->teacher)
@@ -209,7 +209,7 @@ test('advisor and admin can submit extracurricular activity logs with image uplo
     $response->assertSessionHas('success');
 
     expect(ExtracurricularActivity::where('extracurricular_id', $ekskul->id)->count())->toBe(1);
-    
+
     $activity = ExtracurricularActivity::first();
     expect($activity->title)->toBe('Latihan Rutin Karawitan');
     expect(count($activity->gallery_paths))->toBe(2);
@@ -249,7 +249,7 @@ test('waka kesiswaan and admin can log OSIS financial transaction with receipt s
         'description' => 'Pembelian Trofi Piala OSIS Cup 2026',
         'category' => 'Kegiatan',
         'transaction_date' => now()->toDateString(),
-        'receipt' => $receipt
+        'receipt' => $receipt,
     ];
 
     $response = $this->actingAs($this->waka)
@@ -261,9 +261,9 @@ test('waka kesiswaan and admin can log OSIS financial transaction with receipt s
     expect(OsisTransaction::count())->toBe(1);
     $transaction = OsisTransaction::first();
     expect($transaction->type)->toBe('expense');
-    expect((int)$transaction->amount)->toBe(1250000);
+    expect((int) $transaction->amount)->toBe(1250000);
     expect($transaction->category)->toBe('Kegiatan');
-    
+
     expect($transaction->receipt_path)->not->toBeNull();
     Storage::disk('public')->assertExists($transaction->receipt_path);
 });

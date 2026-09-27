@@ -7,7 +7,7 @@ use App\Models\LibraryCategory;
 use App\Models\LibraryLoan;
 use App\Models\Student;
 use App\Models\User;
-use Tests\TestCase;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     // 1. Setup Users
@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->guruLain = User::factory()->create(['role' => 'guru']);
     $this->studentUser = User::factory()->create(['role' => 'student', 'phone_number' => '08987654321']);
     $this->parentUser = User::factory()->create(['role' => 'parent', 'phone_number' => '08112223334']);
-    
+
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
         'parent_id' => $this->parentUser->id,
@@ -29,12 +29,12 @@ beforeEach(function () {
     // 3. Create Library Category
     $this->category = LibraryCategory::factory()->create([
         'name' => 'Fisika',
-        'icon' => 'book'
+        'icon' => 'book',
     ]);
 
     // 4. Create Library Books
     $this->bookPhysical = LibraryBook::factory()->create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'title' => 'Fisika Dasar I',
         'author' => 'Halliday & Resnick',
         'category_id' => $this->category->id,
@@ -44,7 +44,7 @@ beforeEach(function () {
     ]);
 
     $this->bookDigital = LibraryBook::factory()->create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'title' => 'Pengenalan Quantum Physics',
         'author' => 'Stephen Hawking',
         'category_id' => $this->category->id,
@@ -137,7 +137,7 @@ test('students cannot view overdue report', function () {
 test('authorized users can send overdue reminder via WhatsApp', function () {
     // Create an overdue loan
     $loan = LibraryLoan::factory()->create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'student_id' => $this->student->id,
         'library_book_id' => $this->bookPhysical->id,
         'borrowed_at' => now()->subDays(10),

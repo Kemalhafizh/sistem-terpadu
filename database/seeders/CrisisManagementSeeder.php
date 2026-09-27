@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
-use App\Models\CrisisProtocol;
+use App\Models\BullyingReport;
 use App\Models\CrisisIncident;
+use App\Models\CrisisProtocol;
 use App\Models\CrisisResponseLog;
 use App\Models\EmergencyBroadcast;
-use App\Models\BullyingReport;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CrisisManagementSeeder extends Seeder
 {

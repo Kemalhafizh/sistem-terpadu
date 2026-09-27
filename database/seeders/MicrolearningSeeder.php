@@ -1,10 +1,11 @@
 <?php
+
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 class MicrolearningSeeder extends Seeder
 {
@@ -30,7 +31,7 @@ class MicrolearningSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        
+
         DB::table('memory_cards')->insert([
             'front_content' => 'Apa hukum nun mati bertemu ba?',
             'back_content' => 'Iqlab',

@@ -50,12 +50,12 @@ class FinanceSeeder extends Seeder
                         'amount_paid' => 750000,
                         'payment_date' => $paymentDate,
                         'payment_method' => ['cash', 'transfer'][rand(0, 1)],
-                        'receipt_number' => 'KW-' . date('Ym') . '-' . str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
-                        'note' => 'Pembayaran SPP ' . $month,
+                        'receipt_number' => 'KW-'.date('Ym').'-'.str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
+                        'note' => 'Pembayaran SPP '.$month,
                     ]);
                     $billing->update([
                         'remaining_balance' => 0,
-                        'status' => 'paid'
+                        'status' => 'paid',
                     ]);
                 }
             }
@@ -79,12 +79,12 @@ class FinanceSeeder extends Seeder
                         'amount_paid' => 5000000,
                         'payment_date' => now()->subDays(rand(5, 30))->format('Y-m-d'),
                         'payment_method' => 'transfer',
-                        'receipt_number' => 'KW-' . date('Ym') . '-' . str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
+                        'receipt_number' => 'KW-'.date('Ym').'-'.str_pad($receiptCounter++, 5, '0', STR_PAD_LEFT),
                         'note' => 'Pelunasan Uang Pangkal',
                     ]);
                     $billing->update([
                         'remaining_balance' => 0,
-                        'status' => 'paid'
+                        'status' => 'paid',
                     ]);
                 }
             }

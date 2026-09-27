@@ -15,7 +15,7 @@ class BiometricBindingService
     public function issueChallenge(User $user): array
     {
         $nonce = bin2hex(random_bytes(32));
-        Cache::put('bio_challenge:' . $user->id, $nonce, 300); // 5 min TTL
+        Cache::put('bio_challenge:'.$user->id, $nonce, 300); // 5 min TTL
 
         return [
             'challenge' => $nonce,
@@ -29,8 +29,8 @@ class BiometricBindingService
      */
     public function verifyBiometricSignature(User $user, string $signature, string $challenge): bool
     {
-        $cachedChallenge = Cache::get('bio_challenge:' . $user->id);
-        if (!$cachedChallenge || !hash_equals($cachedChallenge, $challenge)) {
+        $cachedChallenge = Cache::get('bio_challenge:'.$user->id);
+        if (! $cachedChallenge || ! hash_equals($cachedChallenge, $challenge)) {
             return false;
         }
 
@@ -40,7 +40,7 @@ class BiometricBindingService
         }
 
         // Invalidate challenge to prevent replay
-        Cache::forget('bio_challenge:' . $user->id);
+        Cache::forget('bio_challenge:'.$user->id);
 
         return true;
     }
@@ -50,7 +50,7 @@ class BiometricBindingService
      */
     public function detectAccessAnomaly(User $user, string $currentIp, string $deviceId): array
     {
-        $recentLogins = Cache::get('user_logins:' . $user->id, []);
+        $recentLogins = Cache::get('user_logins:'.$user->id, []);
         $anomalyDetected = false;
         $reasons = [];
 
@@ -68,7 +68,7 @@ class BiometricBindingService
         ];
         // Keep last 5 logins
         $recentLogins = array_slice($recentLogins, -5);
-        Cache::put('user_logins:' . $user->id, $recentLogins, 3600);
+        Cache::put('user_logins:'.$user->id, $recentLogins, 3600);
 
         return [
             'is_anomalous' => $anomalyDetected,

@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Academic;
 
 use App\Http\Controllers\Controller;
-use App\Models\Subject;
-use App\Models\Classroom;
 use App\Models\AcademicYear;
+use App\Models\Classroom;
 use App\Models\LessonPlan;
 use App\Models\QuestionBank;
+use App\Models\Subject;
 use App\Services\AiCopilotService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Exception;
 
 class AiCopilotController extends Controller
 {
@@ -37,6 +37,7 @@ class AiCopilotController extends Controller
     {
         $subjects = Subject::orderBy('name')->get();
         $classrooms = Classroom::orderBy('name')->get();
+
         return view('academic.copilot.rpp', compact('subjects', 'classrooms'));
     }
 
@@ -135,7 +136,7 @@ class AiCopilotController extends Controller
             return redirect()->route('curriculum.lesson-plans.index')
                 ->with('success', 'RPP hasil AI berhasil disimpan sebagai draft di kurikulum SISTA.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal menyimpan RPP: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan RPP: '.$e->getMessage());
         }
     }
 
@@ -145,6 +146,7 @@ class AiCopilotController extends Controller
     public function cbtForm()
     {
         $subjects = Subject::orderBy('name')->get();
+
         return view('academic.copilot.cbt', compact('subjects'));
     }
 
@@ -210,7 +212,7 @@ class AiCopilotController extends Controller
             foreach ($selectedIndexes as $index) {
                 if (isset($allQuestions[$index])) {
                     $q = $allQuestions[$index];
-                    
+
                     QuestionBank::create([
                         'subject_id' => $request->subject_id,
                         'created_by' => auth()->id(),
@@ -225,10 +227,11 @@ class AiCopilotController extends Controller
                     $importedCount++;
                 }
             }
+
             return redirect()->route('cbt.question-banks.index')
                 ->with('success', "Berhasil mengimpor {$importedCount} soal hasil AI ke Bank Soal SISTA.");
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal mengimpor soal: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengimpor soal: '.$e->getMessage());
         }
     }
 }

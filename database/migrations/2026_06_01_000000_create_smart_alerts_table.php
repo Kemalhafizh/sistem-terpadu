@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::dropIfExists('smart_alerts');
@@ -17,14 +18,14 @@ return new class extends Migration {
             $table->json('context_data')->nullable(); // Payload data pendukung (misal: rerata nilai, daftar tagihan, dll.)
             $table->morphs('alertable');             // Relasi polimorfik ke objek terkait (Student, User, UksMedicine, AssetLoan)
             $table->enum('status', ['active', 'acknowledged', 'resolved'])->default('active');
-            
+
             $table->foreignId('acknowledged_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('acknowledged_at')->nullable();
-            
+
             $table->foreignId('resolved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('resolved_at')->nullable();
             $table->text('resolution_notes')->nullable(); // Catatan penanganan masalah
-            
+
             $table->timestamps();
 
             // Optimasi indeks untuk query dasbor interaktif

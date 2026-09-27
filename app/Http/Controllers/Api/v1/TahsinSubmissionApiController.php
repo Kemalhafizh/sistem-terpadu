@@ -34,7 +34,7 @@ class TahsinSubmissionApiController extends Controller
         ]);
 
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -64,7 +64,7 @@ class TahsinSubmissionApiController extends Controller
     public function myIndex(Request $request)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -86,13 +86,13 @@ class TahsinSubmissionApiController extends Controller
     public function teacherIndex(Request $request)
     {
         $user = $request->user();
-        if (!in_array($user->role, self::TEACHER_ROLES, true)) {
+        if (! in_array($user->role, self::TEACHER_ROLES, true)) {
             return $this->errorResponse('Otorisasi ditolak', 403);
         }
 
         $query = TahsinSubmission::with('student')->withCount('annotations');
 
-        if (!in_array($user->role, ['admin', 'superadmin'], true)) {
+        if (! in_array($user->role, ['admin', 'superadmin'], true)) {
             $query->where('teacher_id', $user->id);
         }
 
@@ -116,7 +116,7 @@ class TahsinSubmissionApiController extends Controller
     public function show(Request $request, $id)
     {
         $submission = TahsinSubmission::with(['student', 'annotations.teacher'])->find($id);
-        if (!$submission) {
+        if (! $submission) {
             return $this->errorResponse('Setoran tahsin tidak ditemukan', 404);
         }
 
@@ -125,7 +125,7 @@ class TahsinSubmissionApiController extends Controller
         $isAssignedTeacher = (int) $submission->teacher_id === (int) $user->id;
         $isPrivileged = in_array($user->role, ['admin', 'superadmin'], true);
 
-        if (!$isOwner && !$isAssignedTeacher && !$isPrivileged) {
+        if (! $isOwner && ! $isAssignedTeacher && ! $isPrivileged) {
             return $this->errorResponse('Anda tidak berwenang melihat setoran ini', 403);
         }
 
@@ -148,18 +148,18 @@ class TahsinSubmissionApiController extends Controller
         ]);
 
         $user = $request->user();
-        if (!in_array($user->role, self::TEACHER_ROLES, true)) {
+        if (! in_array($user->role, self::TEACHER_ROLES, true)) {
             return $this->errorResponse('Otorisasi ditolak', 403);
         }
 
         $submission = TahsinSubmission::find($id);
-        if (!$submission) {
+        if (! $submission) {
             return $this->errorResponse('Setoran tahsin tidak ditemukan', 404);
         }
 
         $isAssignedTeacher = (int) $submission->teacher_id === (int) $user->id;
         $isPrivileged = in_array($user->role, ['admin', 'superadmin'], true);
-        if (!$isAssignedTeacher && !$isPrivileged) {
+        if (! $isAssignedTeacher && ! $isPrivileged) {
             return $this->errorResponse('Hanya guru pembimbing yang dapat memberi catatan pada setoran ini', 403);
         }
 
@@ -184,18 +184,18 @@ class TahsinSubmissionApiController extends Controller
     public function markReviewed(Request $request, $id)
     {
         $user = $request->user();
-        if (!in_array($user->role, self::TEACHER_ROLES, true)) {
+        if (! in_array($user->role, self::TEACHER_ROLES, true)) {
             return $this->errorResponse('Otorisasi ditolak', 403);
         }
 
         $submission = TahsinSubmission::find($id);
-        if (!$submission) {
+        if (! $submission) {
             return $this->errorResponse('Setoran tahsin tidak ditemukan', 404);
         }
 
         $isAssignedTeacher = (int) $submission->teacher_id === (int) $user->id;
         $isPrivileged = in_array($user->role, ['admin', 'superadmin'], true);
-        if (!$isAssignedTeacher && !$isPrivileged) {
+        if (! $isAssignedTeacher && ! $isPrivileged) {
             return $this->errorResponse('Hanya guru pembimbing yang dapat menyelesaikan evaluasi ini', 403);
         }
 

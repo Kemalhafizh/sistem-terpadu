@@ -7,9 +7,9 @@ use App\Models\ComplianceDocument;
 use App\Models\ComplianceMilestone;
 use App\Models\EdsStandard;
 use App\Services\ComplianceService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class ComplianceController extends Controller
 {
@@ -30,9 +30,9 @@ class ComplianceController extends Controller
         $report = $this->complianceService->getFullComplianceReport();
         $milestones = ComplianceMilestone::orderBy('due_date', 'asc')->get();
         $activeYear = AcademicYear::current();
-        
-        $milestonesProgress = $milestones->count() > 0 
-            ? round(($milestones->where('status', 'completed')->count() / $milestones->count()) * 100) 
+
+        $milestonesProgress = $milestones->count() > 0
+            ? round(($milestones->where('status', 'completed')->count() / $milestones->count()) * 100)
             : 0;
 
         $documentsCount = ComplianceDocument::count();
@@ -121,8 +121,8 @@ class ComplianceController extends Controller
         $milestones = ComplianceMilestone::orderBy('due_date', 'asc')->get();
         $activeYear = AcademicYear::current();
 
-        $milestonesProgress = $milestones->count() > 0 
-            ? round(($milestones->where('status', 'completed')->count() / $milestones->count()) * 100) 
+        $milestonesProgress = $milestones->count() > 0
+            ? round(($milestones->where('status', 'completed')->count() / $milestones->count()) * 100)
             : 0;
 
         return view('compliance.timeline', compact('milestones', 'activeYear', 'milestonesProgress'));
@@ -186,7 +186,7 @@ class ComplianceController extends Controller
         $documents = ComplianceDocument::with(['standard', 'uploader'])->get();
         $milestones = ComplianceMilestone::orderBy('due_date', 'asc')->get();
         $activeYear = AcademicYear::current();
-        
+
         $schoolName = school_name();
         $schoolAddress = school_address();
 

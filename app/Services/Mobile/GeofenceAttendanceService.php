@@ -14,11 +14,9 @@ use Illuminate\Support\Facades\Cache;
 
 /**
  * Class GeofenceAttendanceService
- * 
+ *
  * Provides high-precision GPS geofencing verification, anti-mock GPS detection,
  * and rotating TOTP QR token generation for school gate and classroom attendance.
- * 
- * @package App\Services\Mobile
  */
 class GeofenceAttendanceService
 {
@@ -29,12 +27,6 @@ class GeofenceAttendanceService
     /**
      * Validate mobile GPS coordinates against campus geofence boundary.
      *
-     * @param User $user
-     * @param float $latitude
-     * @param float $longitude
-     * @param float $accuracyMeters
-     * @param bool $isMockLocation
-     * @param string|null $selfieProofUrl
      * @return array<string, mixed>
      */
     public function validateCampusCheckin(
@@ -76,7 +68,7 @@ class GeofenceAttendanceService
             return [
                 'success' => false,
                 'code' => 'OUTSIDE_GEOFENCE_RADIUS',
-                'message' => 'Anda berada di luar radius kampus ' . School::shortName() . ' (Jarak: ' . round($distance) . 'm, Maksimal: ' . round($campus['radius_meters']) . 'm).',
+                'message' => 'Anda berada di luar radius kampus '.School::shortName().' (Jarak: '.round($distance).'m, Maksimal: '.round($campus['radius_meters']).'m).',
                 'distance_meters' => round($distance, 1),
             ];
         }
@@ -92,7 +84,7 @@ class GeofenceAttendanceService
                 ],
                 [
                     'status' => 'hadir',
-                    'notes' => 'Absensi Mobile Geofence GPS (Radius: ' . round($distance) . 'm)',
+                    'notes' => 'Absensi Mobile Geofence GPS (Radius: '.round($distance).'m)',
                 ]
             );
 
@@ -135,12 +127,6 @@ class GeofenceAttendanceService
 
     /**
      * Haversine formula to compute great-circle distance between two GPS points in meters.
-     *
-     * @param float $lat1
-     * @param float $lon1
-     * @param float $lat2
-     * @param float $lon2
-     * @return float
      */
     public function calculateHaversineDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
@@ -161,7 +147,6 @@ class GeofenceAttendanceService
     /**
      * Generate Dynamic Rotating TOTP QR Code Token (Time-sliced 30 seconds).
      *
-     * @param User $user
      * @return array<string, mixed>
      */
     public function generateDynamicTotpQr(User $user): array
@@ -169,7 +154,7 @@ class GeofenceAttendanceService
         $timeSlice = (int) floor(time() / 30);
         $secretKey = (string) config('app.key', 'SISTA_SA1_SECRET');
         $hash = hash_hmac('sha256', "USER:{$user->id}:SLICE:{$timeSlice}", $secretKey);
-        
+
         $token = base64_encode((string) json_encode([
             'u' => $user->id,
             'r' => $user->role,
@@ -188,19 +173,18 @@ class GeofenceAttendanceService
     /**
      * Verify a scanned Dynamic QR Code Token at school gate terminals.
      *
-     * @param string $qrToken
      * @return array<string, mixed>
      */
     public function verifyDynamicTotpQr(string $qrToken): array
     {
         try {
             $rawJson = base64_decode($qrToken, true);
-            if (!$rawJson) {
+            if (! $rawJson) {
                 return ['valid' => false, 'message' => 'Token QR tidak dapat diuraikan'];
             }
 
             $decoded = json_decode($rawJson, true);
-            if (!is_array($decoded) || !isset($decoded['u'], $decoded['ts'], $decoded['sig'])) {
+            if (! is_array($decoded) || ! isset($decoded['u'], $decoded['ts'], $decoded['sig'])) {
                 return ['valid' => false, 'message' => 'Format payload QR tidak valid'];
             }
 
@@ -217,14 +201,14 @@ class GeofenceAttendanceService
             }
 
             // Anti-Replay Check: Ensure this QR token hasn't been scanned already
-            $replayCacheKey = 'used_totp_qr:' . $decoded['sig'];
+            $replayCacheKey = 'used_totp_qr:'.$decoded['sig'];
             if (Cache::has($replayCacheKey)) {
                 return ['valid' => false, 'message' => 'Token QR ini sudah pernah dipindai sebelumnya. Silakan refresh layar HP.'];
             }
             Cache::put($replayCacheKey, true, 60);
 
             $user = User::find($decoded['u']);
-            if (!$user) {
+            if (! $user) {
                 return ['valid' => false, 'message' => 'Pengguna tidak ditemukan di database'];
             }
 
@@ -236,7 +220,7 @@ class GeofenceAttendanceService
                 'verified_at' => now()->toIso8601String(),
             ];
         } catch (\Throwable $e) {
-            return ['valid' => false, 'message' => 'Gagal memverifikasi QR: ' . $e->getMessage()];
+            return ['valid' => false, 'message' => 'Gagal memverifikasi QR: '.$e->getMessage()];
         }
     }
 }

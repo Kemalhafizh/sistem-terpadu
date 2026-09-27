@@ -12,7 +12,7 @@ class CertificateService
         return IssuedCertificate::create([
             'student_id' => $studentId,
             'template_id' => $templateId,
-            'verification_code' => 'CERT-' . strtoupper(Str::random(10)),
+            'verification_code' => 'CERT-'.strtoupper(Str::random(10)),
             'metadata' => $metadata,
             'issued_at' => now(),
         ]);

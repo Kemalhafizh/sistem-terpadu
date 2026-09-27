@@ -2,8 +2,6 @@
 
 namespace App\Services\Communication;
 
-use App\Models\DripCampaign;
-
 class DripCampaignService
 {
     public function enrollSubscriber($userId, $campaignId)

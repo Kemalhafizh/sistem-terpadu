@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ticket extends Model
 {
-    use \App\Traits\HasUuid, \App\Traits\LogsActivity, HasFactory, SoftDeletes;
+    use \App\Traits\LogsActivity, HasFactory, HasUuid, SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -42,8 +43,8 @@ class Ticket extends Model
             if (empty($ticket->ticket_number)) {
                 $year = date('Y');
                 $prefix = "TK-{$year}-";
-                
-                $lastTicket = static::where('ticket_number', 'like', $prefix . '%')
+
+                $lastTicket = static::where('ticket_number', 'like', $prefix.'%')
                     ->orderBy('ticket_number', 'desc')
                     ->first();
 
@@ -53,8 +54,8 @@ class Ticket extends Model
                 } else {
                     $newNum = 1;
                 }
-                
-                $ticket->ticket_number = $prefix . str_pad($newNum, 4, '0', STR_PAD_LEFT);
+
+                $ticket->ticket_number = $prefix.str_pad($newNum, 4, '0', STR_PAD_LEFT);
             }
 
             // Calculate dynamic SLA due date based on priority
@@ -113,6 +114,7 @@ class Ticket extends Model
         if (in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
             return $query;
         }
+
         return $query->where('reporter_id', $user->id);
     }
 
@@ -122,6 +124,7 @@ class Ticket extends Model
         if (in_array($this->status, ['resolved', 'closed'])) {
             return false;
         }
+
         return $this->due_date && $this->due_date->isPast();
     }
 }

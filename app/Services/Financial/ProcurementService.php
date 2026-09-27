@@ -25,6 +25,7 @@ class ProcurementService
     public function submitForApproval(ProcurementRequest $request): ProcurementRequest
     {
         $request->update(['status' => 'submitted']);
+
         return $request;
     }
 
@@ -35,6 +36,7 @@ class ProcurementService
             'approved_by' => $approverId,
             'approval_notes' => $notes,
         ]);
+
         return $request;
     }
 
@@ -45,6 +47,7 @@ class ProcurementService
             'approved_by' => $approverId,
             'approval_notes' => $notes,
         ]);
+
         return $request;
     }
 
@@ -58,7 +61,7 @@ class ProcurementService
         $tax = $poData['tax_amount'] ?? 0;
         $total = $subtotal + $tax;
 
-        $poNumber = 'PO-' . strtoupper(Str::random(6)) . '-' . date('Ymd');
+        $poNumber = 'PO-'.strtoupper(Str::random(6)).'-'.date('Ymd');
 
         $po = PurchaseOrder::create([
             'procurement_request_id' => $procurementRequest->id,
@@ -81,7 +84,7 @@ class ProcurementService
 
     public function recordGoodsReceived(PurchaseOrder $po, array $grnData, int $userId): GoodsReceivedNote
     {
-        $grnNumber = 'GRN-' . strtoupper(Str::random(6)) . '-' . date('Ymd');
+        $grnNumber = 'GRN-'.strtoupper(Str::random(6)).'-'.date('Ymd');
         $isComplete = $grnData['is_complete'] ?? true;
 
         $grn = GoodsReceivedNote::create([
@@ -111,6 +114,7 @@ class ProcurementService
         if ($request->purchaseOrder) {
             $request->purchaseOrder->update(['status' => 'completed']);
         }
+
         return $request;
     }
 }

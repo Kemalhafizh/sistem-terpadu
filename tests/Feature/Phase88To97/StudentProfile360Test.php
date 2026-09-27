@@ -9,18 +9,18 @@ beforeEach(function () {
 test('student can view comprehensive 360 profile', function () {
     $response = $this->actingAs($this->student)->getJson('/api/v1/profile/student/me');
     $response->assertStatus(200)
-             ->assertJsonStructure([
-                 'success',
-                 'data' => [
-                     'biodata',
-                     'akademik_summary',
-                     'ibadah_summary',
-                     'disiplin_summary',
-                     'ekskul_list',
-                     'prestasi_list',
-                     'kesehatan_summary',
-                 ]
-             ]);
+        ->assertJsonStructure([
+            'success',
+            'data' => [
+                'biodata',
+                'akademik_summary',
+                'ibadah_summary',
+                'disiplin_summary',
+                'ekskul_list',
+                'prestasi_list',
+                'kesehatan_summary',
+            ],
+        ]);
 });
 
 test('student can view academic and ibadah breakdown', function () {

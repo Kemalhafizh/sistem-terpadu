@@ -1,4 +1,5 @@
 <?php
+
 return [
     // Navigation
     'nav_home' => 'الرئيسية',

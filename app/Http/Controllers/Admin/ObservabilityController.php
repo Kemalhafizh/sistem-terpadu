@@ -57,11 +57,12 @@ class ObservabilityController extends Controller
             if (file_exists($logPath)) {
                 unlink($logPath);
             }
+
             return redirect()->route('admin.observability.dashboard')
                 ->with('success', 'Log observabilitas berhasil dikosongkan.');
         } catch (\Exception $e) {
             return redirect()->route('admin.observability.dashboard')
-                ->with('error', 'Gagal mengosongkan log: ' . $e->getMessage());
+                ->with('error', 'Gagal mengosongkan log: '.$e->getMessage());
         }
     }
 

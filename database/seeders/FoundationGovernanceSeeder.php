@@ -1,17 +1,21 @@
 <?php
+
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
-use App\Models\FoundationUnit;
-use App\Models\FoundationReport;
+
 use App\Models\FoundationBoardMeeting;
-use App\Models\WakafAsset;
-use App\Models\StaffRotation;
 use App\Models\FoundationKpi;
+use App\Models\FoundationReport;
+use App\Models\FoundationUnit;
+use App\Models\StaffRotation;
 use App\Models\UnitAccreditationRecord;
 use App\Models\User;
+use App\Models\WakafAsset;
+use Illuminate\Database\Seeder;
 
-class FoundationGovernanceSeeder extends Seeder {
-    public function run() {
+class FoundationGovernanceSeeder extends Seeder
+{
+    public function run()
+    {
         $user = User::first() ?? User::factory()->create();
 
         $tk = FoundationUnit::create(['unit_code' => 'TK-01', 'unit_name' => 'TK ISA', 'level' => 'tk', 'student_count' => 120, 'is_flagship' => false]);
@@ -35,11 +39,11 @@ class FoundationGovernanceSeeder extends Seeder {
         StaffRotation::create(['user_id' => $user->id, 'from_unit_id' => $sd->id, 'to_unit_id' => $smp->id, 'rotation_type' => 'mutasi_tetap', 'effective_date' => now(), 'reason' => 'test', 'status' => 'completed']);
         StaffRotation::create(['user_id' => $user->id, 'from_unit_id' => $smp->id, 'to_unit_id' => $sma->id, 'rotation_type' => 'mutasi_tetap', 'effective_date' => now(), 'reason' => 'test', 'status' => 'proposed']);
 
-        for ($i=0; $i<10; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             FoundationKpi::create(['kpi_name' => 'KPI '.$i, 'category' => 'akademik', 'target_value' => 100, 'actual_value' => 90, 'unit' => '%', 'fiscal_year' => 2026]);
         }
 
-        foreach([$tk, $sd, $smp, $sma, $univ] as $unit) {
+        foreach ([$tk, $sd, $smp, $sma, $univ] as $unit) {
             UnitAccreditationRecord::create(['foundation_unit_id' => $unit->id, 'accreditation_body' => 'BAN', 'accreditation_grade' => 'A', 'valid_from' => now(), 'valid_until' => now()->addYears(5), 'status' => 'active']);
         }
     }

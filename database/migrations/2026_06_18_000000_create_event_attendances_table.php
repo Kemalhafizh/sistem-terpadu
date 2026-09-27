@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('type', [
                 'upacara', 'sholat_dhuha', 'sholat_dzuhur', 'kultum',
-                'phbi', 'rapat_guru', 'osis', 'class_meeting', 'lainnya'
+                'phbi', 'rapat_guru', 'osis', 'class_meeting', 'lainnya',
             ]);
             $table->date('event_date');
             $table->time('start_time')->nullable();

@@ -2,10 +2,10 @@
 
 namespace App\Services\Crisis;
 
-use App\Models\BullyingReport;
 use App\Models\BullyingInvestigationLog;
-use Illuminate\Support\Str;
+use App\Models\BullyingReport;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AntiBullyingService
 {
@@ -13,6 +13,7 @@ class AntiBullyingService
     {
         $data['ticket_number'] = (string) Str::uuid();
         $data['status'] = 'reported';
+
         return BullyingReport::create($data);
     }
 
@@ -20,13 +21,14 @@ class AntiBullyingService
     {
         $report->update([
             'assigned_to' => $userId,
-            'status' => 'under_review'
+            'status' => 'under_review',
         ]);
     }
 
     public function logInvestigation(BullyingReport $report, array $data): BullyingInvestigationLog
     {
         $data['bullying_report_id'] = $report->id;
+
         return BullyingInvestigationLog::create($data);
     }
 

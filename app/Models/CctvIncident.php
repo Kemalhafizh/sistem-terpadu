@@ -11,7 +11,7 @@ class CctvIncident extends Model
 
     protected $fillable = [
         'camera_id', 'zone_name', 'incident_time', 'incident_type',
-        'snapshot_url', 'status', 'resolution_notes', 'resolved_by'
+        'snapshot_url', 'status', 'resolution_notes', 'resolved_by',
     ];
 
     protected $casts = [

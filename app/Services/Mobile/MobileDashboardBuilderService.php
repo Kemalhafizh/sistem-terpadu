@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services\Mobile;
 
-use App\Models\AcademicCalendar;
 use App\Models\Announcement;
 use App\Models\Classroom;
 use App\Models\Employee;
@@ -29,11 +28,11 @@ class MobileDashboardBuilderService
                 ->where('day', Carbon::now()->locale('id')->isoFormat('dddd'))
                 ->orderBy('start_time')
                 ->get()
-                ->map(fn($s) => [
+                ->map(fn ($s) => [
                     'id' => $s->id,
                     'subject' => $s->subject->name ?? 'Mata Pelajaran',
                     'class' => $s->classroom->name ?? 'Kelas',
-                    'time' => substr((string) $s->start_time, 0, 5) . ' - ' . substr((string) $s->end_time, 0, 5),
+                    'time' => substr((string) $s->start_time, 0, 5).' - '.substr((string) $s->end_time, 0, 5),
                     'room' => $s->room->name ?? 'Ruang Kelas',
                 ])
                 ->toArray();
@@ -43,7 +42,7 @@ class MobileDashboardBuilderService
         $attendancePendingCount = Classroom::where('teacher_id', $user->id)->count();
 
         // 3. School Announcements
-        $announcements = Announcement::latest()->take(3)->get()->map(fn($a) => [
+        $announcements = Announcement::latest()->take(3)->get()->map(fn ($a) => [
             'id' => $a->id,
             'title' => $a->title,
             'time_ago' => $a->created_at->diffForHumans(),

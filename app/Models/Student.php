@@ -2,34 +2,38 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
 
 class Student extends Model
 {
-    use \App\Traits\HasUuid, \App\Traits\LogsActivity, HasFactory, SoftDeletes;
+    use \App\Traits\LogsActivity, HasFactory, HasUuid, SoftDeletes;
 
     protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_date', 'address', 'status', 'total_xp', 'current_streak', 'longest_streak'];
 
     /**
      * Graceful Encrypted Attribute for Student Address (handles legacy plain-text data safely).
      */
-    protected function address(): \Illuminate\Database\Eloquent\Casts\Attribute
+    protected function address(): Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+        return Attribute::make(
             get: function ($value) {
                 if (empty($value)) {
                     return $value;
                 }
                 try {
-                    return \Illuminate\Support\Facades\Crypt::decryptString($value);
-                } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                    return Crypt::decryptString($value);
+                } catch (DecryptException $e) {
                     // Jika data lama di database masih berbentuk plain-text, kembalikan tanpa error
                     return $value;
                 }
             },
-            set: fn ($value) => !empty($value) ? \Illuminate\Support\Facades\Crypt::encryptString($value) : $value
+            set: fn ($value) => ! empty($value) ? Crypt::encryptString($value) : $value
         );
     }
 
@@ -123,6 +127,7 @@ class Student extends Model
     public function getNameAttribute()
     {
         $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+
         return $user?->name;
     }
 
@@ -132,6 +137,7 @@ class Student extends Model
     public function getEmailAttribute()
     {
         $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+
         return $user?->email;
     }
 
@@ -196,6 +202,7 @@ class Student extends Model
         $currentLevelXp = (int) floor($this->total_xp / 100) * 100;
         $nextLevelXp = $currentLevelXp + 100;
         $earnedXpInLevel = $this->total_xp - $currentLevelXp;
+
         return round(($earnedXpInLevel / 100) * 100, 1);
     }
 }

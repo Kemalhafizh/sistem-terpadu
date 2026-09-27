@@ -2,12 +2,12 @@
 
 use App\Models\Asset;
 use App\Models\AssetCategory;
+use App\Models\AssetMaintenanceTicket;
 use App\Models\Room;
 use App\Models\User;
-use App\Models\AssetMaintenanceTicket;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -24,7 +24,7 @@ beforeEach(function () {
     ]);
 
     $this->asset = Asset::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'asset_code' => 'AST-TEST-999',
         'name' => 'Proyektor BenQ',
         'category_id' => $category->id,
@@ -58,7 +58,7 @@ test('user can submit a maintenance ticket report', function () {
     ]);
 
     $response->assertStatus(302);
-    
+
     $this->assertDatabaseHas('asset_maintenance_tickets', [
         'asset_id' => $this->asset->id,
         'issue_description' => 'Lampu proyektor redup dan berkedip.',

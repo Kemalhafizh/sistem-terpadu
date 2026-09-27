@@ -4,7 +4,6 @@ namespace App\Services\Grc;
 
 use App\Models\Incident;
 use App\Models\RiskRegister;
-use Illuminate\Support\Collection;
 
 class RiskManagementService
 {

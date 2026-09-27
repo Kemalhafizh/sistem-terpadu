@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\CpdCategory;
-use App\Models\LeadershipPosition;
 use App\Models\User;
 use App\Services\HumanCapital\CpdTrackerService;
 use App\Services\HumanCapital\Evaluation360Service;

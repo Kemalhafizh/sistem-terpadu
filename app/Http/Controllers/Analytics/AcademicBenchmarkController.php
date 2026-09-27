@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Analytics;
 
 use App\Http\Controllers\Controller;
 use App\Models\AcademicBenchmark;
-use Illuminate\Http\Request;
 
 class AcademicBenchmarkController extends Controller
 {
     public function dashboard()
     {
         $benchmarks = AcademicBenchmark::with('subject')->latest()->get();
+
         return view('analytics.benchmarking.dashboard', compact('benchmarks'));
     }
 

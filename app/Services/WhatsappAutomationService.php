@@ -3,16 +3,13 @@
 namespace App\Services;
 
 use App\Models\Billing;
-use App\Models\DailyAssessmentScore;
 use App\Models\Exam;
 use App\Models\MutabaahWeeklySummary;
 use App\Models\Student;
-use App\Models\StudentAttendance;
 use App\Models\TahfidzTarget;
-use App\Models\UksVisit;
+use App\Models\User;
 use App\Models\WhatsappAutomation;
 use App\Models\WhatsappLog;
-use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -69,7 +66,7 @@ class WhatsappAutomationService
             ->with('template')
             ->first();
 
-        if (!$automation || !$automation->template || !$automation->template->is_active) {
+        if (! $automation || ! $automation->template || ! $automation->template->is_active) {
             return null;
         }
 
@@ -81,8 +78,9 @@ class WhatsappAutomationService
             $to = $notifiable->parent?->phone_number;
         }
 
-        if (!$to) {
+        if (! $to) {
             Log::warning("WhatsApp instant trigger {$triggerType} cancelled: No phone number found for notifiable.");
+
             return null;
         }
 
@@ -90,7 +88,7 @@ class WhatsappAutomationService
         $parsedMessage = $this->parseMessage($automation->template->content, $contextData);
 
         // 4. Send message
-        return $this->whatsappService->sendMessage($to, $parsedMessage, 'automation_' . $triggerType);
+        return $this->whatsappService->sendMessage($to, $parsedMessage, 'automation_'.$triggerType);
     }
 
     /**
@@ -112,7 +110,9 @@ class WhatsappAutomationService
             ->with('template')
             ->first();
 
-        if (!$automation) return;
+        if (! $automation) {
+            return;
+        }
 
         $targetDate = Carbon::today()->addDays(3)->toDateString();
         $billings = Billing::whereIn('status', ['unpaid', 'partial'])
@@ -129,7 +129,7 @@ class WhatsappAutomationService
                     'nama_siswa' => $student->name,
                     'nama_orang_tua' => $parent->name,
                     'jenis_tagihan' => $billing->category?->name ?? 'SPP',
-                    'tagihan' => 'Rp ' . number_format($billing->remaining_balance, 0, ',', '.'),
+                    'tagihan' => 'Rp '.number_format($billing->remaining_balance, 0, ',', '.'),
                     'batas_waktu' => $billing->due_date->format('d-m-Y'),
                 ];
 
@@ -146,7 +146,9 @@ class WhatsappAutomationService
             ->with('template')
             ->first();
 
-        if (!$automation) return;
+        if (! $automation) {
+            return;
+        }
 
         $billings = Billing::whereIn('status', ['unpaid', 'partial'])
             ->whereDate('due_date', '<', Carbon::today())
@@ -162,7 +164,7 @@ class WhatsappAutomationService
                     'nama_siswa' => $student->name,
                     'nama_orang_tua' => $parent->name,
                     'jenis_tagihan' => $billing->category?->name ?? 'SPP',
-                    'tagihan' => 'Rp ' . number_format($billing->remaining_balance, 0, ',', '.'),
+                    'tagihan' => 'Rp '.number_format($billing->remaining_balance, 0, ',', '.'),
                     'batas_waktu' => $billing->due_date->format('d-m-Y'),
                 ];
 
@@ -179,7 +181,9 @@ class WhatsappAutomationService
             ->with('template')
             ->first();
 
-        if (!$automation) return;
+        if (! $automation) {
+            return;
+        }
 
         $tomorrow = Carbon::tomorrow();
         $exams = Exam::whereDate('start_time', $tomorrow->toDateString())
@@ -213,7 +217,9 @@ class WhatsappAutomationService
             ->with('template')
             ->first();
 
-        if (!$automation) return;
+        if (! $automation) {
+            return;
+        }
 
         // Get summaries for previous week or current incomplete week that have grade D
         $summaries = MutabaahWeeklySummary::where('grade', 'D')
@@ -248,7 +254,9 @@ class WhatsappAutomationService
             ->with('template')
             ->first();
 
-        if (!$automation) return;
+        if (! $automation) {
+            return;
+        }
 
         $targets = TahfidzTarget::where('status', 'behind')
             ->with('student.parent')

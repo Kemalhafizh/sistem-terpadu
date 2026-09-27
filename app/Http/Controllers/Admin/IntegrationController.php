@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Models\IntegrationConfig;
 use App\Models\IntegrationLog;
 use App\Models\Webhook;
-use App\Models\Classroom;
 use App\Services\Integration\DapodikService;
 use App\Services\Integration\EmisService;
+use App\Services\Security\SsrfGuardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Crypt;
 use Maatwebsite\Excel\Facades\Excel;
 
 class IntegrationController extends Controller
 {
     protected $dapodikService;
+
     protected $emisService;
 
     public function __construct(DapodikService $dapodikService, EmisService $emisService)
@@ -101,7 +102,7 @@ class IntegrationController extends Controller
 
         try {
             $export = $this->dapodikService->generateDapodikExcel($type, $classroomId, $month);
-            
+
             $allData = [];
             if ($type === 'students') {
                 $allData = $this->dapodikService->exportStudentData($classroomId);
@@ -128,7 +129,8 @@ class IntegrationController extends Controller
 
             $config->update(['last_sync_at' => now()]);
 
-            $filename = 'Dapodik_' . ucfirst($type) . '_' . date('Ymd_His') . '.xlsx';
+            $filename = 'Dapodik_'.ucfirst($type).'_'.date('Ymd_His').'.xlsx';
+
             return Excel::download($export, $filename);
 
         } catch (\Exception $e) {
@@ -140,10 +142,10 @@ class IntegrationController extends Controller
                 'records_processed' => 0,
                 'records_failed' => 0,
                 'error_details' => [['message' => $e->getMessage()]],
-                'summary' => "Gagal mengekspor data {$type} Dapodik: " . $e->getMessage(),
+                'summary' => "Gagal mengekspor data {$type} Dapodik: ".$e->getMessage(),
             ]);
 
-            return back()->with('error', 'Gagal memproses ekspor Dapodik: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses ekspor Dapodik: '.$e->getMessage());
         }
     }
 
@@ -184,7 +186,7 @@ class IntegrationController extends Controller
 
         try {
             $export = $this->emisService->generateEmisExcel($type, $classroomId);
-            
+
             $allData = [];
             if ($type === 'students') {
                 $allData = $this->emisService->exportStudentData($classroomId);
@@ -206,7 +208,8 @@ class IntegrationController extends Controller
 
             $config->update(['last_sync_at' => now()]);
 
-            $filename = 'EMIS_' . ucfirst($type) . '_' . date('Ymd_His') . '.xlsx';
+            $filename = 'EMIS_'.ucfirst($type).'_'.date('Ymd_His').'.xlsx';
+
             return Excel::download($export, $filename);
 
         } catch (\Exception $e) {
@@ -218,10 +221,10 @@ class IntegrationController extends Controller
                 'records_processed' => 0,
                 'records_failed' => 0,
                 'error_details' => [['message' => $e->getMessage()]],
-                'summary' => "Gagal mengekspor data {$type} EMIS: " . $e->getMessage(),
+                'summary' => "Gagal mengekspor data {$type} EMIS: ".$e->getMessage(),
             ]);
 
-            return back()->with('error', 'Gagal memproses ekspor EMIS: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses ekspor EMIS: '.$e->getMessage());
         }
     }
 
@@ -231,6 +234,7 @@ class IntegrationController extends Controller
     public function webhooks()
     {
         $webhooks = Webhook::latest()->get();
+
         return view('integrations.webhooks', compact('webhooks'));
     }
 
@@ -244,9 +248,9 @@ class IntegrationController extends Controller
         ]);
 
         try {
-            $validatedUrl = \App\Services\Security\SsrfGuardService::validateUrl($request->url);
+            $validatedUrl = SsrfGuardService::validateUrl($request->url);
         } catch (\InvalidArgumentException $e) {
-            return back()->withInput()->with('error', 'URL Webhook ditolak demi keamanan (SSRF Protection): ' . $e->getMessage());
+            return back()->withInput()->with('error', 'URL Webhook ditolak demi keamanan (SSRF Protection): '.$e->getMessage());
         }
 
         Webhook::create([
@@ -270,9 +274,9 @@ class IntegrationController extends Controller
         ]);
 
         try {
-            $validatedUrl = \App\Services\Security\SsrfGuardService::validateUrl($request->url);
+            $validatedUrl = SsrfGuardService::validateUrl($request->url);
         } catch (\InvalidArgumentException $e) {
-            return back()->withInput()->with('error', 'URL Webhook ditolak demi keamanan (SSRF Protection): ' . $e->getMessage());
+            return back()->withInput()->with('error', 'URL Webhook ditolak demi keamanan (SSRF Protection): '.$e->getMessage());
         }
 
         $webhook->update([
@@ -289,6 +293,7 @@ class IntegrationController extends Controller
     public function destroyWebhook(Webhook $webhook)
     {
         $webhook->delete();
+
         return redirect()->route('admin.integrations.webhooks.index')->with('success', 'Webhook berhasil dihapus.');
     }
 
@@ -306,20 +311,20 @@ class IntegrationController extends Controller
                 'nisn' => '0098765432',
                 'gender' => 'L',
                 'kelas' => 'X-A',
-            ]
+            ],
         ];
 
         $signature = $webhook->secret ? hash_hmac('sha256', json_encode($payload), $webhook->secret) : 'none';
 
         try {
-            \App\Services\Security\SsrfGuardService::validateUrl($webhook->url);
+            SsrfGuardService::validateUrl($webhook->url);
 
             $startTime = microtime(true);
             $response = Http::withHeaders([
                 'X-Sista-Signature' => $signature,
                 'Content-Type' => 'application/json',
             ])->timeout(5)->post($webhook->url, $payload);
-            
+
             $latency = round((microtime(true) - $startTime) * 1000);
 
             $webhook->update([
@@ -344,7 +349,7 @@ class IntegrationController extends Controller
                 'status' => 500,
                 'successful' => false,
                 'latency_ms' => 0,
-                'body' => 'Gagal terhubung ke endpoint tujuan: ' . $e->getMessage(),
+                'body' => 'Gagal terhubung ke endpoint tujuan: '.$e->getMessage(),
             ]);
         }
     }
@@ -355,6 +360,7 @@ class IntegrationController extends Controller
     public function logs()
     {
         $logs = IntegrationLog::with('config')->latest()->paginate(15);
+
         return view('integrations.logs', compact('logs'));
     }
 }

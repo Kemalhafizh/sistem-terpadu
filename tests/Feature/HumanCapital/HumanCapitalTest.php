@@ -16,7 +16,9 @@ class HumanCapitalTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $teacher;
+
     protected User $student;
 
     protected function setUp(): void

@@ -25,6 +25,7 @@ class ContextualHomeController extends Controller
     {
         $user = $request->user();
         $payload = $this->homeService->getHomePayload($user);
+
         return $this->successResponse($payload, 'Contextual home data retrieved successfully');
     }
 
@@ -35,6 +36,7 @@ class ContextualHomeController extends Controller
     {
         $user = $request->user();
         $suggestions = $this->homeService->getSmartSuggestions($user);
+
         return $this->successResponse($suggestions, 'Smart suggestions retrieved successfully');
     }
 
@@ -47,6 +49,7 @@ class ContextualHomeController extends Controller
         if ($suggestionId) {
             $this->homeService->dismissSuggestion($request->user()->id, $suggestionId);
         }
+
         return $this->successResponse(null, 'Suggestion dismissed successfully');
     }
 }

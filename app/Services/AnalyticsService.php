@@ -18,7 +18,7 @@ class AnalyticsService
         $cacheKey = 'analytics_attendance_trend_'.$months;
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             $driver = DB::getDriverName();
             $monthExpression = $driver === 'sqlite' ? "strftime('%Y-%m', date)" : "DATE_FORMAT(date, '%Y-%m')";
 
@@ -77,7 +77,7 @@ class AnalyticsService
         $cacheKey = 'analytics_grade_distribution_'.($classroomId ?? 'global');
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             // Top 10 Subjects Average
             $topQuery = DB::table('grades')
                 ->join('subjects', 'grades.subject_id', '=', 'subjects.id')
@@ -92,7 +92,7 @@ class AnalyticsService
             $topSubjects = $topQuery->orderByDesc('average')
                 ->limit(10)
                 ->get()
-                ->map(fn($item) => (array) $item)
+                ->map(fn ($item) => (array) $item)
                 ->all();
 
             // Distribution score ranges
@@ -120,7 +120,7 @@ class AnalyticsService
                     ->groupBy('classrooms.id', 'classrooms.name')
                     ->orderBy('classrooms.name')
                     ->get()
-                    ->map(fn($item) => (array) $item)
+                    ->map(fn ($item) => (array) $item)
                     ->all();
             }
 
@@ -139,10 +139,10 @@ class AnalyticsService
         }
 
         if (isset($data['top_subjects'])) {
-            $data['top_subjects'] = array_map(fn($item) => (object) $item, $data['top_subjects']);
+            $data['top_subjects'] = array_map(fn ($item) => (object) $item, $data['top_subjects']);
         }
         if (isset($data['class_averages'])) {
-            $data['class_averages'] = array_map(fn($item) => (object) $item, $data['class_averages']);
+            $data['class_averages'] = array_map(fn ($item) => (object) $item, $data['class_averages']);
         }
 
         return $data;
@@ -156,7 +156,7 @@ class AnalyticsService
         $cacheKey = 'analytics_financial_overview';
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             // Global overview
             $globalRaw = DB::table('billings')
                 ->selectRaw('SUM(amount) as total, SUM(amount - remaining_balance) as paid, SUM(remaining_balance) as unpaid')
@@ -219,7 +219,7 @@ class AnalyticsService
         $cacheKey = 'analytics_point_statistics';
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             // Global points
             $globalRaw = DB::table('student_point_logs')
                 ->selectRaw("
@@ -276,7 +276,7 @@ class AnalyticsService
         $cacheKey = 'analytics_elearning_metrics';
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             $totalClasses = DB::table('elearning_classes')->count();
             $totalAssignments = DB::table('elearning_assignments')->count();
 
@@ -296,7 +296,7 @@ class AnalyticsService
                 ->orderByDesc('total_classes')
                 ->limit(5)
                 ->get()
-                ->map(fn($item) => (array) $item)
+                ->map(fn ($item) => (array) $item)
                 ->all();
 
             $data = [
@@ -312,7 +312,7 @@ class AnalyticsService
         }
 
         if (isset($data['active_teachers'])) {
-            $data['active_teachers'] = array_map(fn($item) => (object) $item, $data['active_teachers']);
+            $data['active_teachers'] = array_map(fn ($item) => (object) $item, $data['active_teachers']);
         }
 
         return $data;
@@ -326,7 +326,7 @@ class AnalyticsService
         $cacheKey = 'analytics_spmb_comparison';
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             $driver = DB::getDriverName();
             $yearExpression = $driver === 'sqlite' ? "strftime('%Y', created_at)" : 'YEAR(created_at)';
 
@@ -335,7 +335,7 @@ class AnalyticsService
                 ->groupBy('year')
                 ->orderBy('year')
                 ->get()
-                ->map(fn($item) => (array) $item)
+                ->map(fn ($item) => (array) $item)
                 ->all();
 
             $data = [
@@ -345,7 +345,7 @@ class AnalyticsService
         }
 
         if (isset($data['growth'])) {
-            $data['growth'] = array_map(fn($item) => (object) $item, $data['growth']);
+            $data['growth'] = array_map(fn ($item) => (object) $item, $data['growth']);
         }
 
         return $data;
@@ -359,7 +359,7 @@ class AnalyticsService
         $cacheKey = 'analytics_teacher_performance';
         $data = Cache::get($cacheKey);
 
-        if ($data === null || $data instanceof \__PHP_Incomplete_Class || !is_array($data)) {
+        if ($data === null || $data instanceof \__PHP_Incomplete_Class || ! is_array($data)) {
             $teacherPerformance = DB::table('teaching_journals')
                 ->join('users', 'teaching_journals.user_id', '=', 'users.id')
                 ->select(
@@ -371,7 +371,7 @@ class AnalyticsService
                 ->orderByDesc('total_journals')
                 ->limit(10)
                 ->get()
-                ->map(fn($item) => (array) $item)
+                ->map(fn ($item) => (array) $item)
                 ->all();
 
             $data = [
@@ -381,7 +381,7 @@ class AnalyticsService
         }
 
         if (isset($data['performance'])) {
-            $data['performance'] = array_map(fn($item) => (object) $item, $data['performance']);
+            $data['performance'] = array_map(fn ($item) => (object) $item, $data['performance']);
         }
 
         return $data;

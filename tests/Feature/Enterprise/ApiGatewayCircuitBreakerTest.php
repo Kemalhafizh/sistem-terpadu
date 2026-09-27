@@ -5,12 +5,11 @@ use App\Models\User;
 use App\Services\CircuitBreakerService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->student = User::factory()->create(['role' => 'student']);
-    $this->cb = new CircuitBreakerService();
+    $this->cb = new CircuitBreakerService;
     $this->cb->resetCircuit('test_service');
 });
 
@@ -34,10 +33,11 @@ test('circuit breaker service executes fallback when open', function () {
         'test_service',
         function () use (&$primaryCalled) {
             $primaryCalled = true;
+
             return 'PRIMARY';
         },
         function ($reason) {
-            return 'FALLBACK: ' . $reason;
+            return 'FALLBACK: '.$reason;
         }
     );
 
@@ -46,7 +46,7 @@ test('circuit breaker service executes fallback when open', function () {
 });
 
 test('role based rate limiter middleware sets rate limit headers', function () {
-    $middleware = new RoleBasedRateLimiterMiddleware();
+    $middleware = new RoleBasedRateLimiterMiddleware;
     $request = Request::create('/api/v1/gateway/test', 'GET');
 
     $response = $middleware->handle($request, function () {

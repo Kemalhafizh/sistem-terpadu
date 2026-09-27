@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
+use App\Models\Exam;
 use App\Models\ParentMessage;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -22,7 +23,7 @@ Broadcast::channel('user.{id}', function (User $user, int $id) {
 
 Broadcast::channel('chat.{studentId}', function (User $user, int $studentId) {
     $student = Student::find($studentId);
-    if (!$student) {
+    if (! $student) {
         return false;
     }
 
@@ -49,10 +50,11 @@ Broadcast::channel('dashboard', function (User $user) {
 });
 
 Broadcast::channel('cbt.exam.{examId}', function (User $user, int $examId) {
-    $exam = \App\Models\Exam::find($examId);
-    if (!$exam) {
+    $exam = Exam::find($examId);
+    if (! $exam) {
         return false;
     }
+
     return (int) $exam->created_by === (int) $user->id ||
            in_array($user->role, ['admin', 'superadmin', 'waka_kurikulum', 'kepala_sekolah']);
 });
@@ -64,7 +66,7 @@ Broadcast::channel('cbt.exam.{examId}', function (User $user, int $examId) {
 // fan-out from CbtEnterpriseService::proctorBroadcastWarning()).
 Broadcast::channel('cbt.exam.{examId}.student.{studentId}', function (User $user, int $examId, int $studentId) {
     $student = Student::find($studentId);
-    if (!$student) {
+    if (! $student) {
         return false;
     }
 
@@ -72,7 +74,8 @@ Broadcast::channel('cbt.exam.{examId}.student.{studentId}', function (User $user
         return true;
     }
 
-    $exam = \App\Models\Exam::find($examId);
+    $exam = Exam::find($examId);
+
     return $exam && (
         (int) $exam->created_by === (int) $user->id ||
         in_array($user->role, ['admin', 'superadmin', 'waka_kurikulum', 'kepala_sekolah'])

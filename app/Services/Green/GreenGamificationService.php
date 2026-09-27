@@ -2,8 +2,6 @@
 
 namespace App\Services\Green;
 
-use App\Models\EcoParticipation;
-
 class GreenGamificationService
 {
     public function awardEcoPoints()

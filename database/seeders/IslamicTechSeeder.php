@@ -1,10 +1,11 @@
 <?php
+
 namespace Database\Seeders;
 
+use App\Models\Employee;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Student;
-use App\Models\Employee;
 
 class IslamicTechSeeder extends Seeder
 {
@@ -31,13 +32,13 @@ class IslamicTechSeeder extends Seeder
             'hijri_start_date' => '1 Ramadan 1447',
             'description' => 'Bulan Suci Ramadan',
         ]);
-        
+
         DB::table('spiritual_portfolios')->insert([
             'student_id' => $student->id,
             'record_date' => now(),
             'daily_prayers' => json_encode(['fajr' => true, 'dhuhr' => true, 'asr' => true, 'maghrib' => true, 'isha' => true]),
         ]);
-        
+
         DB::table('dawah_contents')->insert([
             'author_id' => $employee->id,
             'title' => 'Keutamaan Shalat Dhuha',

@@ -10,7 +10,7 @@ class ExitInterview extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_id', 'interviewer_id', 'interview_date', 'reasons_for_leaving', 'constructive_feedback', 'status'
+        'employee_id', 'interviewer_id', 'interview_date', 'reasons_for_leaving', 'constructive_feedback', 'status',
     ];
 
     protected $casts = [

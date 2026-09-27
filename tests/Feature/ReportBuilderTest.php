@@ -2,12 +2,10 @@
 
 /** @var TestCase|stdClass $this */
 
-use App\Models\User;
-use App\Models\Student;
 use App\Models\CustomReport;
-use App\Services\ReportBuilderService;
+use App\Models\Student;
+use App\Models\User;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Hash;
 
 beforeEach(function () {
     config(['security.test_force_logout' => false]);
@@ -42,7 +40,7 @@ test('user can store custom report template successfully', function () {
         'source' => 'students',
         'columns' => ['nis', 'name', 'classroom_name'],
         'filters' => [
-            ['column' => 'gender', 'operator' => '=', 'value' => 'L']
+            ['column' => 'gender', 'operator' => '=', 'value' => 'L'],
         ],
         'chartType' => 'bar',
         'is_shared' => '1',
@@ -62,7 +60,7 @@ test('user can trigger live preview ajax endpoint', function () {
         'gender' => 'L',
         'nis' => '12345',
     ]);
-    
+
     // Update name to Ahmad Faisal for exact matching
     $studentUser = $student->user;
     $studentUser->update(['name' => 'Ahmad Faisal']);
@@ -73,7 +71,7 @@ test('user can trigger live preview ajax endpoint', function () {
         'source' => 'students',
         'columns' => ['nis', 'name', 'classroom_name'],
         'filters' => [
-            ['column' => 'gender', 'operator' => '=', 'value' => 'L']
+            ['column' => 'gender', 'operator' => '=', 'value' => 'L'],
         ],
     ]);
 

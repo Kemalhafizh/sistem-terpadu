@@ -1,26 +1,23 @@
 <?php
 
+use App\Models\CharityDonation;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\WadiahAccount;
-use App\Models\CharityCampaign;
-use App\Models\CharityDonation;
 use App\Services\CharityService;
 use App\Services\WadiahService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->parent = User::factory()->create(['role' => 'parent']);
     $this->student = Student::factory()->create(['parent_id' => $this->parent->id]);
-    
+
     // Create wadiah account for student
     $wadiahService = app(WadiahService::class);
     $this->wadiahAccount = $wadiahService->createAccount($this->student);
     $wadiahService->deposit($this->wadiahAccount, 100000, $this->admin->id, 'Initial Deposit');
 
     $this->charityService = app(CharityService::class);
-    
+
     $this->campaign = $this->charityService->createCampaign([
         'title' => 'Wakaf Masjid',
         'type' => 'wakaf',
@@ -44,7 +41,7 @@ test('admin can create campaign', function () {
 
 test('user can submit a bank transfer donation which starts as pending', function () {
     $user = $this->parent;
-    
+
     $response = $this->actingAs($user)->post(route('portal.charity.donate.store'), [
         'charity_campaign_id' => $this->campaign->id,
         'amount' => 50000,
@@ -54,7 +51,7 @@ test('user can submit a bank transfer donation which starts as pending', functio
     ]);
 
     $response->assertStatus(302);
-    
+
     $this->assertDatabaseHas('charity_donations', [
         'charity_campaign_id' => $this->campaign->id,
         'amount' => 50000,
@@ -77,17 +74,17 @@ test('admin can verify a pending donation', function () {
     $response = $this->actingAs($this->admin)->post(route('admin.finance.charity.verify', $donation->id));
 
     $response->assertStatus(302);
-    
+
     $donation->refresh();
     expect($donation->status)->toBe('verified');
-    
+
     $this->campaign->refresh();
     expect($this->campaign->collected_amount)->toEqual(50000);
 });
 
 test('student can donate via wadiah wallet with auto-debit and instant verification', function () {
     $studentUser = $this->student->user; // get the student's User model
-    
+
     $response = $this->actingAs($studentUser)->post(route('portal.charity.donate.store'), [
         'charity_campaign_id' => $this->campaign->id,
         'amount' => 10000, // exact limit
@@ -110,7 +107,7 @@ test('student can donate via wadiah wallet with auto-debit and instant verificat
 
 test('student cannot donate via wadiah wallet more than 10k', function () {
     $studentUser = $this->student->user;
-    
+
     $response = $this->actingAs($studentUser)->post(route('portal.charity.donate.store'), [
         'charity_campaign_id' => $this->campaign->id,
         'amount' => 15000, // exceeds 10k limit

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services\Analytics;
 
-use App\Models\Billing;
 use App\Models\TreasuryForecast;
 
 class DynamicTreasuryForecastingService

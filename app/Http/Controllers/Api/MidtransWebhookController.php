@@ -41,6 +41,7 @@ class MidtransWebhookController extends Controller
         if (! $isSimulation) {
             if (empty($serverKey)) {
                 Log::error('Midtrans Webhook: Server key tidak terkonfigurasi pada server production!');
+
                 return response()->json(['message' => 'Payment gateway server key misconfigured'], 500);
             }
 

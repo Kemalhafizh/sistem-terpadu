@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('user_device_tokens')) {
+        if (! Schema::hasTable('user_device_tokens')) {
             Schema::create('user_device_tokens', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -31,7 +31,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('sync_logs')) {
+        if (! Schema::hasTable('sync_logs')) {
             Schema::create('sync_logs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->cascadeOnDelete();

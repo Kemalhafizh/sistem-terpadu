@@ -60,14 +60,15 @@ class Survey extends Model
     public function scopeOpen($query)
     {
         $now = now();
+
         return $query->where('status', 'active')
             ->where(function ($q) use ($now) {
                 $q->whereNull('start_date')
-                  ->orWhere('start_date', '<=', $now);
+                    ->orWhere('start_date', '<=', $now);
             })
             ->where(function ($q) use ($now) {
                 $q->whereNull('end_date')
-                  ->orWhere('end_date', '>=', $now);
+                    ->orWhere('end_date', '>=', $now);
             });
     }
 
@@ -76,9 +77,10 @@ class Survey extends Model
         if (empty($role)) {
             return $query;
         }
+
         return $query->where(function ($q) use ($role) {
             $q->whereNull('target_role')
-              ->orWhere('target_role', $role);
+                ->orWhere('target_role', $role);
         });
     }
 

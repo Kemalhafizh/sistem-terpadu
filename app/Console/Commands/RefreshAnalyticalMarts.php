@@ -19,8 +19,8 @@ class RefreshAnalyticalMarts extends Command
 
         $result = $olapService->refreshAllMarts($date);
 
-        $this->info("Refresh EDW Data Marts Selesai:");
-        $this->line("- Financial Data Mart: UPDATED");
+        $this->info('Refresh EDW Data Marts Selesai:');
+        $this->line('- Financial Data Mart: UPDATED');
         $this->line("- Student KPI Mart: {$result['student_kpis_count']} Record");
         $this->line("- Employee Performance Mart: {$result['employee_performances_count']} Record");
 

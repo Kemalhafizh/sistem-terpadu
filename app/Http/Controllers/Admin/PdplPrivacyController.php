@@ -79,6 +79,6 @@ class PdplPrivacyController extends Controller
             return back()->with('success', "Protokol Hak untuk Dilupakan (Right to be Forgotten - UU PDP) berhasil dieksekusi untuk User #{$user->id}!");
         }
 
-        return back()->with('error', "Gagal mengeksekusi protokol hak untuk dilupakan.");
+        return back()->with('error', 'Gagal mengeksekusi protokol hak untuk dilupakan.');
     }
 }

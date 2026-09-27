@@ -1,4 +1,5 @@
 <?php
+
 return [
     'student_list' => 'Daftar Siswa Terdaftar',
     'add_student' => 'Tambah Siswa Baru',

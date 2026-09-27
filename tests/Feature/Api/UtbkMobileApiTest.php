@@ -19,11 +19,17 @@ class UtbkMobileApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $studentUser;
+
     protected Student $student;
+
     protected Tryout $activeTryout;
+
     protected TryoutQuestion $q1;
+
     protected TryoutQuestion $q2;
+
     protected PtnProgram $ptn1;
+
     protected PtnProgram $ptn2;
 
     protected function setUp(): void
@@ -32,7 +38,7 @@ class UtbkMobileApiTest extends TestCase
 
         $academicYear = AcademicYear::factory()->create(['is_active' => true]);
         $classroom = Classroom::factory()->create(['academic_year' => '2026/2027']);
-        
+
         $this->studentUser = User::factory()->create(['role' => 'student']);
         $this->student = Student::factory()->create([
             'user_id' => $this->studentUser->id,
@@ -97,7 +103,7 @@ class UtbkMobileApiTest extends TestCase
         ];
 
         $response = $this->postJson("/api/v1/utbk/tryouts/{$this->activeTryout->id}/submit", [
-            'answers' => $answers
+            'answers' => $answers,
         ]);
 
         $response->assertStatus(200)
@@ -108,7 +114,7 @@ class UtbkMobileApiTest extends TestCase
         // Assert attempt is created with calculated score
         $attempt = TryoutAttempt::where('student_id', $this->student->id)->first();
         $this->assertNotNull($attempt);
-        
+
         // Check scores. With MLE and 1 correct (easy), 1 wrong (hard), theta should be around 0.
         // Base UTBK score = 500. So we expect score ~ 500.
         $this->assertTrue($attempt->score_tps > 300 && $attempt->score_tps < 700);
@@ -138,10 +144,10 @@ class UtbkMobileApiTest extends TestCase
 
         // Now change attempt score to 600
         TryoutAttempt::where('student_id', $this->student->id)->update(['total_score' => 600]);
-        
+
         $response2 = $this->getJson('/api/v1/utbk/recommendations');
         $recs2 = $response2->json('recommendations');
-        
+
         $this->assertCount(1, $recs2); // Only UB (550) should be recommended, UI (750) is excluded
         $this->assertEquals('Universitas Brawijaya', $recs2[0]['university']);
     }
@@ -158,7 +164,7 @@ class UtbkMobileApiTest extends TestCase
         ]);
 
         $response = $this->postJson("/api/v1/utbk/tryouts/{$this->activeTryout->id}/submit", [
-            'answers' => [$this->q1->id => 'A']
+            'answers' => [$this->q1->id => 'A'],
         ]);
 
         $response->assertStatus(400);

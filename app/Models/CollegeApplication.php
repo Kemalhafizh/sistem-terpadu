@@ -10,7 +10,7 @@ class CollegeApplication extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', 'university_catalog_id', 'admission_type', 'status', 'counselor_id'
+        'student_id', 'university_catalog_id', 'admission_type', 'status', 'counselor_id',
     ];
 
     public function student()

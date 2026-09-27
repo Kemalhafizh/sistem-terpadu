@@ -41,7 +41,9 @@ class LearningPathService
     public function calculateProgress(int $pathId): int
     {
         $path = LearningPath::with('items')->find($pathId);
-        if (!$path || $path->items->isEmpty()) return 0;
+        if (! $path || $path->items->isEmpty()) {
+            return 0;
+        }
 
         $completed = $path->items->where('is_completed', true)->count();
         $total = $path->items->count();
@@ -56,7 +58,9 @@ class LearningPathService
     public function evaluateImprovement(int $pathId): float
     {
         $path = LearningPath::find($pathId);
-        if (!$path || is_null($path->pre_score) || is_null($path->post_score)) return 0.0;
+        if (! $path || is_null($path->pre_score) || is_null($path->post_score)) {
+            return 0.0;
+        }
 
         return $path->post_score - $path->pre_score;
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Services\ParentExperienceService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ParentPortalController extends Controller
     private function authorizeChildAccess(Request $request, ?int $childId = null): int
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             abort(401, 'Unauthenticated');
         }
 
@@ -32,14 +33,14 @@ class ParentPortalController extends Controller
 
         // 2. Parent / Orangtua: must be registered parent of this child
         if (in_array($user->role, ['parent', 'orangtua'], true)) {
-            $studentQuery = \App\Models\Student::where('parent_id', $user->id);
+            $studentQuery = Student::where('parent_id', $user->id);
             if ($childId !== null) {
                 $child = $studentQuery->where('id', $childId)->first();
             } else {
                 $child = $studentQuery->first();
             }
 
-            if (!$child) {
+            if (! $child) {
                 abort(403, 'Akses ditolak. Anda tidak berwenang mengakses data siswa ini.');
             }
 
@@ -53,6 +54,7 @@ class ParentPortalController extends Controller
             if ($childId !== null && (int) $childId !== $ownId) {
                 abort(403, 'Akses ditolak. Siswa dilarang menginspeksi aktivitas siswa lain.');
             }
+
             return $ownId;
         }
 
@@ -66,6 +68,7 @@ class ParentPortalController extends Controller
     {
         $resolvedId = $this->authorizeChildAccess($request, $childId !== null ? (int) $childId : null);
         $feed = $this->parentService->getChildActivityFeed($resolvedId);
+
         return $this->successResponse($feed, 'Child activity feed retrieved successfully');
     }
 
@@ -76,6 +79,7 @@ class ParentPortalController extends Controller
     {
         $resolvedId = $this->authorizeChildAccess($request, $childId !== null ? (int) $childId : null);
         $digest = $this->parentService->generateWeeklyDigest($resolvedId);
+
         return $this->successResponse($digest, 'Weekly digest retrieved successfully');
     }
 
@@ -86,6 +90,7 @@ class ParentPortalController extends Controller
     {
         $resolvedId = $this->authorizeChildAccess($request, $childId !== null ? (int) $childId : null);
         $benchmark = $this->parentService->getChildVsClassAverage($resolvedId);
+
         return $this->successResponse($benchmark, 'Benchmark class comparison retrieved successfully');
     }
 
@@ -96,6 +101,7 @@ class ParentPortalController extends Controller
     {
         $parentId = $request->user() ? $request->user()->id : 1;
         $actions = $this->parentService->getParentQuickActions($parentId);
+
         return $this->successResponse($actions, 'Parent quick actions retrieved successfully');
     }
 }

@@ -2,14 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\ChatbotFaq;
-use App\Models\ChatbotConversation;
-use App\Models\User;
-use App\Models\Student;
 use App\Models\Attendance;
 use App\Models\Billing;
-use App\Models\Ticket;
+use App\Models\ChatbotConversation;
+use App\Models\ChatbotFaq;
+use App\Models\Exam;
+use App\Models\Student;
 use App\Models\TeachingJournal;
+use App\Models\Ticket;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class ChatbotService
@@ -25,17 +27,19 @@ class ChatbotService
         $contextResponse = $this->getContextualResponse($user, $message);
         if ($contextResponse) {
             $conversation = $this->logConversation($user, $message, $contextResponse['reply'], $contextResponse['intent'], $contextResponse['context'], 1.0);
+
             return [
                 'reply' => $contextResponse['reply'],
                 'intent' => $contextResponse['intent'],
                 'conversation_id' => $conversation->id,
             ];
         }
-        
+
         // 1. Try to match Data Query Intent
         $dataResponse = $this->handleDataQueryIntent($user, $normalizedMessage);
         if ($dataResponse) {
             $conversation = $this->logConversation($user, $message, $dataResponse['reply'], 'query_data', $dataResponse['context'], 1.0);
+
             return [
                 'reply' => $dataResponse['reply'],
                 'intent' => 'query_data',
@@ -48,6 +52,7 @@ class ChatbotService
         if ($navResponse) {
             $reply = "Tentu! Saya dapat membantu Anda menavigasi ke sana. Klik tautan berikut untuk membuka: <a href=\"{$navResponse['url']}\" class=\"text-blue-400 hover:text-blue-300 font-semibold underline\">{$navResponse['label']}</a>.";
             $conversation = $this->logConversation($user, $message, $reply, 'navigate', $navResponse, 1.0);
+
             return [
                 'reply' => $reply,
                 'intent' => 'navigate',
@@ -59,6 +64,7 @@ class ChatbotService
         $faqReply = $this->handleFaqIntent($normalizedMessage);
         if ($faqReply) {
             $conversation = $this->logConversation($user, $message, $faqReply, 'faq', null, 0.9);
+
             return [
                 'reply' => $faqReply,
                 'intent' => 'faq',
@@ -67,12 +73,13 @@ class ChatbotService
         }
 
         // 4. Fallback (Unknown Intent)
-        $fallbackReply = "Maaf, saya belum memahami pertanyaan Anda secara detail. Cobalah menanyakan hal lain seperti:<br/>" .
-            "-  *\"berapa siswa alpa hari ini\"* atau *\"total tunggakan spp\"*<br/>" .
-            "-  *\"buka halaman nilai\"* atau *\"buka absensi\"*<br/>" .
-            "-  Pertanyaan umum tentang sistem SISTA.";
-            
+        $fallbackReply = 'Maaf, saya belum memahami pertanyaan Anda secara detail. Cobalah menanyakan hal lain seperti:<br/>'.
+            '-  *"berapa siswa alpa hari ini"* atau *"total tunggakan spp"*<br/>'.
+            '-  *"buka halaman nilai"* atau *"buka absensi"*<br/>'.
+            '-  Pertanyaan umum tentang sistem SISTA.';
+
         $conversation = $this->logConversation($user, $message, $fallbackReply, 'unknown', null, 0.0);
+
         return [
             'reply' => $fallbackReply,
             'intent' => 'unknown',
@@ -90,7 +97,7 @@ class ChatbotService
         // 1. Student context: check exams
         if ($user->role === 'student' && $user->student) {
             if (Str::contains($normalized, ['ujian', 'cbt', 'kapan'])) {
-                $exams = \App\Models\Exam::where('classroom_id', $user->student->classroom_id)
+                $exams = Exam::where('classroom_id', $user->student->classroom_id)
                     ->where('status', 'published')
                     ->where('start_time', '>', now())
                     ->orderBy('start_time')
@@ -98,11 +105,12 @@ class ChatbotService
                     ->get();
 
                 if ($exams->isNotEmpty()) {
-                    $reply = "Berikut adalah jadwal ujian/CBT mendatang untuk kelas Anda:<br/>";
+                    $reply = 'Berikut adalah jadwal ujian/CBT mendatang untuk kelas Anda:<br/>';
                     foreach ($exams as $exam) {
                         $startTime = $exam->start_time->format('d M Y H:i');
                         $reply .= "- **{$exam->title}** ({$exam->type}) pada {$startTime} (Durasi: {$exam->duration_minutes} menit)<br/>";
                     }
+
                     return [
                         'reply' => $reply,
                         'intent' => 'context_student_exam',
@@ -110,7 +118,7 @@ class ChatbotService
                     ];
                 } else {
                     return [
-                        'reply' => "Tidak ada ujian atau CBT terjadwal terdekat untuk kelas Anda saat ini.",
+                        'reply' => 'Tidak ada ujian atau CBT terjadwal terdekat untuk kelas Anda saat ini.',
                         'intent' => 'context_student_exam',
                         'context' => ['exams_count' => 0],
                     ];
@@ -124,17 +132,17 @@ class ChatbotService
                 $children = $user->children;
                 if ($children->isEmpty()) {
                     return [
-                        'reply' => "Anda belum terdaftar memiliki data anak di sistem.",
+                        'reply' => 'Anda belum terdaftar memiliki data anak di sistem.',
                         'intent' => 'context_parent_billing',
                         'context' => ['children_count' => 0],
                     ];
                 }
 
-                $reply = "Berikut rincian tagihan/tunggakan anak Anda:<br/>";
+                $reply = 'Berikut rincian tagihan/tunggakan anak Anda:<br/>';
                 $hasTunggakan = false;
 
                 foreach ($children as $child) {
-                    $billings = \App\Models\Billing::where('student_id', $child->id)
+                    $billings = Billing::where('student_id', $child->id)
                         ->where('remaining_balance', '>', 0)
                         ->get();
 
@@ -143,15 +151,15 @@ class ChatbotService
                         $reply .= " **{$child->user->name}**:<br/>";
                         foreach ($billings as $billing) {
                             $balance = number_format($billing->remaining_balance, 0, ',', '.');
-                            $dueDate = $billing->due_date ? \Carbon\Carbon::parse($billing->due_date)->format('d M Y') : '-';
+                            $dueDate = $billing->due_date ? Carbon::parse($billing->due_date)->format('d M Y') : '-';
                             $reply .= "- Tagihan SPP sisa **Rp {$balance}** (Jatuh tempo: {$dueDate})<br/>";
                         }
                     }
                 }
 
-                if (!$hasTunggakan) {
+                if (! $hasTunggakan) {
                     return [
-                        'reply' => "Alhamdulillah, seluruh tagihan SPP anak Anda saat ini **sudah lunas**.",
+                        'reply' => 'Alhamdulillah, seluruh tagihan SPP anak Anda saat ini **sudah lunas**.',
                         'intent' => 'context_parent_billing',
                         'context' => ['has_tunggakan' => false],
                     ];
@@ -168,18 +176,19 @@ class ChatbotService
         // 3. Teacher/Guru context: check today's absent students
         if ($user->role === 'guru') {
             if (Str::contains($normalized, ['belum absen', 'siapa', 'absen', 'kehadiran'])) {
-                $absents = \App\Models\Attendance::where('date', today()->toDateString())
+                $absents = Attendance::where('date', today()->toDateString())
                     ->where('status', 'A')
                     ->with('student.user')
                     ->get();
 
                 if ($absents->isNotEmpty()) {
-                    $reply = "Berikut adalah daftar siswa yang **Alpa (tidak hadir tanpa keterangan)** hari ini:<br/>";
+                    $reply = 'Berikut adalah daftar siswa yang **Alpa (tidak hadir tanpa keterangan)** hari ini:<br/>';
                     foreach ($absents as $absent) {
                         $studentName = $absent->student->user->name ?? 'Siswa';
                         $classroomName = $absent->student->classroom->name ?? '-';
                         $reply .= "- **{$studentName}** ({$classroomName})<br/>";
                     }
+
                     return [
                         'reply' => $reply,
                         'intent' => 'context_teacher_attendance',
@@ -187,7 +196,7 @@ class ChatbotService
                     ];
                 } else {
                     return [
-                        'reply' => "Semua siswa telah tercatat kehadirannya hari ini (tidak ada siswa yang Alpa).",
+                        'reply' => 'Semua siswa telah tercatat kehadirannya hari ini (tidak ada siswa yang Alpa).',
                         'intent' => 'context_teacher_attendance',
                         'context' => ['absent_count' => 0],
                     ];
@@ -209,7 +218,7 @@ class ChatbotService
 
         foreach ($faqs as $faq) {
             $matches = 0;
-            
+
             // Check in question title
             if (Str::contains($message, Str::lower($faq->question))) {
                 $matches += 5;
@@ -233,6 +242,7 @@ class ChatbotService
 
         if ($bestMatch) {
             $bestMatch->increment('usage_count');
+
             return $bestMatch->answer;
         }
 
@@ -290,6 +300,7 @@ class ChatbotService
         // 1. "berapa siswa alpa hari ini"
         if (Str::contains($message, 'alpa') && Str::contains($message, 'hari ini')) {
             $count = Attendance::where('date', today()->toDateString())->where('status', 'A')->count();
+
             return [
                 'reply' => "Jumlah siswa yang alpa (**tidak hadir tanpa keterangan**) hari ini adalah: **{$count}** siswa.",
                 'context' => ['query' => 'absensi_alpa_today', 'result' => $count],
@@ -299,6 +310,7 @@ class ChatbotService
         // 2. "total tunggakan spp"
         if (Str::contains($message, 'tunggakan') || (Str::contains($message, 'spp') && Str::contains($message, 'belum lunas'))) {
             $count = Billing::where('remaining_balance', '>', 0)->count();
+
             return [
                 'reply' => "Total tagihan SPP yang **belum lunas** di sekolah saat ini berjumlah: **{$count}** tagihan.",
                 'context' => ['query' => 'spp_tunggakan_count', 'result' => $count],
@@ -308,6 +320,7 @@ class ChatbotService
         // 3. "berapa total siswa aktif"
         if (Str::contains($message, 'siswa aktif')) {
             $count = Student::where('status', 'active')->count();
+
             return [
                 'reply' => "Total siswa yang **berstatus aktif** terdaftar saat ini: **{$count}** siswa.",
                 'context' => ['query' => 'siswa_aktif_count', 'result' => $count],
@@ -317,6 +330,7 @@ class ChatbotService
         // 4. "tiket helpdesk yang open" / "tiket open"
         if (Str::contains($message, 'tiket') && (Str::contains($message, 'open') || Str::contains($message, 'aktif'))) {
             $count = Ticket::where('status', 'open')->count();
+
             return [
                 'reply' => "Jumlah tiket bantuan/helpdesk yang **berstatus Open** saat ini: **{$count}** tiket.",
                 'context' => ['query' => 'tickets_open_count', 'result' => $count],
@@ -328,7 +342,7 @@ class ChatbotService
             $totalTeachers = User::where('role', 'guru')->count();
             $filledToday = TeachingJournal::whereDate('created_at', today())->distinct('user_id')->count();
             $count = max(0, $totalTeachers - $filledToday);
-            
+
             return [
                 'reply' => "Jumlah guru yang **belum mengisi jurnal mengajar** hari ini berjumlah: **{$count}** guru.",
                 'context' => ['query' => 'teachers_no_journal_today', 'result' => $count],
@@ -362,9 +376,9 @@ class ChatbotService
         $helpfulChats = ChatbotConversation::where('was_helpful', true)->count();
         $unhelpfulChats = ChatbotConversation::where('was_helpful', false)->count();
         $ratedChats = $helpfulChats + $unhelpfulChats;
-        
+
         $helpfulnessRate = $ratedChats > 0 ? round(($helpfulChats / $ratedChats) * 100, 1) : 100.0;
-        
+
         $intentStats = ChatbotConversation::select('intent', \DB::raw('count(*) as count'))
             ->groupBy('intent')
             ->orderByDesc('count')
@@ -372,7 +386,7 @@ class ChatbotService
             ->pluck('count', 'intent')
             ->toArray();
 
-        $dailyStats = ChatbotConversation::select(\DB::raw("date(created_at) as date"), \DB::raw('count(*) as count'))
+        $dailyStats = ChatbotConversation::select(\DB::raw('date(created_at) as date'), \DB::raw('count(*) as count'))
             ->groupBy('date')
             ->orderBy('date')
             ->limit(7)

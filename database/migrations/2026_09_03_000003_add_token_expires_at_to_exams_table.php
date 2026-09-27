@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('exams', function (Blueprint $table) {
-            if (!Schema::hasColumn('exams', 'token_expires_at')) {
+            if (! Schema::hasColumn('exams', 'token_expires_at')) {
                 $table->timestamp('token_expires_at')->nullable()->after('access_token');
             }
         });

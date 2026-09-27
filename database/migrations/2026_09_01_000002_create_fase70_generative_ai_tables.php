@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('ai_tutor_sessions')) {
+        if (! Schema::hasTable('ai_tutor_sessions')) {
             Schema::create('ai_tutor_sessions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
@@ -23,7 +23,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('ai_tutor_messages')) {
+        if (! Schema::hasTable('ai_tutor_messages')) {
             Schema::create('ai_tutor_messages', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('session_id')->constrained('ai_tutor_sessions')->cascadeOnDelete();
@@ -37,7 +37,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('essay_submissions')) {
+        if (! Schema::hasTable('essay_submissions')) {
             Schema::create('essay_submissions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
@@ -55,7 +55,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('generated_lesson_plans')) {
+        if (! Schema::hasTable('generated_lesson_plans')) {
             Schema::create('generated_lesson_plans', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete();

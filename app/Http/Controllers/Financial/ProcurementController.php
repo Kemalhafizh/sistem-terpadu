@@ -13,6 +13,7 @@ class ProcurementController extends Controller
     public function dashboard()
     {
         $requests = ProcurementRequest::with(['requester', 'approver', 'purchaseOrder'])->latest()->get();
+
         return view('procurement.dashboard', compact('requests'));
     }
 
@@ -41,6 +42,7 @@ class ProcurementController extends Controller
     {
         $req = ProcurementRequest::findOrFail($id);
         $service->submitForApproval($req);
+
         return back()->with('success', 'Permohonan pengadaan berhasil diajukan untuk persetujuan!');
     }
 
@@ -65,6 +67,7 @@ class ProcurementController extends Controller
     public function createPO(int $id)
     {
         $procurementRequest = ProcurementRequest::findOrFail($id);
+
         return view('procurement.purchase-order', compact('procurementRequest'));
     }
 
@@ -108,6 +111,7 @@ class ProcurementController extends Controller
     public function history()
     {
         $requests = ProcurementRequest::with(['requester', 'purchaseOrder.goodsReceivedNotes'])->latest()->get();
+
         return view('procurement.history', compact('requests'));
     }
 }

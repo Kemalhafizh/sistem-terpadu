@@ -23,7 +23,9 @@ class EnvironmentConfigService
     public function getConfig(string $key, string $environment = 'production'): ?string
     {
         $cfg = SystemConfiguration::where('environment', $environment)->where('config_key', $key)->first();
-        if (!$cfg) return null;
+        if (! $cfg) {
+            return null;
+        }
 
         try {
             return Crypt::decryptString($cfg->config_value_encrypted);

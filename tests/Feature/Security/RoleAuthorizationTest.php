@@ -112,4 +112,3 @@ test('admin can access student management', function () {
 
     $response->assertStatus(200);
 });
-

@@ -16,7 +16,7 @@ class DataStoryBuilderService
     public function saveStory(User $author, array $data, ?int $storyId = null): DataStory
     {
         $title = $data['title'] ?? 'Laporan Interaktif Capaian Sekolah';
-        $slug = Str::slug($title) . '-' . time();
+        $slug = Str::slug($title).'-'.time();
         $payload = [
             'title' => $title,
             'slug' => $slug,
@@ -35,6 +35,7 @@ class DataStoryBuilderService
             $story = DataStory::find($storyId);
             if ($story) {
                 $story->update($payload);
+
                 return $story;
             }
         }

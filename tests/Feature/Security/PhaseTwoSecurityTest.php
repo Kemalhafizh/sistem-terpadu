@@ -1,14 +1,18 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
+use App\Models\AcademicYear;
+use App\Models\Billing;
+use App\Models\Classroom;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
 use App\Models\ElearningMaterialComment;
+use App\Models\PaymentCategory;
 use App\Models\Registration;
-use App\Models\Billing;
-use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -20,10 +24,10 @@ beforeEach(function () {
     $this->parentB = User::factory()->create(['role' => 'parent']);
 
     // Setup active AcademicYear, Classrooms, and Subject
-    $this->academicYear = \App\Models\AcademicYear::factory()->create(['is_active' => true]);
-    $this->classroomA = \App\Models\Classroom::factory()->create();
-    $this->classroomB = \App\Models\Classroom::factory()->create();
-    $this->subject = \App\Models\Subject::factory()->create();
+    $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
+    $this->classroomA = Classroom::factory()->create();
+    $this->classroomB = Classroom::factory()->create();
+    $this->subject = Subject::factory()->create();
 
     // Setup Student profiles linked to users
     $this->profileA = Student::factory()->create([
@@ -39,7 +43,7 @@ beforeEach(function () {
 
     // Create Elearning Classes
     $this->classA = ElearningClass::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroomA->id,
         'teacher_id' => $this->guruA->id,
@@ -49,7 +53,7 @@ beforeEach(function () {
     ]);
 
     $this->materialA = ElearningMaterial::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'elearning_class_id' => $this->classA->id,
         'title' => 'Materi Gerak Lurus',
         'description' => 'Deskripsi Materi',
@@ -94,14 +98,14 @@ test('unauthorized user cannot post comments to material', function () {
 
 test('comments content is sanitized from dangerous html tags', function () {
     $dangerousHtml = 'Halo <script>alert("hack")</script> <iframe src="dangerous"></iframe> <b>Tebal</b>';
-    
+
     $response = $this->actingAs($this->studentA)
         ->post(route('elearning.comment.store', $this->materialA), [
             'content' => $dangerousHtml,
         ]);
 
     $response->assertStatus(302); // Redirect back
-    
+
     $comment = ElearningMaterialComment::latest()->first();
     expect($comment->content)->not->toContain('<script>');
     expect($comment->content)->not->toContain('<iframe>');
@@ -136,7 +140,7 @@ test('unauthorized guest cannot print arbitrary registration card', function () 
 
 test('execute import rejects path traversal in file_path', function () {
     $user = User::factory()->create(['role' => 'admin']);
-    
+
     $response = $this->actingAs($user)
         ->post(route('import-export.execute'), [
             'module' => 'students',
@@ -153,12 +157,12 @@ test('execute import rejects path traversal in file_path', function () {
 
 test('midtrans webhook rejects simulation bypass in production environment', function () {
     // Force application environment to production
-    app()->detectEnvironment(fn() => 'production');
+    app()->detectEnvironment(fn () => 'production');
     app()->offsetSet('env', 'production');
     config(['services.midtrans.server_key' => 'mock-server-key']);
-    
-    $category = \App\Models\PaymentCategory::factory()->create();
-    
+
+    $category = PaymentCategory::factory()->create();
+
     $billing = Billing::create([
         'student_id' => $this->profileA->id,
         'payment_category_id' => $category->id,
@@ -169,7 +173,7 @@ test('midtrans webhook rejects simulation bypass in production environment', fun
     ]);
 
     $response = $this->postJson(route('api.midtrans.webhook'), [
-        'order_id' => 'BILL-' . $billing->id . '-123456',
+        'order_id' => 'BILL-'.$billing->id.'-123456',
         'status_code' => '200',
         'gross_amount' => '500000',
         'transaction_status' => 'settlement',
@@ -189,7 +193,7 @@ test('security headers are strictly enforced', function () {
     $response->assertHeader('X-Content-Type-Options', 'nosniff');
     $response->assertHeader('X-XSS-Protection', '1; mode=block');
     $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    
+
     // Bandingkan CSP secara manual
     expect($response->headers->has('Content-Security-Policy'))->toBeTrue();
 });
@@ -205,11 +209,11 @@ test('student address is encrypted in database but decrypted automatically', fun
     ]);
 
     // Ambil data mentah langsung dari database untuk memverifikasi enkripsi
-    $rawDbRow = \Illuminate\Support\Facades\DB::table('students')->where('id', $student->id)->first();
-    
+    $rawDbRow = DB::table('students')->where('id', $student->id)->first();
+
     // Pastikan data di database tidak berupa plain text
     expect($rawDbRow->address)->not->toBe($plainAddress);
-    
+
     // Pastikan data didekripsi otomatis saat diakses melalui model Eloquent
     expect($student->fresh()->address)->toBe($plainAddress);
 });
@@ -226,7 +230,7 @@ test('verify mfa middleware redirects administrative user when mfa is not enable
     ]);
 
     $response = $this->actingAs($adminUser)->get('/test-mfa-protection');
-    
+
     // Harus dialihkan ke halaman setup/verify fallback yang ada
     $response->assertRedirect(route('verify-2fa.index'));
 });
@@ -237,8 +241,8 @@ test('admin ip whitelist middleware blocks non whitelisted ip addresses', functi
     })->middleware(['web', 'admin.ip']);
 
     // Force env to non-testing to trigger strict IP validation logic
-    app()->detectEnvironment(fn() => 'production');
-    
+    app()->detectEnvironment(fn () => 'production');
+
     // Set allowed IP into env config
     config(['app.env' => 'production']);
     putenv('ADMIN_ALLOWED_IPS=192.168.1.100');
@@ -292,4 +296,3 @@ test('invisible honeypot middleware intercepts automated bot form submission', f
     $response->assertStatus(403);
     $response->assertSee('CYBER THREAT INTERCEPTION NOTICE');
 });
-

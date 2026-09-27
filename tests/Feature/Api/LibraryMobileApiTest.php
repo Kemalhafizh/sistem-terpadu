@@ -30,7 +30,7 @@ beforeEach(function () {
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
         'classroom_id' => $this->classroom->id,
-        'nis' => '108' . rand(1000, 9999),
+        'nis' => '108'.rand(1000, 9999),
     ]);
 
     // 3. Setup Categories

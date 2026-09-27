@@ -17,8 +17,11 @@ class DisciplineMobileApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $parentUser;
+
     protected User $studentUser;
+
     protected Student $student;
+
     protected PointCategory $violationCategory;
 
     protected function setUp(): void
@@ -27,9 +30,9 @@ class DisciplineMobileApiTest extends TestCase
 
         $this->parentUser = User::factory()->create(['role' => 'parent']);
         $this->studentUser = User::factory()->create(['role' => 'student']);
-        
+
         $classroom = Classroom::factory()->create(['academic_year' => '2026/2027']);
-        
+
         $this->student = Student::factory()->create([
             'user_id' => $this->studentUser->id,
             'parent_id' => $this->parentUser->id,

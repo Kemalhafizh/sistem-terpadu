@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserGamification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -133,7 +134,7 @@ class ContextualHomeService
             ],
         ];
 
-        return array_values(array_filter($pool, fn($s) => !in_array($s['id'], $dismissed)));
+        return array_values(array_filter($pool, fn ($s) => ! in_array($s['id'], $dismissed)));
     }
 
     /**
@@ -142,7 +143,7 @@ class ContextualHomeService
     public function dismissSuggestion(int $userId, string $suggestionId): void
     {
         $dismissed = Cache::get("user_{$userId}_dismissed_suggestions", []);
-        if (!in_array($suggestionId, $dismissed)) {
+        if (! in_array($suggestionId, $dismissed)) {
             $dismissed[] = $suggestionId;
             Cache::put("user_{$userId}_dismissed_suggestions", $dismissed, 86400);
         }
@@ -153,7 +154,7 @@ class ContextualHomeService
      */
     protected function getGamificationSummary(User $user): array
     {
-        $gamification = \App\Models\UserGamification::where('user_id', $user->id)->first();
+        $gamification = UserGamification::where('user_id', $user->id)->first();
         if ($gamification) {
             return [
                 'xpToday' => 85,

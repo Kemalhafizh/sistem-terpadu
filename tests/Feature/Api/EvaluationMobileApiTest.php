@@ -8,7 +8,6 @@ use App\Models\Evaluation360Cycle;
 use App\Models\Evaluation360Instrument;
 use App\Models\OsisCandidate;
 use App\Models\OsisElection;
-use App\Models\OsisVote;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,14 +19,23 @@ class EvaluationMobileApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $adminUser;
+
     protected User $studentUser;
+
     protected Student $student;
+
     protected User $teacherUser;
+
     protected AcademicYear $academicYear;
+
     protected Evaluation360Cycle $activeCycle;
+
     protected Evaluation360Instrument $studentInstrument;
+
     protected OsisElection $activeElection;
+
     protected OsisCandidate $candidate1;
+
     protected OsisCandidate $candidate2;
 
     protected function setUp(): void
@@ -35,13 +43,13 @@ class EvaluationMobileApiTest extends TestCase
         parent::setUp();
 
         $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
-        
+
         $this->adminUser = User::factory()->create(['role' => 'admin']);
         $this->teacherUser = User::factory()->create(['role' => 'guru', 'name' => 'Budi Guru']);
         $this->studentUser = User::factory()->create(['role' => 'student']);
-        
+
         $classroom = Classroom::factory()->create(['academic_year' => '2026/2027']);
-        
+
         $this->student = Student::factory()->create([
             'user_id' => $this->studentUser->id,
             'classroom_id' => $classroom->id,
@@ -138,7 +146,7 @@ class EvaluationMobileApiTest extends TestCase
             ]);
 
         $this->assertStringContainsString('Double Vote Prevention', $response2->json('message'));
-        
+
         $this->assertDatabaseCount('osis_votes', 1);
     }
 

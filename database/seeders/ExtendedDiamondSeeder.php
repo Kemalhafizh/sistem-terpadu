@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\AcademicYear;
 use App\Models\ApprovalChain;
 use App\Models\Classroom;
 use App\Models\ClassroomLayout;
@@ -17,7 +16,6 @@ use App\Models\PodcastEpisode;
 use App\Models\ScheduleBuilderDraft;
 use App\Models\Student;
 use App\Models\StudentProgressSnapshot;
-use App\Models\Subject;
 use App\Models\Teacher360Metric;
 use App\Models\ThemePreference;
 use App\Models\User;
@@ -56,7 +54,7 @@ class ExtendedDiamondSeeder extends Seeder
             ClassroomLayout::firstOrCreate(
                 ['classroom_id' => $classroom->id],
                 [
-                    'layout_name' => 'Formasi U-Shape Diskusi ' . $classroom->name,
+                    'layout_name' => 'Formasi U-Shape Diskusi '.$classroom->name,
                     'grid_rows' => 5,
                     'grid_columns' => 6,
                     'furniture_positions' => [],

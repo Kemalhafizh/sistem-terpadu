@@ -4,10 +4,7 @@
 
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
-use App\Models\EmployeeTraining;
-use App\Models\PerformanceEvaluation;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -115,7 +112,7 @@ test('admin can store performance evaluations with auto computed total score and
     ]);
 
     $response->assertRedirect(route('hrd.evaluations.report'));
-    
+
     // Average: (90+85+80+85)/4 = 85.0 -> Grade A
     $this->assertDatabaseHas('performance_evaluations', [
         'employee_id' => $this->employee->id,

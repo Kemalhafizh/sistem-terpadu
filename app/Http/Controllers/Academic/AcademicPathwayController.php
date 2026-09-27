@@ -13,6 +13,7 @@ class AcademicPathwayController extends Controller
     public function pathways()
     {
         $pathways = AcademicPathway::withCount('enrollments')->get();
+
         return view('pathway.index', compact('pathways'));
     }
 

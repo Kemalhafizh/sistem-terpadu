@@ -11,7 +11,7 @@ class AssetMaintenanceController extends Controller
     public function index()
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah'])) {
             abort(403);
         }
 
@@ -24,7 +24,7 @@ class AssetMaintenanceController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'waka_sarpras'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras'])) {
             abort(403);
         }
 
@@ -49,7 +49,7 @@ class AssetMaintenanceController extends Controller
     public function update(Request $request, AssetMaintenance $maintenance)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'waka_sarpras'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras'])) {
             abort(403);
         }
 

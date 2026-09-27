@@ -21,6 +21,7 @@ class NutritionController extends Controller
     {
         $plans = MealPlan::with('menu')->get();
         $menus = CanteenMenu::all();
+
         return view('canteen.menu-planner', compact('plans', 'menus'));
     }
 
@@ -34,18 +35,21 @@ class NutritionController extends Controller
         ]);
 
         $this->nutritionService->planMenu($data);
+
         return back()->with('success', 'Meal plan added successfully');
     }
 
     public function menuItems()
     {
         $menus = CanteenMenu::all();
+
         return view('canteen.menu-planner', compact('menus'));
     }
 
     public function nutritionDashboard()
     {
         $dailyCalories = $this->nutritionService->calculateDailyCalories(now()->toDateString());
+
         return view('canteen.nutrition-tracker', compact('dailyCalories'));
     }
 }

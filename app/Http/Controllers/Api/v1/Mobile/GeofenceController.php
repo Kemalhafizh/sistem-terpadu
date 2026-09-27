@@ -49,7 +49,7 @@ class GeofenceController extends Controller
             'is_mock' => 'nullable|boolean',
         ]);
 
-        if (!empty($validated['is_mock'])) {
+        if (! empty($validated['is_mock'])) {
             return response()->json([
                 'success' => false,
                 'status' => 'rejected',
@@ -67,13 +67,13 @@ class GeofenceController extends Controller
 
         $isInside = $distance <= $campus['radius_meters'];
 
-        if (!$isInside) {
+        if (! $isInside) {
             return response()->json([
                 'success' => false,
                 'status' => 'out_of_bounds',
                 'distance_meters' => round($distance, 1),
                 'max_radius_meters' => $campus['radius_meters'],
-                'message' => 'Presensi ditolak: Anda berada di luar radius kampus (' . round($distance, 1) . 'm > ' . round($campus['radius_meters']) . 'm).',
+                'message' => 'Presensi ditolak: Anda berada di luar radius kampus ('.round($distance, 1).'m > '.round($campus['radius_meters']).'m).',
             ], 422);
         }
 
@@ -97,8 +97,8 @@ class GeofenceController extends Controller
 
         $student = Student::where('user_id', $user->id)->first() ?? Student::create([
             'user_id' => $user->id,
-            'nisn' => '9982348' . $user->id,
-            'nis' => '120' . $user->id,
+            'nisn' => '9982348'.$user->id,
+            'nis' => '120'.$user->id,
             'gender' => 'L',
             'classroom_id' => $classroom->id,
         ]);
@@ -110,7 +110,7 @@ class GeofenceController extends Controller
                 'classroom_id' => $classroom->id,
                 'status' => 'H',
                 'recorded_by' => $user->id,
-                'notes' => 'Presensi GPS Mobile (' . round($distance, 1) . 'm dari gerbang utama)',
+                'notes' => 'Presensi GPS Mobile ('.round($distance, 1).'m dari gerbang utama)',
             ]
         );
 

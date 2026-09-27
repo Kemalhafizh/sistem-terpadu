@@ -16,7 +16,7 @@ class ExamFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(3) . ' Exam',
+            'title' => $this->faker->sentence(3).' Exam',
             'subject_id' => Subject::factory(),
             'classroom_id' => Classroom::factory(),
             'academic_year_id' => AcademicYear::factory(),

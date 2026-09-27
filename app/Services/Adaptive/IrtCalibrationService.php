@@ -4,7 +4,6 @@ namespace App\Services\Adaptive;
 
 use App\Models\IrtItemParameter;
 use App\Models\IrtStudentAbility;
-use Illuminate\Support\Facades\DB;
 
 class IrtCalibrationService
 {
@@ -32,6 +31,7 @@ class IrtCalibrationService
                 'last_estimated_at' => now(),
             ]
         );
+
         return $ability->theta;
     }
 
@@ -44,7 +44,9 @@ class IrtCalibrationService
     public function getItemCharacteristicCurve(int $questionId): array
     {
         $item = IrtItemParameter::where('question_id', $questionId)->first();
-        if (!$item) return [];
+        if (! $item) {
+            return [];
+        }
 
         $curve = [];
         for ($theta = -3.0; $theta <= 3.0; $theta += 0.5) {
@@ -53,6 +55,7 @@ class IrtCalibrationService
                 'probability' => $this->calculateProbability($theta, $item->difficulty),
             ];
         }
+
         return $curve;
     }
 

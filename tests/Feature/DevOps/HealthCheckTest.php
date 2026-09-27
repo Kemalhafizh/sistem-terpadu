@@ -54,7 +54,7 @@ it('mengembalikan status warning atau critical jika terjadi kesalahan pada cache
     // Buat Cache melempar Exception dengan cara me-mock Cache
     Cache::shouldReceive('put')
         ->once()
-        ->andThrow(new \Exception('Cache store connection lost.'));
+        ->andThrow(new Exception('Cache store connection lost.'));
 
     $exitCode = Artisan::call('app:health-check');
 

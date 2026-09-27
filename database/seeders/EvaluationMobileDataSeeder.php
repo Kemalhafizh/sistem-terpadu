@@ -17,7 +17,7 @@ class EvaluationMobileDataSeeder extends Seeder
     public function run(): void
     {
         $admin = User::firstWhere('role', 'admin') ?? User::factory()->create(['role' => 'admin', 'name' => 'Admin Eval']);
-        
+
         $students = Student::take(3)->get();
         if ($students->count() < 2) {
             $students = Student::factory()->count(2)->create();
@@ -42,7 +42,7 @@ class EvaluationMobileDataSeeder extends Seeder
                 'questions' => [
                     'Guru menjelaskan materi dengan sangat jelas dan mudah dipahami.',
                     'Guru memberikan kesempatan bertanya dan berdiskusi.',
-                    'Guru memberikan feedback tugas secara konstruktif.'
+                    'Guru memberikan feedback tugas secara konstruktif.',
                 ],
                 'scale_type' => 'likert5',
                 'is_anonymous' => true,

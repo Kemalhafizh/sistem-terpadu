@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Crisis;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\SafetyHeadcount;
 use App\Models\CrisisIncident;
+use App\Models\SafetyHeadcount;
+use Illuminate\Http\Request;
 
 class HeadcountController extends Controller
 {
@@ -13,6 +13,7 @@ class HeadcountController extends Controller
     {
         $incident = CrisisIncident::findOrFail($incidentId);
         $headcounts = SafetyHeadcount::where('crisis_incident_id', $incidentId)->get();
+
         return view('crisis.headcount.dashboard', compact('incident', 'headcounts'));
     }
 
@@ -26,8 +27,9 @@ class HeadcountController extends Controller
         ]);
         $validated['crisis_incident_id'] = $incidentId;
         $validated['status'] = $validated['missing_count'] > 0 ? 'missing_persons' : 'all_accounted';
-        
+
         SafetyHeadcount::create($validated);
+
         return back()->with('success', 'Headcount submitted.');
     }
 }

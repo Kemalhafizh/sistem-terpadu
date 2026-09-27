@@ -14,6 +14,7 @@ class PtcSchedulerController extends Controller
     public function sessions()
     {
         $sessions = PtcSession::withCount('slots')->latest()->get();
+
         return view('ptc.sessions', compact('sessions'));
     }
 

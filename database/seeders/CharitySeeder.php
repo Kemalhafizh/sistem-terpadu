@@ -4,12 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\CharityCampaign;
 use App\Models\CharityDonation;
-use App\Models\User;
 use App\Models\Student;
+use App\Models\User;
 use App\Models\WadiahAccount;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class CharitySeeder extends Seeder
 {
@@ -69,7 +69,7 @@ class CharitySeeder extends Seeder
 
             $date = Carbon::now()->subDays(rand(0, 15))->setTime(rand(7, 18), rand(0, 59));
             $paymentMethod = collect(['transfer', 'wadiah_wallet', 'cash'])->random();
-            
+
             // Adjust amount based on type
             if ($campaign->type === 'wakaf') {
                 $amount = rand(5, 50) * 10000; // Rp 50.000 - Rp 500.000
@@ -126,7 +126,7 @@ class CharitySeeder extends Seeder
             $isAnonymous = rand(1, 10) <= 2; // 20% anonymous
             $donorName = $isAnonymous ? 'Hamba Allah' : $user->name;
 
-            $receipt = 'ZIS-' . $date->format('Ymd') . '-' . strtoupper(Str::random(6));
+            $receipt = 'ZIS-'.$date->format('Ymd').'-'.strtoupper(Str::random(6));
 
             CharityDonation::create([
                 'charity_campaign_id' => $campaign->id,

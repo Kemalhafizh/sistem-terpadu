@@ -5,21 +5,21 @@ namespace App\Http\Controllers;
 use App\Mail\RegistrationSubmitted;
 use App\Models\AcademicYear;
 use App\Models\Registration;
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
 use App\Models\SpmbDocument;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
 use App\Services\RegistrationService;
 use App\Services\SpmbService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class SpmbController extends Controller
 {
     protected $registrationService;
+
     protected $spmbService;
 
     public function __construct(RegistrationService $registrationService, SpmbService $spmbService)
@@ -34,7 +34,7 @@ class SpmbController extends Controller
     public function create()
     {
         $activeYear = AcademicYear::where('is_active', true)->first();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return view('spmb.create', ['activeYear' => null]);
         }
 
@@ -89,7 +89,7 @@ class SpmbController extends Controller
         ]);
 
         $activeYear = AcademicYear::where('is_active', true)->first();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return back()->with('error', 'Pendaftaran saat ini sedang ditutup.');
         }
 
@@ -186,7 +186,7 @@ class SpmbController extends Controller
     // Halaman Sukses
     public function success()
     {
-        if (!session('registration_number')) {
+        if (! session('registration_number')) {
             return redirect()->route('spmb.create');
         }
         $candidate = Registration::where('registration_number', session('registration_number'))->first();
@@ -203,7 +203,7 @@ class SpmbController extends Controller
                 ->where('nisn', $request->nisn)
                 ->first();
 
-            if (!$registration) {
+            if (! $registration) {
                 return back()->with('error', 'Data tidak ditemukan. Pastikan Nomor Pendaftaran dan NISN benar.');
             }
         }
@@ -228,19 +228,19 @@ class SpmbController extends Controller
     public function printCard(Registration $registration)
     {
         $isAuthorized = false;
-        
+
         if (auth()->check()) {
             $user = auth()->user();
             if (in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'kepala_sekolah'])) {
                 $isAuthorized = true;
             }
         }
-        
-        if (!$isAuthorized && session('registration_number') === $registration->registration_number) {
+
+        if (! $isAuthorized && session('registration_number') === $registration->registration_number) {
             $isAuthorized = true;
         }
-        
-        if (!$isAuthorized) {
+
+        if (! $isAuthorized) {
             abort(403, 'Akses ditolak. Anda tidak berwenang mencetak kartu peserta ini.');
         }
 
@@ -437,7 +437,7 @@ class SpmbController extends Controller
             'has_reregistered' => true,
         ]);
 
-        return back()->with('success', 'Status daftar ulang untuk pendaftar ' . $registration->full_name . ' berhasil dikonfirmasi.');
+        return back()->with('success', 'Status daftar ulang untuk pendaftar '.$registration->full_name.' berhasil dikonfirmasi.');
     }
 
     // Konversi Massal Pendaftar Lolos -> Akun Siswa Baru
@@ -465,6 +465,7 @@ class SpmbController extends Controller
     public function show(Registration $registration)
     {
         $registration->load(['spmbDocuments.verifier', 'spmbWave', 'spmbTrack']);
+
         return view('spmb.admin.show', compact('registration'));
     }
 

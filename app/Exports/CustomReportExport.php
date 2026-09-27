@@ -2,10 +2,10 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Support\Collection;
 
 class CustomReportExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -31,6 +31,7 @@ class CustomReportExport implements FromCollection, WithHeadings, WithMapping
         foreach ($this->columns as $col) {
             $mapped[] = $row->{$col} ?? '-';
         }
+
         return $mapped;
     }
 }

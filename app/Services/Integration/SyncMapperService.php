@@ -3,9 +3,8 @@
 namespace App\Services\Integration;
 
 use App\Models\Student;
-use App\Models\User;
-use App\Models\SyncConfig;
 use App\Models\SyncReport;
+use App\Models\User;
 use Carbon\Carbon;
 
 class SyncMapperService
@@ -76,7 +75,7 @@ class SyncMapperService
                     $issues[] = [
                         'id' => $student->id,
                         'name' => $studentName,
-                        'identifier' => 'NIS: ' . ($student->nis ?: '-'),
+                        'identifier' => 'NIS: '.($student->nis ?: '-'),
                         'field' => 'nisn',
                         'issue' => 'NISN kosong.',
                         'severity' => 'error',
@@ -85,7 +84,7 @@ class SyncMapperService
                     $issues[] = [
                         'id' => $student->id,
                         'name' => $studentName,
-                        'identifier' => 'NIS: ' . ($student->nis ?: '-'),
+                        'identifier' => 'NIS: '.($student->nis ?: '-'),
                         'field' => 'nisn',
                         'issue' => 'NISN tidak valid (harus 10 digit angka).',
                         'severity' => 'warning',
@@ -97,7 +96,7 @@ class SyncMapperService
                     $issues[] = [
                         'id' => $student->id,
                         'name' => $studentName,
-                        'identifier' => 'NIS: ' . ($student->nis ?: '-'),
+                        'identifier' => 'NIS: '.($student->nis ?: '-'),
                         'field' => 'gender',
                         'issue' => 'Jenis kelamin kosong.',
                         'severity' => 'error',
@@ -109,7 +108,7 @@ class SyncMapperService
                     $issues[] = [
                         'id' => $student->id,
                         'name' => $studentName,
-                        'identifier' => 'NIS: ' . ($student->nis ?: '-'),
+                        'identifier' => 'NIS: '.($student->nis ?: '-'),
                         'field' => 'birth_date',
                         'issue' => 'Tanggal lahir kosong.',
                         'severity' => 'error',
@@ -118,7 +117,7 @@ class SyncMapperService
                     $issues[] = [
                         'id' => $student->id,
                         'name' => $studentName,
-                        'identifier' => 'NIS: ' . ($student->nis ?: '-'),
+                        'identifier' => 'NIS: '.($student->nis ?: '-'),
                         'field' => 'birth_date',
                         'issue' => 'Tanggal lahir tidak valid (di masa depan).',
                         'severity' => 'error',
@@ -130,7 +129,7 @@ class SyncMapperService
                     $issues[] = [
                         'id' => $student->id,
                         'name' => $studentName,
-                        'identifier' => 'NIS: ' . ($student->nis ?: '-'),
+                        'identifier' => 'NIS: '.($student->nis ?: '-'),
                         'field' => 'classroom',
                         'issue' => 'Siswa tidak terdaftar di rombongan belajar (kelas) mana pun.',
                         'severity' => 'warning',

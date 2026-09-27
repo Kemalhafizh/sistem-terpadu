@@ -25,6 +25,6 @@ class FamilyEngagementService
     public function summarizeFeedbackForTeacher($assignmentId)
     {
         // Implementation
-        return "Feedback summary for assignment";
+        return 'Feedback summary for assignment';
     }
 }

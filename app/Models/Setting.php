@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
@@ -10,8 +11,9 @@ class Setting extends Model
 
     public static function get($key, $default = null)
     {
-        return \Illuminate\Support\Facades\Cache::rememberForever("setting_{$key}", function () use ($key, $default) {
+        return Cache::rememberForever("setting_{$key}", function () use ($key, $default) {
             $setting = self::where('key', $key)->first();
+
             return $setting ? $setting->value : $default;
         });
     }
@@ -23,8 +25,8 @@ class Setting extends Model
             ['value' => $value, 'group' => $group, 'type' => $type]
         );
 
-        \Illuminate\Support\Facades\Cache::forget("setting_{$key}");
-        \Illuminate\Support\Facades\Cache::forget('settings_all');
+        Cache::forget("setting_{$key}");
+        Cache::forget('settings_all');
 
         return $setting;
     }

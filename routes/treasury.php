@@ -1,6 +1,11 @@
 <?php
+
+use App\Http\Controllers\Treasury\BankAccountController;
+use App\Http\Controllers\Treasury\PettyCashController;
+use App\Http\Controllers\Treasury\ReconciliationController;
+use App\Http\Controllers\Treasury\TreasuryPositionController;
+use App\Http\Controllers\Treasury\VendorPaymentController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Treasury\{BankAccountController, ReconciliationController, PettyCashController, TreasuryPositionController, VendorPaymentController};
 
 // Static paths (calendar, report, approvals, discrepancies) are registered before the
 // resource routes, otherwise "{vendor}" / "{petty_cash}" would capture them.

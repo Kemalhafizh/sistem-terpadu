@@ -12,6 +12,7 @@ class E2eTestController extends Controller
     public function dashboard()
     {
         $runs = E2eTestRun::latest()->get();
+
         return view('e2e.dashboard', compact('runs'));
     }
 
@@ -26,6 +27,7 @@ class E2eTestController extends Controller
     public function results(int $id)
     {
         $run = E2eTestRun::findOrFail($id);
+
         return view('e2e.results', compact('run'));
     }
 

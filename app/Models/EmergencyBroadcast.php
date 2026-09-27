@@ -11,7 +11,7 @@ class EmergencyBroadcast extends Model
 
     protected $fillable = [
         'uuid', 'crisis_incident_id', 'title', 'message', 'priority', 'target_groups',
-        'channels', 'total_recipients', 'delivered_count', 'read_count', 'sent_by', 'sent_at'
+        'channels', 'total_recipients', 'delivered_count', 'read_count', 'sent_by', 'sent_at',
     ];
 
     protected $casts = [

@@ -22,7 +22,7 @@ class CatEngineService
     {
         // Dummy logic to return a question ID
         // In real app, calculate maximum information function
-        return rand(1, 100); 
+        return rand(1, 100);
     }
 
     public function processResponse(CatSession $session, int $questionId, bool $isCorrect): float
@@ -46,8 +46,10 @@ class CatEngineService
             $session->completed_at = now();
             $session->termination_rule = 'max_items';
             $session->save();
+
             return true;
         }
+
         return false;
     }
 

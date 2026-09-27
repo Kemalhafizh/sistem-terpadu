@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\ForumReply;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -27,7 +26,7 @@ class ForumReplyPosted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('forum.thread.' . $this->reply->thread_id),
+            new PrivateChannel('forum.thread.'.$this->reply->thread_id),
         ];
     }
 

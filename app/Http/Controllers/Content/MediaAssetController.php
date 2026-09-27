@@ -94,6 +94,7 @@ class MediaAssetController extends Controller
         $userId = auth()->id();
         try {
             $mediaService->delete($id, $userId);
+
             return back()->with('success', 'Aset media berhasil dihapus dari repositori.');
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());

@@ -22,7 +22,7 @@ class ScheduledReportController extends Controller
     public function index()
     {
         $reports = ScheduledReport::orderBy('created_at', 'desc')->get();
-        
+
         $types = [
             'daily_admin' => 'Harian Administrator (Daily Admin)',
             'weekly_kepsek' => 'Mingguan Kepala Sekolah (Weekly Headmaster)',
@@ -56,8 +56,8 @@ class ScheduledReportController extends Controller
             'cron_expression' => $request->cron_expression,
             'recipients' => $request->recipients,
             'delivery_method' => $request->delivery_method,
-            'attach_pdf' => $request->has('attach_pdf') ? (bool)$request->attach_pdf : true,
-            'is_active' => $request->has('is_active') ? (bool)$request->is_active : true,
+            'attach_pdf' => $request->has('attach_pdf') ? (bool) $request->attach_pdf : true,
+            'is_active' => $request->has('is_active') ? (bool) $request->is_active : true,
         ]);
 
         return redirect()->route('admin.scheduled-reports.index')->with('success', 'Jadwal laporan baru berhasil dibuat.');
@@ -86,8 +86,8 @@ class ScheduledReportController extends Controller
             'cron_expression' => $request->cron_expression,
             'recipients' => $request->recipients,
             'delivery_method' => $request->delivery_method,
-            'attach_pdf' => $request->has('attach_pdf') ? (bool)$request->attach_pdf : false,
-            'is_active' => $request->has('is_active') ? (bool)$request->is_active : false,
+            'attach_pdf' => $request->has('attach_pdf') ? (bool) $request->attach_pdf : false,
+            'is_active' => $request->has('is_active') ? (bool) $request->is_active : false,
         ]);
 
         return redirect()->route('admin.scheduled-reports.index')->with('success', 'Konfigurasi jadwal laporan berhasil diperbarui.');
@@ -99,6 +99,7 @@ class ScheduledReportController extends Controller
     public function destroy(ScheduledReport $report)
     {
         $report->delete();
+
         return redirect()->route('admin.scheduled-reports.index')->with('success', 'Jadwal laporan berhasil dihapus.');
     }
 
@@ -109,11 +110,12 @@ class ScheduledReportController extends Controller
     {
         try {
             $this->digestService->sendDigest($report);
+
             return redirect()->route('admin.scheduled-reports.index')
                 ->with('success', "Aksi Kirim Sekarang berhasil dipicu. Laporan '{$report->name}' telah dikirim.");
         } catch (\Exception $e) {
             return redirect()->route('admin.scheduled-reports.index')
-                ->with('error', "Gagal mengirim laporan terjadwal secara instan: " . $e->getMessage());
+                ->with('error', 'Gagal mengirim laporan terjadwal secara instan: '.$e->getMessage());
         }
     }
 }

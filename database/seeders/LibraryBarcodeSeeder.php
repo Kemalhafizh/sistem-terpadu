@@ -54,8 +54,8 @@ class LibraryBarcodeSeeder extends Seeder
             foreach ($physicalBooks as $book) {
                 if (! $book->barcode) {
                     $book->update([
-                        'barcode' => 'BK-97860200' . str_pad($counter, 4, '0', STR_PAD_LEFT),
-                        'nfc_uid' => 'NFC-99-00-11-' . str_pad($counter, 2, '0', STR_PAD_LEFT),
+                        'barcode' => 'BK-97860200'.str_pad($counter, 4, '0', STR_PAD_LEFT),
+                        'nfc_uid' => 'NFC-99-00-11-'.str_pad($counter, 2, '0', STR_PAD_LEFT),
                     ]);
                     $counter++;
                 }

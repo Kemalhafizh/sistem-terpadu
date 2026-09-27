@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -51,13 +52,13 @@ class UserSeeder extends Seeder
             'Dimas Seto', 'Eka Putri', 'Farhan Halim', 'Gita Gutawa',
             'Hafizh Syahputra', 'Indah Permatasari', 'Joko Widodo', 'Kurnia Meiga',
             'Lesti Kejora', 'Maudy Ayunda', 'Nadiem Makarim', 'Olga Syahputra',
-            'Pevita Pearce', 'Raffi Ahmad', 'Sule Sutisna', 'Tulus Prasetio', 'Unique Priscilla'
+            'Pevita Pearce', 'Raffi Ahmad', 'Sule Sutisna', 'Tulus Prasetio', 'Unique Priscilla',
         ];
         foreach ($studentNames as $idx => $name) {
             $users[] = [
                 'name' => $name,
-                'email' => 'siswa' . ($idx + 1) . '@student.sa1.sch.id',
-                'role' => 'student'
+                'email' => 'siswa'.($idx + 1).'@student.sa1.sch.id',
+                'role' => 'student',
             ];
         }
 
@@ -68,13 +69,13 @@ class UserSeeder extends Seeder
             'Bp. Seto', 'Ibu Eka', 'Bp. Halim', 'Ibu Gutawa',
             'Bp. Syahputra', 'Ibu Permatasari', 'Bp. Widodo', 'Ibu Meiga',
             'Bp. Kejora', 'Ibu Ayunda', 'Bp. Makarim', 'Ibu Syahputra',
-            'Bp. Pearce', 'Ibu Ahmad', 'Bp. Sutisna', 'Ibu Prasetio', 'Bp. Priscilla'
+            'Bp. Pearce', 'Ibu Ahmad', 'Bp. Sutisna', 'Ibu Prasetio', 'Bp. Priscilla',
         ];
         foreach ($parentNames as $idx => $name) {
             $users[] = [
                 'name' => $name,
-                'email' => 'ortu' . ($idx + 1) . '@parent.sa1.sch.id',
-                'role' => 'parent'
+                'email' => 'ortu'.($idx + 1).'@parent.sa1.sch.id',
+                'role' => 'parent',
             ];
         }
 
@@ -84,7 +85,7 @@ class UserSeeder extends Seeder
                 array_merge($u, [
                     'password' => bcrypt('password'),
                     'email_verified_at' => now(),
-                    'uuid' => (string) \Illuminate\Support\Str::uuid(),
+                    'uuid' => (string) Str::uuid(),
                 ])
             );
         }

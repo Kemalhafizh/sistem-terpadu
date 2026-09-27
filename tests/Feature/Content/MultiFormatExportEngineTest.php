@@ -3,7 +3,6 @@
 use App\Models\ExportJob;
 use App\Models\User;
 use App\Services\Content\ExportEngineService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Admin Export Interop']);

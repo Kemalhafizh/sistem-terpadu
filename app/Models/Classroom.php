@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Classroom extends Model
 {
-    use \App\Traits\HasUuid, HasFactory;
+    use HasFactory, HasUuid;
 
     protected $fillable = ['name', 'grade_level', 'major', 'teacher_id', 'academic_year'];
 
@@ -26,7 +28,7 @@ class Classroom extends Model
      */
     public static function allCached()
     {
-        return \Illuminate\Support\Facades\Cache::rememberForever('classrooms_all', function () {
+        return Cache::rememberForever('classrooms_all', function () {
             return self::orderBy('name')->get();
         });
     }
@@ -34,10 +36,10 @@ class Classroom extends Model
     protected static function booted()
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('classrooms_all');
+            Cache::forget('classrooms_all');
         });
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('classrooms_all');
+            Cache::forget('classrooms_all');
         });
     }
 }

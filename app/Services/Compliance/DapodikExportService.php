@@ -15,7 +15,7 @@ class DapodikExportService
             'records_processed' => 1250,
             'error_count' => 0,
             'exported_by' => $exporterId,
-            'export_file_path' => 'exports/dapodik_' . time() . '.xml',
+            'export_file_path' => 'exports/dapodik_'.time().'.xml',
         ]);
     }
 }

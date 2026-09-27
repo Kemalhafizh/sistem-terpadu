@@ -39,19 +39,19 @@ class EvaluationService
     {
         return DB::transaction(function () use ($evaluateeId, $data, $evaluatorId) {
             $cycle = Evaluation360Cycle::where('status', 'active')->first();
-            if (!$cycle) {
-                throw new Exception("Tidak ada periode evaluasi yang aktif saat ini.");
+            if (! $cycle) {
+                throw new Exception('Tidak ada periode evaluasi yang aktif saat ini.');
             }
 
             $instrument = Evaluation360Instrument::where('cycle_id', $cycle->id)
                 ->where('evaluator_type', 'student')
                 ->first();
 
-            if (!$instrument) {
-                throw new Exception("Instrumen evaluasi untuk siswa tidak ditemukan.");
+            if (! $instrument) {
+                throw new Exception('Instrumen evaluasi untuk siswa tidak ditemukan.');
             }
 
-            $respondentHash = $evaluatorId ? hash('sha256', $evaluatorId . '_' . $instrument->id . '_' . $evaluateeId . '_' . (config('app.key') ?: 'sista_eval_key')) : null;
+            $respondentHash = $evaluatorId ? hash('sha256', $evaluatorId.'_'.$instrument->id.'_'.$evaluateeId.'_'.(config('app.key') ?: 'sista_eval_key')) : null;
 
             if ($evaluatorId) {
                 $existingResponses = Evaluation360Response::where('instrument_id', $instrument->id)
@@ -63,11 +63,12 @@ class EvaluationService
                         return true;
                     }
                     $scores = is_array($resp->scores) ? $resp->scores : [];
+
                     return isset($scores['respondent_hash']) && $scores['respondent_hash'] === $respondentHash;
                 });
 
                 if ($alreadySubmitted) {
-                    throw new Exception("Anda sudah mengevaluasi guru ini.");
+                    throw new Exception('Anda sudah mengevaluasi guru ini.');
                 }
             }
 
@@ -125,7 +126,7 @@ class EvaluationService
         $election = OsisElection::where('status', 'active')
             ->with(['candidates.student.user', 'candidates.viceStudent.user'])
             ->first();
-        if (!$election) {
+        if (! $election) {
             return null;
         }
 
@@ -146,7 +147,7 @@ class EvaluationService
                     'vice_president_name' => optional(optional($candidate->viceStudent)->user)->name,
                     'vision' => $candidate->vision,
                     'mission' => $candidate->mission,
-                    'photo_url' => $candidate->photo_path ? asset('storage/' . $candidate->photo_path) : null,
+                    'photo_url' => $candidate->photo_path ? asset('storage/'.$candidate->photo_path) : null,
                     'total_votes' => $candidate->vote_count,
                     'is_voted' => $votedCandidateId === $candidate->id,
                 ];
@@ -161,13 +162,13 @@ class EvaluationService
     {
         return DB::transaction(function () use ($electionId, $candidateId, $voterId) {
             $election = OsisElection::find($electionId);
-            if (!$election || $election->status !== 'active') {
-                throw new Exception("Pemilihan tidak aktif atau tidak ditemukan.");
+            if (! $election || $election->status !== 'active') {
+                throw new Exception('Pemilihan tidak aktif atau tidak ditemukan.');
             }
 
-            if (now()->format('Y-m-d') < $election->voting_start->format('Y-m-d') || 
+            if (now()->format('Y-m-d') < $election->voting_start->format('Y-m-d') ||
                 now()->format('Y-m-d') > $election->voting_end->format('Y-m-d')) {
-                throw new Exception("Saat ini bukan masa voting.");
+                throw new Exception('Saat ini bukan masa voting.');
             }
 
             // Check if student already voted
@@ -176,7 +177,7 @@ class EvaluationService
                 ->exists();
 
             if ($exists) {
-                throw new Exception("Anda sudah memberikan suara pada pemilihan ini (Double Vote Prevention).");
+                throw new Exception('Anda sudah memberikan suara pada pemilihan ini (Double Vote Prevention).');
             }
 
             // Cast vote

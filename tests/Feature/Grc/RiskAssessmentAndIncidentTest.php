@@ -4,7 +4,6 @@ use App\Models\Incident;
 use App\Models\RiskRegister;
 use App\Models\User;
 use App\Services\Grc\RiskManagementService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Risk & Incident Manager']);

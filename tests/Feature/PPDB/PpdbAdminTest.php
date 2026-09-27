@@ -1,11 +1,11 @@
 <?php
 
 use App\Models\AcademicYear;
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
 use App\Models\Registration;
 use App\Models\SpmbDocument;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
 use App\Models\User;
 
 beforeEach(function () {
@@ -141,8 +141,8 @@ test('admin can input entrance test scores', function () {
 
     $response = $this->actingAs($this->admin)->post(route('spmb.admin.scoring.store', $this->wave), [
         'scores' => [
-            $reg->id => 90.00
-        ]
+            $reg->id => 90.00,
+        ],
     ]);
 
     $response->assertRedirect();

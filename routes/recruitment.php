@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HR\RecruitmentController;
 use App\Http\Controllers\HR\CompensationController;
-use App\Http\Controllers\HR\WellnessController;
+use App\Http\Controllers\HR\RecruitmentController;
 use App\Http\Controllers\HR\TurnoverController;
+use App\Http\Controllers\HR\WellnessController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('recruitment')->name('recruitment.')->group(function () {

@@ -14,8 +14,11 @@ class WorkloadBalancingService
         $totalScore = $teachingHours + $additionalScore + $extraScore;
 
         $status = 'balanced';
-        if ($totalScore < 24) $status = 'under';
-        elseif ($totalScore > 36) $status = 'over';
+        if ($totalScore < 24) {
+            $status = 'under';
+        } elseif ($totalScore > 36) {
+            $status = 'over';
+        }
 
         return TeacherWorkload::updateOrCreate(
             [

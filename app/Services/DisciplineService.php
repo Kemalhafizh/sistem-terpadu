@@ -26,10 +26,15 @@ class DisciplineService
         $totalPoints = (int) $logs->sum('points');
         $status = 'Aman';
 
-        if ($totalPoints >= WarningLetter::THRESHOLDS['SP3']) $status = 'SP3 (Sangat Kritis)';
-        elseif ($totalPoints >= WarningLetter::THRESHOLDS['SP2']) $status = 'SP2 (Kritis)';
-        elseif ($totalPoints >= WarningLetter::THRESHOLDS['SP1']) $status = 'SP1 (Waspada)';
-        elseif ($totalPoints >= 30) $status = 'Perlu Perhatian';
+        if ($totalPoints >= WarningLetter::THRESHOLDS['SP3']) {
+            $status = 'SP3 (Sangat Kritis)';
+        } elseif ($totalPoints >= WarningLetter::THRESHOLDS['SP2']) {
+            $status = 'SP2 (Kritis)';
+        } elseif ($totalPoints >= WarningLetter::THRESHOLDS['SP1']) {
+            $status = 'SP1 (Waspada)';
+        } elseif ($totalPoints >= 30) {
+            $status = 'Perlu Perhatian';
+        }
 
         $penalties = $logs->where('type', 'penalty');
         $nextLevel = collect(WarningLetter::THRESHOLDS)
@@ -114,7 +119,7 @@ class DisciplineService
                     'level' => $letter->level,
                     'point_threshold' => $letter->point_threshold,
                     'issued_at' => $letter->issued_at->format('Y-m-d'),
-                    'is_signed' => !is_null($letter->signed_at),
+                    'is_signed' => ! is_null($letter->signed_at),
                     'signed_at' => $letter->signed_at ? $letter->signed_at->format('Y-m-d H:i:s') : null,
                     'notes' => $letter->notes,
                     'can_sign' => $viewerIsThisParent && is_null($letter->signed_at),
@@ -132,20 +137,20 @@ class DisciplineService
 
         // Validasi: yang sign harus parent dari siswa yang bersangkutan
         if ($user->role !== 'parent' && $user->role !== 'orangtua') {
-            throw new Exception("Akses ditolak. Hanya orang tua/wali yang dapat menandatangani surat peringatan.");
+            throw new Exception('Akses ditolak. Hanya orang tua/wali yang dapat menandatangani surat peringatan.');
         }
 
         $student = Student::find($letter->student_id);
-        if (!$student || $student->parent_id !== $user->id) {
-            throw new Exception("Otorisasi gagal. Anda bukan orang tua yang terdaftar untuk siswa ini.");
+        if (! $student || $student->parent_id !== $user->id) {
+            throw new Exception('Otorisasi gagal. Anda bukan orang tua yang terdaftar untuk siswa ini.');
         }
 
         if ($letter->signed_at) {
-            throw new Exception("Surat peringatan ini sudah ditandatangani sebelumnya.");
+            throw new Exception('Surat peringatan ini sudah ditandatangani sebelumnya.');
         }
 
         if (empty($signatureString)) {
-            throw new Exception("Tanda tangan digital tidak boleh kosong.");
+            throw new Exception('Tanda tangan digital tidak boleh kosong.');
         }
 
         $letter->update([

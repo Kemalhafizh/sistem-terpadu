@@ -19,7 +19,7 @@ class Fase77OfflineSyncProtocolTest extends TestCase
 
         $response = $this->actingAs($user, 'sanctum')
             ->withHeader('X-Device-ID', 'mobile-test-device-001')
-            ->getJson('/api/v1/mobile/sync/pull?since=' . urlencode(now()->subDays(7)->toIso8601String()));
+            ->getJson('/api/v1/mobile/sync/pull?since='.urlencode(now()->subDays(7)->toIso8601String()));
 
         $response->assertStatus(200);
         $response->assertJsonStructure([

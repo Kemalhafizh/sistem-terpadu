@@ -4,12 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\Asset;
 use App\Models\AssetCategory;
+use App\Models\AssetMaintenanceTicket;
 use App\Models\Room;
 use App\Models\User;
-use App\Models\AssetMaintenanceTicket;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class AssetMaintenanceTicketSeeder extends Seeder
 {
@@ -100,8 +100,8 @@ class AssetMaintenanceTicketSeeder extends Seeder
             if (in_array($status, ['resolved', 'scrapped'])) {
                 $resolvedBy = $admin->id;
                 $resolvedAt = $date->copy()->addDays(rand(1, 2));
-                $notes = $status === 'resolved' 
-                    ? 'Sudah diperbaiki dengan penggantian suku cadang yang rusak.' 
+                $notes = $status === 'resolved'
+                    ? 'Sudah diperbaiki dengan penggantian suku cadang yang rusak.'
                     : 'Aset afkir, biaya perbaikan melebihi nilai sisa aset. Direkomendasikan untuk dihapus dari inventaris.';
             }
 

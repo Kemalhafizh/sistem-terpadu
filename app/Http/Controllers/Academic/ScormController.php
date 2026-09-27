@@ -13,6 +13,7 @@ class ScormController extends Controller
     public function packages()
     {
         $packages = ScormPackage::with('uploader')->latest()->get();
+
         return view('scorm.packages', compact('packages'));
     }
 

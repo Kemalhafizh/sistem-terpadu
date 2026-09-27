@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\User;
-use App\Models\Classroom;
-use App\Models\Student;
 use App\Models\AcademicYear;
-use App\Models\Subject;
+use App\Models\Classroom;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\User;
 
 beforeEach(function () {
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
@@ -42,7 +42,7 @@ beforeEach(function () {
 test('teacher can view assessment list', function () {
     $response = $this->actingAs($this->guru)->getJson('/api/v1/assessments/teacher');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('teacher can trigger auto remedial calculation', function () {
@@ -50,11 +50,11 @@ test('teacher can trigger auto remedial calculation', function () {
         'passing_score' => 75,
     ]);
     $response->assertStatus(200)
-             ->assertJson(['success' => true]);
+        ->assertJson(['success' => true]);
 });
 
 test('student can view assigned remedials', function () {
     $response = $this->actingAs($this->student)->getJson('/api/v1/assessments/student/remedials');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });

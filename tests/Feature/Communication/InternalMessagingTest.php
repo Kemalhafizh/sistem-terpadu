@@ -4,7 +4,6 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
 use App\Services\Communication\MessagingService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user1 = User::factory()->create(['role' => 'admin', 'name' => 'Admin Sekolah']);

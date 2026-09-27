@@ -7,11 +7,10 @@ use App\Models\Student;
 use App\Models\WadiahAccount;
 use App\Models\WadiahTransaction;
 use App\Services\WadiahService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 
 class WadiahController extends Controller
 {
@@ -76,7 +75,7 @@ class WadiahController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        
+
         $accounts = WadiahAccount::with(['student.user', 'student.classroom'])
             ->when($search, function ($query, $search) {
                 $query->where('account_number', 'like', "%{$search}%")
@@ -99,7 +98,7 @@ class WadiahController extends Controller
     public function showAccount($id)
     {
         $account = WadiahAccount::with(['student.user', 'student.classroom'])->findOrFail($id);
-        
+
         $transactions = $account->transactions()
             ->with('processedBy')
             ->latest()
@@ -114,6 +113,7 @@ class WadiahController extends Controller
     public function depositForm($accountId)
     {
         $account = WadiahAccount::with('student.user')->findOrFail($accountId);
+
         return view('finance.wadiah.deposit', compact('account'));
     }
 
@@ -142,7 +142,7 @@ class WadiahController extends Controller
                 ->route('admin.finance.wadiah.show', $account->id)
                 ->with('success', 'Setoran tunai berhasil disimpan.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memproses setoran: ' . $e->getMessage())->withInput();
+            return back()->with('error', 'Gagal memproses setoran: '.$e->getMessage())->withInput();
         }
     }
 
@@ -152,6 +152,7 @@ class WadiahController extends Controller
     public function withdrawForm($accountId)
     {
         $account = WadiahAccount::with('student.user')->findOrFail($accountId);
+
         return view('finance.wadiah.withdraw', compact('account'));
     }
 
@@ -180,7 +181,7 @@ class WadiahController extends Controller
                 ->route('admin.finance.wadiah.show', $account->id)
                 ->with('success', 'Penarikan tunai berhasil disimpan.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memproses penarikan: ' . $e->getMessage())->withInput();
+            return back()->with('error', 'Gagal memproses penarikan: '.$e->getMessage())->withInput();
         }
     }
 
@@ -194,7 +195,7 @@ class WadiahController extends Controller
         ]);
 
         $account = WadiahAccount::findOrFail($accountId);
-        
+
         // Authorization check: only Admin, Staf TU, or Parent of this student can change limit
         $user = auth()->user();
         if ($user->role === 'parent' && $account->student->parent_id !== $user->id) {

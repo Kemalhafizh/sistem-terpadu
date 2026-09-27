@@ -38,7 +38,7 @@ class IepManagementService
         $upcoming = IepDocument::where('status', 'active')
             ->where('review_date', '<=', now()->addDays(30))
             ->get();
-            
+
         // logic to notify case managers
         return $upcoming->count();
     }

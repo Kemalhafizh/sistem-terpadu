@@ -2,10 +2,10 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
-use App\Models\Grade;
 
 beforeEach(function () {
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
@@ -16,7 +16,7 @@ beforeEach(function () {
         'name' => 'Matematika',
         'code' => 'MTK',
         'category' => 'Nasional',
-        'kkm' => 75
+        'kkm' => 75,
     ]);
 });
 
@@ -54,7 +54,7 @@ test('guru cannot submit grade below 0', function () {
         ],
     ]);
 
-    $response->assertSessionHasErrors(['grades.' . $this->student->id . '.uh']);
+    $response->assertSessionHasErrors(['grades.'.$this->student->id.'.uh']);
 });
 
 test('guru cannot submit grade above 100', function () {
@@ -68,7 +68,7 @@ test('guru cannot submit grade above 100', function () {
         ],
     ]);
 
-    $response->assertSessionHasErrors(['grades.' . $this->student->id . '.uh']);
+    $response->assertSessionHasErrors(['grades.'.$this->student->id.'.uh']);
 });
 
 test('grade model predikat attribute is calculated correctly based on KKM', function () {

@@ -5,7 +5,6 @@ use App\Models\AccreditationIndicator;
 use App\Models\AccreditationStandard;
 use App\Models\User;
 use App\Services\Grc\AccreditationService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Assessor Kesiapan BAN-SM']);

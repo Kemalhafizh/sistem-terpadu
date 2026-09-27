@@ -25,6 +25,7 @@ class StudentSelfService
             'admin_notes' => $adminNotes,
             'resolved_at' => in_array($status, ['completed', 'rejected']) ? now() : null,
         ]);
+
         return $request;
     }
 }

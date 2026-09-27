@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\MeetingNote;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class MeetingNoteController extends Controller
 {
@@ -21,8 +21,8 @@ class MeetingNoteController extends Controller
         // Search by title or location
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('location', 'like', '%' . $request->search . '%');
+                $q->where('title', 'like', '%'.$request->search.'%')
+                    ->orWhere('location', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -34,19 +34,19 @@ class MeetingNoteController extends Controller
         // Filter by date range (month/year)
         if ($request->filled('month') && $request->filled('year')) {
             $query->whereMonth('meeting_date', $request->month)
-                  ->whereYear('meeting_date', $request->year);
+                ->whereYear('meeting_date', $request->year);
         } elseif ($request->filled('year')) {
             $query->whereYear('meeting_date', $request->year);
         }
 
         $meetingNotes = $query->orderBy('meeting_date', 'desc')
-                             ->orderBy('start_time', 'desc')
-                             ->paginate(10);
+            ->orderBy('start_time', 'desc')
+            ->paginate(10);
 
         $types = ['rapat_guru', 'rapat_osis', 'rapat_wali_murid', 'rapat_yayasan', 'rapat_panitia', 'lainnya'];
         $monthsList = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
-            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
         ];
         $yearsList = range(now()->year - 2, now()->year + 2);
 
@@ -60,7 +60,7 @@ class MeetingNoteController extends Controller
     {
         $users = User::whereIn('role', ['admin', 'superadmin', 'kepala_sekolah', 'staf_tu', 'guru'])->orderBy('name')->get();
         $types = ['rapat_guru', 'rapat_osis', 'rapat_wali_murid', 'rapat_yayasan', 'rapat_panitia', 'lainnya'];
-        
+
         return view('meeting-notes.create', compact('users', 'types'));
     }
 
@@ -91,7 +91,7 @@ class MeetingNoteController extends Controller
         if ($request->has('action_items')) {
             $idCounter = 1;
             foreach ($request->action_items as $item) {
-                if (!empty($item['task']) && !empty($item['pic'])) {
+                if (! empty($item['task']) && ! empty($item['pic'])) {
                     $actionItems[] = [
                         'id' => $idCounter++,
                         'task' => $item['task'],
@@ -128,10 +128,10 @@ class MeetingNoteController extends Controller
     public function show($id)
     {
         $meetingNote = MeetingNote::with('creator')->findOrFail($id);
-        
+
         // Load attendees users
         $attendeeUsers = collect();
-        if (!empty($meetingNote->attendees)) {
+        if (! empty($meetingNote->attendees)) {
             $attendeeUsers = User::whereIn('id', $meetingNote->attendees)->orderBy('name')->get();
         }
 
@@ -151,7 +151,7 @@ class MeetingNoteController extends Controller
         $meetingNote = MeetingNote::findOrFail($id);
 
         // RBAC check: only creator or admin/superadmin can edit
-        if (auth()->id() !== $meetingNote->created_by && !in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (auth()->id() !== $meetingNote->created_by && ! in_array(auth()->user()->role, ['admin', 'superadmin'])) {
             abort(403, 'Anda tidak memiliki wewenang untuk mengubah notulensi ini.');
         }
 
@@ -174,7 +174,7 @@ class MeetingNoteController extends Controller
     {
         $meetingNote = MeetingNote::findOrFail($id);
 
-        if (auth()->id() !== $meetingNote->created_by && !in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (auth()->id() !== $meetingNote->created_by && ! in_array(auth()->user()->role, ['admin', 'superadmin'])) {
             abort(403);
         }
 
@@ -204,17 +204,17 @@ class MeetingNoteController extends Controller
         $existingItems = $meetingNote->action_items ?? [];
         $existingMap = [];
         foreach ($existingItems as $ei) {
-            $existingMap[$ei['task'] . '|' . $ei['pic']] = $ei['is_completed'] ?? false;
+            $existingMap[$ei['task'].'|'.$ei['pic']] = $ei['is_completed'] ?? false;
         }
 
         $actionItems = [];
         if ($request->has('action_items')) {
             $idCounter = 1;
             foreach ($request->action_items as $item) {
-                if (!empty($item['task']) && !empty($item['pic'])) {
-                    $key = $item['task'] . '|' . $item['pic'];
+                if (! empty($item['task']) && ! empty($item['pic'])) {
+                    $key = $item['task'].'|'.$item['pic'];
                     $isCompleted = isset($item['is_completed']) ? filter_var($item['is_completed'], FILTER_VALIDATE_BOOLEAN) : ($existingMap[$key] ?? false);
-                    
+
                     $actionItems[] = [
                         'id' => $idCounter++,
                         'task' => $item['task'],
@@ -250,7 +250,7 @@ class MeetingNoteController extends Controller
     {
         $meetingNote = MeetingNote::findOrFail($id);
 
-        if (auth()->id() !== $meetingNote->created_by && !in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (auth()->id() !== $meetingNote->created_by && ! in_array(auth()->user()->role, ['admin', 'superadmin'])) {
             abort(403);
         }
 
@@ -265,7 +265,7 @@ class MeetingNoteController extends Controller
     public function actionItemTracker(Request $request)
     {
         $meetings = MeetingNote::whereNotNull('action_items')->orderBy('meeting_date', 'desc')->get();
-        
+
         $actionItems = collect();
         foreach ($meetings as $meeting) {
             $items = $meeting->action_items ?? [];
@@ -273,7 +273,7 @@ class MeetingNoteController extends Controller
                 // Apply search filter
                 if ($request->filled('search')) {
                     $searchTerm = strtolower($request->search);
-                    if (str_contains(strtolower($item['task']), $searchTerm) === false && 
+                    if (str_contains(strtolower($item['task']), $searchTerm) === false &&
                         str_contains(strtolower($item['pic']), $searchTerm) === false &&
                         str_contains(strtolower($meeting->title), $searchTerm) === false) {
                         continue;
@@ -304,7 +304,7 @@ class MeetingNoteController extends Controller
         // Paginate manually
         $page = $request->input('page', 1);
         $perPage = 15;
-        $paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
+        $paginatedItems = new LengthAwarePaginator(
             $actionItems->forPage($page, $perPage)->values(),
             $actionItems->count(),
             $perPage,
@@ -321,18 +321,18 @@ class MeetingNoteController extends Controller
     public function toggleActionItem($meetingId, $itemId)
     {
         $meetingNote = MeetingNote::findOrFail($meetingId);
-        
+
         // Allow teachers and management to toggle tasks
-        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'staf_tu', 'guru'])) {
+        if (! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'staf_tu', 'guru'])) {
             abort(403);
         }
 
         $items = $meetingNote->action_items ?? [];
         $updated = false;
-        
+
         foreach ($items as &$item) {
             if ($item['id'] == $itemId) {
-                $item['is_completed'] = !($item['is_completed'] ?? false);
+                $item['is_completed'] = ! ($item['is_completed'] ?? false);
                 $updated = true;
                 break;
             }
@@ -340,10 +340,11 @@ class MeetingNoteController extends Controller
 
         if ($updated) {
             $meetingNote->update(['action_items' => $items]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Status action item berhasil diperbarui.',
-                'is_completed' => $item['is_completed']
+                'is_completed' => $item['is_completed'],
             ]);
         }
 
@@ -356,9 +357,9 @@ class MeetingNoteController extends Controller
     public function exportPdf($id)
     {
         $meetingNote = MeetingNote::with('creator')->findOrFail($id);
-        
+
         $attendeeUsers = collect();
-        if (!empty($meetingNote->attendees)) {
+        if (! empty($meetingNote->attendees)) {
             $attendeeUsers = User::whereIn('id', $meetingNote->attendees)->orderBy('name')->get();
         }
 
@@ -369,7 +370,7 @@ class MeetingNoteController extends Controller
         $pdf = Pdf::loadView('meeting-notes.pdf', compact('meetingNote', 'attendeeUsers', 'agendaHtml', 'discussionHtml', 'decisionsHtml'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->download('Notulensi_Rapat_' . str_replace(' ', '_', $meetingNote->title) . '.pdf');
+        return $pdf->download('Notulensi_Rapat_'.str_replace(' ', '_', $meetingNote->title).'.pdf');
     }
 
     /**

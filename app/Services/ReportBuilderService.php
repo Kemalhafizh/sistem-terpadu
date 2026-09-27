@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Student;
-use App\Models\Billing;
 use App\Models\Attendance;
+use App\Models\Billing;
 use App\Models\Grade;
-use Illuminate\Support\Facades\DB;
+use App\Models\Student;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ReportBuilderService
 {
@@ -29,7 +29,7 @@ class ReportBuilderService
                     'gender' => ['label' => 'Jenis Kelamin', 'field' => 'students.gender', 'type' => 'string'],
                     'status' => ['label' => 'Status Aktif', 'field' => 'students.status', 'type' => 'string'],
                     'address' => ['label' => 'Alamat', 'field' => 'students.address', 'type' => 'string'],
-                ]
+                ],
             ],
             'billings' => [
                 'label' => 'Keuangan & Tagihan SPP',
@@ -42,7 +42,7 @@ class ReportBuilderService
                     'remaining_balance' => ['label' => 'Sisa Tagihan', 'field' => 'billings.remaining_balance', 'type' => 'numeric'],
                     'due_date' => ['label' => 'Jatuh Tempo', 'field' => 'billings.due_date', 'type' => 'date'],
                     'status' => ['label' => 'Status Bayar', 'field' => 'billings.status', 'type' => 'string'],
-                ]
+                ],
             ],
             'attendances' => [
                 'label' => 'Kehadiran & Absensi',
@@ -53,7 +53,7 @@ class ReportBuilderService
                     'date' => ['label' => 'Tanggal Absen', 'field' => 'attendances.date', 'type' => 'date'],
                     'status' => ['label' => 'Status Kehadiran', 'field' => 'attendances.status', 'type' => 'string'],
                     'notes' => ['label' => 'Catatan', 'field' => 'attendances.notes', 'type' => 'string'],
-                ]
+                ],
             ],
             'grades' => [
                 'label' => 'Akademik & Nilai Siswa',
@@ -65,8 +65,8 @@ class ReportBuilderService
                     'type' => ['label' => 'Kategori Nilai', 'field' => 'grades.type', 'type' => 'string'],
                     'score' => ['label' => 'Nilai Angka', 'field' => 'grades.score', 'type' => 'numeric'],
                     'description' => ['label' => 'Keterangan', 'field' => 'grades.description', 'type' => 'string'],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -83,8 +83,8 @@ class ReportBuilderService
         $orderDir = $config['orderDir'] ?? 'asc';
 
         $availableSources = $this->getAvailableSources();
-        if (!isset($availableSources[$sourceKey])) {
-            throw new \InvalidArgumentException("Sumber data tidak valid.");
+        if (! isset($availableSources[$sourceKey])) {
+            throw new \InvalidArgumentException('Sumber data tidak valid.');
         }
 
         // Tentukan Model dan Mapping Kolom
@@ -94,24 +94,24 @@ class ReportBuilderService
         // Terapkan JOIN dan SELECT berdasarkan Sumber Data
         if ($sourceKey === 'students') {
             $query->join('users', 'students.user_id', '=', 'users.id')
-                  ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id')
-                  ->whereNull('students.deleted_at');
+                ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id')
+                ->whereNull('students.deleted_at');
         } elseif ($sourceKey === 'billings') {
             $query->join('students', 'billings.student_id', '=', 'students.id')
-                  ->join('users', 'students.user_id', '=', 'users.id')
-                  ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id')
-                  ->join('payment_categories', 'billings.payment_category_id', '=', 'payment_categories.id')
-                  ->whereNull('billings.deleted_at');
+                ->join('users', 'students.user_id', '=', 'users.id')
+                ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id')
+                ->join('payment_categories', 'billings.payment_category_id', '=', 'payment_categories.id')
+                ->whereNull('billings.deleted_at');
         } elseif ($sourceKey === 'attendances') {
             $query->join('students', 'attendances.student_id', '=', 'students.id')
-                  ->join('users', 'students.user_id', '=', 'users.id')
-                  ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id');
+                ->join('users', 'students.user_id', '=', 'users.id')
+                ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id');
         } elseif ($sourceKey === 'grades') {
             $query->join('students', 'grades.student_id', '=', 'students.id')
-                  ->join('users', 'students.user_id', '=', 'users.id')
-                  ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id')
-                  ->join('subjects', 'grades.subject_id', '=', 'subjects.id')
-                  ->whereNull('grades.deleted_at');
+                ->join('users', 'students.user_id', '=', 'users.id')
+                ->leftJoin('classrooms', 'students.classroom_id', '=', 'classrooms.id')
+                ->join('subjects', 'grades.subject_id', '=', 'subjects.id')
+                ->whereNull('grades.deleted_at');
         }
 
         // Select kolom terpilih secara aman menggunakan mapping field asli
@@ -122,7 +122,7 @@ class ReportBuilderService
                 $selects[] = "{$field} as {$colKey}";
             }
         }
-        if (!empty($selects)) {
+        if (! empty($selects)) {
             $query->selectRaw(implode(', ', $selects));
         }
 
@@ -134,9 +134,9 @@ class ReportBuilderService
 
             if ($colKey && isset($sourceConfig['columns'][$colKey])) {
                 $field = $sourceConfig['columns'][$colKey]['field'];
-                
+
                 $allowedOperators = ['=', '>', '<', '>=', '<=', '!=', 'like', 'in'];
-                if (!in_array($operator, $allowedOperators, true)) {
+                if (! in_array($operator, $allowedOperators, true)) {
                     continue;
                 }
 

@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\AccommodationRegistry;
+use App\Models\DifferentiatedPlan;
+use App\Models\Employee;
 use App\Models\IepDocument;
 use App\Models\ScreeningResult;
-use App\Models\DifferentiatedPlan;
-use App\Models\AccommodationRegistry;
 use App\Models\Student;
-use App\Models\Employee;
+use Illuminate\Database\Seeder;
 
 class InclusiveEducationSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class InclusiveEducationSeeder extends Seeder
             'diagnoses' => ['Disleksia'],
             'present_level_of_performance' => 'Siswa menunjukkan kesulitan dalam membaca teks panjang namun unggul dalam tugas visual dan lisan.',
             'annual_goals' => [
-                ['description' => 'Meningkatkan kecepatan membaca', 'progress' => '0%']
+                ['description' => 'Meningkatkan kecepatan membaca', 'progress' => '0%'],
             ],
             'required_accommodations' => ['Waktu ujian tambahan', 'Materi dalam format audio'],
             'status' => 'active',

@@ -24,6 +24,7 @@ class WellbeingService
     public function activateScreening(WellbeingScreening $screening): WellbeingScreening
     {
         $screening->update(['status' => 'active']);
+
         return $screening;
     }
 
@@ -50,16 +51,30 @@ class WellbeingService
     public function calculateRiskLevel(string $type, int $score): string
     {
         if ($type === 'srq20') {
-            if ($score >= 12) return 'critical';
-            if ($score >= 8) return 'high';
-            if ($score >= 5) return 'moderate';
+            if ($score >= 12) {
+                return 'critical';
+            }
+            if ($score >= 8) {
+                return 'high';
+            }
+            if ($score >= 5) {
+                return 'moderate';
+            }
+
             return 'low';
         }
 
         // PHQ-9 default
-        if ($score >= 20) return 'critical';
-        if ($score >= 15) return 'high';
-        if ($score >= 10) return 'moderate';
+        if ($score >= 20) {
+            return 'critical';
+        }
+        if ($score >= 15) {
+            return 'high';
+        }
+        if ($score >= 10) {
+            return 'moderate';
+        }
+
         return 'low';
     }
 

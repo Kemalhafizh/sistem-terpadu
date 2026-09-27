@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Services\ElearningMobileService;
-use App\Models\ElearningMaterial;
 use App\Models\ElearningAssignment;
+use App\Models\ElearningMaterial;
 use App\Models\ElearningSubmission;
-use Illuminate\Http\Request;
+use App\Services\ElearningMobileService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ElearningMobileApiController extends Controller
 {
@@ -22,6 +22,7 @@ class ElearningMobileApiController extends Controller
     public function studentClasses(Request $request): JsonResponse
     {
         $classes = $this->service->getStudentClasses($request->user()->id);
+
         return response()->json([
             'success' => true,
             'data' => $classes,
@@ -31,6 +32,7 @@ class ElearningMobileApiController extends Controller
     public function studentMaterials(Request $request, int $classId): JsonResponse
     {
         $materials = $this->service->getClassMaterials($classId);
+
         return response()->json([
             'success' => true,
             'data' => $materials,
@@ -40,6 +42,7 @@ class ElearningMobileApiController extends Controller
     public function studentAssignments(Request $request, int $classId): JsonResponse
     {
         $assignments = $this->service->getClassAssignments($classId, $request->user()->id);
+
         return response()->json([
             'success' => true,
             'data' => $assignments,
@@ -70,6 +73,7 @@ class ElearningMobileApiController extends Controller
     public function teacherClasses(Request $request): JsonResponse
     {
         $classes = $this->service->getTeacherClasses($request->user()->id);
+
         return response()->json([
             'success' => true,
             'data' => $classes,

@@ -30,6 +30,7 @@ class MessagingService
             if ($initialMessage) {
                 $this->sendMessage($conversation->id, $userId, $initialMessage);
             }
+
             return $conversation;
         }
 
@@ -141,6 +142,7 @@ class MessagingService
                     : $conv->messages()->where('sender_id', '!=', $userId)->count();
 
                 $conv->unread_count = $unreadCount;
+
                 return $conv;
             });
     }

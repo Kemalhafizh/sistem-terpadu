@@ -1,15 +1,20 @@
 <?php
+
 namespace App\Http\Controllers\Treasury;
+
 use App\Http\Controllers\Controller;
-use App\Models\{BankAccount, VendorPayment};
+use App\Models\BankAccount;
+use App\Models\VendorPayment;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
-class VendorPaymentController extends Controller {
-    public function index() {
+class VendorPaymentController extends Controller
+{
+    public function index()
+    {
         $payments = VendorPayment::with('account')->orderByRaw("CASE WHEN status IN ('scheduled', 'overdue') THEN 0 ELSE 1 END")->orderBy('due_date')->get();
         $open = $payments->filter->isOpen();
         $summary = [
@@ -18,13 +23,19 @@ class VendorPaymentController extends Controller {
             'paid_this_month' => (float) $payments->where('status', 'paid')
                 ->filter(fn ($p) => $p->paid_date && $p->paid_date->isSameMonth(today()))->sum('amount'),
         ];
+
         return view('treasury.vendor.index', compact('payments', 'summary'));
     }
-    public function create() {
+
+    public function create()
+    {
         $accounts = BankAccount::where('is_active', true)->orderBy('bank_name')->get();
+
         return view('treasury.vendor.create', compact('accounts'));
     }
-    public function store(Request $request) {
+
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'vendor_name' => 'required|string|max:255',
             'invoice_number' => 'nullable|string|max:100',
@@ -37,14 +48,20 @@ class VendorPaymentController extends Controller {
         $validated['created_by'] = $request->user()->id;
         $validated['status'] = 'scheduled';
         $payment = VendorPayment::create($validated);
+
         return redirect()->route('treasury.vendor.show', $payment)->with('success', 'Pembayaran vendor dijadwalkan.');
     }
-    public function show(VendorPayment $vendor) {
+
+    public function show(VendorPayment $vendor)
+    {
         $vendor->load(['account', 'creator', 'approver']);
         $accounts = BankAccount::where('is_active', true)->orderBy('bank_name')->get();
+
         return view('treasury.vendor.show', ['payment' => $vendor, 'accounts' => $accounts]);
     }
-    public function markPaid(Request $request, VendorPayment $vendor) {
+
+    public function markPaid(Request $request, VendorPayment $vendor)
+    {
         if (! $vendor->isOpen()) {
             return back()->withErrors(['status' => 'Pembayaran ini sudah '.strtolower($vendor->statusLabel()).'.']);
         }
@@ -65,20 +82,29 @@ class VendorPaymentController extends Controller {
             'proof_file_path' => $request->hasFile('proof') ? $request->file('proof')->store('vendor-proofs', 'local') : $vendor->proof_file_path,
             'approved_by' => $request->user()->id,
         ]);
+
         return redirect()->route('treasury.vendor.show', $vendor)->with('success', 'Pembayaran vendor dicatat lunas.');
     }
-    public function cancel(Request $request, VendorPayment $vendor) {
+
+    public function cancel(Request $request, VendorPayment $vendor)
+    {
         if (! $vendor->isOpen()) {
             return back()->withErrors(['status' => 'Hanya pembayaran yang belum dibayar yang dapat dibatalkan.']);
         }
         $vendor->update(['status' => 'cancelled', 'approved_by' => $request->user()->id]);
+
         return redirect()->route('treasury.vendor.show', $vendor)->with('success', 'Pembayaran vendor dibatalkan.');
     }
-    public function proof(VendorPayment $vendor) {
+
+    public function proof(VendorPayment $vendor)
+    {
         abort_unless($vendor->proof_file_path && Storage::disk('local')->exists($vendor->proof_file_path), 404);
+
         return Storage::disk('local')->download($vendor->proof_file_path);
     }
-    public function calendar(Request $request) {
+
+    public function calendar(Request $request)
+    {
         $month = $request->validate(['month' => 'nullable|date_format:Y-m'])['month'] ?? today()->format('Y-m');
         $start = Carbon::createFromFormat('!Y-m', $month)->startOfMonth();
         $end = $start->copy()->endOfMonth();

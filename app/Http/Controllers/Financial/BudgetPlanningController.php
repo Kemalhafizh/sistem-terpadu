@@ -43,6 +43,7 @@ class BudgetPlanningController extends Controller
     public function show(int $id)
     {
         $plan = BudgetPlan::with(['lineItems', 'revisions.reviser', 'creator', 'approver'])->findOrFail($id);
+
         return view('budget.line-items', compact('plan'));
     }
 

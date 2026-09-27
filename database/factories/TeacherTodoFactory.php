@@ -41,7 +41,7 @@ class TeacherTodoFactory extends Factory
 
     public function pending(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'is_completed' => false,
             'completed_at' => null,
         ]);
@@ -49,7 +49,7 @@ class TeacherTodoFactory extends Factory
 
     public function completed(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'is_completed' => true,
             'completed_at' => now(),
         ]);
@@ -57,7 +57,7 @@ class TeacherTodoFactory extends Factory
 
     public function overdue(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'is_completed' => false,
             'completed_at' => null,
             'due_date' => now()->subDays(rand(1, 5)),
@@ -66,14 +66,14 @@ class TeacherTodoFactory extends Factory
 
     public function highPriority(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'priority' => 'high',
         ]);
     }
 
     public function dueToday(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'is_completed' => false,
             'completed_at' => null,
             'due_date' => now()->toDateString(),

@@ -2,11 +2,14 @@
 
 $basePath = 'c:\project\portofolio\project-super-web\sistem-terpadu\\';
 
-function w($path, $content) {
+function w($path, $content)
+{
     global $basePath;
-    $full = $basePath . $path;
+    $full = $basePath.$path;
     $dir = dirname($full);
-    if (!is_dir($dir)) mkdir($dir, 0777, true);
+    if (! is_dir($dir)) {
+        mkdir($dir, 0777, true);
+    }
     file_put_contents($full, trim($content));
 }
 

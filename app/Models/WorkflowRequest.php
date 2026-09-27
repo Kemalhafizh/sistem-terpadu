@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class WorkflowRequest extends Model
 {
-    use \App\Traits\HasUuid, HasFactory;
+    use HasFactory, HasUuid;
 
     protected $fillable = [
         'definition_id',

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('remedial_sessions')) {
+        if (! Schema::hasTable('remedial_sessions')) {
             Schema::create('remedial_sessions', function (Blueprint $table) {
                 $table->id();
                 $table->uuid('uuid')->unique();

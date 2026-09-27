@@ -3,12 +3,11 @@
 /** @var TestCase|stdClass $this */
 
 use App\Models\AcademicYear;
-use App\Models\Classroom;
 use App\Models\AlumniData;
+use App\Models\Classroom;
 use App\Models\Student;
-use App\Models\User;
 use App\Models\TracerResponse;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\User;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -16,7 +15,7 @@ beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin', 'name' => 'Agus Admin']);
     $this->humas = User::factory()->create(['role' => 'waka_humas', 'name' => 'Hendri Humas']);
     $this->activeStudentUser = User::factory()->create(['role' => 'student', 'name' => 'Ahmad Siswa']);
-    
+
     $this->alumniUser = User::factory()->create(['role' => 'student', 'name' => 'Alumni Siswa']);
     $this->parentUser = User::factory()->create(['role' => 'parent']);
 
@@ -28,14 +27,14 @@ beforeEach(function () {
     $this->activeStudent = Student::factory()->create([
         'user_id' => $this->activeStudentUser->id,
         'classroom_id' => $this->classroom->id,
-        'status' => 'active'
+        'status' => 'active',
     ]);
 
     // Alumni Student
     $this->alumniStudent = Student::factory()->create([
         'user_id' => $this->alumniUser->id,
         'classroom_id' => $this->classroom->id,
-        'status' => 'alumni'
+        'status' => 'alumni',
     ]);
 
     // Create AlumniData for the alumni student
@@ -44,7 +43,7 @@ beforeEach(function () {
         'graduation_year' => 2025,
         'current_activity' => 'other',
         'email' => $this->alumniUser->email,
-        'phone_number' => '08123456789'
+        'phone_number' => '08123456789',
     ]);
 });
 
@@ -53,17 +52,17 @@ test('waka humas or admin can graduate students in bulk', function () {
 
     $response = $this->post(route('alumni.bulk-graduate.store'), [
         'student_ids' => [$this->activeStudent->id],
-        'graduation_year' => 2026
+        'graduation_year' => 2026,
     ]);
 
     $response->assertRedirect(route('alumni.index'));
     $this->assertDatabaseHas('students', [
         'id' => $this->activeStudent->id,
-        'status' => 'alumni'
+        'status' => 'alumni',
     ]);
     $this->assertDatabaseHas('alumni_data', [
         'student_id' => $this->activeStudent->id,
-        'graduation_year' => 2026
+        'graduation_year' => 2026,
     ]);
 });
 
@@ -79,7 +78,7 @@ test('alumni can fill out tracer study questionnaire and edit it later', functio
         'salary_range' => '3M - 5M',
         'relevance_score' => 5,
         'satisfaction_score' => 4,
-        'suggestions' => 'Tingkatkan praktikum komputer.'
+        'suggestions' => 'Tingkatkan praktikum komputer.',
     ]);
 
     $response->assertRedirect(route('alumni.tracer-study.form'));
@@ -87,7 +86,7 @@ test('alumni can fill out tracer study questionnaire and edit it later', functio
         'alumni_data_id' => $this->alumniData->id,
         'job_title' => 'Software Engineer',
         'employer_name' => 'PT Sultan Agung Jaya',
-        'relevance_score' => 5
+        'relevance_score' => 5,
     ]);
 
     // Retrieve Response for editing
@@ -102,7 +101,7 @@ test('alumni can fill out tracer study questionnaire and edit it later', functio
         'salary_range' => '5M - 10M',
         'relevance_score' => 5,
         'satisfaction_score' => 5,
-        'suggestions' => 'Saran diubah.'
+        'suggestions' => 'Saran diubah.',
     ]);
 
     $editResponse->assertRedirect(route('alumni.tracer-study.form'));
@@ -110,7 +109,7 @@ test('alumni can fill out tracer study questionnaire and edit it later', functio
         'id' => $tracerResponse->id,
         'job_title' => 'Senior Developer',
         'salary_range' => '5M - 10M',
-        'suggestions' => 'Saran diubah.'
+        'suggestions' => 'Saran diubah.',
     ]);
 });
 

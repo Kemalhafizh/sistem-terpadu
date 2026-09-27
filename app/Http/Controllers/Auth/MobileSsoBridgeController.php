@@ -36,17 +36,17 @@ class MobileSsoBridgeController extends Controller
         }
 
         // 2. Fallback lookup by email if token is a demo / offline bridge
-        if (!$user && $email) {
+        if (! $user && $email) {
             $user = User::where('email', $email)->first();
         }
 
         // 3. Fallback lookup by role if still not found
-        if (!$user && $role) {
+        if (! $user && $role) {
             $user = User::where('role', $role)->first();
         }
 
         // 4. Default fallback to first active student or admin
-        if (!$user) {
+        if (! $user) {
             $user = User::where('role', 'student')->first() ?? User::first();
         }
 
@@ -57,8 +57,8 @@ class MobileSsoBridgeController extends Controller
 
             // Clean redirect URL (prevent open redirect vulnerabilities)
             $cleanRedirect = filter_var($redirectUrl, FILTER_SANITIZE_URL);
-            if (!str_starts_with($cleanRedirect, '/') && !str_starts_with($cleanRedirect, config('app.url'))) {
-                $cleanRedirect = '/' . ltrim($cleanRedirect, '/');
+            if (! str_starts_with($cleanRedirect, '/') && ! str_starts_with($cleanRedirect, config('app.url'))) {
+                $cleanRedirect = '/'.ltrim($cleanRedirect, '/');
             }
 
             return redirect($cleanRedirect);

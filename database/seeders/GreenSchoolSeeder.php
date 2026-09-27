@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\CarbonMetric;
-use App\Models\WasteLog;
-use App\Models\EcoProject;
 use App\Models\EcoParticipation;
+use App\Models\EcoProject;
 use App\Models\Employee;
 use App\Models\Student;
+use App\Models\WasteLog;
+use Illuminate\Database\Seeder;
 
 class GreenSchoolSeeder extends Seeder
 {
@@ -26,7 +25,7 @@ class GreenSchoolSeeder extends Seeder
             'paper_usage_kg' => 30.00,
             'total_carbon_footprint_kg' => 2181.25,
             'source_data' => ['sensor_1' => 'active'],
-            'reduction_initiatives' => 'Pengurangan penggunaan listrik saat siang hari.'
+            'reduction_initiatives' => 'Pengurangan penggunaan listrik saat siang hari.',
         ]);
 
         WasteLog::create([
@@ -35,7 +34,7 @@ class GreenSchoolSeeder extends Seeder
             'weight_kg' => 10.5,
             'disposal_method' => 'bank_sampah',
             'revenue_generated' => 15000,
-            'recorded_by' => $employee->id
+            'recorded_by' => $employee->id,
         ]);
 
         EcoProject::create([
@@ -45,7 +44,7 @@ class GreenSchoolSeeder extends Seeder
             'start_date' => now()->subDays(10),
             'end_date' => now()->addDays(20),
             'status' => 'in_progress',
-            'participating_classes' => ['10A', '10B']
+            'participating_classes' => ['10A', '10B'],
         ]);
 
         EcoParticipation::create([
@@ -54,7 +53,7 @@ class GreenSchoolSeeder extends Seeder
             'participation_date' => now(),
             'points_awarded' => 10,
             'is_verified' => true,
-            'verified_by' => $employee->id
+            'verified_by' => $employee->id,
         ]);
     }
 }

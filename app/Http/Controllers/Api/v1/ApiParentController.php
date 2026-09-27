@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Events\ChatMessageSent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AttendanceResource;
 use App\Http\Resources\BillingResource;
@@ -13,8 +14,8 @@ use App\Models\Grade;
 use App\Models\ParentMessage;
 use App\Models\Student;
 use App\Models\User;
-use App\Events\ChatMessageSent;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -58,7 +59,7 @@ class ApiParentController extends Controller
     public function childSummary(Request $request, $studentUuid)
     {
         $student = $this->verifyChildRelation($request->user(), $studentUuid);
-        if ($student instanceof \Illuminate\Http\JsonResponse) {
+        if ($student instanceof JsonResponse) {
             return $student;
         }
 
@@ -89,7 +90,7 @@ class ApiParentController extends Controller
                 'attendance_rate' => $attendanceRate,
                 'unpaid_billings_count' => $unpaidBillings,
                 'total_bk_points' => $totalPoints,
-            ]
+            ],
         ], 'Rangkuman data anak berhasil dihitung');
     }
 
@@ -103,7 +104,7 @@ class ApiParentController extends Controller
     public function childGrades(Request $request, $studentUuid)
     {
         $student = $this->verifyChildRelation($request->user(), $studentUuid);
-        if ($student instanceof \Illuminate\Http\JsonResponse) {
+        if ($student instanceof JsonResponse) {
             return $student;
         }
 
@@ -125,7 +126,7 @@ class ApiParentController extends Controller
     public function childAttendance(Request $request, $studentUuid)
     {
         $student = $this->verifyChildRelation($request->user(), $studentUuid);
-        if ($student instanceof \Illuminate\Http\JsonResponse) {
+        if ($student instanceof JsonResponse) {
             return $student;
         }
 
@@ -147,7 +148,7 @@ class ApiParentController extends Controller
     public function childBillings(Request $request, $studentUuid)
     {
         $student = $this->verifyChildRelation($request->user(), $studentUuid);
-        if ($student instanceof \Illuminate\Http\JsonResponse) {
+        if ($student instanceof JsonResponse) {
             return $student;
         }
 
@@ -169,7 +170,7 @@ class ApiParentController extends Controller
     public function childPoints(Request $request, $studentUuid)
     {
         $student = $this->verifyChildRelation($request->user(), $studentUuid);
-        if ($student instanceof \Illuminate\Http\JsonResponse) {
+        if ($student instanceof JsonResponse) {
             return $student;
         }
 
@@ -231,13 +232,13 @@ class ApiParentController extends Controller
 
         // 1. Verifikasi guru ada
         $teacher = User::findOrFail($request->recipient_id);
-        if (!in_array($teacher->role, ['guru', 'bk'])) {
+        if (! in_array($teacher->role, ['guru', 'bk'])) {
             return $this->errorResponse('Tujuan pengiriman bukan akun guru/BK', 400);
         }
 
         // 2. Verifikasi relasi anak
         $student = $this->verifyChildRelation($user, $request->student_uuid);
-        if ($student instanceof \Illuminate\Http\JsonResponse) {
+        if ($student instanceof JsonResponse) {
             return $student;
         }
 
@@ -276,7 +277,7 @@ class ApiParentController extends Controller
     private function verifyChildRelation($user, $studentUuid)
     {
         $student = Student::where('uuid', $studentUuid)->first();
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Siswa tidak ditemukan', 404);
         }
 

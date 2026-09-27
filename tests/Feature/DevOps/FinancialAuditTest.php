@@ -5,12 +5,11 @@ use App\Models\JournalEntry;
 use App\Models\JournalEntryLine;
 use App\Models\User;
 use App\Services\FinancialAuditorService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->staff = User::factory()->create(['role' => 'staf_tu']);
-    $this->auditorService = new FinancialAuditorService();
+    $this->auditorService = new FinancialAuditorService;
 
     $this->kas = Account::firstOrCreate(['code' => '101'], [
         'name' => 'Kas Utama Sekolah',

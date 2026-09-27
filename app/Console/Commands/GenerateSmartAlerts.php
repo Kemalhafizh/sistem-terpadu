@@ -27,10 +27,10 @@ class GenerateSmartAlerts extends Command
     public function handle(SmartAlertService $service)
     {
         $this->info('Starting Smart Alerts generation...');
-        
+
         $results = $service->generateAll();
-        
-        $this->info("Completed. Total generated/updated active alerts: " . $results['total']);
+
+        $this->info('Completed. Total generated/updated active alerts: '.$results['total']);
         foreach ($results['details'] as $type => $count) {
             $this->line(" - {$type}: {$count}");
         }

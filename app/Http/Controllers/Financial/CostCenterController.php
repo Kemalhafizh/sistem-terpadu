@@ -76,6 +76,7 @@ class CostCenterController extends Controller
     public function transactions(int $id)
     {
         $costCenter = CostCenter::with(['transactions.recorder', 'head'])->findOrFail($id);
+
         return view('cost-center.transactions', compact('costCenter'));
     }
 }

@@ -56,7 +56,7 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->json('answers_json')->nullable(); // Track student's answers
             $table->timestamps();
-            
+
             $table->unique(['tryout_id', 'student_id']);
         });
     }

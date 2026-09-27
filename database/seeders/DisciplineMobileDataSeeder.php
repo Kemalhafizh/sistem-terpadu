@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\PointCategory;
 use App\Models\Student;
 use App\Models\StudentPointLog;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DisciplineMobileDataSeeder extends Seeder
@@ -12,12 +13,16 @@ class DisciplineMobileDataSeeder extends Seeder
     public function run(): void
     {
         $student = Student::first();
-        
-        if (!$student) return;
+
+        if (! $student) {
+            return;
+        }
 
         // Ensure parent exists
-        $admin = \App\Models\User::where('role', 'admin')->first();
-        if (!$admin) $admin = \App\Models\User::factory()->create(['role' => 'admin']);
+        $admin = User::where('role', 'admin')->first();
+        if (! $admin) {
+            $admin = User::factory()->create(['role' => 'admin']);
+        }
 
         // Seed some point categories if not exist
         $bolos = PointCategory::updateOrCreate(

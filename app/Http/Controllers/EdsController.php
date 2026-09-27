@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicYear;
+use App\Models\EdsAssessment;
 use App\Models\EdsPeriod;
 use App\Models\EdsStandard;
-use App\Models\EdsAssessment;
 use App\Services\EdsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -55,7 +55,7 @@ class EdsController extends Controller
         ]);
 
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return redirect()->route('eds.index')->with('error', 'Tahun akademik aktif tidak ditemukan. Harap aktifkan tahun akademik terlebih dahulu.');
         }
 
@@ -90,7 +90,7 @@ class EdsController extends Controller
 
         $scoresData = $this->edsService->getStandardScores($period);
         $chartData = $this->edsService->getSpiderChartData($period);
-        
+
         return view('eds.show', compact('period', 'scoresData', 'chartData'));
     }
 
@@ -100,7 +100,7 @@ class EdsController extends Controller
     public function assess(EdsPeriod $period, EdsStandard $standard)
     {
         $this->authorize('viewAny', $period);
-        
+
         $standard->load('indicators');
         $assessments = EdsAssessment::where('period_id', $period->id)
             ->whereIn('indicator_id', $standard->indicators->pluck('id'))
@@ -132,7 +132,7 @@ class EdsController extends Controller
             // Fetch existing assessment or create empty one
             $assessment = EdsAssessment::firstOrNew([
                 'period_id' => $period->id,
-                'indicator_id' => $indicatorId
+                'indicator_id' => $indicatorId,
             ]);
 
             $existingPaths = $assessment->document_paths ?? [];
@@ -165,7 +165,7 @@ class EdsController extends Controller
                 'evidence' => $data['evidence'] ?? null,
                 'document_paths' => $existingPaths,
                 'recommendation' => $data['recommendation'] ?? null,
-                'assessed_by' => $user->id
+                'assessed_by' => $user->id,
             ]);
 
             $assessment->save();
@@ -177,6 +177,7 @@ class EdsController extends Controller
         if ($request->has('complete_period') && $request->complete_period == '1') {
             $this->authorize('manage', $period);
             $period->update(['status' => 'completed']);
+
             return redirect()->route('eds.show', $period->id)->with('success', 'Penilaian disimpan dan Periode EDS resmi diselesaikan (Completed).');
         }
 
@@ -203,7 +204,7 @@ class EdsController extends Controller
         $this->authorize('viewAny', EdsPeriod::class);
 
         $periods = EdsPeriod::with('academicYear')->orderBy('created_at', 'desc')->get();
-        
+
         $currentPeriod = null;
         $previousPeriod = null;
         $comparisonData = null;

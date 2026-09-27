@@ -6,11 +6,9 @@ use App\Models\AcademicYear;
 use App\Models\Billing;
 use App\Models\Classroom;
 use App\Models\CounselingSession;
-use App\Models\Grade;
 use App\Models\ParentMessage;
 use App\Models\PaymentCategory;
 use App\Models\Student;
-use App\Models\Subject;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -88,7 +86,7 @@ test('confidential counseling sessions are strictly hidden from parent views', f
     $parent = User::factory()->create(['role' => 'parent']);
     $classroom = Classroom::factory()->create();
     $student = Student::factory()->create(['parent_id' => $parent->id, 'classroom_id' => $classroom->id]);
-    
+
     $counselor = User::factory()->create(['role' => 'bk']);
 
     // Confidential Session
@@ -145,7 +143,7 @@ test('chat messages between parent and teacher can be fetched, auto-read, and se
 
     $response->assertStatus(200);
     $response->assertSee('anak Anda sangat berprestasi hari ini.');
-    
+
     // Check message has been marked as read automatically
     $msgFromTeacher->refresh();
     expect($msgFromTeacher->is_read)->toBeTrue();
@@ -188,7 +186,7 @@ test('parent can checkout billing and successfully confirm via callback simulati
     // Checkout page
     $response = $this->get(route('parent-portal.billings.checkout', $billing->id));
     $response->assertStatus(200);
-    
+
     // Billing should now have generated snap_token
     $billing->refresh();
     expect($billing->snap_token)->not->toBeNull();
@@ -198,7 +196,7 @@ test('parent can checkout billing and successfully confirm via callback simulati
     $callbackResponse->assertRedirect(route('parent-portal.billings', $student->id));
 
     $billing->refresh();
-    expect((int)$billing->remaining_balance)->toBe(0);
+    expect((int) $billing->remaining_balance)->toBe(0);
     expect($billing->status)->toBe('paid');
 
     $this->assertDatabaseHas('payments', [

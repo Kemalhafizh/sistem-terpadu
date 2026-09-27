@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\ExtendedDiamond;
 
-use App\Models\DigitalMagazine;
-use App\Models\Podcast;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

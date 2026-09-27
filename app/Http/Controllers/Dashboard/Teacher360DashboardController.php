@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Teacher360Metric;
 use App\Models\User;
 use App\Services\Dashboard\TeacherPerformance360Service;
 use Illuminate\Http\JsonResponse;

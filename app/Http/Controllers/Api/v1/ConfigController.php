@@ -25,6 +25,7 @@ class ConfigController extends Controller
     {
         $userId = $request->user()->id;
         $config = $this->configService->getAnimationConfig($userId);
+
         return $this->successResponse($config, 'Animation configuration retrieved successfully');
     }
 

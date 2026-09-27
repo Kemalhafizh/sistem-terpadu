@@ -1,4 +1,5 @@
 <?php
+
 return [
     'title' => 'Manajemen Keuangan SPP & Uang Pangkal',
     'spp_billings' => 'Daftar Tagihan Siswa',

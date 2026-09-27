@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\AcademicYear;
-use App\Models\User;
 use App\Models\OsisWorkProgram;
+use App\Models\User;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([

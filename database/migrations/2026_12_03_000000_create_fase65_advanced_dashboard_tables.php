@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // 65.1: Executive Command Center KPIs
-        if (!Schema::hasTable('executive_kpis')) {
+        if (! Schema::hasTable('executive_kpis')) {
             Schema::create('executive_kpis', function (Blueprint $table) {
                 $table->id();
                 $table->string('metric_name');
@@ -25,7 +25,7 @@ return new class extends Migration
         }
 
         // 65.2: Teacher Performance 360 Dashboard Metrics
-        if (!Schema::hasTable('teacher_360_metrics')) {
+        if (! Schema::hasTable('teacher_360_metrics')) {
             Schema::create('teacher_360_metrics', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete();
@@ -40,7 +40,7 @@ return new class extends Migration
         }
 
         // 65.3: Student Progress Cockpit Snapshots
-        if (!Schema::hasTable('student_progress_snapshots')) {
+        if (! Schema::hasTable('student_progress_snapshots')) {
             Schema::create('student_progress_snapshots', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
@@ -54,7 +54,7 @@ return new class extends Migration
         }
 
         // 65.4: Financial Health Scoreboard Metrics
-        if (!Schema::hasTable('financial_health_metrics')) {
+        if (! Schema::hasTable('financial_health_metrics')) {
             Schema::create('financial_health_metrics', function (Blueprint $table) {
                 $table->id();
                 $table->date('report_date');

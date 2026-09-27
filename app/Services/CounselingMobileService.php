@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\CounselingSession;
+use App\Models\Student;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class CounselingMobileService
 {
@@ -34,7 +34,7 @@ class CounselingMobileService
     public function createSession(array $data, int $counselorId): CounselingSession
     {
         $rawStudentId = (int) $data['student_id'];
-        $student = \App\Models\Student::where('user_id', $rawStudentId)->first() ?? \App\Models\Student::find($rawStudentId);
+        $student = Student::where('user_id', $rawStudentId)->first() ?? Student::find($rawStudentId);
         $targetStudentId = $student ? $student->id : $rawStudentId;
 
         return CounselingSession::create([
@@ -56,7 +56,7 @@ class CounselingMobileService
 
     public function requestAppointment(int $studentId, array $data): CounselingSession
     {
-        $student = \App\Models\Student::where('user_id', $studentId)->first() ?? \App\Models\Student::find($studentId);
+        $student = Student::where('user_id', $studentId)->first() ?? Student::find($studentId);
         $targetStudentId = $student ? $student->id : $studentId;
 
         return CounselingSession::create([
@@ -73,7 +73,7 @@ class CounselingMobileService
 
     public function getStudentAppointments(int $studentId)
     {
-        $student = \App\Models\Student::where('user_id', $studentId)->first() ?? \App\Models\Student::find($studentId);
+        $student = Student::where('user_id', $studentId)->first() ?? Student::find($studentId);
         $targetStudentId = $student ? $student->id : $studentId;
 
         return CounselingSession::where('student_id', $targetStudentId)
@@ -114,6 +114,7 @@ class CounselingMobileService
             'follow_up_notes' => $note,
             'follow_up_date' => $followUpDate ?: now()->addDays(7)->toDateString(),
         ]);
+
         return $session;
     }
 }

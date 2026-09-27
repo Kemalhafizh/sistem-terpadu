@@ -10,7 +10,7 @@ class UniversityCatalog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'university_name', 'major', 'passing_grade_index', 'alumni_acceptance_history', 'city', 'accreditation'
+        'university_name', 'major', 'passing_grade_index', 'alumni_acceptance_history', 'city', 'accreditation',
     ];
 
     protected $casts = [

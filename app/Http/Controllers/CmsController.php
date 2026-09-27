@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CmsGallery;
 use App\Models\CmsPage;
 use App\Models\CmsPost;
-use App\Models\CmsGallery;
 use App\Models\CmsTestimonial;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class CmsController extends Controller
 {
@@ -51,12 +50,14 @@ class CmsController extends Controller
     {
         $this->authorizeCms();
         $pages = CmsPage::orderBy('order', 'asc')->get();
+
         return view('cms.pages.index', compact('pages'));
     }
 
     public function pagesCreate()
     {
         $this->authorizeCms();
+
         return view('cms.pages.create');
     }
 
@@ -85,6 +86,7 @@ class CmsController extends Controller
     public function pagesEdit(CmsPage $page)
     {
         $this->authorizeCms();
+
         return view('cms.pages.edit', compact('page'));
     }
 
@@ -94,7 +96,7 @@ class CmsController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:cms_pages,slug,' . $page->id,
+            'slug' => 'required|string|max:255|unique:cms_pages,slug,'.$page->id,
             'content' => 'required|string',
             'meta_description' => 'nullable|string|max:255',
             'is_published' => 'boolean',
@@ -114,6 +116,7 @@ class CmsController extends Controller
     {
         $this->authorizeCms();
         $page->delete();
+
         return redirect()->route('cms.pages.index')->with('success', 'Halaman berhasil dihapus.');
     }
 
@@ -125,12 +128,14 @@ class CmsController extends Controller
     {
         $this->authorizeCms();
         $posts = CmsPost::with('author')->latest()->paginate(10);
+
         return view('cms.posts.index', compact('posts'));
     }
 
     public function postsCreate()
     {
         $this->authorizeCms();
+
         return view('cms.posts.create');
     }
 
@@ -169,6 +174,7 @@ class CmsController extends Controller
     public function postsEdit(CmsPost $post)
     {
         $this->authorizeCms();
+
         return view('cms.posts.edit', compact('post'));
     }
 
@@ -178,7 +184,7 @@ class CmsController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:cms_posts,slug,' . $post->id,
+            'slug' => 'required|string|max:255|unique:cms_posts,slug,'.$post->id,
             'excerpt' => 'nullable|string|max:500',
             'body' => 'required|string',
             'cover_image' => 'nullable|image|max:2048',
@@ -200,7 +206,7 @@ class CmsController extends Controller
 
         if ($validated['is_published'] && empty($validated['published_at'])) {
             $validated['published_at'] = $post->published_at ?: now();
-        } elseif (!$validated['is_published']) {
+        } elseif (! $validated['is_published']) {
             $validated['published_at'] = null;
         }
 
@@ -216,6 +222,7 @@ class CmsController extends Controller
             Storage::disk('public')->delete($post->cover_image);
         }
         $post->delete();
+
         return redirect()->route('cms.posts.index')->with('success', 'Artikel/Berita berhasil dihapus.');
     }
 
@@ -227,6 +234,7 @@ class CmsController extends Controller
     {
         $this->authorizeCms();
         $galleries = CmsGallery::orderBy('order', 'asc')->paginate(10);
+
         return view('cms.galleries.index', compact('galleries'));
     }
 
@@ -290,6 +298,7 @@ class CmsController extends Controller
             Storage::disk('public')->delete($gallery->image_path);
         }
         $gallery->delete();
+
         return redirect()->route('cms.galleries.index')->with('success', 'Foto galeri berhasil dihapus.');
     }
 
@@ -301,6 +310,7 @@ class CmsController extends Controller
     {
         $this->authorizeCms();
         $testimonials = CmsTestimonial::orderBy('order', 'asc')->paginate(10);
+
         return view('cms.testimonials.index', compact('testimonials'));
     }
 
@@ -364,6 +374,7 @@ class CmsController extends Controller
             Storage::disk('public')->delete($testimonial->avatar_path);
         }
         $testimonial->delete();
+
         return redirect()->route('cms.testimonials.index')->with('success', 'Testimoni berhasil dihapus.');
     }
 
@@ -380,8 +391,9 @@ class CmsController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('cms/editor', 'public');
+
             return response()->json([
-                'url' => asset('storage/' . $path),
+                'url' => asset('storage/'.$path),
             ]);
         }
 
@@ -402,6 +414,7 @@ class CmsController extends Controller
             'published_at' => $request->published_at,
             'is_published' => true,
         ]);
+
         return redirect()->route('cms.posts.index')->with('success', 'Artikel berhasil dijadwalkan.');
     }
 
@@ -416,9 +429,11 @@ class CmsController extends Controller
                 'tags' => 'required|string',
             ]);
             Setting::set('cms_tags', $request->tags, 'cms');
+
             return redirect()->route('cms.tags.index')->with('success', 'Tag/kategori berhasil diperbarui.');
         }
         $tags = Setting::get('cms_tags', 'Berita, Pengumuman, Prestasi, Kegiatan, Artikel');
+
         return view('cms.tags.index', compact('tags'));
     }
 
@@ -428,27 +443,30 @@ class CmsController extends Controller
     public function mediaLibrary(Request $request)
     {
         $this->authorizeCms();
-        
+
         if ($request->isMethod('post')) {
             $request->validate([
                 'file' => 'required|file|mimes:jpeg,png,jpg,gif,webp|max:5120',
             ]);
             $path = $request->file('file')->store('cms/media', 'public');
+
             return redirect()->route('cms.media.index')->with('success', 'File berhasil diupload ke media library.');
         }
 
         if ($request->has('delete')) {
             $file = $request->delete;
             // Cegah directory traversal dan pastikan berkas berada di dalam cms/
-            $isSafe = str_starts_with($file, 'cms/') && !str_contains($file, '..') && !str_contains($file, '\\');
-            
+            $isSafe = str_starts_with($file, 'cms/') && ! str_contains($file, '..') && ! str_contains($file, '\\');
+
             if ($isSafe && Storage::disk('public')->exists($file)) {
                 Storage::disk('public')->delete($file);
+
                 return redirect()->route('cms.media.index')->with('success', 'File berhasil dihapus dari media library.');
             }
         }
 
         $files = Storage::disk('public')->allFiles('cms');
+
         return view('cms.media.index', compact('files'));
     }
 

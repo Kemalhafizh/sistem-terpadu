@@ -14,6 +14,7 @@ class ScholarshipController extends Controller
     public function programs(ScholarshipService $service)
     {
         $programs = ScholarshipProgram::withCount('applications')->latest()->get();
+
         return view('scholarship.programs', compact('programs'));
     }
 
@@ -53,6 +54,7 @@ class ScholarshipController extends Controller
     {
         $program = ScholarshipProgram::findOrFail($programId);
         $students = User::where('role', 'student')->get();
+
         return view('scholarship.apply', compact('program', 'students'));
     }
 
@@ -99,6 +101,7 @@ class ScholarshipController extends Controller
     public function disbursementForm(int $appId)
     {
         $application = ScholarshipApplication::with(['program', 'student'])->findOrFail($appId);
+
         return view('scholarship.disbursement', compact('application'));
     }
 
@@ -113,12 +116,13 @@ class ScholarshipController extends Controller
         $disbursement = $service->disburse($app, $validated['disbursement_method'], auth()->id());
 
         return redirect()->route('financial.scholarships.review', $app->scholarship_program_id)
-            ->with('success', "Dana Beasiswa sejumlah Rp " . number_format($disbursement->amount, 0, ',', '.') . " berhasil dicairkan!");
+            ->with('success', 'Dana Beasiswa sejumlah Rp '.number_format($disbursement->amount, 0, ',', '.').' berhasil dicairkan!');
     }
 
     public function report(ScholarshipService $service)
     {
         $programs = ScholarshipProgram::with(['applications.student', 'applications.disbursement'])->latest()->get();
+
         return view('scholarship.report', compact('programs'));
     }
 }

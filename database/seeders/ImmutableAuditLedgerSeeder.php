@@ -9,7 +9,7 @@ class ImmutableAuditLedgerSeeder extends Seeder
 {
     public function run(): void
     {
-        $ledger = new ImmutableAuditLedgerService();
+        $ledger = new ImmutableAuditLedgerService;
 
         // Seed 3 linked cryptographic audit entries
         $ledger->record(

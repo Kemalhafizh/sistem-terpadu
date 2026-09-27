@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Communication;
 
 use App\Http\Controllers\Controller;
+use App\Models\DocumentSignature;
 use App\Services\Communication\DigitalSignatureService;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class DocumentSignatureController extends Controller
     public function signForm(int $id)
     {
         $userId = auth()->id();
-        $signature = \App\Models\DocumentSignature::where('id', $id)
+        $signature = DocumentSignature::where('id', $id)
             ->where('signer_id', $userId)
             ->firstOrFail();
 
@@ -42,10 +43,11 @@ class DocumentSignatureController extends Controller
 
         try {
             $signed = $signatureService->sign($id, $userId, $ipAddress);
+
             return redirect()->route('documents.pending_signatures')
                 ->with('success', "Dokumen [{$signed->document_type} #{$signed->document_id}] berhasil ditandatangani secara digital (E-Stamp)!");
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal membubuhi tanda tangan digital: ' . $e->getMessage());
+            return back()->with('error', 'Gagal membubuhi tanda tangan digital: '.$e->getMessage());
         }
     }
 

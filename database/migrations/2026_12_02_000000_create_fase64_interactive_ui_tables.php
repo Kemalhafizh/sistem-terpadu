@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // 64.1: Drag-and-Drop Schedule Builder Drafts
-        if (!Schema::hasTable('schedule_builder_drafts')) {
+        if (! Schema::hasTable('schedule_builder_drafts')) {
             Schema::create('schedule_builder_drafts', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('academic_year_id')->nullable()->constrained('academic_years')->nullOnDelete();
@@ -23,7 +23,7 @@ return new class extends Migration
         }
 
         // 64.2: Interactive Seating Chart & Classroom Layout
-        if (!Schema::hasTable('classroom_layouts')) {
+        if (! Schema::hasTable('classroom_layouts')) {
             Schema::create('classroom_layouts', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('classroom_id')->constrained('classrooms')->cascadeOnDelete();
@@ -37,7 +37,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('seat_assignments')) {
+        if (! Schema::hasTable('seat_assignments')) {
             Schema::create('seat_assignments', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('classroom_layout_id')->constrained('classroom_layouts')->cascadeOnDelete();
@@ -50,7 +50,7 @@ return new class extends Migration
         }
 
         // 64.3: Kanban-Style Task & Project Manager
-        if (!Schema::hasTable('kanban_boards')) {
+        if (! Schema::hasTable('kanban_boards')) {
             Schema::create('kanban_boards', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
@@ -61,7 +61,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('kanban_tasks')) {
+        if (! Schema::hasTable('kanban_tasks')) {
             Schema::create('kanban_tasks', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('kanban_board_id')->constrained('kanban_boards')->cascadeOnDelete();
@@ -77,7 +77,7 @@ return new class extends Migration
         }
 
         // 64.4: Real-Time Collaborative Whiteboard
-        if (!Schema::hasTable('whiteboard_sessions')) {
+        if (! Schema::hasTable('whiteboard_sessions')) {
             Schema::create('whiteboard_sessions', function (Blueprint $table) {
                 $table->id();
                 $table->uuid('session_id')->unique();

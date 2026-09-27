@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\VendorSlaMetric;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class VendorSlaProbeService
 {
@@ -93,6 +92,7 @@ class VendorSlaProbeService
         foreach (array_keys($this->vendors) as $vendorKey) {
             $metrics[$vendorKey] = $this->probeVendor($vendorKey);
         }
+
         return $metrics;
     }
 
@@ -124,6 +124,7 @@ class VendorSlaProbeService
                     'is_sla_compliant' => true,
                     'total_probes' => 0,
                 ];
+
                 continue;
             }
 

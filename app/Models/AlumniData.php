@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 class AlumniData extends Model
 {
-    use \App\Traits\HasUuid;
+    use HasUuid;
 
     protected $fillable = [
         'student_id',

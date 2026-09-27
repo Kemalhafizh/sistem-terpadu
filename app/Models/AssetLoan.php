@@ -42,7 +42,7 @@ class AssetLoan extends Model
                 } elseif ($loan->status === 'returned') {
                     $asset->update([
                         'status' => 'available',
-                        'condition' => $loan->return_condition ?? $asset->condition
+                        'condition' => $loan->return_condition ?? $asset->condition,
                     ]);
                 } elseif ($loan->status === 'lost') {
                     $asset->update(['status' => 'lost']);

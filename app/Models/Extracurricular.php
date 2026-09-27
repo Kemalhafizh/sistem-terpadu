@@ -60,6 +60,7 @@ class Extracurricular extends Model
         if (is_null($this->max_members)) {
             return 9999; // Unlimited
         }
+
         return max(0, $this->max_members - $this->activeMembers()->count());
     }
 
@@ -99,4 +100,3 @@ class Extracurricular extends Model
         ];
     }
 }
-

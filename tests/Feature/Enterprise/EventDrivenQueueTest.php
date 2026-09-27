@@ -12,10 +12,10 @@ use App\Listeners\LogJournalEntry;
 use App\Listeners\NotifyParentsViaWhatsApp;
 use App\Listeners\UpdateBillingStatus;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\DB;
-use Tests\TestCase;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -64,7 +64,7 @@ test('admin can dispatch demo jobs to queue pipelines', function () {
 
 test('admin can retry failed job from dead letter queue', function () {
     $failedId = DB::table('failed_jobs')->insertGetId([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'connection' => 'database',
         'queue' => 'high',
         'payload' => json_encode(['job' => 'App\\Jobs\\SendHighPriorityNotificationJob']),
@@ -78,7 +78,7 @@ test('admin can retry failed job from dead letter queue', function () {
 
 test('admin can delete and flush failed jobs from dead letter queue', function () {
     $failedId = DB::table('failed_jobs')->insertGetId([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'connection' => 'database',
         'queue' => 'low',
         'payload' => json_encode(['job' => 'App\\Jobs\\GeneratePdfReportJob']),

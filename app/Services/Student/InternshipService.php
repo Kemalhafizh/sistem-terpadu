@@ -16,7 +16,7 @@ class InternshipService
     {
         return InternshipJournal::create($data);
     }
-    
+
     public function postOpening(array $data)
     {
         return true;

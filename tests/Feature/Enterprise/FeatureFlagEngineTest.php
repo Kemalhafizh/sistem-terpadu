@@ -3,12 +3,11 @@
 use App\Models\FeatureFlag;
 use App\Models\User;
 use App\Services\FeatureFlagService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->student = User::factory()->create(['role' => 'student']);
-    $this->flagService = new FeatureFlagService();
+    $this->flagService = new FeatureFlagService;
 
     $this->flag = FeatureFlag::updateOrCreate(
         ['key' => 'test_feature_flag'],

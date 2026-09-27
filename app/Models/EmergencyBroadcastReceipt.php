@@ -10,7 +10,7 @@ class EmergencyBroadcastReceipt extends Model
     use HasFactory;
 
     protected $fillable = [
-        'broadcast_id', 'user_id', 'status', 'channel', 'delivered_at', 'read_at', 'acknowledged_at'
+        'broadcast_id', 'user_id', 'status', 'channel', 'delivered_at', 'read_at', 'acknowledged_at',
     ];
 
     protected $casts = [

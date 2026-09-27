@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('blockchain_credentials')) {
+        if (! Schema::hasTable('blockchain_credentials')) {
             Schema::create('blockchain_credentials', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
@@ -29,7 +29,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('student_dids')) {
+        if (! Schema::hasTable('student_dids')) {
             Schema::create('student_dids', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->unique()->constrained('users')->cascadeOnDelete();

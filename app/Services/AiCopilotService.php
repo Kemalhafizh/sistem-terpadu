@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 class AiCopilotService
 {
@@ -47,7 +46,7 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
                     'model' => 'gpt-4o-mini',
                     'messages' => [
                         ['role' => 'system', 'content' => 'Anda adalah asisten AI guru profesional di Indonesia.'],
-                        ['role' => 'user', 'content' => $prompt]
+                        ['role' => 'user', 'content' => $prompt],
                     ],
                     'temperature' => 0.7,
                 ]);
@@ -59,9 +58,9 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
                 $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                     'contents' => [
                         'parts' => [
-                            ['text' => $prompt]
-                        ]
-                    ]
+                            ['text' => $prompt],
+                        ],
+                    ],
                 ]);
 
                 if ($response->successful()) {
@@ -70,9 +69,9 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
             }
 
             // Fallback if API response is not successful
-            return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies) . "\n\n*(Catatan: Terjadi kendala saat menghubungi API AI, dialihkan ke model template lokal)*";
+            return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies)."\n\n*(Catatan: Terjadi kendala saat menghubungi API AI, dialihkan ke model template lokal)*";
         } catch (Exception $e) {
-            return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies) . "\n\n*(Catatan: Gagal memicu AI ({$e->getMessage()}), dialihkan ke model template lokal)*";
+            return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies)."\n\n*(Catatan: Gagal memicu AI ({$e->getMessage()}), dialihkan ke model template lokal)*";
         }
     }
 
@@ -116,7 +115,7 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
                     'model' => 'gpt-4o-mini',
                     'messages' => [
                         ['role' => 'system', 'content' => 'Anda adalah asisten CBT pembuat soal ujian dalam format JSON murni.'],
-                        ['role' => 'user', 'content' => $prompt]
+                        ['role' => 'user', 'content' => $prompt],
                     ],
                     'response_format' => ['type' => 'json_object'],
                     'temperature' => 0.5,
@@ -126,21 +125,23 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
                     $jsonText = $response->json('choices.0.message.content');
                     // In some cases, response_format json return wrapper object or list
                     $decoded = json_decode($jsonText, true);
+
                     return $decoded['questions'] ?? $decoded;
                 }
             } elseif ($provider === 'gemini') {
                 $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                     'contents' => [
                         'parts' => [
-                            ['text' => $prompt . "\n\nHarus berformat JSON murni."]
-                        ]
-                    ]
+                            ['text' => $prompt."\n\nHarus berformat JSON murni."],
+                        ],
+                    ],
                 ]);
 
                 if ($response->successful()) {
                     $text = $response->json('candidates.0.content.parts.0.text');
                     // clean markdown markers if gemini returned it
                     $cleaned = preg_replace('/```json|```/', '', $text);
+
                     return json_decode(trim($cleaned), true) ?: [];
                 }
             }
@@ -228,7 +229,7 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
     {
         // Extract some terms/keywords from material text for customization
         $cleaned = preg_replace('/[^\p{L}\p{N}\s]/u', '', $materialText);
-        $words = array_filter(explode(' ', $cleaned), fn($w) => strlen($w) > 4);
+        $words = array_filter(explode(' ', $cleaned), fn ($w) => strlen($w) > 4);
         $keywords = array_values(array_unique(array_slice($words, 0, 5)));
 
         if (empty($keywords)) {
@@ -253,15 +254,15 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
             } else {
                 $correctOption = collect(['A', 'B', 'C', 'D', 'E'])->random();
                 $options = [
-                    'A' => "Proses identifikasi dini dari " . $keyword . " secara struktural.",
-                    'B' => "Implementasi taktis tanpa adanya batasan ruang lingkup.",
-                    'C' => "Metodologi evaluasi berkala yang dijalankan secara independen.",
-                    'D' => "Konsep teoretis murni yang tidak memiliki aplikasi praktis.",
-                    'E' => "Sinergi multi-sektoral untuk meningkatkan kualitas output.",
+                    'A' => 'Proses identifikasi dini dari '.$keyword.' secara struktural.',
+                    'B' => 'Implementasi taktis tanpa adanya batasan ruang lingkup.',
+                    'C' => 'Metodologi evaluasi berkala yang dijalankan secara independen.',
+                    'D' => 'Konsep teoretis murni yang tidak memiliki aplikasi praktis.',
+                    'E' => 'Sinergi multi-sektoral untuk meningkatkan kualitas output.',
                 ];
 
                 // Make the correct option description positive/ideal
-                $options[$correctOption] = "Jawaban Tepat: Alternatif solusi optimal dalam merumuskan penyelesaian " . $keyword . ".";
+                $options[$correctOption] = 'Jawaban Tepat: Alternatif solusi optimal dalam merumuskan penyelesaian '.$keyword.'.';
 
                 $questions[] = [
                     'question_text' => "Manakah di bawah ini pernyataan yang paling tepat menggambarkan implikasi dari penerapan {$keyword} menurut teks materi?",

@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Crisis\AntiBullyingController;
 use App\Http\Controllers\Crisis\CrisisController;
 use App\Http\Controllers\Crisis\EmergencyBroadcastController;
 use App\Http\Controllers\Crisis\HeadcountController;
-use App\Http\Controllers\Crisis\AntiBullyingController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('crisis')->name('crisis.')->group(function () {
     Route::get('/command-center', [CrisisController::class, 'commandCenter'])->name('command_center');
@@ -14,7 +14,7 @@ Route::middleware(['auth'])->prefix('crisis')->name('crisis.')->group(function (
     Route::post('/incident/{id}/response', [CrisisController::class, 'storeResponse'])->name('store_response');
     Route::post('/incident/{id}/resolve', [CrisisController::class, 'resolveIncident'])->name('resolve');
     Route::get('/incident/{id}/post-mortem', [CrisisController::class, 'postMortemReport'])->name('post_mortem');
-    
+
     Route::get('/protocols', [CrisisController::class, 'protocols'])->name('protocols.index');
     Route::get('/protocols/create', [CrisisController::class, 'createProtocol'])->name('protocols.create');
     Route::post('/protocols', [CrisisController::class, 'storeProtocol'])->name('protocols.store');

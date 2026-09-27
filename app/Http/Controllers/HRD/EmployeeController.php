@@ -4,15 +4,13 @@ namespace App\Http\Controllers\HRD;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
-use App\Models\User;
-use App\Models\Classroom;
+use App\Models\EmployeeAttendance;
 use App\Models\EmployeeDocument;
 use App\Models\EmployeeTraining;
 use App\Models\PerformanceEvaluation;
-use App\Models\EmployeeAttendance;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -136,7 +134,7 @@ class EmployeeController extends Controller
         $totalEmployees = Employee::count();
         $totalGuru = Employee::where('position', 'like', '%Guru%')->orWhere('position', 'like', '%Pengajar%')->count();
         $totalStaf = Employee::where('position', 'not like', '%Guru%')->where('position', 'not like', '%Pengajar%')->count();
-        
+
         $statusDistribution = [
             'gty' => Employee::where('employment_status', 'gty')->count(),
             'gtt' => Employee::where('employment_status', 'gtt')->count(),
@@ -160,6 +158,7 @@ class EmployeeController extends Controller
     public function documents(Employee $employee)
     {
         $employee->load('documents');
+
         return view('hrd.documents.index', compact('employee'));
     }
 
@@ -179,7 +178,7 @@ class EmployeeController extends Controller
 
         if ($request->hasFile('file')) {
             $path = $request->file('file')->store('hrd/documents', 'public');
-            
+
             EmployeeDocument::create([
                 'employee_id' => $employee->id,
                 'title' => $validated['title'],
@@ -189,7 +188,7 @@ class EmployeeController extends Controller
                 'expiry_date' => $validated['expiry_date'],
                 'notes' => $validated['notes'],
             ]);
-            
+
             return back()->with('success', 'Dokumen berhasil diunggah.');
         }
 
@@ -202,6 +201,7 @@ class EmployeeController extends Controller
     public function deleteDocument(Employee $employee, EmployeeDocument $document)
     {
         $document->delete();
+
         return back()->with('success', 'Dokumen berhasil dihapus.');
     }
 
@@ -211,6 +211,7 @@ class EmployeeController extends Controller
     public function trainings(Employee $employee)
     {
         $employee->load('trainings');
+
         return view('hrd.trainings.index', compact('employee'));
     }
 
@@ -229,11 +230,11 @@ class EmployeeController extends Controller
             'certificate_number' => 'nullable|string|max:255',
             'certificate_expiry' => 'nullable|date|after_or_equal:start_date',
             'notes' => 'nullable|string',
-          ]);
+        ]);
 
-          EmployeeTraining::create(array_merge($validated, ['employee_id' => $employee->id]));
+        EmployeeTraining::create(array_merge($validated, ['employee_id' => $employee->id]));
 
-          return back()->with('success', 'Riwayat pelatihan berhasil ditambahkan.');
+        return back()->with('success', 'Riwayat pelatihan berhasil ditambahkan.');
     }
 
     /**
@@ -268,7 +269,7 @@ class EmployeeController extends Controller
         ];
 
         $totalScore = array_sum($scores) / count($scores);
-        
+
         if ($totalScore >= 85) {
             $grade = 'A';
         } elseif ($totalScore >= 70) {
@@ -291,7 +292,7 @@ class EmployeeController extends Controller
             'strengths' => $validated['strengths'],
             'improvements' => $validated['improvements'],
             'goals' => $validated['goals'],
-            'status' => 'submitted'
+            'status' => 'submitted',
         ]);
 
         return redirect()->route('hrd.evaluations.report')->with('success', 'Evaluasi kinerja berhasil disimpan.');
@@ -303,6 +304,7 @@ class EmployeeController extends Controller
     public function evaluationReport()
     {
         $evaluations = PerformanceEvaluation::with('employee.user')->latest()->get();
+
         return view('hrd.evaluations.report', compact('evaluations'));
     }
 
@@ -331,17 +333,19 @@ class EmployeeController extends Controller
      */
     public function orgChart()
     {
-        $kepsek = Employee::whereHas('user', function($q) { $q->where('role', 'kepala_sekolah'); })->first();
-        
-        $wakas = Employee::whereHas('user', function($q) {
+        $kepsek = Employee::whereHas('user', function ($q) {
+            $q->where('role', 'kepala_sekolah');
+        })->first();
+
+        $wakas = Employee::whereHas('user', function ($q) {
             $q->whereIn('role', ['waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras', 'waka_humas']);
         })->get();
 
-        $staffAndBk = Employee::whereHas('user', function($q) {
+        $staffAndBk = Employee::whereHas('user', function ($q) {
             $q->whereIn('role', ['staf_tu', 'bk']);
         })->get();
 
-        $gurus = Employee::whereHas('user', function($q) {
+        $gurus = Employee::whereHas('user', function ($q) {
             $q->where('role', 'guru');
         })->get();
 
@@ -399,37 +403,37 @@ class EmployeeController extends Controller
     {
         $month = $request->input('month', date('m'));
         $year = $request->input('year', date('Y'));
-        
+
         $headers = [
-            'Content-type'        => 'text/csv',
+            'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=laporan_kehadiran_pegawai_{$month}_{$year}.csv",
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0'
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
-        
-        $callback = function() use ($month, $year) {
+
+        $callback = function () use ($month, $year) {
             $file = fopen('php://output', 'w');
             fputcsv($file, ['Nama Pegawai', 'NIP', 'Jabatan', 'Hadir', 'Terlambat', 'Izin', 'Sakit', 'Cuti', 'Alpa', 'Tingkat Kehadiran (%)']);
-            
+
             $employees = Employee::with('user')->get();
             foreach ($employees as $employee) {
                 $attendances = EmployeeAttendance::where('employee_id', $employee->id)
                     ->whereMonth('date', $month)
                     ->whereYear('date', $year)
                     ->get();
-                    
+
                 $hadir = $attendances->where('status', 'hadir')->count();
                 $terlambat = $attendances->where('status', 'terlambat')->count();
                 $izin = $attendances->where('status', 'izin')->count();
                 $sakit = $attendances->where('status', 'sakit')->count();
                 $cuti = $attendances->where('status', 'cuti')->count();
                 $alfa = $attendances->where('status', 'alfa')->count();
-                
+
                 $totalWorkdays = 25;
                 $present = $hadir + $terlambat;
                 $rate = round(($present / $totalWorkdays) * 100, 1);
-                
+
                 fputcsv($file, [
                     $employee->user->name ?? '-',
                     $employee->employee_number,
@@ -440,13 +444,13 @@ class EmployeeController extends Controller
                     $sakit,
                     $cuti,
                     $alfa,
-                    $rate
-                 ]);
-             }
-             fclose($file);
-         };
-         
-         return response()->stream($callback, 200, $headers);
+                    $rate,
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -455,9 +459,9 @@ class EmployeeController extends Controller
     public function exportEmployeeCard(Employee $employee)
     {
         $employee->load('user');
-        
+
         $pdf = Pdf::loadView('hrd.employee-card', compact('employee'))->setPaper([0, 0, 241, 153], 'portrait');
-        
+
         return $pdf->download("kartu_pegawai_{$employee->employee_number}.pdf");
     }
 }

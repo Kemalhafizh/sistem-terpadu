@@ -18,4 +18,3 @@ Schedule::command('app:send-event-reminders')->dailyAt('07:00');
 // WhatsApp Broadcast & Automation Triggers
 Schedule::command('whatsapp:process-broadcasts')->everyMinute();
 Schedule::command('whatsapp:process-broadcasts --run-triggers')->dailyAt('06:00');
-

@@ -4,7 +4,6 @@ use App\Models\SopAcknowledgement;
 use App\Models\SopDocument;
 use App\Models\User;
 use App\Services\Grc\SopGovernanceService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Admin Kebijakan SOP']);

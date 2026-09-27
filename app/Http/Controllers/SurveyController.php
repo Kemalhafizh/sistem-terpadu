@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
-use App\Models\Classroom;
 use App\Models\User;
 use App\Services\SurveyAnalyticsService;
 use App\Services\WhatsappService;
@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 class SurveyController extends Controller
 {
     protected $analyticsService;
+
     protected $whatsappService;
 
     public function __construct(SurveyAnalyticsService $analyticsService, WhatsappService $whatsappService)
@@ -53,17 +54,17 @@ class SurveyController extends Controller
         $surveys = Survey::with('classroom')->active()
             ->where(function ($query) use ($targetRole) {
                 $query->whereNull('target_role')
-                      ->orWhere('target_role', $targetRole);
+                    ->orWhere('target_role', $targetRole);
             })
             ->where(function ($query) use ($classroomId) {
                 $query->whereNull('target_classroom_id')
-                      ->orWhere('target_classroom_id', $classroomId);
+                    ->orWhere('target_classroom_id', $classroomId);
             })
             ->whereDoesntHave('responses', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->get()
-            ->filter(fn($survey) => $survey->isOpen());
+            ->filter(fn ($survey) => $survey->isOpen());
 
         return view('surveys.index', compact('surveys'));
     }
@@ -75,6 +76,7 @@ class SurveyController extends Controller
     {
         $this->authorizeAdmin();
         $classrooms = Classroom::orderBy('name')->get();
+
         return view('surveys.create', compact('classrooms'));
     }
 
@@ -150,7 +152,7 @@ class SurveyController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('toast_error', 'Gagal menyimpan survei: ' . $e->getMessage());
+                ->with('toast_error', 'Gagal menyimpan survei: '.$e->getMessage());
         }
     }
 
@@ -164,23 +166,24 @@ class SurveyController extends Controller
         // Admin sees the survey details/preview
         if ($user->isAdmin()) {
             $survey->load(['questions', 'classroom']);
+
             return view('surveys.show_preview', compact('survey'));
         }
 
         // Respondent validation
-        if (!$survey->isOpen()) {
+        if (! $survey->isOpen()) {
             return redirect()->route('surveys.index')
                 ->with('toast_error', 'Survei ini sudah tidak aktif atau ditutup.');
         }
 
         // Role verification
-        if ($survey->target_role && !$user->hasRole($survey->target_role)) {
+        if ($survey->target_role && ! $user->hasRole($survey->target_role)) {
             abort(403, 'Survei ini tidak ditujukan untuk peran Anda.');
         }
 
         // Classroom verification for students
         if ($survey->target_classroom_id) {
-            if ($user->role !== 'student' || !$user->student || $user->student->classroom_id != $survey->target_classroom_id) {
+            if ($user->role !== 'student' || ! $user->student || $user->student->classroom_id != $survey->target_classroom_id) {
                 abort(403, 'Survei ini hanya untuk kelas tertentu.');
             }
         }
@@ -196,6 +199,7 @@ class SurveyController extends Controller
         }
 
         $survey->load(['questions', 'classroom']);
+
         return view('surveys.respond', compact('survey'));
     }
 
@@ -206,16 +210,16 @@ class SurveyController extends Controller
     {
         $user = Auth::user();
 
-        if (!$survey->isOpen()) {
+        if (! $survey->isOpen()) {
             return redirect()->route('surveys.index')->with('toast_error', 'Survei ini sudah ditutup.');
         }
 
         // Role & Classroom Check
-        if ($survey->target_role && !$user->hasRole($survey->target_role)) {
+        if ($survey->target_role && ! $user->hasRole($survey->target_role)) {
             abort(403);
         }
         if ($survey->target_classroom_id) {
-            if ($user->role !== 'student' || !$user->student || $user->student->classroom_id != $survey->target_classroom_id) {
+            if ($user->role !== 'student' || ! $user->student || $user->student->classroom_id != $survey->target_classroom_id) {
                 abort(403);
             }
         }
@@ -233,18 +237,18 @@ class SurveyController extends Controller
         $rules = [];
         $messages = [];
         foreach ($survey->questions as $question) {
-            $key = 'answers.' . $question->id;
+            $key = 'answers.'.$question->id;
             $requiredRule = $question->is_required ? 'required' : 'nullable';
 
             if ($question->type === 'checkbox') {
                 $rules[$key] = [$requiredRule, 'array'];
-                $messages[$key . '.required'] = 'Pertanyaan "' . $question->question_text . '" wajib dipilih minimal satu.';
+                $messages[$key.'.required'] = 'Pertanyaan "'.$question->question_text.'" wajib dipilih minimal satu.';
             } elseif ($question->type === 'scale') {
-                $rules[$key] = [$requiredRule, 'integer', 'min:' . $question->scale_min, 'max:' . $question->scale_max];
-                $messages[$key . '.required'] = 'Pertanyaan "' . $question->question_text . '" wajib diberi rating.';
+                $rules[$key] = [$requiredRule, 'integer', 'min:'.$question->scale_min, 'max:'.$question->scale_max];
+                $messages[$key.'.required'] = 'Pertanyaan "'.$question->question_text.'" wajib diberi rating.';
             } else {
                 $rules[$key] = [$requiredRule, 'string'];
-                $messages[$key . '.required'] = 'Pertanyaan "' . $question->question_text . '" wajib diisi.';
+                $messages[$key.'.required'] = 'Pertanyaan "'.$question->question_text.'" wajib diisi.';
             }
         }
 
@@ -333,10 +337,10 @@ class SurveyController extends Controller
     public function exportPdf(Survey $survey)
     {
         $this->authorizeAdmin();
-        
+
         $pdf = $this->analyticsService->exportResultsPdf($survey);
-        $filename = 'Laporan_Survei_' . str_replace(' ', '_', $survey->title) . '.pdf';
-        
+        $filename = 'Laporan_Survei_'.str_replace(' ', '_', $survey->title).'.pdf';
+
         return $pdf->download($filename);
     }
 
@@ -346,6 +350,7 @@ class SurveyController extends Controller
     public function exportExcel(Survey $survey)
     {
         $this->authorizeAdmin();
+
         return $this->analyticsService->exportResultsExcel($survey);
     }
 
@@ -366,7 +371,7 @@ class SurveyController extends Controller
      */
     protected function authorizeAdmin()
     {
-        if (!Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin()) {
             abort(403, 'Akses ditolak. Peran Anda tidak diizinkan untuk mengelola survei.');
         }
     }
@@ -377,12 +382,12 @@ class SurveyController extends Controller
     protected function broadcastNotification(Survey $survey)
     {
         $message = " *SISTEM INFORMASI TERPADU SMA ISLAM SULTAN AGUNG 1*\n\n"
-                 . "Ada kuesioner/survei digital baru yang memerlukan partisipasi Anda:\n"
-                 . " *Judul:* {$survey->title}\n"
-                 . " *Sifat:* " . ($survey->is_anonymous ? "Anonim (Rahasia & PDP Protected)" : "Umum") . "\n\n"
-                 . "Mohon luangkan waktu 2-3 menit untuk mengisi survei ini pada portal Sistem Terpadu Anda.\n"
-                 . "Link: " . route('surveys.show', $survey->uuid) . "\n\n"
-                 . "_Terima kasih atas kerja samanya._";
+                 ."Ada kuesioner/survei digital baru yang memerlukan partisipasi Anda:\n"
+                 ." *Judul:* {$survey->title}\n"
+                 .' *Sifat:* '.($survey->is_anonymous ? 'Anonim (Rahasia & PDP Protected)' : 'Umum')."\n\n"
+                 ."Mohon luangkan waktu 2-3 menit untuk mengisi survei ini pada portal Sistem Terpadu Anda.\n"
+                 .'Link: '.route('surveys.show', $survey->uuid)."\n\n"
+                 .'_Terima kasih atas kerja samanya._';
 
         // Query targeted users
         $query = User::query()->whereNotNull('phone_number');
@@ -392,7 +397,7 @@ class SurveyController extends Controller
         }
 
         if ($survey->target_classroom_id) {
-            $query->whereHas('student', function($q) use ($survey) {
+            $query->whereHas('student', function ($q) use ($survey) {
                 $q->where('classroom_id', $survey->target_classroom_id);
             });
         }

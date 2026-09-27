@@ -26,12 +26,14 @@ class SendLibraryDueReminderJob implements ShouldQueue
 
         if (! $loan) {
             Log::warning("SendLibraryDueReminderJob: Peminjaman ID {$this->loanId} tidak ditemukan.");
+
             return;
         }
 
         // Jika buku sudah dikembalikan, batalkan pengingat
         if ($loan->returned_at !== null) {
             Log::info("SendLibraryDueReminderJob: Buku {$loan->book->title} sudah dikembalikan oleh siswa ID {$loan->student_id}. Pengingat dibatalkan.");
+
             return;
         }
 

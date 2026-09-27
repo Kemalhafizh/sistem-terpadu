@@ -10,7 +10,7 @@ class StudentWallet extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', 'balance', 'savings_target', 'is_active'
+        'student_id', 'balance', 'savings_target', 'is_active',
     ];
 
     protected $casts = [

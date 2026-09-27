@@ -2,12 +2,14 @@
 
 use App\Models\AcademicYear;
 use App\Models\Asset;
+use App\Models\AssetCategory;
 use App\Models\AssetLoan;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Classroom;
 use App\Models\Grade;
 use App\Models\PaymentCategory;
+use App\Models\Room;
 use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\Subject;
@@ -16,6 +18,7 @@ use App\Models\UksMedicine;
 use App\Models\User;
 use App\Services\SmartAlertService;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
@@ -38,7 +41,7 @@ beforeEach(function () {
         'classroom_id' => $this->classroom->id,
     ]);
 
-    $this->service = new SmartAlertService();
+    $this->service = new SmartAlertService;
 });
 
 // ================================================================
@@ -209,7 +212,7 @@ test('critical medicine alert is created for low stock or expired products', fun
     $alerts = $this->service->detectCriticalMedicineStock();
 
     expect($alerts)->toHaveCount(2);
-    
+
     $expiredAlert = $alerts->firstWhere('alertable_id', $medExpired->id);
     expect($expiredAlert->severity)->toBe('critical');
 
@@ -222,12 +225,12 @@ test('critical medicine alert is created for low stock or expired products', fun
 // ================================================================
 
 test('overdue asset alert is created for late sarpras returns', function () {
-    $category = \App\Models\AssetCategory::create([
+    $category = AssetCategory::create([
         'name' => 'Elektronik',
         'code' => 'CAT-ELEK',
     ]);
 
-    $room = \App\Models\Room::create([
+    $room = Room::create([
         'name' => 'Lab Komputer',
     ]);
 
@@ -245,7 +248,7 @@ test('overdue asset alert is created for late sarpras returns', function () {
     ]);
 
     $loan = AssetLoan::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'asset_id' => $asset->id,
         'borrower_id' => $this->teacher->id,
         'borrowed_at' => Carbon::now()->subDays(5),
@@ -290,7 +293,7 @@ test('authorized staff can acknowledge and resolve alerts', function () {
     // 1. Acknowledge
     $responseAck = $this->actingAs($this->admin)->post(route('smart-alerts.acknowledge', $alert));
     $responseAck->assertRedirect();
-    
+
     $alert->refresh();
     expect($alert->status)->toBe('acknowledged');
     expect($alert->acknowledged_by)->toBe($this->admin->id);

@@ -21,8 +21,8 @@ class SopGovernanceController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%')
-                ->orWhere('code', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%')
+                ->orWhere('code', 'like', '%'.$request->search.'%');
         }
 
         $sops = $query->orderBy('created_at', 'desc')->paginate(15);
@@ -108,6 +108,7 @@ class SopGovernanceController extends Controller
         $sops = SopDocument::where('status', 'published')->get()->map(function ($sop) use ($sopService) {
             $sop->compliance_rate = $sopService->getComplianceRate($sop->id);
             $sop->unacknowledged_users = $sopService->getUnacknowledgedUsers($sop->id);
+
             return $sop;
         });
 

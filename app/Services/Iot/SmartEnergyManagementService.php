@@ -32,7 +32,7 @@ class SmartEnergyManagementService
         $kwhSaved = 0.0;
         $costSavedIdr = 0.0;
 
-        if (!$isOccupied) {
+        if (! $isOccupied) {
             // Automatically turn off or set to eco mode
             $sensor->update([
                 'ac_power_status' => 'off',
@@ -79,8 +79,8 @@ class SmartEnergyManagementService
         $vacantRooms = RoomOccupancySensor::where('is_occupied', false)->count();
 
         return [
-            'total_kwh_saved' => round((float)$totalKwh, 2),
-            'total_idr_saved' => round((float)$totalIdr, 2),
+            'total_kwh_saved' => round((float) $totalKwh, 2),
+            'total_idr_saved' => round((float) $totalIdr, 2),
             'active_monitored_rooms' => $activeRooms,
             'vacant_eco_rooms' => $vacantRooms,
             'green_school_efficiency_score' => 94.5,

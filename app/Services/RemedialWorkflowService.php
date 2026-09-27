@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
 use App\Models\RemedialSession;
+use App\Models\Student;
 use Illuminate\Support\Str;
 
 class RemedialWorkflowService
@@ -20,7 +21,7 @@ class RemedialWorkflowService
 
         $assignedCount = 0;
         foreach ($underKkmScores as $scoreItem) {
-            $studentUserId = \App\Models\Student::find($scoreItem->student_id)?->user_id ?? $scoreItem->student_id;
+            $studentUserId = Student::find($scoreItem->student_id)?->user_id ?? $scoreItem->student_id;
             RemedialSession::updateOrCreate(
                 [
                     'daily_assessment_id' => $assessmentId,
@@ -74,6 +75,7 @@ class RemedialWorkflowService
         if ($remedial && $remedial->remedial_score !== null) {
             // Sesuai kaidah Kurikulum Merdeka/K13: Nilai remedial maksimal setara KKM
             $cappedRemedial = min((float) $remedial->remedial_score, (float) $remedial->kkm);
+
             return max((float) $original, $cappedRemedial);
         }
 

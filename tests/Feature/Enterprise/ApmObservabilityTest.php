@@ -7,6 +7,7 @@ use App\Services\Observability\RequestMetricsRecorder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 /*
  * The APM dashboard used to show fixed numbers (P50 35 / P90 65 / P99 98 ms,
@@ -41,11 +42,12 @@ function recordedLines(): array
 // ── Correlation ID ───────────────────────────────────────────────────────
 
 test('correlation id middleware injects X-Correlation-ID header into request and response', function () {
-    $middleware = new CorrelationIdMiddleware();
+    $middleware = new CorrelationIdMiddleware;
     $request = Request::create('/test-tracing', 'GET');
 
     $response = $middleware->handle($request, function ($req) {
         expect($req->headers->has('X-Correlation-ID'))->toBeTrue();
+
         return new Response('OK');
     });
 
@@ -53,7 +55,7 @@ test('correlation id middleware injects X-Correlation-ID header into request and
 });
 
 test('correlation id dari klien dipertahankan jika valid dan diganti jika mengandung karakter berbahaya', function () {
-    $middleware = new CorrelationIdMiddleware();
+    $middleware = new CorrelationIdMiddleware;
 
     $valid = Request::create('/x', 'GET', server: ['HTTP_X_CORRELATION_ID' => 'abc-123_DEF.4']);
     expect($middleware->handle($valid, fn () => new Response('OK'))->headers->get('X-Correlation-ID'))->toBe('abc-123_DEF.4');
@@ -62,7 +64,7 @@ test('correlation id dari klien dipertahankan jika valid dan diganti jika mengan
     $hostile = Request::create('/x', 'GET', server: ['HTTP_X_CORRELATION_ID' => "evil\tid\nforged"]);
     $replaced = $middleware->handle($hostile, fn () => new Response('OK'))->headers->get('X-Correlation-ID');
     expect($replaced)->not->toContain("\t")->not->toContain('evil')
-        ->and(\Illuminate\Support\Str::isUuid($replaced))->toBeTrue();
+        ->and(Str::isUuid($replaced))->toBeTrue();
 });
 
 // ── Recording real requests ───────────────────────────────────────────────

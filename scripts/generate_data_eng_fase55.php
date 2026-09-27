@@ -307,16 +307,16 @@ class DataQualityController extends Controller {
 // 5. Views
 $viewLayout = "@extends('layouts.app')\n@section('content')\n<div class=\"container mx-auto p-6\">\n    <div class=\"flex items-center space-x-3 mb-6\">\n        <svg class=\"w-8 h-8 text-indigo-600 dark:text-indigo-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 10V3L4 14h7v7l9-11h-7z\"></path></svg>\n        <h1 class=\"text-2xl font-black text-gray-900 dark:text-white\">SMA Islam Sultan Agung 1 Semarang - %s</h1>\n    </div>\n    <div class=\"bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6\">\n        <p class=\"text-sm text-gray-600 dark:text-gray-300\">%s</p>\n    </div>\n</div>\n@endsection";
 
-file_put_contents("$dir/resources/views/data-engineering/streams.blade.php", sprintf($viewLayout, "Event Streams Dashboard", "Pemantauan data aliran kejadian waktu nyata."));
-file_put_contents("$dir/resources/views/data-engineering/replay.blade.php", sprintf($viewLayout, "Event Replay", "Pemutaran ulang peristiwa masa lalu."));
-file_put_contents("$dir/resources/views/nlq/search.blade.php", sprintf($viewLayout, "Pencarian Bahasa Alami", "Lakukan kueri analitik menggunakan bahasa Indonesia."));
-file_put_contents("$dir/resources/views/nlq/dictionary.blade.php", sprintf($viewLayout, "Kamus Pemetaan NLQ", "Kelola pemetaan skema ke alias Indonesia."));
-file_put_contents("$dir/resources/views/report-scheduler/manager.blade.php", sprintf($viewLayout, "Manajer Laporan Kondisional", "Jadwalkan laporan analitik dengan kondisi tertentu."));
-file_put_contents("$dir/resources/views/report-scheduler/execution-logs.blade.php", sprintf($viewLayout, "Log Eksekusi Laporan", "Riwayat eksekusi jadwal laporan."));
-file_put_contents("$dir/resources/views/data-quality/health-dashboard.blade.php", sprintf($viewLayout, "Dasbor Kualitas Data", "Tinjau skor kesehatan dan integritas data sistem."));
-file_put_contents("$dir/resources/views/data-quality/resolution-center.blade.php", sprintf($viewLayout, "Pusat Resolusi Anomali", "Penyelesaian manual untuk data yang tidak wajar."));
+file_put_contents("$dir/resources/views/data-engineering/streams.blade.php", sprintf($viewLayout, 'Event Streams Dashboard', 'Pemantauan data aliran kejadian waktu nyata.'));
+file_put_contents("$dir/resources/views/data-engineering/replay.blade.php", sprintf($viewLayout, 'Event Replay', 'Pemutaran ulang peristiwa masa lalu.'));
+file_put_contents("$dir/resources/views/nlq/search.blade.php", sprintf($viewLayout, 'Pencarian Bahasa Alami', 'Lakukan kueri analitik menggunakan bahasa Indonesia.'));
+file_put_contents("$dir/resources/views/nlq/dictionary.blade.php", sprintf($viewLayout, 'Kamus Pemetaan NLQ', 'Kelola pemetaan skema ke alias Indonesia.'));
+file_put_contents("$dir/resources/views/report-scheduler/manager.blade.php", sprintf($viewLayout, 'Manajer Laporan Kondisional', 'Jadwalkan laporan analitik dengan kondisi tertentu.'));
+file_put_contents("$dir/resources/views/report-scheduler/execution-logs.blade.php", sprintf($viewLayout, 'Log Eksekusi Laporan', 'Riwayat eksekusi jadwal laporan.'));
+file_put_contents("$dir/resources/views/data-quality/health-dashboard.blade.php", sprintf($viewLayout, 'Dasbor Kualitas Data', 'Tinjau skor kesehatan dan integritas data sistem.'));
+file_put_contents("$dir/resources/views/data-quality/resolution-center.blade.php", sprintf($viewLayout, 'Pusat Resolusi Anomali', 'Penyelesaian manual untuk data yang tidak wajar.'));
 @mkdir("$dir/resources/views/report-scheduler", 0777, true);
-file_put_contents("$dir/resources/views/report-scheduler/create.blade.php", sprintf($viewLayout, "Buat Laporan Baru", "Form pembuatan laporan kondisional."));
+file_put_contents("$dir/resources/views/report-scheduler/create.blade.php", sprintf($viewLayout, 'Buat Laporan Baru', 'Form pembuatan laporan kondisional.'));
 
 // 6. Seeder
 file_put_contents("$dir/database/seeders/DataEngineeringSeeder.php", "<?php
@@ -455,4 +455,3 @@ class DataEngineeringSuiteTest extends TestCase {
 ");
 
 echo "DONE\n";
-

@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->stafTu = User::factory()->create(['role' => 'staf_tu']);
     $this->kepsek = User::factory()->create(['role' => 'kepala_sekolah']);
     $this->studentUser = User::factory()->create(['role' => 'student']);
-    
+
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
     ]);
@@ -29,7 +29,7 @@ beforeEach(function () {
     $this->category = PaymentCategory::factory()->create([
         'name' => 'SPP Bulanan',
         'default_amount' => 750000,
-        'is_monthly' => true
+        'is_monthly' => true,
     ]);
 
     $this->billing = Billing::factory()->create([
@@ -103,11 +103,11 @@ test('authorized users can export arrears report to Excel', function () {
         ->get(route('finance.reports.export', [
             'type' => 'arrears',
             'format' => 'excel',
-            'year_id' => $this->academicYear->id
+            'year_id' => $this->academicYear->id,
         ]));
 
     $response->assertStatus(200);
-    $response->assertHeader('content-disposition', 'attachment; filename=laporan_tunggakan_kelas_' . date('Ymd') . '.xlsx');
+    $response->assertHeader('content-disposition', 'attachment; filename=laporan_tunggakan_kelas_'.date('Ymd').'.xlsx');
 });
 
 test('authorized users can export income statement to PDF', function () {

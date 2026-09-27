@@ -3,7 +3,6 @@
 namespace App\Services\Content;
 
 use App\Models\OcrDocument;
-use Illuminate\Support\Str;
 
 class OcrProcessingService
 {
@@ -36,7 +35,7 @@ class OcrProcessingService
                 return [
                     'confidence' => 0.96,
                     'data' => [
-                        'nik' => '337401' . rand(10000000, 99999999),
+                        'nik' => '337401'.rand(10000000, 99999999),
                         'nama' => 'H. Bambang Sulistyo, S.E.',
                         'tempat_lahir' => 'Semarang',
                         'tanggal_lahir' => '1980-05-12',
@@ -49,7 +48,7 @@ class OcrProcessingService
                 return [
                     'confidence' => 0.94,
                     'data' => [
-                        'no_kk' => '337401' . rand(10000000, 99999999),
+                        'no_kk' => '337401'.rand(10000000, 99999999),
                         'nama_kepala_keluarga' => 'H. Bambang Sulistyo, S.E.',
                         'alamat' => 'Jl. Sultan Agung No. 105, Candi, Semarang',
                         'anggota' => [
@@ -63,10 +62,10 @@ class OcrProcessingService
                 return [
                     'confidence' => 0.98,
                     'data' => [
-                        'nomor_ijazah' => 'DN-03/D-SMP/26/' . rand(100000, 999999),
+                        'nomor_ijazah' => 'DN-03/D-SMP/26/'.rand(100000, 999999),
                         'nama_siswa' => 'Muhammad Raihan',
                         'sekolah_asal' => 'SMP Islam Sultan Agung 1 Semarang',
-                        'nisn' => '0089' . rand(100000, 999999),
+                        'nisn' => '0089'.rand(100000, 999999),
                         'tahun_lulus' => '2026',
                         'nilai_rata_rata' => 91.50,
                     ],
@@ -76,7 +75,7 @@ class OcrProcessingService
                 return [
                     'confidence' => 0.92,
                     'data' => [
-                        'no_akta' => '3374-LU-' . rand(100000, 999999),
+                        'no_akta' => '3374-LU-'.rand(100000, 999999),
                         'nama_anak' => 'Muhammad Raihan',
                         'nama_ayah' => 'H. Bambang Sulistyo',
                         'nama_ibu' => 'Hj. Siti Aminah',

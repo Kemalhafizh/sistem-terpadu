@@ -8,16 +8,16 @@ use App\Models\AssetLoan;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Grade;
+use App\Models\Setting;
 use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\TeachingJournal;
 use App\Models\UksMedicine;
 use App\Models\User;
-use App\Models\Setting;
-use App\Services\WhatsappService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SmartAlertService
 {
@@ -27,7 +27,7 @@ class SmartAlertService
     public function detectAtRiskStudents(): Collection
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return collect();
         }
 
@@ -36,15 +36,15 @@ class SmartAlertService
 
         foreach ($students as $student) {
             $riskFactors = [];
-            
+
             // 1. Academic: check average grade
             $gpaThreshold = (float) Setting::get('smart_alert_at_risk_gpa_threshold', 70);
             $avgGrade = $student->grades()
                 ->where('academic_year_id', $activeYear->id)
                 ->avg('score');
-            
+
             if ($avgGrade !== null && $avgGrade < $gpaThreshold) {
-                $riskFactors[] = "Akademik (Rerata nilai: " . number_format($avgGrade, 1) . ")";
+                $riskFactors[] = 'Akademik (Rerata nilai: '.number_format($avgGrade, 1).')';
             }
 
             // 2. Attendance percentage
@@ -52,13 +52,13 @@ class SmartAlertService
             $attendances = $student->attendances()
                 ->where('academic_year_id', $activeYear->id)
                 ->get();
-            
+
             $attendanceRate = 100.0;
             if ($attendances->count() > 0) {
                 $presentCount = $attendances->where('status', 'H')->count();
                 $attendanceRate = ($presentCount / $attendances->count()) * 100;
                 if ($attendanceRate < $attendanceThreshold) {
-                    $riskFactors[] = "Kehadiran (Tingkat kehadiran: " . number_format($attendanceRate, 1) . "%)";
+                    $riskFactors[] = 'Kehadiran (Tingkat kehadiran: '.number_format($attendanceRate, 1).'%)';
                 }
             }
 
@@ -66,7 +66,7 @@ class SmartAlertService
             $bkPointsThreshold = (int) Setting::get('smart_alert_at_risk_bk_points_threshold', 50);
             $bkPoints = $student->total_points;
             if ($bkPoints >= $bkPointsThreshold) {
-                $riskFactors[] = "Tata Tertib BK (Akumulasi poin: " . $bkPoints . ")";
+                $riskFactors[] = 'Tata Tertib BK (Akumulasi poin: '.$bkPoints.')';
             }
 
             // If any risk factor met, create alert
@@ -77,8 +77,8 @@ class SmartAlertService
                     $severity = 'critical';
                 }
 
-                $title = "Siswa Berisiko: " . $student->name;
-                $description = "Siswa terdeteksi berisiko tinggi karena memenuhi faktor: " . implode(', ', $riskFactors) . ".";
+                $title = 'Siswa Berisiko: '.$student->name;
+                $description = 'Siswa terdeteksi berisiko tinggi karena memenuhi faktor: '.implode(', ', $riskFactors).'.';
 
                 $alert = SmartAlert::updateOrCreate(
                     [
@@ -116,7 +116,7 @@ class SmartAlertService
     public function detectAttendanceDecline(): Collection
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return collect();
         }
 
@@ -137,8 +137,8 @@ class SmartAlertService
             if ($rate1 !== null && $rate2 !== null && $rate3 !== null) {
                 if ($rate3 > $rate2 && $rate2 > $rate1) {
                     $severity = $rate1 < 50 ? 'critical' : 'warning';
-                    $title = "Penurunan Kehadiran: " . $student->name;
-                    $description = "Tingkat kehadiran harian siswa menurun berturut-turut dalam 3 minggu terakhir (M3: " . round($rate3, 1) . "%, M2: " . round($rate2, 1) . "%, M1: " . round($rate1, 1) . "%).";
+                    $title = 'Penurunan Kehadiran: '.$student->name;
+                    $description = 'Tingkat kehadiran harian siswa menurun berturut-turut dalam 3 minggu terakhir (M3: '.round($rate3, 1).'%, M2: '.round($rate2, 1).'%, M1: '.round($rate1, 1).'%).';
 
                     $alert = SmartAlert::updateOrCreate(
                         [
@@ -157,9 +157,9 @@ class SmartAlertService
                                 'weekly_rates' => [
                                     'week3' => round($rate3, 2),
                                     'week2' => round($rate2, 2),
-                                    'week1' => round($rate1, 2)
-                                ]
-                            ]
+                                    'week1' => round($rate1, 2),
+                                ],
+                            ],
                         ]
                     );
 
@@ -183,6 +183,7 @@ class SmartAlertService
         }
 
         $present = $records->where('status', 'H')->count();
+
         return ($present / $records->count()) * 100;
     }
 
@@ -192,7 +193,7 @@ class SmartAlertService
     public function predictPaymentDefault(): Collection
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return collect();
         }
 
@@ -217,9 +218,9 @@ class SmartAlertService
             if ($totalOverdueCount >= 2) {
                 $totalUnpaidAmount = $overdueBillings->sum('remaining_balance');
                 $severity = $totalOverdueCount >= 3 ? 'critical' : 'warning';
-                
-                $title = "Prediksi Tunggakan SPP: " . $student->name;
-                $description = "Siswa memiliki " . $totalOverdueCount . " tagihan bulanan tertunggak melewati batas jatuh tempo (Total Tunggakan: Rp " . number_format($totalUnpaidAmount, 0, ',', '.') . ").";
+
+                $title = 'Prediksi Tunggakan SPP: '.$student->name;
+                $description = 'Siswa memiliki '.$totalOverdueCount.' tagihan bulanan tertunggak melewati batas jatuh tempo (Total Tunggakan: Rp '.number_format($totalUnpaidAmount, 0, ',', '.').').';
 
                 $alert = SmartAlert::updateOrCreate(
                     [
@@ -237,13 +238,13 @@ class SmartAlertService
                             'classroom' => $student->classroom?->name ?? 'Tanpa Kelas',
                             'overdue_count' => $totalOverdueCount,
                             'total_unpaid' => $totalUnpaidAmount,
-                            'billings' => $overdueBillings->map(fn($b) => [
+                            'billings' => $overdueBillings->map(fn ($b) => [
                                 'month' => $b->month,
                                 'amount' => $b->amount,
                                 'remaining' => $b->remaining_balance,
-                                'due_date' => $b->due_date
-                            ])->toArray()
-                        ]
+                                'due_date' => $b->due_date,
+                            ])->toArray(),
+                        ],
                     ]
                 );
 
@@ -260,7 +261,7 @@ class SmartAlertService
     public function detectTeacherJournalGap(): Collection
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return collect();
         }
 
@@ -276,7 +277,7 @@ class SmartAlertService
                 ->first();
 
             $gapDays = null;
-            $lastDateString = "Belum pernah mengisi";
+            $lastDateString = 'Belum pernah mengisi';
 
             if ($latestJournal) {
                 $lastDateString = Carbon::parse($latestJournal->teaching_date)->format('d-m-Y');
@@ -290,8 +291,8 @@ class SmartAlertService
             $journalGapCriticalDays = (int) Setting::get('smart_alert_journal_gap_critical_days', 10);
             if ($gapDays > $journalGapDays) {
                 $severity = $gapDays > $journalGapCriticalDays ? 'critical' : 'warning';
-                $title = "Kesenjangan Jurnal Mengajar: " . $teacher->name;
-                $description = "Guru belum mengisikan/mengirimkan jurnal mengajar selama " . $gapDays . " hari kerja terakhir (Jurnal terakhir: " . $lastDateString . ").";
+                $title = 'Kesenjangan Jurnal Mengajar: '.$teacher->name;
+                $description = 'Guru belum mengisikan/mengirimkan jurnal mengajar selama '.$gapDays.' hari kerja terakhir (Jurnal terakhir: '.$lastDateString.').';
 
                 $alert = SmartAlert::updateOrCreate(
                     [
@@ -309,7 +310,7 @@ class SmartAlertService
                             'teacher_email' => $teacher->email,
                             'gap_days' => $gapDays,
                             'last_journal_date' => $lastDateString,
-                        ]
+                        ],
                     ]
                 );
 
@@ -324,13 +325,13 @@ class SmartAlertService
     {
         $startDate = Carbon::parse($date);
         $endDate = Carbon::now();
-        
+
         if ($startDate->greaterThanOrEqualTo($endDate)) {
             return 0;
         }
 
         return $startDate->diffInDaysFiltered(function (Carbon $d) {
-            return !$d->isWeekend();
+            return ! $d->isWeekend();
         }, $endDate);
     }
 
@@ -350,33 +351,33 @@ class SmartAlertService
             // Check stock
             if ($med->stock == 0) {
                 $isCritical = true;
-                $reasons[] = "Stok habis (0)";
+                $reasons[] = 'Stok habis (0)';
             } elseif ($med->stock < $med->min_stock) {
                 $isWarning = true;
-                $reasons[] = "Stok menipis (" . $med->stock . " < " . $med->min_stock . ")";
+                $reasons[] = 'Stok menipis ('.$med->stock.' < '.$med->min_stock.')';
             }
 
             // Check expiry
             if ($med->expiry_date) {
                 $expiry = Carbon::parse($med->expiry_date);
-                 if ($expiry->isPast()) {
+                if ($expiry->isPast()) {
                     $isCritical = true;
-                    $reasons[] = "Obat kedaluwarsa pada " . $expiry->format('d-m-Y');
+                    $reasons[] = 'Obat kedaluwarsa pada '.$expiry->format('d-m-Y');
                 } else {
                     $expiryDays = (int) Setting::get('smart_alert_medicine_expiry_days', 30);
                     if ($expiry->diffInDays(Carbon::now()) <= $expiryDays) {
                         $isWarning = true;
-                        $reasons[] = "Obat mendekati kedaluwarsa (" . $expiry->format('d-m-Y') . ")";
+                        $reasons[] = 'Obat mendekati kedaluwarsa ('.$expiry->format('d-m-Y').')';
                     }
                 }
             }
 
             if ($isCritical || $isWarning) {
                 $severity = $isCritical ? 'critical' : 'warning';
-                $title = ($isCritical && str_contains(implode(', ', $reasons), 'kedaluwarsa')) 
-                    ? "Obat Kedaluwarsa: " . $med->name 
-                    : "Stok Kritis Obat UKS: " . $med->name;
-                $description = "Inventaris UKS [" . $med->name . "] bermasalah: " . implode(' & ', $reasons) . ".";
+                $title = ($isCritical && str_contains(implode(', ', $reasons), 'kedaluwarsa'))
+                    ? 'Obat Kedaluwarsa: '.$med->name
+                    : 'Stok Kritis Obat UKS: '.$med->name;
+                $description = 'Inventaris UKS ['.$med->name.'] bermasalah: '.implode(' & ', $reasons).'.';
 
                 $alert = SmartAlert::updateOrCreate(
                     [
@@ -396,7 +397,7 @@ class SmartAlertService
                             'min_stock' => $med->min_stock,
                             'expiry_date' => $med->expiry_date ? Carbon::parse($med->expiry_date)->format('d-m-Y') : null,
                             'reasons' => $reasons,
-                        ]
+                        ],
                     ]
                 );
 
@@ -420,13 +421,13 @@ class SmartAlertService
         $alerts = collect();
 
         foreach ($overdueLoans as $loan) {
-             $expectedReturn = Carbon::parse($loan->expected_return_at);
+            $expectedReturn = Carbon::parse($loan->expected_return_at);
             $overdueDays = $expectedReturn->diffInDays(Carbon::now());
-            
+
             $overdueAssetDays = (int) Setting::get('smart_alert_overdue_asset_days', 7);
             $severity = $overdueDays > $overdueAssetDays ? 'critical' : 'warning';
-            $title = "Peminjaman Aset Terlambat: " . $loan->asset->name;
-            $description = "Barang [" . $loan->asset->name . "] dipinjam oleh " . $loan->borrower->name . " melewati batas waktu pengembalian (" . $expectedReturn->format('d-m-Y H:i') . "). Terlambat " . $overdueDays . " hari.";
+            $title = 'Peminjaman Aset Terlambat: '.$loan->asset->name;
+            $description = 'Barang ['.$loan->asset->name.'] dipinjam oleh '.$loan->borrower->name.' melewati batas waktu pengembalian ('.$expectedReturn->format('d-m-Y H:i').'). Terlambat '.$overdueDays.' hari.';
 
             $alert = SmartAlert::updateOrCreate(
                 [
@@ -444,7 +445,7 @@ class SmartAlertService
                         'borrower_name' => $loan->borrower->name,
                         'expected_return' => $expectedReturn->format('d-m-Y H:i'),
                         'overdue_days' => $overdueDays,
-                    ]
+                    ],
                 ]
             );
 
@@ -484,7 +485,7 @@ class SmartAlertService
 
         return [
             'total' => $totalCount,
-            'details' => collect($generated)->map(fn($col) => $col->count())->toArray()
+            'details' => collect($generated)->map(fn ($col) => $col->count())->toArray(),
         ];
     }
 
@@ -495,7 +496,7 @@ class SmartAlertService
     {
         // Find users to notify based on alert type
         $roles = ['admin', 'superadmin', 'kepala_sekolah'];
-        
+
         if (in_array($alert->type, ['at_risk_student', 'attendance_decline'])) {
             $roles[] = 'bk';
             $roles[] = 'waka_kesiswaan';
@@ -518,14 +519,14 @@ class SmartAlertService
             // Send WhatsApp if recipient has phone number and it is a critical alert
             if ($user->phone_number && $alert->severity === 'critical') {
                 try {
-                    $message = " *SMART ALERT CRITICAL (SISTA)* \n\n" .
-                               "Judul: *{$alert->title}*\n" .
-                               "Deskripsi: {$alert->description}\n" .
-                               "Waktu: " . now()->format('d-m-Y H:i') . "\n\n" .
-                               "Mohon segera tindak lanjuti melalui portal SISTA.";
+                    $message = " *SMART ALERT CRITICAL (SISTA)* \n\n".
+                               "Judul: *{$alert->title}*\n".
+                               "Deskripsi: {$alert->description}\n".
+                               'Waktu: '.now()->format('d-m-Y H:i')."\n\n".
+                               'Mohon segera tindak lanjuti melalui portal SISTA.';
                     app(WhatsappService::class)->sendMessage($user->phone_number, $message, 'smart_alert_critical');
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp Alert to {$user->name}: " . $e->getMessage());
+                    Log::error("Failed to send WhatsApp Alert to {$user->name}: ".$e->getMessage());
                 }
             }
         }
@@ -548,8 +549,8 @@ class SmartAlertService
         event(new NewNotificationEvent($supervisor, [
             'id' => $alert->id,
             'type' => 'smart_alert',
-            'title' => " Eskalasi Alert: " . $alert->title,
-            'description' => "Alert telah dieskalasikan kepada Anda: " . $notes,
+            'title' => ' Eskalasi Alert: '.$alert->title,
+            'description' => 'Alert telah dieskalasikan kepada Anda: '.$notes,
             'severity' => 'critical',
             'created_at' => now()->toDateTimeString(),
         ]));
@@ -557,15 +558,15 @@ class SmartAlertService
         // Send WhatsApp Notification to Supervisor
         if ($supervisor->phone_number) {
             try {
-                $message = " *ESKALASI SMART ALERT (SISTA)* \n\n" .
-                           "Sebuah alert telah dieskalasikan kepada Anda:\n" .
-                           "Judul: *{$alert->title}*\n" .
-                           "Catatan Eskalasi: _{$notes}_\n" .
-                           "Waktu: " . now()->format('d-m-Y H:i') . "\n\n" .
-                           "Silakan login ke portal SISTA untuk mengambil tindakan.";
+                $message = " *ESKALASI SMART ALERT (SISTA)* \n\n".
+                           "Sebuah alert telah dieskalasikan kepada Anda:\n".
+                           "Judul: *{$alert->title}*\n".
+                           "Catatan Eskalasi: _{$notes}_\n".
+                           'Waktu: '.now()->format('d-m-Y H:i')."\n\n".
+                           'Silakan login ke portal SISTA untuk mengambil tindakan.';
                 app(WhatsappService::class)->sendMessage($supervisor->phone_number, $message, 'smart_alert_escalation');
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp Escalation to {$supervisor->name}: " . $e->getMessage());
+                Log::error("Failed to send WhatsApp Escalation to {$supervisor->name}: ".$e->getMessage());
             }
         }
     }

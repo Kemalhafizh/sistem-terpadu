@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Growth;
 
 use App\Http\Controllers\Controller;
-use App\Models\StudentLifecycleEvent;
 use App\Models\User;
 use App\Services\Growth\StudentLifecycleService;
 use Illuminate\Http\Request;
@@ -42,6 +41,7 @@ class StudentLifecycleController extends Controller
     public function retentionDashboard(StudentLifecycleService $service)
     {
         $retention = $service->calculateCohortRetention();
+
         return view('lifecycle.retention-dashboard', compact('retention'));
     }
 

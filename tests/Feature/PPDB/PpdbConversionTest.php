@@ -1,13 +1,13 @@
 <?php
 
 use App\Models\AcademicYear;
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
-use App\Models\Registration;
 use App\Models\Classroom;
-use App\Models\User;
+use App\Models\Registration;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
@@ -80,7 +80,7 @@ test('admin can confirm reregistration and convert applicant to student', functi
     // 1. Confirm reregistration
     $response = $this->actingAs($this->admin)->post(route('spmb.admin.reregistration.confirm', $reg));
     $response->assertRedirect();
-    
+
     $reg->refresh();
     expect($reg->has_reregistered)->toBe(true);
 

@@ -11,6 +11,7 @@ class SatisfactionSurveyController extends Controller
     public function index()
     {
         $surveys = SatisfactionSurvey::latest()->get();
+
         return view('strategic.survey.index', compact('surveys'));
     }
 
@@ -37,12 +38,14 @@ class SatisfactionSurveyController extends Controller
     public function show($id)
     {
         $survey = SatisfactionSurvey::with('dimensions.questions')->findOrFail($id);
+
         return view('strategic.survey.show', compact('survey'));
     }
 
     public function respond($id)
     {
         $survey = SatisfactionSurvey::with('dimensions.questions')->findOrFail($id);
+
         return view('strategic.survey.respond', compact('survey'));
     }
 
@@ -54,6 +57,7 @@ class SatisfactionSurveyController extends Controller
     public function results($id)
     {
         $survey = SatisfactionSurvey::with('dimensions.questions.responses')->findOrFail($id);
+
         return view('strategic.survey.results', compact('survey'));
     }
 }

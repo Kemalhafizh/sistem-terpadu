@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\AssetMaintenanceTicket;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 
 class AssetMaintenanceTicketController extends Controller
 {
@@ -17,6 +17,7 @@ class AssetMaintenanceTicketController extends Controller
     public function scanQr($uuid)
     {
         $asset = Asset::where('uuid', $uuid)->with('room')->firstOrFail();
+
         return view('assets.maintenance.scan', compact('asset'));
     }
 
@@ -49,7 +50,7 @@ class AssetMaintenanceTicketController extends Controller
 
             return back()->with('success', 'Laporan kerusakan berhasil dikirim. Terima kasih atas partisipasi Anda.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal mengirim laporan: ' . $e->getMessage())->withInput();
+            return back()->with('error', 'Gagal mengirim laporan: '.$e->getMessage())->withInput();
         }
     }
 
@@ -91,6 +92,7 @@ class AssetMaintenanceTicketController extends Controller
     public function showTicket($id)
     {
         $ticket = AssetMaintenanceTicket::with(['asset.room', 'reporter', 'resolver'])->findOrFail($id);
+
         return view('assets.maintenance.ticket-detail', compact('ticket'));
     }
 
@@ -133,7 +135,7 @@ class AssetMaintenanceTicketController extends Controller
             return redirect()->route('admin.assets.maintenance.index')
                 ->with('success', 'Status tiket perbaikan aset berhasil diperbarui.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memperbarui status: '.$e->getMessage());
         }
     }
 
@@ -143,6 +145,7 @@ class AssetMaintenanceTicketController extends Controller
     public function generateQrLabels()
     {
         $assets = Asset::with('room')->orderBy('asset_code')->get();
+
         return view('assets.maintenance.qr-print', compact('assets'));
     }
 }

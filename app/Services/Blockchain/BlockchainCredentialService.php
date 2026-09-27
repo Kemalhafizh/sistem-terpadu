@@ -29,9 +29,9 @@ class BlockchainCredentialService
         ]);
 
         $leafHash = hash('sha256', $rawDigest);
-        $merkleRoot = '0x' . hash('sha256', $leafHash . hash('sha256', 'YBWSA_SULTAN_AGUNG_ROOT_SECRET'));
-        $mockTxHash = '0x' . hash('sha256', $merkleRoot . microtime());
-        $contractAddress = '0x' . substr(hash('sha256', 'SULAONE_CREDENTIAL_REGISTRY_V1'), 0, 40);
+        $merkleRoot = '0x'.hash('sha256', $leafHash.hash('sha256', 'YBWSA_SULTAN_AGUNG_ROOT_SECRET'));
+        $mockTxHash = '0x'.hash('sha256', $merkleRoot.microtime());
+        $contractAddress = '0x'.substr(hash('sha256', 'SULAONE_CREDENTIAL_REGISTRY_V1'), 0, 40);
 
         return BlockchainCredential::create([
             'student_id' => $student->id,
@@ -53,7 +53,7 @@ class BlockchainCredentialService
     public function verifyCredential(string $certificateNumber): array
     {
         $cred = BlockchainCredential::where('certificate_number', $certificateNumber)->first();
-        if (!$cred) {
+        if (! $cred) {
             return [
                 'verified' => false,
                 'status' => 'not_found',

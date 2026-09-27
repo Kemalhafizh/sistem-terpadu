@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\PwaService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PwaController extends Controller
 {
@@ -40,7 +40,7 @@ class PwaController extends Controller
             ]);
         }
 
-        $defaultSw = <<<JS
+        $defaultSw = <<<'JS'
 const CACHE_NAME = 'sista-v2.4.0';
 self.addEventListener('install', (event) => {
     self.skipWaiting();
@@ -67,11 +67,12 @@ JS;
     public function subscribe(Request $request): JsonResponse
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             abort(401, 'Autentikasi diperlukan untuk mendaftarkan web push notification.');
         }
 
         $result = $this->pwaService->registerWebPush($user->id, $request->all());
+
         return response()->json($result);
     }
 }

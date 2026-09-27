@@ -1,24 +1,21 @@
 <?php
 
+use App\Jobs\SendWhatsappBroadcastJob;
+use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\DailyAssessment;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\User;
 use App\Models\WhatsappAutomation;
 use App\Models\WhatsappBroadcast;
 use App\Models\WhatsappLog;
 use App\Models\WhatsappTemplate;
-use App\Models\UksVisit;
-use App\Models\DailyAssessment;
-use App\Models\DailyAssessmentScore;
-use App\Models\Subject;
-use App\Models\AcademicYear;
 use App\Services\AttendanceService;
-use App\Services\UksService;
 use App\Services\DailyAssessmentService;
+use App\Services\UksService;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Queue;
-use App\Jobs\SendWhatsappBroadcastJob;
 
 beforeEach(function () {
     // Create users with different roles
@@ -174,8 +171,8 @@ test('triggers attendance_absent instant notification when student is marked alp
     $attendanceService->recordBulkAttendance($this->classroom->id, Carbon::today()->toDateString(), [
         $this->student->id => [
             'status' => 'A',
-            'notes' => 'Tanpa keterangan'
-        ]
+            'notes' => 'Tanpa keterangan',
+        ],
     ], $this->guru->id);
 
     $this->assertDatabaseHas('whatsapp_logs', [
@@ -259,8 +256,8 @@ test('triggers grade_below_kkm instant notification when score is below KKM', fu
     $assessmentService->batchStoreScores($assessment->id, [
         $this->student->id => [
             'score' => 50,
-            'notes' => 'Butuh bimbingan'
-        ]
+            'notes' => 'Butuh bimbingan',
+        ],
     ]);
 
     $this->assertDatabaseHas('whatsapp_logs', [

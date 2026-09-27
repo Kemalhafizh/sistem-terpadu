@@ -3,12 +3,11 @@
 use App\Models\ImmutableAuditLog;
 use App\Models\User;
 use App\Services\DataAnonymizerService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->student = User::factory()->create(['role' => 'student', 'name' => 'John Doe PDP', 'email' => 'john.pdp@smaisa1.sch.id']);
-    $this->anonymizer = new DataAnonymizerService();
+    $this->anonymizer = new DataAnonymizerService;
 });
 
 test('data anonymizer service masks nik, phone, and email according to uu pdp rules', function () {

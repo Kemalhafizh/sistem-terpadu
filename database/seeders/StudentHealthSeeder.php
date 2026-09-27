@@ -3,16 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\AcademicYear;
-use App\Models\Student;
-use App\Models\StudentHealthRecord;
 use App\Models\HealthScreening;
 use App\Models\HealthScreeningResult;
+use App\Models\Student;
+use App\Models\StudentHealthRecord;
 use App\Models\UksMedicine;
 use App\Models\UksVisit;
 use App\Models\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class StudentHealthSeeder extends Seeder
 {
@@ -66,7 +65,7 @@ class StudentHealthSeeder extends Seeder
                 'medications' => null,
                 'medical_notes' => $faker->boolean(15) ? 'Perlu pengawasan saat aktivitas fisik berat.' : null,
                 'emergency_contact_name' => $faker->name,
-                'emergency_contact_phone' => '08' . $faker->numerify('##########'),
+                'emergency_contact_phone' => '08'.$faker->numerify('##########'),
                 'insurance_number' => $faker->boolean(70) ? $faker->numerify('BPJS-000#########') : null,
                 'height_cm' => $faker->randomFloat(1, 150, 180),
                 'weight_kg' => $faker->randomFloat(1, 45, 80),

@@ -2,8 +2,8 @@
 
 namespace App\Services\HR;
 
-use App\Models\WellnessProgram;
 use App\Models\WellnessLog;
+use App\Models\WellnessProgram;
 
 class WellnessService
 {

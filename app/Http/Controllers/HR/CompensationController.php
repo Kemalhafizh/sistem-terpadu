@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\CompensationStructure;
 use App\Models\BenefitClaim;
+use App\Models\CompensationStructure;
+use Illuminate\Http\Request;
 
 class CompensationController extends Controller
 {
@@ -17,6 +17,7 @@ class CompensationController extends Controller
     public function structures()
     {
         $structures = CompensationStructure::all();
+
         return view('compensation.employee-structures', compact('structures'));
     }
 
@@ -28,6 +29,7 @@ class CompensationController extends Controller
     public function claims()
     {
         $claims = BenefitClaim::all();
+
         return view('compensation.claims-approval', compact('claims'));
     }
 

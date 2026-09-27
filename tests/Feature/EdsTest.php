@@ -1,18 +1,18 @@
 <?php
 
-use App\Models\User;
 use App\Models\AcademicYear;
+use App\Models\EdsAssessment;
+use App\Models\EdsIndicator;
 use App\Models\EdsPeriod;
 use App\Models\EdsStandard;
-use App\Models\EdsIndicator;
-use App\Models\EdsAssessment;
+use App\Models\User;
 use App\Services\EdsService;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('public');
-    
+
     // Clear EDS tables to ensure clean slate per test
     EdsAssessment::query()->delete();
     EdsIndicator::query()->delete();
@@ -115,8 +115,8 @@ test('authorized roles can store batch assessments', function () {
                 'evidence' => 'Semua RPP terdokumentasi dengan baik.',
                 'recommendation' => 'Pertahankan kualitas.',
                 'files' => [$file],
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect();
@@ -134,7 +134,7 @@ test('authorized roles can store batch assessments', function () {
     $assessment = EdsAssessment::where('period_id', $period->id)->where('indicator_id', $indicator->id)->first();
     expect($assessment->document_paths)->toBeArray();
     expect(count($assessment->document_paths))->toBe(1);
-    
+
     // Check file physical existence on disk
     $path = str_replace('/storage/', '', $assessment->document_paths[0]);
     Storage::disk('public')->assertExists($path);
@@ -151,7 +151,7 @@ test('assessments calculate mathematical averages correctly', function () {
     ]);
 
     $indicators = EdsIndicator::all();
-    
+
     // Total indicators is 18
     // Let's assess 3 indicators: score 4, score 3, score 2
     // Math overall average = (4 + 3 + 2 + (15 * 0)) / 18 = 9 / 18 = 0.50
@@ -159,21 +159,21 @@ test('assessments calculate mathematical averages correctly', function () {
         'period_id' => $period->id,
         'indicator_id' => $indicators[0]->id,
         'score' => 4,
-        'assessed_by' => $this->waka->id
+        'assessed_by' => $this->waka->id,
     ]);
 
     EdsAssessment::create([
         'period_id' => $period->id,
         'indicator_id' => $indicators[1]->id,
         'score' => 3,
-        'assessed_by' => $this->waka->id
+        'assessed_by' => $this->waka->id,
     ]);
 
     EdsAssessment::create([
         'period_id' => $period->id,
         'indicator_id' => $indicators[2]->id,
         'score' => 2,
-        'assessed_by' => $this->waka->id
+        'assessed_by' => $this->waka->id,
     ]);
 
     $scoresData = $service->getStandardScores($period);
@@ -203,7 +203,7 @@ test('gap analysis correctly captures scores under 3', function () {
         'score' => 4,
         'evidence' => 'Aman',
         'recommendation' => 'Aman',
-        'assessed_by' => $this->waka->id
+        'assessed_by' => $this->waka->id,
     ]);
 
     // 1 indicator with score 2 (under target)
@@ -213,7 +213,7 @@ test('gap analysis correctly captures scores under 3', function () {
         'score' => 2,
         'evidence' => 'Masalah',
         'recommendation' => 'Solusi',
-        'assessed_by' => $this->waka->id
+        'assessed_by' => $this->waka->id,
     ]);
 
     $gaps = $service->getGapAnalysis($period);
@@ -273,7 +273,7 @@ test('comparison view displays correct baseline vs target metrics', function () 
             'period_id' => $periodA->id,
             'indicator_id' => $ind->id,
             'score' => 2,
-            'assessed_by' => $this->waka->id
+            'assessed_by' => $this->waka->id,
         ]);
     }
 
@@ -283,7 +283,7 @@ test('comparison view displays correct baseline vs target metrics', function () 
             'period_id' => $periodB->id,
             'indicator_id' => $ind->id,
             'score' => 3,
-            'assessed_by' => $this->waka->id
+            'assessed_by' => $this->waka->id,
         ]);
     }
 
@@ -294,7 +294,7 @@ test('comparison view displays correct baseline vs target metrics', function () 
     ]));
 
     $response->assertStatus(200);
-    
+
     // Test the Service comparison logic directly
     $comparisonData = $service->getComparisonData($periodB, $periodA);
 

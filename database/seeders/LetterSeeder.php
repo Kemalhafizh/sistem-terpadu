@@ -15,7 +15,7 @@ class LetterSeeder extends Seeder
     {
         $admin = User::where('role', 'admin')->first();
         $stafTu = User::where('email', 'staf.tu@sultanagung1.sch.id')->first();
-        if (!$stafTu) {
+        if (! $stafTu) {
             $stafTu = $admin;
         }
 
@@ -62,7 +62,7 @@ class LetterSeeder extends Seeder
             $student = $students[$i] ?? $students->first();
             Letter::create([
                 'template_id' => $template1->id,
-                'letter_number' => '421.3/' . str_pad($i + 1, 3, '0', STR_PAD_LEFT) . '/SMA-SA1/VI/' . date('Y'),
+                'letter_number' => '421.3/'.str_pad($i + 1, 3, '0', STR_PAD_LEFT).'/SMA-SA1/VI/'.date('Y'),
                 'field_values' => [
                     'student_name' => $student->user->name ?? 'Siswa',
                     'nis' => $student->nis,
@@ -90,7 +90,7 @@ class LetterSeeder extends Seeder
             ];
             Letter::create([
                 'template_id' => $template2->id,
-                'letter_number' => '090/' . str_pad($i + 6, 3, '0', STR_PAD_LEFT) . '/SMA-SA1/VI/' . date('Y'),
+                'letter_number' => '090/'.str_pad($i + 6, 3, '0', STR_PAD_LEFT).'/SMA-SA1/VI/'.date('Y'),
                 'field_values' => [
                     'employee_name' => $employee->user->name ?? 'Karyawan',
                     'employee_number' => $employee->employee_number,
@@ -111,7 +111,7 @@ class LetterSeeder extends Seeder
             $student = $students[$i + 5] ?? $students->first();
             Letter::create([
                 'template_id' => $template3->id,
-                'letter_number' => '005/' . str_pad($i + 11, 3, '0', STR_PAD_LEFT) . '/SMA-SA1/VI/' . date('Y'),
+                'letter_number' => '005/'.str_pad($i + 11, 3, '0', STR_PAD_LEFT).'/SMA-SA1/VI/'.date('Y'),
                 'field_values' => [
                     'student_name' => $student->user->name ?? 'Siswa',
                     'classroom' => $student->classroom->name ?? 'X-A',

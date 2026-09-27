@@ -3,16 +3,16 @@
 namespace Database\Seeders;
 
 use App\Models\AcademicYear;
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
 use App\Models\Registration;
 use App\Models\SpmbDocument;
-use App\Models\User;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
 use App\Models\Student;
+use App\Models\User;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 
 class PpdbSeeder extends Seeder
 {
@@ -20,14 +20,14 @@ class PpdbSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
         $academicYear = AcademicYear::current() ?: AcademicYear::first();
-        
-        if (!$academicYear) {
+
+        if (! $academicYear) {
             $academicYear = AcademicYear::create([
                 'year' => '2025/2026',
                 'semester' => 'Genap',
                 'is_active' => true,
                 'start_date' => '2026-01-06',
-                'end_date' => '2026-06-21'
+                'end_date' => '2026-06-21',
             ]);
         }
 
@@ -35,9 +35,9 @@ class PpdbSeeder extends Seeder
         $period = SpmbPeriod::create([
             'uuid' => (string) Str::uuid(),
             'academic_year_id' => $academicYear->id,
-            'name' => 'SPMB ' . $academicYear->year,
+            'name' => 'SPMB '.$academicYear->year,
             'total_quota' => 150,
-            'status' => 'open'
+            'status' => 'open',
         ]);
 
         // 2. SpmbWaves
@@ -50,7 +50,7 @@ class PpdbSeeder extends Seeder
             'announcement_date' => now()->subDays(25)->toDateString(),
             'quota' => 60,
             'registration_fee' => 200000,
-            'status' => 'closed'
+            'status' => 'closed',
         ]);
 
         $wave2 = SpmbWave::create([
@@ -62,7 +62,7 @@ class PpdbSeeder extends Seeder
             'announcement_date' => now()->addDays(25)->toDateString(),
             'quota' => 90,
             'registration_fee' => 250000,
-            'status' => 'open'
+            'status' => 'open',
         ]);
 
         // 3. SpmbTracks
@@ -72,7 +72,7 @@ class PpdbSeeder extends Seeder
             'name' => 'Jalur Reguler',
             'quota' => 90,
             'scoring_weights' => ['rapor' => 40, 'tes' => 60],
-            'requirements' => 'Rata-rata rapor minimal 75 dan lulus ujian masuk tertulis.'
+            'requirements' => 'Rata-rata rapor minimal 75 dan lulus ujian masuk tertulis.',
         ]);
 
         $trackPrestasi = SpmbTrack::create([
@@ -81,7 +81,7 @@ class PpdbSeeder extends Seeder
             'name' => 'Jalur Prestasi',
             'quota' => 30,
             'scoring_weights' => ['rapor' => 30, 'tes' => 30, 'prestasi' => 40],
-            'requirements' => 'Pernah menjuarai lomba minimal tingkat kota/kabupaten.'
+            'requirements' => 'Pernah menjuarai lomba minimal tingkat kota/kabupaten.',
         ]);
 
         $trackTahfidz = SpmbTrack::create([
@@ -90,7 +90,7 @@ class PpdbSeeder extends Seeder
             'name' => 'Jalur Tahfidz',
             'quota' => 30,
             'scoring_weights' => ['rapor' => 20, 'tes' => 20, 'tahfidz' => 60],
-            'requirements' => 'Hafal Al-Quran minimal 3 Juz dibuktikan dengan sertifikat/syahadah.'
+            'requirements' => 'Hafal Al-Quran minimal 3 Juz dibuktikan dengan sertifikat/syahadah.',
         ]);
 
         $tracks = [$trackReguler, $trackPrestasi, $trackTahfidz];
@@ -186,7 +186,7 @@ class PpdbSeeder extends Seeder
             // Converted to Student
             $user = User::create([
                 'name' => $reg->full_name,
-                'email' => strtolower(str_replace(' ', '.', $reg->full_name)) . '@sista-student.com',
+                'email' => strtolower(str_replace(' ', '.', $reg->full_name)).'@sista-student.com',
                 'password' => bcrypt('password'),
                 'role' => 'student',
                 'phone_number' => $reg->parent_phone,
@@ -197,7 +197,7 @@ class PpdbSeeder extends Seeder
             Student::create([
                 'user_id' => $user->id,
                 'classroom_id' => 1, // Default X-A
-                'nis' => '10' . str_pad($reg->id, 4, '0', STR_PAD_LEFT),
+                'nis' => '10'.str_pad($reg->id, 4, '0', STR_PAD_LEFT),
                 'nisn' => $reg->nisn,
                 'gender' => $reg->gender,
                 'birth_date' => $reg->birth_date,
@@ -212,7 +212,7 @@ class PpdbSeeder extends Seeder
         $gender = $faker->randomElement(['L', 'P']);
         $firstName = $gender === 'L' ? $faker->firstNameMale : $faker->firstNameFemale;
         $lastName = $faker->lastName;
-        $fullName = $firstName . ' ' . $lastName;
+        $fullName = $firstName.' '.$lastName;
 
         $rapor = [
             'agama' => $faker->numberBetween(80, 95),
@@ -236,10 +236,10 @@ class PpdbSeeder extends Seeder
         $reg = Registration::create([
             'registration_number' => Registration::generateRegistrationNumber(),
             'full_name' => $fullName,
-            'email' => strtolower($firstName . '.' . $lastName . '@gmail.com'),
+            'email' => strtolower($firstName.'.'.$lastName.'@gmail.com'),
             'nisn' => $faker->numerify('##########'),
             'previous_school' => $school,
-            'parent_phone' => '08' . $faker->numerify('##########'),
+            'parent_phone' => '08'.$faker->numerify('##########'),
             'status' => $status,
             'academic_year_id' => $academicYearId,
             'spmb_wave_id' => $wave->id,
@@ -265,7 +265,7 @@ class PpdbSeeder extends Seeder
             SpmbDocument::create([
                 'registration_id' => $reg->id,
                 'document_type' => $type,
-                'file_path' => 'spmb/' . $reg->registration_number . '/' . $type . '.pdf',
+                'file_path' => 'spmb/'.$reg->registration_number.'/'.$type.'.pdf',
                 'verification_status' => $docStatus === 'verified' ? 'verified' : ($docStatus === 'incomplete' ? 'pending' : 'verified'),
                 'verified_by' => $docStatus === 'verified' ? 1 : null,
                 'verified_at' => $docStatus === 'verified' ? now() : null,

@@ -2,8 +2,6 @@
 
 namespace App\Services\Green;
 
-use App\Models\EcoProject;
-
 class GreenCurriculumService
 {
     public function mapSdgToCurriculum()

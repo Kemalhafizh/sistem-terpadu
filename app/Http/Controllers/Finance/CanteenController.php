@@ -9,10 +9,9 @@ use App\Models\Student;
 use App\Models\User;
 use App\Models\WadiahAccount;
 use App\Services\WadiahService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 
 class CanteenController extends Controller
 {
@@ -70,7 +69,7 @@ class CanteenController extends Controller
             'is_active' => ! $merchant->is_active,
         ]);
 
-        return back()->with('success', 'Status merchant ' . $merchant->name . ' berhasil diperbarui.');
+        return back()->with('success', 'Status merchant '.$merchant->name.' berhasil diperbarui.');
     }
 
     /**
@@ -79,10 +78,10 @@ class CanteenController extends Controller
     public function merchantDashboard()
     {
         $user = auth()->user();
-        
+
         // Find merchant belonging to current user
         $merchant = CanteenMerchant::where('owner_user_id', $user->id)->first();
-        
+
         if (! $merchant && ($user->role === 'admin' || $user->role === 'superadmin')) {
             // Admin can view the first merchant for demo purposes
             $merchant = CanteenMerchant::first();
@@ -168,7 +167,7 @@ class CanteenController extends Controller
         ]);
 
         $identifier = $request->student_identifier;
-        
+
         // Find student by NIS or UUID
         $student = Student::where('nis', $identifier)
             ->orWhere('uuid', $identifier)
@@ -188,7 +187,7 @@ class CanteenController extends Controller
         if (! $student) {
             return response()->json([
                 'success' => false,
-                'message' => 'Siswa dengan identitas tersebut tidak ditemukan.'
+                'message' => 'Siswa dengan identitas tersebut tidak ditemukan.',
             ], 404);
         }
 
@@ -196,14 +195,14 @@ class CanteenController extends Controller
         if (! $account) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rekening tabungan wadiah siswa belum terdaftar.'
+                'message' => 'Rekening tabungan wadiah siswa belum terdaftar.',
             ], 404);
         }
 
         try {
             $merchantUser = auth()->user();
             $merchant = CanteenMerchant::where('owner_user_id', $merchantUser->id)->first();
-            
+
             if (! $merchant && ($merchantUser->role === 'admin' || $merchantUser->role === 'superadmin')) {
                 $merchant = CanteenMerchant::first();
                 if ($merchant) {
@@ -214,7 +213,7 @@ class CanteenController extends Controller
             if (! $merchant) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Anda tidak memiliki hak akses sebagai merchant kantin.'
+                    'message' => 'Anda tidak memiliki hak akses sebagai merchant kantin.',
                 ], 403);
             }
 
@@ -236,12 +235,12 @@ class CanteenController extends Controller
                     'total' => $tx->amount,
                     'balance_remaining' => $tx->current_balance,
                     'time' => $tx->created_at->format('d/m/Y H:i:s'),
-                ]
+                ],
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 422);
         }
     }

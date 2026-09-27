@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\HasUuid;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use \App\Traits\HasUuid, \App\Traits\LogsActivity, HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use \App\Traits\LogsActivity, HasApiTokens, HasFactory, HasUuid, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -156,7 +157,7 @@ class User extends Authenticatable
      */
     public function getMfaEnabledAttribute(): bool
     {
-        return !empty($this->two_factor_code);
+        return ! empty($this->two_factor_code);
     }
 
     /**

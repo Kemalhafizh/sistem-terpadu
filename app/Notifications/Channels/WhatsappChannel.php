@@ -4,7 +4,9 @@ namespace App\Notifications\Channels;
 
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\WhatsappAutomation;
 use App\Models\WhatsappLog;
+use App\Services\WhatsappAutomationService;
 use App\Services\WhatsappService;
 use Illuminate\Notifications\Notification;
 
@@ -62,7 +64,7 @@ class WhatsappChannel
         }
 
         $message = null;
-        $automationService = app(\App\Services\WhatsappAutomationService::class);
+        $automationService = app(WhatsappAutomationService::class);
 
         if ($type === 'StudentAttendanceNotification') {
             $attendance = $notification->attendance;
@@ -76,7 +78,7 @@ class WhatsappChannel
                 'tanggal' => date('d-m-Y', strtotime($attendance->date)),
             ];
 
-            $automation = \App\Models\WhatsappAutomation::where('trigger', 'attendance_absent')
+            $automation = WhatsappAutomation::where('trigger', 'attendance_absent')
                 ->where('is_active', true)
                 ->with('template')
                 ->first();
@@ -93,11 +95,11 @@ class WhatsappChannel
                 'nama_siswa' => $student?->name ?? '',
                 'nama_orang_tua' => $parent?->name ?? '',
                 'jenis_tagihan' => $billing->category?->name ?? 'SPP',
-                'tagihan' => 'Rp ' . number_format($billing->remaining_balance, 0, ',', '.'),
+                'tagihan' => 'Rp '.number_format($billing->remaining_balance, 0, ',', '.'),
                 'batas_waktu' => date('d-m-Y', strtotime($billing->due_date)),
             ];
 
-            $automation = \App\Models\WhatsappAutomation::where('trigger', 'billing_overdue')
+            $automation = WhatsappAutomation::where('trigger', 'billing_overdue')
                 ->where('is_active', true)
                 ->with('template')
                 ->first();

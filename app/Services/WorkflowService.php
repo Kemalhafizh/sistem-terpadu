@@ -19,7 +19,7 @@ class WorkflowService
     {
         return DB::transaction(function () use ($code, $requester, $requestable, $notes) {
             $definition = WorkflowDefinition::where('code', $code)->where('is_active', true)->firstOrFail();
-            
+
             $request = WorkflowRequest::create([
                 'definition_id' => $definition->id,
                 'requester_id' => $requester->id,
@@ -57,7 +57,7 @@ class WorkflowService
     {
         DB::transaction(function () use ($request, $approver, $remarks) {
             $currentApproval = $request->currentApproval;
-            if (!$currentApproval) {
+            if (! $currentApproval) {
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
@@ -66,7 +66,7 @@ class WorkflowService
             $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
-            if (!$isAuthorized) {
+            if (! $isAuthorized) {
                 abort(403, 'Anda tidak berwenang memberikan persetujuan pada langkah ini.');
             }
 
@@ -88,7 +88,7 @@ class WorkflowService
             } else {
                 // Semua langkah disetujui -> Persetujuan Selesai!
                 $request->update(['status' => 'approved']);
-                
+
                 // Perbarui status model induk menjadi approved
                 $request->requestable->update([
                     'status' => 'approved',
@@ -108,14 +108,14 @@ class WorkflowService
     {
         DB::transaction(function () use ($request, $approver, $remarks) {
             $currentApproval = $request->currentApproval;
-            if (!$currentApproval) {
+            if (! $currentApproval) {
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
             $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
-            if (!$isAuthorized) {
+            if (! $isAuthorized) {
                 abort(403, 'Anda tidak berwenang menolak pengajuan pada langkah ini.');
             }
 
@@ -128,7 +128,7 @@ class WorkflowService
 
             // Hentikan alur dan tandai ditolak
             $request->update(['status' => 'rejected']);
-            
+
             // Perbarui status model induk menjadi ditolak
             $request->requestable->update(['status' => 'rejected']);
 
@@ -144,14 +144,14 @@ class WorkflowService
     {
         DB::transaction(function () use ($request, $approver, $remarks) {
             $currentApproval = $request->currentApproval;
-            if (!$currentApproval) {
+            if (! $currentApproval) {
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
             $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
-            if (!$isAuthorized) {
+            if (! $isAuthorized) {
                 abort(403, 'Anda tidak berwenang meminta revisi pada langkah ini.');
             }
 
@@ -164,7 +164,7 @@ class WorkflowService
 
             // Set request status ke revision
             $request->update(['status' => 'revision']);
-            
+
             // Perbarui status model induk menjadi revision
             try {
                 $request->requestable->update(['status' => 'revision']);
@@ -226,28 +226,28 @@ class WorkflowService
     {
         DB::transaction(function () use ($request, $approver, $delegatee, $remarks) {
             $currentApproval = $request->currentApproval;
-            if (!$currentApproval) {
+            if (! $currentApproval) {
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
             $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
-            if (!$isAuthorized) {
+            if (! $isAuthorized) {
                 abort(403, 'Anda tidak berwenang mendelegasikan langkah persetujuan ini.');
             }
 
             $currentApproval->update([
                 'delegated_to_id' => $delegatee->id,
-                'remarks' => ($currentApproval->remarks ? $currentApproval->remarks . "\n" : '') . "Didelegasikan dari " . $approver->name . " ke " . $delegatee->name . ($remarks ? ": " . $remarks : ""),
+                'remarks' => ($currentApproval->remarks ? $currentApproval->remarks."\n" : '').'Didelegasikan dari '.$approver->name.' ke '.$delegatee->name.($remarks ? ': '.$remarks : ''),
             ]);
 
             // Kirim notifikasi real-time ke penerima delegasi
             event(new NewNotificationEvent($delegatee, [
                 'id' => $request->id,
                 'type' => 'workflow_delegation',
-                'title' => 'Delegasi Persetujuan: ' . $request->definition->name,
-                'description' => $approver->name . ' mendelegasikan persetujuan ' . $request->definition->name . ' milik ' . $request->requester->name . ' kepada Anda.',
+                'title' => 'Delegasi Persetujuan: '.$request->definition->name,
+                'description' => $approver->name.' mendelegasikan persetujuan '.$request->definition->name.' milik '.$request->requester->name.' kepada Anda.',
                 'created_at' => now()->toDateTimeString(),
             ]));
         });
@@ -262,7 +262,7 @@ class WorkflowService
             ->whereHas('currentApproval', function ($query) use ($user) {
                 $query->where(function ($q) use ($user) {
                     $q->where('role', $user->role)
-                      ->whereNull('delegated_to_id');
+                        ->whereNull('delegated_to_id');
                 })->orWhere('delegated_to_id', $user->id);
             })
             ->with(['requester', 'definition', 'approvals'])
@@ -273,7 +273,9 @@ class WorkflowService
     private function notifyApprovers(WorkflowRequest $request): void
     {
         $currentApproval = $request->currentApproval;
-        if (!$currentApproval) return;
+        if (! $currentApproval) {
+            return;
+        }
 
         if ($currentApproval->delegated_to_id) {
             $approvers = User::where('id', $currentApproval->delegated_to_id)->get();
@@ -285,8 +287,8 @@ class WorkflowService
             event(new NewNotificationEvent($app, [
                 'id' => $request->id,
                 'type' => 'workflow_approval',
-                'title' => 'Butuh Persetujuan: ' . $request->definition->name,
-                'description' => 'Pengajuan dari ' . $request->requester->name . ' menunggu tinjauan Anda.',
+                'title' => 'Butuh Persetujuan: '.$request->definition->name,
+                'description' => 'Pengajuan dari '.$request->requester->name.' menunggu tinjauan Anda.',
                 'created_at' => now()->toDateTimeString(),
             ]));
         }
@@ -297,8 +299,8 @@ class WorkflowService
         event(new NewNotificationEvent($request->requester, [
             'id' => $request->id,
             'type' => 'workflow_status',
-            'title' => 'Pengajuan Anda ' . ucfirst($action),
-            'description' => 'Pengajuan ' . $request->definition->name . ' telah ' . $action . '.' . ($remarks ? ' Catatan: ' . $remarks : ''),
+            'title' => 'Pengajuan Anda '.ucfirst($action),
+            'description' => 'Pengajuan '.$request->definition->name.' telah '.$action.'.'.($remarks ? ' Catatan: '.$remarks : ''),
             'created_at' => now()->toDateTimeString(),
         ]));
     }

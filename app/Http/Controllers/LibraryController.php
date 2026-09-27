@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\LibraryBook;
 use App\Models\LibraryCategory;
+use App\Models\LibraryLoan;
+use App\Models\Student;
 use App\Models\Subject;
+use App\Services\LibraryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Models\Student;
-use App\Models\LibraryLoan;
-use App\Services\LibraryService;
 
 class LibraryController extends Controller
 {
@@ -193,7 +193,7 @@ class LibraryController extends Controller
     public function statistics()
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -233,7 +233,7 @@ class LibraryController extends Controller
     public function recommendations()
     {
         $user = auth()->user();
-        if ($user->role !== 'student' || !$user->student) {
+        if ($user->role !== 'student' || ! $user->student) {
             abort(403, 'Hanya siswa yang dapat mengakses rekomendasi buku.');
         }
 
@@ -249,7 +249,7 @@ class LibraryController extends Controller
     public function overdueReport()
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -264,12 +264,13 @@ class LibraryController extends Controller
     public function sendOverdueReminder(LibraryLoan $loan)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'guru'])) {
             abort(403, 'Akses ditolak.');
         }
 
         try {
             app(LibraryService::class)->sendOverdueWhatsAppReminder($loan->id);
+
             return back()->with('success', 'Notifikasi denda keterlambatan WhatsApp berhasil dikirim.');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());

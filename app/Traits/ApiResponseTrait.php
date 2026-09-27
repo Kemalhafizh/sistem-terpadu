@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 
 trait ApiResponseTrait
 {
@@ -38,13 +39,14 @@ trait ApiResponseTrait
      * (e.g. offline sync polling); mutating endpoints get freshness from
      * IdempotencyMiddleware instead.
      */
-    protected function successResponseWithValidators($data, ?\Illuminate\Support\Carbon $lastModified = null, $message = null, $code = 200): JsonResponse
+    protected function successResponseWithValidators($data, ?Carbon $lastModified = null, $message = null, $code = 200): JsonResponse
     {
         $response = $this->successResponse($data, $message, $code);
-        $response->headers->set('ETag', '"' . sha1(json_encode($data)) . '"');
+        $response->headers->set('ETag', '"'.sha1(json_encode($data)).'"');
         if ($lastModified) {
             $response->headers->set('Last-Modified', $lastModified->toRfc7231String());
         }
+
         return $response;
     }
 }

@@ -11,8 +11,8 @@ use App\Models\Classroom;
 use App\Models\Grade;
 use App\Models\Payment;
 use App\Models\PaymentCategory;
-use App\Models\Student;
 use App\Models\ReportCard;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TahfidzLog;
 use App\Models\TahfidzTarget;
@@ -73,6 +73,7 @@ class MobileAnalyticsService
 
         $competencyRadar = $bySubject->map(function ($grades) {
             $subject = $grades->first()->subject;
+
             return [
                 'label' => $subject->name,
                 'value' => round((float) $grades->avg('score'), 1),
@@ -84,8 +85,8 @@ class MobileAnalyticsService
             'name' => $grades->first()->subject->name,
             'avg' => round((float) $grades->avg('score'), 1),
         ])->sortByDesc('avg')->take(5)->values()
-          ->map(fn ($item) => ['first' => $item['name'], 'second' => $item['avg']])
-          ->toArray();
+            ->map(fn ($item) => ['first' => $item['name'], 'second' => $item['avg']])
+            ->toArray();
 
         return [
             'studentName' => $student->user->name ?? '',
@@ -151,6 +152,7 @@ class MobileAnalyticsService
         $total = $scores->count();
         $distributionBuckets = array_map(function ($bucket) use ($scores, $total) {
             $count = $scores->filter(fn ($s) => $s >= $bucket['min'] && $s <= $bucket['max'])->count();
+
             return [
                 'rangeLabel' => $bucket['label'],
                 'count' => $count,
@@ -170,6 +172,7 @@ class MobileAnalyticsService
                     return null;
                 }
                 $student = $studentGrades->first()->student;
+
                 return [
                     'studentId' => (string) $student->id,
                     'studentName' => $student->user->name ?? 'Siswa',

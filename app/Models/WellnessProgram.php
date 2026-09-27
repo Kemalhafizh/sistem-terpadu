@@ -10,7 +10,7 @@ class WellnessProgram extends Model
     use HasFactory;
 
     protected $fillable = [
-        'program_name', 'category', 'description', 'points_reward', 'is_active'
+        'program_name', 'category', 'description', 'points_reward', 'is_active',
     ];
 
     protected $casts = [

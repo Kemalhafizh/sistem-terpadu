@@ -56,18 +56,18 @@ function spmbRegistrationPayload(): array
 test('public can view spmb waves and tracks', function () {
     $response = $this->getJson('/api/v1/spmb/waves');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data'])
-             ->assertJsonPath('data.0.name', 'Gelombang 1')
-             ->assertJsonPath('data.0.fee', 150000)
-             ->assertJsonPath('data.0.tracks.0.name', 'Jalur Tahfidz');
+        ->assertJsonStructure(['success', 'data'])
+        ->assertJsonPath('data.0.name', 'Gelombang 1')
+        ->assertJsonPath('data.0.fee', 150000)
+        ->assertJsonPath('data.0.tracks.0.name', 'Jalur Tahfidz');
 });
 
 test('public can submit spmb registration', function () {
     $response = $this->postJson('/api/v1/spmb/register', spmbRegistrationPayload());
 
     $response->assertStatus(201)
-             ->assertJson(['success' => true])
-             ->assertJsonPath('data.track', 'Jalur Tahfidz');
+        ->assertJson(['success' => true])
+        ->assertJsonPath('data.track', 'Jalur Tahfidz');
 
     $this->assertDatabaseHas('registrations', [
         'registration_number' => $response->json('data.registration_number'),
@@ -85,29 +85,29 @@ test('public can track spmb registration status', function () {
 
     $response = $this->getJson("/api/v1/spmb/status/{$number}");
     $response->assertStatus(200)
-             ->assertJson(['success' => true])
-             ->assertJsonPath('data.registration_number', $number)
-             ->assertJsonPath('data.verification_status', 'menunggu')
+        ->assertJson(['success' => true])
+        ->assertJsonPath('data.registration_number', $number)
+        ->assertJsonPath('data.verification_status', 'menunggu')
              // No schedule columns exist yet — must stay null, not a made-up date.
-             ->assertJsonPath('data.cbt_test_date', null)
-             ->assertJsonPath('data.final_status', null);
+        ->assertJsonPath('data.cbt_test_date', null)
+        ->assertJsonPath('data.final_status', null);
 
     Registration::where('registration_number', $number)->update(['status' => 'accepted']);
     $this->getJson("/api/v1/spmb/status/{$number}")
-         ->assertJsonPath('data.verification_status', 'terverifikasi')
-         ->assertJsonPath('data.final_status', 'diterima');
+        ->assertJsonPath('data.verification_status', 'terverifikasi')
+        ->assertJsonPath('data.final_status', 'diterima');
 });
 
 test('unknown registration number returns 404', function () {
     $this->getJson('/api/v1/spmb/status/SPMB-2026-TIDAKADA')->assertStatus(404)
-         ->assertJsonPath('success', false);
+        ->assertJsonPath('success', false);
 });
 
 test('registration is refused when no wave is open', function () {
     $this->wave->update(['status' => 'closed']);
 
     $this->postJson('/api/v1/spmb/register', spmbRegistrationPayload())
-         ->assertStatus(422)
-         ->assertJsonPath('success', false);
+        ->assertStatus(422)
+        ->assertJsonPath('success', false);
     $this->assertDatabaseCount('registrations', 0);
 });

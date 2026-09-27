@@ -12,17 +12,17 @@ class IdempotencyMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->isMethod('POST') && !$request->isMethod('PUT') && !$request->isMethod('PATCH') && !$request->isMethod('DELETE')) {
+        if (! $request->isMethod('POST') && ! $request->isMethod('PUT') && ! $request->isMethod('PATCH') && ! $request->isMethod('DELETE')) {
             return $next($request);
         }
 
         $idempotencyKey = $request->header('Idempotency-Key');
 
-        if (!$idempotencyKey) {
+        if (! $idempotencyKey) {
             return $next($request);
         }
 
@@ -31,6 +31,7 @@ class IdempotencyMiddleware
 
         if (Cache::has($cacheKey)) {
             $cachedResponse = Cache::get($cacheKey);
+
             return response($cachedResponse['content'], $cachedResponse['status'], $cachedResponse['headers']);
         }
 

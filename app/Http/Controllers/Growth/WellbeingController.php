@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Growth;
 use App\Http\Controllers\Controller;
 use App\Models\WellbeingJournal;
 use App\Models\WellbeingScreening;
-use App\Models\WellbeingScreeningResponse;
 use App\Services\Growth\WellbeingService;
 use Illuminate\Http\Request;
 
@@ -14,6 +13,7 @@ class WellbeingController extends Controller
     public function screenings()
     {
         $screenings = WellbeingScreening::withCount('responses')->latest()->get();
+
         return view('wellbeing.screenings', compact('screenings'));
     }
 
@@ -42,6 +42,7 @@ class WellbeingController extends Controller
     public function fillScreening(int $id)
     {
         $screening = WellbeingScreening::findOrFail($id);
+
         return view('wellbeing.fill-screening', compact('screening'));
     }
 
@@ -57,12 +58,13 @@ class WellbeingController extends Controller
         $responseObj = $service->submitResponse($screening, $studentId, $validated);
 
         return redirect()->route('growth.wellbeing.screenings')
-            ->with('success', 'Skrining kesehatan mental berhasil dikirim! Tingkat Risiko: ' . strtoupper($responseObj->risk_level));
+            ->with('success', 'Skrining kesehatan mental berhasil dikirim! Tingkat Risiko: '.strtoupper($responseObj->risk_level));
     }
 
     public function results(WellbeingService $service)
     {
         $heatmap = $service->getCounselorHeatmap();
+
         return view('wellbeing.results', compact('heatmap'));
     }
 

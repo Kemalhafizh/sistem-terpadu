@@ -1,14 +1,15 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DataEngineering\EventStreamingController;
-use App\Http\Controllers\DataEngineering\NlqController;
+
 use App\Http\Controllers\DataEngineering\ConditionalReportController;
 use App\Http\Controllers\DataEngineering\DataQualityController;
+use App\Http\Controllers\DataEngineering\EventStreamingController;
+use App\Http\Controllers\DataEngineering\NlqController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/data-engineering/streams', [EventStreamingController::class, 'monitorDashboard'])->name('data_engineering.streams');
     Route::get('/data-engineering/replay', [EventStreamingController::class, 'streamLogs'])->name('data_engineering.replay');
-    
+
     Route::get('/nlq/search', [NlqController::class, 'searchInterface'])->name('nlq.search');
     Route::post('/nlq/search', [NlqController::class, 'executeQuery']);
     Route::get('/nlq/dictionary', [NlqController::class, 'dictionaryMapping'])->name('nlq.dictionary');

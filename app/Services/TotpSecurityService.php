@@ -18,6 +18,7 @@ class TotpSecurityService
         for ($i = 0; $i < $length; $i++) {
             $secret .= self::BASE32_CHARS[random_int(0, 31)];
         }
+
         return $secret;
     }
 
@@ -39,8 +40,9 @@ class TotpSecurityService
     {
         $codes = [];
         for ($i = 0; $i < $count; $i++) {
-            $codes[] = strtoupper(Str::random(4) . '-' . Str::random(4));
+            $codes[] = strtoupper(Str::random(4).'-'.Str::random(4));
         }
+
         return $codes;
     }
 
@@ -60,15 +62,15 @@ class TotpSecurityService
 
         for ($i = -$discretion; $i <= $discretion; $i++) {
             $timeCounter = $currentTime + $i;
-            $packedTime = pack('N*', 0) . pack('N*', $timeCounter);
+            $packedTime = pack('N*', 0).pack('N*', $timeCounter);
             $hash = hash_hmac('sha1', $packedTime, $binarySecret, true);
 
-            $offset = ord($hash[19]) & 0xf;
+            $offset = ord($hash[19]) & 0xF;
             $otp = (
-                ((ord($hash[$offset]) & 0x7f) << 24) |
-                ((ord($hash[$offset + 1]) & 0xff) << 16) |
-                ((ord($hash[$offset + 2]) & 0xff) << 8) |
-                (ord($hash[$offset + 3]) & 0xff)
+                ((ord($hash[$offset]) & 0x7F) << 24) |
+                ((ord($hash[$offset + 1]) & 0xFF) << 16) |
+                ((ord($hash[$offset + 2]) & 0xFF) << 8) |
+                (ord($hash[$offset + 3]) & 0xFF)
             ) % 1000000;
 
             $formattedOtp = str_pad((string) $otp, 6, '0', STR_PAD_LEFT);
@@ -136,7 +138,7 @@ class TotpSecurityService
 
             if ($bufferSize >= 8) {
                 $bufferSize -= 8;
-                $binary .= chr(($buffer >> $bufferSize) & 0xff);
+                $binary .= chr(($buffer >> $bufferSize) & 0xFF);
             }
         }
 

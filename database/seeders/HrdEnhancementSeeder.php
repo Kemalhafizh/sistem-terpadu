@@ -7,8 +7,8 @@ use App\Models\EmployeeDocument;
 use App\Models\EmployeeTraining;
 use App\Models\PerformanceEvaluation;
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class HrdEnhancementSeeder extends Seeder
 {
@@ -28,8 +28,8 @@ class HrdEnhancementSeeder extends Seeder
                     'email' => 'ahmad.fauzi@sultanagung1.sch.id',
                     'password' => bcrypt('password'),
                     'role' => 'guru',
-                    'phone_number' => '081223344556'
-                ])
+                    'phone_number' => '081223344556',
+                ]),
             ]);
         }
 
@@ -40,7 +40,7 @@ class HrdEnhancementSeeder extends Seeder
             $employee = Employee::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'employee_number' => 'NIY.' . $faker->unique()->numerify('198######202#####'),
+                    'employee_number' => 'NIY.'.$faker->unique()->numerify('198######202#####'),
                     'position' => $this->getPositionByRole($user->role),
                     'employment_status' => $faker->randomElement(['gty', 'gtt', 'staf_tetap', 'honorer']),
                     'hire_date' => $faker->date('Y-m-d', '-5 years'),
@@ -65,16 +65,22 @@ class HrdEnhancementSeeder extends Seeder
                 'pedagogik' => $faker->numberBetween(70, 95),
                 'profesional' => $faker->numberBetween(72, 98),
                 'sosial' => $faker->numberBetween(75, 95),
-                'kepribadian' => $faker->numberBetween(80, 98)
+                'kepribadian' => $faker->numberBetween(80, 98),
             ];
             $avg = array_sum($criteria) / count($criteria);
-            
+
             $grade = 'B';
-            if ($avg >= 90) $grade = 'A';
-            elseif ($avg >= 80) $grade = 'B';
-            elseif ($avg >= 70) $grade = 'C';
-            elseif ($avg >= 60) $grade = 'D';
-            else $grade = 'E';
+            if ($avg >= 90) {
+                $grade = 'A';
+            } elseif ($avg >= 80) {
+                $grade = 'B';
+            } elseif ($avg >= 70) {
+                $grade = 'C';
+            } elseif ($avg >= 60) {
+                $grade = 'D';
+            } else {
+                $grade = 'E';
+            }
 
             PerformanceEvaluation::create([
                 'employee_id' => $emp->id,
@@ -101,13 +107,13 @@ class HrdEnhancementSeeder extends Seeder
             'Workshop Penulisan Jurnal Ilmiah Internasional Guru',
             'Pelatihan Pemanfaatan LMS Google Classroom & SISTA',
             'Diklat Pengurus UKS & Penanganan Cedera Olahraga',
-            'Sertifikasi Kompetensi Pengelola Laboratorium Komputer'
+            'Sertifikasi Kompetensi Pengelola Laboratorium Komputer',
         ];
 
         for ($i = 0; $i < 30; $i++) {
             $emp = $faker->randomElement($employees);
             $title = $faker->randomElement($trainingTitles);
-            
+
             EmployeeTraining::create([
                 'employee_id' => $emp->id,
                 'title' => $title,
@@ -116,8 +122,8 @@ class HrdEnhancementSeeder extends Seeder
                 'start_date' => $faker->date('Y-m-d', '-1 year'),
                 'end_date' => $faker->date('Y-m-d', 'now'),
                 'hours' => $faker->randomElement([24, 32, 48, 64]),
-                'certificate_path' => 'trainings/cert_' . $faker->unique()->numerify('#####') . '.pdf',
-                'certificate_number' => 'CERT/' . $faker->unique()->numerify('####/SISTA/#####'),
+                'certificate_path' => 'trainings/cert_'.$faker->unique()->numerify('#####').'.pdf',
+                'certificate_number' => 'CERT/'.$faker->unique()->numerify('####/SISTA/#####'),
                 'certificate_expiry' => $faker->randomElement([null, $faker->date('Y-m-d', '+2 years')]),
                 'notes' => $faker->sentence(6),
             ]);
@@ -131,7 +137,7 @@ class HrdEnhancementSeeder extends Seeder
             'ijazah' => ['Ijazah Sarjana S1', 'Ijazah Magister S2'],
             'ktp' => ['KTP Elektronik Pegawai'],
             'npwp' => ['Kartu NPWP Pegawai'],
-            'bpjs' => ['Kartu BPJS Kesehatan', 'Kartu BPJS Ketenagakerjaan']
+            'bpjs' => ['Kartu BPJS Kesehatan', 'Kartu BPJS Ketenagakerjaan'],
         ];
 
         // 45 normal documents
@@ -142,9 +148,9 @@ class HrdEnhancementSeeder extends Seeder
 
             EmployeeDocument::create([
                 'employee_id' => $emp->id,
-                'title' => $title . ' - ' . $emp->name,
+                'title' => $title.' - '.$emp->name,
                 'type' => $type,
-                'file_path' => 'documents/emp_' . $emp->id . '/' . $type . '_' . $faker->unique()->numerify('#####') . '.pdf',
+                'file_path' => 'documents/emp_'.$emp->id.'/'.$type.'_'.$faker->unique()->numerify('#####').'.pdf',
                 'issue_date' => $faker->date('Y-m-d', '-3 years'),
                 'expiry_date' => $faker->randomElement([null, $faker->date('Y-m-d', '+4 years')]),
                 'notes' => $faker->sentence(4),
@@ -159,9 +165,9 @@ class HrdEnhancementSeeder extends Seeder
 
             EmployeeDocument::create([
                 'employee_id' => $emp->id,
-                'title' => $title . ' - ' . $emp->name,
+                'title' => $title.' - '.$emp->name,
                 'type' => $type,
-                'file_path' => 'documents/emp_' . $emp->id . '/contract_expiring.pdf',
+                'file_path' => 'documents/emp_'.$emp->id.'/contract_expiring.pdf',
                 'issue_date' => now()->subDays(340)->toDateString(),
                 'expiry_date' => now()->addDays($faker->numberBetween(10, 30))->toDateString(),
                 'notes' => 'Kontrak kerja mendekati masa kedaluwarsa berkala.',

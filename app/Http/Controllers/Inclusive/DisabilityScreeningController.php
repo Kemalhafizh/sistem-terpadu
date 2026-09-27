@@ -19,6 +19,7 @@ class DisabilityScreeningController extends Controller
     public function dashboard()
     {
         $results = ScreeningResult::with('student', 'evaluator')->latest()->take(10)->get();
+
         return view('fase58.screening.dashboard', compact('results'));
     }
 
@@ -62,6 +63,7 @@ class DisabilityScreeningController extends Controller
     public function showResult(ScreeningResult $result)
     {
         $result->load('student', 'evaluator');
+
         return view('fase58.screening.report', compact('result'));
     }
 }

@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Announcement extends Model
@@ -57,8 +56,8 @@ class Announcement extends Model
     public function readUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'announcement_reads')
-                    ->withPivot('read_at', 'acknowledged_at')
-                    ->withTimestamps();
+            ->withPivot('read_at', 'acknowledged_at')
+            ->withTimestamps();
     }
 
     /**
@@ -75,8 +74,8 @@ class Announcement extends Model
     public function isAcknowledgedBy(int $userId): bool
     {
         return $this->reads()
-                    ->where('user_id', $userId)
-                    ->whereNotNull('acknowledged_at')
-                    ->exists();
+            ->where('user_id', $userId)
+            ->whereNotNull('acknowledged_at')
+            ->exists();
     }
 }

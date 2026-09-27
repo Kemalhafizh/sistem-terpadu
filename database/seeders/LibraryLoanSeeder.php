@@ -15,7 +15,7 @@ class LibraryLoanSeeder extends Seeder
     {
         $admin = User::where('role', 'admin')->first();
         $pustakawan = User::where('email', 'pustakawan@sultanagung1.sch.id')->first();
-        if (!$pustakawan) {
+        if (! $pustakawan) {
             $pustakawan = $admin;
         }
 
@@ -35,7 +35,7 @@ class LibraryLoanSeeder extends Seeder
             // Determine status
             // 60% chance returned, 20% active (still borrowed and not overdue), 20% overdue
             $rand = rand(1, 100);
-            
+
             $returnedAt = null;
             $status = 'borrowed';
             $fineAmount = 0;

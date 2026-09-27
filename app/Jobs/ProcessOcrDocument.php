@@ -24,8 +24,8 @@ class ProcessOcrDocument implements ShouldQueue
     public function handle(): void
     {
         $ocrResult = OcrResult::find($this->ocrResultId);
-        
-        if (!$ocrResult) {
+
+        if (! $ocrResult) {
             return;
         }
 
@@ -35,17 +35,17 @@ class ProcessOcrDocument implements ShouldQueue
             // Simulate OCR Processing time and text extraction
             // In reality, this might call Tesseract or Google Cloud Vision API
             sleep(1);
-            
-            $simulatedExtractedText = "DOCUMENT TYPE: " . strtoupper($ocrResult->document_type) . "\n"
-                                    . "This is a simulated extracted text from OCR for file: " . $ocrResult->file_path . "\n"
-                                    . "STATUS: VERIFIED\n";
+
+            $simulatedExtractedText = 'DOCUMENT TYPE: '.strtoupper($ocrResult->document_type)."\n"
+                                    .'This is a simulated extracted text from OCR for file: '.$ocrResult->file_path."\n"
+                                    ."STATUS: VERIFIED\n";
 
             $ocrResult->update([
                 'extracted_text' => $simulatedExtractedText,
                 'status' => 'completed',
             ]);
         } catch (\Exception $e) {
-            Log::error('OCR Processing failed: ' . $e->getMessage());
+            Log::error('OCR Processing failed: '.$e->getMessage());
             $ocrResult->update(['status' => 'failed']);
         }
     }

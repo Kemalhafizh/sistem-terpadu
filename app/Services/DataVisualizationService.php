@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class DataVisualizationService
 {
@@ -53,10 +52,10 @@ class DataVisualizationService
     public function getGradeDistribution(int $examId): array
     {
         $scores = [65, 70, 72, 75, 78, 80, 82, 85, 85, 88, 90, 92, 95, 96, 98, 100];
-        
+
         $count = count($scores);
         $mean = array_sum($scores) / $count;
-        
+
         // Median
         sort($scores);
         $mid = (int) floor($count / 2);

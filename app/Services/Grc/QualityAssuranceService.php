@@ -5,7 +5,6 @@ namespace App\Services\Grc;
 use App\Models\AccreditationStandard;
 use App\Models\SelfEvaluationCycle;
 use App\Models\SelfEvaluationResponse;
-use Illuminate\Support\Collection;
 
 class QualityAssuranceService
 {
@@ -101,7 +100,7 @@ class QualityAssuranceService
         return [
             'institution' => school_name(),
             'npsn' => school_npsn() ?: null,
-            'report_title' => "Laporan Evaluasi Diri Sekolah (EDS) — TA {$results['academic_year']} " . ucfirst($results['semester']),
+            'report_title' => "Laporan Evaluasi Diri Sekolah (EDS) — TA {$results['academic_year']} ".ucfirst($results['semester']),
             'overall_score' => $results['overall_mean'],
             'overall_rating' => $results['overall_category'],
             'standards' => $results['standards_breakdown'],
@@ -146,8 +145,8 @@ class QualityAssuranceService
         }
 
         return [
-            'current_cycle' => $currentResults['academic_year'] . ' ' . ucfirst($currentResults['semester']),
-            'previous_cycle' => $prevResults ? ($prevResults['academic_year'] . ' ' . ucfirst($prevResults['semester'])) : 'N/A',
+            'current_cycle' => $currentResults['academic_year'].' '.ucfirst($currentResults['semester']),
+            'previous_cycle' => $prevResults ? ($prevResults['academic_year'].' '.ucfirst($prevResults['semester'])) : 'N/A',
             'comparison' => $comparison,
         ];
     }

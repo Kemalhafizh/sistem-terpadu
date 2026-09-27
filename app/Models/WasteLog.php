@@ -15,7 +15,7 @@ class WasteLog extends Model
         'weight_kg',
         'disposal_method',
         'revenue_generated',
-        'recorded_by'
+        'recorded_by',
     ];
 
     protected $casts = [

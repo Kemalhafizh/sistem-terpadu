@@ -2,10 +2,9 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\HealthScreening;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\HealthScreening;
-use App\Models\HealthScreeningResult;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([
@@ -69,8 +68,8 @@ test('admin can input health screening results', function () {
                 'dental_status' => 'sehat',
                 'findings' => 'Tidak ada kelainan.',
                 'recommendations' => 'Jaga kebersihan gigi.',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect();

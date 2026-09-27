@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
 use App\Models\AcademicYear;
-use Tests\TestCase;
+use App\Models\Student;
+use App\Models\User;
 
 beforeEach(function () {
     // Make sure we have an active academic year
@@ -12,9 +11,9 @@ beforeEach(function () {
 
 test('admin can access dashboard and view admin stats', function () {
     $user = User::factory()->create(['role' => 'admin']);
-    
+
     $response = $this->actingAs($user)->get(route('dashboard'));
-    
+
     $response->assertStatus(200);
     $response->assertViewHas('todayAttendanceRate');
     $response->assertViewHas('collectionRate');
@@ -24,9 +23,9 @@ test('admin can access dashboard and view admin stats', function () {
 
 test('guru can access dashboard and view teacher stats', function () {
     $user = User::factory()->create(['role' => 'guru']);
-    
+
     $response = $this->actingAs($user)->get(route('dashboard'));
-    
+
     $response->assertStatus(200);
     $response->assertViewHas('schedules');
     $response->assertViewHas('pendingAttendanceAlerts');
@@ -36,9 +35,9 @@ test('guru can access dashboard and view teacher stats', function () {
 test('student can access dashboard and view student stats', function () {
     $user = User::factory()->create(['role' => 'student']);
     $student = Student::factory()->create(['user_id' => $user->id]);
-    
+
     $response = $this->actingAs($user)->get(route('dashboard'));
-    
+
     $response->assertStatus(200);
     $response->assertViewHas('studentSchedulesToday');
     $response->assertViewHas('mutabaahItems');
@@ -48,9 +47,9 @@ test('student can access dashboard and view student stats', function () {
 test('parent can access dashboard and view parent stats', function () {
     $user = User::factory()->create(['role' => 'parent']);
     $student = Student::factory()->create(['parent_id' => $user->id]);
-    
+
     $response = $this->actingAs($user)->get(route('dashboard'));
-    
+
     $response->assertStatus(200);
     $response->assertViewHas('children');
     $response->assertViewHas('upcomingSchoolEvents');

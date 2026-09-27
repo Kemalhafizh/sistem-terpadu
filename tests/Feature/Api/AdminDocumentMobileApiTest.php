@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\User;
+use App\Jobs\ProcessOcrDocument;
 use App\Models\Student;
-use App\Models\Billing;
+use App\Models\User;
+use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
-use App\Models\OcrResult;
-use App\Models\DigitalSignature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
@@ -20,8 +19,11 @@ class AdminDocumentMobileApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $adminUser;
+
     protected User $kepsekUser;
+
     protected User $teacherUser;
+
     protected User $studentUser;
 
     protected function setUp(): void
@@ -38,7 +40,7 @@ class AdminDocumentMobileApiTest extends TestCase
     {
         // Add some dummy data
         Student::factory()->count(3)->create();
-        
+
         // 1. Test using Teacher role (should be denied if we use middleware, or just basic test)
         // Since we didn't add the middleware strictly to the route, let's assume it passes or we verify the code handles it.
         // Wait, the plan said "middleware role:admin,kepsek". If not implemented in code yet, we can skip testing the 403 or implement it.
@@ -56,7 +58,7 @@ class AdminDocumentMobileApiTest extends TestCase
                     'unpaid_billings',
                     'attendance_rate',
                     'pending_approvals',
-                ]
+                ],
             ]);
     }
 
@@ -64,7 +66,7 @@ class AdminDocumentMobileApiTest extends TestCase
     {
         Sanctum::actingAs($this->kepsekUser);
 
-        $definition = \App\Models\WorkflowDefinition::create([
+        $definition = WorkflowDefinition::create([
             'name' => 'Pengajuan Dana',
             'code' => 'FIN-001',
             'is_active' => true,
@@ -78,13 +80,13 @@ class AdminDocumentMobileApiTest extends TestCase
             'requestable_id' => $this->teacherUser->id,
             'status' => 'pending',
             'notes' => 'Pengajuan Dana ATK',
-            'current_step' => 1
+            'current_step' => 1,
         ]);
 
         // Test approve
         $response = $this->postJson("/api/v1/mobile/admin/approvals/{$workflowRequest->id}/action", [
             'action' => 'approve',
-            'notes' => 'Disetujui untuk bulan ini'
+            'notes' => 'Disetujui untuk bulan ini',
         ]);
 
         $response->assertStatus(200);
@@ -96,7 +98,7 @@ class AdminDocumentMobileApiTest extends TestCase
         // Test cannot reject already approved request
         $responseReject = $this->postJson("/api/v1/mobile/admin/approvals/{$workflowRequest->id}/action", [
             'action' => 'reject',
-            'notes' => 'Batal'
+            'notes' => 'Batal',
         ]);
 
         $responseReject->assertStatus(400); // Because it's no longer pending
@@ -120,16 +122,16 @@ class AdminDocumentMobileApiTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data' => ['task_id', 'status']
+                'data' => ['task_id', 'status'],
             ]);
 
         // Assert job pushed
-        Queue::assertPushed(\App\Jobs\ProcessOcrDocument::class);
+        Queue::assertPushed(ProcessOcrDocument::class);
 
         // Assert file stored
         $this->assertDatabaseHas('ocr_results', [
             'document_type' => 'ktp',
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
     }
 

@@ -2,8 +2,8 @@
 
 namespace App\Services\Operations;
 
-use App\Models\SchoolBus;
 use App\Models\BusRoute;
+use App\Models\SchoolBus;
 
 class BusRoutingService
 {

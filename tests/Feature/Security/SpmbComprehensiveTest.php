@@ -3,13 +3,14 @@
 namespace Tests\Feature\Security;
 
 use App\Models\AcademicYear;
+use App\Models\PaymentCategory;
 use App\Models\Registration;
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
 use App\Models\SpmbDocument;
-use App\Models\User;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -20,9 +21,13 @@ class SpmbComprehensiveTest extends TestCase
     use RefreshDatabase;
 
     protected $admin;
+
     protected $academicYear;
+
     protected $period;
+
     protected $wave;
+
     protected $track;
 
     protected function setUp(): void
@@ -233,7 +238,7 @@ class SpmbComprehensiveTest extends TestCase
 
         // 6. Admin Convert Re-registered Applicant to Student
         // Need to create default payment category first as RegistrationService queries it
-        \App\Models\PaymentCategory::create([
+        PaymentCategory::create([
             'name' => 'Uang Pangkal / Pendaftaran',
             'default_amount' => 5000000,
             'is_monthly' => false,

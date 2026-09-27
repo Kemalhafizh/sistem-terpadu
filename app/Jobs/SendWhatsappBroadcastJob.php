@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
 use App\Models\Student;
+use App\Models\User;
 use App\Models\WhatsappBroadcast;
 use App\Services\WhatsappAutomationService;
 use App\Services\WhatsappService;
@@ -12,7 +12,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class SendWhatsappBroadcastJob implements ShouldQueue
 {
@@ -49,7 +48,7 @@ class SendWhatsappBroadcastJob implements ShouldQueue
             case 'specific_class':
                 $classroomIds = (array) $broadcast->target_ids;
                 $students = Student::whereIn('classroom_id', $classroomIds)->with('parent')->get();
-                $recipients = $students->map(fn($s) => $s->parent)->filter()->unique('id');
+                $recipients = $students->map(fn ($s) => $s->parent)->filter()->unique('id');
                 break;
             case 'custom':
                 $userIds = (array) $broadcast->target_ids;
@@ -69,6 +68,7 @@ class SendWhatsappBroadcastJob implements ShouldQueue
                 'status' => 'completed',
                 'sent_at' => now(),
             ]);
+
             return;
         }
 
@@ -101,7 +101,7 @@ class SendWhatsappBroadcastJob implements ShouldQueue
             }
 
             // Send via WhatsappService
-            $log = $whatsappService->sendMessage($recipient->phone_number, $messageBody, 'broadcast_' . $broadcast->id);
+            $log = $whatsappService->sendMessage($recipient->phone_number, $messageBody, 'broadcast_'.$broadcast->id);
 
             if ($log->status === 'sent') {
                 $sent++;

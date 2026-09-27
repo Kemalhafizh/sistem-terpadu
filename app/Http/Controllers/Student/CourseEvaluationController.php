@@ -12,12 +12,14 @@ class CourseEvaluationController extends Controller
     public function index()
     {
         $evaluations = CourseEvaluation::with(['subject', 'teacher'])->latest()->get();
+
         return view('evaluations.index', compact('evaluations'));
     }
 
     public function fillForm(int $id)
     {
         $evaluation = CourseEvaluation::with(['subject', 'teacher'])->findOrFail($id);
+
         return view('evaluations.form', compact('evaluation'));
     }
 

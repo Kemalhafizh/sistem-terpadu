@@ -2,28 +2,25 @@
 
 namespace App\Services;
 
-use App\Models\Student;
-use App\Models\User;
+use App\Mail\ScheduledDigestMail;
 use App\Models\Attendance;
 use App\Models\Billing;
-use App\Models\Ticket;
-use App\Models\SmartAlert;
-use App\Models\Payment;
-use App\Models\TeachingJournal;
-use App\Models\ComplianceDocument;
 use App\Models\ComplianceMilestone;
-use App\Models\Grade;
-use App\Models\StudentPointLog;
-use App\Models\ElearningClass;
 use App\Models\ElearningAssignment;
+use App\Models\ElearningClass;
 use App\Models\ElearningSubmission;
+use App\Models\Grade;
+use App\Models\Payment;
 use App\Models\ScheduledReport;
-use App\Mail\ScheduledDigestMail;
-use App\Services\WhatsappService;
+use App\Models\SmartAlert;
+use App\Models\Student;
+use App\Models\StudentPointLog;
+use App\Models\TeachingJournal;
+use App\Models\Ticket;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class DigestService
 {
@@ -82,7 +79,7 @@ class DigestService
 
         return [
             'attendance_rate' => $attendanceRate,
-            'total_payments' => (float)$totalPayments,
+            'total_payments' => (float) $totalPayments,
             'missing_journals' => $missingJournals,
             'completed_milestones' => $completedMilestones,
             'total_milestones' => $totalMilestones,
@@ -114,8 +111,8 @@ class DigestService
             ->get();
 
         return [
-            'total_received' => (float)$totalReceived,
-            'total_outstanding' => (float)$totalOutstanding,
+            'total_received' => (float) $totalReceived,
+            'total_outstanding' => (float) $totalOutstanding,
             'outstanding_count' => $totalOutstandingCount,
             'top_debtors' => $topDebtors,
             'month' => Carbon::now()->translatedFormat('F Y'),
@@ -135,7 +132,7 @@ class DigestService
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
             ->where('status', 'A')
             ->count();
-            
+
         $lateCount = Attendance::where('student_id', $student->id)
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
             ->where('status', 'T')
@@ -167,7 +164,7 @@ class DigestService
             'alpa_count' => $alpaCount,
             'late_count' => $lateCount,
             'recent_grades' => $recentGrades,
-            'bk_points' => (int)$bkPoints,
+            'bk_points' => (int) $bkPoints,
             'pending_assignments' => $pendingAssignments,
             'start_date' => $startOfWeek->translatedFormat('d M'),
             'end_date' => $endOfWeek->translatedFormat('d M Y'),
@@ -216,7 +213,7 @@ class DigestService
                     <h3 style='margin-top: 0; color: #312e81; font-size: 16px;'> Ringkasan Eksekutif</h3>
                     <ul style='padding-left: 20px; margin-bottom: 0; line-height: 1.8;'>
                         <li>Rata-rata Kehadiran Siswa Kelas: <strong>{$data['attendance_rate']}%</strong></li>
-                        <li>Total Penerimaan Iuran SPP Baru: <strong>Rp " . number_format($data['total_payments'], 0, ',', '.') . "</strong></li>
+                        <li>Total Penerimaan Iuran SPP Baru: <strong>Rp ".number_format($data['total_payments'], 0, ',', '.')."</strong></li>
                         <li>Jurnal Mengajar Kelas Terhambat (Belum Verifikasi): <strong>{$data['missing_journals']} Jurnal</strong></li>
                         <li>Target Kepatuhan Standar Mutu Tercapai: <strong>{$data['completed_milestones']} / {$data['total_milestones']} Target</strong></li>
                     </ul>
@@ -228,12 +225,12 @@ class DigestService
             foreach ($data['top_debtors'] as $idx => $debtor) {
                 $debtorsHtml .= "
                     <tr>
-                        <td style='padding: 10px; border: 1px solid #cbd5e1; text-align: center;'>" . ($idx + 1) . "</td>
+                        <td style='padding: 10px; border: 1px solid #cbd5e1; text-align: center;'>".($idx + 1)."</td>
                         <td style='padding: 10px; border: 1px solid #cbd5e1;'>{$debtor->name}</td>
                         <td style='padding: 10px; border: 1px solid #cbd5e1; text-align: center;'>{$debtor->classroom?->name}</td>
-                        <td style='padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: bold; color: #ef4444;'>Rp " . number_format($debtor->unpaid_sum, 0, ',', '.') . "</td>
+                        <td style='padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: bold; color: #ef4444;'>Rp ".number_format($debtor->unpaid_sum, 0, ',', '.').'</td>
                     </tr>
-                ";
+                ';
             }
             if ($data['top_debtors']->isEmpty()) {
                 $debtorsHtml = "<tr><td colspan='4' style='padding: 20px; text-align: center; color: #94a3b8; italic;'>Tidak ada penunggak tagihan bulan ini.</td></tr>";
@@ -244,11 +241,11 @@ class DigestService
                 <div style='display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;'>
                     <div style='flex: 1; min-width: 200px; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 15px; text-align: center;'>
                         <p style='margin: 0; font-size: 11px; font-weight: bold; color: #047857; uppercase; letter-spacing: 0.05em;'>TOTAL DITERIMA BULAN INI</p>
-                        <p style='margin: 5px 0 0 0; font-size: 20px; font-weight: 900; color: #065f46;'>Rp " . number_format($data['total_received'], 0, ',', '.') . "</p>
+                        <p style='margin: 5px 0 0 0; font-size: 20px; font-weight: 900; color: #065f46;'>Rp ".number_format($data['total_received'], 0, ',', '.')."</p>
                     </div>
                     <div style='flex: 1; min-width: 200px; background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 15px; text-align: center;'>
                         <p style='margin: 0; font-size: 11px; font-weight: bold; color: #b91c1c; uppercase; letter-spacing: 0.05em;'>TOTAL TUNGGAKAN BERJALAN</p>
-                        <p style='margin: 5px 0 0 0; font-size: 20px; font-weight: 900; color: #991b1b;'>Rp " . number_format($data['total_outstanding'], 0, ',', '.') . "</p>
+                        <p style='margin: 5px 0 0 0; font-size: 20px; font-weight: 900; color: #991b1b;'>Rp ".number_format($data['total_outstanding'], 0, ',', '.')."</p>
                     </div>
                 </div>
                 
@@ -275,7 +272,7 @@ class DigestService
 
             $hwHtml = '';
             foreach ($data['pending_assignments'] as $hw) {
-                $hwHtml .= "<li>{$hw->elearningClass->subject->name} - {$hw->title} (Batas: " . Carbon::parse($hw->due_at)->translatedFormat('d M Y') . ")</li>";
+                $hwHtml .= "<li>{$hw->elearningClass->subject->name} - {$hw->title} (Batas: ".Carbon::parse($hw->due_at)->translatedFormat('d M Y').')</li>';
             }
             if ($data['pending_assignments']->isEmpty()) {
                 $hwHtml = "<li><span style='color:#10b981;'> Sempurna! Semua tugas E-Learning telah diselesaikan.</span></li>";
@@ -288,7 +285,7 @@ class DigestService
                 <ul style='padding-left: 20px; line-height: 1.7;'>
                     <li>Siswa tidak hadir tanpa keterangan (Alpa): <strong>{$data['alpa_count']} Kali</strong></li>
                     <li>Siswa terlambat masuk sekolah: <strong>{$data['late_count']} Kali</strong></li>
-                    <li>Akumulasi poin sanksi bimbingan BK baru: <strong style='color: " . ($data['bk_points'] > 0 ? '#ef4444' : '#64748b') . "'>{$data['bk_points']} Poin</strong></li>
+                    <li>Akumulasi poin sanksi bimbingan BK baru: <strong style='color: ".($data['bk_points'] > 0 ? '#ef4444' : '#64748b')."'>{$data['bk_points']} Poin</strong></li>
                 </ul>
 
                 <h3 style='color: #312e81; font-size: 14px; margin-top: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;'> Perkembangan Akademik</h3>
@@ -312,10 +309,10 @@ class DigestService
     public function renderDigestPdf(string $type, array $data): string
     {
         $htmlContent = $this->renderDigestHtml($type, $data);
-        
+
         $headings = [];
         $title = 'Laporan Rangkuman Terjadwal SISTA';
-        
+
         if ($type === 'daily_admin') {
             $title = 'Laporan Ringkasan Operasional Harian Sekolah';
         } elseif ($type === 'weekly_kepsek') {
@@ -381,9 +378,9 @@ class DigestService
                 <!-- Kop surat: identity from App\Support\School (this used an invented
                      'Jalan Pahlawan No. 1' address and a (024) 123456 number). -->
                 <div class='kop-surat'>
-                    <h2>" . e(mb_strtoupper(school_name())) . "</h2>
-                    <p>" . e(school_contact_line(['address', 'phone'])) . "</p>
-                    " . (school_accreditation() !== '' ? "<p style='font-size: 9px; font-weight: normal; color: #94a3b8; margin-top: 3px;'>TERAKREDITASI " . e(mb_strtoupper(school_accreditation())) . "</p>" : '') . "
+                    <h2>".e(mb_strtoupper(school_name())).'</h2>
+                    <p>'.e(school_contact_line(['address', 'phone'])).'</p>
+                    '.(school_accreditation() !== '' ? "<p style='font-size: 9px; font-weight: normal; color: #94a3b8; margin-top: 3px;'>TERAKREDITASI ".e(mb_strtoupper(school_accreditation())).'</p>' : '')."
                 </div>
                 
                 <div class='pdf-title'>{$title}</div>
@@ -393,25 +390,25 @@ class DigestService
                 </div>
 
                 <div class='footer'>
-                    Laporan ini dicetak secara otomatis oleh SISTA Reporting Engine pada " . date('d-m-Y H:i:s') . ". Halaman 1 dari 1.
+                    Laporan ini dicetak secara otomatis oleh SISTA Reporting Engine pada ".date('d-m-Y H:i:s').'. Halaman 1 dari 1.
                 </div>
             </body>
             </html>
-        ";
+        ';
 
         // Generate Barryvdh DomPDF
         $pdf = Pdf::loadHTML($pdfHtml);
-        
+
         $tempPath = storage_path('app/temp');
-        if (!file_exists($tempPath)) {
+        if (! file_exists($tempPath)) {
             mkdir($tempPath, 0755, true);
         }
-        
-        $fileName = 'Digest_' . $type . '_' . uniqid() . '.pdf';
-        $fullPath = $tempPath . '/' . $fileName;
-        
+
+        $fileName = 'Digest_'.$type.'_'.uniqid().'.pdf';
+        $fullPath = $tempPath.'/'.$fileName;
+
         $pdf->setPaper('a4', 'portrait')->save($fullPath);
-        
+
         return $fullPath;
     }
 
@@ -433,7 +430,7 @@ class DigestService
         } elseif ($type === 'weekly_parent') {
             // Parental digest runs dynamically for EACH student whose parents have emails!
             // For testing/mocking or generic execution, we can fetch students
-            $students = Student::with(['user', 'classroom'])->whereHas('user', function($q) {
+            $students = Student::with(['user', 'classroom'])->whereHas('user', function ($q) {
                 $q->whereNotNull('email');
             })->take(5)->get(); // Limit for performance safety
 
@@ -441,9 +438,10 @@ class DigestService
                 $stData = $this->generateWeeklyParentDigest($st);
                 $this->deliverDigestToRecipient($report, $st->user->email, $st->user->phone_number, $stData);
             }
-            
+
             // Mark as sent
             $report->update(['last_sent_at' => Carbon::now()]);
+
             return;
         }
 
@@ -457,8 +455,12 @@ class DigestService
             } elseif ($rec['type'] === 'role') {
                 $roleUsers = User::where('role', $rec['value'])->get();
                 foreach ($roleUsers as $u) {
-                    if ($u->email) $emails[] = $u->email;
-                    if ($u->phone_number) $phones[] = $u->phone_number;
+                    if ($u->email) {
+                        $emails[] = $u->email;
+                    }
+                    if ($u->phone_number) {
+                        $phones[] = $u->phone_number;
+                    }
                 }
             }
         }
@@ -483,7 +485,7 @@ class DigestService
     {
         $type = $report->report_type;
         $htmlContent = $this->renderDigestHtml($type, $data);
-        
+
         $pdfPath = null;
         if ($report->attach_pdf) {
             $pdfPath = $this->renderDigestPdf($type, $data);
@@ -494,20 +496,20 @@ class DigestService
             try {
                 Mail::to($email)->send(new ScheduledDigestMail($report->name, $htmlContent, $pdfPath));
             } catch (\Exception $e) {
-                \Log::error("Gagal mengirim email digest terjadwal ke {$email}: " . $e->getMessage());
+                \Log::error("Gagal mengirim email digest terjadwal ke {$email}: ".$e->getMessage());
             }
         }
 
         // B. WhatsApp Delivery
         if ($report->delivery_method === 'whatsapp' || $report->delivery_method === 'both') {
-            if (!empty($phone)) {
+            if (! empty($phone)) {
                 $smsText = " SISTA INFO DIGEST: *{$report->name}*\n\n";
                 if ($type === 'daily_admin') {
                     $smsText .= "• Alpa Hari Ini: {$data['alpa_count']} Siswa\n• Tiket Baru: {$data['new_tickets']}\n• SPP Baru: {$data['new_billings']}\n• Smart Alerts: {$data['active_alerts']}\n\nHarap login ke dashboard admin SISTA.";
                 } elseif ($type === 'weekly_kepsek') {
-                    $smsText .= "• Rata-rata Kehadiran: {$data['attendance_rate']}%\n• Penerimaan SPP: Rp " . number_format($data['total_payments'], 0, ',', '.') . "\n• Target Mutu: {$data['completed_milestones']}/{$data['total_milestones']}\n\nHarap periksa email Anda untuk lampiran laporan PDF lengkap.";
+                    $smsText .= "• Rata-rata Kehadiran: {$data['attendance_rate']}%\n• Penerimaan SPP: Rp ".number_format($data['total_payments'], 0, ',', '.')."\n• Target Mutu: {$data['completed_milestones']}/{$data['total_milestones']}\n\nHarap periksa email Anda untuk lampiran laporan PDF lengkap.";
                 } elseif ($type === 'monthly_finance') {
-                    $smsText .= "• Diterima: Rp " . number_format($data['total_received'], 0, ',', '.') . "\n• Sisa Tunggakan: Rp " . number_format($data['total_outstanding'], 0, ',', '.') . "\n\nLaporan keuangan PDF lengkap telah dikirimkan ke email Anda.";
+                    $smsText .= '• Diterima: Rp '.number_format($data['total_received'], 0, ',', '.')."\n• Sisa Tunggakan: Rp ".number_format($data['total_outstanding'], 0, ',', '.')."\n\nLaporan keuangan PDF lengkap telah dikirimkan ke email Anda.";
                 } elseif ($type === 'weekly_parent') {
                     $smsText .= "Bapak/Ibu Wali dari *{$data['student_name']}*:\n• Absen Alpa: {$data['alpa_count']} kali\n• Terlambat: {$data['late_count']} kali\n• Nilai & PR tertunda dapat diperiksa di email Anda atau portal SISTA.";
                 }
@@ -515,7 +517,7 @@ class DigestService
                 try {
                     $this->whatsappService->sendMessage($phone, $smsText, 'scheduled_digest');
                 } catch (\Exception $e) {
-                    \Log::error("Gagal mengirim WhatsApp digest terjadwal ke {$phone}: " . $e->getMessage());
+                    \Log::error("Gagal mengirim WhatsApp digest terjadwal ke {$phone}: ".$e->getMessage());
                 }
             }
         }

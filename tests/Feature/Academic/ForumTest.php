@@ -4,13 +4,10 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
-use App\Models\Student;
-use App\Models\Subject;
-use App\Models\ElearningClass;
-use App\Models\User;
-use App\Models\ForumThread;
 use App\Models\ForumReply;
-use App\Models\ForumReaction;
+use App\Models\ForumThread;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -24,7 +21,7 @@ beforeEach(function () {
 
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
     $this->classroom = Classroom::factory()->create(['academic_year' => $this->academicYear->year]);
-    
+
     // Create Student model and link to studentUser
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
@@ -61,7 +58,7 @@ test('teacher can create a thread in school scope with attachment', function () 
     ]);
 
     $response->assertRedirect();
-    
+
     $thread = ForumThread::first();
     expect($thread)->not->toBeNull();
     expect($thread->title)->toBe('Diskusi Belajar Mandiri');
@@ -351,7 +348,7 @@ test('teacher can pin and lock thread, and mark reply as best answer', function 
     $reply1->update(['is_best_answer' => true]);
 
     $this->actingAs($this->guru)->post(route('forum.replies.best', $reply2->uuid))->assertRedirect();
-    
+
     $reply1->refresh();
     $reply2->refresh();
     expect($reply1->is_best_answer)->toBeFalse();
@@ -369,7 +366,7 @@ test('authorized users can soft delete threads', function () {
 
     // Guru (author) can delete their own thread
     $this->actingAs($this->guru)->delete(route('forum.threads.destroy', $thread->uuid))->assertRedirect();
-    
+
     $this->assertSoftDeleted('forum_threads', [
         'id' => $thread->id,
     ]);

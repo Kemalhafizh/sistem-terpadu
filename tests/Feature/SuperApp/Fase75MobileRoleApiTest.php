@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\SuperApp;
 
-use App\Models\User;
-use App\Models\Student;
 use App\Models\Classroom;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -28,7 +28,7 @@ class Fase75MobileRoleApiTest extends TestCase
     {
         $parent = User::factory()->create(['role' => 'parent']);
         $studentUser = User::factory()->create(['role' => 'student']);
-        
+
         $classroom = Classroom::first() ?? Classroom::create([
             'name' => 'XII MIPA 1',
             'grade_level' => 'XII',

@@ -14,7 +14,9 @@ class ScheduledDigestMail extends Mailable
     use Queueable, SerializesModels;
 
     public $digestName;
+
     public $htmlContent;
+
     public $pdfPath;
 
     /**
@@ -57,7 +59,7 @@ class ScheduledDigestMail extends Mailable
         if ($this->pdfPath && file_exists($this->pdfPath)) {
             return [
                 Attachment::fromPath($this->pdfPath)
-                    ->as(str_replace(' ', '_', $this->digestName) . '.pdf')
+                    ->as(str_replace(' ', '_', $this->digestName).'.pdf')
                     ->mime('application/pdf'),
             ];
         }

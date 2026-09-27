@@ -7,7 +7,6 @@ namespace Tests\Feature\SuperApp;
 use App\Events\CampusAnnouncementEvent;
 use App\Events\EmergencyBroadcastEvent;
 use App\Models\User;
-use App\Services\Mobile\BiometricBindingService;
 use App\Services\Mobile\DynamicQrService;
 use App\Services\Mobile\FcmNotificationService;
 use App\Services\Mobile\OfflineSyncManager;

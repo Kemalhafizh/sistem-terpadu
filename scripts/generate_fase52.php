@@ -1,11 +1,13 @@
 <?php
-$baseDir = "c:/project/portofolio/project-super-web/sistem-terpadu";
 
-function writeFile($path, $content) {
+$baseDir = 'c:/project/portofolio/project-super-web/sistem-terpadu';
+
+function writeFile($path, $content)
+{
     global $baseDir;
-    $fullPath = $baseDir . '/' . $path;
+    $fullPath = $baseDir.'/'.$path;
     $dir = dirname($fullPath);
-    if (!is_dir($dir)) {
+    if (! is_dir($dir)) {
         mkdir($dir, 0777, true);
     }
     file_put_contents($fullPath, trim($content));
@@ -13,7 +15,7 @@ function writeFile($path, $content) {
 }
 
 // 1. Migration
-writeFile("database/migrations/2026_10_26_000000_create_advanced_hr_tables.php", <<< 'PHP'
+writeFile('database/migrations/2026_10_26_000000_create_advanced_hr_tables.php', <<< 'PHP'
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -125,7 +127,7 @@ return new class extends Migration
 PHP);
 
 // 2. Models
-writeFile("app/Models/JobVacancy.php", <<< 'PHP'
+writeFile('app/Models/JobVacancy.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -157,7 +159,7 @@ class JobVacancy extends Model
 }
 PHP);
 
-writeFile("app/Models/JobApplicant.php", <<< 'PHP'
+writeFile('app/Models/JobApplicant.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -184,7 +186,7 @@ class JobApplicant extends Model
 }
 PHP);
 
-writeFile("app/Models/CompensationStructure.php", <<< 'PHP'
+writeFile('app/Models/CompensationStructure.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -213,7 +215,7 @@ class CompensationStructure extends Model
 }
 PHP);
 
-writeFile("app/Models/BenefitClaim.php", <<< 'PHP'
+writeFile('app/Models/BenefitClaim.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -241,7 +243,7 @@ class BenefitClaim extends Model
 }
 PHP);
 
-writeFile("app/Models/WellnessProgram.php", <<< 'PHP'
+writeFile('app/Models/WellnessProgram.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -268,7 +270,7 @@ class WellnessProgram extends Model
 }
 PHP);
 
-writeFile("app/Models/WellnessLog.php", <<< 'PHP'
+writeFile('app/Models/WellnessLog.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -300,7 +302,7 @@ class WellnessLog extends Model
 }
 PHP);
 
-writeFile("app/Models/ExitInterview.php", <<< 'PHP'
+writeFile('app/Models/ExitInterview.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -333,7 +335,7 @@ class ExitInterview extends Model
 }
 PHP);
 
-writeFile("app/Models/TurnoverAnalytic.php", <<< 'PHP'
+writeFile('app/Models/TurnoverAnalytic.php', <<< 'PHP'
 <?php
 
 namespace App\Models;
@@ -352,7 +354,7 @@ class TurnoverAnalytic extends Model
 PHP);
 
 // 3. Services
-writeFile("app/Services/HR/RecruitmentService.php", <<< 'PHP'
+writeFile('app/Services/HR/RecruitmentService.php', <<< 'PHP'
 <?php
 
 namespace App\Services\HR;
@@ -385,7 +387,7 @@ class RecruitmentService
 }
 PHP);
 
-writeFile("app/Services/HR/CompensationService.php", <<< 'PHP'
+writeFile('app/Services/HR/CompensationService.php', <<< 'PHP'
 <?php
 
 namespace App\Services\HR;
@@ -416,7 +418,7 @@ class CompensationService
 }
 PHP);
 
-writeFile("app/Services/HR/WellnessService.php", <<< 'PHP'
+writeFile('app/Services/HR/WellnessService.php', <<< 'PHP'
 <?php
 
 namespace App\Services\HR;
@@ -445,7 +447,7 @@ class WellnessService
 }
 PHP);
 
-writeFile("app/Services/HR/TurnoverService.php", <<< 'PHP'
+writeFile('app/Services/HR/TurnoverService.php', <<< 'PHP'
 <?php
 
 namespace App\Services\HR;
@@ -473,7 +475,7 @@ class TurnoverService
 PHP);
 
 // 4. Controllers
-writeFile("app/Http/Controllers/HR/RecruitmentController.php", <<< 'PHP'
+writeFile('app/Http/Controllers/HR/RecruitmentController.php', <<< 'PHP'
 <?php
 
 namespace App\Http\Controllers\HR;
@@ -520,7 +522,7 @@ class RecruitmentController extends Controller
 }
 PHP);
 
-writeFile("app/Http/Controllers/HR/CompensationController.php", <<< 'PHP'
+writeFile('app/Http/Controllers/HR/CompensationController.php', <<< 'PHP'
 <?php
 
 namespace App\Http\Controllers\HR;
@@ -571,7 +573,7 @@ class CompensationController extends Controller
 }
 PHP);
 
-writeFile("app/Http/Controllers/HR/WellnessController.php", <<< 'PHP'
+writeFile('app/Http/Controllers/HR/WellnessController.php', <<< 'PHP'
 <?php
 
 namespace App\Http\Controllers\HR;
@@ -620,7 +622,7 @@ class WellnessController extends Controller
 }
 PHP);
 
-writeFile("app/Http/Controllers/HR/TurnoverController.php", <<< 'PHP'
+writeFile('app/Http/Controllers/HR/TurnoverController.php', <<< 'PHP'
 <?php
 
 namespace App\Http\Controllers\HR;
@@ -660,7 +662,7 @@ class TurnoverController extends Controller
 PHP);
 
 // 5. Views
-writeFile("resources/views/recruitment/kanban.blade.php", <<< 'HTML'
+writeFile('resources/views/recruitment/kanban.blade.php', <<< 'HTML'
 @extends('layouts.app')
 
 @section('content')
@@ -695,7 +697,7 @@ writeFile("resources/views/recruitment/kanban.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/recruitment/vacancies.blade.php", <<< 'HTML'
+writeFile('resources/views/recruitment/vacancies.blade.php', <<< 'HTML'
 @extends('layouts.app')
 
 @section('content')
@@ -728,7 +730,7 @@ writeFile("resources/views/recruitment/vacancies.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/recruitment/vacancy-form.blade.php", <<< 'HTML'
+writeFile('resources/views/recruitment/vacancy-form.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -737,7 +739,7 @@ writeFile("resources/views/recruitment/vacancy-form.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/recruitment/applicant-detail.blade.php", <<< 'HTML'
+writeFile('resources/views/recruitment/applicant-detail.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -746,7 +748,7 @@ writeFile("resources/views/recruitment/applicant-detail.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/compensation/dashboard.blade.php", <<< 'HTML'
+writeFile('resources/views/compensation/dashboard.blade.php', <<< 'HTML'
 @extends('layouts.app')
 
 @section('content')
@@ -768,7 +770,7 @@ writeFile("resources/views/compensation/dashboard.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/compensation/employee-structures.blade.php", <<< 'HTML'
+writeFile('resources/views/compensation/employee-structures.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -777,7 +779,7 @@ writeFile("resources/views/compensation/employee-structures.blade.php", <<< 'HTM
 @endsection
 HTML);
 
-writeFile("resources/views/compensation/claims-approval.blade.php", <<< 'HTML'
+writeFile('resources/views/compensation/claims-approval.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -786,7 +788,7 @@ writeFile("resources/views/compensation/claims-approval.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/compensation/claim-form.blade.php", <<< 'HTML'
+writeFile('resources/views/compensation/claim-form.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -795,7 +797,7 @@ writeFile("resources/views/compensation/claim-form.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/wellness/catalog.blade.php", <<< 'HTML'
+writeFile('resources/views/wellness/catalog.blade.php', <<< 'HTML'
 @extends('layouts.app')
 
 @section('content')
@@ -817,7 +819,7 @@ writeFile("resources/views/wellness/catalog.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/wellness/employee-dashboard.blade.php", <<< 'HTML'
+writeFile('resources/views/wellness/employee-dashboard.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -826,7 +828,7 @@ writeFile("resources/views/wellness/employee-dashboard.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/wellness/hr-analytics.blade.php", <<< 'HTML'
+writeFile('resources/views/wellness/hr-analytics.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -835,7 +837,7 @@ writeFile("resources/views/wellness/hr-analytics.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/turnover/dashboard.blade.php", <<< 'HTML'
+writeFile('resources/views/turnover/dashboard.blade.php', <<< 'HTML'
 @extends('layouts.app')
 
 @section('content')
@@ -857,7 +859,7 @@ writeFile("resources/views/turnover/dashboard.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/turnover/exit-interviews.blade.php", <<< 'HTML'
+writeFile('resources/views/turnover/exit-interviews.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -866,7 +868,7 @@ writeFile("resources/views/turnover/exit-interviews.blade.php", <<< 'HTML'
 @endsection
 HTML);
 
-writeFile("resources/views/turnover/clearance.blade.php", <<< 'HTML'
+writeFile('resources/views/turnover/clearance.blade.php', <<< 'HTML'
 @extends('layouts.app')
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -876,7 +878,7 @@ writeFile("resources/views/turnover/clearance.blade.php", <<< 'HTML'
 HTML);
 
 // 6. Seeder
-writeFile("database/seeders/AdvancedHrSeeder.php", <<< 'PHP'
+writeFile('database/seeders/AdvancedHrSeeder.php', <<< 'PHP'
 <?php
 
 namespace Database\Seeders;
@@ -968,7 +970,7 @@ class AdvancedHrSeeder extends Seeder
 PHP);
 
 // 7. Routes
-writeFile("routes/recruitment.php", <<< 'PHP'
+writeFile('routes/recruitment.php', <<< 'PHP'
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -998,7 +1000,7 @@ Route::middleware(['auth'])->group(function () {
 PHP);
 
 // 8. Tests
-writeFile("tests/Feature/HR/AdvancedHrSuiteTest.php", <<< 'PHP'
+writeFile('tests/Feature/HR/AdvancedHrSuiteTest.php', <<< 'PHP'
 <?php
 
 namespace Tests\Feature\HR;
@@ -1044,4 +1046,3 @@ class AdvancedHrSuiteTest extends TestCase
 PHP);
 
 echo "All files generated successfully.\n";
-?>

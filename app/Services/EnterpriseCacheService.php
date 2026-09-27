@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Cache;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 class EnterpriseCacheService
 {
@@ -31,6 +31,7 @@ class EnterpriseCacheService
         try {
             if (Cache::supportsTags()) {
                 Cache::tags([$tag])->flush();
+
                 return true;
             }
         } catch (Exception $e) {
@@ -39,6 +40,7 @@ class EnterpriseCacheService
 
         // Forget keys matching tag prefix
         Cache::forget("tag_{$tag}_*");
+
         return true;
     }
 

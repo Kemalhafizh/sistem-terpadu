@@ -54,9 +54,9 @@ class PerformanceLogger
 
         // Threshold slow request OR peak memory > 128MB OR has slow queries
         $isSlowRequest = $durationMs >= (float) config('apm.slow_request_ms', 1000);
-        $isHighMemory = !app()->environment('testing') && $peakMemory >= (128 * 1024 * 1024); // 128MB
+        $isHighMemory = ! app()->environment('testing') && $peakMemory >= (128 * 1024 * 1024); // 128MB
 
-        if ($isSlowRequest || $isHighMemory || !empty($slowQueries)) {
+        if ($isSlowRequest || $isHighMemory || ! empty($slowQueries)) {
             $this->logPerformance($request, $durationMs, $peakMemory, array_values($slowQueries), $correlationId, $response->getStatusCode());
         }
 
@@ -73,7 +73,7 @@ class PerformanceLogger
 
             // Ensure the directory exists
             $logDir = dirname($logPath);
-            if (!file_exists($logDir)) {
+            if (! file_exists($logDir)) {
                 mkdir($logDir, 0755, true);
             }
 
@@ -92,7 +92,7 @@ class PerformanceLogger
             ];
 
             // Append structured JSON line
-            file_put_contents($logPath, json_encode($logEntry) . "\n", FILE_APPEND | LOCK_EX);
+            file_put_contents($logPath, json_encode($logEntry)."\n", FILE_APPEND | LOCK_EX);
 
             // Trim log file to prevent infinite growth (keep last 1000 lines)
             if (file_exists($logPath) && filesize($logPath) > 5 * 1024 * 1024) { // > 5MB

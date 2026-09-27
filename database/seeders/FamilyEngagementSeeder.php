@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\FamilyTask;
 use App\Models\ClassFeedPost;
+use App\Models\Employee;
 use App\Models\FamilyLearningPlan;
+use App\Models\FamilyTask;
 use App\Models\ParentSkill;
 use App\Models\Student;
-use App\Models\Employee;
+use Illuminate\Database\Seeder;
 
 class FamilyEngagementSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class FamilyEngagementSeeder extends Seeder
         $student = Student::first();
         $teacher = Employee::first();
 
-        if (!$student || !$teacher) {
+        if (! $student || ! $teacher) {
             return;
         }
 

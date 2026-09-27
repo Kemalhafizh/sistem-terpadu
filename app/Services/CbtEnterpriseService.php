@@ -7,11 +7,9 @@ use App\Models\CbtEssaySubmission;
 use App\Models\CbtProctorLog;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
-use App\Models\QuestionBank;
 use App\Models\Student;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CbtEnterpriseService
@@ -82,7 +80,7 @@ class CbtEnterpriseService
         $graceStart = $exam->start_time ? $exam->start_time->copy()->subMinutes(10) : now()->subMinutes(10);
         $isAccessible = now()->gte($graceStart);
 
-        if (!$isAccessible) {
+        if (! $isAccessible) {
             return [
                 'accessible' => false,
                 'message' => 'Ujian belum dimulai. Kunci dekripsi akan dibagikan saat waktu ujian tiba.',
@@ -114,7 +112,7 @@ class CbtEnterpriseService
             abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
         }
 
-        if (!$attempt) {
+        if (! $attempt) {
             $attempt = ExamAttempt::create([
                 'exam_id' => $exam->id,
                 'student_id' => $student->id,
@@ -160,7 +158,7 @@ class CbtEnterpriseService
             abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
         }
 
-        if (!$attempt) {
+        if (! $attempt) {
             $attempt = ExamAttempt::create([
                 'exam_id' => $exam->id,
                 'student_id' => $student->id,
@@ -171,17 +169,17 @@ class CbtEnterpriseService
         }
 
         $questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();
-        if (!$questionBelongsToExam) {
+        if (! $questionBelongsToExam) {
             abort(422, 'Soal tidak terdaftar dalam paket ujian ini.');
         }
 
-        $filename = 'essay_' . $exam->id . '_' . $student->id . '_' . $questionId . '_' . time() . '.jpg';
-        $destinationPath = storage_path('app/public/cbt/essays/' . $exam->id);
-        if (!file_exists($destinationPath)) {
+        $filename = 'essay_'.$exam->id.'_'.$student->id.'_'.$questionId.'_'.time().'.jpg';
+        $destinationPath = storage_path('app/public/cbt/essays/'.$exam->id);
+        if (! file_exists($destinationPath)) {
             mkdir($destinationPath, 0755, true);
         }
 
-        $targetFile = $destinationPath . '/' . $filename;
+        $targetFile = $destinationPath.'/'.$filename;
         $fileSize = $file->getSize();
 
         // Compress image using GD if available
@@ -211,7 +209,7 @@ class CbtEnterpriseService
             $file->move($destinationPath, $filename);
         }
 
-        $relativePath = 'uploads/cbt/essays/' . $exam->id . '/' . $filename;
+        $relativePath = 'uploads/cbt/essays/'.$exam->id.'/'.$filename;
 
         return CbtEssaySubmission::updateOrCreate(
             [
@@ -318,6 +316,7 @@ class CbtEnterpriseService
     protected function deriveExamKey(Exam $exam): string
     {
         $appKey = (string) config('app.key', 'cbt_default_salt_super_web_2026');
+
         return hash_hmac('sha256', "cbt_exam_{$exam->id}_{$exam->uuid}_{$exam->created_at}", $appKey, true);
     }
 }

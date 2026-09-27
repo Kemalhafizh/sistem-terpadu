@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\User;
 use App\Models\Classroom;
 use App\Models\Student;
+use App\Models\User;
 
 beforeEach(function () {
     $this->counselor = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
@@ -17,7 +17,7 @@ beforeEach(function () {
 test('counselor can view dashboard', function () {
     $response = $this->actingAs($this->counselor)->getJson('/api/v1/counseling/dashboard');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('student can request counseling appointment', function () {
@@ -26,11 +26,11 @@ test('student can request counseling appointment', function () {
         'category' => 'karir',
     ]);
     $response->assertStatus(201)
-             ->assertJson(['success' => true]);
+        ->assertJson(['success' => true]);
 });
 
 test('counselor can view at risk students', function () {
     $response = $this->actingAs($this->counselor)->getJson('/api/v1/counseling/at-risk');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });

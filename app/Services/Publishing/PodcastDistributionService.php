@@ -18,7 +18,7 @@ class PodcastDistributionService
     {
         return Podcast::create([
             'title' => $data['title'],
-            'slug' => Str::slug($data['title']) . '-' . time(),
+            'slug' => Str::slug($data['title']).'-'.time(),
             'description' => $data['description'] ?? '',
             'cover_image_path' => $data['cover_image_path'] ?? '/images/podcast-cover.jpg',
             'category' => $data['category'] ?? 'islamic_studies',

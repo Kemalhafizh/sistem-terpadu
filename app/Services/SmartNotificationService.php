@@ -26,7 +26,7 @@ class SmartNotificationService
      */
     public function isQuietHoursActive(?NotificationPreference $pref, ?Carbon $now = null): bool
     {
-        if (!$pref || empty($pref->quiet_hours) || !($pref->quiet_hours['enabled'] ?? false)) {
+        if (! $pref || empty($pref->quiet_hours) || ! ($pref->quiet_hours['enabled'] ?? false)) {
             return false;
         }
 
@@ -63,6 +63,7 @@ class SmartNotificationService
         // 2. Check Quiet Hours
         if ($this->isQuietHoursActive($pref)) {
             $this->queueToDigest($userId, $payload);
+
             return [
                 'delivered' => false,
                 'mode' => 'queued_quiet_hours',
@@ -73,6 +74,7 @@ class SmartNotificationService
         // 3. Check Digest Mode
         if ($pref && $pref->digest_mode && in_array($priority, ['medium', 'low'])) {
             $this->queueToDigest($userId, $payload);
+
             return [
                 'delivered' => false,
                 'mode' => 'queued_digest',
@@ -117,7 +119,7 @@ class SmartNotificationService
         return [
             'has_digest' => true,
             'count' => count($queue),
-            'summary' => "Anda memiliki " . count($queue) . " pembaruan penting sekolah hari ini.",
+            'summary' => 'Anda memiliki '.count($queue).' pembaruan penting sekolah hari ini.',
             'grouped' => $grouped,
             'items' => $queue,
         ];
@@ -131,11 +133,12 @@ class SmartNotificationService
         $groups = [];
         foreach ($items as $item) {
             $channel = $item['channel'] ?? 'umum';
-            if (!isset($groups[$channel])) {
+            if (! isset($groups[$channel])) {
                 $groups[$channel] = [];
             }
             $groups[$channel][] = $item;
         }
+
         return $groups;
     }
 

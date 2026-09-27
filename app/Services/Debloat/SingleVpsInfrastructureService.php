@@ -39,7 +39,7 @@ class SingleVpsInfrastructureService
         $dbConnections = 1;
         try {
             $result = DB::select("SHOW STATUS WHERE `variable_name` = 'Threads_connected'");
-            if (!empty($result)) {
+            if (! empty($result)) {
                 $dbConnections = (int) ($result[0]->Value ?? 1);
             }
         } catch (\Throwable $e) {

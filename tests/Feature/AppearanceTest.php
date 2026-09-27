@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\User;
 use App\Models\AppearanceSetting;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     AppearanceSetting::truncate();
@@ -27,7 +27,7 @@ test('admin can view appearance settings page successfully', function () {
     $admin = User::factory()->create(['role' => 'admin']);
 
     $response = $this->actingAs($admin)->get(route('admin.appearance.index'));
-    
+
     $response->assertStatus(200);
     $response->assertViewHas('appearance');
     $response->assertViewHas('fonts');
@@ -48,7 +48,7 @@ test('admin can update appearance branding text and color configurations', funct
     ]);
 
     $response->assertRedirect(route('admin.appearance.index'));
-    
+
     $this->assertDatabaseHas('appearance_settings', [
         'app_name' => 'SMA Sultan Agung Satu',
         'footer_text' => 'Hak Cipta Terpelihara 2026',
@@ -85,9 +85,9 @@ test('admin can upload custom logo, favicon, and login background assets', funct
     ]);
 
     $response->assertRedirect(route('admin.appearance.index'));
-    
+
     $setting = AppearanceSetting::first();
-    
+
     $this->assertNotNull($setting->logo_path);
     $this->assertNotNull($setting->logo_dark_path);
     $this->assertNotNull($setting->favicon_path);
@@ -112,9 +112,9 @@ test('admin can reset appearance configuration back to factory default presets',
     $response = $this->actingAs($admin)->post(route('admin.appearance.reset'));
 
     $response->assertRedirect(route('admin.appearance.index'));
-    
+
     $fresh = AppearanceSetting::first();
-    
+
     $this->assertEquals('Sistem Terpadu SMA ISA 1', $fresh->app_name);
     $this->assertEquals('#3b82f6', $fresh->primary_color);
     $this->assertEquals('#8b5cf6', $fresh->secondary_color);
@@ -125,7 +125,7 @@ test('admin can reset appearance configuration back to factory default presets',
 
 test('appearance settings are globally bound and resolved in app and guest views via view composer', function () {
     $admin = User::factory()->create(['role' => 'admin']);
-    
+
     $setting = AppearanceSetting::firstOrCreate([]);
     $setting->update([
         'app_name' => 'Sistem Kustomisasi Kece',

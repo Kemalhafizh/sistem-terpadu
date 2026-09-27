@@ -53,7 +53,6 @@ class Exam extends Model
         'passing_score' => 'decimal:2',
     ];
 
-
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
@@ -81,7 +80,6 @@ class Exam extends Model
     {
         return $this->belongsTo(User::class, 'operator_id');
     }
-
 
     public function questions(): BelongsToMany
     {
@@ -113,13 +111,14 @@ class Exam extends Model
     public function isOngoing(): bool
     {
         $now = now();
+
         return $this->isPublished() && $now->between($this->start_time, $this->end_time);
     }
 
     protected static function booted(): void
     {
         static::saving(function ($exam) {
-            if (!empty($exam->access_token) && empty($exam->token_expires_at)) {
+            if (! empty($exam->access_token) && empty($exam->token_expires_at)) {
                 $exam->token_expires_at = now()->addMinutes(5);
             }
         });
@@ -137,8 +136,10 @@ class Exam extends Model
             if ($this->updated_at) {
                 return now()->gt($this->updated_at->copy()->addMinutes(5));
             }
+
             return false;
         }
+
         return now()->gt($this->token_expires_at);
     }
 
@@ -150,6 +151,7 @@ class Exam extends Model
         if (empty($this->token_expires_at)) {
             return 300;
         }
+
         return max(0, (int) now()->diffInSeconds($this->token_expires_at, false));
     }
 }

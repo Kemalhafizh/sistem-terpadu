@@ -3,11 +3,8 @@
 namespace Tests\Feature\Academic;
 
 use App\Models\AcademicPathway;
-use App\Models\LearningOutcome;
-use App\Models\ScormPackage;
 use App\Models\Subject;
 use App\Models\User;
-use App\Models\VirtualClassroom;
 use App\Services\Academic\AcademicPathwayService;
 use App\Services\Academic\CompetencyMappingService;
 use App\Services\Academic\ScormService;
@@ -20,7 +17,9 @@ class AcademicIntelligenceTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $student;
+
     protected Subject $subject;
 
     protected function setUp(): void

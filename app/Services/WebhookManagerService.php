@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\WebhookPayloadJob;
 use App\Models\WebhookDelivery;
 use App\Models\WebhookSubscription;
+use App\Services\Security\SsrfGuardService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -16,8 +17,8 @@ class WebhookManagerService
      */
     public function registerSubscription(array $data): WebhookSubscription
     {
-        $targetUrl = \App\Services\Security\SsrfGuardService::validateUrl($data['target_url']);
-        $secretKey = $data['secret_key'] ?? 'whsec_' . Str::random(24);
+        $targetUrl = SsrfGuardService::validateUrl($data['target_url']);
+        $secretKey = $data['secret_key'] ?? 'whsec_'.Str::random(24);
 
         return WebhookSubscription::create([
             'name' => $data['name'],
@@ -80,7 +81,7 @@ class WebhookManagerService
         $responseBody = '{"success": true}';
 
         try {
-            \App\Services\Security\SsrfGuardService::validateUrl($subscription->target_url);
+            SsrfGuardService::validateUrl($subscription->target_url);
 
             if (! app()->environment('testing')) {
                 $response = Http::timeout(5)
@@ -103,7 +104,7 @@ class WebhookManagerService
             $status = 'FAILED';
             $responseCode = 500;
             $responseBody = $e->getMessage();
-            Log::error("Webhook Delivery Exception [{$subscription->target_url}]: " . $e->getMessage());
+            Log::error("Webhook Delivery Exception [{$subscription->target_url}]: ".$e->getMessage());
         }
 
         return WebhookDelivery::create([
@@ -138,7 +139,7 @@ class WebhookManagerService
         $responseBody = '{"replayed": true, "success": true}';
 
         try {
-            \App\Services\Security\SsrfGuardService::validateUrl($subscription->target_url);
+            SsrfGuardService::validateUrl($subscription->target_url);
 
             if (! app()->environment('testing')) {
                 $response = Http::timeout(5)

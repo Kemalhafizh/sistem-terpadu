@@ -17,7 +17,7 @@ class AiLessonPlanGeneratorService
         $objectives = [
             "Siswa mampu menjelaskan prinsip dasar {$topic} dengan kalimat sendiri.",
             "Siswa dapat menganalisis studi kasus nyata dan mengidentifikasi penerapan {$topic}.",
-            "Siswa dapat mempresentasikan solusi pemecahan masalah secara kolaboratif.",
+            'Siswa dapat mempresentasikan solusi pemecahan masalah secara kolaboratif.',
         ];
 
         $steps = [
@@ -25,7 +25,7 @@ class AiLessonPlanGeneratorService
                 'duration_minutes' => 15,
                 'activities' => [
                     'Pembukaan dengan salam dan doa bersama (Profil Pelajar Pancasila Beriman/Bertaqwa).',
-                    'Apersepsi dan pemantik diskusi awal seputar ' . $topic,
+                    'Apersepsi dan pemantik diskusi awal seputar '.$topic,
                 ],
             ],
             'inti' => [

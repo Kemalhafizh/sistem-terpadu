@@ -11,7 +11,7 @@ class VirtualClassroomService
     public function createMeeting(array $data, int $hostId): VirtualClassroom
     {
         $provider = $data['provider'] ?? 'google_meet';
-        $meetingUrl = $data['meeting_url'] ?? ($provider === 'jitsi' ? 'https://meet.jit.si/' . Str::random(10) : 'https://meet.google.com/' . Str::random(3) . '-' . Str::random(4) . '-' . Str::random(3));
+        $meetingUrl = $data['meeting_url'] ?? ($provider === 'jitsi' ? 'https://meet.jit.si/'.Str::random(10) : 'https://meet.google.com/'.Str::random(3).'-'.Str::random(4).'-'.Str::random(3));
 
         return VirtualClassroom::create([
             'title' => $data['title'],

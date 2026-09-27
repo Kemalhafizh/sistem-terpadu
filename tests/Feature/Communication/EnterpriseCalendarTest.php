@@ -2,11 +2,9 @@
 
 use App\Models\BookableResource;
 use App\Models\CalendarEvent;
-use App\Models\ResourceBooking;
 use App\Models\User;
 use App\Services\Communication\CalendarService;
 use App\Services\Communication\ResourceBookingService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Admin Kebijakan']);
@@ -66,7 +64,7 @@ test('resource booking service detects schedule conflicts', function () {
             'start_datetime' => $start,
             'end_datetime' => $end,
         ], $this->user->id);
-    })->toThrow(\Exception::class);
+    })->toThrow(Exception::class);
 });
 
 test('admin can view calendar console and JSON API endpoint', function () {

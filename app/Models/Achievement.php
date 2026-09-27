@@ -89,7 +89,7 @@ class Achievement extends Model
             'organizer' => (string) $this->organizer,
             'date' => $this->event_date ? $this->event_date->format('Y-m-d') : now()->format('Y-m-d'),
             'verification_status' => (string) $this->verification_status,
-            'certificate_url' => $this->certificate_path ? asset('storage/' . $this->certificate_path) : null,
+            'certificate_url' => $this->certificate_path ? asset('storage/'.$this->certificate_path) : null,
             'points_earned' => (int) ($this->points_earned ?? 0),
         ];
     }

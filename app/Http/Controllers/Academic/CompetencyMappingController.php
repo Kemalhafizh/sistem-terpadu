@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\LearningObjective;
 use App\Models\LearningOutcome;
 use App\Models\Subject;
-use App\Models\User;
 use App\Services\Academic\CompetencyMappingService;
 use Illuminate\Http\Request;
 
@@ -54,6 +53,7 @@ class CompetencyMappingController extends Controller
     public function atpMapping(int $objectiveId, CompetencyMappingService $service)
     {
         $objective = LearningObjective::with(['outcome.subject', 'atpMappings'])->findOrFail($objectiveId);
+
         return view('competency.atp-mapping', compact('objective'));
     }
 

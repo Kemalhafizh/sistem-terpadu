@@ -2,8 +2,6 @@
 
 namespace App\Services\Green;
 
-use App\Models\WasteLog;
-
 class WasteTrackingService
 {
     public function calculateDiversionRate()

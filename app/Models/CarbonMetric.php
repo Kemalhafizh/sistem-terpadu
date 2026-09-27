@@ -17,7 +17,7 @@ class CarbonMetric extends Model
         'paper_usage_kg',
         'total_carbon_footprint_kg',
         'source_data',
-        'reduction_initiatives'
+        'reduction_initiatives',
     ];
 
     protected $casts = [

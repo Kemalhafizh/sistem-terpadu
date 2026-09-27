@@ -5,9 +5,9 @@
 use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\User;
-use Illuminate\Support\Facades\Notification;
 use App\Notifications\TicketCreatedNotification;
 use App\Notifications\TicketStatusUpdatedNotification;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -16,7 +16,7 @@ beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->wakaSarpras = User::factory()->create(['role' => 'waka_sarpras']);
     $this->stafTu = User::factory()->create(['role' => 'staf_tu']);
-    
+
     $this->guru = User::factory()->create(['role' => 'guru']);
     $this->siswa = User::factory()->create(['role' => 'student']);
     $this->parent = User::factory()->create(['role' => 'parent']);
@@ -191,7 +191,7 @@ test('staff can successfully assign technical assignee and ticket transitions to
     ]);
 
     $response->assertRedirect();
-    
+
     // Assert assignee updated and status transitioned
     $ticket->refresh();
     expect($ticket->assignee_id)->toBe($this->stafTu->id);

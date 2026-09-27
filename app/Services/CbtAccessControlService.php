@@ -6,6 +6,7 @@ use App\Models\Exam;
 use App\Models\ExamAttempt;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Str;
 
 class CbtAccessControlService
@@ -86,7 +87,7 @@ class CbtAccessControlService
      */
     public function isPlatformAllowed(Exam $exam, string $platform): bool
     {
-        if (!$exam->mobile_only) {
+        if (! $exam->mobile_only) {
             return true; // Any platform allowed
         }
 
@@ -101,7 +102,7 @@ class CbtAccessControlService
     public function validateStudentToken(Exam $exam, Student $student, string $token, string $platform): array
     {
         // 1. Check platform
-        if (!$this->isPlatformAllowed($exam, $platform)) {
+        if (! $this->isPlatformAllowed($exam, $platform)) {
             return [
                 'valid' => false,
                 'message' => 'Ujian ini hanya dapat dikerjakan melalui Aplikasi SISTA di HP Anda.',
@@ -125,7 +126,7 @@ class CbtAccessControlService
         }
 
         // 3. Check exam is ongoing
-        if (!$exam->isOngoing()) {
+        if (! $exam->isOngoing()) {
             return [
                 'valid' => false,
                 'message' => 'Ujian belum dimulai atau sudah berakhir.',
@@ -189,7 +190,7 @@ class CbtAccessControlService
         // Merge snapshot with existing answers if any (preserve string keys)
         $mergedAnswers = $attempt->answers ?? [];
         foreach ($answersSnapshot ?? [] as $key => $val) {
-            $mergedAnswers[(string)$key] = $val;
+            $mergedAnswers[(string) $key] = $val;
         }
 
         $attempt->update([
@@ -210,8 +211,8 @@ class CbtAccessControlService
     public function resetForceClose(Exam $exam, Student $student, User $operator): ExamAttempt
     {
         // Verify the operator has permission
-        if (!$this->canViewToken($operator, $exam)) {
-            throw new \Illuminate\Auth\Access\AuthorizationException(
+        if (! $this->canViewToken($operator, $exam)) {
+            throw new AuthorizationException(
                 'Anda tidak memiliki hak untuk mereset status ujian siswa ini.'
             );
         }

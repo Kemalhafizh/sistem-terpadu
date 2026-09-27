@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\Room;
 use App\Models\Schedule;
 use App\Models\SchedulePreset;
 use App\Models\ScheduleTime;
 use App\Models\Subject;
 use App\Models\User;
-use App\Models\Room;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
@@ -72,7 +72,7 @@ class ScheduleController extends Controller
         ]);
 
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -81,11 +81,11 @@ class ScheduleController extends Controller
             $query->where('day', $validated['day'])
                 ->where(function ($q) use ($validated) {
                     $q->whereBetween('session_start', [$validated['session_start'], $validated['session_end']])
-                      ->orWhereBetween('session_end', [$validated['session_start'], $validated['session_end']])
-                      ->orWhere(function ($sub) use ($validated) {
-                          $sub->where('session_start', '<=', $validated['session_start'])
-                              ->where('session_end', '>=', $validated['session_end']);
-                      });
+                        ->orWhereBetween('session_end', [$validated['session_start'], $validated['session_end']])
+                        ->orWhere(function ($sub) use ($validated) {
+                            $sub->where('session_start', '<=', $validated['session_start'])
+                                ->where('session_end', '>=', $validated['session_end']);
+                        });
                 });
         };
 
@@ -110,7 +110,7 @@ class ScheduleController extends Controller
         }
 
         // 3. Room Conflict Check (if room is assigned)
-        if (!empty($validated['room_id'])) {
+        if (! empty($validated['room_id'])) {
             $roomConflict = Schedule::where('academic_year_id', $activeYear->id)
                 ->where('room_id', $validated['room_id'])
                 ->where($overlapCheck)
@@ -183,7 +183,7 @@ class ScheduleController extends Controller
 
         // If user is a teacher, default to themselves if no specific selection
         $currentUser = auth()->user();
-        if ($currentUser->role === 'guru' && !$request->has('teacher_id')) {
+        if ($currentUser->role === 'guru' && ! $request->has('teacher_id')) {
             $selectedTeacher = $currentUser;
         } elseif ($request->filled('teacher_id')) {
             $selectedTeacher = User::findOrFail($request->teacher_id);
@@ -238,12 +238,18 @@ class ScheduleController extends Controller
 
         foreach ($schedules as $s1) {
             foreach ($schedules as $s2) {
-                if ($s1->id >= $s2->id) continue;
-                if ($s1->day !== $s2->day) continue;
+                if ($s1->id >= $s2->id) {
+                    continue;
+                }
+                if ($s1->day !== $s2->day) {
+                    continue;
+                }
 
                 // Check overlap
                 $overlap = max($s1->session_start, $s2->session_start) <= min($s1->session_end, $s2->session_end);
-                if (!$overlap) continue;
+                if (! $overlap) {
+                    continue;
+                }
 
                 // 1. Teacher conflict
                 if ($s1->teacher_id === $s2->teacher_id) {
@@ -294,6 +300,7 @@ class ScheduleController extends Controller
 
         $pdf = Pdf::loadView('schedules.print-class', compact('classroom', 'schedules', 'activePreset', 'days'))->setPaper('a4', 'landscape');
         $fileName = str_replace(' ', '_', strtolower($classroom->name));
+
         return $pdf->download("jadwal_kelas_{$fileName}.pdf");
     }
 
@@ -315,6 +322,7 @@ class ScheduleController extends Controller
 
         $pdf = Pdf::loadView('schedules.print-teacher', compact('teacher', 'schedules', 'activePreset', 'days'))->setPaper('a4', 'landscape');
         $fileName = str_replace(' ', '_', strtolower($teacher->name));
+
         return $pdf->download("jadwal_guru_{$fileName}.pdf");
     }
 
@@ -331,6 +339,7 @@ class ScheduleController extends Controller
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 
         $pdf = Pdf::loadView('schedules.print-master', compact('classrooms', 'schedules', 'activePreset', 'days'))->setPaper('a4', 'landscape');
-        return $pdf->download("jadwal_master_sekolah.pdf");
+
+        return $pdf->download('jadwal_master_sekolah.pdf');
     }
 }

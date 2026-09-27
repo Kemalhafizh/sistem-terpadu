@@ -8,9 +8,9 @@ use App\Models\CharityDonation;
 use App\Models\Student;
 use App\Models\WadiahAccount;
 use App\Services\CharityService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Illuminate\Http\Request;
 
 class CharityController extends Controller
 {
@@ -27,6 +27,7 @@ class CharityController extends Controller
     public function index()
     {
         $campaigns = CharityCampaign::withCount('donations')->latest()->get();
+
         return view('finance.charity.index', compact('campaigns'));
     }
 
@@ -63,6 +64,7 @@ class CharityController extends Controller
     public function edit($id)
     {
         $campaign = CharityCampaign::findOrFail($id);
+
         return view('finance.charity.edit', compact('campaign'));
     }
 
@@ -113,9 +115,10 @@ class CharityController extends Controller
     {
         try {
             $this->charityService->verifyDonation($id, auth()->id());
+
             return back()->with('success', 'Donasi berhasil diverifikasi.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memverifikasi donasi: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memverifikasi donasi: '.$e->getMessage());
         }
     }
 
@@ -126,9 +129,10 @@ class CharityController extends Controller
     {
         try {
             $this->charityService->cancelDonation($id);
+
             return back()->with('success', 'Donasi berhasil dibatalkan.');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal membatalkan donasi: ' . $e->getMessage());
+            return back()->with('error', 'Gagal membatalkan donasi: '.$e->getMessage());
         }
     }
 
@@ -166,7 +170,7 @@ class CharityController extends Controller
     public function donateForm($campaignId)
     {
         $campaign = CharityCampaign::active()->findOrFail($campaignId);
-        
+
         $walletBalance = 0.00;
         $student = null;
         $user = auth()->user();
@@ -243,7 +247,7 @@ class CharityController extends Controller
     public function downloadCertificate($donationId)
     {
         $donation = CharityDonation::with('campaign')->findOrFail($donationId);
-        
+
         $user = auth()->user();
         if ($user->role !== 'admin' && $user->role !== 'superadmin' && $donation->user_id !== $user->id) {
             abort(403, 'Aksi tidak diotorisasi.');

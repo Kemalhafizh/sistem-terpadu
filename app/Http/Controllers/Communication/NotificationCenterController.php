@@ -92,6 +92,6 @@ class NotificationCenterController extends Controller
 
         $logs = $dispatchService->dispatch($userId, $eventType, $title, $body, ['test_mode' => true]);
 
-        return back()->with('success', 'Notifikasi uji coba berhasil dipancarkan ke ' . count($logs) . ' saluran yang aktif!');
+        return back()->with('success', 'Notifikasi uji coba berhasil dipancarkan ke '.count($logs).' saluran yang aktif!');
     }
 }

@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\AssetLoan;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class AssetLoanController extends Controller
 {
@@ -18,7 +17,7 @@ class AssetLoanController extends Controller
         $query = AssetLoan::with(['asset', 'borrower', 'approver']);
 
         // Guru & staf hanya bisa melihat daftar milik mereka sendiri
-        if (!in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah', 'staf_tu'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah', 'staf_tu'])) {
             $query->where('borrower_id', $user->id);
         } else {
             if ($request->filled('status')) {
@@ -31,13 +30,14 @@ class AssetLoanController extends Controller
                         $qb->where('name', 'like', '%'.$search.'%');
                     })->orWhereHas('asset', function ($qa) use ($search) {
                         $qa->where('name', 'like', '%'.$search.'%')
-                          ->orWhere('asset_code', 'like', '%'.$search.'%');
+                            ->orWhere('asset_code', 'like', '%'.$search.'%');
                     });
                 });
             }
         }
 
         $loans = $query->latest()->paginate(15);
+
         return view('assets.loans.index', compact('loans'));
     }
 
@@ -46,6 +46,7 @@ class AssetLoanController extends Controller
         $this->authorize('create', AssetLoan::class);
         // Tampilkan hanya aset yang is_borrowable & status available
         $assets = Asset::where('is_borrowable', true)->where('status', 'available')->get();
+
         return view('assets.loans.create', compact('assets'));
     }
 
@@ -59,7 +60,7 @@ class AssetLoanController extends Controller
         ]);
 
         $asset = Asset::find($validated['asset_id']);
-        if (!$asset->is_borrowable || $asset->status !== 'available') {
+        if (! $asset->is_borrowable || $asset->status !== 'available') {
             return back()->with('error', 'Aset saat ini tidak dapat dipinjam.');
         }
 
@@ -77,6 +78,7 @@ class AssetLoanController extends Controller
     public function show(AssetLoan $loan)
     {
         $this->authorize('view', $loan);
+
         return view('assets.loans.show', compact('loan'));
     }
 
@@ -126,6 +128,7 @@ class AssetLoanController extends Controller
         $this->authorize('approve', AssetLoan::class);
         $assets = Asset::all();
         $pdf = Pdf::loadView('assets.qr-labels', compact('assets'));
+
         return $pdf->setPaper('a4', 'portrait')->download('Stiker_Label_Aset.pdf');
     }
 
@@ -133,7 +136,7 @@ class AssetLoanController extends Controller
     public function depreciationReport()
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah'])) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah'])) {
             abort(403);
         }
 

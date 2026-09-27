@@ -43,6 +43,7 @@ class ResourceBookingController extends Controller
 
         try {
             $booking = $bookingService->createBooking($request->all(), $bookedBy);
+
             return back()->with('success', "Reservasi aset [{$booking->purpose}] berhasil dikirim dan menunggu persetujuan Admin!");
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());
@@ -58,6 +59,7 @@ class ResourceBookingController extends Controller
 
         try {
             $booking = $bookingService->approveBooking($id, $approvedBy);
+
             return back()->with('success', "Reservasi [{$booking->purpose}] berhasil DISETUJUI.");
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());
@@ -73,6 +75,7 @@ class ResourceBookingController extends Controller
 
         try {
             $booking = $bookingService->rejectBooking($id, $approvedBy);
+
             return back()->with('success', "Reservasi [{$booking->purpose}] DITOLAK.");
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());

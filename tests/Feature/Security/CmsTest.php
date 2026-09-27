@@ -1,17 +1,16 @@
 <?php
 
-use App\Models\User;
+use App\Models\CmsGallery;
 use App\Models\CmsPage;
 use App\Models\CmsPost;
-use App\Models\CmsGallery;
 use App\Models\CmsTestimonial;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 beforeEach(function () {
     Storage::fake('public');
-    
+
     // Create users with various roles
     $this->superadmin = User::factory()->create(['role' => 'superadmin']);
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -24,7 +23,7 @@ beforeEach(function () {
 
 test('authorized roles can access cms dashboard', function () {
     $roles = [$this->superadmin, $this->admin, $this->humas];
-    
+
     foreach ($roles as $user) {
         $response = $this->actingAs($user)->get(route('cms.dashboard'));
         $response->assertStatus(200);
@@ -33,7 +32,7 @@ test('authorized roles can access cms dashboard', function () {
 
 test('unauthorized roles are forbidden from cms dashboard', function () {
     $roles = [$this->guru, $this->student];
-    
+
     foreach ($roles as $user) {
         $response = $this->actingAs($user)->get(route('cms.dashboard'));
         $response->assertStatus(403);
@@ -57,7 +56,7 @@ test('landing page loads dynamic welcome contents correctly', function () {
         'category' => 'berita',
         'is_published' => true,
         'published_at' => now(),
-        'author_id' => $this->humas->id
+        'author_id' => $this->humas->id,
     ]);
 
     $gallery = CmsGallery::create([
@@ -66,7 +65,7 @@ test('landing page loads dynamic welcome contents correctly', function () {
         'category' => 'Fasilitas',
         'caption' => 'Laboratorium komputer sekolah terpadu',
         'order' => 1,
-        'is_active' => true
+        'is_active' => true,
     ]);
 
     $testimonial = CmsTestimonial::create([
@@ -75,7 +74,7 @@ test('landing page loads dynamic welcome contents correctly', function () {
         'content' => 'Sekolah yang sangat luar biasa membentuk kepribadian mulia.',
         'avatar_path' => 'cms/testimonials/avatar.jpg',
         'order' => 1,
-        'is_active' => true
+        'is_active' => true,
     ]);
 
     // Perform public welcome page request
@@ -99,7 +98,7 @@ test('public can view dynamic custom page based on slug', function () {
         'meta_description' => 'Mengenal lebih dalam sejarah berdirinya sekolah sultan agung.',
         'is_published' => true,
         'order' => 1,
-        'show_in_nav' => true
+        'show_in_nav' => true,
     ]);
 
     $response = $this->get(route('public.page', 'sejarah-sekolah'));
@@ -120,7 +119,7 @@ test('public can view single post and it increments view count', function () {
         'is_published' => true,
         'published_at' => now(),
         'author_id' => $this->humas->id,
-        'view_count' => 10
+        'view_count' => 10,
     ]);
 
     // First request should increment view count
@@ -144,12 +143,12 @@ test('authorized users can crud cms pages', function () {
         'meta_description' => 'Visi dan Misi sekolah.',
         'is_published' => true,
         'order' => 2,
-        'show_in_nav' => true
+        'show_in_nav' => true,
     ]);
-    
+
     $createResponse->assertRedirect(route('cms.pages.index'));
     $this->assertDatabaseHas('cms_pages', ['slug' => 'visi-misi', 'title' => 'Visi Misi Sekolah']);
-    
+
     $page = CmsPage::where('slug', 'visi-misi')->first();
 
     // 2. Edit page
@@ -160,7 +159,7 @@ test('authorized users can crud cms pages', function () {
         'meta_description' => 'Visi dan Misi teranyar.',
         'is_published' => true,
         'order' => 1,
-        'show_in_nav' => true
+        'show_in_nav' => true,
     ]);
 
     $editResponse->assertRedirect(route('cms.pages.index'));
@@ -207,7 +206,7 @@ test('authorized users can crud cms posts with image cover upload', function () 
 
     $editResponse->assertRedirect(route('cms.posts.index'));
     $this->assertDatabaseHas('cms_posts', ['slug' => 'pesantren-ramadhan-terkini']);
-    
+
     $updatedPost = $post->fresh();
     Storage::disk('public')->assertExists($updatedPost->cover_image);
     Storage::disk('public')->assertMissing($post->cover_image); // Should delete old image
@@ -228,7 +227,7 @@ test('authorized users can crud cms galleries', function () {
         'caption' => 'Tempat bermain basket',
         'image_path' => $imageFile,
         'order' => 1,
-        'is_active' => true
+        'is_active' => true,
     ]);
 
     $createResponse->assertRedirect(route('cms.galleries.index'));
@@ -243,7 +242,7 @@ test('authorized users can crud cms galleries', function () {
         'category' => 'Fasilitas',
         'caption' => 'Olahraga multifungsi',
         'order' => 3,
-        'is_active' => true
+        'is_active' => true,
     ]);
 
     $editResponse->assertRedirect(route('cms.galleries.index'));
@@ -266,7 +265,7 @@ test('authorized users can crud cms testimonials', function () {
         'content' => 'Sistem terpadu ini mempermudah monitoring anak.',
         'avatar_path' => $avatarFile,
         'is_active' => true,
-        'order' => 1
+        'order' => 1,
     ]);
 
     $createResponse->assertRedirect(route('cms.testimonials.index'));
@@ -281,7 +280,7 @@ test('authorized users can crud cms testimonials', function () {
         'role' => 'Wali Murid Kelas XII',
         'content' => 'Pelayanan guru sangat prima.',
         'is_active' => true,
-        'order' => 2
+        'order' => 2,
     ]);
 
     $editResponse->assertRedirect(route('cms.testimonials.index'));
@@ -315,7 +314,7 @@ test('draft articles are not displayed publicly', function () {
         'category' => 'berita',
         'is_published' => false,
         'published_at' => null,
-        'author_id' => $this->humas->id
+        'author_id' => $this->humas->id,
     ]);
 
     // Try viewing single draft post

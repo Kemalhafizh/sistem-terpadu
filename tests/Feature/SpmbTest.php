@@ -6,6 +6,9 @@ use App\Mail\RegistrationSubmitted;
 use App\Mail\StudentAccountCreated;
 use App\Models\AcademicYear;
 use App\Models\Registration;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
@@ -21,14 +24,14 @@ beforeEach(function () {
         'semester' => 'Ganjil',
     ]);
 
-    $this->period = \App\Models\SpmbPeriod::create([
+    $this->period = SpmbPeriod::create([
         'academic_year_id' => $this->academicYear->id,
         'name' => 'SPMB 2026/2027',
         'total_quota' => 100,
         'status' => 'open',
     ]);
 
-    $this->wave = \App\Models\SpmbWave::create([
+    $this->wave = SpmbWave::create([
         'spmb_period_id' => $this->period->id,
         'name' => 'Gelombang 1',
         'registration_start' => now()->subDays(5)->format('Y-m-d'),
@@ -38,7 +41,7 @@ beforeEach(function () {
         'status' => 'open',
     ]);
 
-    $this->track = \App\Models\SpmbTrack::create([
+    $this->track = SpmbTrack::create([
         'spmb_period_id' => $this->period->id,
         'name' => 'Reguler',
         'quota' => 30,

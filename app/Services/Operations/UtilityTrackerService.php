@@ -2,8 +2,8 @@
 
 namespace App\Services\Operations;
 
-use App\Models\UtilityBill;
 use App\Models\CarbonEmission;
+use App\Models\UtilityBill;
 
 class UtilityTrackerService
 {

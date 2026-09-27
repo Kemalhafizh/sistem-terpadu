@@ -4,15 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\AcademicYear;
 use App\Models\Extracurricular;
-use App\Models\ExtracurricularMember;
+use App\Models\ExtracurricularAchievement;
 use App\Models\ExtracurricularActivity;
 use App\Models\ExtracurricularAttendance;
-use App\Models\ExtracurricularAchievement;
 use App\Models\ExtracurricularGrade;
+use App\Models\ExtracurricularMember;
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class ExtracurricularSeeder extends Seeder
 {
@@ -103,7 +103,7 @@ class ExtracurricularSeeder extends Seeder
                 $activityDate = now()->subWeeks(5 - $j)->toDateString();
                 $activity = ExtracurricularActivity::create([
                     'extracurricular_id' => $club->id,
-                    'title' => 'Latihan Rutin Pertemuan ke-' . ($j + 1),
+                    'title' => 'Latihan Rutin Pertemuan ke-'.($j + 1),
                     'description' => $faker->sentence(12),
                     'activity_date' => $activityDate,
                     'gallery_paths' => null,
@@ -127,15 +127,15 @@ class ExtracurricularSeeder extends Seeder
             if ($faker->boolean(60)) {
                 $level = $faker->randomElement(['provinsi', 'nasional', 'kota']);
                 $winner = $faker->randomElement(['Juara 1', 'Juara 2', 'Juara 3', 'Harapan 1']);
-                
+
                 ExtracurricularAchievement::create([
                     'extracurricular_id' => $club->id,
-                    'title' => 'Kompetisi Tahunan Cabang ' . $club->name,
+                    'title' => 'Kompetisi Tahunan Cabang '.$club->name,
                     'level' => $level,
                     'event_date' => now()->subMonths($faker->numberBetween(1, 4))->toDateString(),
                     'organizer' => 'Dinas Kepemudaan dan Olahraga',
                     'participants' => [$faker->name, $faker->name, $faker->name],
-                    'notes' => 'Meraih ' . $winner . ' setelah mengalahkan 20 peserta lainnya.',
+                    'notes' => 'Meraih '.$winner.' setelah mengalahkan 20 peserta lainnya.',
                 ]);
             }
         }

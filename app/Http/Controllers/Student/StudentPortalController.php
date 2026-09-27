@@ -12,6 +12,7 @@ class StudentPortalController extends Controller
     public function dashboard()
     {
         $requests = StudentRequest::where('student_id', auth()->id())->latest()->get();
+
         return view('student.portal.dashboard', compact('requests'));
     }
 

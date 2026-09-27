@@ -23,11 +23,11 @@ beforeEach(function () {
     // Classrooms
     $this->classroomA = Classroom::factory()->create([
         'teacher_id' => $this->teacherUser->id,
-        'name' => 'XII-IPA-1'
+        'name' => 'XII-IPA-1',
     ]);
     $this->classroomB = Classroom::factory()->create([
         'teacher_id' => $this->otherTeacher->id,
-        'name' => 'XII-IPA-2'
+        'name' => 'XII-IPA-2',
     ]);
 
     // Student A (Classroom A) and parent
@@ -102,7 +102,7 @@ test('guru can create event targeting specific classrooms only', function () {
     ]);
 
     $response->assertRedirect(route('event-attendance.index'));
-    
+
     $event = EventAttendanceEvent::where('name', 'Kultum PAI Kelas XII-IPA-1')->first();
     expect($event)->not->toBeNull();
 

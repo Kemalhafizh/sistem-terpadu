@@ -67,11 +67,17 @@ class Evaluation360Service
             $type = $resp->instrument->evaluator_type;
             $avg = is_array($resp->scores) ? array_sum($resp->scores) / count($resp->scores) : 4.0;
 
-            if ($type === 'supervisor') $supervisorScores[] = $avg;
-            elseif ($type === 'peer') $peerScores[] = $avg;
-            elseif ($type === 'student') $studentScores[] = $avg;
-            elseif ($type === 'parent') $parentScores[] = $avg;
-            elseif ($type === 'self') $selfScores[] = $avg;
+            if ($type === 'supervisor') {
+                $supervisorScores[] = $avg;
+            } elseif ($type === 'peer') {
+                $peerScores[] = $avg;
+            } elseif ($type === 'student') {
+                $studentScores[] = $avg;
+            } elseif ($type === 'parent') {
+                $parentScores[] = $avg;
+            } elseif ($type === 'self') {
+                $selfScores[] = $avg;
+            }
         }
 
         $supAvg = count($supervisorScores) ? array_sum($supervisorScores) / count($supervisorScores) : 4.2;

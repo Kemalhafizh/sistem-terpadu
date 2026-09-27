@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Jobs\GeneratePdfReportJob;
 use App\Jobs\ProcessCbtScoreJob;
 use App\Jobs\SendHighPriorityNotificationJob;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class QueueMonitorController extends Controller
 {
@@ -43,6 +43,7 @@ class QueueMonitorController extends Controller
     {
         try {
             Artisan::call('queue:retry', ['id' => [$id]]);
+
             return back()->with('success', "Pekerjaan gagal (ID #{$id}) berhasil dikirim ulang ke queue worker!");
         } catch (Exception $e) {
             return back()->with('error', "Gagal mengulang pekerjaan: {$e->getMessage()}");
@@ -56,6 +57,7 @@ class QueueMonitorController extends Controller
     {
         try {
             DB::table('failed_jobs')->where('id', $id)->delete();
+
             return back()->with('success', "Pekerjaan gagal (ID #{$id}) berhasil dihapus dari sistem.");
         } catch (Exception $e) {
             return back()->with('error', "Gagal menghapus pekerjaan: {$e->getMessage()}");
@@ -69,7 +71,8 @@ class QueueMonitorController extends Controller
     {
         try {
             DB::table('failed_jobs')->truncate();
-            return back()->with('success', "Seluruh daftar pekerjaan gagal (Dead Letter Queue) berhasil dibersihkan!");
+
+            return back()->with('success', 'Seluruh daftar pekerjaan gagal (Dead Letter Queue) berhasil dibersihkan!');
         } catch (Exception $e) {
             return back()->with('error', "Gagal membersihkan DLQ: {$e->getMessage()}");
         }

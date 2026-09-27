@@ -16,12 +16,12 @@ class PredictiveAnalyticsService
      */
     public function identifyAtRiskStudents(?int $classroomId = null): Collection
     {
-        $cacheKey = 'analytics_at_risk_students_' . ($classroomId ?? 'global');
+        $cacheKey = 'analytics_at_risk_students_'.($classroomId ?? 'global');
         $data = Cache::get($cacheKey);
 
         if ($data === null || $data instanceof \__PHP_Incomplete_Class) {
             $query = Student::with(['classroom', 'user'])->where('status', 'active');
-            
+
             if ($classroomId) {
                 $query->where('classroom_id', $classroomId);
             }
@@ -55,10 +55,15 @@ class PredictiveAnalyticsService
         $avgGrade = DB::table('grades')->where('student_id', $student->id)->avg('score');
         $academicRisk = 0;
         if ($avgGrade !== null) {
-            if ($avgGrade < 60) $academicRisk = 100;
-            elseif ($avgGrade < 70) $academicRisk = 75;
-            elseif ($avgGrade < 80) $academicRisk = 40;
-            elseif ($avgGrade < 90) $academicRisk = 10;
+            if ($avgGrade < 60) {
+                $academicRisk = 100;
+            } elseif ($avgGrade < 70) {
+                $academicRisk = 75;
+            } elseif ($avgGrade < 80) {
+                $academicRisk = 40;
+            } elseif ($avgGrade < 90) {
+                $academicRisk = 10;
+            }
         }
 
         // 2. Attendance Factor (0-100)
@@ -66,27 +71,37 @@ class PredictiveAnalyticsService
         $totalDays = $attendances->count();
         $attendanceRisk = 0;
         $attendanceRate = 100;
-        
+
         if ($totalDays > 0) {
             $presentDays = $attendances->where('status', 'H')->count();
             $attendanceRate = ($presentDays / $totalDays) * 100;
-            
-            if ($attendanceRate < 70) $attendanceRisk = 100;
-            elseif ($attendanceRate < 80) $attendanceRisk = 80;
-            elseif ($attendanceRate < 90) $attendanceRisk = 50;
-            elseif ($attendanceRate < 95) $attendanceRisk = 20;
+
+            if ($attendanceRate < 70) {
+                $attendanceRisk = 100;
+            } elseif ($attendanceRate < 80) {
+                $attendanceRisk = 80;
+            } elseif ($attendanceRate < 90) {
+                $attendanceRisk = 50;
+            } elseif ($attendanceRate < 95) {
+                $attendanceRisk = 20;
+            }
         }
 
         // 3. Behavior/Points Factor (0-100)
         $penaltyPoints = DB::table('student_point_logs')
-                            ->where('student_id', $student->id)
-                            ->where('type', 'penalty')
-                            ->sum('points');
+            ->where('student_id', $student->id)
+            ->where('type', 'penalty')
+            ->sum('points');
         $behaviorRisk = 0;
-        if ($penaltyPoints >= 100) $behaviorRisk = 100;
-        elseif ($penaltyPoints >= 75) $behaviorRisk = 75;
-        elseif ($penaltyPoints >= 50) $behaviorRisk = 50;
-        elseif ($penaltyPoints >= 20) $behaviorRisk = 25;
+        if ($penaltyPoints >= 100) {
+            $behaviorRisk = 100;
+        } elseif ($penaltyPoints >= 75) {
+            $behaviorRisk = 75;
+        } elseif ($penaltyPoints >= 50) {
+            $behaviorRisk = 50;
+        } elseif ($penaltyPoints >= 20) {
+            $behaviorRisk = 25;
+        }
 
         // Weighted Total Risk Score
         $totalRiskScore = ($academicRisk * 0.4) + ($attendanceRisk * 0.3) + ($behaviorRisk * 0.3);
@@ -162,20 +177,20 @@ class PredictiveAnalyticsService
     public function getStudentPerformanceRadar(Student $student): array
     {
         $riskData = $this->calculateRiskScore($student);
-        
+
         // Invert risk to performance (100 = best)
         $academic = 100 - $riskData['academic_risk'];
         $attendance = 100 - $riskData['attendance_risk'];
         $behavior = 100 - $riskData['behavior_risk'];
-        
+
         // Additional mock dimensions for complete radar
-        $elearning = rand(60, 100); 
+        $elearning = rand(60, 100);
         $tahfidz = rand(50, 100);
         $extracurricular = rand(70, 100);
 
         return [
             'labels' => ['Akademik', 'Kehadiran', 'Perilaku', 'E-Learning', 'Tahfidz', 'Ekstrakurikuler'],
-            'data' => [$academic, $attendance, $behavior, $elearning, $tahfidz, $extracurricular]
+            'data' => [$academic, $attendance, $behavior, $elearning, $tahfidz, $extracurricular],
         ];
     }
 }

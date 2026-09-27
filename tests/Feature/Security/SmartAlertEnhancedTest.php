@@ -5,7 +5,6 @@ use App\Models\Setting;
 use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\User;
-use Carbon\Carbon;
 
 beforeEach(function () {
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);

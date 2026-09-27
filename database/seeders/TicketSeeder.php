@@ -32,7 +32,7 @@ class TicketSeeder extends Seeder
                 'comments' => [
                     ['user' => $admin, 'body' => 'Sedang dicek ke router akses point ruang guru.', 'internal' => true],
                     ['user' => $admin, 'body' => 'Mohon dicoba kembali menggunakan password baru: SultanAgung2026.', 'internal' => false],
-                ]
+                ],
             ],
             [
                 'title' => 'Kerusakan Air Conditioner (AC) Kelas XI-A',
@@ -41,7 +41,7 @@ class TicketSeeder extends Seeder
                 'priority' => 'medium',
                 'status' => 'open',
                 'assignee' => $wakaSarpras,
-                'comments' => []
+                'comments' => [],
             ],
             [
                 'title' => 'Kesulitan Akses Pembayaran SPP Online',
@@ -54,7 +54,7 @@ class TicketSeeder extends Seeder
                 'comments' => [
                     ['user' => $stafTu, 'body' => 'Mohon lampirkan screenshoot kendala / nomor VA yang digunakan.', 'internal' => false],
                     ['user' => $stafTu, 'body' => 'Data billing sudah disinkronkan ulang.', 'internal' => true],
-                ]
+                ],
             ],
             [
                 'title' => 'E-learning Error: Gagal Upload File Tugas Tugas Mandiri',
@@ -67,7 +67,7 @@ class TicketSeeder extends Seeder
                 'comments' => [
                     ['user' => $admin, 'body' => 'Cek konfigurasi php.ini upload_max_filesize.', 'internal' => true],
                     ['user' => $admin, 'body' => 'Konfigurasi server telah diperbarui. Batas upload file sekarang 10MB. Silakan dicoba kembali.', 'internal' => false],
-                ]
+                ],
             ],
             [
                 'title' => 'Meja & Kursi Rusak Kelas X-B',
@@ -78,7 +78,7 @@ class TicketSeeder extends Seeder
                 'assignee' => $wakaSarpras,
                 'comments' => [
                     ['user' => $wakaSarpras, 'body' => 'Sudah dipindahkan ke gudang perbaikan dan disiapkan meja pengganti.', 'internal' => true],
-                ]
+                ],
             ],
             [
                 'title' => 'Kesalahan Ketik Nama Siswa di Cetak Raport',
@@ -90,7 +90,7 @@ class TicketSeeder extends Seeder
                 'resolution' => 'Nama siswa telah diperbarui di database SISTA sesuai akta kelahiran.',
                 'comments' => [
                     ['user' => $stafTu, 'body' => 'Silakan kirim foto akta kelahiran anak ke WA Tata Usaha.', 'internal' => false],
-                ]
+                ],
             ],
             [
                 'title' => 'LCD Proyektor Ruang Aula Mati Total',
@@ -102,7 +102,7 @@ class TicketSeeder extends Seeder
                 'resolution' => 'Kabel power LCD proyektor diganti baru dan sekarang berfungsi normal.',
                 'comments' => [
                     ['user' => $wakaSarpras, 'body' => 'Beli kabel power LCD baru di toko komputer terdekat.', 'internal' => true],
-                ]
+                ],
             ],
             [
                 'title' => 'Permintaan Reset Password Akun E-Learning',
@@ -111,7 +111,7 @@ class TicketSeeder extends Seeder
                 'priority' => 'low',
                 'status' => 'open',
                 'assignee' => $admin,
-                'comments' => []
+                'comments' => [],
             ],
             [
                 'title' => 'Stok Buku Paket Fisika Kurikulum Merdeka Kurang',
@@ -120,7 +120,7 @@ class TicketSeeder extends Seeder
                 'priority' => 'medium',
                 'status' => 'open',
                 'assignee' => $wakaSarpras,
-                'comments' => []
+                'comments' => [],
             ],
             [
                 'title' => 'Double Billing / Tagihan Uang OSIS Ganda',
@@ -131,7 +131,7 @@ class TicketSeeder extends Seeder
                 'assignee' => $stafTu,
                 'comments' => [
                     ['user' => $stafTu, 'body' => 'Sedang memeriksa database log billing Uang OSIS.', 'internal' => true],
-                ]
+                ],
             ],
         ];
 

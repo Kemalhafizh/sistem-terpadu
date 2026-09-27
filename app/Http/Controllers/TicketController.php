@@ -9,7 +9,6 @@ use App\Notifications\TicketCreatedNotification;
 use App\Notifications\TicketStatusUpdatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
@@ -19,7 +18,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        
+
         $query = Ticket::with(['reporter', 'assignee'])
             ->forUser($user)
             ->orderBy('created_at', 'desc');
@@ -27,10 +26,10 @@ class TicketController extends Controller
         // Apply dynamic filters
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('ticket_number', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('ticket_number', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -116,7 +115,7 @@ class TicketController extends Controller
         }
 
         return redirect()->route('helpdesk.tickets.show', $ticket->uuid)
-            ->with('success', 'Tiket support #' . $ticket->ticket_number . ' berhasil diajukan.');
+            ->with('success', 'Tiket support #'.$ticket->ticket_number.' berhasil diajukan.');
     }
 
     /**
@@ -127,12 +126,12 @@ class TicketController extends Controller
         $this->authorize('view', $ticket);
 
         $commentsQuery = $ticket->comments()->with('user')->orderBy('created_at', 'asc');
-        
+
         // Hide internal comments from normal users (students/parents/teachers)
-        if (!Auth::user()->can('viewInternalComments', $ticket)) {
+        if (! Auth::user()->can('viewInternalComments', $ticket)) {
             $commentsQuery->where('is_internal', false);
         }
-        
+
         $comments = $commentsQuery->get();
 
         // Staf options for assignment dropdown
@@ -158,7 +157,7 @@ class TicketController extends Controller
         ]);
 
         $isInternal = $request->boolean('is_internal', false);
-        
+
         // Safety boundary check
         if ($isInternal) {
             $this->authorize('viewInternalComments', $ticket);
@@ -178,7 +177,7 @@ class TicketController extends Controller
         ]);
 
         // Send updates if it is a public comment
-        if (!$isInternal) {
+        if (! $isInternal) {
             // If commenter is staff, notify reporter
             if (Auth::id() !== $ticket->reporter_id) {
                 $ticket->reporter->notify(new TicketStatusUpdatedNotification($ticket, 'comment_added', [
@@ -186,7 +185,7 @@ class TicketController extends Controller
                     'comment_body' => $comment->body,
                 ]));
             }
-            
+
             // If commenter is reporter and ticket has an assignee, notify assignee
             if (Auth::id() === $ticket->reporter_id && $ticket->assignee) {
                 $ticket->assignee->notify(new TicketStatusUpdatedNotification($ticket, 'comment_added', [
@@ -270,7 +269,7 @@ class TicketController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        if (!in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -280,7 +279,7 @@ class TicketController extends Controller
         $inProgress = Ticket::where('status', 'in_progress')->count();
         $resolved = Ticket::where('status', 'resolved')->count();
         $closed = Ticket::where('status', 'closed')->count();
-        
+
         $overdue = Ticket::where('due_date', '<', now())
             ->whereNotIn('status', ['resolved', 'closed'])
             ->count();

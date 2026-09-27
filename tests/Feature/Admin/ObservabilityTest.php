@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use App\Services\ObservabilityService;
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
@@ -56,7 +55,7 @@ test('superadmin can retrieve metrics JSON payload', function () {
         'disk' => ['used', 'total', 'percentage'],
         'db_size',
         'active_users',
-        'queue_depth'
+        'queue_depth',
     ]);
 });
 
@@ -70,11 +69,11 @@ test('middleware logs performance records on slow requests', function () {
 
     // Trigger simulation endpoint which triggers a 1.5s sleep in PerformanceLogger
     $response = $this->actingAs($user)->post(route('admin.observability.simulate'), [
-        'type' => 'request'
+        'type' => 'request',
     ]);
 
     $response->assertRedirect();
-    
+
     // Verify file was written
     $this->assertTrue(File::exists($this->logPath));
     $logContent = File::get($this->logPath);
@@ -86,10 +85,10 @@ test('superadmin can clear observability logs', function () {
     $user = User::factory()->create(['role' => 'superadmin', 'must_change_password' => false]);
 
     // Create a mock log entry
-    File::put($this->logPath, json_encode(['timestamp' => now()->toIso8601String(), 'type' => 'performance']) . "\n");
+    File::put($this->logPath, json_encode(['timestamp' => now()->toIso8601String(), 'type' => 'performance'])."\n");
 
     $response = $this->actingAs($user)->post(route('admin.observability.clear-logs'));
     $response->assertRedirect();
-    
+
     $this->assertFalse(File::exists($this->logPath));
 });

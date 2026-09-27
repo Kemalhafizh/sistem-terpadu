@@ -4,8 +4,6 @@ namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\WellnessProgram;
-use App\Models\WellnessLog;
 
 class WellnessController extends Controller
 {

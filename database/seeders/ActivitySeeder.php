@@ -25,7 +25,7 @@ class ActivitySeeder extends Seeder
         for ($d = 30; $d >= 0; $d--) {
             $dateObj = now()->subDays($d);
             $date = $dateObj->format('Y-m-d');
-            
+
             // Skip weekends
             $dayOfWeek = $dateObj->dayOfWeek;
             if ($dayOfWeek === 0 || $dayOfWeek === 6) {
@@ -33,10 +33,10 @@ class ActivitySeeder extends Seeder
             }
 
             foreach ($students as $student) {
-                if (!$student->classroom) {
+                if (! $student->classroom) {
                     continue;
                 }
-                
+
                 $rand = rand(1, 100);
                 // 92% presence rate, rest are Sick (S), Permit (I), or Absent/Alpa (A)
                 $status = $rand <= 92 ? 'H' : ($rand <= 96 ? 'S' : ($rand <= 98 ? 'I' : 'A'));
@@ -90,7 +90,7 @@ class ActivitySeeder extends Seeder
             ['name' => 'Hafalan Al-Quran 1 Juz', 'type' => 'reward', 'default_points' => -20],
             ['name' => 'Perilaku Terpuji', 'type' => 'reward', 'default_points' => -10],
         ];
-        
+
         // Clear point categories to prevent uniqueness conflicts if run multiple times
         PointCategory::truncate();
         foreach ($categories as $c) {
@@ -108,9 +108,9 @@ class ActivitySeeder extends Seeder
                 'points' => $cat->default_points,
                 'type' => $cat->type,
                 'point_category_id' => $cat->id,
-                'description' => $cat->name . ' - ' . ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'][rand(0, 4)] . ' minggu ini',
+                'description' => $cat->name.' - '.['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'][rand(0, 4)].' minggu ini',
             ]);
-            
+
             // Add a second log for some students
             if (rand(0, 1)) {
                 $cat2 = $pointCats->random();
@@ -120,7 +120,7 @@ class ActivitySeeder extends Seeder
                     'points' => $cat2->default_points,
                     'type' => $cat2->type,
                     'point_category_id' => $cat2->id,
-                    'description' => $cat2->name . ' - Insiden bulan lalu',
+                    'description' => $cat2->name.' - Insiden bulan lalu',
                 ]);
             }
         }

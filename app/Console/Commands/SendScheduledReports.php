@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\ScheduledReport;
 use App\Services\DigestService;
-use Illuminate\Console\Command;
 use Cron\CronExpression;
+use Illuminate\Console\Command;
 
 class SendScheduledReports extends Command
 {
@@ -44,7 +44,7 @@ class SendScheduledReports extends Command
         foreach ($reports as $report) {
             try {
                 $cron = new CronExpression($report->cron_expression);
-                
+
                 if ($cron->isDue()) {
                     $this->info("Report '{$report->name}' is due. Sending...");
                     $this->digestService->sendDigest($report);
@@ -52,7 +52,7 @@ class SendScheduledReports extends Command
                     $sentCount++;
                 }
             } catch (\Exception $e) {
-                $this->error("Failed to process scheduled report ID {$report->id} ('{$report->name}'): " . $e->getMessage());
+                $this->error("Failed to process scheduled report ID {$report->id} ('{$report->name}'): ".$e->getMessage());
             }
         }
 

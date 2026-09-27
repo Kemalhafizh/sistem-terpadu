@@ -4,10 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
-        if (!Schema::hasTable('design_tokens')) {
+        if (! Schema::hasTable('design_tokens')) {
             Schema::create('design_tokens', function (Blueprint $table) {
                 $table->id();
                 $table->string('token_key')->unique()->comment('Contoh: color.primary, spacing.md, radius.card');
@@ -19,7 +20,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable('theme_presets')) {
+        if (! Schema::hasTable('theme_presets')) {
             Schema::create('theme_presets', function (Blueprint $table) {
                 $table->id();
                 $table->string('name')->comment('Sultan Agung Green, Ramadhan Gold, Exam Mode');
@@ -33,7 +34,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable('user_theme_preferences')) {
+        if (! Schema::hasTable('user_theme_preferences')) {
             Schema::create('user_theme_preferences', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

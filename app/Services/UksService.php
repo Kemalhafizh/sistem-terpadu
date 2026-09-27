@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\UksMedicine;
 use App\Models\UksVisit;
+use App\Models\WhatsappAutomation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -131,7 +132,7 @@ class UksService
                 $dispositionText = $dispMapping[$visit->disposition] ?? 'Sedang ditangani di UKS';
 
                 // Check if active automation for uks_visit_severe exists
-                $automationService = app(\App\Services\WhatsappAutomationService::class);
+                $automationService = app(WhatsappAutomationService::class);
                 $context = [
                     'nama_siswa' => $studentName,
                     'nama_orang_tua' => $parent->name,
@@ -141,10 +142,10 @@ class UksService
                     'diagnosa' => $visit->diagnosis,
                     'penanganan' => $visit->treatment,
                     'gejala' => $visit->severity,
-                    'disposisi' => $dispositionText
+                    'disposisi' => $dispositionText,
                 ];
 
-                $automation = \App\Models\WhatsappAutomation::where('trigger', 'uks_visit_severe')
+                $automation = WhatsappAutomation::where('trigger', 'uks_visit_severe')
                     ->where('is_active', true)
                     ->with('template')
                     ->first();

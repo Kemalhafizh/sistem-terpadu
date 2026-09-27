@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Schema;
 
 class OfflineSyncService
 {
@@ -17,21 +18,21 @@ class OfflineSyncService
         // Millisecond precision support
         $isMilliseconds = $lastSyncTimestamp > 9999999999;
         $timestampSeconds = $isMilliseconds ? $lastSyncTimestamp / 1000 : $lastSyncTimestamp;
-        
+
         $since = Carbon::createFromTimestampMs($isMilliseconds ? $lastSyncTimestamp : $lastSyncTimestamp * 1000);
 
         // Fetch announcements updated since timestamp
-        $announcements = \Illuminate\Support\Facades\Schema::hasTable('announcements')
+        $announcements = Schema::hasTable('announcements')
             ? DB::table('announcements')->where('updated_at', '>=', $since)->whereNull('deleted_at')->get()->toArray()
             : [];
 
         // Tombstones: records that were soft-deleted since the timestamp
         $tombstones = [];
-        if (\Illuminate\Support\Facades\Schema::hasTable('announcements')) {
+        if (Schema::hasTable('announcements')) {
             $deletedAnnouncements = DB::table('announcements')
                 ->where('deleted_at', '>=', $since)
                 ->get();
-            
+
             foreach ($deletedAnnouncements as $deleted) {
                 $tombstones[] = [
                     'id' => $deleted->id,
@@ -71,7 +72,7 @@ class OfflineSyncService
     {
         // In a real implementation, this would read from Redis Streams using XRANGE
         // Redis::command('XRANGE', ['events_stream', $lastEventId, '+', 'COUNT', 100]);
-        
+
         // Simulating Redis stream events for testing
         $events = [];
         if ($lastEventId === '1700000000-0') {
@@ -152,7 +153,8 @@ class OfflineSyncService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error("OfflineSync batch upload failed: " . $e->getMessage());
+            Log::error('OfflineSync batch upload failed: '.$e->getMessage());
+
             return [
                 'success' => false,
                 'error' => $e->getMessage(),

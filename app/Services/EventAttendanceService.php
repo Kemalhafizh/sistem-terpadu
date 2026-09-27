@@ -42,7 +42,7 @@ class EventAttendanceService
                     break;
 
                 case 'specific_class':
-                    if (!empty($targetIds)) {
+                    if (! empty($targetIds)) {
                         $userIds = Student::whereIn('classroom_id', $targetIds)
                             ->pluck('user_id')
                             ->filter()
@@ -72,7 +72,7 @@ class EventAttendanceService
                 ];
             }
 
-            if (!empty($records)) {
+            if (! empty($records)) {
                 // Chunk inserts to prevent SQL limitations in SQLite
                 foreach (array_chunk($records, 100) as $chunk) {
                     EventAttendanceRecord::insert($chunk);
@@ -90,7 +90,9 @@ class EventAttendanceService
     {
         DB::transaction(function () use ($event, $recordsData) {
             foreach ($recordsData as $data) {
-                if (!isset($data['user_id'])) continue;
+                if (! isset($data['user_id'])) {
+                    continue;
+                }
 
                 EventAttendanceRecord::updateOrCreate(
                     [
@@ -141,7 +143,7 @@ class EventAttendanceService
             $groupedStats[$type] = [
                 'total' => $tCount,
                 'hadir' => $tHadir,
-                'rate' => $tRate
+                'rate' => $tRate,
             ];
         }
 
@@ -153,8 +155,8 @@ class EventAttendanceService
             'rate' => $rate,
             'types' => $groupedStats,
             'records' => $records->sortByDesc(function ($r) {
-                return $r->event?->event_date?->format('Y-m-d') . ' ' . $r->event?->start_time;
-            })
+                return $r->event?->event_date?->format('Y-m-d').' '.$r->event?->start_time;
+            }),
         ];
     }
 }

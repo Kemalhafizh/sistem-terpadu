@@ -43,6 +43,7 @@ class SuccessionPlanningController extends Controller
     public function pipelineReport()
     {
         $candidates = SuccessionCandidate::with(['position', 'candidate'])->get();
+
         return view('succession.pipeline-report', compact('candidates'));
     }
 }

@@ -1,7 +1,13 @@
 <?php
+
 namespace App\Services\Treasury;
 
-use App\Models\{BankAccount, BankStatement, BankTransaction, Billing, DailyCashPosition, Payment};
+use App\Models\BankAccount;
+use App\Models\BankStatement;
+use App\Models\BankTransaction;
+use App\Models\Billing;
+use App\Models\DailyCashPosition;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Collection;
@@ -9,7 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
-class TreasuryReconciliationService {
+class TreasuryReconciliationService
+{
     /** A payment dated up to this many days before/after a bank credit may explain it. */
     public const MATCH_WINDOW_DAYS = 3;
 
@@ -37,7 +44,8 @@ class TreasuryReconciliationService {
      * comes from the transaction dates in the file, and the importer must be a
      * real user: the one given, or the one logged in.
      */
-    public function importBankStatement(int $bankAccountId, string $filePath, ?int $importedBy = null): BankStatement {
+    public function importBankStatement(int $bankAccountId, string $filePath, ?int $importedBy = null): BankStatement
+    {
         $importedBy ??= auth()->id();
         if (! $importedBy) {
             throw new AuthenticationException('Impor rekening koran membutuhkan pengguna yang login atau importer yang disebutkan.');
@@ -99,7 +107,8 @@ class TreasuryReconciliationService {
      *
      * @return array{total: int, matched: int, unmatched: int}
      */
-    public function autoReconcile(int $statementId): array {
+    public function autoReconcile(int $statementId): array
+    {
         $statement = BankStatement::with('transactions')->findOrFail($statementId);
 
         return DB::transaction(function () use ($statement) {
@@ -127,7 +136,8 @@ class TreasuryReconciliationService {
         });
     }
 
-    public function manualMatch(int $transactionId, int $billingId, ?int $matchedBy = null): void {
+    public function manualMatch(int $transactionId, int $billingId, ?int $matchedBy = null): void
+    {
         $matchedBy ??= auth()->id();
         if (! $matchedBy) {
             throw new AuthenticationException('Pencocokan manual membutuhkan pengguna yang login.');
@@ -144,17 +154,20 @@ class TreasuryReconciliationService {
         $this->refreshCounts($tx->statement);
     }
 
-    public function getReconciliationSummary(int $statementId): array {
+    public function getReconciliationSummary(int $statementId): array
+    {
         $st = BankStatement::findOrFail($statementId);
+
         return [
             'total' => $st->total_transactions,
             'matched' => $st->matched_count,
             'unmatched' => $st->unmatched_count,
-            'status' => $st->status
+            'status' => $st->status,
         ];
     }
 
-    public function getDiscrepancies(int $statementId): Collection {
+    public function getDiscrepancies(int $statementId): Collection
+    {
         return BankTransaction::where('bank_statement_id', $statementId)
             ->whereIn('match_status', ['unmatched', 'disputed'])
             ->get();
@@ -167,7 +180,8 @@ class TreasuryReconciliationService {
      * earlier position it is the account's recorded opening balance plus the net flow
      * of every earlier imported transaction. Recomputed on every call.
      */
-    public function calculateTreasuryPosition(int $bankAccountId, string $date): DailyCashPosition {
+    public function calculateTreasuryPosition(int $bankAccountId, string $date): DailyCashPosition
+    {
         $account = BankAccount::findOrFail($bankAccountId);
         $day = Carbon::parse($date)->startOfDay();
 
@@ -189,7 +203,8 @@ class TreasuryReconciliationService {
     }
 
     /** @return array{total: int, matched: int, unmatched: int} */
-    private function refreshCounts(BankStatement $statement): array {
+    private function refreshCounts(BankStatement $statement): array
+    {
         $statuses = $statement->transactions()->pluck('match_status');
         $total = $statuses->count();
         $matched = $statuses->filter(fn ($s) => in_array($s, self::MATCHED_STATUSES, true))->count();
@@ -205,7 +220,8 @@ class TreasuryReconciliationService {
         return ['total' => $total, 'matched' => $matched, 'unmatched' => $unmatched];
     }
 
-    private function matchByReference(BankTransaction $tx, array &$used): bool {
+    private function matchByReference(BankTransaction $tx, array &$used): bool
+    {
         $text = trim(($tx->reference_number ?? '').' '.$tx->description);
         $amount = $this->cents($tx->credit);
 
@@ -216,6 +232,7 @@ class TreasuryReconciliationService {
             if ($payment) {
                 if (isset($used[$payment->id])) {
                     $tx->update(['match_notes' => "Referensi kuitansi {$payment->receipt_number} sudah dicocokkan dengan mutasi bank lain."]);
+
                     return true;
                 }
                 if ($this->cents($payment->amount_paid) !== $amount) {
@@ -227,9 +244,11 @@ class TreasuryReconciliationService {
                             $payment->receipt_number, $this->display($amount), $this->display($this->cents($payment->amount_paid))
                         ),
                     ]);
+
                     return true;
                 }
                 $this->markMatched($tx, $payment, "Cocok berdasarkan nomor kuitansi {$payment->receipt_number}.", $used);
+
                 return true;
             }
         }
@@ -240,6 +259,7 @@ class TreasuryReconciliationService {
             $payment = $this->closestUnique($candidates, $tx->transaction_date);
             if ($payment) {
                 $this->markMatched($tx, $payment, "Cocok berdasarkan order id {$bill[0]}… (tagihan #{$bill[1]}).", $used);
+
                 return true;
             }
         }
@@ -247,7 +267,8 @@ class TreasuryReconciliationService {
         return false;
     }
 
-    private function matchByAmountAndDate(BankTransaction $tx, array &$used): void {
+    private function matchByAmountAndDate(BankTransaction $tx, array &$used): void
+    {
         $amount = $this->cents($tx->credit);
         $date = $tx->transaction_date->copy()->startOfDay();
 
@@ -262,6 +283,7 @@ class TreasuryReconciliationService {
                 'Tidak ada pembayaran non-tunai Rp %s dalam ±%d hari dari %s.',
                 $this->display($amount), self::MATCH_WINDOW_DAYS, $date->format('d/m/Y')
             )]);
+
             return;
         }
 
@@ -271,6 +293,7 @@ class TreasuryReconciliationService {
                 '%d pembayaran Rp %s sama dekatnya dengan tanggal mutasi; cocokkan manual.',
                 $candidates->count(), $this->display($amount)
             )]);
+
             return;
         }
 
@@ -281,7 +304,8 @@ class TreasuryReconciliationService {
     }
 
     /** The candidate dated closest to $date, or null when there is none or a tie. */
-    private function closestUnique(Collection $candidates, Carbon $date): ?Payment {
+    private function closestUnique(Collection $candidates, Carbon $date): ?Payment
+    {
         if ($candidates->isEmpty()) {
             return null;
         }
@@ -292,7 +316,8 @@ class TreasuryReconciliationService {
         return $nearest->count() === 1 ? $nearest->first() : null;
     }
 
-    private function markMatched(BankTransaction $tx, Payment $payment, string $note, array &$used): void {
+    private function markMatched(BankTransaction $tx, Payment $payment, string $note, array &$used): void
+    {
         $tx->update([
             'match_status' => 'auto_matched',
             'matched_billing_id' => $payment->billing_id,
@@ -302,7 +327,8 @@ class TreasuryReconciliationService {
         $used[$payment->id] = true;
     }
 
-    private function openingBalance(BankAccount $account, Carbon $day): int {
+    private function openingBalance(BankAccount $account, Carbon $day): int
+    {
         $previous = DailyCashPosition::where('bank_account_id', $account->id)
             ->whereDate('position_date', '<', $day->toDateString())
             ->orderByDesc('position_date')
@@ -311,6 +337,7 @@ class TreasuryReconciliationService {
         if (! $previous) {
             // current_balance is the balance before the first imported transaction.
             [$inflow, $outflow] = $this->flows($account->id, null, $day->copy()->subDay());
+
             return $this->cents($account->current_balance) + $inflow - $outflow;
         }
 
@@ -322,7 +349,8 @@ class TreasuryReconciliationService {
     }
 
     /** @return array{0: int, 1: int} credits and debits in cents, dates inclusive; no $from means since the first one */
-    private function flows(int $bankAccountId, ?Carbon $from, Carbon $to): array {
+    private function flows(int $bankAccountId, ?Carbon $from, Carbon $to): array
+    {
         $rows = BankTransaction::whereHas('statement', fn ($q) => $q->where('bank_account_id', $bankAccountId))
             ->when($from, fn ($q) => $q->whereDate('transaction_date', '>=', $from->toDateString()))
             ->whereDate('transaction_date', '<=', $to->toDateString())
@@ -335,7 +363,8 @@ class TreasuryReconciliationService {
     }
 
     /** @return list<array<string, mixed>> */
-    private function parseStatementCsv(string $contents): array {
+    private function parseStatementCsv(string $contents): array
+    {
         $contents = preg_replace('/^\xEF\xBB\xBF/', '', $contents);
         $lines = preg_split('/\r\n|\n|\r/', trim($contents));
         $headerLine = array_shift($lines) ?? '';
@@ -385,7 +414,8 @@ class TreasuryReconciliationService {
         return $rows;
     }
 
-    private function parseDate(string $raw, int $lineNo): Carbon {
+    private function parseDate(string $raw, int $lineNo): Carbon
+    {
         foreach (self::DATE_FORMATS as $format) {
             try {
                 $date = Carbon::createFromFormat('!'.$format, $raw);
@@ -400,7 +430,8 @@ class TreasuryReconciliationService {
     }
 
     /** Parses "1.500.000,00", "1,500,000.00", "1500000" or "Rp 1.500.000" into cents. */
-    private function parseAmount(string $raw, int $lineNo, bool $allowNegative = false): int {
+    private function parseAmount(string $raw, int $lineNo, bool $allowNegative = false): int
+    {
         $value = preg_replace('/[^\d,.\-]/', '', $raw);
         if ($value === '' || $value === '-') {
             return 0;
@@ -424,15 +455,18 @@ class TreasuryReconciliationService {
         return (int) round((float) $value * 100);
     }
 
-    private function cents(mixed $amount): int {
+    private function cents(mixed $amount): int
+    {
         return (int) round((float) ($amount ?? 0) * 100);
     }
 
-    private function money(int $cents): string {
+    private function money(int $cents): string
+    {
         return number_format($cents / 100, 2, '.', '');
     }
 
-    private function display(int $cents): string {
+    private function display(int $cents): string
+    {
         return number_format($cents / 100, 0, ',', '.');
     }
 }

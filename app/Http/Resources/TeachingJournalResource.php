@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class TeachingJournalResource extends JsonResource
 {
@@ -25,7 +24,7 @@ class TeachingJournalResource extends JsonResource
             'notes' => $this->notes,
             'students_present' => $this->students_present,
             'students_absent' => $this->students_absent,
-            'attachment_url' => $this->attachment_path ? asset('storage/' . $this->attachment_path) : null,
+            'attachment_url' => $this->attachment_path ? asset('storage/'.$this->attachment_path) : null,
             'status' => $this->status,
             'reviewer_notes' => $this->reviewer_notes,
             'reviewer_name' => $this->reviewer->name ?? null,

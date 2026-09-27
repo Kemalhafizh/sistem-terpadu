@@ -74,7 +74,7 @@ class ExamAttempt extends Model
         }
 
         $exam = $this->exam;
-        if (!$exam) {
+        if (! $exam) {
             return 0;
         }
 

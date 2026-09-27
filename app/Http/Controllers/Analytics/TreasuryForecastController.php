@@ -19,7 +19,7 @@ class TreasuryForecastController extends Controller
     public function generate(Request $request): JsonResponse
     {
         $scenario = $request->query('scenario', 'base');
-        if (!in_array($scenario, ['conservative', 'base', 'optimistic'], true)) {
+        if (! in_array($scenario, ['conservative', 'base', 'optimistic'], true)) {
             $scenario = 'base';
         }
 

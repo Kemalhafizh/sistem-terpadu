@@ -14,11 +14,17 @@ class StudentCheatedEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public string $attemptUuid;
+
     public string $studentName;
+
     public string $studentNis;
+
     public string $violationType;
+
     public int $violationCount;
+
     public string $timestamp;
+
     public int $examId;
 
     /**
@@ -27,7 +33,7 @@ class StudentCheatedEvent implements ShouldBroadcast
     public function __construct(ExamAttempt $attempt, string $violationType)
     {
         $attempt->load(['student.user']);
-        
+
         $this->attemptUuid = $attempt->uuid;
         $this->studentName = $attempt->student?->name ?? 'Siswa';
         $this->studentNis = $attempt->student?->nis ?? '-';
@@ -43,7 +49,7 @@ class StudentCheatedEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('cbt.exam.' . $this->examId),
+            new PrivateChannel('cbt.exam.'.$this->examId),
         ];
     }
 

@@ -45,6 +45,7 @@ class DailyAssessmentScore extends Model
         if ($this->remedial_status === 'completed' && $this->remedial_score !== null) {
             $kkm = $this->dailyAssessment->effective_kkm;
             $cappedRemedial = min((float) $this->remedial_score, $kkm);
+
             return max((float) ($this->score ?? 0), $cappedRemedial);
         }
 

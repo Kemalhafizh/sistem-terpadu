@@ -2,7 +2,6 @@
 
 namespace App\Services\Academic;
 
-use App\Models\AcademicPathway;
 use App\Models\GraduationRequirement;
 use App\Models\StudentGraduationProgress;
 use App\Models\StudentPathwayEnrollment;
@@ -32,7 +31,9 @@ class AcademicPathwayService
         foreach ($requirements as $req) {
             $prog = $progresses->where('graduation_requirement_id', $req->id)->first();
             $isFulfilled = $prog ? $prog->is_fulfilled : false;
-            if ($isFulfilled) $totalFulfilled++;
+            if ($isFulfilled) {
+                $totalFulfilled++;
+            }
 
             $checklist[] = [
                 'requirement_id' => $req->id,

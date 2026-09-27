@@ -2,14 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Survey;
-use App\Models\SurveyQuestion;
-use App\Models\SurveyResponse;
-use App\Models\Student;
-use App\Models\User;
 use App\Exports\SurveyResponsesExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Student;
+use App\Models\Survey;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SurveyAnalyticsService
 {
@@ -35,6 +33,7 @@ class SurveyAnalyticsService
         }
 
         $rate = ($responseCount / $potential) * 100;
+
         return round(min($rate, 100.0), 2);
     }
 
@@ -68,7 +67,7 @@ class SurveyAnalyticsService
                 'question_text' => $question->question_text,
                 'type' => $question->type,
                 'response_count' => $questionCount,
-                'data' => []
+                'data' => [],
             ];
 
             switch ($question->type) {
@@ -89,7 +88,7 @@ class SurveyAnalyticsService
                         $breakdown[] = [
                             'label' => $option,
                             'count' => $count,
-                            'percentage' => $questionCount > 0 ? round(($count / $questionCount) * 100, 2) : 0
+                            'percentage' => $questionCount > 0 ? round(($count / $questionCount) * 100, 2) : 0,
                         ];
                     }
 
@@ -120,14 +119,14 @@ class SurveyAnalyticsService
                         for ($i = $min; $i <= $max; $i++) {
                             $count = 0;
                             foreach ($numericAnswers as $ans) {
-                                if ((int)$ans === $i) {
+                                if ((int) $ans === $i) {
                                     $count++;
                                 }
                             }
                             $distribution[$i] = [
                                 'score' => $i,
                                 'count' => $count,
-                                'percentage' => round(($count / $numericCount) * 100, 2)
+                                'percentage' => round(($count / $numericCount) * 100, 2),
                             ];
                         }
 
@@ -136,13 +135,13 @@ class SurveyAnalyticsService
                             'median' => $median,
                             'distribution' => $distribution,
                             'min_label' => $question->scale_min_label ?? 'Sangat Kurang',
-                            'max_label' => $question->scale_max_label ?? 'Sangat Baik'
+                            'max_label' => $question->scale_max_label ?? 'Sangat Baik',
                         ];
                     } else {
                         $summary['data'] = [
                             'average' => 0,
                             'median' => 0,
-                            'distribution' => []
+                            'distribution' => [],
                         ];
                     }
                     break;
@@ -171,7 +170,7 @@ class SurveyAnalyticsService
         $responseRate = $this->getResponseRate($survey);
 
         $pdf = Pdf::loadView('surveys.results_report', compact('survey', 'analytics', 'responseRate'))
-                  ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'portrait');
 
         return $pdf;
     }
@@ -181,7 +180,8 @@ class SurveyAnalyticsService
      */
     public function exportResultsExcel(Survey $survey)
     {
-        $filename = 'Respons_Survei_' . str_replace(' ', '_', $survey->title) . '_' . date('YmdHis') . '.xlsx';
+        $filename = 'Respons_Survei_'.str_replace(' ', '_', $survey->title).'_'.date('YmdHis').'.xlsx';
+
         return Excel::download(new SurveyResponsesExport($survey), $filename);
     }
 }

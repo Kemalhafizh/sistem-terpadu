@@ -2,10 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\BudgetPlan;
-use App\Models\CostCenter;
-use App\Models\ProcurementRequest;
-use App\Models\ScholarshipProgram;
 use App\Models\User;
 use App\Services\Financial\BudgetPlanningService;
 use App\Services\Financial\CostCenterService;
@@ -70,7 +66,7 @@ class EnterpriseFinancialSeeder extends Seeder
             'vendor_contact' => 'sales@sultanagungtech.co.id',
             'delivery_date' => date('Y-m-d', strtotime('+5 days')),
             'items' => [
-                ['name' => 'Laptop Core i5 16GB RAM', 'qty' => 15, 'unit_price' => 10000000]
+                ['name' => 'Laptop Core i5 16GB RAM', 'qty' => 15, 'unit_price' => 10000000],
             ],
             'tax_amount' => 0,
         ], $superadmin->id);

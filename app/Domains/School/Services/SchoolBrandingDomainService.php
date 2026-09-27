@@ -59,6 +59,7 @@ class SchoolBrandingDomainService
         }
 
         self::forgetCache();
+
         return true;
     }
 

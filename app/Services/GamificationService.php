@@ -2,15 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\AchievementDefinition;
+use App\Models\ForumReply;
+use App\Models\MutabaahLog;
 use App\Models\Student;
 use App\Models\StudentAchievement;
 use App\Models\StudentXpLog;
-use App\Models\AchievementDefinition;
-use App\Models\ForumReply;
-use App\Models\ElearningSubmission;
 use App\Models\TahfidzLog;
-use App\Models\MutabaahLog;
-use App\Models\ExamAttempt;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -21,7 +19,9 @@ class GamificationService
      */
     public function awardXp(Student $student, int $amount, string $source, string $description): void
     {
-        if ($amount === 0) return;
+        if ($amount === 0) {
+            return;
+        }
 
         DB::transaction(function () use ($student, $amount, $source, $description) {
             // 1. Create XP log entry
@@ -49,7 +49,7 @@ class GamificationService
             if ($status === 'H') {
                 // Increment streak
                 $student->increment('current_streak');
-                
+
                 if ($student->current_streak > $student->longest_streak) {
                     $student->update(['longest_streak' => $student->current_streak]);
                 }
@@ -76,13 +76,17 @@ class GamificationService
                 ->where('achievement_id', $def->id)
                 ->exists();
 
-            if ($alreadyEarned) continue;
+            if ($alreadyEarned) {
+                continue;
+            }
 
             $criteria = $def->criteria;
             $matches = false;
             $context = '';
 
-            if (empty($criteria) || !isset($criteria['type'])) continue;
+            if (empty($criteria) || ! isset($criteria['type'])) {
+                continue;
+            }
 
             switch ($criteria['type']) {
                 case 'attendance_streak':
@@ -164,7 +168,7 @@ class GamificationService
      */
     public function onAssignmentSubmitted(Student $student): void
     {
-        $this->awardXp($student, 15, 'assignment', "Mengunggah tugas kelas E-Learning tepat waktu.");
+        $this->awardXp($student, 15, 'assignment', 'Mengunggah tugas kelas E-Learning tepat waktu.');
     }
 
     /**
@@ -172,7 +176,7 @@ class GamificationService
      */
     public function onForumReplyPosted(Student $student): void
     {
-        $this->awardXp($student, 5, 'forum', "Aktif berkontribusi menjawab di forum diskusi akademik.");
+        $this->awardXp($student, 5, 'forum', 'Aktif berkontribusi menjawab di forum diskusi akademik.');
     }
 
     /**
@@ -183,7 +187,7 @@ class GamificationService
         if ($score >= 80) {
             $this->awardXp($student, 50, 'exam', "Lulus ujian online CBT dengan nilai unggul: {$score}");
         } else {
-            $this->awardXp($student, 20, 'exam', "Menyelesaikan sesi ujian online CBT.");
+            $this->awardXp($student, 20, 'exam', 'Menyelesaikan sesi ujian online CBT.');
         }
     }
 
@@ -192,7 +196,7 @@ class GamificationService
      */
     public function onTahfidzRecorded(Student $student): void
     {
-        $this->awardXp($student, 30, 'tahfidz', "Menyelesaikan setoran hafalan hafalan Al-Quran baru.");
+        $this->awardXp($student, 30, 'tahfidz', 'Menyelesaikan setoran hafalan hafalan Al-Quran baru.');
     }
 
     /**
@@ -208,7 +212,10 @@ class GamificationService
      */
     public function calculateLevel(int $xp): int
     {
-        if ($xp <= 0) return 1;
+        if ($xp <= 0) {
+            return 1;
+        }
+
         return (int) floor(sqrt($xp / 100)) + 1;
     }
 
@@ -235,7 +242,7 @@ class GamificationService
         $today = Carbon::today();
         for ($i = 29; $i >= 0; $i--) {
             $date = $today->copy()->subDays($i);
-            $dayXp = (int) \App\Models\StudentXpLog::where('student_id', $studentId)
+            $dayXp = (int) StudentXpLog::where('student_id', $studentId)
                 ->whereDate('created_at', $date->toDateString())
                 ->sum('xp_amount');
             $days[] = [
@@ -244,6 +251,7 @@ class GamificationService
                 'xp' => $dayXp,
             ];
         }
+
         return $days;
     }
 
@@ -334,4 +342,3 @@ class GamificationService
         return ['earned' => $earned, 'locked' => $locked];
     }
 }
-

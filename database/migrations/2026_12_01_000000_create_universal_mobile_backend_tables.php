@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Universal Multi-Role Device Tokens
-        if (!Schema::hasTable('user_device_tokens')) {
+        if (! Schema::hasTable('user_device_tokens')) {
             Schema::create('user_device_tokens', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -30,7 +30,7 @@ return new class extends Migration
         }
 
         // 2. Mobile App Remote Configuration & Version Gate
-        if (!Schema::hasTable('mobile_app_configs')) {
+        if (! Schema::hasTable('mobile_app_configs')) {
             Schema::create('mobile_app_configs', function (Blueprint $table) {
                 $table->id();
                 $table->string('app_name')->default('SISTA Mobile');
@@ -49,7 +49,7 @@ return new class extends Migration
         }
 
         // 3. Mobile Biometric Credentials (FaceID / Fingerprint)
-        if (!Schema::hasTable('mobile_biometric_credentials')) {
+        if (! Schema::hasTable('mobile_biometric_credentials')) {
             Schema::create('mobile_biometric_credentials', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -65,7 +65,7 @@ return new class extends Migration
         }
 
         // 4. Mobile Sync Logs
-        if (!Schema::hasTable('mobile_sync_logs')) {
+        if (! Schema::hasTable('mobile_sync_logs')) {
             Schema::create('mobile_sync_logs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

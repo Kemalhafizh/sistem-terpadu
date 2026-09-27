@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\ImmutableAuditLog;
 use App\Services\ImmutableAuditLedgerService;
 use App\Services\PermissionService;
-use Illuminate\Http\Request;
 
 class RbacAuditController extends Controller
 {
@@ -32,7 +31,7 @@ class RbacAuditController extends Controller
         if ($integrity['is_valid']) {
             return back()->with('success', "Verifikasi Cryptographic Ledger Selesai: 100% Valid! {$integrity['total_logs']} entri log terverifikasi utuh tanpa manipulasi database.");
         } else {
-            return back()->with('error', "PERINGATAN BAHAYA INTEGRITAS: Ditemukan {$integrity['tampered_count']} entri log terpotong/dimanipulasi (ID: " . implode(', ', $integrity['tampered_ids']) . ").");
+            return back()->with('error', "PERINGATAN BAHAYA INTEGRITAS: Ditemukan {$integrity['tampered_count']} entri log terpotong/dimanipulasi (ID: ".implode(', ', $integrity['tampered_ids']).').');
         }
     }
 }

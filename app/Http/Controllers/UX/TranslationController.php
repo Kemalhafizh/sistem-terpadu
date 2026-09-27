@@ -27,12 +27,13 @@ class TranslationController extends Controller
 
         $service->overrideTranslation($validated['locale'], $validated['key'], $validated['value'], auth()->id());
 
-        return back()->with('success', "Terjemahan [{$validated['key']}] untuk bahasa " . strtoupper($validated['locale']) . " berhasil diperbarui!");
+        return back()->with('success', "Terjemahan [{$validated['key']}] untuk bahasa ".strtoupper($validated['locale']).' berhasil diperbarui!');
     }
 
     public function completionReport(TranslationService $service)
     {
         $completion = $service->getCompletionPercentage();
+
         return view('i18n.completion-report', compact('completion'));
     }
 }

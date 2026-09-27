@@ -11,7 +11,7 @@ class CrisisProtocol extends Model
 
     protected $fillable = [
         'name', 'crisis_type', 'steps', 'emergency_contacts', 'assembly_points',
-        'special_instructions', 'is_active', 'approved_by'
+        'special_instructions', 'is_active', 'approved_by',
     ];
 
     protected $casts = [

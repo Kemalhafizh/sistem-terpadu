@@ -22,7 +22,7 @@ class AchievementService
             ->orderBy('event_date', 'desc')
             ->latest()
             ->get()
-            ->map(fn($a) => $a->toMobileItemArray())
+            ->map(fn ($a) => $a->toMobileItemArray())
             ->toArray();
     }
 
@@ -66,7 +66,7 @@ class AchievementService
                 if (strlen($binary) > 5 * 1024 * 1024) {
                     throw new \Exception('Ukuran gambar Base64 melebihi batas 5MB.');
                 }
-                $filename = 'achievements/cert_' . uniqid() . '.jpg';
+                $filename = 'achievements/cert_'.uniqid().'.jpg';
                 Storage::disk('public')->put($filename, $binary);
                 $certificatePath = $filename;
             }
@@ -118,11 +118,11 @@ class AchievementService
             $metadata = is_array($item->metadata_json) ? $item->metadata_json : [];
             $certificates[] = [
                 'id' => (int) $item->id,
-                'certificate_number' => (string) ($item->certificate_number ?: "CERT/SA1/" . date('Y') . "/{$item->id}"),
-                'title' => (string) ($metadata['title'] ?? $item->credential_type ?: "Sertifikat Resmi"),
-                'role' => (string) ($metadata['role'] ?? "Penerima Sertifikat"),
+                'certificate_number' => (string) ($item->certificate_number ?: 'CERT/SA1/'.date('Y')."/{$item->id}"),
+                'title' => (string) ($metadata['title'] ?? $item->credential_type ?: 'Sertifikat Resmi'),
+                'role' => (string) ($metadata['role'] ?? 'Penerima Sertifikat'),
                 'issued_date' => $item->issued_at ? $item->issued_at->format('Y-m-d') : now()->format('Y-m-d'),
-                'blockchain_hash' => (string) ($item->transaction_hash ?: '0x' . hash('sha256', (string) $item->id)),
+                'blockchain_hash' => (string) ($item->transaction_hash ?: '0x'.hash('sha256', (string) $item->id)),
             ];
         }
 
@@ -136,11 +136,11 @@ class AchievementService
         foreach ($issuedItems as $issued) {
             $certificates[] = [
                 'id' => (int) ($issued->id + 1000),
-                'certificate_number' => (string) ($issued->verification_code ?: "CERT/SA1/" . date('Y') . "/{$issued->id}"),
-                'title' => (string) ($issued->template?->name ?: "Sertifikat Digital Sekolah"),
-                'role' => "Peserta Berprestasi",
+                'certificate_number' => (string) ($issued->verification_code ?: 'CERT/SA1/'.date('Y')."/{$issued->id}"),
+                'title' => (string) ($issued->template?->name ?: 'Sertifikat Digital Sekolah'),
+                'role' => 'Peserta Berprestasi',
                 'issued_date' => $issued->issued_at ? $issued->issued_at->format('Y-m-d') : now()->format('Y-m-d'),
-                'blockchain_hash' => '0x' . hash('sha256', 'issued_' . $issued->id),
+                'blockchain_hash' => '0x'.hash('sha256', 'issued_'.$issued->id),
             ];
         }
 
@@ -153,11 +153,11 @@ class AchievementService
         foreach ($validatedAchievements as $ach) {
             $certificates[] = [
                 'id' => (int) ($ach->id + 2000),
-                'certificate_number' => "CERT/ACH/" . date('Y') . "/" . str_pad((string) $ach->id, 4, '0', STR_PAD_LEFT),
-                'title' => "Sertifikat " . $ach->title,
-                'role' => "Juara (" . $ach->level . ")",
+                'certificate_number' => 'CERT/ACH/'.date('Y').'/'.str_pad((string) $ach->id, 4, '0', STR_PAD_LEFT),
+                'title' => 'Sertifikat '.$ach->title,
+                'role' => 'Juara ('.$ach->level.')',
                 'issued_date' => $ach->event_date ? $ach->event_date->format('Y-m-d') : now()->format('Y-m-d'),
-                'blockchain_hash' => '0x' . hash('sha256', 'ach_' . $ach->id),
+                'blockchain_hash' => '0x'.hash('sha256', 'ach_'.$ach->id),
             ];
         }
 
@@ -188,7 +188,7 @@ class AchievementService
             ->where('status', 'active')
             ->with('extracurricular')
             ->get()
-            ->map(fn($m) => $m->extracurricular?->name)
+            ->map(fn ($m) => $m->extracurricular?->name)
             ->filter()
             ->values()
             ->toArray();

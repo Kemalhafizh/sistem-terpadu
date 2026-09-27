@@ -11,26 +11,18 @@ use Illuminate\Http\Request;
 
 /**
  * Class MobileSyncController
- * 
+ *
  * Provides delta-syncing endpoints for mobile applications, allowing client-side
  * SQLite / Room / CoreData caches to pull only updated and new records.
- * 
- * @package App\Http\Controllers\Api\v1\Mobile
  */
 class MobileSyncController extends Controller
 {
-    /**
-     * @param MobileSyncService $syncService
-     */
     public function __construct(
         protected MobileSyncService $syncService
     ) {}
 
     /**
      * Pull delta changes since a specific timestamp.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function pullDelta(Request $request): JsonResponse
     {

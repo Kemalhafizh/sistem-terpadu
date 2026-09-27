@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::table('schedules', function (Blueprint $table) {
             $table->foreignId('room_id')
-                  ->nullable()
-                  ->after('teacher_id')
-                  ->constrained('rooms')
-                  ->nullOnDelete();
+                ->nullable()
+                ->after('teacher_id')
+                ->constrained('rooms')
+                ->nullOnDelete();
         });
     }
 

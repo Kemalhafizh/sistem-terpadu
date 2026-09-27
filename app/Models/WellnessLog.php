@@ -10,7 +10,7 @@ class WellnessLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_id', 'wellness_program_id', 'participation_date', 'feedback_note'
+        'employee_id', 'wellness_program_id', 'participation_date', 'feedback_note',
     ];
 
     protected $casts = [

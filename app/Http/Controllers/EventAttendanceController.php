@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\EventAttendanceEvent;
-use App\Models\EventAttendanceRecord;
 use App\Models\Student;
 use App\Models\User;
 use App\Services\EventAttendanceService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class EventAttendanceController extends Controller
 {
@@ -44,7 +42,7 @@ class EventAttendanceController extends Controller
             $monthParts = explode('-', $request->month);
             if (count($monthParts) === 2) {
                 $query->whereYear('event_date', $monthParts[0])
-                      ->whereMonth('event_date', $monthParts[1]);
+                    ->whereMonth('event_date', $monthParts[1]);
             }
         }
 
@@ -52,7 +50,7 @@ class EventAttendanceController extends Controller
             'records as total_attendees',
             'records as present_count' => function ($q) {
                 $q->whereIn('status', ['hadir', 'terlambat']);
-            }
+            },
         ])->latest('event_date')->paginate(10);
 
         return view('event-attendance.index', compact('events'));
@@ -64,12 +62,12 @@ class EventAttendanceController extends Controller
     public function create()
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
         $classrooms = Classroom::all();
-        
+
         // Load teachers list for target specific group if needed
         $teachers = User::where('role', 'guru')->get();
         $students = Student::with('user')->get();
@@ -83,7 +81,7 @@ class EventAttendanceController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -120,7 +118,7 @@ class EventAttendanceController extends Controller
                 $childrenIds = Student::where('parent_id', $user->id)->pluck('user_id')->toArray();
                 $hasAccess = $event->records()->whereIn('user_id', $childrenIds)->exists();
             }
-            if (!$hasAccess) {
+            if (! $hasAccess) {
                 abort(403, 'Anda tidak memiliki akses ke data kegiatan ini.');
             }
         }
@@ -145,7 +143,7 @@ class EventAttendanceController extends Controller
     public function inputAttendance(EventAttendanceEvent $event)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin']) && $event->created_by !== $user->id) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin']) && $event->created_by !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -162,7 +160,7 @@ class EventAttendanceController extends Controller
     public function storeAttendance(Request $request, EventAttendanceEvent $event)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin']) && $event->created_by !== $user->id) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin']) && $event->created_by !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -190,6 +188,7 @@ class EventAttendanceController extends Controller
         if ($user->role === 'student') {
             $student = Student::where('user_id', $user->id)->firstOrFail();
             $summary = $this->attendanceService->getStudentEventAttendanceSummary($student);
+
             return view('event-attendance.rekap', compact('student', 'summary'));
         }
 
@@ -201,6 +200,7 @@ class EventAttendanceController extends Controller
             $selectedStudentId = $request->get('student_id', $students->first()->id);
             $student = $students->firstWhere('id', $selectedStudentId) ?? $students->first();
             $summary = $this->attendanceService->getStudentEventAttendanceSummary($student);
+
             return view('event-attendance.rekap', compact('student', 'summary', 'students'));
         }
 
@@ -208,7 +208,7 @@ class EventAttendanceController extends Controller
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id', Classroom::first()?->id);
         $classroom = Classroom::find($classroomId);
-        
+
         $students = $classroom ? Student::where('classroom_id', $classroom->id)->with('user')->get() : collect();
         $selectedStudentId = $request->get('student_id', $students->first()?->id);
         $student = $selectedStudentId ? Student::find($selectedStudentId) : $students->first();
@@ -241,8 +241,9 @@ class EventAttendanceController extends Controller
         ];
 
         $pdf = Pdf::loadView('event-attendance.pdf_export', compact('event', 'records', 'stats'));
-        
+
         $fileName = str_replace(' ', '_', strtolower($event->name));
+
         return $pdf->download("rekap_presensi_{$fileName}.pdf");
     }
 }

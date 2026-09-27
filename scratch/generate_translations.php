@@ -104,7 +104,6 @@ return [
 PHP;
 file_put_contents("$langPath/id/finance.php", $idFinance);
 
-
 // ==========================================
 // 2. ENGLISH (en)
 // ==========================================
@@ -200,7 +199,6 @@ return [
 ];
 PHP;
 file_put_contents("$langPath/en/finance.php", $enFinance);
-
 
 // ==========================================
 // 3. ARABIC (ar)
@@ -299,6 +297,5 @@ PHP;
 file_put_contents("$langPath/ar/finance.php", $arFinance);
 
 echo "Translations generation completed successfully!\n";
-PHP;
 
 file_put_contents("$basePath/scratch/generate_translations.php", $codeContent);

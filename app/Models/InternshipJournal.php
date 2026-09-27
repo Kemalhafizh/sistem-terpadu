@@ -10,7 +10,7 @@ class InternshipJournal extends Model
     use HasFactory;
 
     protected $fillable = [
-        'application_id', 'journal_date', 'activities', 'reflection', 'verified_by'
+        'application_id', 'journal_date', 'activities', 'reflection', 'verified_by',
     ];
 
     protected $casts = [

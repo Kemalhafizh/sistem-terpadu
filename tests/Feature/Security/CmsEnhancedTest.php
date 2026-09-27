@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\User;
 use App\Models\CmsPost;
-use App\Models\CmsPage;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -53,7 +52,7 @@ test('public achievements page is accessible and displays published prestasi pos
 
 test('public staff directory page is accessible and shows staff', function () {
     $teacher = User::factory()->create(['role' => 'guru', 'name' => 'Pak Ahmad Fauzi']);
-    
+
     $response = $this->get(route('public.staff-directory'));
     $response->assertStatus(200);
     $response->assertSee('Pak Ahmad Fauzi');
@@ -118,7 +117,7 @@ test('authorized user can upload and browse media library', function () {
         'file' => $imageFile,
     ]);
     $response->assertRedirect(route('cms.media.index'));
-    Storage::disk('public')->assertExists('cms/media/' . $imageFile->hashName());
+    Storage::disk('public')->assertExists('cms/media/'.$imageFile->hashName());
 
     // Browse
     $response = $this->actingAs($this->admin)->get(route('cms.media.index'));

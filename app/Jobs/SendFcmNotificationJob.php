@@ -32,7 +32,8 @@ class SendFcmNotificationJob implements ShouldQueue
             ->toArray();
 
         if (empty($tokens)) {
-            Log::info("SendFcmNotificationJob: No active device tokens found for users: " . implode(',', $this->userIds));
+            Log::info('SendFcmNotificationJob: No active device tokens found for users: '.implode(',', $this->userIds));
+
             return;
         }
 
@@ -51,6 +52,6 @@ class SendFcmNotificationJob implements ShouldQueue
             ]),
         ];
 
-        Log::info("SendFcmNotificationJob: Dispatched push notification to " . count($tokens) . " devices. Title: {$this->title}");
+        Log::info('SendFcmNotificationJob: Dispatched push notification to '.count($tokens)." devices. Title: {$this->title}");
     }
 }

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\UksMedicine;
-use App\Models\UksVisit;
-use App\Models\StudentHealthRecord;
+use App\Models\AcademicYear;
+use App\Models\Classroom;
 use App\Models\HealthScreening;
 use App\Models\HealthScreeningResult;
+use App\Models\Student;
+use App\Models\StudentHealthRecord;
+use App\Models\UksMedicine;
 use App\Models\UksMedicineRestock;
+use App\Models\UksVisit;
 use App\Services\UksService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -310,6 +312,7 @@ class UksController extends Controller
         $visit = UksVisit::with('medicines')->findOrFail($id);
         $students = Student::with(['user', 'classroom'])->where('status', 'active')->get()->sortBy('user.name');
         $medicines = UksMedicine::all();
+
         return view('uks.visits.edit', compact('visit', 'students', 'medicines'));
     }
 
@@ -348,7 +351,7 @@ class UksController extends Controller
     public function healthRecords()
     {
         $this->authorize('manageUks', UksVisit::class);
-        
+
         // Ensure all active students have a record initialized
         $activeStudentIds = Student::where('status', 'active')->pluck('id');
         foreach ($activeStudentIds as $studentId) {
@@ -364,6 +367,7 @@ class UksController extends Controller
         }
 
         $records = StudentHealthRecord::with('student.user', 'student.classroom')->paginate(15);
+
         return view('uks.health-records.index', compact('records'));
     }
 
@@ -383,6 +387,7 @@ class UksController extends Controller
                 'medications' => [],
             ]
         );
+
         return view('uks.health-records.show', compact('student', 'record'));
     }
 
@@ -437,8 +442,9 @@ class UksController extends Controller
     {
         $this->authorize('manageUks', UksVisit::class);
         $screenings = HealthScreening::with('academicYear')->latest()->paginate(15);
-        $academicYears = \App\Models\AcademicYear::all();
-        $classrooms = \App\Models\Classroom::all();
+        $academicYears = AcademicYear::all();
+        $classrooms = Classroom::all();
+
         return view('uks.screenings.index', compact('screenings', 'academicYears', 'classrooms'));
     }
 
@@ -473,7 +479,7 @@ class UksController extends Controller
     {
         $this->authorize('manageUks', UksVisit::class);
         $screening = HealthScreening::findOrFail($id);
-        
+
         $students = Student::with('user')
             ->whereIn('classroom_id', $screening->target_classrooms)
             ->where('status', 'active')
@@ -581,7 +587,7 @@ class UksController extends Controller
     public function medicineDispenseLog()
     {
         $this->authorize('manageUks', UksVisit::class);
-        
+
         $logs = DB::table('uks_visit_medicines')
             ->join('uks_medicines', 'uks_visit_medicines.uks_medicine_id', '=', 'uks_medicines.id')
             ->join('uks_visits', 'uks_visit_medicines.uks_visit_id', '=', 'uks_visits.id')
@@ -607,6 +613,7 @@ class UksController extends Controller
         $this->authorize('manageUks', UksVisit::class);
         $logs = UksMedicineRestock::with(['medicine', 'restocker'])->latest()->paginate(15);
         $medicines = UksMedicine::all();
+
         return view('uks.medicines.restock-log', compact('logs', 'medicines'));
     }
 

@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Student;
 
-use App\Models\IssuedCertificate;
-
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

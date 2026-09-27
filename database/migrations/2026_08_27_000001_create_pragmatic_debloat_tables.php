@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Pragmatic Digital Document Verification (Replaces Complex Blockchain)
-        if (!Schema::hasTable('digital_verifications')) {
+        if (! Schema::hasTable('digital_verifications')) {
             Schema::create('digital_verifications', function (Blueprint $table) {
                 $table->id();
                 $table->string('document_number')->unique(); // e.g. IJZ-2026-SMA-001
@@ -31,7 +31,7 @@ return new class extends Migration
         }
 
         // 2. Pragmatic Rules-Based At-Risk Student Alerts (Replaces ML GPU Blackbox)
-        if (!Schema::hasTable('at_risk_alerts')) {
+        if (! Schema::hasTable('at_risk_alerts')) {
             Schema::create('at_risk_alerts', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
@@ -49,7 +49,7 @@ return new class extends Migration
         }
 
         // 3. Single VPS Server Health Metrics (Replaces K8s Multi-Cloud Cluster)
-        if (!Schema::hasTable('vps_server_health_logs')) {
+        if (! Schema::hasTable('vps_server_health_logs')) {
             Schema::create('vps_server_health_logs', function (Blueprint $table) {
                 $table->id();
                 $table->string('server_hostname')->default('sista-production-vps');
@@ -67,7 +67,7 @@ return new class extends Migration
         }
 
         // 4. Pragmatic FIFO Offline Sync Queue (Replaces Vector Clock Delta Sync)
-        if (!Schema::hasTable('offline_sync_queues')) {
+        if (! Schema::hasTable('offline_sync_queues')) {
             Schema::create('offline_sync_queues', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -82,7 +82,7 @@ return new class extends Migration
         }
 
         // 5. Static Monolithic Module Catalog (Replaces WeChat-style dynamic plugin loader)
-        if (!Schema::hasTable('static_module_catalogs')) {
+        if (! Schema::hasTable('static_module_catalogs')) {
             Schema::create('static_module_catalogs', function (Blueprint $table) {
                 $table->id();
                 $table->string('module_code')->unique();

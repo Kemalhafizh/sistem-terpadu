@@ -3,11 +3,11 @@
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Student;
-use App\Models\User;
 use App\Models\Subject;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
+use App\Models\User;
 use App\Services\PredictiveAnalyticsService;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([
@@ -41,7 +41,7 @@ beforeEach(function () {
 
 test('at risk student identification logic works correctly', function () {
     // 1. Initially, student should be Aman since they have no grades, attendance logs, or penalties.
-    $service = new PredictiveAnalyticsService();
+    $service = new PredictiveAnalyticsService;
     $initialAtRiskList = $service->identifyAtRiskStudents($this->classroom->id);
     expect($initialAtRiskList->count())->toBe(0);
 

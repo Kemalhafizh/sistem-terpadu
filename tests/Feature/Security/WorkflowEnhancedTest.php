@@ -1,12 +1,10 @@
 <?php
 
-use App\Models\User;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
+use App\Models\User;
 use App\Models\WorkflowDefinition;
-use App\Models\WorkflowRequest;
-use App\Models\WorkflowApproval;
-use Illuminate\Support\Carbon;
+use App\Services\WorkflowService;
 
 beforeEach(function () {
     // Create users with roles
@@ -32,7 +30,7 @@ beforeEach(function () {
         'description' => 'Alur persetujuan cuti tahunan guru dan staf.',
         'steps' => [
             ['order' => 1, 'role' => 'waka_kurikulum', 'sla_hours' => 24],
-            ['order' => 2, 'role' => 'kepala_sekolah', 'sla_hours' => 48]
+            ['order' => 2, 'role' => 'kepala_sekolah', 'sla_hours' => 48],
         ],
         'is_active' => true,
     ]);
@@ -64,7 +62,7 @@ test('admin can manage workflow definitions', function () {
         'description' => 'Deskripsi baru.',
         'steps' => [
             ['order' => 1, 'role' => 'bk', 'sla_hours' => 12],
-            ['order' => 2, 'role' => 'admin', 'sla_hours' => 24]
+            ['order' => 2, 'role' => 'admin', 'sla_hours' => 24],
         ],
         'is_active' => '1',
     ]);
@@ -78,7 +76,7 @@ test('admin can manage workflow definitions', function () {
     $def = WorkflowDefinition::where('code', 'new_workflow_code')->first();
     expect($def->steps)->toBe([
         ['order' => 1, 'role' => 'bk', 'sla_hours' => 12],
-        ['order' => 2, 'role' => 'admin', 'sla_hours' => 24]
+        ['order' => 2, 'role' => 'admin', 'sla_hours' => 24],
     ]);
 
     // 2. Update
@@ -86,7 +84,7 @@ test('admin can manage workflow definitions', function () {
         'name' => 'Alur Baru Diedit',
         'description' => 'Deskripsi diedit.',
         'steps' => [
-            ['order' => 1, 'role' => 'staf_tu', 'sla_hours' => 48]
+            ['order' => 1, 'role' => 'staf_tu', 'sla_hours' => 48],
         ],
         'is_active' => '1',
     ]);
@@ -117,7 +115,7 @@ test('approver can request revision and requester can resubmit request', functio
     ]);
 
     // 2. Initiate Workflow
-    $workflowService = app(\App\Services\WorkflowService::class);
+    $workflowService = app(WorkflowService::class);
     $workflowRequest = $workflowService->initiate('leave_annual_approval', $this->guru, $leave, 'Mohon disetujui');
 
     $this->assertDatabaseHas('workflow_requests', [
@@ -171,7 +169,7 @@ test('approver can delegate step to specific user', function () {
         'status' => 'pending',
     ]);
 
-    $workflowService = app(\App\Services\WorkflowService::class);
+    $workflowService = app(WorkflowService::class);
     $workflowRequest = $workflowService->initiate('leave_annual_approval', $this->guru, $leave, 'Ujian cuti');
 
     // Delegate step 1 (waka_kurikulum) to $delegatee

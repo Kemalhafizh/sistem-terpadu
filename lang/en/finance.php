@@ -1,4 +1,5 @@
 <?php
+
 return [
     'title' => 'SPP & Entrance Fee Financial Management',
     'spp_billings' => 'Student Billings List',

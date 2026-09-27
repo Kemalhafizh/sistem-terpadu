@@ -10,13 +10,18 @@ use App\Http\Resources\TeachingJournalResource;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classroom;
+use App\Models\Exam;
 use App\Models\ParentMessage;
+use App\Models\QuestionBank;
 use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\TeachingJournal;
+use App\Services\CbtAccessControlService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @group Teacher Scoped Data v1
@@ -140,7 +145,7 @@ class ApiTeacherController extends Controller
         ]);
 
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return $this->errorResponse('Tahun akademik aktif tidak ditemukan', 400);
         }
 
@@ -149,7 +154,7 @@ class ApiTeacherController extends Controller
         foreach ($request->students as $s) {
             // Validasi relasi siswa ada di kelas tersebut
             $student = Student::find($s['student_id']);
-            if ($student->classroom_id !== (int)$request->classroom_id) {
+            if ($student->classroom_id !== (int) $request->classroom_id) {
                 continue;
             }
 
@@ -172,7 +177,7 @@ class ApiTeacherController extends Controller
         }
 
         return $this->successResponse([
-            'recorded_count' => $recordedCount
+            'recorded_count' => $recordedCount,
         ], 'Absensi berhasil disimpan');
     }
 
@@ -231,7 +236,7 @@ class ApiTeacherController extends Controller
         ]);
 
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return $this->errorResponse('Tahun akademik aktif tidak ditemukan', 400);
         }
 
@@ -310,7 +315,7 @@ class ApiTeacherController extends Controller
 
         $user = $request->user();
         $student = Student::where('uuid', $request->student_uuid)->first();
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Siswa tidak ditemukan', 404);
         }
 
@@ -321,11 +326,11 @@ class ApiTeacherController extends Controller
             })
             ->exists();
 
-        if (!$isHomeroomTeacher && !$hasExistingThread) {
+        if (! $isHomeroomTeacher && ! $hasExistingThread) {
             return $this->errorResponse('Anda tidak memiliki akses untuk mengirim pesan mengenai siswa ini.', 403);
         }
 
-        if (!$student->parent_id) {
+        if (! $student->parent_id) {
             return $this->errorResponse('Siswa ini belum memiliki akun wali murid terdaftar.', 400);
         }
 
@@ -360,12 +365,12 @@ class ApiTeacherController extends Controller
      */
     public function storeExamWithQuestions(Request $request)
     {
-        \Illuminate\Support\Facades\Gate::authorize('create', \App\Models\Exam::class);
+        Gate::authorize('create', Exam::class);
 
         // No client-supplied token: the entry token is issued only by
         // CbtAccessControlService (5-minute lifetime) via GET cbt/exams/{id}/token.
         // No subject/grade/academic-year fallbacks either — every value is real.
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'subject_id' => 'required|integer|exists:subjects,id',
             'classroom_id' => 'required|integer|exists:classrooms,id',
@@ -393,14 +398,14 @@ class ApiTeacherController extends Controller
             foreach ($request->input('questions', []) as $i => $q) {
                 $keys = array_column($q['options'], 'key');
                 if (count($keys) !== count(array_unique($keys))) {
-                    $v->errors()->add("questions.$i.options", 'Soal #' . ($i + 1) . ': kunci pilihan jawaban tidak boleh ganda.');
+                    $v->errors()->add("questions.$i.options", 'Soal #'.($i + 1).': kunci pilihan jawaban tidak boleh ganda.');
                 }
-                if (!in_array($q['correct_answer'], $keys, true)) {
-                    $v->errors()->add("questions.$i.correct_answer", 'Soal #' . ($i + 1) . ': kunci jawaban harus salah satu pilihan yang ada.');
+                if (! in_array($q['correct_answer'], $keys, true)) {
+                    $v->errors()->add("questions.$i.correct_answer", 'Soal #'.($i + 1).': kunci jawaban harus salah satu pilihan yang ada.');
                 }
                 foreach ($q['options'] as $opt) {
                     if (blank($opt['text'] ?? null) && blank($opt['image_url'] ?? null)) {
-                        $v->errors()->add("questions.$i.options", 'Soal #' . ($i + 1) . ": pilihan {$opt['key']} harus berisi teks atau gambar.");
+                        $v->errors()->add("questions.$i.options", 'Soal #'.($i + 1).": pilihan {$opt['key']} harus berisi teks atau gambar.");
                     }
                 }
             }
@@ -409,7 +414,7 @@ class ApiTeacherController extends Controller
         $validator->validate();
 
         $activeYear = AcademicYear::where('is_active', true)->first();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return $this->errorResponse('Tahun ajaran aktif belum diatur. Hubungi admin sekolah.', 422);
         }
 
@@ -417,8 +422,8 @@ class ApiTeacherController extends Controller
         $classroom = Classroom::findOrFail($request->integer('classroom_id'));
         $questions = $request->input('questions');
 
-        $exam = \Illuminate\Support\Facades\DB::transaction(function () use ($request, $teacher, $classroom, $activeYear, $questions) {
-            $exam = \App\Models\Exam::create([
+        $exam = DB::transaction(function () use ($request, $teacher, $classroom, $activeYear, $questions) {
+            $exam = Exam::create([
                 'title' => $request->input('title'),
                 'subject_id' => $request->integer('subject_id'),
                 'classroom_id' => $classroom->id,
@@ -438,7 +443,7 @@ class ApiTeacherController extends Controller
             ]);
 
             foreach ($questions as $index => $qData) {
-                $qBank = \App\Models\QuestionBank::create([
+                $qBank = QuestionBank::create([
                     'subject_id' => $exam->subject_id,
                     'created_by' => $teacher->id,
                     'question_text' => $qData['question_text'],
@@ -478,7 +483,7 @@ class ApiTeacherController extends Controller
             'operator_id' => $exam->operator_id,
             // Same rule as GET cbt/exams/{id}/token — tells the app whether it
             // may open the proctor screen (which fetches the real token).
-            'can_view_token' => app(\App\Services\CbtAccessControlService::class)->canViewToken($teacher, $exam),
+            'can_view_token' => app(CbtAccessControlService::class)->canViewToken($teacher, $exam),
         ], 'Ujian dan bank soal berhasil diterbitkan', 201);
     }
 
@@ -492,7 +497,7 @@ class ApiTeacherController extends Controller
         ]);
 
         $path = $request->file('image')->store('uploads/cbt/questions', 'public');
-        $fullUrl = asset('storage/' . $path);
+        $fullUrl = asset('storage/'.$path);
 
         return $this->successResponse([
             'path' => $path,

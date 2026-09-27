@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ForumReplyPosted;
 use App\Models\Classroom;
 use App\Models\ElearningClass;
 use App\Models\ForumReaction;
 use App\Models\ForumReply;
 use App\Models\ForumThread;
 use App\Models\Subject;
-use App\Events\ForumReplyPosted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +27,7 @@ class ForumController extends Controller
         if ($user->role === 'student') {
             $student = $user->student;
             $classroomId = $student?->classroom_id;
-            
+
             $query->where(function ($q) use ($classroomId) {
                 $q->where('scope', 'school')
                     ->orWhere(function ($sq) use ($classroomId) {
@@ -44,7 +44,7 @@ class ForumController extends Controller
             });
         } elseif ($user->role === 'parent') {
             $childClassrooms = $user->children()->pluck('classroom_id')->toArray();
-            
+
             $query->where(function ($q) use ($childClassrooms) {
                 $q->where('scope', 'school')
                     ->orWhere(function ($sq) use ($childClassrooms) {
@@ -138,9 +138,9 @@ class ForumController extends Controller
                         'reactions',
                         'children' => function ($sq) {
                             $sq->orderBy('created_at', 'asc')->with(['author', 'reactions']);
-                        }
+                        },
                     ]);
-                }
+                },
             ])
             ->orderBy('is_best_answer', 'desc')
             ->orderBy('created_at', 'asc')
@@ -248,6 +248,7 @@ class ForumController extends Controller
 
         if ($request->wantsJson()) {
             $reply->load('author');
+
             return response()->json([
                 'success' => true,
                 'reply' => [
@@ -262,8 +263,8 @@ class ForumController extends Controller
                     'author' => [
                         'name' => $reply->author->name,
                         'role' => $reply->author->role,
-                    ]
-                ]
+                    ],
+                ],
             ]);
         }
 
@@ -275,10 +276,11 @@ class ForumController extends Controller
         $this->authorize('moderate', $thread);
 
         $thread->update([
-            'is_pinned' => !$thread->is_pinned
+            'is_pinned' => ! $thread->is_pinned,
         ]);
 
         $status = $thread->is_pinned ? 'ditempel di atas' : 'dilepas dari atas';
+
         return back()->with('success', "Diskusi berhasil {$status}.");
     }
 
@@ -287,10 +289,11 @@ class ForumController extends Controller
         $this->authorize('moderate', $thread);
 
         $thread->update([
-            'is_locked' => !$thread->is_locked
+            'is_locked' => ! $thread->is_locked,
         ]);
 
         $status = $thread->is_locked ? 'dikunci (tutup diskusi)' : 'dibuka kembali';
+
         return back()->with('success', "Diskusi berhasil {$status}.");
     }
 
@@ -305,10 +308,11 @@ class ForumController extends Controller
             ->update(['is_best_answer' => false]);
 
         $reply->update([
-            'is_best_answer' => !$reply->is_best_answer
+            'is_best_answer' => ! $reply->is_best_answer,
         ]);
 
         $status = $reply->is_best_answer ? 'ditandai sebagai jawaban terbaik' : 'batal ditandai sebagai jawaban terbaik';
+
         return back()->with('success', "Balasan berhasil {$status}.");
     }
 
@@ -331,7 +335,7 @@ class ForumController extends Controller
             'user_id' => Auth::id(),
             'reactable_type' => $modelClass,
             'reactable_id' => $validated['reactable_id'],
-            'type' => $validated['type']
+            'type' => $validated['type'],
         ])->first();
 
         if ($reaction) {
@@ -342,7 +346,7 @@ class ForumController extends Controller
                 'user_id' => Auth::id(),
                 'reactable_type' => $modelClass,
                 'reactable_id' => $validated['reactable_id'],
-                'type' => $validated['type']
+                'type' => $validated['type'],
             ]);
             $status = 'added';
         }

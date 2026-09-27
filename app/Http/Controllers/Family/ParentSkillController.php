@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Family;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ParentSkill;
+use Illuminate\Http\Request;
 
 class ParentSkillController extends Controller
 {
     public function directory()
     {
         $skills = ParentSkill::with('student')->get();
+
         return view('fase62.skill-sharing.directory', compact('skills'));
     }
 

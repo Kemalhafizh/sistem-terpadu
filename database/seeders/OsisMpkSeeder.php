@@ -3,19 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\AcademicYear;
-use App\Models\OsisMember;
-use App\Models\OsisWorkProgram;
-use App\Models\OsisElection;
-use App\Models\OsisCandidate;
-use App\Models\OsisVote;
-use App\Models\OsisTransaction;
-use App\Models\MpkLpj;
 use App\Models\MpkAudit;
+use App\Models\MpkLpj;
+use App\Models\OsisCandidate;
+use App\Models\OsisElection;
+use App\Models\OsisMember;
+use App\Models\OsisTransaction;
+use App\Models\OsisVote;
+use App\Models\OsisWorkProgram;
 use App\Models\Student;
 use App\Models\User;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 
 class OsisMpkSeeder extends Seeder
 {
@@ -31,10 +31,10 @@ class OsisMpkSeeder extends Seeder
         }
 
         $positions = [
-            'Ketua OSIS', 'Wakil Ketua OSIS', 'Sekretaris I', 'Sekretaris II', 
-            'Bendahara I', 'Bendahara II', 'Ketua Sekbid Keagamaan', 
-            'Ketua Sekbid Bela Negara', 'Ketua Sekbid Olahraga', 
-            'Ketua Sekbid Humas & IT', 'Anggota Sekbid Keagamaan', 'Anggota Sekbid Olahraga'
+            'Ketua OSIS', 'Wakil Ketua OSIS', 'Sekretaris I', 'Sekretaris II',
+            'Bendahara I', 'Bendahara II', 'Ketua Sekbid Keagamaan',
+            'Ketua Sekbid Bela Negara', 'Ketua Sekbid Olahraga',
+            'Ketua Sekbid Humas & IT', 'Anggota Sekbid Keagamaan', 'Anggota Sekbid Olahraga',
         ];
 
         // Create Osis Members
@@ -70,8 +70,8 @@ class OsisMpkSeeder extends Seeder
                 'planned_date' => now()->subMonths(6 - $index)->toDateString(),
                 'actual_date' => $p['actual'] > 0 ? now()->subMonths(6 - $index)->addDays(2)->toDateString() : null,
                 'status' => $p['status'],
-                'report' => $p['actual'] > 0 ? 'Laporan pertanggungjawaban lengkap program ' . $p['title'] . '.' : null,
-                'photo_paths' => $p['actual'] > 0 ? ['osis/photos/prog_' . $index . '_1.jpg', 'osis/photos/prog_' . $index . '_2.jpg'] : null,
+                'report' => $p['actual'] > 0 ? 'Laporan pertanggungjawaban lengkap program '.$p['title'].'.' : null,
+                'photo_paths' => $p['actual'] > 0 ? ['osis/photos/prog_'.$index.'_1.jpg', 'osis/photos/prog_'.$index.'_2.jpg'] : null,
             ]);
         }
 
@@ -89,7 +89,7 @@ class OsisMpkSeeder extends Seeder
         $candidateData = [
             ['vision' => 'Menjadikan SMA Islam Sultan Agung 1 sebagai sekolah religius, inovatif, dan berwawasan lingkungan.', 'mission' => 'Meningkatkan kualitas ibadah harian siswa, mengadakan pekan inovasi teknologi, dan gerakan zero waste.'],
             ['vision' => 'Menciptakan wadah kolaborasi siswa yang inklusif, kreatif, dan berprestasi di tingkat nasional.', 'mission' => 'Mengadakan kompetisi seni tahunan, mempererat komunikasi OSIS dengan ekstrakurikuler, dan konseling sebaya.'],
-            ['vision' => 'Mengembangkan OSIS yang adaptif, berintegritas tinggi, dan responsif terhadap aspirasi siswa.', 'mission' => 'Membuat mading digital interaktif, menyalurkan aspirasi fasilitas berkala, dan pelatihan kepemimpinan umum.']
+            ['vision' => 'Mengembangkan OSIS yang adaptif, berintegritas tinggi, dan responsif terhadap aspirasi siswa.', 'mission' => 'Membuat mading digital interaktif, menyalurkan aspirasi fasilitas berkala, dan pelatihan kepemimpinan umum.'],
         ];
 
         for ($k = 0; $k < 3; $k++) {
@@ -99,8 +99,8 @@ class OsisMpkSeeder extends Seeder
                 'candidate_number' => $k + 1,
                 'vision' => $candidateData[$k]['vision'],
                 'mission' => $candidateData[$k]['mission'],
-                'photo_path' => 'osis/candidates/num_' . ($k + 1) . '.jpg',
-                'vote_count' => 0
+                'photo_path' => 'osis/candidates/num_'.($k + 1).'.jpg',
+                'vote_count' => 0,
             ]);
             $candidates->push($candidate);
         }
@@ -110,8 +110,10 @@ class OsisMpkSeeder extends Seeder
         if ($allStudents->isNotEmpty()) {
             $votedCount = 0;
             foreach ($allStudents as $student) {
-                if ($votedCount >= 100) break;
-                
+                if ($votedCount >= 100) {
+                    break;
+                }
+
                 $chosenCandidate = $faker->randomElement($candidates->all());
                 OsisVote::create([
                     'election_id' => $election->id,
@@ -145,7 +147,7 @@ class OsisMpkSeeder extends Seeder
                 'description' => $tx['desc'],
                 'category' => $tx['cat'],
                 'transaction_date' => $tx['date'],
-                'receipt_path' => 'osis/receipts/tx_' . $faker->unique()->numerify('#####') . '.pdf',
+                'receipt_path' => 'osis/receipts/tx_'.$faker->unique()->numerify('#####').'.pdf',
                 'recorded_by' => $recorderId,
             ]);
             $transactions->push($t);
@@ -159,9 +161,9 @@ class OsisMpkSeeder extends Seeder
             $lpj = MpkLpj::create([
                 'uuid' => (string) Str::uuid(),
                 'academic_year_id' => $academicYear->id,
-                'title' => 'Laporan Pertanggungjawaban Kegiatan ke-' . ($i + 1),
+                'title' => 'Laporan Pertanggungjawaban Kegiatan ke-'.($i + 1),
                 'description' => $faker->sentence(10),
-                'file_path' => 'mpk/lpj/lpj_event_' . ($i + 1) . '.pdf',
+                'file_path' => 'mpk/lpj/lpj_event_'.($i + 1).'.pdf',
                 'status' => 'approved',
                 'reviewer_notes' => 'Laporan diterima dengan catatan kelengkapan foto dokumentasi diperbanyak.',
                 'submitted_by' => $students[0]->user_id, // submitted by ketua osis

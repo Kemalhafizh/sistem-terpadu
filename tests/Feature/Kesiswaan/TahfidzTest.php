@@ -2,13 +2,11 @@
 
 /** @var TestCase|stdClass $this */
 
-use App\Models\Student;
-use App\Models\User;
-use App\Models\Classroom;
 use App\Models\AcademicYear;
-use App\Models\TahfidzLog;
+use App\Models\Classroom;
+use App\Models\Student;
 use App\Models\TahfidzTarget;
-use App\Models\StudentXpLog;
+use App\Models\User;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -17,22 +15,22 @@ beforeEach(function () {
         'semester' => 'Genap',
         'is_active' => true,
         'start_date' => '2026-01-06',
-        'end_date' => '2026-06-21'
+        'end_date' => '2026-06-21',
     ]);
-    
+
     $this->guru = User::factory()->create(['role' => 'guru']);
     $this->admin = User::factory()->create(['role' => 'admin']);
-    
+
     $this->classroom = Classroom::factory()->create([
         'name' => 'XII-A',
         'grade_level' => 'XII',
         'major' => 'IPA',
         'teacher_id' => $this->guru->id,
-        'academic_year' => '2025/2026'
+        'academic_year' => '2025/2026',
     ]);
-    
+
     $this->student = Student::factory()->create([
-        'classroom_id' => $this->classroom->id
+        'classroom_id' => $this->classroom->id,
     ]);
     $this->studentUser = $this->student->user;
     $this->studentUser->update(['role' => 'student']);
@@ -152,8 +150,8 @@ test('guru can submit bulk setoran', function () {
                 'pages_count' => 1,
                 'notes' => 'Cukup',
                 'date' => now()->format('Y-m-d'),
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect();
@@ -179,8 +177,8 @@ test('guru can store and update student targets', function () {
                 'target_juz' => 3,
                 'target_pages' => 60,
                 'notes' => 'Fokus semester ini',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect();
@@ -297,7 +295,7 @@ test('authorized users can export student progress to pdf', function () {
     ]);
 
     $response = $this->actingAs($this->guru)->get(route('tahfidz.export-pdf', $this->student));
-    
+
     $response->assertStatus(200);
     $response->assertHeader('Content-Type', 'application/pdf');
 });

@@ -2,10 +2,6 @@
 
 namespace Tests\Feature\Financial;
 
-use App\Models\BudgetPlan;
-use App\Models\CostCenter;
-use App\Models\ProcurementRequest;
-use App\Models\ScholarshipProgram;
 use App\Models\User;
 use App\Services\Financial\BudgetPlanningService;
 use App\Services\Financial\CostCenterService;
@@ -19,6 +15,7 @@ class EnterpriseFinancialTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $student;
 
     protected function setUp(): void

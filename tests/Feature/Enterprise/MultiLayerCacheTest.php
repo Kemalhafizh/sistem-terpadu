@@ -6,18 +6,18 @@ use App\Services\EnterpriseCacheService;
 use App\Services\RequestLifetimeCacheService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
-    $this->cacheService = new EnterpriseCacheService();
-    $this->requestCache = new RequestLifetimeCacheService();
+    $this->cacheService = new EnterpriseCacheService;
+    $this->requestCache = new RequestLifetimeCacheService;
 });
 
 test('request lifetime cache singleton stores items per request', function () {
     $counter = 0;
     $callback = function () use (&$counter) {
         $counter++;
+
         return 'test_value';
     };
 
@@ -33,7 +33,7 @@ test('request lifetime cache singleton stores items per request', function () {
 });
 
 test('enterprise cache service remembers and flushes tag groups', function () {
-    $val = $this->cacheService->remember('test_tag_key', 3600, fn() => 'tag_data', ['academic']);
+    $val = $this->cacheService->remember('test_tag_key', 3600, fn () => 'tag_data', ['academic']);
     expect($val)->toBe('tag_data');
 
     $flushed = $this->cacheService->flushTag('academic');
@@ -41,7 +41,7 @@ test('enterprise cache service remembers and flushes tag groups', function () {
 });
 
 test('http cache headers middleware sets etag and returns 304 on match', function () {
-    $middleware = new HttpCacheHeadersMiddleware();
+    $middleware = new HttpCacheHeadersMiddleware;
     $request = Request::create('/test-page', 'GET');
 
     $response = $middleware->handle($request, function ($req) {

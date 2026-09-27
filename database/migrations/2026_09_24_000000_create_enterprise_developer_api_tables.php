@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('developer_api_keys')) {
+        if (! Schema::hasTable('developer_api_keys')) {
             Schema::create('developer_api_keys', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -21,7 +21,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('dev_webhook_endpoints')) {
+        if (! Schema::hasTable('dev_webhook_endpoints')) {
             Schema::create('dev_webhook_endpoints', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

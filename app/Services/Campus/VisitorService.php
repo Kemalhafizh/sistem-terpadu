@@ -11,6 +11,7 @@ class VisitorService
     {
         $data['badge_number'] = strtoupper(Str::random(8));
         $data['status'] = 'pre_registered';
+
         return VisitorLog::create($data);
     }
 
@@ -20,6 +21,7 @@ class VisitorService
             'status' => 'active',
             'check_in_time' => now(),
         ]);
+
         return $visitor;
     }
 
@@ -29,6 +31,7 @@ class VisitorService
             'status' => 'completed',
             'check_out_time' => now(),
         ]);
+
         return $visitor;
     }
 

@@ -75,7 +75,7 @@ class MutabaahService
 
         // Totals
         $avgScore = $loggedDaysCount > 0 ? (int) round($logs->avg('score')) : 0;
-        
+
         $sholat5WaktuCount = 0;
         $sholatBerjamaahCount = 0;
         $tadarusTotalPages = 0;
@@ -163,19 +163,19 @@ class MutabaahService
         }
         if ($sholatLengkap) {
             $extraXp += 5;
-            $xpReasons[] = "Shalat 5 waktu lengkap (+5 XP)";
+            $xpReasons[] = 'Shalat 5 waktu lengkap (+5 XP)';
         }
 
         // - Sholat berjamaah -> +2 XP per sholat
         if ($jamaahCount > 0) {
             $extraXp += ($jamaahCount * 2);
-            $xpReasons[] = "{$jamaahCount} Shalat Berjamaah (+".($jamaahCount * 2)." XP)";
+            $xpReasons[] = "{$jamaahCount} Shalat Berjamaah (+".($jamaahCount * 2).' XP)';
         }
 
         // - Sholat dhuha -> +3 XP
         if ($log->sholat_dhuha >= 1) {
             $extraXp += 3;
-            $xpReasons[] = "Shalat Dhuha (+3 XP)";
+            $xpReasons[] = 'Shalat Dhuha (+3 XP)';
         }
 
         // - Tadarus >= 2 halaman -> +5 XP
@@ -187,19 +187,19 @@ class MutabaahService
         // - Puasa sunnah -> +10 XP
         if ($log->puasa_sunnah) {
             $extraXp += 10;
-            $xpReasons[] = "Puasa Sunnah (+10 XP)";
+            $xpReasons[] = 'Puasa Sunnah (+10 XP)';
         }
 
         // - Sedekah -> +3 XP (or +5 XP as in plan, let's use +5)
         if ($log->sedekah) {
             $extraXp += 5;
-            $xpReasons[] = "Sedekah harian (+5 XP)";
+            $xpReasons[] = 'Sedekah harian (+5 XP)';
         }
 
         // - Score 100 -> +20 XP
         if ($log->score === 100) {
             $extraXp += 20;
-            $xpReasons[] = "Amalan Harian Sempurna Score 100 (+20 XP)";
+            $xpReasons[] = 'Amalan Harian Sempurna Score 100 (+20 XP)';
         }
 
         if ($extraXp > 0) {

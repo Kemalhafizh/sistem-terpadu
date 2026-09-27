@@ -51,7 +51,7 @@ class CbtSeeder extends Seeder
                     'Berapakah luas segitiga dengan panjang alas $a = 10\\text{ cm}$ dan tinggi $t = 8\\text{ cm}$?',
                     'Tentukan nilai integral tentu: $$\\int_{0}^{2} (3x^2 + 2x) \\, dx$$',
                     'Berapakah peluang munculnya mata dadu prima pada pelemparan sebuah dadu berkisi enam?',
-                ]
+                ],
             ],
             [
                 'subject' => $fis,
@@ -68,7 +68,7 @@ class CbtSeeder extends Seeder
                     'Berapakah frekuensi gelombang foton $f = \\frac{1}{T}$ jika periodenya $T = 0.02\\text{ detik}$?',
                     'Alat optik yang menggunakan susunan lensa objektif dan okuler untuk melihat benda mikroskopis adalah...',
                     'Tentukan panjang gelombang de Broglie $\\lambda = \\frac{h}{p}$ untuk partikel bermassa $m$ dan momentum $p$!',
-                ]
+                ],
             ],
             [
                 'subject' => $pai,
@@ -80,7 +80,7 @@ class CbtSeeder extends Seeder
                     'Hukum menikah bagi orang yang sudah mampu secara fisik dan finansial adalah...', 'Siapakah khalifah pertama setelah wafatnya Rasulullah?',
                     'Berapa jumlah rakaat shalat fardhu dalam sehari semalam?', 'Perang yang terjadi pada tahun 2 Hijriah adalah perang...',
                     'Manakah yang termasuk akhlak mazmumah (tercela)?', 'Kitab suci yang diturunkan kepada Nabi Daud AS adalah...',
-                ]
+                ],
             ],
         ];
 
@@ -102,10 +102,10 @@ class CbtSeeder extends Seeder
                 }
 
                 $options = [
-                    'A' => ['text' => 'Pilihan Jawaban A: $' . ($q * 2) . '$', 'image_url' => null],
-                    'B' => ['text' => 'Pilihan Jawaban B (Kunci): $\\frac{' . ($q + 1) . '}{2}$', 'image_url' => null],
-                    'C' => ['text' => 'Pilihan Jawaban C: $\\sqrt{' . ($q * 3) . '}$', 'image_url' => null],
-                    'D' => ['text' => 'Pilihan Jawaban D: $' . ($q * 5) . '^2$', 'image_url' => null],
+                    'A' => ['text' => 'Pilihan Jawaban A: $'.($q * 2).'$', 'image_url' => null],
+                    'B' => ['text' => 'Pilihan Jawaban B (Kunci): $\\frac{'.($q + 1).'}{2}$', 'image_url' => null],
+                    'C' => ['text' => 'Pilihan Jawaban C: $\\sqrt{'.($q * 3).'}$', 'image_url' => null],
+                    'D' => ['text' => 'Pilihan Jawaban D: $'.($q * 5).'^2$', 'image_url' => null],
                     'E' => ['text' => 'Pilihan Jawaban E: $0$', 'image_url' => null],
                 ];
 
@@ -117,7 +117,7 @@ class CbtSeeder extends Seeder
                     'type' => 'multiple_choice',
                     'options' => $options,
                     'correct_answer' => 'B',
-                    'explanation' => 'Penjelasan untuk kunci jawaban B pada soal nomor ' . $q,
+                    'explanation' => 'Penjelasan untuk kunci jawaban B pada soal nomor '.$q,
                     'difficulty' => ['easy', 'medium', 'hard'][$q % 3],
                     'grade_level' => 'XII',
                 ]);

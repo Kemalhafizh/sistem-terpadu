@@ -54,15 +54,15 @@ class StudentPointLog extends Model
             // Pemicu Auto-Generate SP
             if ($student) {
                 $totalPoints = $student->total_points;
-                
+
                 // Highest level first, so only the top applicable SP is issued.
-                $thresholds = array_flip(\App\Models\WarningLetter::THRESHOLDS);
+                $thresholds = array_flip(WarningLetter::THRESHOLDS);
                 krsort($thresholds);
 
                 foreach ($thresholds as $threshold => $level) {
                     if ($totalPoints >= $threshold) {
                         // Check if SP already exists for this level
-                        \App\Models\WarningLetter::firstOrCreate(
+                        WarningLetter::firstOrCreate(
                             ['student_id' => $student->id, 'level' => $level],
                             [
                                 'point_threshold' => $threshold,

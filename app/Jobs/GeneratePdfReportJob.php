@@ -14,6 +14,7 @@ class GeneratePdfReportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 2;
+
     public int $backoff = 60;
 
     public function __construct(

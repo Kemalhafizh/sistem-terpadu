@@ -17,27 +17,19 @@ use Throwable;
 
 /**
  * Class MobileAuthController
- * 
+ *
  * Central authentication gateway for native mobile applications (Android & iOS).
  * Handles multi-device token registration, biometric challenge-response verification,
  * and remote session management.
- * 
- * @package App\Http\Controllers\Api\v1\Mobile
  */
 class MobileAuthController extends Controller
 {
-    /**
-     * @param PushNotificationService $pushService
-     */
     public function __construct(
         protected PushNotificationService $pushService
     ) {}
 
     /**
      * Authenticate user credentials and register the physical mobile device token.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -56,7 +48,7 @@ class MobileAuthController extends Controller
         try {
             $user = User::where('email', $validated['email'])->first();
 
-            if (!$user || !Hash::check($validated['password'], $user->password)) {
+            if (! $user || ! Hash::check($validated['password'], $user->password)) {
                 return response()->json([
                     'success' => false,
                     'code' => 'INVALID_CREDENTIALS',
@@ -97,9 +89,6 @@ class MobileAuthController extends Controller
 
     /**
      * Generate a cryptographic random nonce challenge for native biometric auth.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function biometricChallenge(Request $request): JsonResponse
     {
@@ -119,9 +108,6 @@ class MobileAuthController extends Controller
 
     /**
      * Verify native biometric challenge response and issue a valid authentication token.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function biometricVerify(Request $request): JsonResponse
     {
@@ -134,7 +120,7 @@ class MobileAuthController extends Controller
         $cacheKey = "bio_nonce_{$validated['device_id']}";
         $nonce = Cache::pull($cacheKey);
 
-        if (!$nonce) {
+        if (! $nonce) {
             return response()->json([
                 'success' => false,
                 'code' => 'CHALLENGE_EXPIRED',
@@ -148,7 +134,7 @@ class MobileAuthController extends Controller
                 ->where('is_enabled', true)
                 ->first();
 
-            if (!$credential) {
+            if (! $credential) {
                 return response()->json([
                     'success' => false,
                     'code' => 'BIOMETRIC_NOT_REGISTERED',
@@ -158,8 +144,8 @@ class MobileAuthController extends Controller
 
             // Cryptographic Verification: Verify digital signature using device public key
             $pubKeyStr = trim((string) $credential->public_key);
-            if (!str_contains($pubKeyStr, 'BEGIN PUBLIC KEY')) {
-                $pubKeyPem = "-----BEGIN PUBLIC KEY-----\n" . chunk_split($pubKeyStr, 64, "\n") . "-----END PUBLIC KEY-----\n";
+            if (! str_contains($pubKeyStr, 'BEGIN PUBLIC KEY')) {
+                $pubKeyPem = "-----BEGIN PUBLIC KEY-----\n".chunk_split($pubKeyStr, 64, "\n")."-----END PUBLIC KEY-----\n";
             } else {
                 $pubKeyPem = $pubKeyStr;
             }
@@ -181,7 +167,7 @@ class MobileAuthController extends Controller
                     || hash_equals(base64_encode(hash_hmac('sha256', $nonce, $pubKeyStr, true)), $validated['signature']);
             }
 
-            if (!$isVerified) {
+            if (! $isVerified) {
                 return response()->json([
                     'success' => false,
                     'code' => 'SIGNATURE_VERIFICATION_FAILED',
@@ -210,16 +196,13 @@ class MobileAuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 'VERIFICATION_ERROR',
-                'message' => 'Gagal memverifikasi biometrik: ' . $e->getMessage(),
+                'message' => 'Gagal memverifikasi biometrik: '.$e->getMessage(),
             ], 500);
         }
     }
 
     /**
      * Register or update the public key credential for FaceID / Fingerprint on this device.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function registerBiometric(Request $request): JsonResponse
     {
@@ -254,9 +237,6 @@ class MobileAuthController extends Controller
      * can actually be targeted at it. PushNotificationService::sendToUser()
      * already reads from UserDeviceToken — this was the missing HTTP
      * entry point into that already-real service.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function registerDevice(Request $request): JsonResponse
     {
@@ -279,9 +259,6 @@ class MobileAuthController extends Controller
 
     /**
      * Retrieve all active devices currently registered to the authenticated user.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getActiveDevices(Request $request): JsonResponse
     {
@@ -295,10 +272,6 @@ class MobileAuthController extends Controller
 
     /**
      * Revoke and terminate an active mobile device session.
-     *
-     * @param Request $request
-     * @param string $deviceId
-     * @return JsonResponse
      */
     public function revokeDevice(Request $request, string $deviceId): JsonResponse
     {

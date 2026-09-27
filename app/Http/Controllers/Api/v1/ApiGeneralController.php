@@ -64,7 +64,7 @@ class ApiGeneralController extends Controller
             })
             ->find($id);
 
-        if (!$announcement) {
+        if (! $announcement) {
             return $this->errorResponse('Pengumuman tidak ditemukan', 404);
         }
 

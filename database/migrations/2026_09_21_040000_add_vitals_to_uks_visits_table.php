@@ -15,10 +15,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('uks_visits', function (Blueprint $table) {
-            if (!Schema::hasColumn('uks_visits', 'temperature')) {
+            if (! Schema::hasColumn('uks_visits', 'temperature')) {
                 $table->decimal('temperature', 4, 1)->nullable()->after('treatment');
             }
-            if (!Schema::hasColumn('uks_visits', 'blood_pressure')) {
+            if (! Schema::hasColumn('uks_visits', 'blood_pressure')) {
                 $table->string('blood_pressure', 20)->nullable()->after('temperature');
             }
         });
@@ -28,7 +28,7 @@ return new class extends Migration
     {
         Schema::table('uks_visits', function (Blueprint $table) {
             $cols = array_filter(['temperature', 'blood_pressure'], fn ($c) => Schema::hasColumn('uks_visits', $c));
-            if (!empty($cols)) {
+            if (! empty($cols)) {
                 $table->dropColumn($cols);
             }
         });

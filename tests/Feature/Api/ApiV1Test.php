@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ChatMessageSent;
 use App\Models\AcademicEvent;
 use App\Models\AcademicYear;
 use App\Models\Announcement;
@@ -7,14 +8,13 @@ use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Classroom;
 use App\Models\Grade;
-use App\Models\ParentMessage;
+use App\Models\PaymentCategory;
+use App\Models\PointCategory;
 use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\Subject;
-use App\Models\TeachingJournal;
 use App\Models\User;
-use App\Events\ChatMessageSent;
 use Illuminate\Support\Facades\Event;
 use Laravel\Sanctum\Sanctum;
 
@@ -133,7 +133,7 @@ test('siswa dapat mengambil data absensi mereka', function () {
 test('siswa dapat mengambil tagihan keuangan mereka', function () {
     Sanctum::actingAs($this->studentUser);
 
-    $paymentCategory = \App\Models\PaymentCategory::create([
+    $paymentCategory = PaymentCategory::create([
         'name' => 'SPP',
         'default_amount' => 150000,
         'is_monthly' => true,
@@ -159,7 +159,7 @@ test('siswa dapat mengambil tagihan keuangan mereka', function () {
 test('siswa dapat mengambil log poin BK mereka', function () {
     Sanctum::actingAs($this->studentUser);
 
-    $pointCategory = \App\Models\PointCategory::create([
+    $pointCategory = PointCategory::create([
         'name' => 'Keterlambatan',
         'type' => 'penalty',
         'default_points' => 10,
@@ -316,8 +316,8 @@ test('guru dapat menginput absensi kehadiran siswa secara bulk', function () {
                 'student_id' => $this->student->id,
                 'status' => 'H',
                 'notes' => 'Hadir tepat waktu',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertStatus(200)

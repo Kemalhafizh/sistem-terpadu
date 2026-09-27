@@ -6,7 +6,6 @@ use App\Models\LibraryLoan;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);

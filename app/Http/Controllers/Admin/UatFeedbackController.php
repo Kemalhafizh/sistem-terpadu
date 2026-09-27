@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\UatFeedback;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UatFeedbackController extends Controller
 {
@@ -27,7 +27,7 @@ class UatFeedbackController extends Controller
         $screenshotPath = null;
 
         // Handle base64 screenshot upload from html2canvas with strict extension whitelist
-        if (!empty($validated['screenshot']) && str_starts_with($validated['screenshot'], 'data:image')) {
+        if (! empty($validated['screenshot']) && str_starts_with($validated['screenshot'], 'data:image')) {
             try {
                 $imageParts = explode(';base64,', $validated['screenshot']);
                 if (count($imageParts) === 2) {
@@ -42,7 +42,7 @@ class UatFeedbackController extends Controller
                         'webp' => 'webp',
                     ];
 
-                    if (!isset($allowedExtensions[$rawType])) {
+                    if (! isset($allowedExtensions[$rawType])) {
                         throw new \InvalidArgumentException('Format gambar tidak didukung atau tidak aman.');
                     }
 
@@ -53,8 +53,8 @@ class UatFeedbackController extends Controller
                         throw new \InvalidArgumentException('Data gambar base64 tidak valid.');
                     }
 
-                    $filename = 'screenshot_' . time() . '_' . uniqid() . '.' . $imageType;
-                    $path = 'uat_screenshots/' . $filename;
+                    $filename = 'screenshot_'.time().'_'.uniqid().'.'.$imageType;
+                    $path = 'uat_screenshots/'.$filename;
 
                     Storage::disk('public')->put($path, $imageBase64);
                     $screenshotPath = $path;
@@ -87,7 +87,7 @@ class UatFeedbackController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Feedback Anda berhasil dikirim! Terima kasih atas kontribusi Anda dalam pengembangan Sistem Terpadu.',
-                'data' => $feedback
+                'data' => $feedback,
             ]);
         }
 
@@ -115,11 +115,11 @@ class UatFeedbackController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('description', 'like', "%{$search}%")
-                  ->orWhere('page_url', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%")
-                        ->orWhere('role', 'like', "%{$search}%");
-                  });
+                    ->orWhere('page_url', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%")
+                            ->orWhere('role', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -173,13 +173,13 @@ class UatFeedbackController extends Controller
             ->mapWithKeys(function ($item) use ($totalFeedback) {
                 return [$item->category => [
                     'count' => $item->total,
-                    'percentage' => $totalFeedback > 0 ? round(($item->total / $totalFeedback) * 100, 1) : 0
+                    'percentage' => $totalFeedback > 0 ? round(($item->total / $totalFeedback) * 100, 1) : 0,
                 ]];
             })->toArray();
 
         // Ensure all categories exist in output structure
         foreach (['bug', 'ui_suggestion', 'unclear_feature', 'slow', 'other'] as $cat) {
-            if (!isset($byCategory[$cat])) {
+            if (! isset($byCategory[$cat])) {
                 $byCategory[$cat] = ['count' => 0, 'percentage' => 0];
             }
         }
@@ -191,12 +191,12 @@ class UatFeedbackController extends Controller
             ->mapWithKeys(function ($item) use ($totalFeedback) {
                 return [$item->status => [
                     'count' => $item->total,
-                    'percentage' => $totalFeedback > 0 ? round(($item->total / $totalFeedback) * 100, 1) : 0
+                    'percentage' => $totalFeedback > 0 ? round(($item->total / $totalFeedback) * 100, 1) : 0,
                 ]];
             })->toArray();
 
         foreach (['open', 'in_progress', 'fixed', 'verified', 'wont_fix'] as $stat) {
-            if (!isset($byStatus[$stat])) {
+            if (! isset($byStatus[$stat])) {
                 $byStatus[$stat] = ['count' => 0, 'percentage' => 0];
             }
         }
@@ -210,7 +210,7 @@ class UatFeedbackController extends Controller
             })->toArray();
 
         foreach (['critical', 'high', 'medium', 'low'] as $prio) {
-            if (!isset($byPriority[$prio])) {
+            if (! isset($byPriority[$prio])) {
                 $byPriority[$prio] = 0;
             }
         }

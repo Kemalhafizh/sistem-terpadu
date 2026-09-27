@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Models\QuestionBankCategory;
 use App\Models\QuestionBankItem;
-use App\Models\Exam;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class QuestionBankService
 {
@@ -16,6 +15,7 @@ class QuestionBankService
         if ($subjectId) {
             $query->where('subject_id', $subjectId);
         }
+
         return $query->latest()->get();
     }
 
@@ -23,22 +23,22 @@ class QuestionBankService
     {
         $query = QuestionBankItem::with(['category.subject', 'creator']);
 
-        if (!empty($filters['category_id'])) {
+        if (! empty($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
         }
-        if (!empty($filters['difficulty'])) {
+        if (! empty($filters['difficulty'])) {
             $query->byDifficulty($filters['difficulty']);
         }
-        if (!empty($filters['cognitive_level'])) {
+        if (! empty($filters['cognitive_level'])) {
             $query->byCognitive($filters['cognitive_level']);
         }
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
         if (isset($filters['is_validated'])) {
             $query->where('is_validated', (bool) $filters['is_validated']);
         }
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where('question_text', 'like', "%{$search}%");
         }
@@ -73,6 +73,7 @@ class QuestionBankService
     {
         $item = QuestionBankItem::findOrFail($id);
         $item->update($data);
+
         return $item;
     }
 
@@ -84,6 +85,7 @@ class QuestionBankService
             'validated_by' => $validatorId,
             'validated_at' => now(),
         ]);
+
         return $item;
     }
 
@@ -108,6 +110,7 @@ class QuestionBankService
             if ($categoryId) {
                 $q->where('category_id', $categoryId);
             }
+
             return $q->inRandomOrder()->limit($limit)->get();
         };
 
@@ -119,7 +122,7 @@ class QuestionBankService
             $remaining = $totalQuestions - $selectedItems->count();
             $existingIds = $selectedItems->pluck('id')->toArray();
             $fallback = QuestionBankItem::whereNotIn('id', $existingIds)
-                ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
+                ->when($categoryId, fn ($q) => $q->where('category_id', $categoryId))
                 ->inRandomOrder()
                 ->limit($remaining)
                 ->get();
@@ -127,7 +130,7 @@ class QuestionBankService
         }
 
         // If exam_id provided, link them
-        if (!empty($criteria['exam_id'])) {
+        if (! empty($criteria['exam_id'])) {
             $examId = $criteria['exam_id'];
             DB::table('exam_question_links')->where('exam_id', $examId)->delete();
 
@@ -158,7 +161,7 @@ class QuestionBankService
     public function getDuplicateCheck(string $questionText, ?int $categoryId = null): array
     {
         $normalizedNew = strtolower(trim(preg_replace('/[^a-zA-Z0-9]/', '', $questionText)));
-        $candidates = QuestionBankItem::when($categoryId, fn($q) => $q->where('category_id', $categoryId))
+        $candidates = QuestionBankItem::when($categoryId, fn ($q) => $q->where('category_id', $categoryId))
             ->limit(100)
             ->get();
 

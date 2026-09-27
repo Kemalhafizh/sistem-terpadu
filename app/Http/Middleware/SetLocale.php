@@ -11,21 +11,21 @@ class SetLocale
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $locale = null;
 
-        if (auth()->check() && !empty(auth()->user()->preferred_locale)) {
+        if (auth()->check() && ! empty(auth()->user()->preferred_locale)) {
             $locale = auth()->user()->preferred_locale;
         }
 
-        if (!$locale && $request->hasSession()) {
+        if (! $locale && $request->hasSession()) {
             $locale = session('locale');
         }
 
-        if (!$locale || !in_array($locale, ['id', 'en', 'ar'])) {
+        if (! $locale || ! in_array($locale, ['id', 'en', 'ar'])) {
             $locale = config('app.locale', 'id');
         }
 

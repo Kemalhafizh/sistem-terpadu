@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
+use App\Models\ElearningAnnouncement;
 use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
-use App\Models\ElearningSubmission;
-use App\Models\ElearningAnnouncement;
 use App\Models\ElearningMaterialComment;
+use App\Models\ElearningSubmission;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Services\ElearningService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Gate;
 
 class ElearningController extends Controller
 {
@@ -50,7 +49,7 @@ class ElearningController extends Controller
             // Student: load classes for their classroom (students do not see archived classes unless specified)
             $classesQuery = ElearningClass::where('classroom_id', $user->student->classroom_id)
                 ->with(['subject', 'teacher', 'materials', 'assignments']);
-            
+
             if ($showArchived) {
                 $classes = $classesQuery->where('is_archived', true)->get();
             } else {
@@ -120,7 +119,7 @@ class ElearningController extends Controller
                 $isAuthorized = true;
             }
         } elseif ($user->role === 'parent') {
-            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
+            $isAuthorized = Student::where('parent_id', $user->id)
                 ->where('classroom_id', $elearningClass->classroom_id)
                 ->exists();
         } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
@@ -129,7 +128,7 @@ class ElearningController extends Controller
             }
         }
 
-        if (!$isAuthorized) {
+        if (! $isAuthorized) {
             abort(403, 'Anda tidak memiliki akses ke kelas virtual ini.');
         }
 
@@ -372,7 +371,7 @@ class ElearningController extends Controller
             abort(400);
         }
 
-        if (auth()->id() !== $announcement->user_id && !in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (auth()->id() !== $announcement->user_id && ! in_array(auth()->user()->role, ['admin', 'superadmin'])) {
             abort(403);
         }
 
@@ -400,7 +399,7 @@ class ElearningController extends Controller
                 $isAuthorized = true;
             }
         } elseif ($user->role === 'parent') {
-            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
+            $isAuthorized = Student::where('parent_id', $user->id)
                 ->where('classroom_id', $elearningClass->classroom_id)
                 ->exists();
         } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
@@ -409,7 +408,7 @@ class ElearningController extends Controller
             }
         }
 
-        if (!$isAuthorized) {
+        if (! $isAuthorized) {
             abort(403, 'Anda tidak memiliki akses ke materi ini.');
         }
 
@@ -440,7 +439,7 @@ class ElearningController extends Controller
                 $isAuthorized = true;
             }
         } elseif ($user->role === 'parent') {
-            $isAuthorized = \App\Models\Student::where('parent_id', $user->id)
+            $isAuthorized = Student::where('parent_id', $user->id)
                 ->where('classroom_id', $elearningClass->classroom_id)
                 ->exists();
         } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
@@ -449,7 +448,7 @@ class ElearningController extends Controller
             }
         }
 
-        if (!$isAuthorized) {
+        if (! $isAuthorized) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -482,7 +481,7 @@ class ElearningController extends Controller
         $isTeacher = in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']) && auth()->id() === $material->elearningClass->teacher_id;
         $isAdmin = in_array(auth()->user()->role, ['admin', 'superadmin']);
 
-        if (auth()->id() !== $comment->user_id && !$isTeacher && !$isAdmin) {
+        if (auth()->id() !== $comment->user_id && ! $isTeacher && ! $isAdmin) {
             abort(403, 'Akses ditolak.');
         }
 

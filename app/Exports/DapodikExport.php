@@ -3,14 +3,16 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class DapodikExport implements FromArray, WithHeadings, WithTitle, ShouldAutoSize
+class DapodikExport implements FromArray, ShouldAutoSize, WithHeadings, WithTitle
 {
     protected $data;
+
     protected $headings;
+
     protected $title;
 
     public function __construct(array $data, array $headings, string $title)

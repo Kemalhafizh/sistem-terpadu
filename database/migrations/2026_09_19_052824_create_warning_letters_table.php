@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('digital_signature')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             // Unik per student dan level
             $table->unique(['student_id', 'level']);
         });
