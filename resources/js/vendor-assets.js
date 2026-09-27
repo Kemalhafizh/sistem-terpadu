@@ -4,7 +4,6 @@
 // through App\Support\VendorAsset. Keep this list in sync with that class
 // (tests/Feature/Security/VendorAssetsTest.php checks it).
 import.meta.glob([
-    '../../node_modules/alpinejs/dist/cdn.min.js',
     '../../node_modules/apexcharts/dist/apexcharts.min.js',
     '../../node_modules/chart.js/dist/chart.umd.min.js',
     '../../node_modules/fullcalendar/index.global.min.js',

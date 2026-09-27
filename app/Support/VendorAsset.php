@@ -23,7 +23,6 @@ use InvalidArgumentException;
 class VendorAsset
 {
     public const SCRIPTS = [
-        'alpinejs' => 'node_modules/alpinejs/dist/cdn.min.js',
         'apexcharts' => 'node_modules/apexcharts/dist/apexcharts.min.js',
         'chartjs' => 'node_modules/chart.js/dist/chart.umd.min.js',
         'fullcalendar' => 'node_modules/fullcalendar/index.global.min.js',

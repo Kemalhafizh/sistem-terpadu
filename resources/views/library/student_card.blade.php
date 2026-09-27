@@ -11,6 +11,12 @@
         @layer base {
             *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
         }
+        @theme {
+            /* Same primary palette as resources/css/app.css */
+            --color-primary-200: #a7f3d0;
+            --color-primary-600: #059669;
+            --color-primary-700: #047857;
+        }
     </style>
     <style>
         /* Gaya Khusus Cetak Kartu */
