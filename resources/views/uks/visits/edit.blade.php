@@ -33,7 +33,7 @@
         allergies: '{{ old('allergies', $visit->student->allergies) }}',
         
         // AlpineJS Medicine rows
-        rows: {!! json_encode(old('medicines', $visit->medicines->isNotEmpty() ? $visit->medicines->map(fn($m) => ['id' => $m->id, 'quantity' => $m->pivot->quantity]) : [['id' => '', 'quantity' => 1]])) !!},
+        rows: {{ Js::from(old('medicines', $visit->medicines->isNotEmpty() ? $visit->medicines->map(fn($m) => ['id' => $m->id, 'quantity' => $m->pivot->quantity]) : [['id' => '', 'quantity' => 1]])) }},
         medicinesList: {{ $medicines->toJson() }},
         
         getAvailableStock(medId) {

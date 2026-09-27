@@ -21,9 +21,9 @@
                 templateId: '',
                 messageText: '',
                 scheduledAt: '',
-                templates: @json($templates->keyBy('id')),
+                templates: {{ Js::from($templates->keyBy('id')) }},
                 search: '',
-                users: @json($users),
+                users: {{ Js::from($users) }},
                 selectedUsers: [],
                 get filteredUsers() {
                     if (this.search === '') return [];

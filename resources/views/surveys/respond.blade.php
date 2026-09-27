@@ -29,11 +29,11 @@
     <!-- Main Container -->
     <div class="max-w-4xl mx-auto space-y-8" 
          x-data="surveyResponder({
-             questions: @json($survey->questions->map(fn($q) => [
+             questions: {{ Js::from($survey->questions->map(fn($q) => [
                  'id' => $q->id,
                  'is_required' => $q->is_required,
                  'type' => $q->type
-             ]))
+             ])) }}
          })">
         
         <!-- Welcome & Instructions Card -->
@@ -156,7 +156,7 @@
                         <!-- 4. Checkbox Type -->
                         @elseif($question->type === 'checkbox')
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" 
-                                 x-data="{ selectedValues: @json(old('answers.' . $question->id, [])) }"
+                                 x-data="{ selectedValues: {{ Js::from(old('answers.' . $question->id, [])) }} }"
                                  x-init="$watch('selectedValues', val => updateAnswer({{ $question->id }}, val))">
                                 @foreach($question->options as $oIndex => $option)
                                     <label class="relative flex items-center p-4 bg-slate-50 dark:bg-slate-900/40 hover:bg-emerald-500/5 border border-slate-200 dark:border-slate-700 rounded-2xl cursor-pointer transition-all duration-200 group">

@@ -33,7 +33,7 @@
         allergies: '{{ old('allergies') }}',
         
         // AlpineJS Medicine rows
-        rows: @json(old('medicines', [['id' => '', 'quantity' => 1]])),
+        rows: {{ Js::from(old('medicines', [['id' => '', 'quantity' => 1]])) }},
         medicinesList: {{ $medicines->toJson() }},
         
         getAvailableStock(medId) {
