@@ -13,7 +13,8 @@ class FoundationGovernanceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actingAs(User::factory()->create());
+        // Foundation governance is for school leadership (was open to every signed-in user).
+        $this->actingAs(User::factory()->create(['role' => 'kepala_sekolah']));
     }
 
     public function test_can_view_foundation_dashboard()

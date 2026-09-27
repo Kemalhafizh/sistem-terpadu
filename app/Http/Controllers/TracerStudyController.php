@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlumniData;
-use App\Models\Student;
 use App\Models\TracerResponse;
 use App\Services\AlumniEnhancedService;
 use App\Services\AlumniService;
@@ -24,31 +23,27 @@ class TracerStudyController extends Controller
 
     /**
      * Show the tracer study questionnaire form for alumni.
+     * Admins get a read-only preview filled with an existing alumnus.
      */
     public function showForm()
     {
         $user = auth()->user();
-        $student = $user->student;
 
-        if ($user->role === 'admin' || $user->role === 'superadmin') {
+        if ($this->isAdmin($user)) {
+            // This used to create a fake student + alumnus with model factories
+            // (dev-only classes) when none existed: a 500 in production.
             $alumni = AlumniData::first();
             if (! $alumni) {
-                $student = Student::factory()->create(['status' => 'alumni']);
-                $alumni = AlumniData::factory()->create(['student_id' => $student->id]);
+                return redirect()->route('alumni.tracer-study.analytics')
+                    ->with('info', 'Belum ada data alumni, jadi pratinjau kuesioner belum bisa ditampilkan.');
             }
-            $existingResponse = $alumni->tracerResponse;
 
-            return view('alumni.tracer.form', compact('alumni', 'existingResponse'));
+            return view('alumni.tracer.form', ['alumni' => $alumni, 'existingResponse' => $alumni->tracerResponse]);
         }
 
-        if (! $student || $student->status !== 'alumni' || ! $student->alumniData) {
-            abort(403, 'Hanya siswa dengan status Alumni yang dapat mengakses dan mengisi kuesioner Tracer Study ini.');
-        }
+        $alumni = $this->ownAlumniOrAbort($user, 'Hanya siswa dengan status Alumni yang dapat mengakses dan mengisi kuesioner Tracer Study ini.');
 
-        $alumni = $student->alumniData;
-        $existingResponse = $alumni->tracerResponse;
-
-        return view('alumni.tracer.form', compact('alumni', 'existingResponse'));
+        return view('alumni.tracer.form', ['alumni' => $alumni, 'existingResponse' => $alumni->tracerResponse]);
     }
 
     /**
@@ -57,20 +52,12 @@ class TracerStudyController extends Controller
     public function submitForm(Request $request)
     {
         $user = auth()->user();
-        $student = $user->student;
 
-        if ($user->role === 'admin' || $user->role === 'superadmin') {
-            $alumni = AlumniData::first();
-            if (! $alumni) {
-                $student = Student::factory()->create(['status' => 'alumni']);
-                $alumni = AlumniData::factory()->create(['student_id' => $student->id]);
-            }
-        } else {
-            if (! $student || $student->status !== 'alumni' || ! $student->alumniData) {
-                abort(403, 'Akses ditolak. Anda tidak terdaftar sebagai alumni.');
-            }
-            $alumni = $student->alumniData;
-        }
+        // Admins only preview the form. Submitting used to overwrite the
+        // answers of whichever alumnus happened to be first in the table.
+        abort_if($this->isAdmin($user), 403, 'Admin hanya dapat meninjau kuesioner, bukan mengisinya atas nama alumni.');
+
+        $alumni = $this->ownAlumniOrAbort($user, 'Akses ditolak. Anda tidak terdaftar sebagai alumni.');
 
         $validated = $request->validate([
             'current_activity' => 'required|in:study,work,entrepreneur,unemployed,other',
@@ -96,6 +83,8 @@ class TracerStudyController extends Controller
      */
     public function editResponse(TracerResponse $tracerResponse)
     {
+        $this->authorizeResponse($tracerResponse);
+
         $alumni = $tracerResponse->alumni;
         $existingResponse = $tracerResponse;
 
@@ -107,6 +96,8 @@ class TracerStudyController extends Controller
      */
     public function updateResponse(Request $request, TracerResponse $tracerResponse)
     {
+        $this->authorizeResponse($tracerResponse);
+
         $validated = $request->validate([
             'current_activity' => 'required|in:study,work,entrepreneur,unemployed,other',
             'institution_name' => 'nullable|string|max:255',
@@ -125,6 +116,35 @@ class TracerStudyController extends Controller
 
         return redirect()->route('alumni.tracer-study.form')
             ->with('success', 'Tanggapan kuesioner Tracer Study berhasil diperbarui.');
+    }
+
+    private function isAdmin($user): bool
+    {
+        return in_array($user->role, ['admin', 'superadmin'], true);
+    }
+
+    private function ownAlumniOrAbort($user, string $message): AlumniData
+    {
+        $student = $user->student;
+
+        abort_if(! $student || $student->status !== 'alumni' || ! $student->alumniData, 403, $message);
+
+        return $student->alumniData;
+    }
+
+    /**
+     * Alumni may only edit their own answers (the route takes any response id).
+     */
+    private function authorizeResponse(TracerResponse $tracerResponse): void
+    {
+        $user = auth()->user();
+
+        if ($this->isAdmin($user)) {
+            return;
+        }
+
+        $own = $user->student?->alumniData;
+        abort_unless($own && $tracerResponse->alumni_data_id === $own->id, 403, 'Anda hanya dapat mengubah jawaban kuesioner milik sendiri.');
     }
 
     /**
