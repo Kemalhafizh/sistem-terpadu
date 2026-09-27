@@ -9,7 +9,7 @@ use App\Models\Billing;
 use App\Models\Grade;
 use App\Models\MobileSyncLog;
 use App\Models\Student;
-use App\Models\TahfidzRecord;
+use App\Models\TahfidzLog;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -161,16 +161,18 @@ class MobileSyncService
         $total += $bills->count();
 
         // Qur'an Tahfidz Progress Records
-        $tahfidz = TahfidzRecord::where('student_id', $student->id)
+        // Payload keys are kept stable for the Android client; they map onto
+        // the tahfidz_logs columns (from_ayat/to_ayat/date/grade).
+        $tahfidz = TahfidzLog::where('student_id', $student->id)
             ->where('updated_at', '>=', $since)
             ->get()
             ->map(fn ($t) => [
                 'id' => $t->id,
                 'surah_name' => $t->surah_name,
-                'start_ayah' => $t->start_ayah,
-                'end_ayah' => $t->end_ayah,
-                'assessment_date' => $t->assessment_date,
-                'fluency_score' => $t->fluency_score,
+                'start_ayah' => $t->from_ayat,
+                'end_ayah' => $t->to_ayat,
+                'assessment_date' => $t->date?->toDateString(),
+                'fluency_score' => $t->grade,
                 'updated_at' => $t->updated_at->toIso8601String(),
             ]);
         $total += $tahfidz->count();

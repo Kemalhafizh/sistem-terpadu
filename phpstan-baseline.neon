@@ -2407,12 +2407,6 @@ parameters:
 			path: app/Services/LibraryService.php
 
 		-
-			message: '#^Call to static method where\(\) on an unknown class App\\Models\\TahfidzRecord\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Services/Mobile/MobileSyncService.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1

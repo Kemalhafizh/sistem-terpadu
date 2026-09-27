@@ -24,7 +24,7 @@
                 <div class="relative z-10">
                     <span class="text-xs font-semibold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full">Progres Tahfidz Terbaru</span>
                     <h3 class="text-2xl font-bold mt-2">{{ $data['latest_tahfidz']['surah'] }}</h3>
-                    <p class="text-emerald-100 text-sm mt-0.5">{{ $data['latest_tahfidz']['ayah'] }} &bull; Nilai Kelancaran: {{ $data['latest_tahfidz']['score'] }}/100</p>
+                    <p class="text-emerald-100 text-sm mt-0.5">{{ $data['latest_tahfidz']['ayah'] }} &bull; Nilai Kelancaran: {{ $data['latest_tahfidz']['score'] ?? '-' }}</p>
                 </div>
             </div>
         @endif

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Mobile;
 
+use App\Models\Student;
+use App\Models\TahfidzLog;
 use App\Models\User;
 use App\Models\UserDeviceToken;
 use App\Services\Mobile\PushNotificationService;
@@ -234,6 +236,52 @@ class MobileGatewaySuiteTest extends TestCase
             'user_id' => $user->id,
             'device_id' => 'mobile-test-device-001',
         ]);
+    }
+
+    public function test_mobile_delta_sync_pull_includes_student_tahfidz_logs(): void
+    {
+        $student = Student::factory()->create();
+        $teacher = User::factory()->create(['role' => 'guru']);
+
+        $recent = TahfidzLog::create([
+            'student_id' => $student->id,
+            'teacher_id' => $teacher->id,
+            'surah_number' => 67,
+            'surah_name' => 'Al-Mulk',
+            'from_ayat' => 1,
+            'to_ayat' => 10,
+            'type' => 'ziyadah',
+            'grade' => 'A',
+            'date' => '2026-09-20',
+        ]);
+
+        // Older than the `since` cursor, so it must not be re-sent.
+        $stale = TahfidzLog::create([
+            'student_id' => $student->id,
+            'teacher_id' => $teacher->id,
+            'surah_number' => 78,
+            'surah_name' => 'An-Naba',
+            'from_ayat' => 1,
+            'to_ayat' => 5,
+            'date' => '2026-01-10',
+        ]);
+        TahfidzLog::whereKey($stale->id)->update(['updated_at' => now()->subDays(30)]);
+
+        $response = $this->actingAs($student->user)
+            ->withHeader('X-Device-ID', 'mobile-test-device-002')
+            ->getJson('/api/v1/mobile/sync/pull?since='.urlencode(now()->subDays(7)->toIso8601String()));
+
+        $response->assertStatus(200)
+            ->assertJsonCount(1, 'delta.student_data.tahfidz')
+            ->assertJsonPath('delta.student_data.tahfidz.0', [
+                'id' => $recent->id,
+                'surah_name' => 'Al-Mulk',
+                'start_ayah' => 1,
+                'end_ayah' => 10,
+                'assessment_date' => '2026-09-20',
+                'fluency_score' => 'A',
+                'updated_at' => $recent->fresh()->updated_at->toIso8601String(),
+            ]);
     }
 
     public function test_well_known_manifests_for_android_and_ios_deep_linking(): void
