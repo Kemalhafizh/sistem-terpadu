@@ -2,8 +2,6 @@
 
 use App\Events\ProctorInterventionEvent;
 use App\Models\AcademicYear;
-use App\Models\CbtEssaySubmission;
-use App\Models\CbtProctorLog;
 use App\Models\Classroom;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
@@ -35,7 +33,7 @@ beforeEach(function () {
         $this->questions[] = QuestionBank::create([
             'subject_id' => $this->subject->id,
             'created_by' => $this->teacher->id,
-            'question_text' => "Soal Fisika Nomor " . ($i + 1),
+            'question_text' => 'Soal Fisika Nomor '.($i + 1),
             'type' => 'multiple_choice',
             'options' => ['A' => 'Opsi A', 'B' => 'Opsi B', 'C' => 'Opsi C', 'D' => 'Opsi D'],
             'correct_answer' => $correct,

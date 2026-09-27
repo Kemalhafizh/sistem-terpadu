@@ -5,7 +5,6 @@ namespace Tests\Feature\ExtendedDiamond;
 use App\Models\Classroom;
 use App\Models\ClassroomLayout;
 use App\Models\KanbanBoard;
-use App\Models\ScheduleBuilderDraft;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

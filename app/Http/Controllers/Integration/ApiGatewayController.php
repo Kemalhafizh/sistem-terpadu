@@ -55,8 +55,8 @@ class ApiGatewayController extends Controller
 
         $client = ApiClient::create([
             'name' => $request->name,
-            'client_id' => 'client_' . Str::random(12),
-            'client_secret' => 'secret_' . Str::random(32),
+            'client_id' => 'client_'.Str::random(12),
+            'client_secret' => 'secret_'.Str::random(32),
             'allowed_scopes' => ['read', 'write'],
             'rate_limit_per_minute' => $request->rate_limit_per_minute,
             'is_active' => true,

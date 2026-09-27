@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\User;
 use App\Models\Announcement;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -31,17 +31,17 @@ class SyncConsistencyTest extends TestCase
                 [
                     'id' => 'action-1',
                     'type' => 'offline_draft',
-                    'data' => ['title' => 'Test']
-                ]
-            ]
+                    'data' => ['title' => 'Test'],
+                ],
+            ],
         ];
 
         // 1st request
         $response1 = $this->actingAs($this->user)
             ->postJson('/api/v1/sync/batch', $payload, [
-                'Idempotency-Key' => $idempotencyKey
+                'Idempotency-Key' => $idempotencyKey,
             ]);
-        
+
         $response1->assertStatus(200);
 
         // Modify payload just to prove it won't be processed but returned from cache
@@ -50,19 +50,19 @@ class SyncConsistencyTest extends TestCase
                 [
                     'id' => 'action-2',
                     'type' => 'offline_draft',
-                    'data' => ['title' => 'Test Modified']
-                ]
-            ]
+                    'data' => ['title' => 'Test Modified'],
+                ],
+            ],
         ];
 
         // 2nd request with SAME idempotency key
         $response2 = $this->actingAs($this->user)
             ->postJson('/api/v1/sync/batch', $payload2, [
-                'Idempotency-Key' => $idempotencyKey
+                'Idempotency-Key' => $idempotencyKey,
             ]);
 
         $response2->assertStatus(200);
-        
+
         // Response content should match EXACTLY the first response because it's cached
         $this->assertEquals($response1->getContent(), $response2->getContent());
     }

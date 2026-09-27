@@ -10,6 +10,6 @@ class TurnoverAnalytic extends Model
     use HasFactory;
 
     protected $fillable = [
-        'department', 'year', 'month', 'headcount_start', 'terminations', 'turnover_rate'
+        'department', 'year', 'month', 'headcount_start', 'terminations', 'turnover_rate',
     ];
 }

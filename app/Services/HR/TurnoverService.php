@@ -3,7 +3,6 @@
 namespace App\Services\HR;
 
 use App\Models\ExitInterview;
-use App\Models\TurnoverAnalytic;
 
 class TurnoverService
 {

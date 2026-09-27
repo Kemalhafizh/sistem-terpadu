@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Communication\OmnichannelController;
 use App\Http\Controllers\Communication\DripCampaignController;
 use App\Http\Controllers\Communication\NpsController;
+use App\Http\Controllers\Communication\OmnichannelController;
 use App\Http\Controllers\Communication\PublicRelationsController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('omnichannel')->name('omnichannel.')->group(function () {

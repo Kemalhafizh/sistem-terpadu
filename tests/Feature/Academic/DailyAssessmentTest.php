@@ -2,24 +2,24 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\DailyAssessment;
+use App\Models\DailyAssessmentScore;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
-use App\Models\DailyAssessment;
-use App\Models\DailyAssessmentScore;
 
 beforeEach(function () {
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
     $this->classroom = Classroom::factory()->create();
-    
+
     // Create teacher
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
-    
+
     // Create student
     $this->studentUser = User::factory()->create(['role' => 'student', 'must_change_password' => false]);
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
-        'classroom_id' => $this->classroom->id
+        'classroom_id' => $this->classroom->id,
     ]);
 
     // Create parent
@@ -30,7 +30,7 @@ beforeEach(function () {
         'name' => 'Matematika',
         'code' => 'MTK',
         'category' => 'Nasional',
-        'kkm' => 75
+        'kkm' => 75,
     ]);
 });
 
@@ -48,7 +48,7 @@ test('guru can create daily assessment', function () {
         'assessment_date' => now()->format('Y-m-d'),
         'max_score' => 100,
         'kkm' => 75,
-        'description' => 'Evaluasi Bab 3 Trigonometri'
+        'description' => 'Evaluasi Bab 3 Trigonometri',
     ]);
 
     // Should redirect to input scores page
@@ -88,9 +88,9 @@ test('guru can batch input student scores and auto detect remedial', function ()
         'grades' => [
             $this->student->id => [
                 'score' => 60,
-                'notes' => 'Kurang konsentrasi'
-            ]
-        ]
+                'notes' => 'Kurang konsentrasi',
+            ],
+        ],
     ]);
 
     $response->assertRedirect(route('daily-assessments.show', $assessment->id));
@@ -101,7 +101,7 @@ test('guru can batch input student scores and auto detect remedial', function ()
         'student_id' => $this->student->id,
         'score' => 60,
         'needs_remedial' => true,
-        'remedial_status' => 'pending'
+        'remedial_status' => 'pending',
     ]);
 });
 
@@ -123,13 +123,13 @@ test('remedial scores cap at KKM for final score calculation', function () {
         'student_id' => $this->student->id,
         'score' => 60,
         'needs_remedial' => true,
-        'remedial_status' => 'pending'
+        'remedial_status' => 'pending',
     ]);
 
     // Input remedial score of 90 (above KKM 75)
     $response = $this->actingAs($this->guru)->post(route('daily-assessments.store-remedial', $scoreRecord->id), [
         'remedial_score' => 90,
-        'notes' => 'Sudah remedial'
+        'notes' => 'Sudah remedial',
     ]);
 
     $response->assertRedirect(route('daily-assessments.remedial'));
@@ -161,7 +161,7 @@ test('student can view their daily assessments transcript', function () {
         'student_id' => $this->student->id,
         'score' => 85,
         'needs_remedial' => false,
-        'remedial_status' => 'not_needed'
+        'remedial_status' => 'not_needed',
     ]);
 
     $response = $this->actingAs($this->studentUser)->get(route('student.daily-assessments'));
@@ -188,7 +188,7 @@ test('parent can view child daily assessments transcript', function () {
         'student_id' => $this->student->id,
         'score' => 92,
         'needs_remedial' => false,
-        'remedial_status' => 'not_needed'
+        'remedial_status' => 'not_needed',
     ]);
 
     $response = $this->actingAs($this->parentUser)->get(route('parent-portal.daily-assessments', $this->student));
@@ -229,12 +229,12 @@ test('analytics is calculated and displays correctly', function () {
         'student_id' => $this->student->id,
         'score' => 88,
         'needs_remedial' => false,
-        'remedial_status' => 'not_needed'
+        'remedial_status' => 'not_needed',
     ]);
 
     $response = $this->actingAs($this->guru)->get(route('daily-assessments.analytics', [
         'classroom' => $this->classroom->id,
-        'subject_id' => $this->subject->id
+        'subject_id' => $this->subject->id,
     ]));
 
     $response->assertStatus(200);
@@ -259,11 +259,11 @@ test('guru can export daily assessment scores to PDF', function () {
         'student_id' => $this->student->id,
         'score' => 90,
         'needs_remedial' => false,
-        'remedial_status' => 'not_needed'
+        'remedial_status' => 'not_needed',
     ]);
 
     $response = $this->actingAs($this->guru)->get(route('daily-assessments.pdf', $assessment->id));
-    
+
     $response->assertStatus(200);
     $response->assertHeader('content-type', 'application/pdf');
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ImportLog;
 use App\Services\ImportExportService;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class ImportExportController extends Controller
@@ -22,6 +23,7 @@ class ImportExportController extends Controller
     public function index()
     {
         $modules = $this->service->getAvailableModules();
+
         return view('import-export.index', compact('modules'));
     }
 
@@ -37,15 +39,15 @@ class ImportExportController extends Controller
 
         $module = $request->module;
         $file = $request->file('file');
-        
+
         // Store temporarily
         $path = $file->store('temp_imports');
         $fileName = $file->getClientOriginalName();
 
         // Parse file to get headers and preview
         $filePath = Storage::path($path);
-        $fileInstance = new \Illuminate\Http\UploadedFile($filePath, $fileName);
-        
+        $fileInstance = new UploadedFile($filePath, $fileName);
+
         $parsed = $this->service->parseUploadedFile($fileInstance);
         $headers = $parsed['headers'];
         $preview = $parsed['preview'];
@@ -53,6 +55,7 @@ class ImportExportController extends Controller
 
         if (empty($headers)) {
             Storage::delete($path);
+
             return redirect()->route('import-export.index')->with('error', 'Berkas kosong atau tidak dapat diuraikan / The file is empty or cannot be parsed.');
         }
 
@@ -88,14 +91,14 @@ class ImportExportController extends Controller
         $mapping = $request->mapping; // e.g. ['name' => 0, 'email' => 1]
 
         // Validasi dan sanitasi jalur berkas untuk mencegah path traversal
-        $isSafePath = str_starts_with($path, 'temp_imports/') && !str_contains($path, '..') && !str_contains($path, '\\');
+        $isSafePath = str_starts_with($path, 'temp_imports/') && ! str_contains($path, '..') && ! str_contains($path, '\\');
 
-        if (!$isSafePath || !Storage::exists($path)) {
+        if (! $isSafePath || ! Storage::exists($path)) {
             return redirect()->route('import-export.index')->with('error', 'Berkas tidak valid atau sesi kadaluarsa / Invalid file or session expired.');
         }
 
         $absolutePath = Storage::path($path);
-        $fileInstance = new \Illuminate\Http\UploadedFile($absolutePath, $fileName);
+        $fileInstance = new UploadedFile($absolutePath, $fileName);
 
         $parsed = $this->service->parseUploadedFile($fileInstance);
         $data = $parsed['all_data'];
@@ -106,7 +109,7 @@ class ImportExportController extends Controller
         // Delete temporary file
         Storage::delete($path);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return redirect()->route('import-export.index')->with('error', $result['message']);
         }
 
@@ -140,7 +143,7 @@ class ImportExportController extends Controller
     {
         $result = $this->service->rollbackImport($id);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return back()->with('error', $result['message']);
         }
 

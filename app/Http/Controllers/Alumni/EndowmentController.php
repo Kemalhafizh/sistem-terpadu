@@ -11,12 +11,16 @@ class EndowmentController extends Controller
     {
         return view('fase61.endowment.dashboard');
     }
+
     public function createPledge() {}
+
     public function storePledge(Request $request) {}
+
     public function pledgeManager()
     {
         return view('fase61.endowment.pledge-manager');
     }
+
     public function recognition()
     {
         return view('fase61.endowment.recognition');

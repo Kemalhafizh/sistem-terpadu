@@ -1,10 +1,9 @@
 <?php
 
+use App\Jobs\SendWhatsappBroadcastJob;
 use App\Models\User;
 use App\Models\WhatsappTemplate;
-use App\Models\WhatsappBroadcast;
 use Illuminate\Support\Facades\Bus;
-use App\Jobs\SendWhatsappBroadcastJob;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([

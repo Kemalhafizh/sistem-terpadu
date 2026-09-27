@@ -49,20 +49,20 @@ class AtRiskStudentPredictionService
         $recommendations = [];
 
         if ($academicRisk > 40.0) {
-            $riskFactors[] = "Nilai akademik di bawah rata-rata kelas (Rata-rata: " . round($avgGrade, 1) . ").";
-            $recommendations[] = "Jadwalkan sesi remedial adaptif IRT dan bimbingan belajar teman sebaya.";
+            $riskFactors[] = 'Nilai akademik di bawah rata-rata kelas (Rata-rata: '.round($avgGrade, 1).').';
+            $recommendations[] = 'Jadwalkan sesi remedial adaptif IRT dan bimbingan belajar teman sebaya.';
         }
         if ($attendanceRisk > 30.0) {
-            $riskFactors[] = "Tingkat ketidakhadiran mencapai " . round($absenceRate, 1) . "%.";
-            $recommendations[] = "Lakukan home-visit atau konfirmasi berkala dengan wali murid.";
+            $riskFactors[] = 'Tingkat ketidakhadiran mencapai '.round($absenceRate, 1).'%.';
+            $recommendations[] = 'Lakukan home-visit atau konfirmasi berkala dengan wali murid.';
         }
         if ($behavioralRisk > 20.0) {
-            $riskFactors[] = "Tercatat akumulasi poin pelanggaran disiplin.";
-            $recommendations[] = "Konsultasi intensif dengan Guru Bimbingan Konseling (BK).";
+            $riskFactors[] = 'Tercatat akumulasi poin pelanggaran disiplin.';
+            $recommendations[] = 'Konsultasi intensif dengan Guru Bimbingan Konseling (BK).';
         }
         if (empty($riskFactors)) {
-            $riskFactors[] = "Performa siswa stabil dan berada dalam batas aman.";
-            $recommendations[] = "Pertahankan ritme belajar dan dorong partisipasi kegiatan pengayaan.";
+            $riskFactors[] = 'Performa siswa stabil dan berada dalam batas aman.';
+            $recommendations[] = 'Pertahankan ritme belajar dan dorong partisipasi kegiatan pengayaan.';
         }
 
         return StudentRiskProfile::updateOrCreate(

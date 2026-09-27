@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\CircuitBreakerService;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 
 class ApiGatewayMonitorController extends Controller
 {

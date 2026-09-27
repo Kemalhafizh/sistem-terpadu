@@ -72,16 +72,26 @@ class SmartNotificationController extends Controller
         $data = $request->all();
 
         $pref = NotificationPreference::firstOrNew(['user_id' => $userId]);
-        if (!$pref->exists) {
+        if (! $pref->exists) {
             $pref->event_category = 'all';
         }
 
         $channelPref = $pref->channel_preferences ?: [];
-        if (isset($data['examEnabled'])) $channelPref['exam'] = (bool) $data['examEnabled'];
-        if (isset($data['examNotifsEnabled'])) $channelPref['exam'] = (bool) $data['examNotifsEnabled'];
-        if (isset($data['assignmentEnabled'])) $channelPref['assignment'] = (bool) $data['assignmentEnabled'];
-        if (isset($data['assignmentNotifsEnabled'])) $channelPref['assignment'] = (bool) $data['assignmentNotifsEnabled'];
-        if (isset($data['schoolInfoEnabled'])) $channelPref['school_info'] = (bool) $data['schoolInfoEnabled'];
+        if (isset($data['examEnabled'])) {
+            $channelPref['exam'] = (bool) $data['examEnabled'];
+        }
+        if (isset($data['examNotifsEnabled'])) {
+            $channelPref['exam'] = (bool) $data['examNotifsEnabled'];
+        }
+        if (isset($data['assignmentEnabled'])) {
+            $channelPref['assignment'] = (bool) $data['assignmentEnabled'];
+        }
+        if (isset($data['assignmentNotifsEnabled'])) {
+            $channelPref['assignment'] = (bool) $data['assignmentNotifsEnabled'];
+        }
+        if (isset($data['schoolInfoEnabled'])) {
+            $channelPref['school_info'] = (bool) $data['schoolInfoEnabled'];
+        }
 
         $pref->channel_preferences = $channelPref;
         if (isset($data['digestMode'])) {
@@ -92,8 +102,12 @@ class SmartNotificationController extends Controller
         if (isset($data['quietHoursEnabled'])) {
             $qh = $pref->quiet_hours ?: [];
             $qh['enabled'] = (bool) $data['quietHoursEnabled'];
-            if (isset($data['quietHoursStart'])) $qh['start'] = $data['quietHoursStart'];
-            if (isset($data['quietHoursEnd'])) $qh['end'] = $data['quietHoursEnd'];
+            if (isset($data['quietHoursStart'])) {
+                $qh['start'] = $data['quietHoursStart'];
+            }
+            if (isset($data['quietHoursEnd'])) {
+                $qh['end'] = $data['quietHoursEnd'];
+            }
             $pref->quiet_hours = $qh;
         }
 
@@ -109,6 +123,7 @@ class SmartNotificationController extends Controller
     {
         $userId = $request->user()->id;
         $digest = $this->notificationService->buildDigest($userId);
+
         return $this->successResponse($digest, 'Notification digest retrieved successfully');
     }
 }

@@ -24,6 +24,7 @@ class DesignSystemController extends Controller
     public function getTokens()
     {
         $tokens = $this->designService->getDesignTokens();
+
         return $this->successResponse($tokens, 'Design tokens retrieved successfully');
     }
 
@@ -34,6 +35,7 @@ class DesignSystemController extends Controller
     {
         $userId = $request->user() ? $request->user()->id : null;
         $theme = $this->designService->getUserTheme($userId);
+
         return $this->successResponse($theme, 'User theme payload retrieved');
     }
 

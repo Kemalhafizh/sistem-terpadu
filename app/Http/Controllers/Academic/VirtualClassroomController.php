@@ -12,6 +12,7 @@ class VirtualClassroomController extends Controller
     public function index()
     {
         $meetings = VirtualClassroom::with('host')->latest()->get();
+
         return view('virtual-classroom.index', compact('meetings'));
     }
 

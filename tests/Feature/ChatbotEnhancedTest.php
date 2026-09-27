@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Classroom;
-use App\Models\Exam;
 use App\Models\Billing;
 use App\Models\ChatbotConversation;
+use App\Models\Classroom;
+use App\Models\Exam;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 
@@ -24,7 +24,7 @@ beforeEach(function () {
     $this->studentModel = Student::factory()->create([
         'user_id' => $this->studentUser->id,
         'classroom_id' => $this->classroom->id,
-        'status' => 'active'
+        'status' => 'active',
     ]);
 });
 
@@ -55,13 +55,13 @@ test('student context-aware exam check displays scheduled exams', function () {
     ]);
 
     $response = $this->actingAs($this->studentUser)->postJson(route('chatbot.send'), [
-        'message' => 'kapan ada ujian cbt?'
+        'message' => 'kapan ada ujian cbt?',
     ]);
 
     $response->assertStatus(200);
     $response->assertJsonPath('intent', 'context_student_exam');
     $response->assertJsonFragment([
-        'success' => true
+        'success' => true,
     ]);
     expect($response->json('reply'))->toContain('Ujian Tengah Semester Fisika');
 });
@@ -74,11 +74,11 @@ test('parent context-aware billing check displays children unpaid bills', functi
         'student_id' => $this->studentModel->id,
         'amount' => 500000,
         'remaining_balance' => 500000,
-        'status' => 'unpaid'
+        'status' => 'unpaid',
     ]);
 
     $response = $this->actingAs($this->parentUser)->postJson(route('chatbot.send'), [
-        'message' => 'berapa total tunggakan spp anak?'
+        'message' => 'berapa total tunggakan spp anak?',
     ]);
 
     $response->assertStatus(200);
@@ -92,17 +92,17 @@ test('chatbot conversations can be escalated to support ticket', function () {
         'user_message' => 'Saya butuh bantuan masalah akun',
         'bot_response' => 'Maaf saya tidak mengerti',
         'intent' => 'unknown',
-        'confidence' => 0.0
+        'confidence' => 0.0,
     ]);
 
     $response = $this->actingAs($this->admin)->post(route('admin.chatbot.conversations.escalate', $conversation->id));
 
     $response->assertRedirect();
-    
+
     $this->assertDatabaseHas('tickets', [
         'reporter_id' => $this->studentUser->id,
         'category' => 'it',
-        'status' => 'open'
+        'status' => 'open',
     ]);
 
     // Check if conversation intent is updated
@@ -119,17 +119,17 @@ test('faqs can be exported and imported via csv', function () {
     // 2. Import CSV
     $csvContent = "Question,Answer,Category,Keywords\n";
     $csvContent .= "Bagaimana cara reset password?,Silakan hubungi staf TU,teknis,\"reset, sandi, password\"\n";
-    
+
     $file = UploadedFile::fake()->createWithContent('faqs.csv', $csvContent);
 
     $response = $this->actingAs($this->admin)->post(route('admin.chatbot.faqs.import'), [
-        'csv_file' => $file
+        'csv_file' => $file,
     ]);
 
     $response->assertRedirect();
     $this->assertDatabaseHas('chatbot_faqs', [
         'question' => 'Bagaimana cara reset password?',
         'answer' => 'Silakan hubungi staf TU',
-        'category' => 'teknis'
+        'category' => 'teknis',
     ]);
 });

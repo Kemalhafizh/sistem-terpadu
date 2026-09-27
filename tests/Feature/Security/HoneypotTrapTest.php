@@ -13,6 +13,6 @@ test('honeypot trap middleware intercepts canary endpoint scanning attempts and 
     }
 
     $ip = '127.0.0.1';
-    $banKey = 'banned_ip_' . md5($ip);
+    $banKey = 'banned_ip_'.md5($ip);
     expect(Cache::has($banKey))->toBeTrue();
 });

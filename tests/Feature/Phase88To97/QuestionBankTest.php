@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\User;
 use App\Models\QuestionBankCategory;
-use App\Models\QuestionBankItem;
+use App\Models\Subject;
+use App\Models\User;
 
 beforeEach(function () {
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
@@ -11,17 +11,17 @@ beforeEach(function () {
 test('guru can get question bank categories', function () {
     $response = $this->actingAs($this->guru)->getJson('/api/v1/question-bank/categories');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('guru can get question bank items', function () {
     $response = $this->actingAs($this->guru)->getJson('/api/v1/question-bank/items');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('guru can create question bank item', function () {
-    $subject = \App\Models\Subject::factory()->create();
+    $subject = Subject::factory()->create();
     $category = QuestionBankCategory::create([
         'subject_id' => $subject->id,
         'created_by' => $this->guru->id,
@@ -38,7 +38,7 @@ test('guru can create question bank item', function () {
     ]);
 
     $response->assertStatus(201)
-             ->assertJson(['success' => true]);
+        ->assertJson(['success' => true]);
 });
 
 test('guru can auto-generate exam package from question bank', function () {
@@ -52,5 +52,5 @@ test('guru can auto-generate exam package from question bank', function () {
     ]);
 
     $response->assertStatus(200)
-             ->assertJson(['success' => true]);
+        ->assertJson(['success' => true]);
 });

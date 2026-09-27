@@ -8,19 +8,15 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class WellKnownController
- * 
+ *
  * Serves standardized domain verification manifests (RFC 5785)
  * for Android App Links and Apple Universal Links (AASA).
- * 
- * @package App\Http\Controllers
  */
 class WellKnownController extends Controller
 {
     /**
      * Digital Asset Links for Android App Links.
      * Accessible via https://domain/.well-known/assetlinks.json
-     *
-     * @return JsonResponse
      */
     public function assetLinks(): JsonResponse
     {
@@ -46,8 +42,6 @@ class WellKnownController extends Controller
     /**
      * Apple App Site Association for iOS Universal Links (AASA).
      * Accessible via https://domain/.well-known/apple-app-site-association
-     *
-     * @return JsonResponse
      */
     public function appleAppSiteAssociation(): JsonResponse
     {

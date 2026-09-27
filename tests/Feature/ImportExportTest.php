@@ -1,13 +1,11 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Employee;
-use App\Models\Subject;
 use App\Models\Classroom;
 use App\Models\ImportLog;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('local');
@@ -42,8 +40,8 @@ test('authorized roles can view import export hub index page', function () {
 
 test('admin can upload a csv file and view column mapping page', function () {
     $csvContent = "Nama Lengkap,Email,NIS,NISN,Gender,Kelas,Alamat\n"
-        . "Ahsan Hadi,ahsan@sista.test,1001,990001,L,X-A,Semarang\n"
-        . "Safira Putri,safira@sista.test,1002,990002,P,X-A,Demak\n";
+        ."Ahsan Hadi,ahsan@sista.test,1001,990001,L,X-A,Semarang\n"
+        ."Safira Putri,safira@sista.test,1002,990002,P,X-A,Demak\n";
 
     $file = UploadedFile::fake()->createWithContent('siswa.csv', $csvContent);
 
@@ -72,8 +70,8 @@ test('admin can execute dynamic student import and perform rollback', function (
     ]);
 
     $csvContent = "Nama Lengkap,Email,NIS,NISN,Gender,Kelas,Alamat\n"
-        . "Ahsan Hadi,ahsan@sista.test,1001,990001,L,X-A,Semarang\n"
-        . "Safira Putri,safira@sista.test,1002,990002,P,X-A,Demak\n";
+        ."Ahsan Hadi,ahsan@sista.test,1001,990001,L,X-A,Semarang\n"
+        ."Safira Putri,safira@sista.test,1002,990002,P,X-A,Demak\n";
 
     $file = UploadedFile::fake()->createWithContent('siswa.csv', $csvContent);
 
@@ -138,8 +136,8 @@ test('admin can execute dynamic student import and perform rollback', function (
 
 test('admin can execute dynamic classroom import', function () {
     $csvContent = "Nama Kelas,Tingkat Kelas,Jurusan,Tahun Akademik\n"
-        . "X IPA 1,X,IPA,2025/2026\n"
-        . "XI IPS 1,XI,IPS,2025/2026\n";
+        ."X IPA 1,X,IPA,2025/2026\n"
+        ."XI IPS 1,XI,IPS,2025/2026\n";
 
     $file = UploadedFile::fake()->createWithContent('kelas.csv', $csvContent);
     $tempPath = $file->store('temp_imports');
@@ -178,7 +176,7 @@ test('admin can export students to json format', function () {
         'name' => 'Randi',
         'email' => 'randi@sista.test',
         'password' => bcrypt('password'),
-        'role' => 'student'
+        'role' => 'student',
     ]);
     Student::create([
         'user_id' => $user->id,
@@ -192,7 +190,7 @@ test('admin can export students to json format', function () {
 
     $response = $this->actingAs($this->admin)->post(route('import-export.export'), [
         'module' => 'students',
-        'format' => 'json'
+        'format' => 'json',
     ]);
 
     $response->assertStatus(200);
@@ -200,7 +198,7 @@ test('admin can export students to json format', function () {
         'module',
         'exported_at',
         'headings',
-        'data'
+        'data',
     ]);
 
     $data = $response->json();
@@ -220,7 +218,7 @@ test('admin can export students to pdf format', function () {
         'name' => 'Randi',
         'email' => 'randi@sista.test',
         'password' => bcrypt('password'),
-        'role' => 'student'
+        'role' => 'student',
     ]);
     Student::create([
         'user_id' => $user->id,
@@ -234,7 +232,7 @@ test('admin can export students to pdf format', function () {
 
     $response = $this->actingAs($this->admin)->post(route('import-export.export'), [
         'module' => 'students',
-        'format' => 'pdf'
+        'format' => 'pdf',
     ]);
 
     $response->assertStatus(200);

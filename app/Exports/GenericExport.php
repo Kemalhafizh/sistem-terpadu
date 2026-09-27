@@ -2,15 +2,17 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Support\Collection;
 
 class GenericExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $collection;
+
     protected $headings;
+
     protected $mapCallback;
 
     public function __construct(Collection $collection, array $headings, callable $mapCallback)

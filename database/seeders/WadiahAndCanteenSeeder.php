@@ -2,17 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\CanteenMerchant;
+use App\Models\CanteenTransaction;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\WadiahAccount;
 use App\Models\WadiahTransaction;
-use App\Models\CanteenMerchant;
-use App\Models\CanteenTransaction;
 use App\Services\WadiahService;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class WadiahAndCanteenSeeder extends Seeder
 {
@@ -41,13 +40,13 @@ class WadiahAndCanteenSeeder extends Seeder
         $merchantNames = [
             'Kantin Amanah Bu Sri',
             'Koperasi Siswa SA-1',
-            'Kantin Makanan Sehat YBWSA'
+            'Kantin Makanan Sehat YBWSA',
         ];
 
         $merchants = [];
         foreach ($merchantNames as $idx => $name) {
             $owner = $merchantOwners->get($idx) ?: User::first();
-            
+
             // Re-role the owner to merchant for demonstration purposes
             if ($owner->role !== 'admin' && $owner->role !== 'superadmin') {
                 $owner->update(['role' => 'merchant']);
@@ -78,11 +77,13 @@ class WadiahAndCanteenSeeder extends Seeder
 
         foreach ($activeStudents as $student) {
             $account = WadiahAccount::where('student_id', $student->id)->first();
-            if (! $account) continue;
+            if (! $account) {
+                continue;
+            }
 
             // Set random pocket money limit
             $account->update([
-                'daily_spending_limit' => collect([15000, 20000, 30000, 50000])->random()
+                'daily_spending_limit' => collect([15000, 20000, 30000, 50000])->random(),
             ]);
 
             // Seed deposits first to give them balance
@@ -92,8 +93,8 @@ class WadiahAndCanteenSeeder extends Seeder
             // Initial deposit
             $depositAmount = rand(100, 300) * 1000; // Rp 100.000 - Rp 300.000
             $currentBalance += $depositAmount;
-            
-            $refNumber = 'DEP-' . $startDate->format('Ymd') . '-' . strtoupper(Str::random(6));
+
+            $refNumber = 'DEP-'.$startDate->format('Ymd').'-'.strtoupper(Str::random(6));
             $tx = WadiahTransaction::create([
                 'wadiah_account_id' => $account->id,
                 'type' => 'deposit',
@@ -120,7 +121,7 @@ class WadiahAndCanteenSeeder extends Seeder
                     $prevBalance = $currentBalance;
                     $currentBalance += $topupAmount;
 
-                    $ref = 'DEP-' . $txDate->format('Ymd') . '-' . strtoupper(Str::random(6));
+                    $ref = 'DEP-'.$txDate->format('Ymd').'-'.strtoupper(Str::random(6));
                     WadiahTransaction::create([
                         'wadiah_account_id' => $account->id,
                         'type' => 'deposit',
@@ -147,7 +148,7 @@ class WadiahAndCanteenSeeder extends Seeder
                     foreach ($menuSelection as $menu) {
                         $qty = rand(1, 2);
                         $subtotal = $menu['price'] * $qty;
-                        
+
                         // Check if exceeds daily limit or remaining balance
                         if (($totalPrice + $subtotal) > $account->daily_spending_limit || ($currentBalance - ($totalPrice + $subtotal)) < 0) {
                             break;
@@ -166,7 +167,7 @@ class WadiahAndCanteenSeeder extends Seeder
                         $currentBalance -= $totalPrice;
 
                         $merchant = collect($merchants)->random();
-                        $ref = 'PUR-' . $txDate->format('Ymd') . '-' . strtoupper(Str::random(6));
+                        $ref = 'PUR-'.$txDate->format('Ymd').'-'.strtoupper(Str::random(6));
 
                         $wadiahTx = WadiahTransaction::create([
                             'wadiah_account_id' => $account->id,
@@ -175,7 +176,7 @@ class WadiahAndCanteenSeeder extends Seeder
                             'previous_balance' => $prevBalance,
                             'current_balance' => $currentBalance,
                             'reference_number' => $ref,
-                            'description' => 'Pembayaran cashless di ' . $merchant->name,
+                            'description' => 'Pembayaran cashless di '.$merchant->name,
                             'processed_by' => $merchant->owner_user_id,
                             'created_at' => $txDate,
                             'updated_at' => $txDate,

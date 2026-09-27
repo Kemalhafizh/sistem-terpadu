@@ -19,7 +19,7 @@ class HttpCacheHeadersMiddleware
         if ($request->isMethod('GET') && $response->getStatusCode() === 200) {
             $content = $response->getContent();
             if (is_string($content) && strlen($content) > 0) {
-                $eTag = '"' . md5($content) . '"';
+                $eTag = '"'.md5($content).'"';
 
                 $response->headers->set('ETag', $eTag);
                 $response->headers->set('Cache-Control', 'public, max-age=300, must-revalidate');

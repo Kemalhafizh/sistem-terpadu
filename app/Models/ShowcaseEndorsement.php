@@ -10,7 +10,7 @@ class ShowcaseEndorsement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'showcase_id', 'endorser_id', 'endorsement_text'
+        'showcase_id', 'endorser_id', 'endorsement_text',
     ];
 
     public function showcase()

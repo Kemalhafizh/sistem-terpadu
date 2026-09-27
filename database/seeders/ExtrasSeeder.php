@@ -10,7 +10,6 @@ use App\Models\Employee;
 use App\Models\LibraryBook;
 use App\Models\LibraryCategory;
 use App\Models\Registration;
-use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -74,7 +73,7 @@ class ExtrasSeeder extends Seeder
         ];
         foreach ($pendaftaran as $idx => $p) {
             Registration::create(array_merge($p, [
-                'registration_number' => 'SPMB-2026-' . str_pad($idx + 1, 4, '0', STR_PAD_LEFT),
+                'registration_number' => 'SPMB-2026-'.str_pad($idx + 1, 4, '0', STR_PAD_LEFT),
                 'academic_year_id' => $activeYear->id,
                 'created_at' => now()->subDays(rand(1, 14)),
             ]));
@@ -114,14 +113,14 @@ class ExtrasSeeder extends Seeder
 
             Employee::create([
                 'user_id' => $user->id,
-                'employee_number' => 'NIY-' . str_pad($idx + 1, 3, '0', STR_PAD_LEFT),
+                'employee_number' => 'NIY-'.str_pad($idx + 1, 3, '0', STR_PAD_LEFT),
                 'position' => $position,
                 'employment_status' => $user->role === 'staf_tu' ? 'staf_tetap' : ($isGTT ? 'gtt' : 'gty'),
                 'hire_date' => now()->subYears(rand(1, 8))->format('Y-m-d'),
                 'base_salary' => $salary,
                 'hourly_rate' => $isGTT ? 75000 : 0,
                 'bank_name' => ['BRI', 'BNI', 'BSI', 'Mandiri'][rand(0, 3)],
-                'bank_account' => '00' . rand(10000000, 99999999),
+                'bank_account' => '00'.rand(10000000, 99999999),
             ]);
         }
 

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotificationEvent;
 use App\Models\Classroom;
+use App\Models\Setting;
 use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\Setting;
 use App\Services\SmartAlertService;
+use App\Services\WhatsappService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class SmartAlertController extends Controller
 {
@@ -40,10 +43,10 @@ class SmartAlertController extends Controller
                 $query->where(function ($q) use ($studentIds, $user) {
                     $q->where(function ($sq) use ($studentIds) {
                         $sq->where('alertable_type', Student::class)
-                           ->whereIn('alertable_id', $studentIds);
+                            ->whereIn('alertable_id', $studentIds);
                     })->orWhere(function ($uq) use ($user) {
                         $uq->where('alertable_type', User::class)
-                           ->where('alertable_id', $user->id);
+                            ->where('alertable_id', $user->id);
                     });
                 });
             } else {
@@ -76,10 +79,10 @@ class SmartAlertController extends Controller
                 $kpiQuery->where(function ($q) use ($studentIds, $user) {
                     $q->where(function ($sq) use ($studentIds) {
                         $sq->where('alertable_type', Student::class)
-                           ->whereIn('alertable_id', $studentIds);
+                            ->whereIn('alertable_id', $studentIds);
                     })->orWhere(function ($uq) use ($user) {
                         $uq->where('alertable_type', User::class)
-                           ->where('alertable_id', $user->id);
+                            ->where('alertable_id', $user->id);
                     });
                 });
             } else {
@@ -108,7 +111,7 @@ class SmartAlertController extends Controller
      */
     public function dashboard()
     {
-        abort_if(!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
+        abort_if(! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
 
         $kpis = [
             'total' => SmartAlert::count(),
@@ -147,7 +150,7 @@ class SmartAlertController extends Controller
      */
     public function rulesConfig()
     {
-        abort_if(!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
+        abort_if(! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
 
         $rules = [
             'smart_alert_at_risk_gpa_threshold' => Setting::get('smart_alert_at_risk_gpa_threshold', 70),
@@ -168,7 +171,7 @@ class SmartAlertController extends Controller
      */
     public function updateRules(Request $request)
     {
-        abort_if(!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
+        abort_if(! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
 
         $validated = $request->validate([
             'smart_alert_at_risk_gpa_threshold' => 'required|numeric|min:0|max:100',
@@ -193,7 +196,7 @@ class SmartAlertController extends Controller
      */
     public function create()
     {
-        abort_if(!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'bk']), 403);
+        abort_if(! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'bk']), 403);
 
         $students = Student::with('classroom')->get();
         $teachers = User::whereIn('role', ['guru', 'bk', 'staf_tu', 'waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras', 'waka_humas'])->get();
@@ -206,7 +209,7 @@ class SmartAlertController extends Controller
      */
     public function manualCreate(Request $request)
     {
-        abort_if(!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'bk']), 403);
+        abort_if(! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'bk']), 403);
 
         $validated = $request->validate([
             'target_type' => 'required|in:student,user',
@@ -229,8 +232,8 @@ class SmartAlertController extends Controller
             'alertable_id' => $alertableId,
             'context_data' => [
                 'created_by_name' => auth()->user()->name,
-                'manual_entry' => true
-            ]
+                'manual_entry' => true,
+            ],
         ]);
 
         // Trigger Reverb & WhatsApp if critical
@@ -240,10 +243,10 @@ class SmartAlertController extends Controller
             $users = User::whereIn('role', $roles)->get();
 
             foreach ($users as $user) {
-                event(new \App\Events\NewNotificationEvent($user, [
+                event(new NewNotificationEvent($user, [
                     'id' => $alert->id,
                     'type' => 'smart_alert',
-                    'title' => ' ' . $alert->title,
+                    'title' => ' '.$alert->title,
                     'description' => $alert->description,
                     'severity' => $alert->severity,
                     'created_at' => $alert->created_at->toDateTimeString(),
@@ -251,15 +254,15 @@ class SmartAlertController extends Controller
 
                 if ($user->phone_number) {
                     try {
-                        $message = " *MANUAL SMART ALERT CRITICAL (SISTA)* \n\n" .
-                                   "Judul: *{$alert->title}*\n" .
-                                   "Pencipta: " . auth()->user()->name . "\n" .
-                                   "Deskripsi: {$alert->description}\n" .
-                                   "Waktu: " . now()->format('d-m-Y H:i') . "\n\n" .
-                                   "Silakan ulas di portal SISTA.";
-                        app(\App\Services\WhatsappService::class)->sendMessage($user->phone_number, $message, 'smart_alert_manual');
+                        $message = " *MANUAL SMART ALERT CRITICAL (SISTA)* \n\n".
+                                   "Judul: *{$alert->title}*\n".
+                                   'Pencipta: '.auth()->user()->name."\n".
+                                   "Deskripsi: {$alert->description}\n".
+                                   'Waktu: '.now()->format('d-m-Y H:i')."\n\n".
+                                   'Silakan ulas di portal SISTA.';
+                        app(WhatsappService::class)->sendMessage($user->phone_number, $message, 'smart_alert_manual');
                     } catch (\Exception $e) {
-                        \Illuminate\Support\Facades\Log::error("Failed to send WhatsApp manual alert: " . $e->getMessage());
+                        Log::error('Failed to send WhatsApp manual alert: '.$e->getMessage());
                     }
                 }
             }
@@ -323,7 +326,7 @@ class SmartAlertController extends Controller
 
         $this->service->escalateAlert($alert, $supervisor, $request->escalation_notes);
 
-        return redirect()->route('smart-alerts.index')->with('success', 'Smart Alert berhasil dieskalasikan ke ' . $supervisor->name);
+        return redirect()->route('smart-alerts.index')->with('success', 'Smart Alert berhasil dieskalasikan ke '.$supervisor->name);
     }
 
     /**
@@ -348,7 +351,7 @@ class SmartAlertController extends Controller
      */
     public function exportReport(Request $request)
     {
-        abort_if(!in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
+        abort_if(! in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah']), 403);
 
         $alerts = SmartAlert::with(['alertable', 'acknowledgedBy', 'resolvedBy', 'escalatedTo'])
             ->latest()
@@ -356,7 +359,7 @@ class SmartAlertController extends Controller
 
         $pdf = Pdf::loadView('smart-alerts.report', compact('alerts'))->setPaper('a4', 'landscape');
 
-        return $pdf->download('Laporan_Smart_Alerts_' . now()->format('YmdHis') . '.pdf');
+        return $pdf->download('Laporan_Smart_Alerts_'.now()->format('YmdHis').'.pdf');
     }
 
     /**
@@ -369,7 +372,7 @@ class SmartAlertController extends Controller
         $user = auth()->user();
         if ($user->role === 'guru') {
             $classroom = Classroom::where('teacher_id', $user->id)->first();
-            if (!$classroom || $student->classroom_id !== $classroom->id) {
+            if (! $classroom || $student->classroom_id !== $classroom->id) {
                 abort(403, 'Anda hanya dapat melihat data siswa di kelas Anda.');
             }
         }

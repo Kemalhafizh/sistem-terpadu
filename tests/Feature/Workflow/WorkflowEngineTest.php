@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Lightweight self-contained Polymorphic Model for testing.
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Schema;
 class TestApprovalModel extends Model
 {
     protected $table = 'test_approval_models';
+
     protected $fillable = ['status', 'approved_by'];
 }
 
@@ -27,7 +29,7 @@ beforeEach(function () {
     Event::fake([NewNotificationEvent::class]);
 
     // Create the temporary polymorphic table
-    if (!Schema::hasTable('test_approval_models')) {
+    if (! Schema::hasTable('test_approval_models')) {
         Schema::create('test_approval_models', function (Blueprint $table) {
             $table->id();
             $table->string('status')->default('draft');
@@ -55,7 +57,7 @@ beforeEach(function () {
 test('workflow service can initiate polymorphic request successfully', function () {
     // Create at least one user with 'waka_kurikulum' role so notification event is dispatched
     User::factory()->create(['role' => 'waka_kurikulum']);
-    
+
     $requester = User::factory()->create(['role' => 'guru']);
     $parentModel = TestApprovalModel::create(['status' => 'draft']);
 
@@ -97,12 +99,12 @@ test('unauthorized users are blocked from approving or rejecting steps', functio
     $request = $this->service->initiate('leave_approval_test', $requester, $parentModel, 'Notes');
 
     // Attempting service approval directly should abort
-    expect(fn() => $this->service->approve($request, $unauthorizedUser, 'Remark'))
-        ->toThrow(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+    expect(fn () => $this->service->approve($request, $unauthorizedUser, 'Remark'))
+        ->toThrow(HttpException::class);
 
     // Attempting service rejection directly should abort
-    expect(fn() => $this->service->reject($request, $unauthorizedUser, 'Remark'))
-        ->toThrow(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+    expect(fn () => $this->service->reject($request, $unauthorizedUser, 'Remark'))
+        ->toThrow(HttpException::class);
 });
 
 test('workflow moves sequentially to the next step upon approval', function () {

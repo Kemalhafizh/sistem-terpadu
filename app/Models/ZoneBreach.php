@@ -11,7 +11,7 @@ class ZoneBreach extends Model
 
     protected $fillable = [
         'student_id', 'zone_name', 'breach_type', 'breach_time',
-        'detected_by', 'is_acknowledged', 'security_action_taken'
+        'detected_by', 'is_acknowledged', 'security_action_taken',
     ];
 
     protected $casts = [

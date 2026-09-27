@@ -10,7 +10,7 @@ class CrisisResponseLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'crisis_incident_id', 'responder_id', 'action_type', 'description', 'evidence_file_path'
+        'crisis_incident_id', 'responder_id', 'action_type', 'description', 'evidence_file_path',
     ];
 
     public function incident()

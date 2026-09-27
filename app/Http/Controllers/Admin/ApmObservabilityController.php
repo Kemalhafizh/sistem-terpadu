@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\ApmTelemetryService;
-use App\Services\ObservabilityService;
 use App\Services\Observability\RequestMetricsRecorder;
+use App\Services\ObservabilityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

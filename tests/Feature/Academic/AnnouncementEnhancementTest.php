@@ -4,10 +4,8 @@ use App\Models\Announcement;
 use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\AnnouncementRead;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('public');
@@ -17,10 +15,10 @@ beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin', 'must_change_password' => false]);
     $this->humas = User::factory()->create(['role' => 'waka_humas', 'must_change_password' => false]);
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
-    
+
     // Create classroom, student and parent
     $this->classroom = Classroom::factory()->create(['name' => 'XII MIPA 1']);
-    
+
     $this->studentUser = User::factory()->create(['role' => 'student', 'must_change_password' => false]);
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
@@ -107,7 +105,7 @@ test('humas can create rich announcement with attachment and pinning enabled', f
 
 test('humas can update announcement metadata and change files', function () {
     $image = UploadedFile::fake()->image('new_poster.png');
-    
+
     $response = $this->actingAs($this->humas)->put(route('announcements.update', $this->announcement), [
         'title' => 'Updated Title',
         'content' => 'Updated content here.',
@@ -118,7 +116,7 @@ test('humas can update announcement metadata and change files', function () {
     ]);
 
     $response->assertRedirect(route('announcements.index'));
-    
+
     $this->announcement->refresh();
     $this->assertEquals('Updated Title', $this->announcement->title);
     $this->assertEquals('keislaman', $this->announcement->category);
@@ -133,7 +131,7 @@ test('authorized users can toggle pinned status', function () {
 
     $response = $this->actingAs($this->humas)->post(route('announcements.pin', $this->announcement));
     $response->assertStatus(302);
-    
+
     $this->announcement->refresh();
     $this->assertTrue($this->announcement->is_pinned);
 
@@ -186,7 +184,7 @@ test('creator/admin can view read receipts dashboard and stats', function () {
     $this->announcement->update([
         'target_role' => 'student',
         'target_classroom_id' => $this->classroom->id,
-        'require_acknowledgement' => true
+        'require_acknowledgement' => true,
     ]);
 
     // Student reads

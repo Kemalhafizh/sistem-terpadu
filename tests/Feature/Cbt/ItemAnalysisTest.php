@@ -9,7 +9,6 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
 use App\Services\ItemAnalysisService;
-use Tests\TestCase;
 
 beforeEach(function () {
     // 1. Setup Users
@@ -134,7 +133,7 @@ test('calculates correct difficulty index and text', function () {
         ]);
     }
 
-    $service = new ItemAnalysisService();
+    $service = new ItemAnalysisService;
     $diffMap = $service->calculateDifficultyIndex($this->exam->id);
 
     $q1Diff = $diffMap->get($this->q1->id);
@@ -158,7 +157,7 @@ test('calculates discrimination index using 27 percent rule', function () {
     // If Q2 is correct for all 3 upper group and 1 lower group, D = 3/3 - 1/3 = 0.67 (Baik)
 
     $students = Student::factory()->count(10)->create(['classroom_id' => $this->classroom->id]);
-    
+
     // 3 high performers, 4 average, 3 low performers
     $performance = [
         ['q1' => 'B', 'q2' => 'B', 'score' => 100], // Upper
@@ -189,7 +188,7 @@ test('calculates discrimination index using 27 percent rule', function () {
         ]);
     }
 
-    $service = new ItemAnalysisService();
+    $service = new ItemAnalysisService;
     $discMap = $service->calculateDiscriminationIndex($this->exam->id);
 
     $q1Disc = $discMap->get($this->q1->id);
@@ -209,7 +208,7 @@ test('analyzes distractor effectiveness properly', function () {
     // Option A (distractor) selected by 2 students -> 2/20 = 10% (Effective >= 5%)
     // Option C (distractor) selected by 0 students -> 0% (Ineffective)
     // Option D (distractor) selected by 3 students -> 15% (Effective >= 5%)
-    
+
     $students = Student::factory()->count(20)->create(['classroom_id' => $this->classroom->id]);
 
     // q1 answer distribution:
@@ -240,9 +239,9 @@ test('analyzes distractor effectiveness properly', function () {
         ]);
     }
 
-    $service = new ItemAnalysisService();
+    $service = new ItemAnalysisService;
     $distMap = $service->analyzeDistractors($this->exam->id);
-    
+
     $q1Distractors = $distMap->get($this->q1->id);
 
     $this->assertTrue($q1Distractors['A']['is_effective']);
@@ -271,7 +270,7 @@ test('authorized users can download item analysis PDF report', function () {
     }
 
     $response = $this->actingAs($this->guru)->get(route('cbt.exams.analysis.pdf', $this->exam));
-    
+
     $response->assertStatus(200);
     $response->assertHeader('content-type', 'application/pdf');
 });

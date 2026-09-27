@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Extracurricular;
-use App\Models\ExtracurricularMember;
-use App\Models\ExtracurricularAttendance;
-use App\Models\ExtracurricularActivity;
-use App\Models\ExtracurricularAchievement;
-use App\Models\ExtracurricularGrade;
 use App\Models\AcademicYear;
+use App\Models\Extracurricular;
+use App\Models\ExtracurricularAchievement;
+use App\Models\ExtracurricularActivity;
+use App\Models\ExtracurricularAttendance;
+use App\Models\ExtracurricularGrade;
+use App\Models\ExtracurricularMember;
 use App\Models\Student;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -32,6 +32,7 @@ class ExtracurricularController extends Controller
                 ->where('status', 'active')
                 ->pluck('extracurricular_id')
                 ->toArray();
+
             return view('extracurricular.index', compact('extracurriculars', 'myEkskulIds'));
         }
 
@@ -41,7 +42,7 @@ class ExtracurricularController extends Controller
     public function show(Extracurricular $extracurricular)
     {
         $extracurricular->load(['advisor', 'activeMembers.student.classroom', 'activeMembers.student.user', 'activities.creator']);
-        
+
         // Cek Keikutsertaan Siswa
         $isMember = false;
         if (auth()->user()->role === 'student') {
@@ -82,7 +83,7 @@ class ExtracurricularController extends Controller
         }
 
         // Cek Ketersediaan Kuota Slot Anggota
-        if (!is_null($extracurricular->max_members) && $extracurricular->activeMembers()->count() >= $extracurricular->max_members) {
+        if (! is_null($extracurricular->max_members) && $extracurricular->activeMembers()->count() >= $extracurricular->max_members) {
             return back()->with('error', 'Pendaftaran gagal, kuota anggota ekstrakurikuler ini telah penuh.');
         }
 
@@ -94,13 +95,13 @@ class ExtracurricularController extends Controller
             'joined_at' => now(),
         ]);
 
-        return redirect()->route('ekskul.show', $extracurricular->id)->with('success', 'Berhasil mendaftar di ekstrakurikuler ' . $extracurricular->name);
+        return redirect()->route('ekskul.show', $extracurricular->id)->with('success', 'Berhasil mendaftar di ekstrakurikuler '.$extracurricular->name);
     }
 
     public function manage()
     {
         $user = auth()->user();
-        
+
         // Guru hanya bisa mengelola ekskul yang dibimbingnya
         if ($user->role === 'guru') {
             $extracurriculars = Extracurricular::with('advisor')->where('advisor_id', $user->id)->get();
@@ -144,10 +145,12 @@ class ExtracurricularController extends Controller
             }
 
             DB::commit();
+
             return back()->with('success', 'Presensi latihan berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal memproses presensi: ' . $e->getMessage());
+
+            return back()->with('error', 'Gagal memproses presensi: '.$e->getMessage());
         }
     }
 
@@ -188,6 +191,7 @@ class ExtracurricularController extends Controller
     public function create()
     {
         $advisors = User::whereIn('role', ['guru', 'admin', 'superadmin'])->get();
+
         return view('extracurricular.create', compact('advisors'));
     }
 
@@ -216,13 +220,14 @@ class ExtracurricularController extends Controller
     public function edit(Extracurricular $extracurricular)
     {
         $advisors = User::whereIn('role', ['guru', 'admin', 'superadmin'])->get();
+
         return view('extracurricular.edit', compact('extracurricular', 'advisors'));
     }
 
     public function update(Request $request, Extracurricular $extracurricular)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:extracurriculars,name,' . $extracurricular->id,
+            'name' => 'required|string|max:255|unique:extracurriculars,name,'.$extracurricular->id,
             'description' => 'nullable|string',
             'advisor_id' => 'required|exists:users,id',
             'schedule_day' => 'required|string|max:50',
@@ -250,12 +255,14 @@ class ExtracurricularController extends Controller
             Storage::disk('public')->delete($extracurricular->cover_image);
         }
         $extracurricular->delete();
+
         return redirect()->route('ekskul.manage')->with('success', 'Ekstrakurikuler berhasil dihapus.');
     }
 
     public function unregister(ExtracurricularMember $member)
     {
         $member->update(['status' => 'inactive', 'left_at' => now()]);
+
         return back()->with('success', 'Siswa berhasil dikeluarkan dari anggota ekskul.');
     }
 
@@ -263,6 +270,7 @@ class ExtracurricularController extends Controller
     {
         $extracurricular->load('achievements');
         $students = Student::with('user')->where('status', 'active')->get();
+
         return view('extracurricular.achievements', compact('extracurricular', 'students'));
     }
 
@@ -308,9 +316,9 @@ class ExtracurricularController extends Controller
     public function grading(Extracurricular $extracurricular)
     {
         $extracurricular->load('activeMembers.student.user');
-        
+
         $academicYear = AcademicYear::where('is_active', true)->first();
-        if (!$academicYear) {
+        if (! $academicYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -332,7 +340,7 @@ class ExtracurricularController extends Controller
         ]);
 
         $academicYear = AcademicYear::where('is_active', true)->first();
-        if (!$academicYear) {
+        if (! $academicYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -355,7 +363,7 @@ class ExtracurricularController extends Controller
     public function attendanceReport(Extracurricular $extracurricular)
     {
         $extracurricular->load('activeMembers.student.user');
-        
+
         $attendanceSummary = [];
         foreach ($extracurricular->activeMembers as $member) {
             $attendances = ExtracurricularAttendance::where('extracurricular_id', $extracurricular->id)
@@ -386,21 +394,23 @@ class ExtracurricularController extends Controller
     public function semesterReport(Extracurricular $extracurricular)
     {
         $extracurricular->load(['advisor', 'activeMembers.student.user', 'achievements', 'activities']);
+
         return view('extracurricular.semester-report', compact('extracurricular'));
     }
 
     public function exportPdf(Extracurricular $extracurricular)
     {
         $extracurricular->load(['advisor', 'activeMembers.student.user', 'achievements', 'activities']);
-        
+
         $pdf = Pdf::loadView('extracurricular.pdf-report', compact('extracurricular'))->setPaper('a4', 'portrait');
-        
+
         return $pdf->download("laporan_semester_{$extracurricular->name}.pdf");
     }
 
     public function schedule()
     {
         $extracurriculars = Extracurricular::with('advisor')->where('is_active', true)->get();
+
         return view('extracurricular.schedule', compact('extracurriculars'));
     }
 

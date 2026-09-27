@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use App\Services\EdwOlapEngineService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);

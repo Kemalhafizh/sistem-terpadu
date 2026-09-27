@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\AcademicYear;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
-use App\Models\Student;
 use App\Models\Grade;
-use App\Models\AcademicYear;
+use App\Models\Student;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -19,8 +19,8 @@ class DailyAssessmentService
     {
         return DB::transaction(function () use ($data) {
             $academicYearId = $data['academic_year_id'] ?? AcademicYear::current()?->id;
-            
-            if (!$academicYearId) {
+
+            if (! $academicYearId) {
                 throw new \Exception('Tahun akademik aktif tidak ditemukan.');
             }
 
@@ -103,7 +103,7 @@ class DailyAssessmentService
                 $student = $scoreRecord->student;
                 $parent = $student?->parent;
                 if ($parent && $parent->phone_number) {
-                    $automationService = app(\App\Services\WhatsappAutomationService::class);
+                    $automationService = app(WhatsappAutomationService::class);
                     $context = [
                         'nama_siswa' => $student->name,
                         'nama_orang_tua' => $parent->name,
@@ -171,8 +171,8 @@ class DailyAssessmentService
 
         foreach ($assessments as $assessment) {
             $kkm = $assessment->effective_kkm;
-            $asScores = $assessment->scores->filter(fn($s) => $s->final_score !== null);
-            
+            $asScores = $assessment->scores->filter(fn ($s) => $s->final_score !== null);
+
             if ($asScores->isEmpty()) {
                 continue;
             }
@@ -219,11 +219,17 @@ class DailyAssessmentService
         $distribution = [0, 0, 0, 0, 0];
         foreach ($allFinalScores as $fs) {
             $val = $fs['score'];
-            if ($val >= 90) $distribution[4]++;
-            elseif ($val >= 80) $distribution[3]++;
-            elseif ($val >= 70) $distribution[2]++;
-            elseif ($val >= 60) $distribution[1]++;
-            else $distribution[0]++;
+            if ($val >= 90) {
+                $distribution[4]++;
+            } elseif ($val >= 80) {
+                $distribution[3]++;
+            } elseif ($val >= 70) {
+                $distribution[2]++;
+            } elseif ($val >= 60) {
+                $distribution[1]++;
+            } else {
+                $distribution[0]++;
+            }
         }
 
         return [
@@ -245,6 +251,7 @@ class DailyAssessmentService
     public function getStudentTranscript(int $studentId): Collection
     {
         $activeYear = AcademicYear::current();
+
         return DailyAssessmentScore::where('student_id', $studentId)
             ->whereHas('dailyAssessment', function ($q) use ($activeYear) {
                 if ($activeYear) {
@@ -275,7 +282,7 @@ class DailyAssessmentService
             ->get();
 
         $formativeAverage = null;
-        $validFormative = $formativeScores->filter(fn($s) => $s->final_score !== null);
+        $validFormative = $formativeScores->filter(fn ($s) => $s->final_score !== null);
         if ($validFormative->isNotEmpty()) {
             $formativeAverage = (float) $validFormative->avg('final_score');
         }
@@ -295,16 +302,26 @@ class DailyAssessmentService
                 ->where('academic_year_id', $activeYearId)
                 ->where('type', 'pas')
                 ->first();
-                
-            if ($utsGrade) $utsScore = (float) $utsGrade->score;
-            if ($pasGrade) $pasScore = (float) $pasGrade->score;
+
+            if ($utsGrade) {
+                $utsScore = (float) $utsGrade->score;
+            }
+            if ($pasGrade) {
+                $pasScore = (float) $pasGrade->score;
+            }
         }
 
         // Calculate weighted average dynamically based on available data
         $components = [];
-        if ($formativeAverage !== null) $components[] = ['score' => $formativeAverage, 'weight' => 0.6];
-        if ($utsScore !== null) $components[] = ['score' => $utsScore, 'weight' => 0.2];
-        if ($pasScore !== null) $components[] = ['score' => $pasScore, 'weight' => 0.2];
+        if ($formativeAverage !== null) {
+            $components[] = ['score' => $formativeAverage, 'weight' => 0.6];
+        }
+        if ($utsScore !== null) {
+            $components[] = ['score' => $utsScore, 'weight' => 0.2];
+        }
+        if ($pasScore !== null) {
+            $components[] = ['score' => $pasScore, 'weight' => 0.2];
+        }
 
         if (empty($components)) {
             // Default fallback is KKM or 0.0

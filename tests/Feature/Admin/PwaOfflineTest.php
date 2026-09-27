@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Classroom;
+use App\Models\User;
 use Illuminate\Support\Facades\File;
 
 test('service-worker.js file exists in public directory', function () {
@@ -14,7 +14,7 @@ test('offline-queue.js file exists in public directory', function () {
 
 test('app layout loads offline-queue.js script', function () {
     $user = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
-    
+
     $response = $this->actingAs($user)->get(route('dashboard'));
     $response->assertOk();
     $response->assertSee('offline-queue.js');
@@ -22,12 +22,12 @@ test('app layout loads offline-queue.js script', function () {
 
 test('attendance create form has offline sync data attributes', function () {
     $user = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
-    
+
     $classroom = Classroom::create([
-        'name' => 'X-A', 
-        'grade_level' => 'X', 
-        'major' => 'MIPA', 
-        'academic_year' => '2026/2027'
+        'name' => 'X-A',
+        'grade_level' => 'X',
+        'major' => 'MIPA',
+        'academic_year' => '2026/2027',
     ]);
 
     $response = $this->actingAs($user)->get(route('attendances.create', ['classroom_id' => $classroom->id]));

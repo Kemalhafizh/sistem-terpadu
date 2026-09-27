@@ -10,7 +10,7 @@ class InternshipApplication extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', 'company_id', 'supervisor_id', 'start_date', 'end_date', 'status', 'final_score'
+        'student_id', 'company_id', 'supervisor_id', 'start_date', 'end_date', 'status', 'final_score',
     ];
 
     protected $casts = [

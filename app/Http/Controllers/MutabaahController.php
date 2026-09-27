@@ -7,9 +7,9 @@ use App\Models\MutabaahLog;
 use App\Models\MutabaahWeeklySummary;
 use App\Models\Student;
 use App\Services\MutabaahService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class MutabaahController extends Controller
 {
@@ -28,7 +28,7 @@ class MutabaahController extends Controller
         $date = $request->get('date', now()->format('Y-m-d'));
         $student = $this->getStudentFromRequest($request);
 
-        if (!$student) {
+        if (! $student) {
             return back()->with('error', 'Data siswa tidak ditemukan.');
         }
 
@@ -100,7 +100,7 @@ class MutabaahController extends Controller
         $date = $request->get('date', now()->format('Y-m-d'));
         $student = $this->getStudentFromRequest($request);
 
-        if (!$student) {
+        if (! $student) {
             return back()->with('error', 'Siswa tidak ditemukan.');
         }
 
@@ -123,7 +123,7 @@ class MutabaahController extends Controller
     {
         $student = $this->getStudentFromRequest($request);
 
-        if (!$student) {
+        if (! $student) {
             return back()->with('error', 'Data siswa tidak ditemukan.');
         }
 
@@ -143,7 +143,7 @@ class MutabaahController extends Controller
         $classroom = Classroom::findOrFail($classroomId);
 
         // Authorization check: Homeroom teacher or Admin
-        if (!in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
             abort(403, 'Anda bukan wali kelas dari kelas ini.');
         }
 
@@ -174,7 +174,7 @@ class MutabaahController extends Controller
         $classroom = $summary->student->classroom;
 
         $user = auth()->user();
-        if (!in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
+        if (! in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -230,25 +230,27 @@ class MutabaahController extends Controller
     public function statistik(Request $request)
     {
         $user = auth()->user();
-        
+
         $classroomId = $request->get('classroom_id');
         $classrooms = [];
 
         if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah', 'waka_kesiswaan'])) {
             $classrooms = Classroom::all();
-            if (!$classroomId) {
+            if (! $classroomId) {
                 $classroomId = $classrooms->first()?->id;
             }
         } elseif ($user->role === 'guru') {
             $classrooms = Classroom::where('teacher_id', $user->id)->get();
-            if (!$classroomId) {
+            if (! $classroomId) {
                 $classroomId = $classrooms->first()?->id;
             }
         } else {
             // Students/Parents redirect to student individual stats page
             $student = $this->getStudentFromRequest($request);
-            if (!$student) abort(404);
-            
+            if (! $student) {
+                abort(404);
+            }
+
             $scoreTrend = MutabaahLog::where('student_id', $student->id)
                 ->whereNull('mutabaah_item_id')
                 ->orderBy('date')
@@ -258,7 +260,7 @@ class MutabaahController extends Controller
             return view('mutabaah.statistik-individu', compact('student', 'scoreTrend'));
         }
 
-        if (!$classroomId) {
+        if (! $classroomId) {
             return back()->with('error', 'Kelas tidak tersedia.');
         }
 
@@ -266,7 +268,7 @@ class MutabaahController extends Controller
         $weekStart = $request->get('week_start', now()->startOfWeek()->format('Y-m-d'));
 
         $students = Student::where('classroom_id', $classroomId)->get();
-        
+
         $summaries = MutabaahWeeklySummary::whereIn('student_id', $students->pluck('id'))
             ->where('week_start', $weekStart)
             ->get();
@@ -305,6 +307,7 @@ class MutabaahController extends Controller
             ->keyBy('student_id');
 
         $pdf = Pdf::loadView('mutabaah.pdf_export', compact('classroom', 'students', 'summaries', 'weekStart', 'weekEnd'));
+
         return $pdf->download("rekap_mutabaah_{$classroom->name}_{$weekStart}.pdf");
     }
 
@@ -370,11 +373,13 @@ class MutabaahController extends Controller
             if ($user->role === 'parent' && $student?->parent_id !== $user->id) {
                 abort(403);
             }
+
             return $student;
         }
         if ($user->role === 'parent') {
             return Student::where('parent_id', $user->id)->first();
         }
+
         return Student::first();
     }
 }

@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Services\AccountingService;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Billing extends Model
 {
-    use \App\Traits\LogsActivity, HasFactory, SoftDeletes;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected static function booted()
     {

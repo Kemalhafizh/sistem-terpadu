@@ -120,7 +120,7 @@ class AchievementMobileDataSeeder extends Seeder
                     ],
                     array_merge($c, [
                         'student_id' => $student->user_id,
-                        'merkle_root' => '0x' . hash('sha256', $c['certificate_number']),
+                        'merkle_root' => '0x'.hash('sha256', $c['certificate_number']),
                         'contract_address' => '0x1234567890abcdef1234567890abcdef12345678',
                         'block_number' => 128456,
                     ])

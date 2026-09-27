@@ -2,8 +2,8 @@
 
 namespace App\Services\HR;
 
-use App\Models\JobVacancy;
 use App\Models\JobApplicant;
+use App\Models\JobVacancy;
 
 class RecruitmentService
 {
@@ -15,6 +15,7 @@ class RecruitmentService
     public function movePipelineStage(JobApplicant $applicant, $newStage)
     {
         $applicant->update(['pipeline_stage' => $newStage]);
+
         return $applicant;
     }
 

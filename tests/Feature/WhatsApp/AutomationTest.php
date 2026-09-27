@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use App\Models\WhatsappTemplate;
 use App\Models\WhatsappAutomation;
+use App\Models\WhatsappTemplate;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([

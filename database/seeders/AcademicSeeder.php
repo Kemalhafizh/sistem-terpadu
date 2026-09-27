@@ -23,7 +23,7 @@ class AcademicSeeder extends Seeder
         $guruBk = User::where('email', 'guru.bk@sultanagung1.sch.id')->first()->id;
         $guruFisika = User::where('email', 'guru.fisika@sultanagung1.sch.id')->first()->id;
         $guruBahasa = User::where('email', 'guru.bahasa@sultanagung1.sch.id')->first()->id;
-        
+
         $guruPai = User::where('email', 'guru.pai@sultanagung1.sch.id')->first()->id;
         $guruKimia = User::where('email', 'guru.kimia@sultanagung1.sch.id')->first()->id;
         $guruBiologi = User::where('email', 'guru.biologi@sultanagung1.sch.id')->first()->id;
@@ -106,7 +106,7 @@ class AcademicSeeder extends Seeder
             'Ovi Sovianti', 'Rossa', 'Siti Badriah', 'Trio Macan', 'Uut Permatasari',
             'Via Vallen', 'Wika Salim', 'Zaskia Gotik', 'Ade Rai', 'Chris John',
             'Taufik Hidayat', 'Liliyana Natsir', 'Hendra Setiawan', 'Markis Kido', 'Susi Susanti',
-            'Alan Budikusuma', 'Triyaningsih', 'Eko Yuli Irawan', 'Sri Wahyuni', 'Lalu Muhammad Zohri'
+            'Alan Budikusuma', 'Triyaningsih', 'Eko Yuli Irawan', 'Sri Wahyuni', 'Lalu Muhammad Zohri',
         ];
 
         $counter = 0;
@@ -120,11 +120,11 @@ class AcademicSeeder extends Seeder
                     $name = $studentUsers[$studentIndex]->name;
                 } else {
                     // Create user accounts dynamically for the remaining 95 students
-                    $name = $studentNames[$counter] ?? 'Siswa Demo ' . ($studentIndex + 1);
+                    $name = $studentNames[$counter] ?? 'Siswa Demo '.($studentIndex + 1);
                     $counter++;
                     $newUser = User::create([
                         'name' => $name,
-                        'email' => 'demo.siswa' . ($studentIndex + 1) . '@student.sa1.sch.id',
+                        'email' => 'demo.siswa'.($studentIndex + 1).'@student.sa1.sch.id',
                         'password' => bcrypt('password123'),
                         'role' => 'student',
                         'email_verified_at' => now(),
@@ -142,11 +142,11 @@ class AcademicSeeder extends Seeder
                     'user_id' => $userId,
                     'classroom_id' => $classroom->id,
                     'parent_id' => $parentId,
-                    'nis' => 'SA1-' . str_pad($studentIndex + 1, 4, '0', STR_PAD_LEFT),
-                    'nisn' => '30' . str_pad(mt_rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
+                    'nis' => 'SA1-'.str_pad($studentIndex + 1, 4, '0', STR_PAD_LEFT),
+                    'nisn' => '30'.str_pad(mt_rand(10000000, 99999999), 8, '0', STR_PAD_LEFT),
                     'gender' => $i % 2 === 0 ? 'L' : 'P',
                     'birth_date' => now()->subYears(rand(15, 18))->subDays(rand(0, 365))->format('Y-m-d'),
-                    'address' => 'Jl. ' . ['Siliwangi', 'Diponegoro', 'Imam Bonjol', 'Pandanaran', 'Gajah Mada', 'Pemuda'][rand(0, 5)] . ' No. ' . rand(1, 200) . ', Semarang',
+                    'address' => 'Jl. '.['Siliwangi', 'Diponegoro', 'Imam Bonjol', 'Pandanaran', 'Gajah Mada', 'Pemuda'][rand(0, 5)].' No. '.rand(1, 200).', Semarang',
                     'status' => 'active',
                     'total_xp' => rand(100, 5000), // Seeding random XP for gamification
                 ]);

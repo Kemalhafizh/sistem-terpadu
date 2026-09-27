@@ -9,7 +9,7 @@ class CircuitBreakerSeeder extends Seeder
 {
     public function run(): void
     {
-        $cb = new CircuitBreakerService();
+        $cb = new CircuitBreakerService;
 
         // Ensure all circuits initialized to CLOSED
         $cb->resetCircuit('fonnte_whatsapp');

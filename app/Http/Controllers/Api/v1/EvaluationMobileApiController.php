@@ -22,6 +22,7 @@ class EvaluationMobileApiController extends Controller
     public function teacherList(Request $request)
     {
         $teachers = $this->evaluationService->getTeachersToEvaluate();
+
         return response()->json($teachers); // return array directly for Retrofit
     }
 
@@ -62,6 +63,7 @@ class EvaluationMobileApiController extends Controller
     public function facilityList(Request $request)
     {
         $facilities = $this->evaluationService->getFacilities();
+
         return response()->json($facilities);
     }
 
@@ -80,7 +82,7 @@ class EvaluationMobileApiController extends Controller
         try {
             $isAnonymous = $request->input('is_anonymous', true);
             $userId = $isAnonymous ? null : ($request->user()->id ?? null);
-            
+
             $this->evaluationService->submitFacilityEvaluation(
                 $request->facility_id,
                 $request->only(['rating', 'comments']),
@@ -106,7 +108,7 @@ class EvaluationMobileApiController extends Controller
     {
         $studentId = $request->user()->student->id ?? null;
         $election = $this->evaluationService->getActiveElection($studentId);
-        if (!$election) {
+        if (! $election) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada pemilihan OSIS aktif saat ini.',
@@ -139,7 +141,7 @@ class EvaluationMobileApiController extends Controller
 
             // Find student model
             $student = $user->student;
-            if (!$student) {
+            if (! $student) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Data profil siswa tidak ditemukan.',

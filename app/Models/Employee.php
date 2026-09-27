@@ -58,6 +58,7 @@ class Employee extends Model
     public function getNameAttribute()
     {
         $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+
         return $user?->name;
     }
 
@@ -67,6 +68,7 @@ class Employee extends Model
     public function getEmailAttribute()
     {
         $user = $this->relationLoaded('user') ? $this->user : $this->load('user')->user;
+
         return $user?->email;
     }
 

@@ -5,10 +5,9 @@ namespace Database\Seeders;
 use App\Models\SyncConfig;
 use App\Models\SyncReport;
 use App\Models\User;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Services\Integration\SyncMapperService;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class SyncConfigSeeder extends Seeder
 {
@@ -45,10 +44,10 @@ class SyncConfigSeeder extends Seeder
             SyncConfig::updateOrCreate(
                 [
                     'system_target' => $config['system_target'],
-                    'local_table' => $config['local_table']
+                    'local_table' => $config['local_table'],
                 ],
                 [
-                    'field_mapping' => $config['field_mapping']
+                    'field_mapping' => $config['field_mapping'],
                 ]
             );
         }
@@ -85,7 +84,7 @@ class SyncConfigSeeder extends Seeder
                             'field' => 'gender',
                             'issue' => 'Jenis kelamin kosong.',
                             'severity' => 'error',
-                        ]
+                        ],
                     ];
                 } else {
                     $errorLogs = [
@@ -96,7 +95,7 @@ class SyncConfigSeeder extends Seeder
                             'field' => 'nip',
                             'issue' => 'Status PNS tetapi NIP kosong.',
                             'severity' => 'error',
-                        ]
+                        ],
                     ];
                 }
             }

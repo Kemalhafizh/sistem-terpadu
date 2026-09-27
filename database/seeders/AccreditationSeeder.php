@@ -60,7 +60,7 @@ class AccreditationSeeder extends Seeder
                 'accreditation_indicator_id' => $ind1->id,
                 'evidence_type' => 'document',
                 'file_path' => "evidences/Dokumen_Kelayakan_{$snp['code']}.pdf",
-                'description' => "Dokumen terbukti diverifikasi asesmen internal BAN-SM.",
+                'description' => 'Dokumen terbukti diverifikasi asesmen internal BAN-SM.',
             ], $user->id);
 
             $accreditationService->verifyEvidence($evidence->id, $user->id);

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('report_card_templates')) {
+        if (! Schema::hasTable('report_card_templates')) {
             Schema::create('report_card_templates', function (Blueprint $table) {
                 $table->id();
                 $table->uuid('uuid')->unique();
@@ -28,7 +28,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('report_card_entries')) {
+        if (! Schema::hasTable('report_card_entries')) {
             Schema::create('report_card_entries', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('report_card_id')->constrained('report_card_templates')->cascadeOnDelete();
@@ -42,7 +42,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('report_card_characters')) {
+        if (! Schema::hasTable('report_card_characters')) {
             Schema::create('report_card_characters', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('report_card_id')->constrained('report_card_templates')->cascadeOnDelete();
@@ -54,7 +54,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('report_card_pdfs')) {
+        if (! Schema::hasTable('report_card_pdfs')) {
             Schema::create('report_card_pdfs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('report_card_id')->constrained('report_card_templates')->cascadeOnDelete();

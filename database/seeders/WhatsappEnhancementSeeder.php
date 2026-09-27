@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\WhatsappTemplate;
+use App\Models\User;
 use App\Models\WhatsappAutomation;
 use App\Models\WhatsappBroadcast;
 use App\Models\WhatsappLog;
-use App\Models\User;
-use Illuminate\Database\Seeder;
+use App\Models\WhatsappTemplate;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class WhatsappEnhancementSeeder extends Seeder
 {
@@ -132,8 +132,8 @@ class WhatsappEnhancementSeeder extends Seeder
         // 4. Create 15 WhatsApp Logs (sent vs failed)
         for ($i = 0; $i < 12; $i++) {
             WhatsappLog::create([
-                'recipient' => '628' . $faker->numerify('#########'),
-                'message' => 'Simulasi pengiriman pesan otomatis sukses #' . ($i + 1),
+                'recipient' => '628'.$faker->numerify('#########'),
+                'message' => 'Simulasi pengiriman pesan otomatis sukses #'.($i + 1),
                 'type' => $faker->randomElement(['keuangan', 'akademik', 'umum']),
                 'status' => 'sent',
                 'payload' => ['simulation' => true, 'fonnte_id' => $faker->uuid],
@@ -142,8 +142,8 @@ class WhatsappEnhancementSeeder extends Seeder
 
         for ($i = 0; $i < 3; $i++) {
             WhatsappLog::create([
-                'recipient' => '628' . $faker->numerify('####999###'), // contains 999 to simulate sandbox fail
-                'message' => 'Simulasi pengiriman pesan otomatis gagal #' . ($i + 1),
+                'recipient' => '628'.$faker->numerify('####999###'), // contains 999 to simulate sandbox fail
+                'message' => 'Simulasi pengiriman pesan otomatis gagal #'.($i + 1),
                 'type' => 'keuangan',
                 'status' => 'failed',
                 'error_message' => 'Simulated WhatsApp Gateway delivery failure (Sandbox Mode).',

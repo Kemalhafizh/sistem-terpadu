@@ -6,14 +6,14 @@ use App\Domains\HumanResources\Services\PayrollDomainService;
 use App\Domains\Keislaman\Services\TahfidzDomainService;
 use App\Domains\School\Services\SchoolBrandingDomainService;
 use App\Models\User;
-use Tests\TestCase;
+use App\Support\School;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
 });
 
 test('academic domain service calculates final grade correctly', function () {
-    $service = new GradeCalculationDomainService();
+    $service = new GradeCalculationDomainService;
     $result = $service->calculateFinalGrade(90, 85, 88, 90);
 
     expect($result['final_score'])->toBe(87.7);
@@ -22,7 +22,7 @@ test('academic domain service calculates final grade correctly', function () {
 });
 
 test('keislaman domain service evaluates tahfidz progress correctly', function () {
-    $service = new TahfidzDomainService();
+    $service = new TahfidzDomainService;
     $result = $service->evaluateProgress(600, 3);
 
     expect($result['percentage'])->toBe(100.0);
@@ -30,7 +30,7 @@ test('keislaman domain service evaluates tahfidz progress correctly', function (
 });
 
 test('finance domain service validates canteen purchase correctly', function () {
-    $service = new WadiahDomainService();
+    $service = new WadiahDomainService;
 
     // Valid purchase
     $valid = $service->validateCanteenPurchase(50000, 10000, 25000, 10000);
@@ -43,7 +43,7 @@ test('finance domain service validates canteen purchase correctly', function () 
 });
 
 test('human resources domain service calculates net payroll correctly', function () {
-    $service = new PayrollDomainService();
+    $service = new PayrollDomainService;
     $result = $service->calculateSalary(4000000, 1000000, 2);
 
     expect($result['gross_salary'])->toBe(5000000.0);
@@ -52,7 +52,7 @@ test('human resources domain service calculates net payroll correctly', function
 });
 
 test('school domain service retrieves single school branding profile', function () {
-    $service = new SchoolBrandingDomainService();
+    $service = new SchoolBrandingDomainService;
     $profile = $service->getSchoolProfile();
 
     expect($profile['school_name'])->toContain('Sultan Agung 1');
@@ -87,11 +87,11 @@ test('admin can view and update school branding profile via controller', functio
     $responsePost->assertStatus(302);
     $responsePost->assertRedirect(route('admin.school.branding.index'));
 
-    $service = new SchoolBrandingDomainService();
+    $service = new SchoolBrandingDomainService;
     $profile = $service->getSchoolProfile();
     expect($profile['school_name'])->toBe('SMA Islam Sultan Agung 1 Semarang Enterprise')
         ->and($profile['principal_name'])->toBe('Kepala Contoh, S.Pd.');
 
     // These were on the form but never validated, so they were silently dropped.
-    expect(\App\Support\School::campus())->toBe(['latitude' => -6.99, 'longitude' => 110.43, 'radius_meters' => 150.0]);
+    expect(School::campus())->toBe(['latitude' => -6.99, 'longitude' => 110.43, 'radius_meters' => 150.0]);
 });

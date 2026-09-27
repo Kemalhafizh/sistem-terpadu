@@ -138,7 +138,7 @@ final class School
      * Labels of official fields that are still empty (e.g. the principal's
      * NIP). Used to warn admins and on documents that would print them.
      *
-     * @return array<string, string>  setting key => label
+     * @return array<string, string> setting key => label
      */
     public static function missingOfficialFields(): array
     {

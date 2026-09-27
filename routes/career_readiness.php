@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Student\InternshipController;
 use App\Http\Controllers\Student\CollegeCounselingController;
-use App\Http\Controllers\Student\ShowcaseController;
+use App\Http\Controllers\Student\InternshipController;
 use App\Http\Controllers\Student\MiniBankingController;
+use App\Http\Controllers\Student\ShowcaseController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('internships')->name('internships.')->group(function () {

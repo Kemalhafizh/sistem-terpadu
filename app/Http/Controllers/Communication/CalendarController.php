@@ -77,9 +77,10 @@ class CalendarController extends Controller
         $userId = auth()->id();
         try {
             $event = $calendarService->updateEvent($id, $request->all(), $userId);
+
             return back()->with('success', "Jadwal Acara [{$event->title}] berhasil diperbarui!");
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal memperbarui acara: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memperbarui acara: '.$e->getMessage());
         }
     }
 
@@ -91,9 +92,10 @@ class CalendarController extends Controller
         $userId = auth()->id();
         try {
             $calendarService->deleteEvent($id, $userId);
+
             return back()->with('success', 'Jadwal Acara berhasil dihapus.');
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal menghapus acara: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus acara: '.$e->getMessage());
         }
     }
 

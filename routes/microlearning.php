@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Microlearning\MicroLessonController;
-use App\Http\Controllers\Microlearning\GamifiedQuizController;
-use App\Http\Controllers\Microlearning\SpacedRepetitionController;
 use App\Http\Controllers\Microlearning\DigitalTranscriptController;
+use App\Http\Controllers\Microlearning\GamifiedQuizController;
+use App\Http\Controllers\Microlearning\MicroLessonController;
+use App\Http\Controllers\Microlearning\SpacedRepetitionController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('micro-lessons', MicroLessonController::class);

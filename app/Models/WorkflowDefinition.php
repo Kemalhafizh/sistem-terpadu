@@ -10,10 +10,10 @@ class WorkflowDefinition extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'code', 'description', 'steps', 'is_active'];
-    
+
     protected $casts = [
-        'steps' => 'array', 
-        'is_active' => 'boolean'
+        'steps' => 'array',
+        'is_active' => 'boolean',
     ];
 
     public function requests()

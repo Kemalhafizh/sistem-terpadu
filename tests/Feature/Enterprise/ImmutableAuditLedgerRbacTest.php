@@ -4,12 +4,11 @@ use App\Models\ImmutableAuditLog;
 use App\Models\User;
 use App\Services\ImmutableAuditLedgerService;
 use App\Services\PermissionService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
-    $this->ledgerService = new ImmutableAuditLedgerService();
-    $this->permissionService = new PermissionService();
+    $this->ledgerService = new ImmutableAuditLedgerService;
+    $this->permissionService = new PermissionService;
 });
 
 test('immutable audit ledger records cryptographic sha256 chained log entries', function () {

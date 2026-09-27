@@ -12,6 +12,7 @@ class PartnershipController extends Controller
     public function index()
     {
         $partnerships = Partnership::with('creator')->latest()->get();
+
         return view('partnerships.index', compact('partnerships'));
     }
 

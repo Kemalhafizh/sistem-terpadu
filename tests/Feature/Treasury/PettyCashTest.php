@@ -3,6 +3,7 @@
 use App\Models\PettyCashFund;
 use App\Models\PettyCashTransaction;
 use App\Models\User;
+use App\Services\Treasury\PettyCashService;
 
 beforeEach(function () {
     $this->clerk = User::factory()->create(['role' => 'staf_tu']);
@@ -109,7 +110,7 @@ test('the fund page and approval queue list real transactions', function () {
 });
 
 test('the report totals approved spending per category for the chosen month', function () {
-    $service = app(\App\Services\Treasury\PettyCashService::class);
+    $service = app(PettyCashService::class);
     foreach ([[100000, 'atk'], [50000, 'atk'], [30000, 'konsumsi']] as [$amount, $category]) {
         $service->approve(pettyRequest($this->fund, $this->clerk, 'pengeluaran', $amount, $category), $this->treasurer->id);
     }
@@ -141,7 +142,7 @@ test('a new fund starts empty and is filled by an approved replenishment', funct
     expect((float) $fund->current_balance)->toBe(0.0);
 
     $refill = pettyRequest($fund, $this->clerk, 'pengisian_ulang', 1000000);
-    app(\App\Services\Treasury\PettyCashService::class)->approve($refill, $this->treasurer->id);
+    app(PettyCashService::class)->approve($refill, $this->treasurer->id);
     expect((float) $fund->fresh()->current_balance)->toBe(1000000.0);
 });
 

@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
-use App\Models\ElearningAssignment;
 use App\Models\ElearningSubmission;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Student;
 use Illuminate\Http\UploadedFile;
 
 class ElearningMobileService
@@ -50,6 +49,7 @@ class ElearningMobileService
                     ->first();
                 $assignment->student_submission = $sub;
                 $assignment->is_submitted = $sub !== null;
+
                 return $assignment;
             });
         }
@@ -64,7 +64,7 @@ class ElearningMobileService
             $filePath = $file->store('uploads/elearning/submissions', 'public');
         }
 
-        $student = \App\Models\Student::where('user_id', $studentId)->first();
+        $student = Student::where('user_id', $studentId)->first();
         $targetStudentId = $student ? $student->id : $studentId;
 
         return ElearningSubmission::updateOrCreate(

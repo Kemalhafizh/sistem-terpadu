@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\SuperApp;
 
-use App\Models\User;
-use App\Models\Student;
 use App\Models\Classroom;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

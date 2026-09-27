@@ -2,15 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\OmnichannelTemplate;
 use App\Models\DripCampaign;
-use App\Models\NpsCampaign;
 use App\Models\MediaContact;
-use App\Models\User;
+use App\Models\NpsCampaign;
 use App\Models\OmnichannelLog;
-use App\Models\CampaignStep;
-use App\Models\NpsResponse;
+use App\Models\OmnichannelTemplate;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class OmnichannelSeeder extends Seeder
 {
@@ -25,7 +23,7 @@ class OmnichannelSeeder extends Seeder
             'allowed_channels' => ['email', 'whatsapp'],
             'variables' => ['name'],
         ]);
-        
+
         OmnichannelLog::create([
             'user_id' => $admin->id,
             'channel' => 'email',

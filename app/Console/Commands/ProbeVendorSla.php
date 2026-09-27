@@ -13,7 +13,7 @@ class ProbeVendorSla extends Command
 
     public function handle(VendorSlaProbeService $probeService): int
     {
-        $this->info("Memulai pengujian SLA Vendor Pihak Ketiga...");
+        $this->info('Memulai pengujian SLA Vendor Pihak Ketiga...');
 
         $results = $probeService->probeAllVendors();
 
@@ -21,7 +21,7 @@ class ProbeVendorSla extends Command
             $this->line("- [{$metric->vendor_name}]: Status {$metric->status} (Latensi: {$metric->latency_ms} ms)");
         }
 
-        $this->info("Pengujian SLA Vendor Selesai.");
+        $this->info('Pengujian SLA Vendor Selesai.');
 
         return self::SUCCESS;
     }

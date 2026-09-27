@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Localization;
 
-use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class LanguageSwitchTest extends TestCase
 {
@@ -41,7 +41,7 @@ class LanguageSwitchTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'admin',
-            'preferred_locale' => 'id'
+            'preferred_locale' => 'id',
         ]);
 
         $response = $this->actingAs($user)->post(route('preferences.locale', 'ar'));
@@ -49,7 +49,7 @@ class LanguageSwitchTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'preferred_locale' => 'ar'
+            'preferred_locale' => 'ar',
         ]);
         $this->assertEquals('ar', session('locale'));
     }
@@ -69,7 +69,7 @@ class LanguageSwitchTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson([
             'success' => true,
-            'locale' => 'en'
+            'locale' => 'en',
         ]);
     }
 
@@ -87,7 +87,7 @@ class LanguageSwitchTest extends TestCase
             'green_school',
             'school_safety',
             'alumni_relations',
-            'family_engagement'
+            'family_engagement',
         ];
 
         foreach ($locales as $locale) {
@@ -119,7 +119,7 @@ class LanguageSwitchTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'admin',
-            'preferred_locale' => 'ar'
+            'preferred_locale' => 'ar',
         ]);
 
         $response = $this->actingAs($user)->withSession(['locale' => 'ar'])->get(route('dashboard'));

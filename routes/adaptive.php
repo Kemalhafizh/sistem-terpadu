@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Adaptive\IrtCalibrationController;
 use App\Http\Controllers\Adaptive\CatController;
+use App\Http\Controllers\Adaptive\IrtCalibrationController;
 use App\Http\Controllers\Adaptive\LearningPathController;
 use App\Http\Controllers\Adaptive\MasteryController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('adaptive')->name('adaptive.')->group(function () {
-    
+
     // IRT Calibration
     Route::get('calibration/dashboard', [IrtCalibrationController::class, 'dashboard'])->name('calibration.dashboard');
     Route::post('calibration/batch/{examId}', [IrtCalibrationController::class, 'batchCalibrate'])->name('calibration.batch');
@@ -18,7 +18,7 @@ Route::middleware(['auth'])->prefix('adaptive')->name('adaptive.')->group(functi
     Route::get('cat/take/{sessionId}', [CatController::class, 'takeExam'])->name('cat.take');
     Route::post('cat/process/{sessionId}', [CatController::class, 'processResponse'])->name('cat.process');
     Route::get('cat/result/{sessionId}', [CatController::class, 'result'])->name('cat.result');
-    Route::get('cat/admin-sessions', function() {
+    Route::get('cat/admin-sessions', function () {
         return view('adaptive.cat.admin-sessions');
     })->name('cat.admin-sessions');
 

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ParentMessageResource extends JsonResource
 {
@@ -21,7 +22,7 @@ class ParentMessageResource extends JsonResource
             'student_uuid' => $this->student->uuid ?? null,
             'student_name' => $this->student->user->name ?? 'N/A',
             'message' => $this->message,
-            'attachment_url' => $this->attachment_path ? \Illuminate\Support\Facades\Storage::url($this->attachment_path) : null,
+            'attachment_url' => $this->attachment_path ? Storage::url($this->attachment_path) : null,
             'attachment_type' => $this->attachment_type,
             'is_read' => (bool) $this->is_read,
             'created_at' => $this->created_at ? $this->created_at->toIso8601String() : null,

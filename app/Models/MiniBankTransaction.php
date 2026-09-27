@@ -10,7 +10,7 @@ class MiniBankTransaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'wallet_id', 'transaction_type', 'amount', 'reference_code', 'description'
+        'wallet_id', 'transaction_type', 'amount', 'reference_code', 'description',
     ];
 
     protected $casts = [

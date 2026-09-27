@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Domains\School\Services\SchoolBrandingDomainService;
 use App\Http\Controllers\Controller;
 use App\Services\EnterpriseCacheService;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 
 class CacheMonitorController extends Controller
 {
@@ -46,7 +46,8 @@ class CacheMonitorController extends Controller
     {
         try {
             $cacheService->flushAll();
-            return back()->with('success', "Seluruh Cache Aplikasi berhasil dibersihkan (Purged All)!");
+
+            return back()->with('success', 'Seluruh Cache Aplikasi berhasil dibersihkan (Purged All)!');
         } catch (Exception $e) {
             return back()->with('error', "Gagal membersihkan cache: {$e->getMessage()}");
         }
@@ -62,9 +63,9 @@ class CacheMonitorController extends Controller
             $brandingService->getSchoolProfile();
 
             // Warmup general enterprise keys
-            $cacheService->remember('warmup_system_ready', 3600, fn() => true, ['system']);
+            $cacheService->remember('warmup_system_ready', 3600, fn () => true, ['system']);
 
-            return back()->with('success', "Proses Warmup Cache Enterprise berhasil diselesaikan! Kunci kritis siap melayani request.");
+            return back()->with('success', 'Proses Warmup Cache Enterprise berhasil diselesaikan! Kunci kritis siap melayani request.');
         } catch (Exception $e) {
             return back()->with('error', "Gagal melakukan warmup cache: {$e->getMessage()}");
         }

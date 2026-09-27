@@ -12,7 +12,7 @@ class SafetyDrill extends Model
     protected $fillable = [
         'drill_type', 'scheduled_date', 'start_time', 'end_time',
         'evacuation_time_seconds', 'headcount_unaccounted', 'observer_notes',
-        'compliance_status'
+        'compliance_status',
     ];
 
     protected $casts = [

@@ -1,13 +1,12 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Classroom;
 use App\Models\AchievementDefinition;
+use App\Models\Classroom;
+use App\Models\Student;
 use App\Models\StudentAchievement;
 use App\Models\StudentXpLog;
+use App\Models\User;
 use App\Services\GamificationService;
-use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
     // Clean tables before each test
@@ -56,7 +55,7 @@ test('XP awarding service increments student XP, creates transaction log, and co
     $service->awardXp($student, 150, 'assignment', 'Menyelesaikan tugas E-Learning.');
 
     $student = $student->fresh();
-    
+
     // Check XP increment
     $this->assertEquals(150, $student->total_xp);
 
@@ -161,7 +160,7 @@ test('leaderboard returns ranked students sorted by total XP and longest streak'
     // 1st: s2 (500 XP)
     // 2nd: s3 (300 XP, streak 15) - tie-breaker
     // 3rd: s1 (300 XP, streak 10)
-    
+
     $this->assertCount(3, $leaderboard);
     $this->assertEquals($s2->id, $leaderboard[0]->id);
     $this->assertEquals($s3->id, $leaderboard[1]->id);

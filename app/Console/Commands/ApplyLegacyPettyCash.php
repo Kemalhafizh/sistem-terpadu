@@ -65,7 +65,7 @@ class ApplyLegacyPettyCash extends Command
             $this->info("Diterapkan: #{$p['fund_id']} {$p['fund_name']} → {$this->rupiah($p['result'])} ({$p['transactions']} transaksi).");
         }
         foreach ($result['skipped'] as $p) {
-            $this->error("Dilewati: #{$p['fund_id']} {$p['fund_name']} — ".self::STATUS_LABELS[$p['status']].". Saldo tidak diubah.");
+            $this->error("Dilewati: #{$p['fund_id']} {$p['fund_name']} — ".self::STATUS_LABELS[$p['status']].'. Saldo tidak diubah.');
         }
 
         return $result['skipped'] === [] ? self::SUCCESS : self::FAILURE;

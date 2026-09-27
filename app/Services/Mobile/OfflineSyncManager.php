@@ -79,8 +79,8 @@ class OfflineSyncManager
 
         $student = Student::where('user_id', $user->id)->first() ?? Student::create([
             'user_id' => $user->id,
-            'nisn' => '9982348' . $user->id,
-            'nis' => '120' . $user->id,
+            'nisn' => '9982348'.$user->id,
+            'nis' => '120'.$user->id,
             'gender' => 'L',
             'classroom_id' => $classroom->id,
         ]);
@@ -112,7 +112,7 @@ class OfflineSyncManager
                             'recorded_by' => $user->id,
                             'date' => $date,
                             'status' => 'H',
-                            'notes' => 'Synced from offline queue: ' . ($payload['notes'] ?? ''),
+                            'notes' => 'Synced from offline queue: '.($payload['notes'] ?? ''),
                         ]);
                         $syncedCount++;
                         $results[] = [
@@ -144,6 +144,7 @@ class OfflineSyncManager
             ];
         } catch (\Throwable $e) {
             DB::rollBack();
+
             return [
                 'success' => false,
                 'error' => $e->getMessage(),

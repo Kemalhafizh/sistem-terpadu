@@ -30,8 +30,8 @@ test('admin can store new workflow definition', function () {
                 'order' => 2,
                 'role' => 'kepala_sekolah',
                 'sla_hours' => 48,
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect(route('workflows.definitions'));
@@ -47,7 +47,7 @@ test('admin can delete workflow definition', function () {
         'code' => 'TEACHER_LEAVE',
         'description' => 'Workflow untuk cuti.',
         'steps' => [
-            ['order' => 1, 'role' => 'waka_kurikulum', 'sla_hours' => 24]
+            ['order' => 1, 'role' => 'waka_kurikulum', 'sla_hours' => 24],
         ],
         'is_active' => true,
     ]);

@@ -18,7 +18,7 @@ class EcoProject extends Model
         'end_date',
         'status',
         'participating_classes',
-        'impact_result'
+        'impact_result',
     ];
 
     protected $casts = [

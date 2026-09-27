@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\SyncConfig;
 use App\Models\SyncReport;
 use App\Services\Integration\SyncMapperService;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Illuminate\Http\Request;
 
 class SyncController extends Controller
 {
@@ -29,7 +28,7 @@ class SyncController extends Controller
         // Audit summary counters
         $dapodikStudentIssuesCount = count($this->syncService->validateData('dapodik', 'students'));
         $dapodikTeacherIssuesCount = count($this->syncService->validateData('dapodik', 'teachers'));
-        
+
         $emisStudentIssuesCount = count($this->syncService->validateData('emis', 'students'));
         $emisTeacherIssuesCount = count($this->syncService->validateData('emis', 'teachers'));
 
@@ -173,7 +172,7 @@ class SyncController extends Controller
 
             // Audit
             $issues = $this->syncService->validateData($target, $table);
-            $failedCount = count(array_filter($issues, fn($i) => $i['severity'] === 'error'));
+            $failedCount = count(array_filter($issues, fn ($i) => $i['severity'] === 'error'));
             $processedCount = count($mappedData);
             $successCount = $processedCount - $failedCount;
 
@@ -189,7 +188,7 @@ class SyncController extends Controller
             );
 
             // Export to JSON file download
-            $filename = "Sync_{$target}_{$table}_" . date('Ymd_His') . '.json';
+            $filename = "Sync_{$target}_{$table}_".date('Ymd_His').'.json';
             $json = json_encode([
                 'metadata' => [
                     'target' => $target,
@@ -205,7 +204,7 @@ class SyncController extends Controller
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memproses ekspor data: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses ekspor data: '.$e->getMessage());
         }
     }
 
@@ -215,6 +214,7 @@ class SyncController extends Controller
     public function syncHistory()
     {
         $reports = SyncReport::with('runBy')->latest()->paginate(15);
+
         return view('integrations.sync.history', compact('reports'));
     }
 }

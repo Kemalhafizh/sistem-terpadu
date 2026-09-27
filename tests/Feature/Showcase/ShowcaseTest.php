@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\StudentShowcase;
 use App\Models\User;
 use App\Services\Student\ShowcaseService;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -203,7 +204,7 @@ test('database menolak dukungan ganda walau lolos pengecekan aplikasi', function
     ShowcaseEndorsement::create(['showcase_id' => $showcase->id, 'endorser_id' => $this->teacher->id, 'endorsement_text' => 'Pertama']);
 
     expect(fn () => ShowcaseEndorsement::create(['showcase_id' => $showcase->id, 'endorser_id' => $this->teacher->id, 'endorsement_text' => 'Kedua']))
-        ->toThrow(\Illuminate\Database\UniqueConstraintViolationException::class);
+        ->toThrow(UniqueConstraintViolationException::class);
 });
 
 // ── Pages show real data ────────────────────────────────────────────────────

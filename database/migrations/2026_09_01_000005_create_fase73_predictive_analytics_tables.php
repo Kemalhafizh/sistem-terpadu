@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('student_risk_profiles')) {
+        if (! Schema::hasTable('student_risk_profiles')) {
             Schema::create('student_risk_profiles', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('student_id')->unique()->constrained('users')->cascadeOnDelete();
@@ -26,7 +26,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('treasury_forecasts')) {
+        if (! Schema::hasTable('treasury_forecasts')) {
             Schema::create('treasury_forecasts', function (Blueprint $table) {
                 $table->id();
                 $table->string('forecast_month', 16); // YYYY-MM

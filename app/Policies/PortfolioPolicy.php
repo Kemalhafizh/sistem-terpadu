@@ -13,9 +13,9 @@ class PortfolioPolicy
      */
     public function manage(User $user, PortfolioItem $item): bool
     {
-        return $user->role === 'student' && 
-               $item->student->user_id === $user->id && 
-               !$item->is_verified;
+        return $user->role === 'student' &&
+               $item->student->user_id === $user->id &&
+               ! $item->is_verified;
     }
 
     /**

@@ -29,7 +29,9 @@ class RequestMetricsRecorder
         }
 
         $line = implode("\t", [
-            sprintf('%.3F', $at ?? microtime(true)),
+            // Truncate, don't round: %.3F rounds up half the time, stamping the
+            // sample up to 0.5 ms in the future so an immediate summary() drops it.
+            sprintf('%.3F', $at ?? floor(microtime(true) * 1000) / 1000),
             sprintf('%.2F', max(0, $durationMs)),
             $status,
             self::clean(strtoupper($method), 10),

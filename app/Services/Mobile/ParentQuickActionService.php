@@ -64,7 +64,7 @@ class ParentQuickActionService
             ],
             [
                 'status' => in_array($status, ['sakit', 'izin']) ? $status : 'izin',
-                'notes' => 'Laporan Orang Tua Mobile: ' . $reason,
+                'notes' => 'Laporan Orang Tua Mobile: '.$reason,
             ]
         );
 

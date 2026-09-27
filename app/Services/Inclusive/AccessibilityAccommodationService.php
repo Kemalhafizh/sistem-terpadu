@@ -17,7 +17,7 @@ class AccessibilityAccommodationService
         if ($registry && str_contains(strtolower($registry->specific_need), 'waktu')) {
             return 30; // 30 minutes extra
         }
-        
+
         return 0;
     }
 

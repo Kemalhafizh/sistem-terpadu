@@ -10,7 +10,7 @@ class JobApplicant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'job_vacancy_id', 'full_name', 'email', 'resume_url', 'pipeline_stage', 'assessment_scores'
+        'job_vacancy_id', 'full_name', 'email', 'resume_url', 'pipeline_stage', 'assessment_scores',
     ];
 
     protected $casts = [

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Services\CounselingMobileService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CounselingMobileApiController extends Controller
 {
@@ -19,6 +19,7 @@ class CounselingMobileApiController extends Controller
     public function dashboard(Request $request): JsonResponse
     {
         $data = $this->service->getCounselorDashboard($request->user()->id);
+
         return response()->json([
             'success' => true,
             'data' => $data,
@@ -64,6 +65,7 @@ class CounselingMobileApiController extends Controller
     public function studentAppointments(Request $request): JsonResponse
     {
         $appointments = $this->service->getStudentAppointments($request->user()->id);
+
         return response()->json([
             'success' => true,
             'data' => $appointments,
@@ -73,6 +75,7 @@ class CounselingMobileApiController extends Controller
     public function atRiskStudents(Request $request): JsonResponse
     {
         $atRisk = $this->service->getAtRiskStudents();
+
         return response()->json([
             'success' => true,
             'data' => $atRisk,

@@ -23,6 +23,7 @@ class UtbkMobileApiController extends Controller
     {
         $studentId = $request->user()?->student?->id;
         $tryouts = $this->utbkService->getAvailableTryouts($studentId);
+
         return response()->json($tryouts);
     }
 
@@ -33,6 +34,7 @@ class UtbkMobileApiController extends Controller
     {
         try {
             $questions = $this->utbkService->getTryoutQuestions($id);
+
             return response()->json($questions);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 404);
@@ -91,6 +93,7 @@ class UtbkMobileApiController extends Controller
         try {
             $studentId = $student->id;
             $recommendations = $this->utbkService->getRecommendations($studentId);
+
             return response()->json($recommendations);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
@@ -103,6 +106,7 @@ class UtbkMobileApiController extends Controller
     public function alumniDirectory(Request $request)
     {
         $directory = $this->utbkService->getAlumniDirectory();
+
         return response()->json($directory);
     }
 }

@@ -173,7 +173,7 @@ class PortfolioController extends Controller
         }
 
         $portfolioItem->update([
-            'is_public' => !$portfolioItem->is_public,
+            'is_public' => ! $portfolioItem->is_public,
         ]);
 
         $status = $portfolioItem->is_public ? 'publik' : 'privat';
@@ -206,9 +206,9 @@ class PortfolioController extends Controller
             'id' => $portfolioItem->id,
             'type' => 'portfolio_verified',
             'title' => $isVerified ? 'Sertifikat Terverifikasi! ' : 'Status Verifikasi Dicabut',
-            'description' => $isVerified 
-                ? 'Item portofolio "' . $portfolioItem->title . '" Anda telah disetujui sekolah.' 
-                : 'Verifikasi item portofolio "' . $portfolioItem->title . '" Anda dicabut oleh staf pengajar.',
+            'description' => $isVerified
+                ? 'Item portofolio "'.$portfolioItem->title.'" Anda telah disetujui sekolah.'
+                : 'Verifikasi item portofolio "'.$portfolioItem->title.'" Anda dicabut oleh staf pengajar.',
             'created_at' => now()->toDateTimeString(),
         ]));
 
@@ -234,7 +234,7 @@ class PortfolioController extends Controller
                 'awarded_by' => auth()->id(),
                 'earned_at' => now(),
                 'notes' => $request->notes,
-            ]
+            ],
         ]);
 
         $badge = PortfolioBadge::find($request->badge_id);
@@ -244,7 +244,7 @@ class PortfolioController extends Controller
             'id' => $badge->id,
             'type' => 'portfolio_badge',
             'title' => 'Lencana Penghargaan Baru! ',
-            'description' => 'Selamat! Anda dianugerahi lencana kehormatan "' . $badge->name . '".',
+            'description' => 'Selamat! Anda dianugerahi lencana kehormatan "'.$badge->name.'".',
             'created_at' => now()->toDateTimeString(),
         ]));
 

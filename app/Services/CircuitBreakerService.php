@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Cache;
 class CircuitBreakerService
 {
     public const STATE_CLOSED = 'CLOSED';
+
     public const STATE_OPEN = 'OPEN';
+
     public const STATE_HALF_OPEN = 'HALF_OPEN';
 
     private const FAILURE_THRESHOLD = 5;
+
     private const COOLOFF_SECONDS = 60;
 
     /**
@@ -28,16 +31,18 @@ class CircuitBreakerService
                 Cache::put("cb_{$serviceName}_state", self::STATE_HALF_OPEN);
             } else {
                 // Circuit is OPEN: execute fallback immediately without calling primary
-                return $fallbackCallback('Circuit Breaker OPEN: Layanan ' . $serviceName . ' dinonaktifkan sementara.');
+                return $fallbackCallback('Circuit Breaker OPEN: Layanan '.$serviceName.' dinonaktifkan sementara.');
             }
         }
 
         try {
             $result = $primaryCallback();
             $this->recordSuccess($serviceName);
+
             return $result;
         } catch (\Throwable $e) {
             $this->recordFailure($serviceName);
+
             return $fallbackCallback($e->getMessage());
         }
     }

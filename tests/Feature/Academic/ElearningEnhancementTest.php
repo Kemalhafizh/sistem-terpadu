@@ -2,17 +2,15 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\ElearningAnnouncement;
+use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
-use App\Models\ElearningAssignment;
-use App\Models\ElearningAnnouncement;
 use App\Models\ElearningMaterialComment;
-use App\Models\ElearningMaterialView;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
-use App\Services\ElearningService;
-use Tests\TestCase;
+use Illuminate\Support\Str;
 
 beforeEach(function () {
     // 1. Setup Users
@@ -26,15 +24,15 @@ beforeEach(function () {
     // 2. Setup Academic Data
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true, 'year' => '2026/2027']);
     $this->classroom = Classroom::factory()->create(['academic_year' => $this->academicYear->year]);
-    
+
     // Explicitly set classroom for the student to avoid factory collision
     $this->student->update(['classroom_id' => $this->classroom->id]);
-    
+
     $this->subject = Subject::factory()->create(['name' => 'Fisika']);
 
     // 3. Create E-Learning Class
     $this->elearningClass = ElearningClass::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
         'teacher_id' => $this->guru->id,
@@ -45,7 +43,7 @@ beforeEach(function () {
 
     // 4. Create Material
     $this->material = ElearningMaterial::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'elearning_class_id' => $this->elearningClass->id,
         'title' => 'Materi Gerak Lurus',
         'description' => 'Pembahasan Gerak Lurus Beraturan',
@@ -53,7 +51,7 @@ beforeEach(function () {
 
     // 5. Create Assignment
     $this->assignment = ElearningAssignment::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'elearning_class_id' => $this->elearningClass->id,
         'title' => 'Tugas Gerak Lurus',
         'description' => 'Kerjakan soal 1-5',
@@ -93,7 +91,7 @@ test('unauthorized users cannot post announcement', function () {
 
 test('teacher can delete their announcement', function () {
     $announcement = ElearningAnnouncement::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'elearning_class_id' => $this->elearningClass->id,
         'user_id' => $this->guru->id,
         'content' => 'Pengumuman lama.',
@@ -143,7 +141,7 @@ test('user can post discussion comment on learning material', function () {
 test('user can delete their own comment, and teacher can delete any comment', function () {
     // 1. Student creates comment
     $comment = ElearningMaterialComment::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'elearning_material_id' => $this->material->id,
         'user_id' => $this->studentUser->id,
         'content' => 'Komentar siswa.',
@@ -162,7 +160,7 @@ test('user can delete their own comment, and teacher can delete any comment', fu
 
     // 4. Create another comment
     $comment2 = ElearningMaterialComment::create([
-        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        'uuid' => (string) Str::uuid(),
         'elearning_material_id' => $this->material->id,
         'user_id' => $this->studentUser->id,
         'content' => 'Komentar siswa kedua.',
@@ -204,9 +202,9 @@ test('teacher can duplicate virtual classroom', function () {
     // Redirects to duplicated class detail page
     $response->assertRedirect();
 
-    $duplicatedClass = ElearningClass::where('name', 'Salinan ' . $this->elearningClass->name)->first();
+    $duplicatedClass = ElearningClass::where('name', 'Salinan '.$this->elearningClass->name)->first();
     $this->assertNotNull($duplicatedClass);
-    
+
     // Verify cloned components count
     $this->assertEquals(1, $duplicatedClass->materials()->count());
     $this->assertEquals(1, $duplicatedClass->assignments()->count());
@@ -219,7 +217,7 @@ test('teacher can archive and unarchive virtual classroom', function () {
     // 2. Archive class
     $response = $this->actingAs($this->guru)
         ->post(route('elearning.class.archive', $this->elearningClass->uuid));
-    
+
     $response->assertRedirect();
     $this->elearningClass->refresh();
     $this->assertTrue($this->elearningClass->is_archived);
@@ -227,7 +225,7 @@ test('teacher can archive and unarchive virtual classroom', function () {
     // 3. Unarchive class
     $response = $this->actingAs($this->guru)
         ->post(route('elearning.class.unarchive', $this->elearningClass->uuid));
-    
+
     $response->assertRedirect();
     $this->elearningClass->refresh();
     $this->assertFalse($this->elearningClass->is_archived);

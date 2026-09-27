@@ -10,6 +10,8 @@ use App\Models\Student;
 use App\Services\CbtAccessControlService;
 use App\Services\CbtService;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class CbtAccessControlApiController extends Controller
@@ -17,6 +19,7 @@ class CbtAccessControlApiController extends Controller
     use ApiResponseTrait;
 
     protected CbtAccessControlService $accessControlService;
+
     protected CbtService $cbtService;
 
     public function __construct(CbtAccessControlService $accessControlService, CbtService $cbtService)
@@ -35,7 +38,7 @@ class CbtAccessControlApiController extends Controller
         ]);
 
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -49,7 +52,7 @@ class CbtAccessControlApiController extends Controller
             $platform
         );
 
-        if (!$result['valid']) {
+        if (! $result['valid']) {
             return $this->errorResponse($result['message'], 403);
         }
 
@@ -81,7 +84,7 @@ class CbtAccessControlApiController extends Controller
         ]);
 
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -100,10 +103,10 @@ class CbtAccessControlApiController extends Controller
                 'answers_saved' => true,
                 'force_close_reason' => $attempt->force_close_reason,
             ], 'Sesi ujian telah ditutup paksa demi integritas ujian');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
         } catch (\Exception $e) {
-            return $this->errorResponse('Gagal menutup sesi ujian: ' . $e->getMessage(), 500);
+            return $this->errorResponse('Gagal menutup sesi ujian: '.$e->getMessage(), 500);
         }
     }
 
@@ -116,17 +119,17 @@ class CbtAccessControlApiController extends Controller
     public function heartbeat(Request $request, $id)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
         $exam = Exam::findOrFail($id);
 
-        $attempt = \App\Models\ExamAttempt::where('exam_id', $exam->id)
+        $attempt = ExamAttempt::where('exam_id', $exam->id)
             ->where('student_id', $student->id)
             ->first();
 
-        if (!$attempt || in_array($attempt->status, ['submitted', 'graded', 'blocked_violation', 'timeout', 'force_closed'])) {
+        if (! $attempt || in_array($attempt->status, ['submitted', 'graded', 'blocked_violation', 'timeout', 'force_closed'])) {
             return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
         }
 
@@ -152,7 +155,7 @@ class CbtAccessControlApiController extends Controller
         ]);
 
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -163,7 +166,7 @@ class CbtAccessControlApiController extends Controller
             ->where('status', 'in_progress')
             ->first();
 
-        if (!$attempt) {
+        if (! $attempt) {
             return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
         }
 
@@ -231,9 +234,9 @@ class CbtAccessControlApiController extends Controller
         $user = $request->user();
         $exam = Exam::findOrFail($id);
 
-        if (!$this->accessControlService->canViewToken($user, $exam)) {
+        if (! $this->accessControlService->canViewToken($user, $exam)) {
             return $this->errorResponse(
-                'Anda tidak berwenang melihat token ujian ini. ' .
+                'Anda tidak berwenang melihat token ujian ini. '.
                 ($exam->type === 'uts' || $exam->type === 'uas'
                     ? 'Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.'
                     : 'Token Ulangan Harian dipegang oleh guru pembuat ujian.'),
@@ -271,7 +274,7 @@ class CbtAccessControlApiController extends Controller
         $user = $request->user();
         $exam = Exam::findOrFail($id);
 
-        if (!$this->accessControlService->canViewToken($user, $exam)) {
+        if (! $this->accessControlService->canViewToken($user, $exam)) {
             return $this->errorResponse('Anda tidak berwenang memperbarui token ujian ini', 403);
         }
 
@@ -311,12 +314,12 @@ class CbtAccessControlApiController extends Controller
                 'attempt_status' => $attempt->status,
                 'force_closed' => $attempt->force_closed,
             ], 'Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.');
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+        } catch (AuthorizationException $e) {
             return $this->errorResponse($e->getMessage(), 403);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return $this->errorResponse('Data attempt force_closed untuk siswa ini tidak ditemukan', 404);
         } catch (\Exception $e) {
-            return $this->errorResponse('Gagal mereset status siswa: ' . $e->getMessage(), 500);
+            return $this->errorResponse('Gagal mereset status siswa: '.$e->getMessage(), 500);
         }
     }
 }

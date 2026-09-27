@@ -70,6 +70,7 @@ class AdaptiveRiskEngine
     public function shouldChallengeMfa(User $user, Request $request): bool
     {
         $assessment = $this->calculateRiskScore($user, $request);
+
         return $assessment['requires_mfa'];
     }
 

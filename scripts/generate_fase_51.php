@@ -1,11 +1,13 @@
 <?php
+
 $baseDir = __DIR__;
 
-function makeFile(string $path, string $content): void {
+function makeFile(string $path, string $content): void
+{
     global $baseDir;
-    $fullPath = $baseDir . '/' . $path;
+    $fullPath = $baseDir.'/'.$path;
     $dir = dirname($fullPath);
-    if (!is_dir($dir)) {
+    if (! is_dir($dir)) {
         mkdir($dir, 0777, true);
     }
     file_put_contents($fullPath, $content);
@@ -476,7 +478,7 @@ EOT
 );
 
 // 5. Views
-makeFile('resources/views/micro-lessons/index.blade.php', <<<EOT
+makeFile('resources/views/micro-lessons/index.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -490,7 +492,7 @@ makeFile('resources/views/micro-lessons/index.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/micro-lessons/create.blade.php', <<<EOT
+makeFile('resources/views/micro-lessons/create.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -501,7 +503,7 @@ makeFile('resources/views/micro-lessons/create.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/micro-lessons/show.blade.php', <<<EOT
+makeFile('resources/views/micro-lessons/show.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -512,7 +514,7 @@ makeFile('resources/views/micro-lessons/show.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/micro-lessons/analytics.blade.php', <<<EOT
+makeFile('resources/views/micro-lessons/analytics.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -524,7 +526,7 @@ makeFile('resources/views/micro-lessons/analytics.blade.php', <<<EOT
 EOT
 );
 
-makeFile('resources/views/gamified-quizzes/dashboard.blade.php', <<<EOT
+makeFile('resources/views/gamified-quizzes/dashboard.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -535,7 +537,7 @@ makeFile('resources/views/gamified-quizzes/dashboard.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/gamified-quizzes/lobby.blade.php', <<<EOT
+makeFile('resources/views/gamified-quizzes/lobby.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -546,7 +548,7 @@ makeFile('resources/views/gamified-quizzes/lobby.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/gamified-quizzes/live.blade.php', <<<EOT
+makeFile('resources/views/gamified-quizzes/live.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -557,7 +559,7 @@ makeFile('resources/views/gamified-quizzes/live.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/gamified-quizzes/results.blade.php', <<<EOT
+makeFile('resources/views/gamified-quizzes/results.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -569,7 +571,7 @@ makeFile('resources/views/gamified-quizzes/results.blade.php', <<<EOT
 EOT
 );
 
-makeFile('resources/views/spaced-repetition/deck.blade.php', <<<EOT
+makeFile('resources/views/spaced-repetition/deck.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -580,7 +582,7 @@ makeFile('resources/views/spaced-repetition/deck.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/spaced-repetition/review.blade.php', <<<EOT
+makeFile('resources/views/spaced-repetition/review.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -591,7 +593,7 @@ makeFile('resources/views/spaced-repetition/review.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/spaced-repetition/stats.blade.php', <<<EOT
+makeFile('resources/views/spaced-repetition/stats.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -603,7 +605,7 @@ makeFile('resources/views/spaced-repetition/stats.blade.php', <<<EOT
 EOT
 );
 
-makeFile('resources/views/transcripts/student-view.blade.php', <<<EOT
+makeFile('resources/views/transcripts/student-view.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -614,7 +616,7 @@ makeFile('resources/views/transcripts/student-view.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/transcripts/admin-manager.blade.php', <<<EOT
+makeFile('resources/views/transcripts/admin-manager.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
@@ -625,7 +627,7 @@ makeFile('resources/views/transcripts/admin-manager.blade.php', <<<EOT
 @endsection
 EOT
 );
-makeFile('resources/views/transcripts/public-verification.blade.php', <<<EOT
+makeFile('resources/views/transcripts/public-verification.blade.php', <<<'EOT'
 @extends('layouts.app')
 @section('content')
 <div class="max-w-7xl mx-auto p-6">

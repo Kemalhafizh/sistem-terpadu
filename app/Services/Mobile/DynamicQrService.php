@@ -31,7 +31,7 @@ class DynamicQrService
         ]);
 
         $signature = hash_hmac('sha256', $payload, $this->secretKey);
-        $encodedToken = base64_encode($payload . '::' . $signature);
+        $encodedToken = base64_encode($payload.'::'.$signature);
 
         $expiresIn = 30 - (time() % 30);
 
@@ -59,7 +59,7 @@ class DynamicQrService
             [$payloadJson, $providedSignature] = $parts;
             $expectedSignature = hash_hmac('sha256', $payloadJson, $this->secretKey);
 
-            if (!hash_equals($expectedSignature, $providedSignature)) {
+            if (! hash_equals($expectedSignature, $providedSignature)) {
                 return ['valid' => false, 'message' => 'Cryptographic signature mismatch'];
             }
 
@@ -73,14 +73,14 @@ class DynamicQrService
             }
 
             // Check replay cache
-            $cacheKey = 'dynamic_qr_used:' . substr($providedSignature, 0, 16);
+            $cacheKey = 'dynamic_qr_used:'.substr($providedSignature, 0, 16);
             if (Cache::has($cacheKey)) {
                 return ['valid' => false, 'message' => 'QR Code has already been used'];
             }
             Cache::put($cacheKey, true, 60);
 
             $user = User::find($payload['uid']);
-            if (!$user) {
+            if (! $user) {
                 return ['valid' => false, 'message' => 'User not found'];
             }
 
@@ -92,7 +92,7 @@ class DynamicQrService
                 'verified_at' => now()->toIso8601String(),
             ];
         } catch (\Throwable $e) {
-            return ['valid' => false, 'message' => 'Verification error: ' . $e->getMessage()];
+            return ['valid' => false, 'message' => 'Verification error: '.$e->getMessage()];
         }
     }
 }

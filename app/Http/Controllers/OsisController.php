@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OsisTransaction;
-use App\Models\OsisMember;
-use App\Models\OsisWorkProgram;
-use App\Models\OsisElection;
-use App\Models\OsisCandidate;
-use App\Models\OsisVote;
 use App\Models\AcademicYear;
+use App\Models\OsisCandidate;
+use App\Models\OsisElection;
+use App\Models\OsisMember;
+use App\Models\OsisTransaction;
+use App\Models\OsisVote;
+use App\Models\OsisWorkProgram;
 use App\Models\Student;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -99,6 +98,7 @@ class OsisController extends Controller
     public function editTransaction($id)
     {
         $transaction = OsisTransaction::findOrFail($id);
+
         return view('extracurricular.osis.edit_transaction', compact('transaction'));
     }
 
@@ -109,6 +109,7 @@ class OsisController extends Controller
             Storage::disk('public')->delete($transaction->receipt_path);
         }
         $transaction->delete();
+
         return back()->with('success', 'Transaksi kas berhasil dihapus.');
     }
 
@@ -137,7 +138,7 @@ class OsisController extends Controller
             'end_date' => $request->end_date,
         ]);
 
-        return $pdf->setPaper('a4', 'portrait')->download('Laporan_Kas_OSIS_' . $request->start_date . '_to_' . $request->end_date . '.pdf');
+        return $pdf->setPaper('a4', 'portrait')->download('Laporan_Kas_OSIS_'.$request->start_date.'_to_'.$request->end_date.'.pdf');
     }
 
     public function members()
@@ -149,13 +150,14 @@ class OsisController extends Controller
             ->get();
 
         $students = Student::with(['user', 'classroom'])->where('status', 'active')->get();
+
         return view('extracurricular.osis.members', compact('members', 'students', 'activeYear'));
     }
 
     public function storeMember(Request $request)
     {
         $activeYear = AcademicYear::where('is_active', true)->first();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -179,12 +181,14 @@ class OsisController extends Controller
         ]);
 
         $member->update($validated);
+
         return back()->with('success', 'Jabatan pengurus berhasil diperbarui.');
     }
 
     public function removeMember(OsisMember $member)
     {
         $member->update(['status' => 'inactive']);
+
         return back()->with('success', 'Pengurus OSIS berhasil dinonaktifkan.');
     }
 
@@ -199,7 +203,7 @@ class OsisController extends Controller
     public function storeWorkProgram(Request $request)
     {
         $activeYear = AcademicYear::where('is_active', true)->first();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -259,7 +263,7 @@ class OsisController extends Controller
     public function storeElection(Request $request)
     {
         $activeYear = AcademicYear::where('is_active', true)->first();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -275,12 +279,13 @@ class OsisController extends Controller
         ]));
 
         return back()->with('success', 'Pemilihan Ketua OSIS baru berhasil didaftarkan.');
-      }
+    }
 
     public function candidates(OsisElection $election)
     {
         $election->load('candidates.student.user');
         $students = Student::with(['user', 'classroom'])->where('status', 'active')->get();
+
         return view('extracurricular.osis.election.candidates', compact('election', 'students'));
     }
 
@@ -315,11 +320,11 @@ class OsisController extends Controller
     public function votingPage(OsisElection $election)
     {
         $election->load('candidates.student.user');
-        
+
         $user = auth()->user();
         $student = $user->student;
         $hasVoted = false;
-        
+
         if ($student) {
             $hasVoted = OsisVote::where('election_id', $election->id)
                 ->where('voter_id', $student->id)
@@ -334,7 +339,7 @@ class OsisController extends Controller
         $user = auth()->user();
         $student = $user->student;
 
-        if (!$student) {
+        if (! $student) {
             return back()->with('error', 'Hanya siswa yang berhak memberikan suara.');
         }
 
@@ -364,10 +369,12 @@ class OsisController extends Controller
             $candidate->increment('vote_count');
 
             DB::commit();
+
             return back()->with('success', 'Suara Anda berhasil dikirim ke bilik suara digital.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Gagal memproses suara: ' . $e->getMessage());
+
+            return back()->with('error', 'Gagal memproses suara: '.$e->getMessage());
         }
     }
 
@@ -375,6 +382,7 @@ class OsisController extends Controller
     {
         $election->load('candidates.student.user');
         $totalVotes = $election->votes()->count();
+
         return view('extracurricular.osis.election.results', compact('election', 'totalVotes'));
     }
 }

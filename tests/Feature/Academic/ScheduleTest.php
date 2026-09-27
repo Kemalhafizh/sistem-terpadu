@@ -8,7 +8,6 @@ use App\Models\SchedulePreset;
 use App\Models\ScheduleTime;
 use App\Models\Subject;
 use App\Models\User;
-use Tests\TestCase;
 
 beforeEach(function () {
     // 1. Setup Users
@@ -269,13 +268,13 @@ test('conflict audit dashboard lists all conflicts in database', function () {
             'session_end' => 2,
             'created_at' => now(),
             'updated_at' => now(),
-        ]
+        ],
     ]);
 
     $response = $this->get(route('schedules.conflicts'));
     $response->assertStatus(200);
     $response->assertViewHas('conflicts');
-    
+
     $conflicts = $response->viewData('conflicts');
     $this->assertCount(1, $conflicts);
     $this->assertEquals('Guru', $conflicts[0]['type']);

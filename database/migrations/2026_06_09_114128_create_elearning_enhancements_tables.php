@@ -52,7 +52,7 @@ return new class extends Migration
         Schema::dropIfExists('elearning_material_comments');
         Schema::dropIfExists('elearning_material_views');
         Schema::dropIfExists('elearning_announcements');
-        
+
         Schema::table('elearning_classes', function (Blueprint $table) {
             $table->dropColumn('is_archived');
         });

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicYear;
+use App\Models\ReportCardTemplate;
 use App\Services\ERaporPdfService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ERaporApiController extends Controller
 {
@@ -47,10 +49,10 @@ class ERaporApiController extends Controller
         $studentId = (int) ($request->input('student_id') ?: $request->user()->id);
         $reportCardId = $request->input('report_card_id');
 
-        if (!$reportCardId) {
-            $template = \App\Models\ReportCardTemplate::latest()->first();
-            if (!$template) {
-                $academicYear = \App\Models\AcademicYear::firstOrCreate(
+        if (! $reportCardId) {
+            $template = ReportCardTemplate::latest()->first();
+            if (! $template) {
+                $academicYear = AcademicYear::firstOrCreate(
                     ['year' => '2025/2026', 'semester' => 'Ganjil'],
                     [
                         'is_active' => true,
@@ -58,7 +60,7 @@ class ERaporApiController extends Controller
                         'end_date' => now()->endOfYear(),
                     ]
                 );
-                $template = \App\Models\ReportCardTemplate::create([
+                $template = ReportCardTemplate::create([
                     'name' => 'Rapor Semester Standar SISTA',
                     'academic_year_id' => $academicYear->id,
                     'semester' => 'ganjil',
@@ -86,7 +88,7 @@ class ERaporApiController extends Controller
     {
         $pdf = $this->service->verifyPdfHash($hash);
 
-        if (!$pdf) {
+        if (! $pdf) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sertifikat rapor digital tidak valid atau tidak ditemukan.',

@@ -14,13 +14,14 @@ class CbtService
      */
     public function getOrInitializeQuestionOrder(Exam $exam, Student $student, ExamAttempt $attempt): array
     {
-        if (!empty($attempt->question_order)) {
+        if (! empty($attempt->question_order)) {
             return $attempt->question_order;
         }
 
         $shuffledIds = $this->computeQuestionOrder($exam, $student->id);
 
         $attempt->update(['question_order' => $shuffledIds]);
+
         return $shuffledIds;
     }
 
@@ -33,6 +34,7 @@ class CbtService
         if ($exam->shuffle_questions) {
             $questionIds = $exam->questions->pluck('id')->toArray();
             $seed = $studentId * 7919 + $exam->id * 104729;
+
             return $this->deterministicShuffle($questionIds, $seed);
         }
 
@@ -55,11 +57,12 @@ class CbtService
     public function getShuffledOptions(QuestionBank $question, int $studentId, int $examId): array
     {
         $options = $question->options;
-        if (empty($options) || !is_array($options) || $question->type !== 'multiple_choice') {
+        if (empty($options) || ! is_array($options) || $question->type !== 'multiple_choice') {
             return $options ?? [];
         }
 
         $seed = $studentId * 7919 + $examId * 104729 + $question->id;
+
         return $this->deterministicShuffleAssociative($options, $seed);
     }
 
@@ -101,7 +104,7 @@ class CbtService
         $number = 1;
         foreach ($orderedIds as $qId) {
             $question = $questions->get($qId);
-            if (!$question) {
+            if (! $question) {
                 continue;
             }
             $set[] = [
@@ -210,7 +213,7 @@ class CbtService
         mt_srand($seed);
         $shuffled = array_values($array);
         $n = count($shuffled);
-        
+
         for ($i = $n - 1; $i > 0; $i--) {
             $j = mt_rand(0, $i);
             $temp = $shuffled[$i];
@@ -229,7 +232,7 @@ class CbtService
         mt_srand($seed);
         $keys = array_keys($array);
         $n = count($keys);
-        
+
         for ($i = $n - 1; $i > 0; $i--) {
             $j = mt_rand(0, $i);
             $temp = $keys[$i];

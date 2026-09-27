@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
 use App\Models\ElearningMaterialView;
-use App\Models\ElearningAssignment;
 use App\Models\Student;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ElearningService
 {
@@ -26,7 +26,7 @@ class ElearningService
                 'subject_id' => $originalClass->subject_id,
                 'classroom_id' => $originalClass->classroom_id,
                 'teacher_id' => $teacherId,
-                'name' => 'Salinan ' . $originalClass->name,
+                'name' => 'Salinan '.$originalClass->name,
                 'description' => $originalClass->description,
                 'is_archived' => false,
             ]);
@@ -68,7 +68,7 @@ class ElearningService
     {
         $class = ElearningClass::findOrFail($classId);
         $class->update([
-            'is_archived' => !$class->is_archived,
+            'is_archived' => ! $class->is_archived,
         ]);
     }
 
@@ -113,8 +113,8 @@ class ElearningService
 
         $submittedCount = $submissions->count();
 
-        $percentage = $totalItems > 0 
-            ? round((($readCount + $submittedCount) / $totalItems) * 100, 1) 
+        $percentage = $totalItems > 0
+            ? round((($readCount + $submittedCount) / $totalItems) * 100, 1)
             : 100.0;
 
         $materialsProgress = [];
@@ -137,16 +137,16 @@ class ElearningService
 
         foreach ($class->assignments as $assignment) {
             $sub = $submissions->get($assignment->id);
-            $score = $sub && !is_null($sub->score) ? (float) $sub->score : null;
+            $score = $sub && ! is_null($sub->score) ? (float) $sub->score : null;
 
-            if (!is_null($score)) {
+            if (! is_null($score)) {
                 $totalScore += $score;
                 $gradedCount++;
             }
 
             $assignmentsProgress[] = [
                 'assignment' => $assignment,
-                'is_submitted' => !is_null($sub),
+                'is_submitted' => ! is_null($sub),
                 'submitted_at' => $sub ? $sub->submitted_at : null,
                 'status' => $sub ? $sub->status : 'pending',
                 'score' => $score,
@@ -187,7 +187,7 @@ class ElearningService
         foreach ($students as $student) {
             $prog = $this->getStudentProgress($classId, $student->id);
             $totalCompletion += $prog['completion_percentage'];
-            
+
             $studentsProgress[] = [
                 'student' => $student,
                 'completion_percentage' => $prog['completion_percentage'],
@@ -197,8 +197,8 @@ class ElearningService
             ];
         }
 
-        $averageCompletion = $students->count() > 0 
-            ? round($totalCompletion / $students->count(), 1) 
+        $averageCompletion = $students->count() > 0
+            ? round($totalCompletion / $students->count(), 1)
             : 100.0;
 
         return [

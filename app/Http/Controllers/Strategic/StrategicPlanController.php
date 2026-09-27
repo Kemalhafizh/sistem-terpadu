@@ -11,12 +11,14 @@ class StrategicPlanController extends Controller
     public function dashboard()
     {
         $activePlan = StrategicPlan::with('objectives.kpis')->where('status', 'active')->first();
+
         return view('strategic.dashboard', compact('activePlan'));
     }
 
     public function index()
     {
         $plans = StrategicPlan::latest()->get();
+
         return view('strategic.plan.index', compact('plans'));
     }
 
@@ -36,12 +38,14 @@ class StrategicPlanController extends Controller
         ]);
 
         StrategicPlan::create($validated);
+
         return redirect()->route('strategic.plan.index')->with('success', 'Rencana Strategis berhasil dibuat.');
     }
 
     public function show($id)
     {
         $plan = StrategicPlan::with('objectives.kpis')->findOrFail($id);
+
         return view('strategic.plan.show', compact('plan'));
     }
 }

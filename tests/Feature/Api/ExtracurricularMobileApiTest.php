@@ -29,7 +29,7 @@ beforeEach(function () {
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
         'classroom_id' => $this->classroom->id,
-        'nis' => '109' . rand(1000, 9999),
+        'nis' => '109'.rand(1000, 9999),
     ]);
 
     // 3. Setup Extracurriculars

@@ -1,10 +1,11 @@
 <?php
-use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Knowledge\KnowledgeArticleController;
 use App\Http\Controllers\Knowledge\LessonStudyController;
-use App\Http\Controllers\Knowledge\PlcGroupController;
 use App\Http\Controllers\Knowledge\PlcDiscussionController;
+use App\Http\Controllers\Knowledge\PlcGroupController;
 use App\Http\Controllers\Knowledge\SharedResourceController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->prefix('knowledge')->name('knowledge.')->group(function () {
     Route::resource('articles', KnowledgeArticleController::class);

@@ -20,12 +20,14 @@ class MerchandiseController extends Controller
     public function catalog()
     {
         $items = MerchandiseItem::where('is_active', true)->get();
+
         return view('store.catalog', compact('items'));
     }
 
     public function adminInventory()
     {
         $items = MerchandiseItem::all();
+
         return view('store.inventory', compact('items'));
     }
 
@@ -38,8 +40,9 @@ class MerchandiseController extends Controller
             'price' => 'required|numeric',
             'current_stock' => 'required|integer',
         ]);
-        
+
         MerchandiseItem::create($data);
+
         return back()->with('success', 'Item created successfully');
     }
 
@@ -55,16 +58,18 @@ class MerchandiseController extends Controller
             'total_amount' => 'required|numeric',
             'order_items' => 'required|array',
         ]);
-        
+
         $data['student_id'] = auth()->id() ?? 1; // Fallback for testing
-        
+
         $this->merchandiseService->createOrder($data);
+
         return back()->with('success', 'Order placed successfully');
     }
 
     public function fulfillment()
     {
         $orders = MerchandiseOrder::where('fulfillment_status', '!=', 'completed')->get();
+
         return view('store.fulfillment', compact('orders'));
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('exam_attempts', function (Blueprint $table) {
-            if (!Schema::hasColumn('exam_attempts', 'last_heartbeat_at')) {
+            if (! Schema::hasColumn('exam_attempts', 'last_heartbeat_at')) {
                 $table->timestamp('last_heartbeat_at')->nullable()->after('force_close_reason');
             }
         });

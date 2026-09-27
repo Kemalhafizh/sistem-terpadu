@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\InteractiveUi;
 
-use App\Models\AcademicYear;
-use App\Models\Classroom;
 use App\Models\Room;
 use App\Models\Schedule;
 use App\Models\ScheduleBuilderDraft;
-use App\Models\Subject;
 use App\Models\User;
 
 class ScheduleBuilderEngineService
@@ -33,6 +30,7 @@ class ScheduleBuilderEngineService
             $draft = ScheduleBuilderDraft::find($draftId);
             if ($draft) {
                 $draft->update($payload);
+
                 return $draft;
             }
         }
@@ -115,6 +113,7 @@ class ScheduleBuilderEngineService
         }
 
         $draft->update(['status' => 'published']);
+
         return true;
     }
 }

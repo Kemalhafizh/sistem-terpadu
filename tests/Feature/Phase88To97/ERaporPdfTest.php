@@ -10,13 +10,13 @@ beforeEach(function () {
 test('student can view current rapor', function () {
     $response = $this->actingAs($this->student)->getJson('/api/v1/rapor/current');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('parent can view child rapor', function () {
     $response = $this->actingAs($this->parent)->getJson("/api/v1/rapor/child/{$this->student->id}");
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('system can generate pdf for rapor', function () {
@@ -25,5 +25,5 @@ test('system can generate pdf for rapor', function () {
         'semester' => 1,
     ]);
     $response->assertStatus(200)
-             ->assertJson(['success' => true]);
+        ->assertJson(['success' => true]);
 });

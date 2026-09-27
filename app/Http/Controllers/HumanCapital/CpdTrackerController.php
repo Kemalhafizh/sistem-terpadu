@@ -39,6 +39,7 @@ class CpdTrackerController extends Controller
     public function teamOverview()
     {
         $activities = CpdActivity::with(['employee', 'category'])->where('status', 'pending')->get();
+
         return view('cpd.team-overview', compact('activities'));
     }
 

@@ -28,8 +28,8 @@ class EnergyManagementController extends Controller
         $result = $this->energyService->updateRoomState(
             $validated['room_name'],
             $validated['device_id'],
-            (int)$validated['occupancy_count'],
-            isset($validated['temperature']) ? (float)$validated['temperature'] : 25.0
+            (int) $validated['occupancy_count'],
+            isset($validated['temperature']) ? (float) $validated['temperature'] : 25.0
         );
 
         return response()->json([

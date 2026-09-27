@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('question_bank_categories')) {
+        if (! Schema::hasTable('question_bank_categories')) {
             Schema::create('question_bank_categories', function (Blueprint $table) {
                 $table->id();
                 $table->uuid('uuid')->unique();
@@ -23,7 +23,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('question_bank_items')) {
+        if (! Schema::hasTable('question_bank_items')) {
             Schema::create('question_bank_items', function (Blueprint $table) {
                 $table->id();
                 $table->uuid('uuid')->unique();
@@ -48,7 +48,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('exam_question_links')) {
+        if (! Schema::hasTable('exam_question_links')) {
             Schema::create('exam_question_links', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();

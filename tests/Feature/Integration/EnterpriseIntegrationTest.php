@@ -1,14 +1,12 @@
 <?php
 
 use App\Models\ApiClient;
-use App\Models\EtlJob;
 use App\Models\Plugin;
 use App\Models\User;
 use App\Services\Integration\ApiDocumentationService;
 use App\Services\Integration\EtlPipelineService;
 use App\Services\Integration\GraphqlService;
 use App\Services\Integration\PluginManagerService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Integration Engineer']);

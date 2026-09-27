@@ -13,10 +13,15 @@ class ProctorInterventionEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public int $examId;
+
     public ?int $studentId;
+
     public string $actionType; // WARNING_MODAL, FORCE_SUBMIT, EXTEND_TIME, UNLOCK_EXAM
+
     public ?string $message;
+
     public ?int $extraMinutes;
+
     public string $timestamp;
 
     /**
@@ -43,11 +48,11 @@ class ProctorInterventionEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         $channels = [
-            new PrivateChannel('cbt.exam.' . $this->examId),
+            new PrivateChannel('cbt.exam.'.$this->examId),
         ];
 
         if ($this->studentId) {
-            $channels[] = new PrivateChannel('cbt.exam.' . $this->examId . '.student.' . $this->studentId);
+            $channels[] = new PrivateChannel('cbt.exam.'.$this->examId.'.student.'.$this->studentId);
         }
 
         return $channels;

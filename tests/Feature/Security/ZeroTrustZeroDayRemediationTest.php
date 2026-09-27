@@ -3,7 +3,6 @@
 namespace Tests\Feature\Security;
 
 use App\Models\AcademicYear;
-use App\Models\Billing;
 use App\Models\Classroom;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
@@ -22,14 +21,23 @@ class ZeroTrustZeroDayRemediationTest extends TestCase
     use RefreshDatabase;
 
     protected User $adminUser;
+
     protected User $studentUserA;
+
     protected User $studentUserB;
+
     protected Student $studentA;
+
     protected Student $studentB;
+
     protected Classroom $classA;
+
     protected Classroom $classB;
+
     protected Exam $examClassA;
+
     protected QuestionBank $question1;
+
     protected QuestionBank $foreignQuestion;
 
     protected function setUp(): void
@@ -230,8 +238,8 @@ class ZeroTrustZeroDayRemediationTest extends TestCase
                     'id' => 'sync-item-1',
                     'type' => 'mutabaah_draft',
                     'data' => ['prayer' => 'subuh'],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $res->assertStatus(200);

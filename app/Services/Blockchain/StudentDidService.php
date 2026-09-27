@@ -19,8 +19,8 @@ class StudentDidService
             return $existing;
         }
 
-        $didUri = 'did:ybwsa:sulaone:' . hash('sha256', (string) $student->id . $student->email . 'YBWSA_SALT');
-        $publicKey = '04' . hash('sha256', $didUri . 'PUB') . hash('sha256', 'KEY_PART2');
+        $didUri = 'did:ybwsa:sulaone:'.hash('sha256', (string) $student->id.$student->email.'YBWSA_SALT');
+        $publicKey = '04'.hash('sha256', $didUri.'PUB').hash('sha256', 'KEY_PART2');
 
         $didDocument = [
             '@context' => [
@@ -31,17 +31,17 @@ class StudentDidService
             'controller' => 'did:ybwsa:authority:sultanagung1',
             'verificationMethod' => [
                 [
-                    'id' => $didUri . '#key-1',
+                    'id' => $didUri.'#key-1',
                     'type' => 'Ed25519VerificationKey2020',
                     'controller' => $didUri,
-                    'publicKeyMultibase' => 'z' . substr($publicKey, 0, 48),
+                    'publicKeyMultibase' => 'z'.substr($publicKey, 0, 48),
                 ],
             ],
             'authentication' => [
-                $didUri . '#key-1',
+                $didUri.'#key-1',
             ],
             'assertionMethod' => [
-                $didUri . '#key-1',
+                $didUri.'#key-1',
             ],
         ];
 
@@ -78,8 +78,8 @@ class StudentDidService
             'proof' => [
                 'type' => 'Ed25519Signature2020',
                 'created' => now()->toIso8601String(),
-                'verificationMethod' => $did->did_uri . '#key-1',
-                'proofValue' => '0x' . hash('sha256', $did->did_uri . now()->timestamp),
+                'verificationMethod' => $did->did_uri.'#key-1',
+                'proofValue' => '0x'.hash('sha256', $did->did_uri.now()->timestamp),
             ],
         ];
     }

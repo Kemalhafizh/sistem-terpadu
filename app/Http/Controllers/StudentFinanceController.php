@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Billing;
 use App\Models\Payment;
 use App\Models\Student;
-use App\Models\WadiahAccount;
 use App\Services\WadiahService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

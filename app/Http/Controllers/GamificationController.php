@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\GamificationService;
-use App\Models\Classroom;
 use App\Models\AchievementDefinition;
+use App\Models\Classroom;
 use App\Models\StudentAchievement;
+use App\Services\GamificationService;
 use Illuminate\Http\Request;
 
 class GamificationController extends Controller
@@ -24,9 +24,9 @@ class GamificationController extends Controller
     {
         $classrooms = Classroom::all();
         $classroomId = $request->filled('classroom_id') ? (int) $request->classroom_id : null;
-        
+
         $leaderboard = $this->gamificationService->getLeaderboard('all_time', $classroomId);
-        
+
         return view('gamification.leaderboard', compact('leaderboard', 'classrooms', 'classroomId'));
     }
 
@@ -36,12 +36,12 @@ class GamificationController extends Controller
     public function myProgress()
     {
         $user = auth()->user();
-        if ($user->role !== 'student' || !$user->student) {
+        if ($user->role !== 'student' || ! $user->student) {
             return redirect()->route('dashboard')->with('error', 'Halaman ini hanya dapat diakses oleh siswa aktif.');
         }
 
         $student = $user->student;
-        $student->load(['xpLogs' => function($q) {
+        $student->load(['xpLogs' => function ($q) {
             $q->latest()->take(10);
         }, 'achievements.definition']);
 
@@ -54,7 +54,7 @@ class GamificationController extends Controller
     public function achievements()
     {
         $user = auth()->user();
-        if ($user->role !== 'student' || !$user->student) {
+        if ($user->role !== 'student' || ! $user->student) {
             return redirect()->route('dashboard')->with('error', 'Katalog pencapaian hanya dapat diakses oleh siswa.');
         }
 

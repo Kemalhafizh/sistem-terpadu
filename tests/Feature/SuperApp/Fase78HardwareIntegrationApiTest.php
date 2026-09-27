@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\SuperApp;
 
 use App\Models\User;
-use App\Services\Mobile\GeofenceAttendanceService;
+use App\Support\School;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -34,8 +34,8 @@ class Fase78HardwareIntegrationApiTest extends TestCase
         $user = User::factory()->create(['role' => 'student']);
 
         $response = $this->actingAs($user, 'sanctum')->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => \App\Support\School::campus()['latitude'],
-            'longitude' => \App\Support\School::campus()['longitude'],
+            'latitude' => School::campus()['latitude'],
+            'longitude' => School::campus()['longitude'],
             'accuracy_meters' => 10.0,
             'is_mock_location' => false,
         ]);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Security;
 
 use App\Models\AcademicYear;
+use App\Models\Achievement;
 use App\Models\Classroom;
 use App\Models\Evaluation360Cycle;
 use App\Models\Evaluation360Instrument;
@@ -15,7 +16,6 @@ use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -24,14 +24,23 @@ class MobileApiSecurityAndQcTest extends TestCase
     use RefreshDatabase;
 
     protected User $adminUser;
+
     protected User $teacherUser;
+
     protected User $parentUserA;
+
     protected User $parentUserB;
+
     protected User $studentUserA;
+
     protected User $studentUserB;
+
     protected Student $studentA;
+
     protected Student $studentB;
+
     protected Classroom $classroom;
+
     protected AcademicYear $academicYear;
 
     protected function setUp(): void
@@ -181,7 +190,7 @@ class MobileApiSecurityAndQcTest extends TestCase
      */
     public function test_achievement_verification_enforces_strict_role_whitelist(): void
     {
-        $achievement = \App\Models\Achievement::create([
+        $achievement = Achievement::create([
             'student_id' => $this->studentA->id,
             'title' => 'Juara 1 Debat Bahasa Inggris',
             'field' => 'Bahasa',

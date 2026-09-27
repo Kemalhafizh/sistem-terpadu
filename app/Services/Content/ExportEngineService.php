@@ -3,7 +3,6 @@
 namespace App\Services\Content;
 
 use App\Models\ExportJob;
-use Illuminate\Support\Str;
 
 class ExportEngineService
 {
@@ -62,7 +61,7 @@ class ExportEngineService
      */
     public function exportToPdfA(string $entityType, array $data): string
     {
-        return "exports/pdf_a_{$entityType}_" . time() . ".pdf";
+        return "exports/pdf_a_{$entityType}_".time().'.pdf';
     }
 
     /**
@@ -70,7 +69,7 @@ class ExportEngineService
      */
     public function exportToXlsx(string $entityType, array $data): string
     {
-        return "exports/excel_{$entityType}_" . time() . ".xlsx";
+        return "exports/excel_{$entityType}_".time().'.xlsx';
     }
 
     /**
@@ -78,7 +77,7 @@ class ExportEngineService
      */
     public function exportToCsv(string $entityType, array $data): string
     {
-        return "exports/csv_{$entityType}_" . time() . ".csv";
+        return "exports/csv_{$entityType}_".time().'.csv';
     }
 
     /**
@@ -86,7 +85,7 @@ class ExportEngineService
      */
     public function exportToJsonLd(string $entityType, array $data): string
     {
-        return "exports/jsonld_{$entityType}_" . time() . ".json";
+        return "exports/jsonld_{$entityType}_".time().'.json';
     }
 
     /**
@@ -94,7 +93,7 @@ class ExportEngineService
      */
     public function exportToXmlDapodik(string $entityType, array $data): string
     {
-        return "exports/xml_dapodik_{$entityType}_" . time() . ".xml";
+        return "exports/xml_dapodik_{$entityType}_".time().'.xml';
     }
 
     /**

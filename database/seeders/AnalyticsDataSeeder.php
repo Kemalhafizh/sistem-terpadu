@@ -10,9 +10,9 @@ use App\Models\PaymentCategory;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class AnalyticsDataSeeder extends Seeder
 {
@@ -22,13 +22,13 @@ class AnalyticsDataSeeder extends Seeder
 
         // 1. Get or create past Academic Year (Semester Ganjil 2025/2026)
         $pastYear = AcademicYear::where('year', '2025/2026')->where('semester', 'Ganjil')->first();
-        if (!$pastYear) {
+        if (! $pastYear) {
             $pastYear = AcademicYear::create([
                 'year' => '2025/2026',
                 'semester' => 'Ganjil',
                 'is_active' => false,
                 'start_date' => '2025-07-14',
-                'end_date' => '2025-12-20'
+                'end_date' => '2025-12-20',
             ]);
         }
 
@@ -80,7 +80,7 @@ class AnalyticsDataSeeder extends Seeder
         $startDate = Carbon::parse($pastYear->start_date);
         for ($d = 0; $d < 15; $d++) {
             $date = $startDate->copy()->addDays($d * 7);
-            if (!$date->isWeekend()) {
+            if (! $date->isWeekend()) {
                 $ganjilDates[] = $date->toDateString();
             }
         }
@@ -100,7 +100,7 @@ class AnalyticsDataSeeder extends Seeder
 
         // 5. Create past billings (SPPP Bulanan) that are fully paid for Ganjil
         $sppCategory = PaymentCategory::where('is_monthly', true)->first();
-        if (!$sppCategory) {
+        if (! $sppCategory) {
             $sppCategory = PaymentCategory::create([
                 'name' => 'SPP Bulanan',
                 'default_amount' => 500000,

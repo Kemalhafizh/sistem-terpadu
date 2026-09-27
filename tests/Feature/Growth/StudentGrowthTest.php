@@ -3,7 +3,6 @@
 namespace Tests\Feature\Growth;
 
 use App\Models\CharacterDimension;
-use App\Models\PtcSession;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
 use App\Services\Growth\PtcSchedulerService;
@@ -17,8 +16,11 @@ class StudentGrowthTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected User $student;
+
     protected User $parent;
+
     protected User $teacher;
 
     protected function setUp(): void
@@ -47,7 +49,7 @@ class StudentGrowthTest extends TestCase
 
         // 2. Submit Response
         $responseObj = $service->submitResponse($screening, $this->student->id, [
-            'responses' => ['q1' => 1, 'q2' => 1, 'q3' => 1, 'q4' => 1, 'q5' => 1, 'q6' => 1, 'q7' => 1, 'q8' => 1]
+            'responses' => ['q1' => 1, 'q2' => 1, 'q3' => 1, 'q4' => 1, 'q5' => 1, 'q6' => 1, 'q7' => 1, 'q8' => 1],
         ]);
 
         $this->assertEquals(8, $responseObj->total_score);

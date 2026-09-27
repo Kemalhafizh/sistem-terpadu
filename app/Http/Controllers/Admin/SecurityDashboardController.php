@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\BlockedIp;
 use App\Models\SecurityThreatLog;
 use App\Models\Setting;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 
 class SecurityDashboardController extends Controller
 {
@@ -81,13 +81,13 @@ class SecurityDashboardController extends Controller
                 'is_resolved' => true,
             ]);
 
-            $msg = $newStatus 
-                ? 'SYSTEM LOCKDOWN BERHASIL DIAKTIFKAN! Akses publik dinonaktifkan sementara.' 
+            $msg = $newStatus
+                ? 'SYSTEM LOCKDOWN BERHASIL DIAKTIFKAN! Akses publik dinonaktifkan sementara.'
                 : 'System Lockdown telah dinonaktifkan. Akses sistem kembali normal.';
 
             return redirect()->route('admin.security.index')->with('success', $msg);
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal merubah status lockdown: ' . $e->getMessage());
+            return back()->with('error', 'Gagal merubah status lockdown: '.$e->getMessage());
         }
     }
 
@@ -124,9 +124,9 @@ class SecurityDashboardController extends Controller
             ]);
 
             return redirect()->route('admin.security.index')
-                ->with('success', 'IP Address ' . $request->ip_address . ' berhasil diblokir dari sistem!');
+                ->with('success', 'IP Address '.$request->ip_address.' berhasil diblokir dari sistem!');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memblokir IP: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memblokir IP: '.$e->getMessage());
         }
     }
 
@@ -141,9 +141,9 @@ class SecurityDashboardController extends Controller
             $blockedIp->delete();
 
             return redirect()->route('admin.security.index')
-                ->with('success', 'Blokir untuk IP Address ' . $ip . ' berhasil dibuka!');
+                ->with('success', 'Blokir untuk IP Address '.$ip.' berhasil dibuka!');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal membuka blokir IP: ' . $e->getMessage());
+            return back()->with('error', 'Gagal membuka blokir IP: '.$e->getMessage());
         }
     }
 
@@ -158,7 +158,7 @@ class SecurityDashboardController extends Controller
 
             return back()->with('success', 'Status ancaman keamanan berhasil ditandai Selesai (Resolved).');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memperbarui status: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memperbarui status: '.$e->getMessage());
         }
     }
 }

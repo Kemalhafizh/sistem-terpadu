@@ -81,6 +81,7 @@ class AlumniEnhancedService
                     $count++;
                 }
             }
+
             return $count;
         });
     }
@@ -158,7 +159,7 @@ class AlumniEnhancedService
             $cityKey = strtolower(trim($record->city));
             $coordinates = self::$cityCoordinates[$cityKey] ?? null;
 
-            if (!$coordinates) {
+            if (! $coordinates) {
                 // Default to Semarang coordinates with a small random variation to avoid overlapping pins
                 $latOffset = (rand(-100, 100) / 3000);
                 $lngOffset = (rand(-100, 100) / 3000);

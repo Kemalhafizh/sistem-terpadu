@@ -11,6 +11,7 @@ class IepController extends Controller
     public function index()
     {
         $ieps = IepDocument::with('student', 'caseManager')->get();
+
         return view('fase58.iep.list', compact('ieps'));
     }
 
@@ -33,6 +34,7 @@ class IepController extends Controller
         ]);
 
         IepDocument::create($validated);
+
         return redirect()->route('iep.index')->with('success', 'Dokumen IEP berhasil dibuat.');
     }
 
@@ -58,12 +60,14 @@ class IepController extends Controller
         ]);
 
         $iep->update($validated);
+
         return redirect()->route('iep.index')->with('success', 'Dokumen IEP berhasil diperbarui.');
     }
 
     public function destroy(IepDocument $iep)
     {
         $iep->delete();
+
         return redirect()->route('iep.index')->with('success', 'Dokumen IEP berhasil dihapus.');
     }
 

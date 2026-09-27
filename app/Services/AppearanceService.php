@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Models\AppearanceSetting;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class AppearanceService
 {
@@ -13,18 +14,18 @@ class AppearanceService
      */
     public function getSettings(): AppearanceSetting
     {
-        $settings = \Illuminate\Support\Facades\Cache::get('appearance_settings');
+        $settings = Cache::get('appearance_settings');
 
         if ($settings instanceof AppearanceSetting) {
             return $settings;
         }
 
         // Cache is empty, corrupt, or contains an incomplete class due to serialization issues.
-        \Illuminate\Support\Facades\Cache::forget('appearance_settings');
+        Cache::forget('appearance_settings');
 
         $settings = AppearanceSetting::first();
 
-        if (!$settings) {
+        if (! $settings) {
             $settings = AppearanceSetting::create([
                 'app_name' => 'Sistem Terpadu SMA ISA 1',
                 'logo_path' => null,
@@ -41,7 +42,7 @@ class AppearanceService
             ]);
         }
 
-        \Illuminate\Support\Facades\Cache::forever('appearance_settings', $settings);
+        Cache::forever('appearance_settings', $settings);
 
         return $settings;
     }
@@ -85,7 +86,7 @@ class AppearanceService
         ";
 
         if ($setting->custom_css) {
-            $css .= "\n/* Kustom CSS Tambahan */\n" . $setting->custom_css;
+            $css .= "\n/* Kustom CSS Tambahan */\n".$setting->custom_css;
         }
 
         return $css;
@@ -101,9 +102,9 @@ class AppearanceService
 
         // Handle text/config fields
         $fields = [
-            'app_name', 'primary_color', 'secondary_color', 
-            'accent_color', 'sidebar_color', 'font_family', 
-            'custom_css', 'footer_text'
+            'app_name', 'primary_color', 'secondary_color',
+            'accent_color', 'sidebar_color', 'font_family',
+            'custom_css', 'footer_text',
         ];
 
         foreach ($fields as $field) {
@@ -115,7 +116,7 @@ class AppearanceService
         // Handle Logo Uploads
         $uploadFields = ['logo', 'logo_dark', 'favicon', 'login_background'];
         foreach ($uploadFields as $uf) {
-            $key = $uf . '_path';
+            $key = $uf.'_path';
             if (isset($data[$uf]) && $data[$uf] instanceof UploadedFile) {
                 // Delete old file if exists
                 if ($settings->$key) {
@@ -127,8 +128,8 @@ class AppearanceService
         }
 
         $settings->update($updateData);
-        \Illuminate\Support\Facades\Cache::forget('appearance_settings');
-        \Illuminate\Support\Facades\Cache::forget('appearance_css_variables');
+        Cache::forget('appearance_settings');
+        Cache::forget('appearance_css_variables');
     }
 
     /**
@@ -147,8 +148,8 @@ class AppearanceService
             $settings->delete();
         }
 
-        \Illuminate\Support\Facades\Cache::forget('appearance_settings');
-        \Illuminate\Support\Facades\Cache::forget('appearance_css_variables');
+        Cache::forget('appearance_settings');
+        Cache::forget('appearance_css_variables');
 
         // Re-initialize with defaults
         $this->getSettings();

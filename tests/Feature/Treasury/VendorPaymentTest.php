@@ -4,8 +4,8 @@ use App\Models\BankAccount;
 use App\Models\User;
 use App\Models\VendorPayment;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     $this->travelTo(now()->setDate(2026, 9, 15)->startOfDay());
@@ -130,7 +130,7 @@ test('a paid or cancelled payment cannot be paid or cancelled again', function (
 
 test('unimplemented vendor and petty cash resource routes are not registered', function () {
     foreach (['treasury.vendor.edit', 'treasury.vendor.update', 'treasury.vendor.destroy',
-              'treasury.petty-cash.edit', 'treasury.petty-cash.update', 'treasury.petty-cash.destroy'] as $name) {
+        'treasury.petty-cash.edit', 'treasury.petty-cash.update', 'treasury.petty-cash.destroy'] as $name) {
         expect(Route::has($name))->toBeFalse();
     }
 });

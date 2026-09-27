@@ -17,7 +17,7 @@ class ItemAnalysisService
         if (isset($answers[$question->id])) {
             return $answers[$question->id];
         }
-        
+
         $order = $question->pivot->order ?? null;
         if ($order && isset($answers[$order])) {
             return $answers[$order];
@@ -39,11 +39,11 @@ class ItemAnalysisService
         }
 
         if ($question->type === 'multiple_choice') {
-            return (strtoupper(trim($studentAnswer)) === strtoupper(trim($question->correct_answer)));
+            return strtoupper(trim($studentAnswer)) === strtoupper(trim($question->correct_answer));
         } elseif ($question->type === 'true_false') {
-            return (strtolower(trim($studentAnswer)) === strtolower(trim($question->correct_answer)));
+            return strtolower(trim($studentAnswer)) === strtolower(trim($question->correct_answer));
         } else {
-            return (strtolower(trim($studentAnswer)) === strtolower(trim($question->correct_answer)));
+            return strtolower(trim($studentAnswer)) === strtolower(trim($question->correct_answer));
         }
     }
 
@@ -124,6 +124,7 @@ class ItemAnalysisService
                     'discrimination_text' => 'Jelek',
                 ]);
             }
+
             return $result;
         }
 
@@ -228,7 +229,7 @@ class ItemAnalysisService
 
                 // For incorrect options (distractors), check if selected by >= 5% of students
                 $isEffective = false;
-                if (!$isCorrectOption) {
+                if (! $isCorrectOption) {
                     $isEffective = ($percentage >= 0.05);
                 }
 
@@ -276,12 +277,12 @@ class ItemAnalysisService
         // Calculate variance of correct counts of participants
         $correctCounts = $attempts->pluck('correct_count')->toArray();
         $mean = count($correctCounts) > 0 ? array_sum($correctCounts) / count($correctCounts) : 0;
-        
+
         $sumSqDiff = 0.0;
         foreach ($correctCounts as $val) {
             $sumSqDiff += pow($val - $mean, 2);
         }
-        
+
         // Use population variance
         $variance = $sumSqDiff / $n;
 
@@ -341,7 +342,7 @@ class ItemAnalysisService
                 if ($ineffectiveCount > 0) {
                     $reasons[] = "ada {$ineffectiveCount} opsi pengecoh tidak berfungsi efektif (< 5% pemilih)";
                 }
-                $notes = 'Soal perlu direvisi karena ' . implode(', ', $reasons) . '.';
+                $notes = 'Soal perlu direvisi karena '.implode(', ', $reasons).'.';
             } else {
                 $recommendation = 'Pertahankan';
                 $notes = 'Soal berkualitas baik (daya pembeda baik dan tingkat kesukaran sedang).';
@@ -364,8 +365,8 @@ class ItemAnalysisService
     {
         $exam = Exam::with(['subject', 'classroom'])->findOrFail($examId);
         $attempts = $this->getValidAttempts($examId);
-        
-        $scores = $attempts->pluck('score')->filter(fn($s) => !is_null($s))->values()->toArray();
+
+        $scores = $attempts->pluck('score')->filter(fn ($s) => ! is_null($s))->values()->toArray();
         $totalParticipants = count($scores);
 
         // General stats
@@ -379,7 +380,7 @@ class ItemAnalysisService
             $average = array_sum($scores) / $totalParticipants;
             $highest = max($scores);
             $lowest = min($scores);
-            
+
             // Median
             sort($scores);
             $middle = (int) ($totalParticipants / 2);

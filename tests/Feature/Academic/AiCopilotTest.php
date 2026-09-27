@@ -1,13 +1,11 @@
 <?php
 
-use App\Models\Subject;
-use App\Models\Classroom;
 use App\Models\AcademicYear;
-use App\Models\User;
+use App\Models\Classroom;
 use App\Models\LessonPlan;
-use App\Models\QuestionBank;
+use App\Models\Subject;
+use App\Models\User;
 use App\Services\AiCopilotService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->teacher = User::factory()->create(['role' => 'guru']);
@@ -41,13 +39,13 @@ test('teacher can generate RPP in local fallback mode', function () {
 });
 
 test('teacher can save generated RPP as a draft in SISTA', function () {
-    $rppMarkdown = "# RENCANA PELAKSANAAN PEMBELAJARAN (RPP) KURIKULUM MERDEKA
+    $rppMarkdown = '# RENCANA PELAKSANAAN PEMBELAJARAN (RPP) KURIKULUM MERDEKA
 ## 2. TUJUAN PEMBELAJARAN
 - Siswa mampu menyelesaikan SPLDV.
 ## 5. ASESMEN
 - Tes tertulis.
 ## 6. MEDIA
-- Buku paket.";
+- Buku paket.';
 
     $response = $this->actingAs($this->teacher)->post(route('academic.copilot.rpp.save'), [
         'subject_id' => $this->subject->id,
@@ -109,8 +107,8 @@ test('teacher can save generated CBT questions to Question Banks', function () {
                 'correct_answer' => 'Jalan Pegangsaan Timur No. 56',
                 'explanation' => 'Dibacakan di kediaman Soekarno.',
                 'difficulty' => 'easy',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertStatus(302);

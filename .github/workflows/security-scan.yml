@@ -16,14 +16,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup PHP
-      uses: shivamurthyu/setup-php@v2
+      uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.4'
         extensions: mbstring, xml, ctype, iconv, sqlite3
         coverage: none
 
     - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
 
     - name: Run Larastan (Static Analysis)
       run: vendor/bin/phpstan analyse --error-format=github

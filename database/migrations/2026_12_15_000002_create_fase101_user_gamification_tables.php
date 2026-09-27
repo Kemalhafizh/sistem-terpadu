@@ -4,10 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
-        if (!Schema::hasTable('user_gamification')) {
+        if (! Schema::hasTable('user_gamification')) {
             Schema::create('user_gamification', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -23,7 +24,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable('xp_transactions')) {
+        if (! Schema::hasTable('xp_transactions')) {
             Schema::create('xp_transactions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -35,7 +36,7 @@ return new class extends Migration {
             });
         }
 
-        if (!Schema::hasTable('achievement_badges')) {
+        if (! Schema::hasTable('achievement_badges')) {
             Schema::create('achievement_badges', function (Blueprint $table) {
                 $table->id();
                 $table->string('slug')->unique();

@@ -13,7 +13,7 @@ class CrisisIncident extends Model
         'uuid', 'title', 'type', 'severity', 'status', 'description', 'location_detail',
         'detected_at', 'responded_at', 'contained_at', 'resolved_at', 'reported_by',
         'incident_commander_id', 'affected_students_count', 'affected_staff_count',
-        'injured_count', 'evacuation_zones', 'post_mortem_notes'
+        'injured_count', 'evacuation_zones', 'post_mortem_notes',
     ];
 
     protected $casts = [

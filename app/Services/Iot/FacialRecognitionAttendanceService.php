@@ -41,9 +41,10 @@ class FacialRecognitionAttendanceService
         $sum = 0.0;
         $count = min(count($v1), count($v2));
         for ($i = 0; $i < $count; $i++) {
-            $diff = (float)$v1[$i] - (float)$v2[$i];
+            $diff = (float) $v1[$i] - (float) $v2[$i];
             $sum += $diff * $diff;
         }
+
         return sqrt($sum);
     }
 
@@ -52,7 +53,7 @@ class FacialRecognitionAttendanceService
      */
     public function matchAndLogAttendance(string $gateCameraId, string $gateLocation, array $capturedVector, bool $liveness = true): array
     {
-        if (!$liveness) {
+        if (! $liveness) {
             return [
                 'success' => false,
                 'message' => 'Zero-Touch check-in ditolak: Gagal uji liveness (anti-spoofing terpicu).',
@@ -75,7 +76,7 @@ class FacialRecognitionAttendanceService
         $confidence = max(0.0, min(100.0, 100.0 - ($lowestDistance * 100.0)));
         $isMatch = $lowestDistance <= 0.40;
 
-        if (!$isMatch || !$bestMatch) {
+        if (! $isMatch || ! $bestMatch) {
             return [
                 'success' => false,
                 'message' => 'Wajah tidak dikenali dalam database biometrik kampus.',
@@ -114,8 +115,8 @@ class FacialRecognitionAttendanceService
 
         $student = Student::where('user_id', $user->id)->first() ?? Student::create([
             'user_id' => $user->id,
-            'nisn' => '9982348' . $user->id,
-            'nis' => '120' . $user->id,
+            'nisn' => '9982348'.$user->id,
+            'nis' => '120'.$user->id,
             'gender' => 'L',
             'classroom_id' => $classroom->id,
         ]);

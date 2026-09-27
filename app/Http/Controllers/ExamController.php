@@ -10,6 +10,8 @@ use App\Models\ExamAttempt;
 use App\Models\QuestionBank;
 use App\Models\Subject;
 use App\Services\CbtService;
+use App\Services\ItemAnalysisService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -38,7 +40,7 @@ class ExamController extends Controller
             if ($student) {
                 $query->where(function ($q) use ($student) {
                     $q->whereNull('classroom_id')
-                      ->orWhere('classroom_id', $student->classroom_id);
+                        ->orWhere('classroom_id', $student->classroom_id);
                 })->where('status', 'published');
             } else {
                 $query->whereRaw('1 = 0');
@@ -235,7 +237,7 @@ class ExamController extends Controller
         $user = auth()->user();
         $student = $user->student;
 
-        if (!$student) {
+        if (! $student) {
             abort(403, 'Data siswa tidak ditemukan.');
         }
 
@@ -246,7 +248,7 @@ class ExamController extends Controller
         }
 
         // Check if exam is ongoing
-        if (!$exam->isOngoing()) {
+        if (! $exam->isOngoing()) {
             return redirect()->route('cbt.exams.index')
                 ->with('error', 'Ujian belum dimulai atau sudah berakhir.');
         }
@@ -267,6 +269,7 @@ class ExamController extends Controller
         if ($attempt->isExpired()) {
             $this->cbtService->autoGrade($attempt->fresh());
             $attempt->update(['status' => 'timeout', 'is_auto_submitted' => true, 'submitted_at' => now()]);
+
             return redirect()->route('cbt.exams.results', $exam)
                 ->with('info', 'Waktu ujian Anda telah habis. Jawaban telah disimpan otomatis.');
         }
@@ -315,7 +318,7 @@ class ExamController extends Controller
         $user = auth()->user();
         $student = $user->student;
 
-        if (!$student) {
+        if (! $student) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -324,7 +327,7 @@ class ExamController extends Controller
             ->where('status', 'in_progress')
             ->first();
 
-        if (!$attempt) {
+        if (! $attempt) {
             return response()->json(['error' => 'Attempt not found or already submitted'], 404);
         }
 
@@ -342,7 +345,7 @@ class ExamController extends Controller
         $user = auth()->user();
         $student = $user->student;
 
-        if (!$student) {
+        if (! $student) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -351,7 +354,7 @@ class ExamController extends Controller
             ->where('status', 'in_progress')
             ->first();
 
-        if (!$attempt) {
+        if (! $attempt) {
             return response()->json(['error' => 'Attempt not found'], 404);
         }
 
@@ -396,7 +399,7 @@ class ExamController extends Controller
         $user = auth()->user();
         $student = $user->student;
 
-        if (!$student) {
+        if (! $student) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -404,10 +407,11 @@ class ExamController extends Controller
             ->where('student_id', $student->id)
             ->first();
 
-        if (!$attempt || in_array($attempt->status, ['submitted', 'graded', 'blocked_violation'])) {
+        if (! $attempt || in_array($attempt->status, ['submitted', 'graded', 'blocked_violation'])) {
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Already submitted'], 409);
             }
+
             return redirect()->route('cbt.exams.index')
                 ->with('info', 'Ujian sudah disubmit sebelumnya.');
         }
@@ -486,7 +490,7 @@ class ExamController extends Controller
         $attempts = $attemptsQuery->orderByDesc('score')->paginate(20);
 
         // Calculate stats
-        $scores = $allAttempts->pluck('score')->filter(fn ($s) => !is_null($s));
+        $scores = $allAttempts->pluck('score')->filter(fn ($s) => ! is_null($s));
         $passedCount = $scores->filter(fn ($s) => $s >= $exam->passing_score)->count();
 
         $stats = [
@@ -504,7 +508,7 @@ class ExamController extends Controller
     /**
      * Show the item analysis dashboard for the specified exam.
      */
-    public function itemAnalysis(Exam $exam, \App\Services\ItemAnalysisService $analysisService)
+    public function itemAnalysis(Exam $exam, ItemAnalysisService $analysisService)
     {
         Gate::authorize('monitor', $exam);
 
@@ -516,14 +520,15 @@ class ExamController extends Controller
     /**
      * Export the item analysis report for the specified exam to PDF.
      */
-    public function exportAnalysisPdf(Exam $exam, \App\Services\ItemAnalysisService $analysisService)
+    public function exportAnalysisPdf(Exam $exam, ItemAnalysisService $analysisService)
     {
         Gate::authorize('monitor', $exam);
 
         $analysis = $analysisService->getFullAnalysis($exam->id);
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cbt.exams.print-analysis', compact('exam', 'analysis'))->setPaper('a4', 'landscape');
+        $pdf = Pdf::loadView('cbt.exams.print-analysis', compact('exam', 'analysis'))->setPaper('a4', 'landscape');
         $fileName = str_replace(' ', '_', strtolower($exam->title));
+
         return $pdf->download("analisis_butir_soal_{$fileName}.pdf");
     }
 }

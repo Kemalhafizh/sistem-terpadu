@@ -39,7 +39,7 @@ class DedicatedEdgeCdnService
         $activeNodes = EdgeCacheNode::where('status', 'online')->get();
         $selectedNode = $activeNodes->first();
 
-        $cdnDomain = $selectedNode ? 'cdn-' . strtolower(preg_replace('/[^a-z0-9]/i', '', $selectedNode->node_location)) . '.sulaone.sch.id' : 'cdn.sulaone.sch.id';
+        $cdnDomain = $selectedNode ? 'cdn-'.strtolower(preg_replace('/[^a-z0-9]/i', '', $selectedNode->node_location)).'.sulaone.sch.id' : 'cdn.sulaone.sch.id';
 
         $cleanPath = ltrim($assetPath, '/');
         $edgeUrl = "https://{$cdnDomain}/{$cleanPath}";

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
+use App\Models\Student;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -42,27 +44,27 @@ class ApiAuthController extends Controller
         $user = User::where('email', $identifier)->first();
 
         // 2. If not found, try finding by phone_number
-        if (!$user) {
+        if (! $user) {
             $user = User::where('phone_number', $identifier)->first();
         }
 
         // 3. If not found, try finding by student NIS / NISN
-        if (!$user) {
-            $student = \App\Models\Student::where('nis', $identifier)->orWhere('nisn', $identifier)->first();
+        if (! $user) {
+            $student = Student::where('nis', $identifier)->orWhere('nisn', $identifier)->first();
             if ($student && $student->user) {
                 $user = $student->user;
             }
         }
 
         // 4. If not found, try finding by employee NIP
-        if (!$user) {
-            $employee = \App\Models\Employee::where('nip', $identifier)->first();
+        if (! $user) {
+            $employee = Employee::where('nip', $identifier)->first();
             if ($employee && $employee->user) {
                 $user = $employee->user;
             }
         }
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return $this->errorResponse('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.', 401);
         }
 
@@ -96,6 +98,7 @@ class ApiAuthController extends Controller
         $currentToken = $request->user()->currentAccessToken();
         if ($currentToken) {
             $currentToken->delete();
+
             return $this->successResponse(null, 'Logout berhasil');
         }
 

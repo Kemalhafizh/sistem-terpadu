@@ -8,9 +8,9 @@ use App\Models\LessonPlan;
 use App\Models\Subject;
 use App\Models\Syllabus;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class CurriculumController extends Controller
 {
@@ -24,7 +24,7 @@ class CurriculumController extends Controller
         $user = auth()->user();
         $activeYear = AcademicYear::current();
 
-        if (!$activeYear) {
+        if (! $activeYear) {
             return redirect()->route('dashboard')->with('error', 'Tahun akademik aktif tidak ditemukan.');
         }
 
@@ -59,11 +59,11 @@ class CurriculumController extends Controller
                 'name' => $t->name,
                 'total' => $totalRpp,
                 'approved' => $approvedRpp,
-                'rate' => $rate
+                'rate' => $rate,
             ];
         }
 
-        usort($teachersProgress, fn($a, $b) => $a['rate'] <=> $b['rate']);
+        usort($teachersProgress, fn ($a, $b) => $a['rate'] <=> $b['rate']);
 
         return view('curriculum.index', compact('rppStats', 'syllabiStats', 'teachersProgress', 'activeYear'));
     }
@@ -72,7 +72,7 @@ class CurriculumController extends Controller
     {
         $this->authorize('downloadReport', LessonPlan::class);
         $activeYear = AcademicYear::current();
-        
+
         $subjects = Subject::all();
         $syllabiData = [];
         foreach ($subjects as $sub) {
@@ -84,7 +84,7 @@ class CurriculumController extends Controller
                 'name' => $sub->name,
                 'status' => $syllabus ? $syllabus->status : 'belum_unggah',
                 'uploader' => $syllabus ? $syllabus->uploader->name : '-',
-                'notes' => $syllabus ? $syllabus->notes : ''
+                'notes' => $syllabus ? $syllabus->notes : '',
             ];
         }
 
@@ -97,13 +97,14 @@ class CurriculumController extends Controller
                 'name' => $t->name,
                 'total' => $totalRpp,
                 'approved' => $approvedRpp,
-                'rate' => $totalRpp > 0 ? round(($approvedRpp / $totalRpp) * 100) : 0
+                'rate' => $totalRpp > 0 ? round(($approvedRpp / $totalRpp) * 100) : 0,
             ];
         }
 
         $pdf = Pdf::loadView('curriculum.pdf_report', compact('syllabiData', 'rppData', 'activeYear'));
         $safeYear = str_replace(['/', '\\'], '-', $activeYear->year);
-        return $pdf->setPaper('a4', 'portrait')->download('Laporan_Kelengkapan_Kurikulum_' . $safeYear . '.pdf');
+
+        return $pdf->setPaper('a4', 'portrait')->download('Laporan_Kelengkapan_Kurikulum_'.$safeYear.'.pdf');
     }
 
     // =========================================================
@@ -177,13 +178,14 @@ class CurriculumController extends Controller
         ]);
 
         $message = $request->status === 'approved' ? 'Silabus berhasil disetujui.' : 'Silabus dikembalikan untuk direvisi.';
+
         return back()->with('success', $message);
     }
 
     public function syllabusDestroy(Syllabus $syllabus)
     {
         $this->authorize('manageSyllabus', Syllabus::class);
-        
+
         if (auth()->user()->role === 'guru' && $syllabus->uploaded_by !== auth()->id()) {
             abort(403);
         }
@@ -282,6 +284,7 @@ class CurriculumController extends Controller
     {
         $this->authorize('viewLessonPlan', $lessonPlan);
         $lessonPlan->load(['subject', 'classroom', 'user', 'academicYear', 'reviewer']);
+
         return view('curriculum.lesson-plans.show', compact('lessonPlan'));
     }
 
@@ -344,11 +347,12 @@ class CurriculumController extends Controller
         if (auth()->id() !== $lessonPlan->user_id) {
             abort(403);
         }
-        if (!in_array($lessonPlan->status, ['draft', 'revision_needed'])) {
+        if (! in_array($lessonPlan->status, ['draft', 'revision_needed'])) {
             return back()->with('error', 'RPP sudah diajukan atau disetujui.');
         }
 
         $lessonPlan->update(['status' => 'submitted']);
+
         return redirect()->route('curriculum.lesson-plans.index')->with('success', 'RPP berhasil diajukan untuk ditinjau.');
     }
 
@@ -369,6 +373,7 @@ class CurriculumController extends Controller
         ]);
 
         $message = $request->status === 'approved' ? 'RPP berhasil disetujui.' : 'RPP dikembalikan untuk revisi.';
+
         return redirect()->route('curriculum.lesson-plans.show', $lessonPlan->uuid)->with('success', $message);
     }
 
@@ -390,6 +395,7 @@ class CurriculumController extends Controller
         $lessonPlan->load(['subject', 'classroom', 'user', 'academicYear', 'reviewer']);
         $pdf = Pdf::loadView('curriculum.lesson-plans.pdf_single', compact('lessonPlan'));
         $safeTopic = str_replace(['/', '\\', ' '], '_', $lessonPlan->topic);
-        return $pdf->setPaper('a4', 'portrait')->download('RPP_' . $safeTopic . '.pdf');
+
+        return $pdf->setPaper('a4', 'portrait')->download('RPP_'.$safeTopic.'.pdf');
     }
 }

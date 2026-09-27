@@ -58,6 +58,7 @@ class AccreditationController extends Controller
 
         try {
             $evidence = $accreditationService->verifyEvidence($id, $verifiedBy);
+
             return back()->with('success', "Bukti fisik #{$evidence->id} berhasil DIVERIFIKASI dan dihitung dalam skor SNP!");
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());

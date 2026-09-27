@@ -18,8 +18,8 @@ class MiniBankingService
             'wallet_id' => $wallet->id,
             'transaction_type' => 'deposit',
             'amount' => $amount,
-            'reference_code' => 'DEP' . Str::upper(Str::random(8)),
-            'description' => $description
+            'reference_code' => 'DEP'.Str::upper(Str::random(8)),
+            'description' => $description,
         ]);
     }
 
@@ -36,15 +36,16 @@ class MiniBankingService
             'wallet_id' => $wallet->id,
             'transaction_type' => 'payment',
             'amount' => $amount,
-            'reference_code' => 'PAY' . Str::upper(Str::random(8)),
-            'description' => $description
+            'reference_code' => 'PAY'.Str::upper(Str::random(8)),
+            'description' => $description,
         ]);
     }
 
     public function transferFunds($fromWalletId, $toWalletId, $amount, $description)
     {
-        $this->processPayment($fromWalletId, $amount, 'Transfer out: ' . $description);
-        $this->processDeposit($toWalletId, $amount, 'Transfer in: ' . $description);
+        $this->processPayment($fromWalletId, $amount, 'Transfer out: '.$description);
+        $this->processDeposit($toWalletId, $amount, 'Transfer in: '.$description);
+
         return true;
     }
 

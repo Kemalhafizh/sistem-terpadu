@@ -11,6 +11,7 @@ class SwotAnalysisController extends Controller
     public function index()
     {
         $analyses = SwotAnalysis::with('items')->latest()->get();
+
         return view('strategic.swot.index', compact('analyses'));
     }
 
@@ -35,6 +36,7 @@ class SwotAnalysisController extends Controller
     public function show($id)
     {
         $swot = SwotAnalysis::with('items')->findOrFail($id);
+
         return view('strategic.swot.show', compact('swot'));
     }
 }

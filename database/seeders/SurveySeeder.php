@@ -128,7 +128,7 @@ class SurveySeeder extends Seeder
                     $s1q2->id => ['Membaca Materi PDF', 'Mengerjakan Tugas / Assignment', 'Menjawab Ujian CBT', 'Diskusi Forum Kelas'][rand(0, 3)],
                     $s1q3->id => rand(1, 100) <= 60 ? $s1FeedbackText[array_rand($s1FeedbackText)] : '',
                 ],
-                'ip_address' => '192.168.1.' . rand(10, 254),
+                'ip_address' => '192.168.1.'.rand(10, 254),
             ]);
         }
 
@@ -153,7 +153,7 @@ class SurveySeeder extends Seeder
                     $s2q2->id => ['Pendingin Ruangan (AC) Kelas', 'Buku Perpustakaan Fisik', 'Alat Praktikum Lab IPA', 'Toilet & Fasilitas Wudhu'][rand(0, 3)],
                     $s2q3->id => rand(1, 100) <= 60 ? $s2FeedbackText[array_rand($s2FeedbackText)] : '',
                 ],
-                'ip_address' => '192.168.1.' . rand(10, 254),
+                'ip_address' => '192.168.1.'.rand(10, 254),
             ]);
         }
     }

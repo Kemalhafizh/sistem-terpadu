@@ -11,12 +11,14 @@ class DifferentiatedPlanController extends Controller
     public function index()
     {
         $plans = DifferentiatedPlan::latest()->get();
+
         return view('fase58.differentiation.planner', compact('plans'));
     }
 
     public function library()
     {
         $plans = DifferentiatedPlan::all();
+
         return view('fase58.differentiation.library', compact('plans'));
     }
 
@@ -35,6 +37,7 @@ class DifferentiatedPlanController extends Controller
         ]);
 
         DifferentiatedPlan::create($validated);
+
         return redirect()->route('differentiation.library')->with('success', 'Rencana diferensiasi berhasil disimpan.');
     }
 
@@ -58,6 +61,7 @@ class DifferentiatedPlanController extends Controller
         ]);
 
         $plan->update($validated);
+
         return redirect()->route('differentiation.library')->with('success', 'Rencana diferensiasi berhasil diperbarui.');
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Services\Integration;
 
-use App\Models\Student;
-use App\Models\Employee;
+use App\Exports\DapodikExport;
+use App\Models\AcademicYear;
 use App\Models\Classroom;
-use App\Exports\DapodikExport; // Re-use DapodikExport layout since it's universally customizable
+use App\Models\Employee;
+use App\Models\Student;
+
+// Re-use DapodikExport layout since it's universally customizable
 
 class EmisService
 {
@@ -22,7 +25,7 @@ class EmisService
 
         $mapped = [];
         foreach ($students as $student) {
-            $activeYear = \App\Models\AcademicYear::where('is_active', true)->first();
+            $activeYear = AcademicYear::where('is_active', true)->first();
             $target = $activeYear ? $student->tahfidzTargets()->where('academic_year_id', $activeYear->id)->first() : null;
             $totalJuz = $target ? $target->achieved_juz : ($student->tahfidzLogs()->whereNotNull('juz')->max('juz') ?? 0);
 
@@ -31,9 +34,9 @@ class EmisService
                 'nama' => $student->name ?? '',
                 'gender' => $student->gender === 'P' ? 'Perempuan' : 'Laki-laki',
                 'kelas' => $student->classroom?->name ?? '',
-                'level_gamifikasi' => 'Level ' . $student->level,
+                'level_gamifikasi' => 'Level '.$student->level,
                 'total_xp' => $student->total_xp ?? 0,
-                'capaian_tahfidz' => $totalJuz . ' Juz',
+                'capaian_tahfidz' => $totalJuz.' Juz',
                 'status_keagamaan' => $student->total_xp >= 150 ? 'Sangat Aktif' : 'Aktif',
             ];
         }

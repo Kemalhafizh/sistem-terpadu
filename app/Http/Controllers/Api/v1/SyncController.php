@@ -32,6 +32,7 @@ class SyncController extends Controller
         // time — see OfflineSyncService::getDeltaChanges()), not a
         // fabricated value.
         $lastModified = Carbon::createFromTimestampMs($delta['sync_timestamp']);
+
         return $this->successResponseWithValidators($delta, $lastModified, 'Delta changes retrieved successfully');
     }
 
@@ -49,6 +50,7 @@ class SyncController extends Controller
 
         $user = $request->user();
         $result = $this->syncService->processBatchUpload($validated, $user);
+
         return $this->successResponse($result, 'Batch offline actions processed');
     }
 
@@ -58,6 +60,7 @@ class SyncController extends Controller
     public function checkVersion()
     {
         $version = $this->syncService->checkVersion();
+
         return $this->successResponse($version, 'Sync version verified');
     }
 
@@ -75,6 +78,7 @@ class SyncController extends Controller
         // call actually returns), it just won't vary much until the
         // Redis Streams backing store is implemented.
         $events = $this->syncService->getCatchUpEvents($lastEventId);
+
         return $this->successResponseWithValidators($events, null, 'Catch-up events retrieved successfully');
     }
 }

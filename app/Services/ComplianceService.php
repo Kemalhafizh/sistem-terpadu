@@ -5,10 +5,8 @@ namespace App\Services;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Billing;
-use App\Models\EmployeeAttendance;
 use App\Models\EdsPeriod;
-use App\Models\EdsStandard;
-use App\Models\EdsAssessment;
+use App\Models\EmployeeAttendance;
 use App\Models\LessonPlan;
 use App\Models\LibraryBook;
 use App\Models\LibraryLoan;
@@ -72,7 +70,7 @@ class ComplianceService
     public function getTeachingJournalComplianceRate(): float
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return 0.0;
         }
 
@@ -94,7 +92,7 @@ class ComplianceService
     public function getSyllabiCompletionRate(): float
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return 0.0;
         }
 
@@ -117,7 +115,7 @@ class ComplianceService
     public function getLessonPlanCompletionRate(): float
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return 0.0;
         }
 
@@ -139,7 +137,7 @@ class ComplianceService
     public function getStudentAttendanceRate(): float
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return 0.0;
         }
 
@@ -176,7 +174,7 @@ class ComplianceService
     public function getFinancialHealthScore(): float
     {
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             return 0.0;
         }
 
@@ -216,11 +214,11 @@ class ComplianceService
     public function getEdsScores(): array
     {
         $latestPeriod = EdsPeriod::orderBy('created_at', 'desc')->first();
-        if (!$latestPeriod) {
+        if (! $latestPeriod) {
             return [
                 'overall_average' => 0.0,
                 'overall_progress' => 0,
-                'standards' => []
+                'standards' => [],
             ];
         }
 
@@ -245,7 +243,9 @@ class ComplianceService
 
         // Evaluate teacher-student ratio score (Target: <= 20 students per teacher)
         $ratioScore = $teacherStudentRatio <= 20.0 && $teacherStudentRatio > 0 ? 100.0 : max(0.0, 100.0 - (($teacherStudentRatio - 20.0) * 5));
-        if ($teacherStudentRatio == 0) $ratioScore = 0.0;
+        if ($teacherStudentRatio == 0) {
+            $ratioScore = 0.0;
+        }
 
         // Evaluate book-student ratio score (Target: >= 10 books per student)
         $bookScore = $bookStudentRatio >= 10.0 ? 100.0 : ($bookStudentRatio / 10.0) * 100;
@@ -257,73 +257,73 @@ class ComplianceService
             'metrics' => [
                 'teacher_student_ratio' => [
                     'label' => 'Rasio Guru - Siswa',
-                    'value' => '1 : ' . ($teacherStudentRatio > 0 ? $teacherStudentRatio : '-'),
+                    'value' => '1 : '.($teacherStudentRatio > 0 ? $teacherStudentRatio : '-'),
                     'score' => round($ratioScore, 2),
                     'status' => $ratioScore >= 80 ? 'terpenuhi' : ($ratioScore >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Idealnya maksimal 20 siswa per guru untuk interaksi optimal.'
+                    'desc' => 'Idealnya maksimal 20 siswa per guru untuk interaksi optimal.',
                 ],
                 'book_student_ratio' => [
                     'label' => 'Rasio Buku - Siswa',
-                    'value' => ($bookStudentRatio > 0 ? $bookStudentRatio : '0') . ' Buku/Siswa',
+                    'value' => ($bookStudentRatio > 0 ? $bookStudentRatio : '0').' Buku/Siswa',
                     'score' => round($bookScore, 2),
                     'status' => $bookScore >= 80 ? 'terpenuhi' : ($bookScore >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Idealnya minimal memiliki 10 judul buku per siswa di perpustakaan.'
+                    'desc' => 'Idealnya minimal memiliki 10 judul buku per siswa di perpustakaan.',
                 ],
                 'teaching_journal_rate' => [
                     'label' => 'Jurnal Mengajar',
-                    'value' => $teachingJournalRate . '%',
+                    'value' => $teachingJournalRate.'%',
                     'score' => $teachingJournalRate,
                     'status' => $teachingJournalRate >= 80 ? 'terpenuhi' : ($teachingJournalRate >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Persentase jurnal mengajar guru yang telah disetujui pimpinan.'
+                    'desc' => 'Persentase jurnal mengajar guru yang telah disetujui pimpinan.',
                 ],
                 'syllabi_rate' => [
                     'label' => 'Kelengkapan Silabus',
-                    'value' => $syllabiRate . '%',
+                    'value' => $syllabiRate.'%',
                     'score' => $syllabiRate,
                     'status' => $syllabiRate >= 80 ? 'terpenuhi' : ($syllabiRate >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Persentase silabus mata pelajaran terunggah dan disetujui.'
+                    'desc' => 'Persentase silabus mata pelajaran terunggah dan disetujui.',
                 ],
                 'lesson_plan_rate' => [
                     'label' => 'Kelengkapan RPP',
-                    'value' => $lessonPlanRate . '%',
+                    'value' => $lessonPlanRate.'%',
                     'score' => $lessonPlanRate,
                     'status' => $lessonPlanRate >= 80 ? 'terpenuhi' : ($lessonPlanRate >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Persentase draf RPP yang disetujui dibanding total rencana.'
+                    'desc' => 'Persentase draf RPP yang disetujui dibanding total rencana.',
                 ],
                 'student_attendance' => [
                     'label' => 'Kehadiran Siswa',
-                    'value' => $studentAttendance . '%',
+                    'value' => $studentAttendance.'%',
                     'score' => $studentAttendance,
                     'status' => $studentAttendance >= 90 ? 'terpenuhi' : ($studentAttendance >= 75 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Kehadiran siswa secara kumulatif selama periode berjalan.'
+                    'desc' => 'Kehadiran siswa secara kumulatif selama periode berjalan.',
                 ],
                 'teacher_attendance' => [
                     'label' => 'Kehadiran Guru',
-                    'value' => $teacherAttendance . '%',
+                    'value' => $teacherAttendance.'%',
                     'score' => $teacherAttendance,
                     'status' => $teacherAttendance >= 90 ? 'terpenuhi' : ($teacherAttendance >= 75 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Kehadiran staf pendidik secara kumulatif periode berjalan.'
+                    'desc' => 'Kehadiran staf pendidik secara kumulatif periode berjalan.',
                 ],
                 'finance_score' => [
                     'label' => 'Kesehatan Finansial',
-                    'value' => $financeScore . '%',
+                    'value' => $financeScore.'%',
                     'score' => $financeScore,
                     'status' => $financeScore >= 80 ? 'terpenuhi' : ($financeScore >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Rasio pelunasan tagihan sekolah / kelancaran iuran SPP siswa.'
+                    'desc' => 'Rasio pelunasan tagihan sekolah / kelancaran iuran SPP siswa.',
                 ],
                 'library_rate' => [
                     'label' => 'Utilitas Perpustakaan',
-                    'value' => $libraryRate . '%',
+                    'value' => $libraryRate.'%',
                     'score' => $libraryRate,
                     'status' => $libraryRate >= 50 ? 'terpenuhi' : ($libraryRate >= 25 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Persentase siswa yang aktif meminjam buku di perpustakaan.'
+                    'desc' => 'Persentase siswa yang aktif meminjam buku di perpustakaan.',
                 ],
                 'eds_readiness' => [
                     'label' => 'Evaluasi Diri Sekolah',
-                    'value' => ($edsScores['overall_average'] > 0 ? number_format($edsScores['overall_average'], 2) : '0.00') . ' / 4.00',
+                    'value' => ($edsScores['overall_average'] > 0 ? number_format($edsScores['overall_average'], 2) : '0.00').' / 4.00',
                     'score' => round($edsReadiness, 2),
                     'status' => $edsReadiness >= 75 ? 'terpenuhi' : ($edsReadiness >= 50 ? 'perlu_perbaikan' : 'belum_terpenuhi'),
-                    'desc' => 'Pencapaian evaluasi diri mandiri terhadap 8 standar mutu.'
+                    'desc' => 'Pencapaian evaluasi diri mandiri terhadap 8 standar mutu.',
                 ],
             ],
             'overall_score' => $this->getAccreditationReadinessScore(),
@@ -348,7 +348,9 @@ class ComplianceService
 
         // 1. Ratio scores
         $ratioScore = $teacherStudentRatio <= 20.0 && $teacherStudentRatio > 0 ? 100.0 : max(0.0, 100.0 - (($teacherStudentRatio - 20.0) * 5));
-        if ($teacherStudentRatio == 0) $ratioScore = 0.0;
+        if ($teacherStudentRatio == 0) {
+            $ratioScore = 0.0;
+        }
 
         $bookScore = $bookStudentRatio >= 10.0 ? 100.0 : ($bookStudentRatio / 10.0) * 100;
 

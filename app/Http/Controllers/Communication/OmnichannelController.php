@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Communication;
 
 use App\Http\Controllers\Controller;
-use App\Models\OmnichannelTemplate;
 use App\Models\OmnichannelLog;
+use App\Models\OmnichannelTemplate;
 use Illuminate\Http\Request;
 
 class OmnichannelController extends Controller
@@ -17,6 +17,7 @@ class OmnichannelController extends Controller
     public function templates()
     {
         $templates = OmnichannelTemplate::all();
+
         return view('omnichannel.templates', compact('templates'));
     }
 
@@ -28,6 +29,7 @@ class OmnichannelController extends Controller
     public function storeTemplate(Request $request)
     {
         OmnichannelTemplate::create($request->all());
+
         return redirect()->route('omnichannel.templates');
     }
 
@@ -45,6 +47,7 @@ class OmnichannelController extends Controller
     public function logs()
     {
         $logs = OmnichannelLog::with(['user', 'template'])->paginate(15);
+
         return view('omnichannel.logs', compact('logs'));
     }
 }

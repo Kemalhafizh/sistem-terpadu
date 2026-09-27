@@ -12,15 +12,16 @@ class WadiahDomainService
         if ($currentBalance < $purchaseAmount) {
             return [
                 'allowed' => false,
-                'reason' => 'Saldo Tabungan Wadiah tidak mencukupi (Saldo: Rp ' . number_format($currentBalance, 0, ',', '.') . ').',
+                'reason' => 'Saldo Tabungan Wadiah tidak mencukupi (Saldo: Rp '.number_format($currentBalance, 0, ',', '.').').',
             ];
         }
 
         if ($dailyLimit > 0 && ($dailySpentToday + $purchaseAmount) > $dailyLimit) {
             $remainingLimit = max(0, $dailyLimit - $dailySpentToday);
+
             return [
                 'allowed' => false,
-                'reason' => 'Transaksi melebihi limit jajan harian (Sisa limit hari ini: Rp ' . number_format($remainingLimit, 0, ',', '.') . ').',
+                'reason' => 'Transaksi melebihi limit jajan harian (Sisa limit hari ini: Rp '.number_format($remainingLimit, 0, ',', '.').').',
             ];
         }
 

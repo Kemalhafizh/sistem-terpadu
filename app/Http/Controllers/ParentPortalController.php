@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatMessageSent;
 use App\Models\AcademicYear;
 use App\Models\Billing;
 use App\Models\CounselingSession;
+use App\Models\DailyAssessmentScore;
 use App\Models\Grade;
 use App\Models\ParentMessage;
 use App\Models\Payment;
@@ -12,11 +14,10 @@ use App\Models\ReportCard;
 use App\Models\Schedule;
 use App\Models\SchedulePreset;
 use App\Models\Student;
-use App\Models\WadiahAccount;
-use App\Services\WadiahService;
 use App\Models\UksVisit;
 use App\Models\User;
-use App\Events\ChatMessageSent;
+use App\Models\WadiahAccount;
+use App\Services\WadiahService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,7 @@ class ParentPortalController extends Controller
             $student = $children->firstWhere('id', $selectedChildId);
         }
 
-        if (!$student) {
+        if (! $student) {
             $student = $children->first();
         }
 
@@ -63,7 +64,7 @@ class ParentPortalController extends Controller
 
         // 2. Academic Widget: Average score, class rank, and running grades trend
         $avgScore = round($student->grades()->avg('score') ?? 0, 1);
-        
+
         // Calculate class rank dynamically
         $rank = 1;
         $totalClassStudents = 1;
@@ -90,12 +91,12 @@ class ParentPortalController extends Controller
             ->take(10)
             ->get();
 
-        $chartLabels = $gradesForChart->map(fn($g) => $g->subject->name . ' (' . $g->type . ')')->toArray();
-        $chartData = $gradesForChart->map(fn($g) => (int) $g->score)->toArray();
+        $chartLabels = $gradesForChart->map(fn ($g) => $g->subject->name.' ('.$g->type.')')->toArray();
+        $chartData = $gradesForChart->map(fn ($g) => (int) $g->score)->toArray();
 
         // 3. Attendance Widget
         $attendanceStats = $student->attendances()
-            ->selectRaw("status, count(*) as count")
+            ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -146,7 +147,7 @@ class ParentPortalController extends Controller
                 'type' => 'grade',
                 'date' => $grade->created_at,
                 'title' => 'Nilai Akademik Baru',
-                'description' => "Nilai mata pelajaran {$grade->subject->name} ({$grade->type}) baru saja ditambahkan dengan skor {$grade->score}. Keterangan: " . ($grade->description ?? '-'),
+                'description' => "Nilai mata pelajaran {$grade->subject->name} ({$grade->type}) baru saja ditambahkan dengan skor {$grade->score}. Keterangan: ".($grade->description ?? '-'),
                 'color' => 'indigo',
                 'icon' => '<svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
             ]);
@@ -174,7 +175,7 @@ class ParentPortalController extends Controller
                 'title' => $log->points > 0 ? 'Pelanggaran Disiplin' : 'Prestasi Perilaku',
                 'description' => "{$log->description} ({$pointsStr} poin)",
                 'color' => $color,
-                'icon' => '<svg class="w-4 h-4 text-' . ($log->points > 0 ? 'red' : 'emerald') . '-600 dark:text-' . ($log->points > 0 ? 'red' : 'emerald') . '-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                'icon' => '<svg class="w-4 h-4 text-'.($log->points > 0 ? 'red' : 'emerald').'-600 dark:text-'.($log->points > 0 ? 'red' : 'emerald').'-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
             ]);
         });
 
@@ -184,16 +185,16 @@ class ParentPortalController extends Controller
                 'Hadir' => 'emerald',
                 'Sakit' => 'amber',
                 'Izin' => 'blue',
-                'Alpa' => 'red'
+                'Alpa' => 'red',
             ];
             $color = $statusColors[$att->status] ?? 'gray';
             $timeline->push([
                 'type' => 'attendance',
-                'date' => Carbon::parse($att->date . ' 07:00:00'),
+                'date' => Carbon::parse($att->date.' 07:00:00'),
                 'title' => "Presensi: {$att->status}",
-                'description' => "Siswa dicatat {$att->status} pada tanggal " . Carbon::parse($att->date)->isoFormat('D MMMM YYYY') . ($att->notes ? " dengan keterangan: {$att->notes}" : ""),
+                'description' => "Siswa dicatat {$att->status} pada tanggal ".Carbon::parse($att->date)->isoFormat('D MMMM YYYY').($att->notes ? " dengan keterangan: {$att->notes}" : ''),
                 'color' => $color,
-                'icon' => '<svg class="w-4 h-4 text-' . $color . '-600 dark:text-' . $color . '-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>',
+                'icon' => '<svg class="w-4 h-4 text-'.$color.'-600 dark:text-'.$color.'-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>',
             ]);
         });
 
@@ -203,7 +204,7 @@ class ParentPortalController extends Controller
                 'type' => 'billing',
                 'date' => $bill->created_at,
                 'title' => 'Tagihan Baru Dirilis',
-                'description' => "Tagihan {$bill->category->name} sebesar Rp " . number_format($bill->amount, 0, ',', '.') . " dirilis. Jatuh tempo: " . Carbon::parse($bill->due_date)->isoFormat('D MMMM YYYY'),
+                'description' => "Tagihan {$bill->category->name} sebesar Rp ".number_format($bill->amount, 0, ',', '.').' dirilis. Jatuh tempo: '.Carbon::parse($bill->due_date)->isoFormat('D MMMM YYYY'),
                 'color' => 'blue',
                 'icon' => '<svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
             ]);
@@ -213,7 +214,7 @@ class ParentPortalController extends Controller
                     'type' => 'payment',
                     'date' => $payment->created_at,
                     'title' => 'Pembayaran Berhasil',
-                    'description' => "Pembayaran tagihan {$bill->category->name} sebesar Rp " . number_format($payment->amount_paid, 0, ',', '.') . " telah berhasil diterima.",
+                    'description' => "Pembayaran tagihan {$bill->category->name} sebesar Rp ".number_format($payment->amount_paid, 0, ',', '.').' telah berhasil diterima.',
                     'color' => 'emerald',
                     'icon' => '<svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
                 ]);
@@ -304,7 +305,7 @@ class ParentPortalController extends Controller
 
         // Calculate statistics
         $attendanceStats = $student->attendances()
-            ->selectRaw("status, count(*) as count")
+            ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -485,7 +486,7 @@ class ParentPortalController extends Controller
         $this->validateChild($student);
 
         $teacher = $student->classroom?->teacher;
-        if (!$teacher) {
+        if (! $teacher) {
             return back()->with('error', 'Wali kelas tidak ditemukan untuk kelas anak Anda.');
         }
 
@@ -531,7 +532,7 @@ class ParentPortalController extends Controller
 
         $activeYear = AcademicYear::current();
 
-        $dailyScores = \App\Models\DailyAssessmentScore::where('student_id', $student->id)
+        $dailyScores = DailyAssessmentScore::where('student_id', $student->id)
             ->whereHas('dailyAssessment', function ($q) use ($activeYear) {
                 if ($activeYear) {
                     $q->where('academic_year_id', $activeYear->id);

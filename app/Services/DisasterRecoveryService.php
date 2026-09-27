@@ -24,8 +24,8 @@ class DisasterRecoveryService
     {
         $timestamp = date('Y-m-d_H-i-s');
         $filename = "snapshot_{$label}_{$timestamp}.sqlite";
-        $targetPath = $this->storagePath . '/' . $filename;
-        $metaPath = $this->storagePath . '/' . $filename . '.json';
+        $targetPath = $this->storagePath.'/'.$filename;
+        $metaPath = $this->storagePath.'/'.$filename.'.json';
 
         $dbConnection = config('database.default', 'sqlite');
         $dbPath = config('database.connections.sqlite.database');
@@ -72,7 +72,7 @@ class DisasterRecoveryService
         foreach ($files as $file) {
             if ($file->getExtension() === 'sqlite' || ($file->getExtension() === 'json' && ! str_ends_with($file->getFilename(), '.sqlite.json'))) {
                 $filename = $file->getFilename();
-                $metaPath = $this->storagePath . '/' . $filename . '.json';
+                $metaPath = $this->storagePath.'/'.$filename.'.json';
 
                 if (File::exists($metaPath)) {
                     $meta = json_decode(File::get($metaPath), true);
@@ -101,8 +101,8 @@ class DisasterRecoveryService
      */
     public function verifyChecksum(string $filename): bool
     {
-        $targetPath = $this->storagePath . '/' . basename($filename);
-        $metaPath = $targetPath . '.json';
+        $targetPath = $this->storagePath.'/'.basename($filename);
+        $metaPath = $targetPath.'.json';
 
         if (! File::exists($targetPath)) {
             return false;
@@ -113,6 +113,7 @@ class DisasterRecoveryService
         if (File::exists($metaPath)) {
             $meta = json_decode(File::get($metaPath), true);
             $expectedHash = $meta['checksum_sha256'] ?? '';
+
             return hash_equals($expectedHash, $calculatedHash);
         }
 
@@ -124,7 +125,7 @@ class DisasterRecoveryService
      */
     public function restoreSnapshot(string $filename): bool
     {
-        $targetPath = $this->storagePath . '/' . basename($filename);
+        $targetPath = $this->storagePath.'/'.basename($filename);
 
         if (! File::exists($targetPath)) {
             return false;
@@ -139,7 +140,7 @@ class DisasterRecoveryService
 
         if ($dbConnection === 'sqlite' && $dbPath !== ':memory:' && File::exists($dbPath)) {
             // Backup active database first before restoring
-            $tempBackup = $this->storagePath . '/pre_restore_backup_' . time() . '.sqlite';
+            $tempBackup = $this->storagePath.'/pre_restore_backup_'.time().'.sqlite';
             File::copy($dbPath, $tempBackup);
 
             // Restore
@@ -154,8 +155,8 @@ class DisasterRecoveryService
      */
     public function deleteSnapshot(string $filename): bool
     {
-        $targetPath = $this->storagePath . '/' . basename($filename);
-        $metaPath = $targetPath . '.json';
+        $targetPath = $this->storagePath.'/'.basename($filename);
+        $metaPath = $targetPath.'.json';
 
         if (File::exists($targetPath)) {
             File::delete($targetPath);
@@ -203,7 +204,7 @@ class DisasterRecoveryService
                 'name' => 'Kesehatan Berkas Penyimpanan Database',
                 'status' => $dbSize > 0 ? 'PASSED' : 'WARNING',
                 'size_bytes' => $dbSize,
-                'size_readable' => round($dbSize / 1024 / 1024, 2) . ' MB',
+                'size_readable' => round($dbSize / 1024 / 1024, 2).' MB',
             ];
 
             if ($auditResult['checks']['foreign_keys']['status'] === 'FAILED' || $auditResult['checks']['database_structure']['status'] === 'FAILED') {

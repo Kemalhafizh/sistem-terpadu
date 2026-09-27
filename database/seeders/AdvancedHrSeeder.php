@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Employee;
-use App\Models\JobVacancy;
-use App\Models\JobApplicant;
-use App\Models\CompensationStructure;
 use App\Models\BenefitClaim;
-use App\Models\WellnessProgram;
-use App\Models\WellnessLog;
+use App\Models\CompensationStructure;
+use App\Models\Employee;
 use App\Models\ExitInterview;
+use App\Models\JobApplicant;
+use App\Models\JobVacancy;
 use App\Models\TurnoverAnalytic;
+use App\Models\User;
+use App\Models\WellnessLog;
+use App\Models\WellnessProgram;
+use Illuminate\Database\Seeder;
 
 class AdvancedHrSeeder extends Seeder
 {
@@ -27,14 +27,14 @@ class AdvancedHrSeeder extends Seeder
             'requirements' => 'S1 Matematika, berpengalaman 2 tahun',
             'status' => 'open',
             'closing_date' => now()->addDays(30),
-            'created_by' => $user->id
+            'created_by' => $user->id,
         ]);
 
         JobApplicant::create([
             'job_vacancy_id' => $vacancy->id,
             'full_name' => 'Budi Santoso',
             'email' => 'budi@example.com',
-            'pipeline_stage' => 'applied'
+            'pipeline_stage' => 'applied',
         ]);
 
         CompensationStructure::create([
@@ -42,7 +42,7 @@ class AdvancedHrSeeder extends Seeder
             'base_salary' => 5000000.00,
             'allowances' => ['transport' => 500000],
             'deductions' => ['tax' => 250000],
-            'effective_date' => now()
+            'effective_date' => now(),
         ]);
 
         BenefitClaim::create([
@@ -50,7 +50,7 @@ class AdvancedHrSeeder extends Seeder
             'claim_type' => 'medical',
             'amount' => 1000000.00,
             'description' => 'Kacamata',
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $program = WellnessProgram::create([
@@ -58,14 +58,14 @@ class AdvancedHrSeeder extends Seeder
             'category' => 'physical_health',
             'description' => 'Senam pagi setiap jumat',
             'points_reward' => 10,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         WellnessLog::create([
             'employee_id' => $employee->id,
             'wellness_program_id' => $program->id,
             'participation_date' => now(),
-            'feedback_note' => 'Sangat menyegarkan'
+            'feedback_note' => 'Sangat menyegarkan',
         ]);
 
         ExitInterview::create([
@@ -73,7 +73,7 @@ class AdvancedHrSeeder extends Seeder
             'interviewer_id' => $user->id,
             'interview_date' => now()->addDays(10),
             'reasons_for_leaving' => ['career_change' => true],
-            'status' => 'scheduled'
+            'status' => 'scheduled',
         ]);
 
         TurnoverAnalytic::create([
@@ -82,7 +82,7 @@ class AdvancedHrSeeder extends Seeder
             'month' => date('n'),
             'headcount_start' => 50,
             'terminations' => 1,
-            'turnover_rate' => 2.00
+            'turnover_rate' => 2.00,
         ]);
     }
 }

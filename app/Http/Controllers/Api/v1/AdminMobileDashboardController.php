@@ -9,15 +9,19 @@ use App\Models\Billing;
 use App\Models\ExamAttempt;
 use App\Models\Payment;
 use App\Models\Student;
+use App\Models\StudentPointLog;
+use App\Models\User;
+use App\Models\WorkflowApproval;
 use App\Models\WorkflowRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminMobileDashboardController extends Controller
 {
     private function authorizeAdmin(Request $request): void
     {
         $role = $request->user()?->role;
-        if (!in_array($role, ['admin', 'superadmin', 'kepsek', 'kepala_sekolah'], true)) {
+        if (! in_array($role, ['admin', 'superadmin', 'kepsek', 'kepala_sekolah'], true)) {
             abort(403, 'Akses ditolak. Hanya administrator dan pimpinan sekolah yang berwenang.');
         }
     }
@@ -30,7 +34,7 @@ class AdminMobileDashboardController extends Controller
         $this->authorizeAdmin($request);
         $studentCount = Student::count();
         $unpaidBillings = Billing::where('status', 'unpaid')->sum('amount');
-        
+
         // Attendance today rate approximation
         $totalStudents = $studentCount > 0 ? $studentCount : 1;
         $attendedToday = Attendance::whereDate('date', now()->toDateString())
@@ -44,10 +48,10 @@ class AdminMobileDashboardController extends Controller
             'success' => true,
             'data' => [
                 'total_students' => $studentCount,
-                'unpaid_billings' => (float)$unpaidBillings,
+                'unpaid_billings' => (float) $unpaidBillings,
                 'attendance_rate' => $attendanceRate,
                 'pending_approvals' => $pendingApprovals,
-            ]
+            ],
         ]);
     }
 
@@ -104,8 +108,8 @@ class AdminMobileDashboardController extends Controller
                 'monthly_revenue' => (float) Payment::whereYear('payment_date', now()->year)
                     ->whereMonth('payment_date', now()->month)
                     ->sum('amount_paid'),
-                'active_teachers' => \App\Models\User::whereIn('role', ['guru', 'teacher'])->count(),
-                'avg_student_points' => \App\Models\StudentPointLog::avg('points') ?? 0,
+                'active_teachers' => User::whereIn('role', ['guru', 'teacher'])->count(),
+                'avg_student_points' => StudentPointLog::avg('points') ?? 0,
                 'spp_payment_ratio_by_cohort' => $sppRatioByYear,
                 'cbt_server_usage' => [
                     'active_sessions' => $activeCbtSessions,
@@ -121,7 +125,7 @@ class AdminMobileDashboardController extends Controller
                 // reported honestly as null.
                 'teacher_attendance_rate' => null,
                 'teacher_attendance_rate_note' => 'Tidak ada data presensi guru di skema saat ini — belum ada tabel/kolom yang mencatat kehadiran guru itu sendiri (Attendance hanya mencatat kehadiran siswa).',
-            ]
+            ],
         ]);
     }
 
@@ -140,7 +144,7 @@ class AdminMobileDashboardController extends Controller
         ]);
 
         $payload = [
-            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'id' => (string) Str::uuid(),
             'title' => $validated['title'],
             'message' => $validated['message'],
             'location' => $validated['location'] ?? 'Kampus SMA Islam Sultan Agung 1',
@@ -173,6 +177,7 @@ class AdminMobileDashboardController extends Controller
             ->get()
             ->map(function (WorkflowRequest $wr) {
                 $totalSteps = is_array($wr->definition?->steps) ? count($wr->definition->steps) : null;
+
                 return [
                     'id' => $wr->id,
                     'uuid' => $wr->uuid,
@@ -215,15 +220,15 @@ class AdminMobileDashboardController extends Controller
         }
 
         $newStatus = $request->action === 'approve' ? 'approved' : 'rejected';
-        
+
         $workflowRequest->update([
             'status' => $newStatus,
             // Assuming there is some notes field or audit trailing in the actual DB
         ]);
 
         // Normally, we'd log this into an audit trail table (e.g. WorkflowApproval)
-        if (class_exists(\App\Models\WorkflowApproval::class)) {
-            \App\Models\WorkflowApproval::create([
+        if (class_exists(WorkflowApproval::class)) {
+            WorkflowApproval::create([
                 'request_id' => $workflowRequest->id,
                 'approver_id' => $request->user()->id,
                 'role' => $request->user()->role,

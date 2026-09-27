@@ -15,7 +15,7 @@ class TeacherPerformance360Service
      */
     public function aggregateTeacherScores(User $teacher): Teacher360Metric
     {
-        $avgGrade = (float) Grade::whereHas('subject', function($q) use ($teacher) {
+        $avgGrade = (float) Grade::whereHas('subject', function ($q) use ($teacher) {
             $q->where('user_id', $teacher->id);
         })->avg('score') ?: 84.5;
 

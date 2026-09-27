@@ -3,7 +3,6 @@
 namespace App\Services\Performance;
 
 use App\Models\QueryPerformanceLog;
-use Illuminate\Support\Collection;
 
 class QueryOptimizerService
 {

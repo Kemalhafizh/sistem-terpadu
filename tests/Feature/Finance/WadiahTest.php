@@ -2,10 +2,7 @@
 
 use App\Models\Student;
 use App\Models\User;
-use App\Models\WadiahAccount;
-use App\Models\WadiahTransaction;
 use App\Services\WadiahService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -17,7 +14,7 @@ beforeEach(function () {
 
 test('wadiah service can create account', function () {
     $account = $this->wadiahService->createAccount($this->student);
-    
+
     expect($account)->not->toBeNull();
     expect($account->student_id)->toEqual($this->student->id);
     expect($account->balance)->toEqual(0);
@@ -26,13 +23,13 @@ test('wadiah service can create account', function () {
 
 test('admin or tu can deposit and withdraw cash', function () {
     $account = $this->wadiahService->createAccount($this->student);
-    
+
     // Deposit
     $deposit = $this->wadiahService->deposit($account, 100000, $this->tu->id, 'Top up');
     expect($deposit->type)->toBe('deposit');
     expect($deposit->amount)->toEqual(100000);
     expect($deposit->current_balance)->toEqual(100000);
-    
+
     $account->refresh();
     expect($account->balance)->toEqual(100000);
 

@@ -2,21 +2,27 @@
 
 namespace App\Services;
 
-use App\Models\ReportCardTemplate;
-use App\Models\ReportCardEntry;
 use App\Models\ReportCardCharacter;
+use App\Models\ReportCardEntry;
 use App\Models\ReportCardPdf;
+use App\Models\ReportCardTemplate;
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class ERaporPdfService
 {
     public function calculatePredikat(float $score): string
     {
-        if ($score >= 90) return 'A';
-        if ($score >= 80) return 'B';
-        if ($score >= 70) return 'C';
+        if ($score >= 90) {
+            return 'A';
+        }
+        if ($score >= 80) {
+            return 'B';
+        }
+        if ($score >= 70) {
+            return 'C';
+        }
+
         return 'D';
     }
 
@@ -35,11 +41,11 @@ class ERaporPdfService
 
     public function getStudentReport(int $studentId, ?int $templateId = null): array
     {
-        $template = $templateId 
+        $template = $templateId
             ? ReportCardTemplate::with('academicYear')->find($templateId)
             : ReportCardTemplate::with('academicYear')->where('is_published', true)->latest()->first();
 
-        if (!$template) {
+        if (! $template) {
             $template = ReportCardTemplate::with('academicYear')->latest()->first();
         }
 
@@ -54,15 +60,15 @@ class ERaporPdfService
 
         $entries = ReportCardEntry::with('subject')
             ->where('student_id', $studentId)
-            ->when($template, fn($q) => $q->where('report_card_id', $template->id))
+            ->when($template, fn ($q) => $q->where('report_card_id', $template->id))
             ->get();
 
         $characters = ReportCardCharacter::where('student_id', $studentId)
-            ->when($template, fn($q) => $q->where('report_card_id', $template->id))
+            ->when($template, fn ($q) => $q->where('report_card_id', $template->id))
             ->get();
 
         $latestPdf = ReportCardPdf::where('student_id', $studentId)
-            ->when($template, fn($q) => $q->where('report_card_id', $template->id))
+            ->when($template, fn ($q) => $q->where('report_card_id', $template->id))
             ->latest()
             ->first();
 
@@ -99,9 +105,9 @@ class ERaporPdfService
 
     public function generateSinglePdf(int $reportCardId, int $studentId, int $generatedBy): ReportCardPdf
     {
-        $hashString = "SISTA-RAPOR-{$reportCardId}-{$studentId}-" . time();
+        $hashString = "SISTA-RAPOR-{$reportCardId}-{$studentId}-".time();
         $sha256 = hash('sha256', $hashString);
-        $fileName = "rapor_smk_sultan_agung_1_{$studentId}_" . time() . ".pdf";
+        $fileName = "rapor_smk_sultan_agung_1_{$studentId}_".time().'.pdf';
         $filePath = "uploads/rapor/{$fileName}";
 
         return ReportCardPdf::updateOrCreate(

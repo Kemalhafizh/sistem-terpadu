@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->teacher = User::factory()->create(['role' => 'guru']);

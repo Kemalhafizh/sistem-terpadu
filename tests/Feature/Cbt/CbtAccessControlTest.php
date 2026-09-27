@@ -4,7 +4,6 @@ use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
-use App\Models\QuestionBank;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;

@@ -131,7 +131,7 @@ class EventAttendanceSeeder extends Seeder
                 'end_time' => '08:00:00',
                 'target' => 'all_students',
                 'target_ids' => null,
-            ]
+            ],
         ];
 
         // 4. Loop to insert events and records
@@ -147,7 +147,7 @@ class EventAttendanceSeeder extends Seeder
                 'target' => $data['target'],
                 'target_ids' => $data['target_ids'],
                 'created_by' => $creator->id,
-                'notes' => "Seeded automatically. Realistis log kehadiran untuk SMA Islam Sultan Agung 1 Semarang."
+                'notes' => 'Seeded automatically. Realistis log kehadiran untuk SMA Islam Sultan Agung 1 Semarang.',
             ]);
 
             // Resolve target user ids
@@ -165,7 +165,7 @@ class EventAttendanceSeeder extends Seeder
                     break;
 
                 case 'specific_class':
-                    if (!empty($targetIds)) {
+                    if (! empty($targetIds)) {
                         $userIds = Student::whereIn('classroom_id', $targetIds)
                             ->pluck('user_id')
                             ->filter()
@@ -233,7 +233,7 @@ class EventAttendanceSeeder extends Seeder
                 ];
             }
 
-            if (!empty($records)) {
+            if (! empty($records)) {
                 foreach (array_chunk($records, 100) as $chunk) {
                     EventAttendanceRecord::insert($chunk);
                 }

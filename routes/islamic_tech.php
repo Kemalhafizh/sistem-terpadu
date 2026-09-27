@@ -1,9 +1,10 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Islamic\TahsinRecordController;
+
+use App\Http\Controllers\Islamic\DawahContentController;
 use App\Http\Controllers\Islamic\IslamicEventController;
 use App\Http\Controllers\Islamic\SpiritualPortfolioController;
-use App\Http\Controllers\Islamic\DawahContentController;
+use App\Http\Controllers\Islamic\TahsinRecordController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('tahsin')->name('tahsin.')->group(function () {

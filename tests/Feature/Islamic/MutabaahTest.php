@@ -6,8 +6,6 @@ use App\Models\MutabaahLog;
 use App\Models\MutabaahWeeklySummary;
 use App\Models\Student;
 use App\Models\User;
-use App\Services\MutabaahService;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -15,7 +13,7 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     // Create basic data needed for tests
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
-    
+
     // Homeroom teacher
     $this->teacherUser = User::factory()->create(['role' => 'guru']);
     $this->classroom = Classroom::factory()->create([
@@ -43,7 +41,7 @@ test('student can view mutabaah calendar page', function () {
 
 test('student can store daily detailed log and system auto-calculates score', function () {
     $dateStr = now()->format('Y-m-d');
-    
+
     $response = $this->actingAs($this->studentUser)->post(route('mutabaah.store-daily-log'), [
         'student_id' => $this->student->id,
         'date' => $dateStr,
@@ -106,7 +104,7 @@ test('daily log submission triggers weekly summary auto-generation', function ()
 
 test('teacher can view class rekap and write comment on student weekly summary', function () {
     $weekStart = now()->startOfWeek()->format('Y-m-d');
-    
+
     // Seed a weekly summary
     $summary = MutabaahWeeklySummary::factory()->create([
         'student_id' => $this->student->id,
@@ -135,7 +133,7 @@ test('teacher can view class rekap and write comment on student weekly summary',
 
 test('parent can view child mutabaah and acknowledge weekly report', function () {
     $weekStart = now()->startOfWeek()->format('Y-m-d');
-    
+
     // Seed summary
     $summary = MutabaahWeeklySummary::factory()->create([
         'student_id' => $this->student->id,

@@ -10,7 +10,7 @@ class CompensationStructure extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_id', 'base_salary', 'allowances', 'deductions', 'effective_date'
+        'employee_id', 'base_salary', 'allowances', 'deductions', 'effective_date',
     ];
 
     protected $casts = [

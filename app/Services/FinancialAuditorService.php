@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Account;
 use App\Models\JournalEntry;
 use App\Models\JournalEntryLine;
 use Illuminate\Support\Collection;
@@ -37,6 +36,7 @@ class FinancialAuditorService
             ->filter(function ($entry) {
                 $totalDebit = round($entry->lines->sum('debit'), 2);
                 $totalCredit = round($entry->lines->sum('credit'), 2);
+
                 return abs($totalDebit - $totalCredit) >= 0.01;
             })
             ->map(function ($entry) {
@@ -69,12 +69,14 @@ class FinancialAuditorService
 
                 $hasExpenseLine = $entry->lines->contains(function ($line) {
                     $accountType = strtolower($line->account->type ?? '');
+
                     return str_contains($accountType, 'expense') || str_contains($accountType, 'beban');
                 });
 
                 $hasCashOrAssetLine = $entry->lines->contains(function ($line) {
                     $accountType = strtolower($line->account->type ?? '');
                     $accountName = strtolower($line->account->name ?? '');
+
                     return str_contains($accountType, 'asset') || str_contains($accountType, 'kas') || str_contains($accountName, 'kas') || str_contains($accountName, 'bank');
                 });
 
@@ -85,6 +87,7 @@ class FinancialAuditorService
                 $entry->issue_type = 'unpaired_cash_account';
                 $entry->issue_severity = 'high';
                 $entry->issue_description = 'Pengeluaran beban tidak disertai dengan akun pasangan Kas/Bank.';
+
                 return $entry;
             })
             ->values();
@@ -112,12 +115,14 @@ class FinancialAuditorService
                         return true;
                     }
                 }
+
                 return false;
             })
             ->map(function ($entry) {
                 $entry->issue_type = 'abnormal_value';
                 $entry->issue_severity = 'medium';
                 $entry->issue_description = 'Ditemukan nilai angka negatif, nol ganda, atau transaksi besar tanpa referensi.';
+
                 return $entry;
             })
             ->values();

@@ -33,11 +33,11 @@ class LibraryLoanFactory extends Factory
     public function returned(): static
     {
         return $this->state(function (array $attributes) {
-            $borrowedAt = $attributes['borrowed_at'] instanceof \DateTimeInterface 
-                ? $attributes['borrowed_at'] 
+            $borrowedAt = $attributes['borrowed_at'] instanceof \DateTimeInterface
+                ? $attributes['borrowed_at']
                 : new \DateTime($attributes['borrowed_at']);
-            $returnedAt = (clone $borrowedAt)->modify('+' . rand(1, 6) . ' days');
-            
+            $returnedAt = (clone $borrowedAt)->modify('+'.rand(1, 6).' days');
+
             return [
                 'returned_at' => $returnedAt,
                 'status' => 'returned',
@@ -50,7 +50,7 @@ class LibraryLoanFactory extends Factory
         return $this->state(function (array $attributes) {
             $borrowedAt = $this->faker->dateTimeBetween('-1 month', '-10 days');
             $dueAt = (clone $borrowedAt)->modify('+7 days');
-            
+
             return [
                 'borrowed_at' => $borrowedAt,
                 'due_at' => $dueAt,

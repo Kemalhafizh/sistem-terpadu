@@ -39,6 +39,7 @@ class SurveyResponse extends Model
         if ($this->survey && $this->survey->is_anonymous) {
             return null;
         }
+
         return $this->user;
     }
 }

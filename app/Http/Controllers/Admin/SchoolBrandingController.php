@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domains\School\Services\SchoolBrandingDomainService;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Request;
 
 class SchoolBrandingController extends Controller
 {
@@ -57,9 +57,9 @@ class SchoolBrandingController extends Controller
             $brandingService->updateSchoolProfile($validated);
 
             return redirect()->route('admin.school.branding.index')
-                ->with('success', 'Profil Konfigurasi Tunggal ' . $validated['school_name'] . ' berhasil diperbarui!');
+                ->with('success', 'Profil Konfigurasi Tunggal '.$validated['school_name'].' berhasil diperbarui!');
         } catch (Exception $e) {
-            return back()->with('error', 'Gagal memperbarui profil sekolah: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memperbarui profil sekolah: '.$e->getMessage());
         }
     }
 }

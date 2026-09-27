@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Models\AcademicYear;
 use App\Models\Attendance;
+use App\Models\Setting;
 use App\Models\StudentPointLog;
 use App\Notifications\StudentAttendanceNotification;
+use App\Support\School;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -95,7 +97,7 @@ class AttendanceService
      */
     public function verifySchoolGeofence(float $latitude, float $longitude): array
     {
-        $campus = \App\Support\School::campus();
+        $campus = School::campus();
 
         $schoolLat = $campus['latitude'];
         $schoolLng = $campus['longitude'];
@@ -108,9 +110,9 @@ class AttendanceService
             'is_valid' => $isWithinGeofence,
             'distance_meters' => round($distance, 2),
             'allowed_radius_meters' => $allowedRadius,
-            'school_name' => \App\Support\School::name(),
+            'school_name' => School::name(),
             // Only a link the admin actually saved (the old fallback link was unverified).
-            'maps_url' => \App\Models\Setting::get('school_maps_url') ?: null,
+            'maps_url' => Setting::get('school_maps_url') ?: null,
             'latitude' => $schoolLat,
             'longitude' => $schoolLng,
         ];

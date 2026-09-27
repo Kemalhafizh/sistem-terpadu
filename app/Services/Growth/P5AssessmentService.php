@@ -5,7 +5,6 @@ namespace App\Services\Growth;
 use App\Models\CharacterAssessment;
 use App\Models\CharacterDimension;
 use App\Models\MeritPoint;
-use App\Models\User;
 
 class P5AssessmentService
 {

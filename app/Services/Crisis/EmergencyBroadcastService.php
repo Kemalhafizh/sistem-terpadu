@@ -11,6 +11,7 @@ class EmergencyBroadcastService
     {
         $data['uuid'] = (string) Str::uuid();
         $data['sent_at'] = now();
+
         return EmergencyBroadcast::create($data);
     }
 

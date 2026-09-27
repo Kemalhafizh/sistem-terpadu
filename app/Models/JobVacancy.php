@@ -10,7 +10,7 @@ class JobVacancy extends Model
     use HasFactory;
 
     protected $fillable = [
-        'position_title', 'department', 'requirements', 'status', 'closing_date', 'created_by'
+        'position_title', 'department', 'requirements', 'status', 'closing_date', 'created_by',
     ];
 
     protected $casts = [

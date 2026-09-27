@@ -2,7 +2,6 @@
 
 namespace App\Services\HR;
 
-use App\Models\CompensationStructure;
 use App\Models\BenefitClaim;
 
 class CompensationService
@@ -16,8 +15,9 @@ class CompensationService
     {
         $claim->update([
             'status' => $status,
-            'approved_by' => $userId
+            'approved_by' => $userId,
         ]);
+
         return $claim;
     }
 

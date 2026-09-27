@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Achievement;
 use App\Models\AcademicYear;
+use App\Models\Achievement;
 use App\Models\ExtracurricularMember;
 use App\Models\Grade;
 use App\Models\MutabaahLog;
@@ -56,7 +56,7 @@ class StudentProfile360Service
     public function getAcademicSummary(int $studentId): array
     {
         $student = $this->resolveStudent($studentId);
-        if (!$student) {
+        if (! $student) {
             return [
                 'average_score' => 0.0, 'rank_in_class' => 0, 'total_class_students' => 0,
                 'strongest_subject' => null, 'improvement_needed' => null, 'trend' => [],
@@ -111,7 +111,7 @@ class StudentProfile360Service
     public function getIbadahSummary(int $studentId): array
     {
         $student = $this->resolveStudent($studentId);
-        if (!$student) {
+        if (! $student) {
             return [
                 'tahfidz_juz_completed' => 0, 'target_juz' => 0, 'tahfidz_progress_percent' => 0,
                 'current_surah' => null, 'mutabaah_weekly_streak' => 0, 'sholat_jamaah_percent' => 0.0,
@@ -171,7 +171,7 @@ class StudentProfile360Service
     public function getDisciplineSummary(int $studentId): array
     {
         $student = $this->resolveStudent($studentId);
-        if (!$student) {
+        if (! $student) {
             return [
                 'total_positive_points' => 0, 'total_violation_points' => 0, 'net_points' => 0,
                 'category' => 'Aman', 'active_sanctions' => 0,
@@ -184,10 +184,15 @@ class StudentProfile360Service
         $net = $student->total_points;
 
         $status = 'Aman';
-        if ($net >= 100) $status = 'SP3 (Sangat Kritis)';
-        elseif ($net >= 75) $status = 'SP2 (Kritis)';
-        elseif ($net >= 50) $status = 'SP1 (Waspada)';
-        elseif ($net >= 30) $status = 'Perlu Perhatian';
+        if ($net >= 100) {
+            $status = 'SP3 (Sangat Kritis)';
+        } elseif ($net >= 75) {
+            $status = 'SP2 (Kritis)';
+        } elseif ($net >= 50) {
+            $status = 'SP1 (Waspada)';
+        } elseif ($net >= 30) {
+            $status = 'Perlu Perhatian';
+        }
 
         $activeSanctions = WarningLetter::where('student_id', $student->id)->whereNull('signed_at')->count();
 
@@ -203,7 +208,7 @@ class StudentProfile360Service
     public function getExtracurriculars(int $studentId): array
     {
         $student = $this->resolveStudent($studentId);
-        if (!$student) {
+        if (! $student) {
             return [];
         }
 
@@ -223,7 +228,7 @@ class StudentProfile360Service
     public function getAchievements(int $studentId): array
     {
         $student = $this->resolveStudent($studentId);
-        if (!$student) {
+        if (! $student) {
             return [];
         }
 
@@ -243,7 +248,7 @@ class StudentProfile360Service
     public function getHealthSummary(int $studentId): array
     {
         $student = $this->resolveStudent($studentId);
-        if (!$student) {
+        if (! $student) {
             return [
                 'blood_type' => null, 'height_cm' => null, 'weight_kg' => null,
                 'allergies' => [], 'total_uks_visits' => 0, 'last_visit_date' => null,

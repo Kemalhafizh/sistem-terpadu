@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Architecture;
 
-use Tests\TestCase;
-use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use Tests\TestCase;
 
 class NoEmojiGovernanceTest extends TestCase
 {
@@ -42,7 +42,7 @@ class NoEmojiGovernanceTest extends TestCase
 
         $this->assertEmpty(
             $filesWithEmoji,
-            "Terdapat emoji pada " . count($filesWithEmoji) . " berkas berikut. Harap ganti dengan ikon SVG / teks formal:\n" . implode("\n", $filesWithEmoji)
+            'Terdapat emoji pada '.count($filesWithEmoji)." berkas berikut. Harap ganti dengan ikon SVG / teks formal:\n".implode("\n", $filesWithEmoji)
         );
     }
 }

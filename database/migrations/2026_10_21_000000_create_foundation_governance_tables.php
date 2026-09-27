@@ -1,10 +1,13 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up() {
+return new class extends Migration
+{
+    public function up()
+    {
         Schema::create('foundation_units', function (Blueprint $table) {
             $table->id();
             $table->string('unit_code');
@@ -113,7 +116,9 @@ return new class extends Migration {
             $table->timestamps();
         });
     }
-    public function down() {
+
+    public function down()
+    {
         Schema::dropIfExists('unit_accreditation_records');
         Schema::dropIfExists('foundation_kpis');
         Schema::dropIfExists('staff_rotations');

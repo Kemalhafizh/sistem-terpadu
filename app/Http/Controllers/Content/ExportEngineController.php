@@ -41,7 +41,7 @@ class ExportEngineController extends Controller
             $userId
         );
 
-        return back()->with('success', "Proses ekspor berkas [{$job->job_name}] berformat [" . strtoupper($job->format) . "] berhasil dijalankan!");
+        return back()->with('success', "Proses ekspor berkas [{$job->job_name}] berformat [".strtoupper($job->format).'] berhasil dijalankan!');
     }
 
     /**
@@ -56,7 +56,7 @@ class ExportEngineController extends Controller
         }
 
         // Return inline dummy text download stream for demonstration
-        $content = "SISTA EXPORT ENGINE -- SULTAN AGUNG 1\nFORMAT: " . strtoupper($job->format) . "\nJOB: {$job->job_name}\nCREATED AT: {$job->created_at}\nSTATUS: VALID VERIFIED";
+        $content = "SISTA EXPORT ENGINE -- SULTAN AGUNG 1\nFORMAT: ".strtoupper($job->format)."\nJOB: {$job->job_name}\nCREATED AT: {$job->created_at}\nSTATUS: VALID VERIFIED";
 
         return response($content, 200, [
             'Content-Type' => 'text/plain',

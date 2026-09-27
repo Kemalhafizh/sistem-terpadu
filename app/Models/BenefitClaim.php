@@ -10,7 +10,7 @@ class BenefitClaim extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_id', 'claim_type', 'amount', 'description', 'receipt_url', 'status', 'approved_by'
+        'employee_id', 'claim_type', 'amount', 'description', 'receipt_url', 'status', 'approved_by',
     ];
 
     public function employee()

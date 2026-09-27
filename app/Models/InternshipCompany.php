@@ -10,7 +10,7 @@ class InternshipCompany extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_name', 'industry_sector', 'address', 'pic_name', 'pic_contact', 'is_verified_partner'
+        'company_name', 'industry_sector', 'address', 'pic_name', 'pic_contact', 'is_verified_partner',
     ];
 
     protected $casts = [

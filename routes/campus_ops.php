@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Campus\VisitorController;
+use App\Http\Controllers\Campus\EventTicketingController;
 use App\Http\Controllers\Campus\MerchandiseController;
 use App\Http\Controllers\Campus\NutritionController;
-use App\Http\Controllers\Campus\EventTicketingController;
+use App\Http\Controllers\Campus\VisitorController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth'])->prefix('campus')->group(function () {

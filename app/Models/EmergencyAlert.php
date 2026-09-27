@@ -12,7 +12,7 @@ class EmergencyAlert extends Model
     protected $fillable = [
         'trigger_source', 'initiated_by_user_id', 'location_description',
         'latitude', 'longitude', 'alert_level', 'dispatched_at', 'resolved_at',
-        'post_incident_report'
+        'post_incident_report',
     ];
 
     protected $casts = [

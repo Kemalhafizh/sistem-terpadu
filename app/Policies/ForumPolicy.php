@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\ForumThread;
 use App\Models\ForumReply;
+use App\Models\ForumThread;
 use App\Models\User;
 
 class ForumPolicy
@@ -33,7 +33,7 @@ class ForumPolicy
             }
 
             $childClassrooms = $user->children()->pluck('classroom_id')->toArray();
-            
+
             if ($thread->classroom_id && in_array($thread->classroom_id, $childClassrooms)) {
                 return true;
             }
@@ -52,7 +52,7 @@ class ForumPolicy
             }
 
             $student = $user->student;
-            if (!$student) {
+            if (! $student) {
                 return false;
             }
 
@@ -87,7 +87,7 @@ class ForumPolicy
             return false;
         }
 
-        if ($thread->is_locked && !$user->isAdmin() && $user->role !== 'guru') {
+        if ($thread->is_locked && ! $user->isAdmin() && $user->role !== 'guru') {
             return false;
         }
 

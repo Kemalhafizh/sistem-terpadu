@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Alumni\AlumniAchievementController;
 use App\Http\Controllers\Alumni\AlumniProfileController;
 use App\Http\Controllers\Alumni\CrowdfundCampaignController;
-use App\Http\Controllers\Alumni\AlumniAchievementController;
 use App\Http\Controllers\Alumni\EndowmentController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('alumni')->name('alumni.')->group(function () {

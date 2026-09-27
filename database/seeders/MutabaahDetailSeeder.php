@@ -6,9 +6,7 @@ use App\Models\MutabaahItem;
 use App\Models\MutabaahLog;
 use App\Models\MutabaahWeeklySummary;
 use App\Models\Student;
-use App\Models\User;
 use App\Services\MutabaahService;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class MutabaahDetailSeeder extends Seeder
@@ -75,13 +73,13 @@ class MutabaahDetailSeeder extends Seeder
                 $catatan = null;
                 if (rand(1, 100) <= 15) {
                     $reflections = [
-                        "Alhamdulillah bisa shalat berjamaah terus hari ini.",
-                        "Tadarus terasa lancar, insya Allah besok tambah lembar.",
-                        "Lupa dzikir pagi karena terburu-buru ke sekolah.",
-                        "Alhamdulillah puasa sunnah senin lancar.",
-                        "Semoga besok bisa tahajud lebih awal.",
-                        "Target tadarus hari ini tercapai.",
-                        "Ingin memperbaiki kekhusyukan shalat subuh.",
+                        'Alhamdulillah bisa shalat berjamaah terus hari ini.',
+                        'Tadarus terasa lancar, insya Allah besok tambah lembar.',
+                        'Lupa dzikir pagi karena terburu-buru ke sekolah.',
+                        'Alhamdulillah puasa sunnah senin lancar.',
+                        'Semoga besok bisa tahajud lebih awal.',
+                        'Target tadarus hari ini tercapai.',
+                        'Ingin memperbaiki kekhusyukan shalat subuh.',
                     ];
                     $catatan = $reflections[array_rand($reflections)];
                 }

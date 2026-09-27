@@ -1,16 +1,15 @@
 <?php
 
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Employee;
-use App\Models\Classroom;
-use App\Models\Grade;
-use App\Models\Attendance;
-use App\Models\Billing;
 use App\Models\AcademicYear;
+use App\Models\Attendance;
+use App\Models\Classroom;
+use App\Models\Employee;
+use App\Models\Grade;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 beforeEach(function () {
     // Set up temp directory for CSV files
@@ -44,7 +43,7 @@ test('data:validate command fails and detects duplicates and orphaned records', 
         'role' => 'siswa',
         'uuid' => 'test-uuid-1',
         'created_at' => now(),
-        'updated_at' => now()
+        'updated_at' => now(),
     ]);
 
     // Create a classroom to prevent foreign key errors
@@ -52,7 +51,7 @@ test('data:validate command fails and detects duplicates and orphaned records', 
         'name' => 'X-IPA-1',
         'grade_level' => 'X',
         'major' => 'MIPA',
-        'academic_year' => '2026/2027'
+        'academic_year' => '2026/2027',
     ]);
 
     // Create a student user
@@ -62,14 +61,14 @@ test('data:validate command fails and detects duplicates and orphaned records', 
         'classroom_id' => $classroom->id,
         'nis' => '33333',
         'nisn' => '44444',
-        'gender' => 'P'
+        'gender' => 'P',
     ]);
-    
+
     $subject = DB::table('subjects')->insertGetId([
         'name' => 'Fisika',
         'code' => 'FIS',
         'kkm' => 75,
-        'category' => 'Nasional'
+        'category' => 'Nasional',
     ]);
     $acYear = AcademicYear::create(['year' => '2026/2027', 'semester' => 'Ganjil', 'is_active' => true]);
 
@@ -80,7 +79,7 @@ test('data:validate command fails and detects duplicates and orphaned records', 
         'academic_year_id' => $acYear->id,
         'type' => 'uh',
         'score' => 150, // Invalid boundary score
-        'recorded_by' => $cleanStudent->id
+        'recorded_by' => $cleanStudent->id,
     ]);
 
     // 3. Future attendance issue
@@ -90,7 +89,7 @@ test('data:validate command fails and detects duplicates and orphaned records', 
         'academic_year_id' => $acYear->id,
         'date' => now()->addDay()->toDateString(), // Future date
         'status' => 'H',
-        'recorded_by' => $cleanStudent->id
+        'recorded_by' => $cleanStudent->id,
     ]);
 
     // Run validation command and assert exit code is 1 (failure)
@@ -105,18 +104,18 @@ test('data:migrate-legacy command successfully imports students and employees fr
         'name' => 'X-IPA-1',
         'grade_level' => 'X',
         'major' => 'MIPA',
-        'academic_year' => '2026/2027'
+        'academic_year' => '2026/2027',
     ]);
 
     // 2. Create mock CSV files
-    $studentCsv = $this->tempDir . '/students.csv';
-    $studentContent = "name,email,nis,nisn,classroom_name,gender,birth_date,address,parent_name,parent_email,parent_phone\n" .
-                      "Siswa A,siswa.a@gmail.com,S001,N001,X-IPA-1,L,2010-05-15,Semarang,Wali A,wali.a@gmail.com,08123456789";
+    $studentCsv = $this->tempDir.'/students.csv';
+    $studentContent = "name,email,nis,nisn,classroom_name,gender,birth_date,address,parent_name,parent_email,parent_phone\n".
+                      'Siswa A,siswa.a@gmail.com,S001,N001,X-IPA-1,L,2010-05-15,Semarang,Wali A,wali.a@gmail.com,08123456789';
     File::put($studentCsv, $studentContent);
 
-    $employeeCsv = $this->tempDir . '/employees.csv';
-    $employeeContent = "name,email,employee_number,position,employment_status,base_salary,hourly_rate\n" .
-                        "Guru B,guru.b@gmail.com,E001,Guru Fisika,gty,3500000,50000";
+    $employeeCsv = $this->tempDir.'/employees.csv';
+    $employeeContent = "name,email,employee_number,position,employment_status,base_salary,hourly_rate\n".
+                        'Guru B,guru.b@gmail.com,E001,Guru Fisika,gty,3500000,50000';
     File::put($employeeCsv, $employeeContent);
 
     // 3. Run migration command pointing to the directory
@@ -160,14 +159,14 @@ test('data:migrate-legacy command rolls back transaction on error', function () 
         'name' => 'X-IPA-1',
         'grade_level' => 'X',
         'major' => 'MIPA',
-        'academic_year' => '2026/2027'
+        'academic_year' => '2026/2027',
     ]);
 
     // Create CSV containing one valid student and one invalid student (unknown classroom)
-    $studentCsv = $this->tempDir . '/students.csv';
-    $studentContent = "name,email,nis,nisn,classroom_name,gender,birth_date,address,parent_name,parent_email,parent_phone\n" .
-                      "Siswa Valid,valid@gmail.com,S002,N002,X-IPA-1,L,2010-05-15,Semarang,Wali A,wali.a@gmail.com,08123456789\n" .
-                      "Siswa Invalid,invalid@gmail.com,S003,N003,NON_EXISTENT_CLASS,P,2010-05-15,Semarang,Wali B,wali.b@gmail.com,08123456789";
+    $studentCsv = $this->tempDir.'/students.csv';
+    $studentContent = "name,email,nis,nisn,classroom_name,gender,birth_date,address,parent_name,parent_email,parent_phone\n".
+                      "Siswa Valid,valid@gmail.com,S002,N002,X-IPA-1,L,2010-05-15,Semarang,Wali A,wali.a@gmail.com,08123456789\n".
+                      'Siswa Invalid,invalid@gmail.com,S003,N003,NON_EXISTENT_CLASS,P,2010-05-15,Semarang,Wali B,wali.b@gmail.com,08123456789';
     File::put($studentCsv, $studentContent);
 
     // Run import and expect it to fail verification (unknown classroom)

@@ -2,14 +2,11 @@
 
 namespace Tests\Feature\SuperApp;
 
+use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classroom;
-use App\Models\DigitalVerification;
-use App\Models\Grade;
-use App\Models\OfflineSyncQueue;
 use App\Models\Student;
 use App\Models\StudentPointLog;
-use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -20,15 +17,18 @@ class Fase85DebloatPragmatismTest extends TestCase
     use RefreshDatabase;
 
     protected User $studentUser;
+
     protected Student $student;
+
     protected Classroom $classroom;
-    protected \App\Models\AcademicYear $academicYear;
+
+    protected AcademicYear $academicYear;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->academicYear = \App\Models\AcademicYear::create([
+        $this->academicYear = AcademicYear::create([
             'year' => '2025/2026',
             'semester' => 'Ganjil',
             'is_active' => true,

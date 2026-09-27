@@ -8,7 +8,6 @@ use App\Models\MpkLpj;
 use App\Models\OsisTransaction;
 use App\Models\StudentAspiration;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class MpkController extends Controller
 {
@@ -67,8 +66,8 @@ class MpkController extends Controller
             ]
         );
 
-        $message = $request->status === 'verified' 
-            ? 'Transaksi OSIS berhasil diverifikasi.' 
+        $message = $request->status === 'verified'
+            ? 'Transaksi OSIS berhasil diverifikasi.'
             : 'Transaksi OSIS berhasil ditandai sebagai mencurigakan (Flagged).';
 
         return back()->with('success', $message);
@@ -82,7 +81,7 @@ class MpkController extends Controller
     {
         $user = auth()->user();
         $activeYear = AcademicYear::current();
-        
+
         $lpjs = MpkLpj::with(['academicYear', 'submitter', 'reviewer'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -137,7 +136,7 @@ class MpkController extends Controller
         $statusText = [
             'approved' => 'disetujui sepenuhnya',
             'approved_with_notes' => 'disetujui dengan catatan',
-            'rejected' => 'ditolak'
+            'rejected' => 'ditolak',
         ][$request->status];
 
         return back()->with('success', "Keputusan sidang berhasil disimpan. LPJ dinyatakan {$statusText}.");
@@ -150,7 +149,7 @@ class MpkController extends Controller
     public function aspirationsIndex()
     {
         $user = auth()->user();
-        
+
         // Non-students can see all aspirations
         if ($user->isAdmin() || in_array($user->role, ['guru', 'waka_kesiswaan', 'kepala_sekolah'])) {
             $aspirations = StudentAspiration::with(['student.user', 'resolver'])
@@ -164,7 +163,7 @@ class MpkController extends Controller
                 ->where('student_id', $studentId)
                 ->orWhere(function ($query) {
                     $query->where('is_anonymous', false)
-                          ->whereIn('status', ['reviewed', 'delegated', 'resolved']);
+                        ->whereIn('status', ['reviewed', 'delegated', 'resolved']);
                 })
                 ->orderBy('created_at', 'desc')
                 ->paginate(15);

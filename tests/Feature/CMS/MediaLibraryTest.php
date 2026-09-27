@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([
@@ -25,7 +25,7 @@ test('admin can upload image file to media library', function () {
     ]);
 
     $response->assertRedirect(route('cms.media.index'));
-    Storage::disk('public')->assertExists('cms/media/' . $file->hashName());
+    Storage::disk('public')->assertExists('cms/media/'.$file->hashName());
 });
 
 test('admin can delete file from media library', function () {

@@ -18,7 +18,7 @@ class SystemLockdownMiddleware
         // 1. Cek apakah IP pengguna terdaftar dalam daftar blokir
         $clientIp = $request->ip();
         if (BlockedIp::where('ip_address', $clientIp)->exists()) {
-            abort(403, 'Akses IP Anda (' . $clientIp . ') diblokir oleh sistem SISTA karena terindikasi aktivitas mencurigakan.');
+            abort(403, 'Akses IP Anda ('.$clientIp.') diblokir oleh sistem SISTA karena terindikasi aktivitas mencurigakan.');
         }
 
         // 2. Cek status System Lockdown Darurat
@@ -27,7 +27,7 @@ class SystemLockdownMiddleware
         if ($isLockdown) {
             // Berikan akses khusus hanya untuk rute admin security, login, dan logout
             $allowedPaths = ['admin/security*', 'login', 'logout', 'up'];
-            
+
             $isAllowedRoute = false;
             foreach ($allowedPaths as $path) {
                 if ($request->is($path)) {

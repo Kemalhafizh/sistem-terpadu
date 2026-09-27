@@ -54,6 +54,7 @@ class AuditLogChainService
             // 1. Check previous hash continuity
             if ($record->previous_hash !== $expectedPreviousHash) {
                 Log::error("SECURITY BREACH DETECTED: Chain broken at sequence #{$record->sequence}!");
+
                 return [
                     'valid' => false,
                     'tampered_sequence' => $record->sequence,
@@ -72,6 +73,7 @@ class AuditLogChainService
 
             if ($record->entry_hash !== $recalculatedHash) {
                 Log::error("SECURITY BREACH DETECTED: Content tampered at sequence #{$record->sequence}!");
+
                 return [
                     'valid' => false,
                     'tampered_sequence' => $record->sequence,
@@ -95,7 +97,7 @@ class AuditLogChainService
     public function calculateHash(int $sequence, string $previousHash, ?int $userId, string $action, array $payload): string
     {
         $payloadJson = json_encode($payload);
-        $dataToHash = "{$sequence}:{$previousHash}:" . ($userId ?? 'null') . ":{$action}:{$payloadJson}";
+        $dataToHash = "{$sequence}:{$previousHash}:".($userId ?? 'null').":{$action}:{$payloadJson}";
 
         return hash('sha256', $dataToHash);
     }

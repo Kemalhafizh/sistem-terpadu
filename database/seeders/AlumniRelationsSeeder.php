@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\AlumniAchievement;
 use App\Models\AlumniProfile;
 use App\Models\CrowdfundCampaign;
-use App\Models\AlumniAchievement;
 use App\Models\LegacyPledge;
 use App\Models\Student;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class AlumniRelationsSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class AlumniRelationsSeeder extends Seeder
     {
         $user = User::first() ?? User::factory()->create();
         $student = Student::first();
-        if (!$student) {
+        if (! $student) {
             $studentId = DB::table('students')->insertGetId([
                 'nis' => '12345678',
                 'name' => 'Budi Santoso',

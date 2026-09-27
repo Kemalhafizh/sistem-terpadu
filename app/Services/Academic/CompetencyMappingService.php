@@ -65,6 +65,7 @@ class CompetencyMappingService
     public function getClassCompetencyHeatmap(int $subjectId): array
     {
         $outcomes = LearningOutcome::with('objectives.achievements.student')->where('subject_id', $subjectId)->get();
+
         return [
             'outcomes' => $outcomes,
             'total_objectives' => $outcomes->pluck('objectives')->flatten()->count(),

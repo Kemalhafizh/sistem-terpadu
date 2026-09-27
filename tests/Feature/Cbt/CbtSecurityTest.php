@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\StudentCheatedEvent;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Exam;
@@ -9,7 +10,6 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
 use App\Services\CbtService;
-use App\Events\StudentCheatedEvent;
 use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
@@ -40,7 +40,7 @@ beforeEach(function () {
         $this->questions[] = QuestionBank::create([
             'subject_id' => $this->subject->id,
             'created_by' => $this->teacher->id,
-            'question_text' => "Test question " . ($i + 1),
+            'question_text' => 'Test question '.($i + 1),
             'type' => 'multiple_choice',
             'options' => ['A' => 'Option A', 'B' => 'Option B', 'C' => 'Option C', 'D' => 'Option D'],
             'correct_answer' => $correct,
@@ -74,7 +74,7 @@ beforeEach(function () {
         $this->exam->questions()->attach($q->id, ['order' => $idx + 1, 'weight' => 1.00]);
     }
 
-    $this->cbtService = new CbtService();
+    $this->cbtService = new CbtService;
 });
 
 // ================================================================

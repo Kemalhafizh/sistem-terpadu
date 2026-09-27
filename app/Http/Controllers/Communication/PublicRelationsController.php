@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Communication;
 
 use App\Http\Controllers\Controller;
-use App\Models\PressRelease;
 use App\Models\MediaContact;
+use App\Models\PressRelease;
 use Illuminate\Http\Request;
 
 class PublicRelationsController extends Controller
@@ -12,6 +12,7 @@ class PublicRelationsController extends Controller
     public function pressReleases()
     {
         $releases = PressRelease::with('author')->get();
+
         return view('pr.press-releases', compact('releases'));
     }
 
@@ -23,12 +24,14 @@ class PublicRelationsController extends Controller
     public function storeRelease(Request $request)
     {
         PressRelease::create($request->all());
+
         return redirect()->route('pr.press_releases');
     }
 
     public function contacts()
     {
         $contacts = MediaContact::all();
+
         return view('pr.media-database', compact('contacts'));
     }
 
@@ -40,6 +43,7 @@ class PublicRelationsController extends Controller
     public function storeContact(Request $request)
     {
         MediaContact::create($request->all());
+
         return redirect()->route('pr.contacts');
     }
 

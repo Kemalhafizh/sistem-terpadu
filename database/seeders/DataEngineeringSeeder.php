@@ -1,18 +1,22 @@
 <?php
+
 namespace Database\Seeders;
-use Illuminate\Database\Seeder;
-use App\Models\EventStream;
-use App\Models\NlqSchemaMap;
-use App\Models\NlqQueryLog;
-use App\Models\ConditionalReport;
-use App\Models\ReportScheduleLog;
-use App\Models\DataQualityRule;
+
 use App\Models\AnomalyRecord;
+use App\Models\ConditionalReport;
+use App\Models\DataQualityRule;
+use App\Models\EventStream;
+use App\Models\NlqQueryLog;
+use App\Models\NlqSchemaMap;
+use App\Models\ReportScheduleLog;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-class DataEngineeringSeeder extends Seeder {
-    public function run(): void {
+class DataEngineeringSeeder extends Seeder
+{
+    public function run(): void
+    {
         $admin = User::first() ?? User::factory()->create();
 
         EventStream::create([

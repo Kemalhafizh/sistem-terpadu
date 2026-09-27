@@ -4,7 +4,6 @@ use App\Models\MediaAsset;
 use App\Models\MediaFolder;
 use App\Models\User;
 use App\Services\Content\MediaAssetService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Admin Media DAM']);

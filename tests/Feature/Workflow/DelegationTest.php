@@ -1,10 +1,10 @@
 <?php
 
+use App\Models\Student;
 use App\Models\User;
+use App\Models\WorkflowApproval;
 use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
-use App\Models\WorkflowApproval;
-use App\Models\Student;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([
@@ -22,7 +22,7 @@ beforeEach(function () {
         'code' => 'OSIS_ACT',
         'description' => 'Workflow untuk persetujuan kegiatan.',
         'steps' => [
-            ['order' => 1, 'role' => 'admin', 'sla_hours' => 24]
+            ['order' => 1, 'role' => 'admin', 'sla_hours' => 24],
         ],
         'is_active' => true,
     ]);
@@ -58,7 +58,7 @@ test('admin can delegate pending approval step to another user', function () {
     ]);
 
     $response->assertRedirect(route('workflows.pending'));
-    
+
     $this->approval->refresh();
     expect($this->approval->delegated_to_id)->toBe($this->waka->id);
     expect($this->approval->remarks)->toContain('Didelegasikan dari Admin Utama ke Waka Kesiswaan');

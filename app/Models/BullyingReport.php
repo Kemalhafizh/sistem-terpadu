@@ -12,7 +12,7 @@ class BullyingReport extends Model
     protected $fillable = [
         'ticket_number', 'description', 'type', 'severity', 'location', 'incident_date',
         'is_anonymous', 'reporter_id', 'reporter_alias', 'status', 'assigned_to',
-        'investigation_notes', 'action_taken', 'follow_up_plan', 'is_escalated'
+        'investigation_notes', 'action_taken', 'follow_up_plan', 'is_escalated',
     ];
 
     protected $casts = [

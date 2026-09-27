@@ -31,6 +31,7 @@ class KpiController extends Controller
     public function report($id)
     {
         $kpi = KeyPerformanceIndicator::with('measurements')->findOrFail($id);
+
         return view('strategic.kpi.report', compact('kpi'));
     }
 }

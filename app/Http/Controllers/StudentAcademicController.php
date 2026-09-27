@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicYear;
+use App\Models\DailyAssessmentScore;
 use App\Models\Grade;
 use App\Models\ReportCard;
 use App\Models\Student;
@@ -48,7 +49,7 @@ class StudentAcademicController extends Controller
 
         $activeYear = AcademicYear::current();
 
-        $dailyScores = \App\Models\DailyAssessmentScore::where('student_id', $student->id)
+        $dailyScores = DailyAssessmentScore::where('student_id', $student->id)
             ->whereHas('dailyAssessment', function ($q) use ($activeYear) {
                 if ($activeYear) {
                     $q->where('academic_year_id', $activeYear->id);

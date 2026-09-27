@@ -15,7 +15,7 @@ class TeacherTodoController extends Controller
     {
         $user = Auth::user();
 
-        if (!in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
             abort(403);
         }
 
@@ -46,7 +46,7 @@ class TeacherTodoController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -54,12 +54,12 @@ class TeacherTodoController extends Controller
         $sort = $request->get('sort', 'due_date');
         if ($sort === 'due_date') {
             $query->orderByRaw('due_date IS NULL ASC')
-                  ->orderBy('due_date', 'asc')
-                  ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END");
+                ->orderBy('due_date', 'asc')
+                ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END");
         } elseif ($sort === 'priority') {
             $query->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END")
-                  ->orderByRaw('due_date IS NULL ASC')
-                  ->orderBy('due_date', 'asc');
+                ->orderByRaw('due_date IS NULL ASC')
+                ->orderBy('due_date', 'asc');
         } elseif ($sort === 'created') {
             $query->latest();
         } elseif ($sort === 'category') {
@@ -93,7 +93,7 @@ class TeacherTodoController extends Controller
     {
         $user = Auth::user();
 
-        if (!in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
             abort(403);
         }
 
@@ -137,8 +137,8 @@ class TeacherTodoController extends Controller
         }
 
         $todo->update([
-            'is_completed' => !$todo->is_completed,
-            'completed_at' => !$todo->is_completed ? now() : null,
+            'is_completed' => ! $todo->is_completed,
+            'completed_at' => ! $todo->is_completed ? now() : null,
         ]);
 
         if (request()->expectsJson()) {
@@ -220,7 +220,7 @@ class TeacherTodoController extends Controller
     {
         $user = Auth::user();
 
-        if (!in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
             abort(403);
         }
 
@@ -228,10 +228,10 @@ class TeacherTodoController extends Controller
             ->pending()
             ->where(function ($q) {
                 $q->whereDate('due_date', now()->toDateString())
-                  ->orWhere(function ($q2) {
-                      $q2->whereNotNull('due_date')
-                         ->whereDate('due_date', '<', now()->toDateString());
-                  });
+                    ->orWhere(function ($q2) {
+                        $q2->whereNotNull('due_date')
+                            ->whereDate('due_date', '<', now()->toDateString());
+                    });
             })
             ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END")
             ->orderBy('due_date')

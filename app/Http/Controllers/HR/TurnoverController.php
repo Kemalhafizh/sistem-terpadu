@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ExitInterview;
+use Illuminate\Http\Request;
 
 class TurnoverController extends Controller
 {
@@ -16,6 +16,7 @@ class TurnoverController extends Controller
     public function exitInterviews()
     {
         $interviews = ExitInterview::all();
+
         return view('turnover.exit-interviews', compact('interviews'));
     }
 

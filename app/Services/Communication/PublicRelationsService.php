@@ -3,7 +3,6 @@
 namespace App\Services\Communication;
 
 use App\Models\PressRelease;
-use App\Models\MediaContact;
 
 class PublicRelationsService
 {
@@ -18,12 +17,14 @@ class PublicRelationsService
             'distributed_to' => $mediaContactIds,
             'status' => 'published',
         ]);
+
         return true;
     }
 
     public function logMediaPickup(PressRelease $release)
     {
         $release->increment('media_pickup_count');
+
         return $release;
     }
 }

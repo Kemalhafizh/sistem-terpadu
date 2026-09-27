@@ -119,7 +119,7 @@ class DigitalSignatureService
     public function generateVerificationCode(): string
     {
         do {
-            $code = 'SISTA-DOC-' . strtoupper(Str::random(12));
+            $code = 'SISTA-DOC-'.strtoupper(Str::random(12));
         } while (DocumentSignature::where('qr_verification_code', $code)->exists());
 
         return $code;

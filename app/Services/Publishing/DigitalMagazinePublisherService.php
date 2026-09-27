@@ -17,7 +17,7 @@ class DigitalMagazinePublisherService
     public function saveMagazine(User $author, array $data, ?int $magazineId = null): DigitalMagazine
     {
         $title = $data['title'] ?? 'Edisi Majalah Sultan Agung 1';
-        $slug = Str::slug($title) . '-' . time();
+        $slug = Str::slug($title).'-'.time();
         $payload = [
             'title' => $title,
             'slug' => $slug,
@@ -33,6 +33,7 @@ class DigitalMagazinePublisherService
             $magazine = DigitalMagazine::find($magazineId);
             if ($magazine) {
                 $magazine->update($payload);
+
                 return $magazine;
             }
         }

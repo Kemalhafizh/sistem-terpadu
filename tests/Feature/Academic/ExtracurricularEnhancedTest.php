@@ -2,13 +2,11 @@
 
 /** @var TestCase|stdClass $this */
 
+use App\Models\AcademicYear;
 use App\Models\Extracurricular;
 use App\Models\ExtracurricularMember;
-use App\Models\AcademicYear;
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -24,10 +22,10 @@ beforeEach(function () {
 
     // 2. Setup Academic Data
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true, 'year' => '2025/2026']);
-    
+
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
-        'status' => 'active'
+        'status' => 'active',
     ]);
 
     // 3. Setup Extracurricular
@@ -122,8 +120,8 @@ test('advisor can log achievements and input grading in batch', function () {
                 'member_id' => $this->member->id,
                 'grade' => 'A',
                 'description' => 'Siswa sangat aktif mengikuti kegiatan.',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $gradeResponse->assertRedirect();

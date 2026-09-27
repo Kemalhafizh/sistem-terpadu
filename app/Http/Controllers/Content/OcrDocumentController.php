@@ -32,12 +32,12 @@ class OcrDocumentController extends Controller
         ]);
 
         $userId = auth()->id();
-        $filePath = "ocr_scans/" . time() . '_' . $request->file_name;
+        $filePath = 'ocr_scans/'.time().'_'.$request->file_name;
 
         $doc = $ocrService->processDocument($filePath, $request->document_type, $userId);
 
         return redirect()->route('ocr.review', $doc->id)
-            ->with('success', "Dokumen [{$doc->document_type}] berhasil di-ekstraksi oleh OCR Engine (Confidence: " . ($doc->confidence_score * 100) . "%)!");
+            ->with('success', "Dokumen [{$doc->document_type}] berhasil di-ekstraksi oleh OCR Engine (Confidence: ".($doc->confidence_score * 100).'%)!');
     }
 
     /**

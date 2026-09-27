@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Family\HomeworkCopilotController;
 use App\Http\Controllers\Family\ClassFeedController;
 use App\Http\Controllers\Family\FamilyLearningPlanController;
+use App\Http\Controllers\Family\HomeworkCopilotController;
 use App\Http\Controllers\Family\ParentSkillController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('homework-copilot')->name('homework_copilot.')->group(function () {

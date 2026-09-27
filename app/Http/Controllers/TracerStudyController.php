@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlumniData;
-use App\Models\TracerResponse;
 use App\Models\Student;
-use App\Services\AlumniService;
+use App\Models\TracerResponse;
 use App\Services\AlumniEnhancedService;
+use App\Services\AlumniService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TracerStudyController extends Controller
 {
     protected AlumniService $alumniService;
+
     protected AlumniEnhancedService $alumniEnhancedService;
 
     public function __construct(AlumniService $alumniService, AlumniEnhancedService $alumniEnhancedService)
@@ -31,7 +32,7 @@ class TracerStudyController extends Controller
 
         if ($user->role === 'admin' || $user->role === 'superadmin') {
             $alumni = AlumniData::first();
-            if (!$alumni) {
+            if (! $alumni) {
                 $student = Student::factory()->create(['status' => 'alumni']);
                 $alumni = AlumniData::factory()->create(['student_id' => $student->id]);
             }
@@ -40,7 +41,7 @@ class TracerStudyController extends Controller
             return view('alumni.tracer.form', compact('alumni', 'existingResponse'));
         }
 
-        if (!$student || $student->status !== 'alumni' || !$student->alumniData) {
+        if (! $student || $student->status !== 'alumni' || ! $student->alumniData) {
             abort(403, 'Hanya siswa dengan status Alumni yang dapat mengakses dan mengisi kuesioner Tracer Study ini.');
         }
 
@@ -60,12 +61,12 @@ class TracerStudyController extends Controller
 
         if ($user->role === 'admin' || $user->role === 'superadmin') {
             $alumni = AlumniData::first();
-            if (!$alumni) {
+            if (! $alumni) {
                 $student = Student::factory()->create(['status' => 'alumni']);
                 $alumni = AlumniData::factory()->create(['student_id' => $student->id]);
             }
         } else {
-            if (!$student || $student->status !== 'alumni' || !$student->alumniData) {
+            if (! $student || $student->status !== 'alumni' || ! $student->alumniData) {
                 abort(403, 'Akses ditolak. Anda tidak terdaftar sebagai alumni.');
             }
             $alumni = $student->alumniData;
@@ -76,7 +77,7 @@ class TracerStudyController extends Controller
             'institution_name' => 'nullable|string|max:255',
             'job_title' => 'nullable|string|max:255',
             'employer_name' => 'nullable|string|max:255',
-            'entry_year' => 'nullable|integer|min:2000|max:' . (date('Y') + 1),
+            'entry_year' => 'nullable|integer|min:2000|max:'.(date('Y') + 1),
             'salary_range' => 'nullable|in:< 3M,3M - 5M,5M - 10M,> 10M',
             'study_major' => 'nullable|string|max:255',
             'relevance_score' => 'required|integer|min:1|max:5',
@@ -111,7 +112,7 @@ class TracerStudyController extends Controller
             'institution_name' => 'nullable|string|max:255',
             'job_title' => 'nullable|string|max:255',
             'employer_name' => 'nullable|string|max:255',
-            'entry_year' => 'nullable|integer|min:2000|max:' . (date('Y') + 1),
+            'entry_year' => 'nullable|integer|min:2000|max:'.(date('Y') + 1),
             'salary_range' => 'nullable|in:< 3M,3M - 5M,5M - 10M,> 10M',
             'study_major' => 'nullable|string|max:255',
             'relevance_score' => 'required|integer|min:1|max:5',
@@ -143,7 +144,7 @@ class TracerStudyController extends Controller
     public function comparison(Request $request)
     {
         $graduationYears = AlumniData::select('graduation_year')->distinct()->orderBy('graduation_year', 'desc')->pluck('graduation_year');
-        
+
         $yearA = $request->year_a ?? $graduationYears->first() ?? date('Y');
         $yearB = $request->year_b ?? $graduationYears->skip(1)->first() ?? (date('Y') - 1);
 
@@ -181,19 +182,19 @@ class TracerStudyController extends Controller
     public function exportExcel()
     {
         $headers = [
-            'Content-type'        => 'text/csv',
+            'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=respon_tracer_study_sma_isa1.csv',
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0'
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
-        $callback = function() {
+        $callback = function () {
             $file = fopen('php://output', 'w');
             fputcsv($file, [
-                'Nama Alumni', 'Angkatan', 'Aktivitas Saat Ini', 'Instansi/Universitas', 
-                'Pekerjaan', 'Tempat Bekerja', 'Tahun Mulai', 'Kisaran Gaji', 
-                'Program Studi', 'Skor Relevansi', 'Skor Kepuasan', 'Saran Kurikulum'
+                'Nama Alumni', 'Angkatan', 'Aktivitas Saat Ini', 'Instansi/Universitas',
+                'Pekerjaan', 'Tempat Bekerja', 'Tahun Mulai', 'Kisaran Gaji',
+                'Program Studi', 'Skor Relevansi', 'Skor Kepuasan', 'Saran Kurikulum',
             ]);
 
             $responses = TracerResponse::with(['alumni.student'])->get();
@@ -210,7 +211,7 @@ class TracerStudyController extends Controller
                     $res->study_major ?? '-',
                     $res->relevance_score,
                     $res->satisfaction_score,
-                    $res->suggestions ?? '-'
+                    $res->suggestions ?? '-',
                 ]);
             }
             fclose($file);

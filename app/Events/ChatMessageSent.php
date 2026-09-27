@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\ParentMessage;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -27,7 +26,7 @@ class ChatMessageSent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat.' . $this->message->student_id),
+            new PrivateChannel('chat.'.$this->message->student_id),
         ];
     }
 

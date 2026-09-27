@@ -1,15 +1,43 @@
 <?php
 
+use App\Http\Controllers\Academic\AcademicPathwayController;
+use App\Http\Controllers\Academic\AiCopilotController;
+use App\Http\Controllers\Academic\CompetencyMappingController;
+use App\Http\Controllers\Academic\ScormController;
+use App\Http\Controllers\Academic\VirtualClassroomController;
 use App\Http\Controllers\AcademicEventController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\UserPreferenceController;
+use App\Http\Controllers\Admin\ApiGatewayMonitorController;
+use App\Http\Controllers\Admin\ApmObservabilityController;
+use App\Http\Controllers\Admin\AppearanceController;
+use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
+use App\Http\Controllers\Admin\BpaRuleEngineController;
+use App\Http\Controllers\Admin\CacheMonitorController;
+use App\Http\Controllers\Admin\DeveloperPortalController;
+use App\Http\Controllers\Admin\DisasterRecoveryController;
+use App\Http\Controllers\Admin\EdwOlapController;
+use App\Http\Controllers\Admin\FeatureFlagController;
+use App\Http\Controllers\Admin\IntegrationController;
+use App\Http\Controllers\Admin\ObservabilityController;
+use App\Http\Controllers\Admin\PdplPrivacyController;
 use App\Http\Controllers\Admin\QueueMonitorController;
-use App\Http\Controllers\Admin\SecurityController;
+use App\Http\Controllers\Admin\RbacAuditController;
 use App\Http\Controllers\Admin\ReportBuilderController;
 use App\Http\Controllers\Admin\ScheduledReportController;
-use App\Http\Controllers\Admin\IntegrationController;
+use App\Http\Controllers\Admin\SchoolBrandingController;
+use App\Http\Controllers\Admin\SecurityController;
+use App\Http\Controllers\Admin\SecurityDashboardController;
+use App\Http\Controllers\Admin\SecurityTwoFactorController;
+use App\Http\Controllers\Admin\SyncController;
+use App\Http\Controllers\Admin\UatFeedbackController;
+use App\Http\Controllers\Admin\VendorSlaController;
+use App\Http\Controllers\Admin\WebhookHubController;
 use App\Http\Controllers\AlumniController;
+use App\Http\Controllers\Analytics\AcademicBenchmarkController;
+use App\Http\Controllers\Analytics\FinancialForecastingController;
+use App\Http\Controllers\Analytics\ParentEngagementController;
+use App\Http\Controllers\Analytics\PredictivePerformanceController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AnalyticsExportController;
 use App\Http\Controllers\AnnouncementController;
@@ -23,92 +51,134 @@ use App\Http\Controllers\Auth\GoogleSsoController;
 use App\Http\Controllers\Auth\MobileSsoBridgeController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\CareerOpportunityController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\CmsController;
+use App\Http\Controllers\Communication\CalendarController;
+use App\Http\Controllers\Communication\DocumentSignatureController;
+use App\Http\Controllers\Communication\MessagingController;
+use App\Http\Controllers\Communication\NotificationCenterController;
+use App\Http\Controllers\Communication\ResourceBookingController;
+use App\Http\Controllers\Community\MentorshipController;
+use App\Http\Controllers\Community\MobileAppGatewayController;
+use App\Http\Controllers\Community\PartnershipController;
+use App\Http\Controllers\Community\VolunteerController;
+use App\Http\Controllers\Compliance\AuditConsoleController;
+use App\Http\Controllers\Compliance\DapodikExportController;
+use App\Http\Controllers\Compliance\DataRetentionController;
+use App\Http\Controllers\Compliance\LegalContractController;
+use App\Http\Controllers\ComplianceController;
+use App\Http\Controllers\Content\ExportEngineController;
+use App\Http\Controllers\Content\MediaAssetController;
+use App\Http\Controllers\Content\OcrDocumentController;
 use App\Http\Controllers\CounselingController;
+use App\Http\Controllers\CurriculumController;
+use App\Http\Controllers\DailyAssessmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Deployment\E2eTestController;
+use App\Http\Controllers\Deployment\EnvironmentConfigController;
+use App\Http\Controllers\Deployment\ReleaseManagerController;
+use App\Http\Controllers\EdsController;
 use App\Http\Controllers\ElearningController;
 use App\Http\Controllers\ElearningSecureController;
-use App\Http\Controllers\FinanceController;
-use App\Http\Controllers\FinancialReportController;
-use App\Http\Controllers\Finance\WadiahController;
+use App\Http\Controllers\EventAttendanceController;
+use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\Finance\CanteenController;
 use App\Http\Controllers\Finance\CharityController;
 use App\Http\Controllers\Finance\FinancialAuditController;
-use App\Http\Controllers\Admin\SecurityDashboardController;
-use App\Http\Controllers\Admin\SchoolBrandingController;
-use App\Http\Controllers\Admin\CacheMonitorController;
-use App\Http\Controllers\Admin\ApiGatewayMonitorController;
-use App\Http\Controllers\Admin\ApmObservabilityController;
-use App\Http\Controllers\Admin\RbacAuditController;
-use App\Http\Controllers\Admin\PdplPrivacyController;
-use App\Http\Controllers\Admin\FeatureFlagController;
-use App\Http\Controllers\Admin\DisasterRecoveryController;
-use App\Http\Controllers\Admin\SecurityTwoFactorController;
-use App\Http\Controllers\Admin\EdwOlapController;
-use App\Http\Controllers\Admin\VendorSlaController;
-use App\Http\Controllers\Admin\WebhookHubController;
-use App\Http\Controllers\Admin\BpaRuleEngineController;
+use App\Http\Controllers\Finance\WadiahController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\Financial\BudgetPlanningController;
+use App\Http\Controllers\Financial\CostCenterController;
+use App\Http\Controllers\Financial\ProcurementController;
+use App\Http\Controllers\Financial\ScholarshipController;
+use App\Http\Controllers\FinancialReportController;
+use App\Http\Controllers\ForumController;
+use App\Http\Controllers\GamificationController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\Grc\AccreditationController;
+use App\Http\Controllers\Grc\QualityAssuranceController;
+use App\Http\Controllers\Grc\RiskManagementController;
+use App\Http\Controllers\Grc\SopGovernanceController;
+use App\Http\Controllers\Growth\P5AssessmentController;
+use App\Http\Controllers\Growth\PtcSchedulerController;
+use App\Http\Controllers\Growth\StudentLifecycleController;
+use App\Http\Controllers\Growth\WellbeingController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
 use App\Http\Controllers\HRD\PayrollController;
+use App\Http\Controllers\HumanCapital\CpdTrackerController;
+use App\Http\Controllers\HumanCapital\Evaluation360Controller;
+use App\Http\Controllers\HumanCapital\SuccessionPlanningController;
+use App\Http\Controllers\HumanCapital\WorkloadBalancingController;
 use App\Http\Controllers\ImpersonateController;
+use App\Http\Controllers\ImportExportController;
+use App\Http\Controllers\Integration\ApiDocumentationController;
+use App\Http\Controllers\Integration\ApiGatewayController;
+use App\Http\Controllers\Integration\EtlController;
+use App\Http\Controllers\Integration\PluginController;
 use App\Http\Controllers\LetterController;
 use App\Http\Controllers\LibraryCirculationController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MeetingNoteController;
+use App\Http\Controllers\MpkController;
 use App\Http\Controllers\MutabaahController;
 use App\Http\Controllers\MutationController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Operations\BusRoutingController;
+use App\Http\Controllers\Operations\IotFacilityController;
+use App\Http\Controllers\Operations\UtilityTrackerController;
+use App\Http\Controllers\OsisController;
 use App\Http\Controllers\ParentPortalController;
+use App\Http\Controllers\Performance\AssetPerformanceController;
+use App\Http\Controllers\Performance\LoadTestController;
+use App\Http\Controllers\Performance\QueryPerformanceController;
+use App\Http\Controllers\Performance\ScalingController;
+use App\Http\Controllers\Platform\AiRecommendationController;
+use App\Http\Controllers\Platform\DashboardBuilderController;
+use App\Http\Controllers\Platform\DeveloperApiController;
+use App\Http\Controllers\Platform\DigitalTwinController;
 use App\Http\Controllers\PointCategoryController;
 use App\Http\Controllers\PointController;
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicSiteController;
+use App\Http\Controllers\PwaController;
+use App\Http\Controllers\QuestionBankController;
 use App\Http\Controllers\ReportCardController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SmartAlertController;
 use App\Http\Controllers\SpmbController;
+use App\Http\Controllers\Student\CertificateController;
+use App\Http\Controllers\Student\CourseEvaluationController;
+use App\Http\Controllers\Student\DigitalIDController;
+use App\Http\Controllers\Student\StudentPortalController;
 use App\Http\Controllers\StudentAcademicController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFinanceController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TahfidzController;
-use App\Http\Controllers\EventAttendanceController;
+use App\Http\Controllers\TeacherTodoController;
 use App\Http\Controllers\TeachingJournalController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TracerStudyController;
 use App\Http\Controllers\UksController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPreferenceController;
+use App\Http\Controllers\UX\AccessibilityController;
+use App\Http\Controllers\UX\DesignSystemController;
+use App\Http\Controllers\UX\PrintEngineController;
+use App\Http\Controllers\UX\TranslationController;
+use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
-use App\Http\Controllers\ForumController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PublicSiteController;
-use App\Http\Controllers\CmsController;
-use App\Http\Controllers\SurveyController;
-use App\Http\Controllers\ExtracurricularController;
-use App\Http\Controllers\OsisController;
-use App\Http\Controllers\CurriculumController;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\MpkController;
-use App\Http\Controllers\ExamController;
-use App\Http\Controllers\QuestionBankController;
-use App\Http\Controllers\SmartAlertController;
 use App\Http\Controllers\WorkflowController;
-use App\Http\Controllers\PortfolioController;
-use App\Http\Controllers\ImportExportController;
-use App\Http\Controllers\ChatbotController;
-use App\Http\Controllers\GamificationController;
-use App\Http\Controllers\DailyAssessmentController;
-use App\Http\Controllers\Admin\SyncController;
-use App\Http\Controllers\TeacherTodoController;
-use App\Http\Controllers\Academic\AiCopilotController;
-use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
-
-
-
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
-Route::get('/verify-document/{code}', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'verifyPublic'])->name('documents.verify_public');
+Route::get('/verify-document/{code}', [DocumentSignatureController::class, 'verifyPublic'])->name('documents.verify_public');
 Route::get('/tentang-kami', [PublicSiteController::class, 'about'])->name('public.about');
 Route::get('/kontak', [PublicSiteController::class, 'contact'])->name('public.contact');
 Route::get('/fasilitas', [PublicSiteController::class, 'facilities'])->name('public.facilities');
@@ -171,7 +241,6 @@ Route::middleware('auth')->group(function () {
     Route::get('library/reading-history', [LibraryController::class, 'studentReadingHistory'])->name('library.reading-history');
     Route::get('library/recommendations', [LibraryController::class, 'recommendations'])->name('library.recommendations');
 
-
     // Career & Scholarship Portal (read-only untuk semua)
     Route::get('career-portal', [CareerOpportunityController::class, 'index'])->name('career-portal.index');
 
@@ -223,393 +292,393 @@ Route::middleware('auth')->group(function () {
     Route::get('admin/impersonate-leave', [ImpersonateController::class, 'leave'])->name('admin.impersonate.leave');
 
     // Unified Notification Center & Enterprise Inbox
-    Route::get('notifications', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'index'])->name('notifications.index');
-    Route::get('notifications/preferences', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'preferences'])->name('notifications.preferences');
-    Route::post('notifications/preferences', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'updatePreferences'])->name('notifications.preferences.update');
-    Route::post('notifications/read-all', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'markAllAsRead'])->name('notifications.read_all');
-    Route::post('notifications/mark-all-read', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'markAllAsRead'])->name('notifications.markAllRead');
-    Route::post('notifications/{id}/read', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('notifications/test-dispatch', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'testDispatch'])->name('notifications.test_dispatch');
-    Route::get('notifications/unread-count', [\App\Http\Controllers\Communication\NotificationCenterController::class, 'unreadCount'])->name('notifications.unread_count');
+    Route::get('notifications', [NotificationCenterController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/preferences', [NotificationCenterController::class, 'preferences'])->name('notifications.preferences');
+    Route::post('notifications/preferences', [NotificationCenterController::class, 'updatePreferences'])->name('notifications.preferences.update');
+    Route::post('notifications/read-all', [NotificationCenterController::class, 'markAllAsRead'])->name('notifications.read_all');
+    Route::post('notifications/mark-all-read', [NotificationCenterController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+    Route::post('notifications/{id}/read', [NotificationCenterController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('notifications/test-dispatch', [NotificationCenterController::class, 'testDispatch'])->name('notifications.test_dispatch');
+    Route::get('notifications/unread-count', [NotificationCenterController::class, 'unreadCount'])->name('notifications.unread_count');
     // Internal Messaging & Threaded Discussion System
-    Route::get('messages', [\App\Http\Controllers\Communication\MessagingController::class, 'index'])->name('messages.index');
-    Route::get('messages/compose', [\App\Http\Controllers\Communication\MessagingController::class, 'compose'])->name('messages.compose');
-    Route::post('messages', [\App\Http\Controllers\Communication\MessagingController::class, 'store'])->name('messages.store');
-    Route::post('messages/{conversation}/reply', [\App\Http\Controllers\Communication\MessagingController::class, 'reply'])->name('messages.reply');
-    Route::get('messages/search-users', [\App\Http\Controllers\Communication\MessagingController::class, 'searchUsers'])->name('messages.search_users');
+    Route::get('messages', [MessagingController::class, 'index'])->name('messages.index');
+    Route::get('messages/compose', [MessagingController::class, 'compose'])->name('messages.compose');
+    Route::post('messages', [MessagingController::class, 'store'])->name('messages.store');
+    Route::post('messages/{conversation}/reply', [MessagingController::class, 'reply'])->name('messages.reply');
+    Route::get('messages/search-users', [MessagingController::class, 'searchUsers'])->name('messages.search_users');
 
     // Digital Signature & E-Stamp Document Workflow
-    Route::get('documents/pending-signatures', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'pendingDocuments'])->name('documents.pending_signatures');
-    Route::get('documents/signatures/{id}/sign', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'signForm'])->name('documents.sign_form');
-    Route::post('documents/signatures/{id}/sign', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'signDocument'])->name('documents.sign');
-    Route::post('documents/test-request', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'testRequest'])->name('documents.test_request');
-    Route::get('documents/signature-history', [\App\Http\Controllers\Communication\DocumentSignatureController::class, 'signatureHistory'])->name('documents.signature_history');
+    Route::get('documents/pending-signatures', [DocumentSignatureController::class, 'pendingDocuments'])->name('documents.pending_signatures');
+    Route::get('documents/signatures/{id}/sign', [DocumentSignatureController::class, 'signForm'])->name('documents.sign_form');
+    Route::post('documents/signatures/{id}/sign', [DocumentSignatureController::class, 'signDocument'])->name('documents.sign');
+    Route::post('documents/test-request', [DocumentSignatureController::class, 'testRequest'])->name('documents.test_request');
+    Route::get('documents/signature-history', [DocumentSignatureController::class, 'signatureHistory'])->name('documents.signature_history');
     // Enterprise Calendar & Resource Booking System
-    Route::get('calendar-hub', [\App\Http\Controllers\Communication\CalendarController::class, 'index'])->name('calendar.index');
-    Route::get('calendar-hub/events-json', [\App\Http\Controllers\Communication\CalendarController::class, 'eventsJson'])->name('calendar.events_json');
-    Route::post('calendar-hub/events', [\App\Http\Controllers\Communication\CalendarController::class, 'store'])->name('calendar.store');
-    Route::put('calendar-hub/events/{id}', [\App\Http\Controllers\Communication\CalendarController::class, 'update'])->name('calendar.update');
-    Route::delete('calendar-hub/events/{id}', [\App\Http\Controllers\Communication\CalendarController::class, 'destroy'])->name('calendar.destroy');
-    Route::post('calendar-hub/events/{id}/rsvp', [\App\Http\Controllers\Communication\CalendarController::class, 'rsvp'])->name('calendar.rsvp');
+    Route::get('calendar-hub', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('calendar-hub/events-json', [CalendarController::class, 'eventsJson'])->name('calendar.events_json');
+    Route::post('calendar-hub/events', [CalendarController::class, 'store'])->name('calendar.store');
+    Route::put('calendar-hub/events/{id}', [CalendarController::class, 'update'])->name('calendar.update');
+    Route::delete('calendar-hub/events/{id}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
+    Route::post('calendar-hub/events/{id}/rsvp', [CalendarController::class, 'rsvp'])->name('calendar.rsvp');
 
-    Route::get('resource-bookings', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'index'])->name('resource_bookings.index');
-    Route::post('resource-bookings', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
-    Route::post('resource-bookings/{id}/approve', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');
-    Route::post('resource-bookings/{id}/reject', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
-    Route::get('resource-bookings/check', [\App\Http\Controllers\Communication\ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
+    Route::get('resource-bookings', [ResourceBookingController::class, 'index'])->name('resource_bookings.index');
+    Route::post('resource-bookings', [ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
+    Route::post('resource-bookings/{id}/approve', [ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');
+    Route::post('resource-bookings/{id}/reject', [ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
+    Route::get('resource-bookings/check', [ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
 
     // FASE 33: Enterprise Financial Governance & Budgetary Control Suite
     // 33.1: RAPBS Multi-Year Budget Planning & Variance
-    Route::get('financial/budget', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'dashboard'])->name('financial.budget.dashboard');
-    Route::get('financial/budget/create', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'create'])->name('financial.budget.create');
-    Route::post('financial/budget', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'store'])->name('financial.budget.store');
-    Route::get('financial/budget/{id}', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'show'])->name('financial.budget.show');
-    Route::post('financial/budget/{id}/line-items', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'storeLineItem'])->name('financial.budget.store_line_item');
-    Route::post('financial/budget/{id}/submit', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'submitApproval'])->name('financial.budget.submit');
-    Route::post('financial/budget/{id}/approve', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'approve'])->name('financial.budget.approve');
-    Route::get('financial/budget/{id}/variance', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
-    Route::get('financial/budget/{id}/forecast', [\App\Http\Controllers\Financial\BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
+    Route::get('financial/budget', [BudgetPlanningController::class, 'dashboard'])->name('financial.budget.dashboard');
+    Route::get('financial/budget/create', [BudgetPlanningController::class, 'create'])->name('financial.budget.create');
+    Route::post('financial/budget', [BudgetPlanningController::class, 'store'])->name('financial.budget.store');
+    Route::get('financial/budget/{id}', [BudgetPlanningController::class, 'show'])->name('financial.budget.show');
+    Route::post('financial/budget/{id}/line-items', [BudgetPlanningController::class, 'storeLineItem'])->name('financial.budget.store_line_item');
+    Route::post('financial/budget/{id}/submit', [BudgetPlanningController::class, 'submitApproval'])->name('financial.budget.submit');
+    Route::post('financial/budget/{id}/approve', [BudgetPlanningController::class, 'approve'])->name('financial.budget.approve');
+    Route::get('financial/budget/{id}/variance', [BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
+    Route::get('financial/budget/{id}/forecast', [BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
 
     // 33.2: Procurement & Purchase Order Workflow
-    Route::get('financial/procurement', [\App\Http\Controllers\Financial\ProcurementController::class, 'dashboard'])->name('financial.procurement.dashboard');
-    Route::get('financial/procurement/request', [\App\Http\Controllers\Financial\ProcurementController::class, 'createRequest'])->name('financial.procurement.create_request');
-    Route::post('financial/procurement/request', [\App\Http\Controllers\Financial\ProcurementController::class, 'storeRequest'])->name('financial.procurement.store_request');
-    Route::post('financial/procurement/{id}/submit', [\App\Http\Controllers\Financial\ProcurementController::class, 'submitApproval'])->name('financial.procurement.submit');
-    Route::post('financial/procurement/{id}/approve', [\App\Http\Controllers\Financial\ProcurementController::class, 'approve'])->name('financial.procurement.approve');
-    Route::post('financial/procurement/{id}/reject', [\App\Http\Controllers\Financial\ProcurementController::class, 'reject'])->name('financial.procurement.reject');
-    Route::get('financial/procurement/{id}/po', [\App\Http\Controllers\Financial\ProcurementController::class, 'createPO'])->name('financial.procurement.create_po');
-    Route::post('financial/procurement/{id}/po', [\App\Http\Controllers\Financial\ProcurementController::class, 'storePO'])->name('financial.procurement.store_po');
-    Route::post('financial/procurement/po/{poId}/grn', [\App\Http\Controllers\Financial\ProcurementController::class, 'recordGRN'])->name('financial.procurement.record_grn');
-    Route::get('financial/procurement/history', [\App\Http\Controllers\Financial\ProcurementController::class, 'history'])->name('financial.procurement.history');
+    Route::get('financial/procurement', [ProcurementController::class, 'dashboard'])->name('financial.procurement.dashboard');
+    Route::get('financial/procurement/request', [ProcurementController::class, 'createRequest'])->name('financial.procurement.create_request');
+    Route::post('financial/procurement/request', [ProcurementController::class, 'storeRequest'])->name('financial.procurement.store_request');
+    Route::post('financial/procurement/{id}/submit', [ProcurementController::class, 'submitApproval'])->name('financial.procurement.submit');
+    Route::post('financial/procurement/{id}/approve', [ProcurementController::class, 'approve'])->name('financial.procurement.approve');
+    Route::post('financial/procurement/{id}/reject', [ProcurementController::class, 'reject'])->name('financial.procurement.reject');
+    Route::get('financial/procurement/{id}/po', [ProcurementController::class, 'createPO'])->name('financial.procurement.create_po');
+    Route::post('financial/procurement/{id}/po', [ProcurementController::class, 'storePO'])->name('financial.procurement.store_po');
+    Route::post('financial/procurement/po/{poId}/grn', [ProcurementController::class, 'recordGRN'])->name('financial.procurement.record_grn');
+    Route::get('financial/procurement/history', [ProcurementController::class, 'history'])->name('financial.procurement.history');
 
     // 33.3: Scholarship & Grant Management Portal
-    Route::get('financial/scholarships', [\App\Http\Controllers\Financial\ScholarshipController::class, 'programs'])->name('financial.scholarships.programs');
-    Route::get('financial/scholarships/create', [\App\Http\Controllers\Financial\ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program');
-    Route::post('financial/scholarships', [\App\Http\Controllers\Financial\ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program');
-    Route::post('financial/scholarships/{id}/open', [\App\Http\Controllers\Financial\ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open');
-    Route::get('financial/scholarships/{programId}/apply', [\App\Http\Controllers\Financial\ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form');
-    Route::post('financial/scholarships/{programId}/apply', [\App\Http\Controllers\Financial\ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application');
-    Route::get('financial/scholarships/{programId}/review', [\App\Http\Controllers\Financial\ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review');
-    Route::post('financial/scholarships/applications/{appId}/review', [\App\Http\Controllers\Financial\ScholarshipController::class, 'review'])->name('financial.scholarships.review_action');
-    Route::get('financial/scholarships/applications/{appId}/disburse', [\App\Http\Controllers\Financial\ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form');
-    Route::post('financial/scholarships/applications/{appId}/disburse', [\App\Http\Controllers\Financial\ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
-    Route::get('financial/scholarships/report', [\App\Http\Controllers\Financial\ScholarshipController::class, 'report'])->name('financial.scholarships.report');
+    Route::get('financial/scholarships', [ScholarshipController::class, 'programs'])->name('financial.scholarships.programs');
+    Route::get('financial/scholarships/create', [ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program');
+    Route::post('financial/scholarships', [ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program');
+    Route::post('financial/scholarships/{id}/open', [ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open');
+    Route::get('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form');
+    Route::post('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application');
+    Route::get('financial/scholarships/{programId}/review', [ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review');
+    Route::post('financial/scholarships/applications/{appId}/review', [ScholarshipController::class, 'review'])->name('financial.scholarships.review_action');
+    Route::get('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form');
+    Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
+    Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report');
 
     // 33.4: Cost Center Accounting & Budget Allocation
-    Route::get('financial/cost-centers', [\App\Http\Controllers\Financial\CostCenterController::class, 'dashboard'])->name('financial.cost-centers.dashboard');
-    Route::get('financial/cost-centers/allocate', [\App\Http\Controllers\Financial\CostCenterController::class, 'allocateForm'])->name('financial.cost-centers.allocate_form');
-    Route::post('financial/cost-centers', [\App\Http\Controllers\Financial\CostCenterController::class, 'storeCostCenter'])->name('financial.cost-centers.store');
-    Route::post('financial/cost-centers/{id}/allocate', [\App\Http\Controllers\Financial\CostCenterController::class, 'storeAllocation'])->name('financial.cost-centers.store_allocation');
-    Route::post('financial/cost-centers/{id}/expense', [\App\Http\Controllers\Financial\CostCenterController::class, 'storeExpense'])->name('financial.cost-centers.store_expense');
-    Route::get('financial/cost-centers/{id}/transactions', [\App\Http\Controllers\Financial\CostCenterController::class, 'transactions'])->name('financial.cost-centers.transactions');
+    Route::get('financial/cost-centers', [CostCenterController::class, 'dashboard'])->name('financial.cost-centers.dashboard');
+    Route::get('financial/cost-centers/allocate', [CostCenterController::class, 'allocateForm'])->name('financial.cost-centers.allocate_form');
+    Route::post('financial/cost-centers', [CostCenterController::class, 'storeCostCenter'])->name('financial.cost-centers.store');
+    Route::post('financial/cost-centers/{id}/allocate', [CostCenterController::class, 'storeAllocation'])->name('financial.cost-centers.store_allocation');
+    Route::post('financial/cost-centers/{id}/expense', [CostCenterController::class, 'storeExpense'])->name('financial.cost-centers.store_expense');
+    Route::get('financial/cost-centers/{id}/transactions', [CostCenterController::class, 'transactions'])->name('financial.cost-centers.transactions');
 
     // FASE 34: Student Growth Ecosystem -- Wellbeing, Positive Behavior & Parent Conference
     // 34.1: Student Mental Health & Wellbeing Screening
-    Route::get('growth/wellbeing', [\App\Http\Controllers\Growth\WellbeingController::class, 'screenings'])->name('growth.wellbeing.screenings');
-    Route::get('growth/wellbeing/create', [\App\Http\Controllers\Growth\WellbeingController::class, 'createScreening'])->name('growth.wellbeing.create');
-    Route::post('growth/wellbeing', [\App\Http\Controllers\Growth\WellbeingController::class, 'storeScreening'])->name('growth.wellbeing.store');
-    Route::get('growth/wellbeing/{id}/fill', [\App\Http\Controllers\Growth\WellbeingController::class, 'fillScreening'])->name('growth.wellbeing.fill');
-    Route::post('growth/wellbeing/{id}/fill', [\App\Http\Controllers\Growth\WellbeingController::class, 'submitScreening'])->name('growth.wellbeing.submit');
-    Route::get('growth/wellbeing/results', [\App\Http\Controllers\Growth\WellbeingController::class, 'results'])->name('growth.wellbeing.results');
-    Route::get('growth/wellbeing/mood-journal', [\App\Http\Controllers\Growth\WellbeingController::class, 'moodJournal'])->name('growth.wellbeing.mood_journal');
-    Route::post('growth/wellbeing/mood-journal', [\App\Http\Controllers\Growth\WellbeingController::class, 'storeMoodJournal'])->name('growth.wellbeing.store_mood_journal');
+    Route::get('growth/wellbeing', [WellbeingController::class, 'screenings'])->name('growth.wellbeing.screenings');
+    Route::get('growth/wellbeing/create', [WellbeingController::class, 'createScreening'])->name('growth.wellbeing.create');
+    Route::post('growth/wellbeing', [WellbeingController::class, 'storeScreening'])->name('growth.wellbeing.store');
+    Route::get('growth/wellbeing/{id}/fill', [WellbeingController::class, 'fillScreening'])->name('growth.wellbeing.fill');
+    Route::post('growth/wellbeing/{id}/fill', [WellbeingController::class, 'submitScreening'])->name('growth.wellbeing.submit');
+    Route::get('growth/wellbeing/results', [WellbeingController::class, 'results'])->name('growth.wellbeing.results');
+    Route::get('growth/wellbeing/mood-journal', [WellbeingController::class, 'moodJournal'])->name('growth.wellbeing.mood_journal');
+    Route::post('growth/wellbeing/mood-journal', [WellbeingController::class, 'storeMoodJournal'])->name('growth.wellbeing.store_mood_journal');
 
     // 34.2: Positive Behavior & Character Report Card (P5)
-    Route::get('growth/character/dimensions', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
-    Route::get('growth/character/assess', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
-    Route::post('growth/character/assess', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'storeAssessment'])->name('growth.character.store_assessment');
-    Route::get('growth/character/student/{studentId}', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'studentReport'])->name('growth.character.student_report');
-    Route::get('growth/character/leaderboard', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'leaderboard'])->name('growth.character.leaderboard');
-    Route::post('growth/character/merit', [\App\Http\Controllers\Growth\P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
+    Route::get('growth/character/dimensions', [P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
+    Route::get('growth/character/assess', [P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
+    Route::post('growth/character/assess', [P5AssessmentController::class, 'storeAssessment'])->name('growth.character.store_assessment');
+    Route::get('growth/character/student/{studentId}', [P5AssessmentController::class, 'studentReport'])->name('growth.character.student_report');
+    Route::get('growth/character/leaderboard', [P5AssessmentController::class, 'leaderboard'])->name('growth.character.leaderboard');
+    Route::post('growth/character/merit', [P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
 
     // 34.3: Parent-Teacher Conference (PTC) Scheduler
-    Route::get('growth/ptc/sessions', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'sessions'])->name('growth.ptc.sessions');
-    Route::post('growth/ptc/sessions', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'storeSession'])->name('growth.ptc.store_session');
-    Route::get('growth/ptc/sessions/{sessionId}/slots', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
-    Route::post('growth/ptc/slots/{slotId}/book', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
-    Route::get('growth/ptc/teacher-schedule', [\App\Http\Controllers\Growth\PtcSchedulerController::class, 'teacherSchedule'])->name('growth.ptc.teacher_schedule');
+    Route::get('growth/ptc/sessions', [PtcSchedulerController::class, 'sessions'])->name('growth.ptc.sessions');
+    Route::post('growth/ptc/sessions', [PtcSchedulerController::class, 'storeSession'])->name('growth.ptc.store_session');
+    Route::get('growth/ptc/sessions/{sessionId}/slots', [PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
+    Route::post('growth/ptc/slots/{slotId}/book', [PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
+    Route::get('growth/ptc/teacher-schedule', [PtcSchedulerController::class, 'teacherSchedule'])->name('growth.ptc.teacher_schedule');
 
     // 34.4: Student Lifecycle Orchestration Engine
-    Route::get('growth/lifecycle/student/{studentId}', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'timeline'])->name('growth.lifecycle.timeline');
-    Route::post('growth/lifecycle/student/{studentId}/event', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'storeEvent'])->name('growth.lifecycle.store_event');
-    Route::get('growth/lifecycle/retention', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'retentionDashboard'])->name('growth.lifecycle.retention');
-    Route::get('growth/lifecycle/at-risk', [\App\Http\Controllers\Growth\StudentLifecycleController::class, 'atRiskStudents'])->name('growth.lifecycle.at_risk');
+    Route::get('growth/lifecycle/student/{studentId}', [StudentLifecycleController::class, 'timeline'])->name('growth.lifecycle.timeline');
+    Route::post('growth/lifecycle/student/{studentId}/event', [StudentLifecycleController::class, 'storeEvent'])->name('growth.lifecycle.store_event');
+    Route::get('growth/lifecycle/retention', [StudentLifecycleController::class, 'retentionDashboard'])->name('growth.lifecycle.retention');
+    Route::get('growth/lifecycle/at-risk', [StudentLifecycleController::class, 'atRiskStudents'])->name('growth.lifecycle.at_risk');
 
     // FASE 35: Enterprise Academic Intelligence -- Kurikulum Merdeka & LMS 2.0
     // 35.1: Competency Mapping (CP/TP/ATP)
-    Route::get('academic/competency/outcomes', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'outcomes'])->name('academic.competency.outcomes');
-    Route::post('academic/competency/outcomes', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'storeOutcome'])->name('academic.competency.store_outcome');
-    Route::post('academic/competency/outcomes/{outcomeId}/objectives', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'storeObjective'])->name('academic.competency.store_objective');
-    Route::get('academic/competency/objectives/{objectiveId}/atp', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'atpMapping'])->name('academic.competency.atp_mapping');
-    Route::post('academic/competency/objectives/{objectiveId}/atp', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'storeAtp'])->name('academic.competency.store_atp');
-    Route::get('academic/competency/subjects/{subjectId}/heatmap', [\App\Http\Controllers\Academic\CompetencyMappingController::class, 'classHeatmap'])->name('academic.competency.class_heatmap');
+    Route::get('academic/competency/outcomes', [CompetencyMappingController::class, 'outcomes'])->name('academic.competency.outcomes');
+    Route::post('academic/competency/outcomes', [CompetencyMappingController::class, 'storeOutcome'])->name('academic.competency.store_outcome');
+    Route::post('academic/competency/outcomes/{outcomeId}/objectives', [CompetencyMappingController::class, 'storeObjective'])->name('academic.competency.store_objective');
+    Route::get('academic/competency/objectives/{objectiveId}/atp', [CompetencyMappingController::class, 'atpMapping'])->name('academic.competency.atp_mapping');
+    Route::post('academic/competency/objectives/{objectiveId}/atp', [CompetencyMappingController::class, 'storeAtp'])->name('academic.competency.store_atp');
+    Route::get('academic/competency/subjects/{subjectId}/heatmap', [CompetencyMappingController::class, 'classHeatmap'])->name('academic.competency.class_heatmap');
 
     // 35.2: Multi-Year Academic Planning & Graduation Pathway
-    Route::get('academic/pathways', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'pathways'])->name('academic.pathways.index');
-    Route::post('academic/pathways/enroll', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'storeEnrollment'])->name('academic.pathways.store_enrollment');
-    Route::get('academic/pathways/student/{studentId}/progress', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'progressDashboard'])->name('academic.pathways.progress_dashboard');
-    Route::get('academic/pathways/graduation-readiness', [\App\Http\Controllers\Academic\AcademicPathwayController::class, 'graduationReadiness'])->name('academic.pathways.graduation_readiness');
+    Route::get('academic/pathways', [AcademicPathwayController::class, 'pathways'])->name('academic.pathways.index');
+    Route::post('academic/pathways/enroll', [AcademicPathwayController::class, 'storeEnrollment'])->name('academic.pathways.store_enrollment');
+    Route::get('academic/pathways/student/{studentId}/progress', [AcademicPathwayController::class, 'progressDashboard'])->name('academic.pathways.progress_dashboard');
+    Route::get('academic/pathways/graduation-readiness', [AcademicPathwayController::class, 'graduationReadiness'])->name('academic.pathways.graduation_readiness');
 
     // 35.3: SCORM/xAPI Learning Content Interoperability
-    Route::get('academic/scorm/packages', [\App\Http\Controllers\Academic\ScormController::class, 'packages'])->name('academic.scorm.packages');
-    Route::post('academic/scorm/packages', [\App\Http\Controllers\Academic\ScormController::class, 'storePackage'])->name('academic.scorm.store_package');
-    Route::get('academic/scorm/packages/{id}/launch', [\App\Http\Controllers\Academic\ScormController::class, 'launch'])->name('academic.scorm.launch');
-    Route::post('academic/scorm/packages/{id}/track', [\App\Http\Controllers\Academic\ScormController::class, 'recordTracking'])->name('academic.scorm.record_tracking');
+    Route::get('academic/scorm/packages', [ScormController::class, 'packages'])->name('academic.scorm.packages');
+    Route::post('academic/scorm/packages', [ScormController::class, 'storePackage'])->name('academic.scorm.store_package');
+    Route::get('academic/scorm/packages/{id}/launch', [ScormController::class, 'launch'])->name('academic.scorm.launch');
+    Route::post('academic/scorm/packages/{id}/track', [ScormController::class, 'recordTracking'])->name('academic.scorm.record_tracking');
 
     // 35.4: Virtual Classroom & Video Conferencing Hub
-    Route::get('academic/virtual', [\App\Http\Controllers\Academic\VirtualClassroomController::class, 'index'])->name('academic.virtual.index');
-    Route::post('academic/virtual', [\App\Http\Controllers\Academic\VirtualClassroomController::class, 'storeMeeting'])->name('academic.virtual.store_meeting');
-    Route::get('academic/virtual/{id}/join', [\App\Http\Controllers\Academic\VirtualClassroomController::class, 'joinLobby'])->name('academic.virtual.join_lobby');
+    Route::get('academic/virtual', [VirtualClassroomController::class, 'index'])->name('academic.virtual.index');
+    Route::post('academic/virtual', [VirtualClassroomController::class, 'storeMeeting'])->name('academic.virtual.store_meeting');
+    Route::get('academic/virtual/{id}/join', [VirtualClassroomController::class, 'joinLobby'])->name('academic.virtual.join_lobby');
 
     // FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
     // 36.1: 360-Degree Teacher Evaluation & EDOM
-    Route::get('hc/evaluation/cycles', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'cycles'])->name('hc.evaluation.cycles');
-    Route::post('hc/evaluation/cycles', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'storeCycle'])->name('hc.evaluation.store_cycle');
-    Route::get('hc/evaluation/cycles/{cycleId}/fill', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'fillForm'])->name('hc.evaluation.fill_form');
-    Route::post('hc/evaluation/cycles/{cycleId}/fill', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'submitEvaluation'])->name('hc.evaluation.submit');
-    Route::get('hc/evaluation/teacher/{teacherId}/results', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'results'])->name('hc.evaluation.results');
-    Route::get('hc/evaluation/ranking', [\App\Http\Controllers\HumanCapital\Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
+    Route::get('hc/evaluation/cycles', [Evaluation360Controller::class, 'cycles'])->name('hc.evaluation.cycles');
+    Route::post('hc/evaluation/cycles', [Evaluation360Controller::class, 'storeCycle'])->name('hc.evaluation.store_cycle');
+    Route::get('hc/evaluation/cycles/{cycleId}/fill', [Evaluation360Controller::class, 'fillForm'])->name('hc.evaluation.fill_form');
+    Route::post('hc/evaluation/cycles/{cycleId}/fill', [Evaluation360Controller::class, 'submitEvaluation'])->name('hc.evaluation.submit');
+    Route::get('hc/evaluation/teacher/{teacherId}/results', [Evaluation360Controller::class, 'results'])->name('hc.evaluation.results');
+    Route::get('hc/evaluation/ranking', [Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
 
     // 36.2: CPD/PKB Credit Tracker
-    Route::get('hc/cpd/dashboard', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'dashboard'])->name('hc.cpd.dashboard');
-    Route::post('hc/cpd/log', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'logActivity'])->name('hc.cpd.log_activity');
-    Route::get('hc/cpd/team-overview', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'teamOverview'])->name('hc.cpd.team_overview');
-    Route::post('hc/cpd/verify/{id}', [\App\Http\Controllers\HumanCapital\CpdTrackerController::class, 'verifyActivity'])->name('hc.cpd.verify');
+    Route::get('hc/cpd/dashboard', [CpdTrackerController::class, 'dashboard'])->name('hc.cpd.dashboard');
+    Route::post('hc/cpd/log', [CpdTrackerController::class, 'logActivity'])->name('hc.cpd.log_activity');
+    Route::get('hc/cpd/team-overview', [CpdTrackerController::class, 'teamOverview'])->name('hc.cpd.team_overview');
+    Route::post('hc/cpd/verify/{id}', [CpdTrackerController::class, 'verifyActivity'])->name('hc.cpd.verify');
 
     // 36.3: School Leadership Succession Planning
-    Route::get('hc/succession/positions', [\App\Http\Controllers\HumanCapital\SuccessionPlanningController::class, 'positions'])->name('hc.succession.positions');
-    Route::post('hc/succession/candidates', [\App\Http\Controllers\HumanCapital\SuccessionPlanningController::class, 'storeCandidate'])->name('hc.succession.store_candidate');
-    Route::get('hc/succession/pipeline-report', [\App\Http\Controllers\HumanCapital\SuccessionPlanningController::class, 'pipelineReport'])->name('hc.succession.pipeline_report');
+    Route::get('hc/succession/positions', [SuccessionPlanningController::class, 'positions'])->name('hc.succession.positions');
+    Route::post('hc/succession/candidates', [SuccessionPlanningController::class, 'storeCandidate'])->name('hc.succession.store_candidate');
+    Route::get('hc/succession/pipeline-report', [SuccessionPlanningController::class, 'pipelineReport'])->name('hc.succession.pipeline_report');
 
     // 36.4: Teacher Workload Balancing & Capacity Dashboard
-    Route::get('hc/workload/dashboard', [\App\Http\Controllers\HumanCapital\WorkloadBalancingController::class, 'dashboard'])->name('hc.workload.dashboard');
-    Route::post('hc/workload', [\App\Http\Controllers\HumanCapital\WorkloadBalancingController::class, 'storeWorkload'])->name('hc.workload.store');
-    Route::get('hc/workload/capacity-report', [\App\Http\Controllers\HumanCapital\WorkloadBalancingController::class, 'capacityReport'])->name('hc.workload.capacity_report');
+    Route::get('hc/workload/dashboard', [WorkloadBalancingController::class, 'dashboard'])->name('hc.workload.dashboard');
+    Route::post('hc/workload', [WorkloadBalancingController::class, 'storeWorkload'])->name('hc.workload.store');
+    Route::get('hc/workload/capacity-report', [WorkloadBalancingController::class, 'capacityReport'])->name('hc.workload.capacity_report');
 
     // FASE 37: Enterprise UX Mastery -- Accessibility, Internationalization & Design System
     // 37.1: WCAG 2.2 AA+ Accessibility Hardening
-    Route::get('ux/accessibility/dashboard', [\App\Http\Controllers\UX\AccessibilityController::class, 'dashboard'])->name('ux.accessibility.dashboard');
-    Route::get('ux/accessibility/report', [\App\Http\Controllers\UX\AccessibilityController::class, 'auditReport'])->name('ux.accessibility.report');
+    Route::get('ux/accessibility/dashboard', [AccessibilityController::class, 'dashboard'])->name('ux.accessibility.dashboard');
+    Route::get('ux/accessibility/report', [AccessibilityController::class, 'auditReport'])->name('ux.accessibility.report');
 
     // 37.2: Advanced i18n & Full Arabic (RTL) Support
-    Route::get('ux/i18n/manager', [\App\Http\Controllers\UX\TranslationController::class, 'index'])->name('ux.i18n.manager');
-    Route::post('ux/i18n/override', [\App\Http\Controllers\UX\TranslationController::class, 'override'])->name('ux.i18n.override');
-    Route::get('ux/i18n/report', [\App\Http\Controllers\UX\TranslationController::class, 'completionReport'])->name('ux.i18n.report');
+    Route::get('ux/i18n/manager', [TranslationController::class, 'index'])->name('ux.i18n.manager');
+    Route::post('ux/i18n/override', [TranslationController::class, 'override'])->name('ux.i18n.override');
+    Route::get('ux/i18n/report', [TranslationController::class, 'completionReport'])->name('ux.i18n.report');
 
     // 37.3: Enterprise Design System Component Library
-    Route::get('ux/design-system/showcase', [\App\Http\Controllers\UX\DesignSystemController::class, 'showcase'])->name('ux.design_system.showcase');
-    Route::get('ux/design-system/documentation', [\App\Http\Controllers\UX\DesignSystemController::class, 'documentation'])->name('ux.design_system.documentation');
+    Route::get('ux/design-system/showcase', [DesignSystemController::class, 'showcase'])->name('ux.design_system.showcase');
+    Route::get('ux/design-system/documentation', [DesignSystemController::class, 'documentation'])->name('ux.design_system.documentation');
 
     // 37.4: Print-Optimized Stylesheet Engine
-    Route::get('ux/print/preview', [\App\Http\Controllers\UX\PrintEngineController::class, 'preview'])->name('ux.print.preview');
+    Route::get('ux/print/preview', [PrintEngineController::class, 'preview'])->name('ux.print.preview');
 
     // FASE 38: Enterprise Deployment & Production Hardening Blueprint
     // 38.1: Production Environment & Secret Management
-    Route::get('deploy/environment', [\App\Http\Controllers\Deployment\EnvironmentConfigController::class, 'dashboard'])->name('deploy.environment.dashboard');
-    Route::get('deploy/environment/configure', [\App\Http\Controllers\Deployment\EnvironmentConfigController::class, 'configureForm'])->name('deploy.environment.configure_form');
-    Route::post('deploy/environment', [\App\Http\Controllers\Deployment\EnvironmentConfigController::class, 'storeConfig'])->name('deploy.environment.store_config');
+    Route::get('deploy/environment', [EnvironmentConfigController::class, 'dashboard'])->name('deploy.environment.dashboard');
+    Route::get('deploy/environment/configure', [EnvironmentConfigController::class, 'configureForm'])->name('deploy.environment.configure_form');
+    Route::post('deploy/environment', [EnvironmentConfigController::class, 'storeConfig'])->name('deploy.environment.store_config');
 
     // 38.3: Release Versioning, Semantic Changelog & Rollback Strategy
-    Route::get('deploy/releases', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'index'])->name('deploy.releases.index');
-    Route::post('deploy/releases', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'storeRelease'])->name('deploy.releases.store');
-    Route::get('deploy/releases/{id}/changelog', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'changelog'])->name('deploy.releases.changelog');
-    Route::get('deploy/releases/{id}/rollback', [\App\Http\Controllers\Deployment\ReleaseManagerController::class, 'rollbackTest'])->name('deploy.releases.rollback');
+    Route::get('deploy/releases', [ReleaseManagerController::class, 'index'])->name('deploy.releases.index');
+    Route::post('deploy/releases', [ReleaseManagerController::class, 'storeRelease'])->name('deploy.releases.store');
+    Route::get('deploy/releases/{id}/changelog', [ReleaseManagerController::class, 'changelog'])->name('deploy.releases.changelog');
+    Route::get('deploy/releases/{id}/rollback', [ReleaseManagerController::class, 'rollbackTest'])->name('deploy.releases.rollback');
 
     // 38.4: Comprehensive E2E Testing Suite Blueprint
-    Route::get('deploy/e2e', [\App\Http\Controllers\Deployment\E2eTestController::class, 'dashboard'])->name('deploy.e2e.dashboard');
-    Route::post('deploy/e2e/trigger', [\App\Http\Controllers\Deployment\E2eTestController::class, 'triggerRun'])->name('deploy.e2e.trigger');
-    Route::get('deploy/e2e/results/{id}', [\App\Http\Controllers\Deployment\E2eTestController::class, 'results'])->name('deploy.e2e.results');
-    Route::get('deploy/e2e/flakey', [\App\Http\Controllers\Deployment\E2eTestController::class, 'flakeyTests'])->name('deploy.e2e.flakey');
+    Route::get('deploy/e2e', [E2eTestController::class, 'dashboard'])->name('deploy.e2e.dashboard');
+    Route::post('deploy/e2e/trigger', [E2eTestController::class, 'triggerRun'])->name('deploy.e2e.trigger');
+    Route::get('deploy/e2e/results/{id}', [E2eTestController::class, 'results'])->name('deploy.e2e.results');
+    Route::get('deploy/e2e/flakey', [E2eTestController::class, 'flakeyTests'])->name('deploy.e2e.flakey');
 
     // FASE 39: Advanced Analytics & Business Intelligence
     // 39.1: Predictive Student Performance Engine
-    Route::get('analytics/predictive/dashboard', [\App\Http\Controllers\Analytics\PredictivePerformanceController::class, 'dashboard'])->name('analytics.predictive.dashboard');
-    Route::get('analytics/predictive/risk/{id}', [\App\Http\Controllers\Analytics\PredictivePerformanceController::class, 'showStudentRisk'])->name('analytics.predictive.student_risk');
-    Route::post('analytics/predictive/intervention', [\App\Http\Controllers\Analytics\PredictivePerformanceController::class, 'storeIntervention'])->name('analytics.predictive.store_intervention');
+    Route::get('analytics/predictive/dashboard', [PredictivePerformanceController::class, 'dashboard'])->name('analytics.predictive.dashboard');
+    Route::get('analytics/predictive/risk/{id}', [PredictivePerformanceController::class, 'showStudentRisk'])->name('analytics.predictive.student_risk');
+    Route::post('analytics/predictive/intervention', [PredictivePerformanceController::class, 'storeIntervention'])->name('analytics.predictive.store_intervention');
 
     // 39.2: Parent Engagement Analytics Dashboard
-    Route::get('analytics/engagement/dashboard', [\App\Http\Controllers\Analytics\ParentEngagementController::class, 'dashboard'])->name('analytics.engagement.dashboard');
-    Route::get('analytics/engagement/{id}', [\App\Http\Controllers\Analytics\ParentEngagementController::class, 'show'])->name('analytics.engagement.detail');
+    Route::get('analytics/engagement/dashboard', [ParentEngagementController::class, 'dashboard'])->name('analytics.engagement.dashboard');
+    Route::get('analytics/engagement/{id}', [ParentEngagementController::class, 'show'])->name('analytics.engagement.detail');
 
     // 39.3: Financial Forecasting & Cash Flow Projection
-    Route::get('analytics/finance/forecast', [\App\Http\Controllers\Analytics\FinancialForecastingController::class, 'dashboard'])->name('analytics.finance.dashboard');
-    Route::get('analytics/finance/scenario-builder', [\App\Http\Controllers\Analytics\FinancialForecastingController::class, 'createScenario'])->name('analytics.finance.create_scenario');
-    Route::post('analytics/finance/scenario', [\App\Http\Controllers\Analytics\FinancialForecastingController::class, 'storeScenario'])->name('analytics.finance.store_scenario');
+    Route::get('analytics/finance/forecast', [FinancialForecastingController::class, 'dashboard'])->name('analytics.finance.dashboard');
+    Route::get('analytics/finance/scenario-builder', [FinancialForecastingController::class, 'createScenario'])->name('analytics.finance.create_scenario');
+    Route::post('analytics/finance/scenario', [FinancialForecastingController::class, 'storeScenario'])->name('analytics.finance.store_scenario');
 
     // 39.4: Academic Benchmarking & National Comparison Engine
-    Route::get('analytics/benchmarking/dashboard', [\App\Http\Controllers\Analytics\AcademicBenchmarkController::class, 'dashboard'])->name('analytics.benchmarking.dashboard');
-    Route::get('analytics/benchmarking/import', [\App\Http\Controllers\Analytics\AcademicBenchmarkController::class, 'importForm'])->name('analytics.benchmarking.import');
+    Route::get('analytics/benchmarking/dashboard', [AcademicBenchmarkController::class, 'dashboard'])->name('analytics.benchmarking.dashboard');
+    Route::get('analytics/benchmarking/import', [AcademicBenchmarkController::class, 'importForm'])->name('analytics.benchmarking.import');
 
     // FASE 40: Advanced Student Experience Platform
     // 40.1: Student Self-Service Portal
-    Route::get('student/portal/dashboard', [\App\Http\Controllers\Student\StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
-    Route::get('student/portal/request', [\App\Http\Controllers\Student\StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
-    Route::post('student/portal/request', [\App\Http\Controllers\Student\StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
+    Route::get('student/portal/dashboard', [StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
+    Route::get('student/portal/request', [StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
+    Route::post('student/portal/request', [StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
 
     // 40.2: Digital Student ID Card (QR & NFC)
-    Route::get('student/idcard/my-card', [\App\Http\Controllers\Student\DigitalIDController::class, 'showMyCard'])->name('student.idcard.my_card');
-    Route::get('student/idcard/scanner', [\App\Http\Controllers\Student\DigitalIDController::class, 'scanner'])->name('student.idcard.scanner');
+    Route::get('student/idcard/my-card', [DigitalIDController::class, 'showMyCard'])->name('student.idcard.my_card');
+    Route::get('student/idcard/scanner', [DigitalIDController::class, 'scanner'])->name('student.idcard.scanner');
 
     // 40.3: Student Achievement Certificate Generator
-    Route::get('certificates/templates', [\App\Http\Controllers\Student\CertificateController::class, 'index'])->name('certificates.templates');
-    Route::get('certificates/verify/{code}', [\App\Http\Controllers\Student\CertificateController::class, 'verifyPage'])->name('certificates.verify');
+    Route::get('certificates/templates', [CertificateController::class, 'index'])->name('certificates.templates');
+    Route::get('certificates/verify/{code}', [CertificateController::class, 'verifyPage'])->name('certificates.verify');
 
     // 40.4: Student Feedback & Course Evaluation System
-    Route::get('evaluations', [\App\Http\Controllers\Student\CourseEvaluationController::class, 'index'])->name('evaluations.index');
-    Route::get('evaluations/{id}/fill', [\App\Http\Controllers\Student\CourseEvaluationController::class, 'fillForm'])->name('evaluations.fill');
-    Route::post('evaluations/response', [\App\Http\Controllers\Student\CourseEvaluationController::class, 'storeResponse'])->name('evaluations.store_response');
+    Route::get('evaluations', [CourseEvaluationController::class, 'index'])->name('evaluations.index');
+    Route::get('evaluations/{id}/fill', [CourseEvaluationController::class, 'fillForm'])->name('evaluations.fill');
+    Route::post('evaluations/response', [CourseEvaluationController::class, 'storeResponse'])->name('evaluations.store_response');
 
     // FASE 41: Advanced Parent & Community Engagement
     // 41.1: Parent Mobile App API Gateway
-    Route::post('api/mobile/token', [\App\Http\Controllers\Community\MobileAppGatewayController::class, 'registerToken'])->name('api.mobile.token');
+    Route::post('api/mobile/token', [MobileAppGatewayController::class, 'registerToken'])->name('api.mobile.token');
 
     // 41.2: School-Community Partnership Management
-    Route::get('partnerships', [\App\Http\Controllers\Community\PartnershipController::class, 'index'])->name('partnerships.index');
-    Route::get('partnerships/create', [\App\Http\Controllers\Community\PartnershipController::class, 'create'])->name('partnerships.create');
-    Route::post('partnerships', [\App\Http\Controllers\Community\PartnershipController::class, 'store'])->name('partnerships.store');
+    Route::get('partnerships', [PartnershipController::class, 'index'])->name('partnerships.index');
+    Route::get('partnerships/create', [PartnershipController::class, 'create'])->name('partnerships.create');
+    Route::post('partnerships', [PartnershipController::class, 'store'])->name('partnerships.store');
 
     // 41.3: Volunteer Management & Hour Tracking
-    Route::get('volunteers/opportunities', [\App\Http\Controllers\Community\VolunteerController::class, 'opportunities'])->name('volunteers.opportunities');
-    Route::get('volunteers/dashboard', [\App\Http\Controllers\Community\VolunteerController::class, 'dashboard'])->name('volunteers.dashboard');
+    Route::get('volunteers/opportunities', [VolunteerController::class, 'opportunities'])->name('volunteers.opportunities');
+    Route::get('volunteers/dashboard', [VolunteerController::class, 'dashboard'])->name('volunteers.dashboard');
 
     // 41.4: Alumni Mentorship Program Platform
-    Route::get('mentorship/directory', [\App\Http\Controllers\Community\MentorshipController::class, 'directory'])->name('mentorship.directory');
-    Route::get('mentorship/workspace', [\App\Http\Controllers\Community\MentorshipController::class, 'workspace'])->name('mentorship.workspace');
+    Route::get('mentorship/directory', [MentorshipController::class, 'directory'])->name('mentorship.directory');
+    Route::get('mentorship/workspace', [MentorshipController::class, 'workspace'])->name('mentorship.workspace');
 
     // FASE 42: Advanced Facility & Operations Management
     // 42.1: IoT Smart Facility & Energy Monitor Hub
-    Route::get('facility/iot/dashboard', [\App\Http\Controllers\Operations\IotFacilityController::class, 'dashboard'])->name('facility.iot.dashboard');
+    Route::get('facility/iot/dashboard', [IotFacilityController::class, 'dashboard'])->name('facility.iot.dashboard');
 
     // 42.2: Utility Expense & Carbon Footprint Tracker
-    Route::get('facility/utility/dashboard', [\App\Http\Controllers\Operations\UtilityTrackerController::class, 'dashboard'])->name('facility.utility.dashboard');
+    Route::get('facility/utility/dashboard', [UtilityTrackerController::class, 'dashboard'])->name('facility.utility.dashboard');
 
     // 42.3: Transportation & Bus Routing System
-    Route::get('facility/transport/routes', [\App\Http\Controllers\Operations\BusRoutingController::class, 'routes'])->name('facility.transport.routes');
+    Route::get('facility/transport/routes', [BusRoutingController::class, 'routes'])->name('facility.transport.routes');
 
     // 42.4: Asset Maintenance & Preventive Service Scheduler
-    Route::get('facility/maintenance/schedule', [\App\Http\Controllers\Operations\AssetMaintenanceController::class, 'schedule'])->name('facility.maintenance.schedule');
+    Route::get('facility/maintenance/schedule', [App\Http\Controllers\Operations\AssetMaintenanceController::class, 'schedule'])->name('facility.maintenance.schedule');
 
     // FASE 43: Advanced Compliance & Regulatory Technology
     // 43.1: Dapodik/EMIS Auto-Export & Validation Engine
-    Route::get('compliance/dapodik/index', [\App\Http\Controllers\Compliance\DapodikExportController::class, 'index'])->name('compliance.dapodik.index');
+    Route::get('compliance/dapodik/index', [DapodikExportController::class, 'index'])->name('compliance.dapodik.index');
 
     // 43.2: Automated Data Retention & PDP Purge Engine
-    Route::get('compliance/retention/index', [\App\Http\Controllers\Compliance\DataRetentionController::class, 'index'])->name('compliance.retention.index');
+    Route::get('compliance/retention/index', [DataRetentionController::class, 'index'])->name('compliance.retention.index');
 
     // 43.3: Digital Forensics & Compliance Audit Console
-    Route::get('compliance/audit/console', [\App\Http\Controllers\Compliance\AuditConsoleController::class, 'console'])->name('compliance.audit.console');
+    Route::get('compliance/audit/console', [AuditConsoleController::class, 'console'])->name('compliance.audit.console');
 
     // 43.4: Legal Contract & Vendor Compliance Manager
-    Route::get('compliance/contracts/index', [\App\Http\Controllers\Compliance\LegalContractController::class, 'index'])->name('compliance.contracts.index');
+    Route::get('compliance/contracts/index', [LegalContractController::class, 'index'])->name('compliance.contracts.index');
 
     // FASE 44: Platform Maturity & Future-Proofing
     // 44.1: Developer API Gateway & Webhook Engine
-    Route::get('developer/api/dashboard', [\App\Http\Controllers\Platform\DeveloperApiController::class, 'dashboard'])->name('developer.api.dashboard');
+    Route::get('developer/api/dashboard', [DeveloperApiController::class, 'dashboard'])->name('developer.api.dashboard');
 
     // 44.2: Drag-and-Drop Executive Dashboard Builder
-    Route::get('developer/dashboards/index', [\App\Http\Controllers\Platform\DashboardBuilderController::class, 'index'])->name('developer.dashboards.index');
+    Route::get('developer/dashboards/index', [DashboardBuilderController::class, 'index'])->name('developer.dashboards.index');
 
     // 44.3: AI Recommendation & Personalization Engine
-    Route::get('developer/ai/recommendations', [\App\Http\Controllers\Platform\AiRecommendationController::class, 'recommendations'])->name('developer.ai.recommendations');
+    Route::get('developer/ai/recommendations', [AiRecommendationController::class, 'recommendations'])->name('developer.ai.recommendations');
 
     // 44.4: Digital Twin School Infrastructure Simulation Engine
-    Route::get('developer/twin/simulation', [\App\Http\Controllers\Platform\DigitalTwinController::class, 'simulation'])->name('developer.twin.simulation');
+    Route::get('developer/twin/simulation', [DigitalTwinController::class, 'simulation'])->name('developer.twin.simulation');
 
     // Centralized Digital Asset Management (DAM)
-    Route::get('media', [\App\Http\Controllers\Content\MediaAssetController::class, 'index'])->name('media.index');
-    Route::post('media/upload', [\App\Http\Controllers\Content\MediaAssetController::class, 'upload'])->name('media.upload');
-    Route::post('media/folders', [\App\Http\Controllers\Content\MediaAssetController::class, 'createFolder'])->name('media.create_folder');
-    Route::post('media/{id}/move', [\App\Http\Controllers\Content\MediaAssetController::class, 'moveToFolder'])->name('media.move');
-    Route::delete('media/{id}', [\App\Http\Controllers\Content\MediaAssetController::class, 'destroy'])->name('media.destroy');
-    Route::get('media/storage-stats', [\App\Http\Controllers\Content\MediaAssetController::class, 'storageStats'])->name('media.storage_stats');
+    Route::get('media', [MediaAssetController::class, 'index'])->name('media.index');
+    Route::post('media/upload', [MediaAssetController::class, 'upload'])->name('media.upload');
+    Route::post('media/folders', [MediaAssetController::class, 'createFolder'])->name('media.create_folder');
+    Route::post('media/{id}/move', [MediaAssetController::class, 'moveToFolder'])->name('media.move');
+    Route::delete('media/{id}', [MediaAssetController::class, 'destroy'])->name('media.destroy');
+    Route::get('media/storage-stats', [MediaAssetController::class, 'storageStats'])->name('media.storage_stats');
 
     // Intelligent Document Processing (IDP) & OCR Engine
-    Route::get('ocr', [\App\Http\Controllers\Content\OcrDocumentController::class, 'index'])->name('ocr.index');
-    Route::post('ocr/upload', [\App\Http\Controllers\Content\OcrDocumentController::class, 'upload'])->name('ocr.upload');
-    Route::get('ocr/{id}/review', [\App\Http\Controllers\Content\OcrDocumentController::class, 'reviewExtraction'])->name('ocr.review');
-    Route::post('ocr/{id}/apply', [\App\Http\Controllers\Content\OcrDocumentController::class, 'applyToRegistration'])->name('ocr.apply');
+    Route::get('ocr', [OcrDocumentController::class, 'index'])->name('ocr.index');
+    Route::post('ocr/upload', [OcrDocumentController::class, 'upload'])->name('ocr.upload');
+    Route::get('ocr/{id}/review', [OcrDocumentController::class, 'reviewExtraction'])->name('ocr.review');
+    Route::post('ocr/{id}/apply', [OcrDocumentController::class, 'applyToRegistration'])->name('ocr.apply');
 
     // Multi-Format Export Engine & Data Interoperability
-    Route::get('exports', [\App\Http\Controllers\Content\ExportEngineController::class, 'selectFormat'])->name('exports.index');
-    Route::post('exports/generate', [\App\Http\Controllers\Content\ExportEngineController::class, 'generateExport'])->name('exports.generate');
-    Route::get('exports/{id}/download', [\App\Http\Controllers\Content\ExportEngineController::class, 'downloadExport'])->name('exports.download');
-    Route::get('exports/history', [\App\Http\Controllers\Content\ExportEngineController::class, 'exportHistory'])->name('exports.history');
+    Route::get('exports', [ExportEngineController::class, 'selectFormat'])->name('exports.index');
+    Route::post('exports/generate', [ExportEngineController::class, 'generateExport'])->name('exports.generate');
+    Route::get('exports/{id}/download', [ExportEngineController::class, 'downloadExport'])->name('exports.download');
+    Route::get('exports/history', [ExportEngineController::class, 'exportHistory'])->name('exports.history');
 
     // BAN-SM Accreditation Readiness Dashboard & Evidence Collector
-    Route::get('accreditation', [\App\Http\Controllers\Grc\AccreditationController::class, 'dashboard'])->name('accreditation.dashboard');
-    Route::get('accreditation/standards/{id}', [\App\Http\Controllers\Grc\AccreditationController::class, 'standardDetail'])->name('accreditation.standard_detail');
-    Route::post('accreditation/evidences', [\App\Http\Controllers\Grc\AccreditationController::class, 'uploadEvidence'])->name('accreditation.upload_evidence');
-    Route::post('accreditation/evidences/{id}/verify', [\App\Http\Controllers\Grc\AccreditationController::class, 'verifyEvidence'])->name('accreditation.verify_evidence');
-    Route::get('accreditation/report', [\App\Http\Controllers\Grc\AccreditationController::class, 'report'])->name('accreditation.report');
+    Route::get('accreditation', [AccreditationController::class, 'dashboard'])->name('accreditation.dashboard');
+    Route::get('accreditation/standards/{id}', [AccreditationController::class, 'standardDetail'])->name('accreditation.standard_detail');
+    Route::post('accreditation/evidences', [AccreditationController::class, 'uploadEvidence'])->name('accreditation.upload_evidence');
+    Route::post('accreditation/evidences/{id}/verify', [AccreditationController::class, 'verifyEvidence'])->name('accreditation.verify_evidence');
+    Route::get('accreditation/report', [AccreditationController::class, 'report'])->name('accreditation.report');
 
     // Internal Quality Assurance (SPMI) & School Self-Evaluation (EDS) Engine
-    Route::get('quality/cycles', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'cycles'])->name('quality.cycles');
-    Route::post('quality/cycles', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'createCycle'])->name('quality.create_cycle');
-    Route::get('quality/cycles/{id}/evaluation', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'fillEvaluation'])->name('quality.fill_evaluation');
-    Route::post('quality/cycles/{id}/evaluation', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'submitEvaluation'])->name('quality.submit_evaluation');
-    Route::get('quality/cycles/{id}/results', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'results'])->name('quality.results');
-    Route::get('quality/cycles/{id}/compare', [\App\Http\Controllers\Grc\QualityAssuranceController::class, 'compareReport'])->name('quality.compare');
+    Route::get('quality/cycles', [QualityAssuranceController::class, 'cycles'])->name('quality.cycles');
+    Route::post('quality/cycles', [QualityAssuranceController::class, 'createCycle'])->name('quality.create_cycle');
+    Route::get('quality/cycles/{id}/evaluation', [QualityAssuranceController::class, 'fillEvaluation'])->name('quality.fill_evaluation');
+    Route::post('quality/cycles/{id}/evaluation', [QualityAssuranceController::class, 'submitEvaluation'])->name('quality.submit_evaluation');
+    Route::get('quality/cycles/{id}/results', [QualityAssuranceController::class, 'results'])->name('quality.results');
+    Route::get('quality/cycles/{id}/compare', [QualityAssuranceController::class, 'compareReport'])->name('quality.compare');
 
     // Risk Assessment Matrix & Incident Response Workflow
-    Route::get('risk/register', [\App\Http\Controllers\Grc\RiskManagementController::class, 'riskRegister'])->name('risk.register');
-    Route::post('risk/register', [\App\Http\Controllers\Grc\RiskManagementController::class, 'createRisk'])->name('risk.create');
-    Route::get('risk/matrix', [\App\Http\Controllers\Grc\RiskManagementController::class, 'riskMatrix'])->name('risk.matrix');
-    Route::get('risk/incidents', [\App\Http\Controllers\Grc\RiskManagementController::class, 'incidents'])->name('risk.incidents');
-    Route::post('risk/incidents', [\App\Http\Controllers\Grc\RiskManagementController::class, 'createIncident'])->name('risk.create_incident');
-    Route::post('risk/incidents/{id}/resolve', [\App\Http\Controllers\Grc\RiskManagementController::class, 'resolveIncident'])->name('risk.resolve_incident');
+    Route::get('risk/register', [RiskManagementController::class, 'riskRegister'])->name('risk.register');
+    Route::post('risk/register', [RiskManagementController::class, 'createRisk'])->name('risk.create');
+    Route::get('risk/matrix', [RiskManagementController::class, 'riskMatrix'])->name('risk.matrix');
+    Route::get('risk/incidents', [RiskManagementController::class, 'incidents'])->name('risk.incidents');
+    Route::post('risk/incidents', [RiskManagementController::class, 'createIncident'])->name('risk.create_incident');
+    Route::post('risk/incidents/{id}/resolve', [RiskManagementController::class, 'resolveIncident'])->name('risk.resolve_incident');
 
     // Policy & SOP Document Governance System
-    Route::get('sop', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'index'])->name('sop.index');
-    Route::get('sop/create', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'create'])->name('sop.create');
-    Route::post('sop', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'store'])->name('sop.store');
-    Route::get('sop/{id}', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'show'])->name('sop.show');
-    Route::post('sop/{id}/publish', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'publish'])->name('sop.publish');
-    Route::post('sop/{id}/acknowledge', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'acknowledge'])->name('sop.acknowledge');
-    Route::get('sop-compliance', [\App\Http\Controllers\Grc\SopGovernanceController::class, 'complianceReport'])->name('sop.compliance');
+    Route::get('sop', [SopGovernanceController::class, 'index'])->name('sop.index');
+    Route::get('sop/create', [SopGovernanceController::class, 'create'])->name('sop.create');
+    Route::post('sop', [SopGovernanceController::class, 'store'])->name('sop.store');
+    Route::get('sop/{id}', [SopGovernanceController::class, 'show'])->name('sop.show');
+    Route::post('sop/{id}/publish', [SopGovernanceController::class, 'publish'])->name('sop.publish');
+    Route::post('sop/{id}/acknowledge', [SopGovernanceController::class, 'acknowledge'])->name('sop.acknowledge');
+    Route::get('sop-compliance', [SopGovernanceController::class, 'complianceReport'])->name('sop.compliance');
 
     // 31.1 GraphQL API Federation & Gateway
-    Route::match(['get', 'post'], 'graphql', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'graphqlEndpoint'])->name('api.graphql');
-    Route::get('api-clients', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'clientManagement'])->name('api.clients');
-    Route::post('api-clients', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'registerClient'])->name('api.register_client');
-    Route::get('api-stats', [\App\Http\Controllers\Integration\ApiGatewayController::class, 'apiUsageStats'])->name('api.stats');
+    Route::match(['get', 'post'], 'graphql', [ApiGatewayController::class, 'graphqlEndpoint'])->name('api.graphql');
+    Route::get('api-clients', [ApiGatewayController::class, 'clientManagement'])->name('api.clients');
+    Route::post('api-clients', [ApiGatewayController::class, 'registerClient'])->name('api.register_client');
+    Route::get('api-stats', [ApiGatewayController::class, 'apiUsageStats'])->name('api.stats');
 
     // 31.2 Enterprise ETL Pipeline & Migration Toolkit
-    Route::get('etl', [\App\Http\Controllers\Integration\EtlController::class, 'index'])->name('etl.index');
-    Route::post('etl/jobs', [\App\Http\Controllers\Integration\EtlController::class, 'createJob'])->name('etl.create_job');
-    Route::get('etl/jobs/{id}/mapping', [\App\Http\Controllers\Integration\EtlController::class, 'configureMapping'])->name('etl.configure_mapping');
-    Route::post('etl/jobs/{id}/execute', [\App\Http\Controllers\Integration\EtlController::class, 'execute'])->name('etl.execute');
-    Route::get('etl/jobs/{id}/progress', [\App\Http\Controllers\Integration\EtlController::class, 'progress'])->name('etl.progress');
-    Route::post('etl/jobs/{id}/rollback', [\App\Http\Controllers\Integration\EtlController::class, 'rollback'])->name('etl.rollback');
+    Route::get('etl', [EtlController::class, 'index'])->name('etl.index');
+    Route::post('etl/jobs', [EtlController::class, 'createJob'])->name('etl.create_job');
+    Route::get('etl/jobs/{id}/mapping', [EtlController::class, 'configureMapping'])->name('etl.configure_mapping');
+    Route::post('etl/jobs/{id}/execute', [EtlController::class, 'execute'])->name('etl.execute');
+    Route::get('etl/jobs/{id}/progress', [EtlController::class, 'progress'])->name('etl.progress');
+    Route::post('etl/jobs/{id}/rollback', [EtlController::class, 'rollback'])->name('etl.rollback');
 
     // 31.3 Third-Party Plugin Architecture & Marketplace
-    Route::get('plugins', [\App\Http\Controllers\Integration\PluginController::class, 'index'])->name('plugins.index');
-    Route::get('plugins/marketplace', [\App\Http\Controllers\Integration\PluginController::class, 'marketplace'])->name('plugins.marketplace');
-    Route::post('plugins/install', [\App\Http\Controllers\Integration\PluginController::class, 'install'])->name('plugins.install');
-    Route::post('plugins/{id}/toggle', [\App\Http\Controllers\Integration\PluginController::class, 'toggle'])->name('plugins.toggle');
+    Route::get('plugins', [PluginController::class, 'index'])->name('plugins.index');
+    Route::get('plugins/marketplace', [PluginController::class, 'marketplace'])->name('plugins.marketplace');
+    Route::post('plugins/install', [PluginController::class, 'install'])->name('plugins.install');
+    Route::post('plugins/{id}/toggle', [PluginController::class, 'toggle'])->name('plugins.toggle');
 
     // 31.4 Public API Documentation Portal (OpenAPI 3.0)
-    Route::get('api-docs', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'index'])->name('api_docs.index');
-    Route::get('api-docs/openapi.json', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'openApiJson'])->name('api_docs.openapi_json');
-    Route::get('api-docs/swagger', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'swaggerUi'])->name('api_docs.swagger_ui');
-    Route::get('api-docs/postman', [\App\Http\Controllers\Integration\ApiDocumentationController::class, 'postmanExport'])->name('api_docs.postman');
+    Route::get('api-docs', [ApiDocumentationController::class, 'index'])->name('api_docs.index');
+    Route::get('api-docs/openapi.json', [ApiDocumentationController::class, 'openApiJson'])->name('api_docs.openapi_json');
+    Route::get('api-docs/swagger', [ApiDocumentationController::class, 'swaggerUi'])->name('api_docs.swagger_ui');
+    Route::get('api-docs/postman', [ApiDocumentationController::class, 'postmanExport'])->name('api_docs.postman');
 
     // 32.1 Database Query Optimizer & N+1 Sentinel
-    Route::get('query-performance', [\App\Http\Controllers\Performance\QueryPerformanceController::class, 'dashboard'])->name('query_performance.dashboard');
-    Route::get('query-performance/slow', [\App\Http\Controllers\Performance\QueryPerformanceController::class, 'slowQueries'])->name('query_performance.slow');
-    Route::get('query-performance/suggestions', [\App\Http\Controllers\Performance\QueryPerformanceController::class, 'optimizationSuggestions'])->name('query_performance.suggestions');
+    Route::get('query-performance', [QueryPerformanceController::class, 'dashboard'])->name('query_performance.dashboard');
+    Route::get('query-performance/slow', [QueryPerformanceController::class, 'slowQueries'])->name('query_performance.slow');
+    Route::get('query-performance/suggestions', [QueryPerformanceController::class, 'optimizationSuggestions'])->name('query_performance.suggestions');
 
     // 32.2 Lazy Loading, Code Splitting & Asset Optimization
-    Route::get('asset-performance', [\App\Http\Controllers\Performance\AssetPerformanceController::class, 'assetReport'])->name('asset_performance.report');
+    Route::get('asset-performance', [AssetPerformanceController::class, 'assetReport'])->name('asset_performance.report');
 
     // 32.3 Automated Stress Test & Load Testing Suite
-    Route::get('load-test', [\App\Http\Controllers\Performance\LoadTestController::class, 'dashboard'])->name('load_test.dashboard');
-    Route::post('load-test/run', [\App\Http\Controllers\Performance\LoadTestController::class, 'runTest'])->name('load_test.run');
-    Route::get('load-test/{id}/results', [\App\Http\Controllers\Performance\LoadTestController::class, 'results'])->name('load_test.results');
-    Route::get('load-test/{id}/compare', [\App\Http\Controllers\Performance\LoadTestController::class, 'compareBaseline'])->name('load_test.compare');
+    Route::get('load-test', [LoadTestController::class, 'dashboard'])->name('load_test.dashboard');
+    Route::post('load-test/run', [LoadTestController::class, 'runTest'])->name('load_test.run');
+    Route::get('load-test/{id}/results', [LoadTestController::class, 'results'])->name('load_test.results');
+    Route::get('load-test/{id}/compare', [LoadTestController::class, 'compareBaseline'])->name('load_test.compare');
 
     // 32.4 Horizontal Scaling Architecture Blueprint & Read Replicas
-    Route::get('scaling', [\App\Http\Controllers\Performance\ScalingController::class, 'dashboard'])->name('scaling.dashboard');
-    Route::get('scaling/configuration', [\App\Http\Controllers\Performance\ScalingController::class, 'configuration'])->name('scaling.configuration');
+    Route::get('scaling', [ScalingController::class, 'dashboard'])->name('scaling.dashboard');
+    Route::get('scaling/configuration', [ScalingController::class, 'configuration'])->name('scaling.configuration');
 
     // =========================================================
     // EKSTRAKURIKULER & OSIS â€” Pengembangan Non-Akademik
@@ -689,7 +758,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin/mpk')->name('mpk.')->group(function () {
         Route::get('/', [MpkController::class, 'index'])->name('index');
         Route::post('audit', [MpkController::class, 'storeAudit'])->name('audit.store');
-        
+
         Route::get('lpj', [MpkController::class, 'lpjIndex'])->name('lpj.index');
         Route::post('lpj', [MpkController::class, 'storeLpj'])->name('lpj.store');
         Route::post('lpj/{lpj}/review', [MpkController::class, 'reviewLpj'])->name('lpj.review');
@@ -1040,10 +1109,10 @@ Route::middleware('auth')->group(function () {
         Route::post('alumni/bulk-graduate', [AlumniController::class, 'bulkGraduate'])->name('alumni.bulk-graduate.store');
         Route::get('alumni/export/excel', [AlumniController::class, 'exportExcel'])->name('alumni.export.excel');
         Route::get('alumni/export/pdf/{year}', [AlumniController::class, 'exportPdf'])->name('alumni.export.pdf');
-        
+
         // Full CRUD for Alumni
         Route::resource('alumni', AlumniController::class)->except(['show']);
-        
+
         // Advanced Tracer Study Control
         Route::get('alumni/tracer-study/analytics', [TracerStudyController::class, 'analytics'])->name('alumni.tracer-study.analytics');
         Route::get('alumni/tracer-study/comparison', [TracerStudyController::class, 'comparison'])->name('alumni.tracer-study.comparison');
@@ -1063,13 +1132,12 @@ Route::middleware('auth')->group(function () {
     Route::get('announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
     Route::post('announcements/{announcement}/acknowledge', [AnnouncementController::class, 'acknowledge'])->name('announcements.acknowledge');
 
-
     // =========================================================
     // HUMAS â€” Content Management System (CMS)
     // =========================================================
     Route::middleware('role:waka_humas,admin,superadmin')->prefix('cms')->name('cms.')->group(function () {
         Route::get('dashboard', [CmsController::class, 'dashboard'])->name('dashboard');
-        
+
         // Pages CRUD
         Route::get('pages', [CmsController::class, 'pagesIndex'])->name('pages.index');
         Route::get('pages/create', [CmsController::class, 'pagesCreate'])->name('pages.create');
@@ -1392,7 +1460,7 @@ Route::middleware('auth')->group(function () {
         // Universal support ticket routes
         Route::resource('tickets', TicketController::class)->only(['index', 'create', 'store', 'show']);
         Route::post('tickets/{ticket}/comment', [TicketController::class, 'comment'])->name('tickets.comment');
-        
+
         // Administrative support handling routes
         Route::middleware('role:staf_tu,waka_sarpras,admin,superadmin')->group(function () {
             Route::get('dashboard', [TicketController::class, 'dashboard'])->name('dashboard');
@@ -1409,16 +1477,16 @@ Route::middleware('auth')->group(function () {
         ->prefix('eds')
         ->name('eds.')
         ->group(function () {
-            Route::get('/', [\App\Http\Controllers\EdsController::class, 'index'])->name('index');
-            Route::post('/', [\App\Http\Controllers\EdsController::class, 'store'])->name('store');
-            Route::get('/comparison', [\App\Http\Controllers\EdsController::class, 'comparison'])->name('comparison');
-            
-            Route::get('/{period}', [\App\Http\Controllers\EdsController::class, 'show'])->name('show');
-            Route::post('/{period}/complete', [\App\Http\Controllers\EdsController::class, 'complete'])->name('complete');
-            Route::get('/{period}/standard/{standard}', [\App\Http\Controllers\EdsController::class, 'assess'])->name('assess');
-            Route::post('/{period}/assess', [\App\Http\Controllers\EdsController::class, 'storeAssessment'])->name('assess.store');
-            Route::get('/{period}/gap-analysis', [\App\Http\Controllers\EdsController::class, 'gapAnalysis'])->name('gap-analysis');
-            Route::get('/{period}/export-pdf', [\App\Http\Controllers\EdsController::class, 'exportPdf'])->name('export-pdf');
+            Route::get('/', [EdsController::class, 'index'])->name('index');
+            Route::post('/', [EdsController::class, 'store'])->name('store');
+            Route::get('/comparison', [EdsController::class, 'comparison'])->name('comparison');
+
+            Route::get('/{period}', [EdsController::class, 'show'])->name('show');
+            Route::post('/{period}/complete', [EdsController::class, 'complete'])->name('complete');
+            Route::get('/{period}/standard/{standard}', [EdsController::class, 'assess'])->name('assess');
+            Route::post('/{period}/assess', [EdsController::class, 'storeAssessment'])->name('assess.store');
+            Route::get('/{period}/gap-analysis', [EdsController::class, 'gapAnalysis'])->name('gap-analysis');
+            Route::get('/{period}/export-pdf', [EdsController::class, 'exportPdf'])->name('export-pdf');
         });
 
     // =========================================================
@@ -1428,15 +1496,15 @@ Route::middleware('auth')->group(function () {
         ->prefix('compliance')
         ->name('compliance.')
         ->group(function () {
-            Route::get('/', [\App\Http\Controllers\ComplianceController::class, 'index'])->name('index');
-            Route::get('/checklist', [\App\Http\Controllers\ComplianceController::class, 'checklist'])->name('checklist');
-            Route::get('/documents', [\App\Http\Controllers\ComplianceController::class, 'documentRepository'])->name('documents');
-            Route::post('/documents', [\App\Http\Controllers\ComplianceController::class, 'uploadDocument'])->name('documents.upload');
-            Route::delete('/documents/{document}', [\App\Http\Controllers\ComplianceController::class, 'deleteDocument'])->name('documents.destroy');
-            Route::get('/timeline', [\App\Http\Controllers\ComplianceController::class, 'timeline'])->name('timeline');
-            Route::post('/milestones', [\App\Http\Controllers\ComplianceController::class, 'storeMilestone'])->name('milestones.store');
-            Route::post('/milestones/{milestone}/toggle', [\App\Http\Controllers\ComplianceController::class, 'toggleMilestone'])->name('milestones.toggle');
-            Route::get('/export', [\App\Http\Controllers\ComplianceController::class, 'exportReport'])->name('export');
+            Route::get('/', [ComplianceController::class, 'index'])->name('index');
+            Route::get('/checklist', [ComplianceController::class, 'checklist'])->name('checklist');
+            Route::get('/documents', [ComplianceController::class, 'documentRepository'])->name('documents');
+            Route::post('/documents', [ComplianceController::class, 'uploadDocument'])->name('documents.upload');
+            Route::delete('/documents/{document}', [ComplianceController::class, 'deleteDocument'])->name('documents.destroy');
+            Route::get('/timeline', [ComplianceController::class, 'timeline'])->name('timeline');
+            Route::post('/milestones', [ComplianceController::class, 'storeMilestone'])->name('milestones.store');
+            Route::post('/milestones/{milestone}/toggle', [ComplianceController::class, 'toggleMilestone'])->name('milestones.toggle');
+            Route::get('/export', [ComplianceController::class, 'exportReport'])->name('export');
         });
 
     // =========================================================
@@ -1503,7 +1571,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/history', [WorkflowController::class, 'history'])->name('history');
             Route::get('/pending', [WorkflowController::class, 'pending'])->name('pending');
             Route::get('/my-requests', [WorkflowController::class, 'myRequests'])->name('my-requests');
-            
+
             Route::get('/{workflowRequest}', [WorkflowController::class, 'show'])->name('show');
             Route::post('/{workflowRequest}/approve', [WorkflowController::class, 'approve'])->name('approve');
             Route::post('/{workflowRequest}/reject', [WorkflowController::class, 'reject'])->name('reject');
@@ -1588,19 +1656,19 @@ Route::middleware('auth')->group(function () {
     // ðŸŽ¨ KUSTOMISASI TAMPILAN SEKOLAH (MODUL 6)
     // =========================================================
     Route::middleware('role:admin,superadmin')->prefix('admin/appearance')->name('admin.appearance.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\AppearanceController::class, 'index'])->name('index');
-        Route::put('/', [\App\Http\Controllers\Admin\AppearanceController::class, 'update'])->name('update');
-        Route::post('/reset', [\App\Http\Controllers\Admin\AppearanceController::class, 'reset'])->name('reset');
+        Route::get('/', [AppearanceController::class, 'index'])->name('index');
+        Route::put('/', [AppearanceController::class, 'update'])->name('update');
+        Route::post('/reset', [AppearanceController::class, 'reset'])->name('reset');
     });
 
     // =========================================================
     // ðŸ§ª UAT FEEDBACK SYSTEM (MODUL 12.2)
     // =========================================================
-    Route::post('admin/uat/feedback', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'store'])->name('uat.feedback.store');
+    Route::post('admin/uat/feedback', [UatFeedbackController::class, 'store'])->name('uat.feedback.store');
     Route::middleware('role:admin,superadmin')->prefix('admin/uat')->name('admin.uat.')->group(function () {
-        Route::get('feedback-dashboard', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'dashboard'])->name('feedback.dashboard');
-        Route::post('feedback/{id}/status', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'updateStatus'])->name('feedback.update-status');
-        Route::get('feedback-report', [\App\Http\Controllers\Admin\UatFeedbackController::class, 'report'])->name('feedback.report');
+        Route::get('feedback-dashboard', [UatFeedbackController::class, 'dashboard'])->name('feedback.dashboard');
+        Route::post('feedback/{id}/status', [UatFeedbackController::class, 'updateStatus'])->name('feedback.update-status');
+        Route::get('feedback-report', [UatFeedbackController::class, 'report'])->name('feedback.report');
     });
 
     // =========================================================
@@ -1665,19 +1733,19 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/chatbot')->n
 });
 // --- Advanced Logging & Observability (Modul 9) ---
 Route::middleware(['auth', 'role:superadmin'])->prefix('admin/observability')->name('admin.observability.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\ObservabilityController::class, 'dashboard'])->name('dashboard');
-    Route::get('/metrics', [\App\Http\Controllers\Admin\ObservabilityController::class, 'metrics'])->name('metrics');
-    Route::post('/clear-logs', [\App\Http\Controllers\Admin\ObservabilityController::class, 'clearLogs'])->name('clear-logs');
-    Route::post('/simulate', [\App\Http\Controllers\Admin\ObservabilityController::class, 'simulate'])->name('simulate');
+    Route::get('/', [ObservabilityController::class, 'dashboard'])->name('dashboard');
+    Route::get('/metrics', [ObservabilityController::class, 'metrics'])->name('metrics');
+    Route::post('/clear-logs', [ObservabilityController::class, 'clearLogs'])->name('clear-logs');
+    Route::post('/simulate', [ObservabilityController::class, 'simulate'])->name('simulate');
 });
 
 // =========================================================
 // ðŸ› ï¸ DEVELOPER PORTAL (DOCUMENTATION)
 // =========================================================
 Route::middleware(['auth', 'role:admin,superadmin'])->prefix('developer')->name('developer.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\DeveloperPortalController::class, 'index'])->name('portal');
-    Route::get('/{category}', [\App\Http\Controllers\Admin\DeveloperPortalController::class, 'index'])->name('page');
-    Route::get('/{category}/{page}', [\App\Http\Controllers\Admin\DeveloperPortalController::class, 'index'])->name('subpage');
+    Route::get('/', [DeveloperPortalController::class, 'index'])->name('portal');
+    Route::get('/{category}', [DeveloperPortalController::class, 'index'])->name('page');
+    Route::get('/{category}/{page}', [DeveloperPortalController::class, 'index'])->name('subpage');
 });
 
 // =========================================================
@@ -1884,7 +1952,6 @@ require __DIR__.'/auth.php';
 
 require __DIR__.'/crisis.php';
 
-
 require __DIR__.'/campus_ops.php';
 
 require __DIR__.'/family_engagement.php';
@@ -1893,12 +1960,10 @@ require __DIR__.'/green_school.php';
 require __DIR__.'/extended_diamond.php';
 
 // --- Mobile Universal Links & Android App Links (.well-known) ---
-Route::get('/.well-known/assetlinks.json', [\App\Http\Controllers\WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');
-Route::get('/.well-known/apple-app-site-association', [\App\Http\Controllers\WellKnownController::class, 'appleAppSiteAssociation'])->name('well-known.apple-app-site-association');
+Route::get('/.well-known/assetlinks.json', [WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');
+Route::get('/.well-known/apple-app-site-association', [WellKnownController::class, 'appleAppSiteAssociation'])->name('well-known.apple-app-site-association');
 
 // --- FASE 107: PWA (Progressive Web App) Routes ---
-Route::get('/manifest.json', [\App\Http\Controllers\PwaController::class, 'manifest'])->name('pwa.manifest');
-Route::get('/sw.js', [\App\Http\Controllers\PwaController::class, 'serviceWorker'])->name('pwa.service-worker');
-Route::post('/pwa/subscribe', [\App\Http\Controllers\PwaController::class, 'subscribe'])->middleware('auth')->name('pwa.subscribe');
-
-
+Route::get('/manifest.json', [PwaController::class, 'manifest'])->name('pwa.manifest');
+Route::get('/sw.js', [PwaController::class, 'serviceWorker'])->name('pwa.service-worker');
+Route::post('/pwa/subscribe', [PwaController::class, 'subscribe'])->middleware('auth')->name('pwa.subscribe');

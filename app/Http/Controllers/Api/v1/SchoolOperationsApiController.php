@@ -3,16 +3,22 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\CalendarEvent;
-use App\Models\TeachingJournal;
-use App\Models\UksVisit;
-use App\Models\Registration;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
 use App\Models\AcademicYear;
-use Illuminate\Http\Request;
+use App\Models\CalendarEvent;
+use App\Models\HealthScreeningResult;
+use App\Models\Registration;
+use App\Models\SpmbDocument;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
+use App\Models\Student;
+use App\Models\TeachingJournal;
+use App\Models\UksMedicine;
+use App\Models\UksVisit;
+use App\Notifications\UksVisitNotification;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class SchoolOperationsApiController extends Controller
 {
@@ -80,7 +86,7 @@ class SchoolOperationsApiController extends Controller
             $end = $event->end_datetime?->format('Ymd\THis\Z') ?? now()->addHours(2)->format('Ymd\THis\Z');
             $title = $event->title;
             $desc = $event->description ?? '';
-            $uid = $event->id . "@sultanagung1.sch.id";
+            $uid = $event->id.'@sultanagung1.sch.id';
 
             $ics .= "BEGIN:VEVENT\r\nUID:{$uid}\r\nDTSTART:{$start}\r\nDTEND:{$end}\r\nSUMMARY:{$title}\r\nDESCRIPTION:{$desc}\r\nEND:VEVENT\r\n";
         }
@@ -139,7 +145,7 @@ class SchoolOperationsApiController extends Controller
         ]);
 
         $openWave = SpmbWave::where('status', 'open')->with('period')->first();
-        if (!$openWave) {
+        if (! $openWave) {
             return response()->json([
                 'success' => false,
                 'message' => 'Pendaftaran SPMB sedang ditutup. Tidak ada gelombang yang aktif saat ini.',
@@ -147,23 +153,23 @@ class SchoolOperationsApiController extends Controller
         }
 
         $track = $request->filled('track_name')
-            ? \App\Models\SpmbTrack::where('spmb_period_id', $openWave->spmb_period_id)
+            ? SpmbTrack::where('spmb_period_id', $openWave->spmb_period_id)
                 ->where('name', 'like', '%'.$request->input('track_name').'%')
                 ->first()
             : null;
 
         $academicYearId = $openWave->period?->academic_year_id
-            ?? \App\Models\AcademicYear::where('is_active', true)->first()?->id;
+            ?? AcademicYear::where('is_active', true)->first()?->id;
 
-        if (!$academicYearId) {
+        if (! $academicYearId) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tahun ajaran aktif tidak ditemukan. Hubungi admin sekolah.',
             ], 422);
         }
 
-        $registration = \App\Models\Registration::create([
-            'registration_number' => \App\Models\Registration::generateRegistrationNumber(),
+        $registration = Registration::create([
+            'registration_number' => Registration::generateRegistrationNumber(),
             'full_name' => $request->input('full_name'),
             'nisn' => $request->input('nisn'),
             'previous_school' => $request->input('school_origin'),
@@ -194,11 +200,11 @@ class SchoolOperationsApiController extends Controller
 
     public function spmbCheckStatus(Request $request, string $registrationNo): JsonResponse
     {
-        $registration = \App\Models\Registration::where('registration_number', $registrationNo)
+        $registration = Registration::where('registration_number', $registrationNo)
             ->with('spmbTrack')
             ->first();
 
-        if (!$registration) {
+        if (! $registration) {
             return response()->json([
                 'success' => false,
                 'message' => 'Nomor pendaftaran tidak ditemukan.',
@@ -249,14 +255,14 @@ class SchoolOperationsApiController extends Controller
             'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        $registration = \App\Models\Registration::where('registration_number', $registrationNo)->first();
-        if (!$registration) {
+        $registration = Registration::where('registration_number', $registrationNo)->first();
+        if (! $registration) {
             return response()->json(['success' => false, 'message' => 'Nomor pendaftaran tidak ditemukan.'], 404);
         }
 
         $path = $request->file('file')->store('spmb/mobile_documents', 'public');
 
-        $document = \App\Models\SpmbDocument::create([
+        $document = SpmbDocument::create([
             'registration_id' => $registration->id,
             'document_type' => $request->input('document_type'),
             'file_path' => $path,
@@ -266,7 +272,7 @@ class SchoolOperationsApiController extends Controller
         // Once every one of the 4 documents the mobile form collects has
         // arrived, the registration is no longer "incomplete".
         $requiredTypes = ['photo', 'kk', 'rapor', 'sertifikat'];
-        $uploadedTypes = \App\Models\SpmbDocument::where('registration_id', $registration->id)
+        $uploadedTypes = SpmbDocument::where('registration_id', $registration->id)
             ->pluck('document_type')
             ->unique();
         if (collect($requiredTypes)->every(fn ($t) => $uploadedTypes->contains($t))) {
@@ -279,7 +285,7 @@ class SchoolOperationsApiController extends Controller
             'data' => [
                 'id' => $document->id,
                 'document_type' => $document->document_type,
-                'file_url' => \Illuminate\Support\Facades\Storage::url($path),
+                'file_url' => Storage::url($path),
             ],
         ], 201);
     }
@@ -296,40 +302,43 @@ class SchoolOperationsApiController extends Controller
      * student's users.id and students.id are different auto-increment
      * sequences on different tables).
      */
-    private function resolveUksTargetStudent(Request $request, ?int $requestedStudentId): \App\Models\Student
+    private function resolveUksTargetStudent(Request $request, ?int $requestedStudentId): Student
     {
         $user = $request->user();
 
         if (in_array($user->role, ['student', 'siswa'], true)) {
             $own = $user->student;
-            if (!$own) {
+            if (! $own) {
                 abort(404, 'Data siswa untuk akun ini tidak ditemukan.');
             }
             if ($requestedStudentId && $requestedStudentId !== $own->id) {
                 abort(403, 'Akses ditolak. Anda hanya berhak melihat data UKS Anda sendiri.');
             }
+
             return $own;
         }
 
         if ($user->role === 'parent') {
-            if (!$requestedStudentId) {
+            if (! $requestedStudentId) {
                 abort(422, 'Parameter student_id wajib diisi untuk melihat data UKS anak.');
             }
-            $child = \App\Models\Student::where('id', $requestedStudentId)->where('parent_id', $user->id)->first();
-            if (!$child) {
+            $child = Student::where('id', $requestedStudentId)->where('parent_id', $user->id)->first();
+            if (! $child) {
                 abort(403, 'Akses ditolak. Anda hanya berhak melihat data UKS anak Anda.');
             }
+
             return $child;
         }
 
         // Staff/nurse/admin: must specify which student.
-        if (!$requestedStudentId) {
+        if (! $requestedStudentId) {
             abort(422, 'Parameter student_id wajib diisi.');
         }
-        $student = \App\Models\Student::find($requestedStudentId);
-        if (!$student) {
+        $student = Student::find($requestedStudentId);
+        if (! $student) {
             abort(404, 'Data siswa tidak ditemukan.');
         }
+
         return $student;
     }
 
@@ -383,7 +392,7 @@ class SchoolOperationsApiController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $visit = \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+        $visit = DB::transaction(function () use ($request) {
             $visit = UksVisit::create([
                 'student_id' => $request->input('student_id'),
                 'handled_by' => $request->user()->id,
@@ -400,8 +409,8 @@ class SchoolOperationsApiController extends Controller
             ]);
 
             foreach ($request->input('medicines', []) as $med) {
-                $medicine = \App\Models\UksMedicine::find($med['id']);
-                if (!$medicine) {
+                $medicine = UksMedicine::find($med['id']);
+                if (! $medicine) {
                     continue;
                 }
                 $qty = (int) ($med['quantity'] ?? 1);
@@ -411,7 +420,7 @@ class SchoolOperationsApiController extends Controller
 
             $student = $visit->load('student.parent')->student;
             if ($student?->parent) {
-                $student->parent->notify(new \App\Notifications\UksVisitNotification($visit));
+                $student->parent->notify(new UksVisitNotification($visit));
                 $visit->update(['parent_notified' => true]);
             }
 
@@ -458,7 +467,7 @@ class SchoolOperationsApiController extends Controller
         // Student.name is a computed accessor proxying User.name (no real
         // "name" column on students), so matching by name needs a relation
         // constraint rather than a direct where().
-        $students = \App\Models\Student::with(['classroom', 'user'])
+        $students = Student::with(['classroom', 'user'])
             ->where(function ($q) use ($query) {
                 $q->whereHas('user', function ($uq) use ($query) {
                     $uq->where('name', 'like', "%{$query}%");
@@ -484,7 +493,7 @@ class SchoolOperationsApiController extends Controller
      */
     public function uksMedicines(Request $request): JsonResponse
     {
-        $medicines = \App\Models\UksMedicine::orderBy('name')->get()->map(fn ($m) => [
+        $medicines = UksMedicine::orderBy('name')->get()->map(fn ($m) => [
             'id' => (string) $m->id,
             'name' => $m->name,
             'quantity' => $m->stock,
@@ -497,7 +506,7 @@ class SchoolOperationsApiController extends Controller
     {
         $student = $this->resolveUksTargetStudent($request, $studentId);
 
-        $latestResult = \App\Models\HealthScreeningResult::where('student_id', $student->id)
+        $latestResult = HealthScreeningResult::where('student_id', $student->id)
             ->with('screening')
             ->latest('id')
             ->first();
@@ -583,7 +592,7 @@ class SchoolOperationsApiController extends Controller
                     'attendance_absent' => 0,
                     'absent_reason' => null,
                     'status' => 'approved',
-                ]
+                ],
             ];
         }
 

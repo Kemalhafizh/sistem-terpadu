@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
-use App\Models\StudentProgressSnapshot;
 use App\Services\Dashboard\StudentCockpitService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

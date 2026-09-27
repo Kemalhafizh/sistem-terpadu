@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendWhatsappBroadcastJob;
 use App\Models\Classroom;
 use App\Models\Setting;
+use App\Models\User;
 use App\Models\WhatsappAutomation;
 use App\Models\WhatsappBroadcast;
 use App\Models\WhatsappLog;
 use App\Models\WhatsappTemplate;
-use App\Services\WhatsappService;
 use App\Services\WhatsappAutomationService;
-use App\Jobs\SendWhatsappBroadcastJob;
+use App\Services\WhatsappService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class WhatsappController extends Controller
 {
     protected $whatsappService;
+
     protected $automationService;
 
     public function __construct(WhatsappService $whatsappService, WhatsappAutomationService $automationService)
@@ -138,6 +139,7 @@ class WhatsappController extends Controller
     public function templates()
     {
         $templates = WhatsappTemplate::latest()->paginate(15);
+
         return view('admin.whatsapp.templates.index', compact('templates'));
     }
 
@@ -172,6 +174,7 @@ class WhatsappController extends Controller
     public function editTemplate($id)
     {
         $template = WhatsappTemplate::findOrFail($id);
+
         return view('admin.whatsapp.templates.edit', compact('template'));
     }
 
@@ -214,6 +217,7 @@ class WhatsappController extends Controller
     public function broadcasts()
     {
         $broadcasts = WhatsappBroadcast::with('template')->latest()->paginate(15);
+
         return view('admin.whatsapp.broadcasts.index', compact('broadcasts'));
     }
 
@@ -221,7 +225,8 @@ class WhatsappController extends Controller
     {
         $templates = WhatsappTemplate::where('is_active', true)->get();
         $classrooms = Classroom::orderBy('name')->get();
-        $users = \App\Models\User::whereNotNull('phone_number')->orderBy('name')->get(['id', 'name', 'role', 'phone_number']);
+        $users = User::whereNotNull('phone_number')->orderBy('name')->get(['id', 'name', 'role', 'phone_number']);
+
         return view('admin.whatsapp.broadcasts.create', compact('templates', 'classrooms', 'users'));
     }
 
@@ -272,9 +277,9 @@ class WhatsappController extends Controller
     public function showBroadcast($id)
     {
         $broadcast = WhatsappBroadcast::with('template', 'creator')->findOrFail($id);
-        
+
         // Find sent/failed logs for this broadcast
-        $logs = WhatsappLog::where('type', 'broadcast_' . $broadcast->id)
+        $logs = WhatsappLog::where('type', 'broadcast_'.$broadcast->id)
             ->latest()
             ->paginate(30);
 
@@ -284,9 +289,9 @@ class WhatsappController extends Controller
     public function retryFailed($id)
     {
         $broadcast = WhatsappBroadcast::findOrFail($id);
-        
+
         // Find failed logs for this broadcast
-        $failedLogs = WhatsappLog::where('type', 'broadcast_' . $broadcast->id)
+        $failedLogs = WhatsappLog::where('type', 'broadcast_'.$broadcast->id)
             ->where('status', 'failed')
             ->get();
 
@@ -299,13 +304,13 @@ class WhatsappController extends Controller
         }
 
         // Reset counts dynamically
-        $totalLogs = WhatsappLog::where('type', 'broadcast_' . $broadcast->id)->get();
+        $totalLogs = WhatsappLog::where('type', 'broadcast_'.$broadcast->id)->get();
         $broadcast->update([
             'sent_count' => $totalLogs->where('status', 'sent')->count(),
             'failed_count' => $totalLogs->where('status', 'failed')->count(),
         ]);
 
-        return back()->with('success', 'Mencoba mengirim ulang ' . $failedLogs->count() . ' pesan yang gagal.');
+        return back()->with('success', 'Mencoba mengirim ulang '.$failedLogs->count().' pesan yang gagal.');
     }
 
     // ==========================================
@@ -370,7 +375,7 @@ class WhatsappController extends Controller
     {
         $automation = WhatsappAutomation::findOrFail($id);
         $automation->update([
-            'is_active' => !$automation->is_active,
+            'is_active' => ! $automation->is_active,
         ]);
 
         return redirect()->route('admin.whatsapp.automations.index')->with('success', 'Status otomasi berhasil diubah.');
@@ -394,9 +399,9 @@ class WhatsappController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('recipient', 'like', "%{$search}%")
-                  ->orWhere('message', 'like', "%{$search}%");
+                    ->orWhere('message', 'like', "%{$search}%");
             });
         }
 
@@ -405,7 +410,7 @@ class WhatsappController extends Controller
         }
 
         if ($request->filled('type')) {
-            $query->where('type', 'like', $request->input('type') . '%');
+            $query->where('type', 'like', $request->input('type').'%');
         }
 
         if ($request->filled('date')) {

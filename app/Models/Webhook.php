@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Webhook extends Model
 {
-    use \App\Traits\HasUuid, HasFactory;
+    use HasFactory, HasUuid;
 
     protected $fillable = [
         'name',

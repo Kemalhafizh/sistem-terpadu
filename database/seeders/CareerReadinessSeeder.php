@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\InternshipCompany;
-use App\Models\UniversityCatalog;
+use App\Models\MiniBankTransaction;
 use App\Models\StudentShowcase;
 use App\Models\StudentWallet;
-use App\Models\MiniBankTransaction;
+use App\Models\UniversityCatalog;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -21,7 +21,7 @@ class CareerReadinessSeeder extends Seeder
             [
                 'name' => 'Siswa Karir Sula',
                 'password' => Hash::make('password'),
-                'role' => 'student'
+                'role' => 'student',
             ]
         );
 
@@ -31,14 +31,14 @@ class CareerReadinessSeeder extends Seeder
             'address' => 'Jl. Kaligawe Raya, Semarang',
             'pic_name' => 'Bapak Budi',
             'pic_contact' => '081234567890',
-            'is_verified_partner' => true
+            'is_verified_partner' => true,
         ]);
 
         $company->applications()->create([
             'student_id' => $student->id,
             'start_date' => now()->addDays(10),
             'end_date' => now()->addMonths(3),
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $uni = UniversityCatalog::create([
@@ -46,13 +46,13 @@ class CareerReadinessSeeder extends Seeder
             'major' => 'Kedokteran',
             'passing_grade_index' => 90.50,
             'city' => 'Semarang',
-            'accreditation' => 'Unggul'
+            'accreditation' => 'Unggul',
         ]);
 
         $uni->applications()->create([
             'student_id' => $student->id,
             'admission_type' => 'snbp',
-            'status' => 'preparing'
+            'status' => 'preparing',
         ]);
 
         StudentShowcase::create([
@@ -67,15 +67,15 @@ class CareerReadinessSeeder extends Seeder
             'student_id' => $student->id,
             'balance' => 500000,
             'savings_target' => 1000000,
-            'is_active' => true
+            'is_active' => true,
         ]);
 
         MiniBankTransaction::create([
             'wallet_id' => $wallet->id,
             'transaction_type' => 'deposit',
             'amount' => 500000,
-            'reference_code' => 'DEP' . Str::random(6),
-            'description' => 'Setoran awal tabungan sekolah'
+            'reference_code' => 'DEP'.Str::random(6),
+            'description' => 'Setoran awal tabungan sekolah',
         ]);
     }
 }

@@ -17,7 +17,7 @@ class DisasterRecoveryController extends Controller
         $auditResult = $drService->runIntegrityAudit();
 
         $totalStorageBytes = array_sum(array_column($snapshots, 'size_bytes'));
-        $totalStorageFormatted = round($totalStorageBytes / 1024 / 1024, 2) . ' MB';
+        $totalStorageFormatted = round($totalStorageBytes / 1024 / 1024, 2).' MB';
 
         return view('admin.security.disaster_recovery', compact(
             'snapshots',
@@ -70,9 +70,10 @@ class DisasterRecoveryController extends Controller
 
         try {
             $drService->restoreSnapshot($request->filename);
+
             return back()->with('success', "Sistem berhasil dipulihkan (Point-In-Time Restore) dari snapshot [{$request->filename}]!");
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal memulihkan database: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memulihkan database: '.$e->getMessage());
         }
     }
 

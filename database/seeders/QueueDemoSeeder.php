@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class QueueDemoSeeder extends Seeder
 {
@@ -12,7 +13,7 @@ class QueueDemoSeeder extends Seeder
         if (DB::table('failed_jobs')->count() === 0) {
             DB::table('failed_jobs')->insert([
                 [
-                    'uuid' => (string) \Illuminate\Support\Str::uuid(),
+                    'uuid' => (string) Str::uuid(),
                     'connection' => 'database',
                     'queue' => 'high',
                     'payload' => json_encode(['job' => 'App\\Jobs\\SendHighPriorityNotificationJob']),
@@ -20,7 +21,7 @@ class QueueDemoSeeder extends Seeder
                     'failed_at' => now()->subMinutes(15),
                 ],
                 [
-                    'uuid' => (string) \Illuminate\Support\Str::uuid(),
+                    'uuid' => (string) Str::uuid(),
                     'connection' => 'database',
                     'queue' => 'low',
                     'payload' => json_encode(['job' => 'App\\Jobs\\GeneratePdfReportJob']),

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ChatbotFaq;
 use App\Models\ChatbotConversation;
+use App\Models\ChatbotFaq;
+use App\Models\Ticket;
 use App\Services\ChatbotService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ChatbotController extends Controller
 {
@@ -66,6 +68,7 @@ class ChatbotController extends Controller
     public function manageFaqs()
     {
         $faqs = ChatbotFaq::latest()->get();
+
         return view('admin.chatbot.faqs', compact('faqs'));
     }
 
@@ -81,8 +84,8 @@ class ChatbotController extends Controller
             'keywords' => 'nullable|string',
         ]);
 
-        $keywords = $request->keywords 
-            ? array_map('trim', explode(',', $request->keywords)) 
+        $keywords = $request->keywords
+            ? array_map('trim', explode(',', $request->keywords))
             : [];
 
         ChatbotFaq::create([
@@ -109,8 +112,8 @@ class ChatbotController extends Controller
             'is_active' => 'required|boolean',
         ]);
 
-        $keywords = $request->keywords 
-            ? array_map('trim', explode(',', $request->keywords)) 
+        $keywords = $request->keywords
+            ? array_map('trim', explode(',', $request->keywords))
             : [];
 
         $faq->update([
@@ -130,6 +133,7 @@ class ChatbotController extends Controller
     public function destroyFaq(ChatbotFaq $faq)
     {
         $faq->delete();
+
         return redirect()->back()->with('success', 'FAQ berhasil dihapus!');
     }
 
@@ -141,6 +145,7 @@ class ChatbotController extends Controller
         $analytics = $this->chatbotService->getAnalytics();
         $recentChats = ChatbotConversation::with('user')->latest()->limit(5)->get();
         $faqsCount = ChatbotFaq::count();
+
         return view('admin.chatbot.dashboard', compact('analytics', 'recentChats', 'faqsCount'));
     }
 
@@ -150,6 +155,7 @@ class ChatbotController extends Controller
     public function conversationHistory()
     {
         $conversations = ChatbotConversation::with('user')->latest()->paginate(15);
+
         return view('admin.chatbot.conversations', compact('conversations'));
     }
 
@@ -159,6 +165,7 @@ class ChatbotController extends Controller
     public function showConversation($id)
     {
         $conversation = ChatbotConversation::with('user')->findOrFail($id);
+
         return view('admin.chatbot.conversation-detail', compact('conversation'));
     }
 
@@ -168,14 +175,14 @@ class ChatbotController extends Controller
     public function escalateToTicket($id)
     {
         $conversation = ChatbotConversation::findOrFail($id);
-        
+
         // Generate a support ticket
-        $ticket = \App\Models\Ticket::create([
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+        $ticket = Ticket::create([
+            'uuid' => (string) Str::uuid(),
             'reporter_id' => $conversation->user_id,
-            'title' => 'Eskalasi Chatbot: ' . \Illuminate\Support\Str::limit($conversation->user_message, 50),
-            'description' => "Tiket ini dibuat otomatis dari eskalasi percakapan chatbot.\n\n" .
-                             "**Pesan Pengguna:**\n{$conversation->user_message}\n\n" .
+            'title' => 'Eskalasi Chatbot: '.Str::limit($conversation->user_message, 50),
+            'description' => "Tiket ini dibuat otomatis dari eskalasi percakapan chatbot.\n\n".
+                             "**Pesan Pengguna:**\n{$conversation->user_message}\n\n".
                              "**Respon Bot:**\n{$conversation->bot_response}",
             'category' => 'it',
             'priority' => 'medium',
@@ -185,7 +192,7 @@ class ChatbotController extends Controller
         $conversation->update(['intent' => 'escalated']);
 
         return redirect()->route('admin.chatbot.conversations.show', $conversation->id)
-            ->with('success', 'Percakapan berhasil dieskalasikan ke tiket #' . $ticket->id);
+            ->with('success', 'Percakapan berhasil dieskalasikan ke tiket #'.$ticket->id);
     }
 
     /**
@@ -194,6 +201,7 @@ class ChatbotController extends Controller
     public function analytics()
     {
         $analytics = $this->chatbotService->getAnalytics();
+
         return view('admin.chatbot.analytics', compact('analytics'));
     }
 
@@ -203,6 +211,7 @@ class ChatbotController extends Controller
     public function trainSuggestions()
     {
         $suggestions = $this->chatbotService->getTrainingSuggestions();
+
         return view('admin.chatbot.train-suggestions', compact('suggestions'));
     }
 
@@ -216,14 +225,16 @@ class ChatbotController extends Controller
         ]);
 
         $file = $request->file('csv_file');
-        
+
         $imported = 0;
         if (($handle = fopen($file->getRealPath(), 'r')) !== false) {
             // Skip header row
             fgetcsv($handle);
 
             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-                if (count($row) < 3) continue;
+                if (count($row) < 3) {
+                    continue;
+                }
 
                 $question = trim($row[0] ?? '');
                 $answer = trim($row[1] ?? '');
@@ -235,8 +246,8 @@ class ChatbotController extends Controller
                     continue;
                 }
 
-                $keywords = !empty($keywordsRaw) 
-                    ? array_map('trim', explode(',', $keywordsRaw)) 
+                $keywords = ! empty($keywordsRaw)
+                    ? array_map('trim', explode(',', $keywordsRaw))
                     : [];
 
                 // Bersihkan teks jawaban dari HTML script/XSS tags tapi pertahankan format teks dasar
@@ -263,19 +274,19 @@ class ChatbotController extends Controller
     public function exportFaqs()
     {
         $faqs = ChatbotFaq::all();
-        $csvFileName = 'sista_chatbot_faqs_' . now()->format('YmdHis') . '.csv';
-        
+        $csvFileName = 'sista_chatbot_faqs_'.now()->format('YmdHis').'.csv';
+
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$csvFileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$csvFileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
         $columns = ['Question', 'Answer', 'Category', 'Keywords'];
 
-        $callback = function() use($faqs, $columns) {
+        $callback = function () use ($faqs, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
@@ -285,7 +296,7 @@ class ChatbotController extends Controller
                     $faq->question,
                     $faq->answer,
                     $faq->category,
-                    $keywords
+                    $keywords,
                 ]);
             }
 

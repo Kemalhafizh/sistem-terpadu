@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class AcademicYear extends Model
 {
-    use \App\Traits\HasUuid, HasFactory;
+    use HasFactory, HasUuid;
 
     protected $fillable = [
         'year',
@@ -31,20 +33,20 @@ class AcademicYear extends Model
      */
     public static function current(): ?self
     {
-        if (\Illuminate\Support\Facades\Cache::has('academic_year_current')) {
-            $year = \Illuminate\Support\Facades\Cache::get('academic_year_current');
+        if (Cache::has('academic_year_current')) {
+            $year = Cache::get('academic_year_current');
 
             if ($year instanceof self || is_null($year)) {
                 return $year;
             }
 
             // Cache is corrupt (e.g. __PHP_Incomplete_Class)
-            \Illuminate\Support\Facades\Cache::forget('academic_year_current');
+            Cache::forget('academic_year_current');
         }
 
         $year = self::where('is_active', true)->first();
 
-        \Illuminate\Support\Facades\Cache::forever('academic_year_current', $year);
+        Cache::forever('academic_year_current', $year);
 
         return $year;
     }
@@ -56,8 +58,8 @@ class AcademicYear extends Model
     {
         self::query()->update(['is_active' => false]);
         $this->update(['is_active' => true]);
-        
-        \Illuminate\Support\Facades\Cache::forget('academic_year_current');
+
+        Cache::forget('academic_year_current');
     }
 
     /**

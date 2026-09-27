@@ -60,7 +60,7 @@ class AiPersonalizedTutorService
             $aiResponse = "Tidak apa-apa! Mari kita urai perlahan. Coba bayangkan analogi sederhana terkait {$session->topic}. Jika dikaitkan dengan kehidupan sehari-hari, apa yang pertama kali terlintas?";
         } elseif ($comprehensionScore >= 0.75) {
             $socraticType = 'conceptual_bridge';
-            $aiResponse = "Maa syaa Allah, pemikiran yang sangat baik! Kamu sudah menangkap esensi utamanya. Sekarang, bisakah kamu mencoba menghubungkan konsep ini dengan contoh kasus atau rumus yang berlaku?";
+            $aiResponse = 'Maa syaa Allah, pemikiran yang sangat baik! Kamu sudah menangkap esensi utamanya. Sekarang, bisakah kamu mencoba menghubungkan konsep ini dengan contoh kasus atau rumus yang berlaku?';
         } else {
             $socraticType = 'prompt_question';
             $aiResponse = "Poin yang menarik! Mengapa menurutmu hal itu terjadi? Apa faktor utama yang mempengaruhinya pada materi {$session->topic}?";

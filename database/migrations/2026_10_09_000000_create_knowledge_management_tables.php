@@ -15,9 +15,9 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->enum('category', [
-                'strategi_mengajar', 'penilaian_formatif', 'manajemen_kelas', 
-                'teknologi_pembelajaran', 'pendidikan_inklusif', 'kurikulum_merdeka', 
-                'keislaman_integrasi', 'penelitian_tindakan_kelas', 'lainnya'
+                'strategi_mengajar', 'penilaian_formatif', 'manajemen_kelas',
+                'teknologi_pembelajaran', 'pendidikan_inklusif', 'kurikulum_merdeka',
+                'keislaman_integrasi', 'penelitian_tindakan_kelas', 'lainnya',
             ]);
             $table->json('tags')->nullable();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
@@ -128,8 +128,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->enum('resource_type', [
-                'rpp', 'bahan_ajar', 'bank_soal', 'media_pembelajaran', 
-                'video_microteaching', 'modul', 'lembar_kerja', 'rubrik_penilaian', 'lainnya'
+                'rpp', 'bahan_ajar', 'bank_soal', 'media_pembelajaran',
+                'video_microteaching', 'modul', 'lembar_kerja', 'rubrik_penilaian', 'lainnya',
             ]);
             $table->foreignId('subject_id')->nullable()->constrained('subjects')->onDelete('set null');
             $table->enum('grade_level', ['x', 'xi', 'xii', 'all'])->default('all');

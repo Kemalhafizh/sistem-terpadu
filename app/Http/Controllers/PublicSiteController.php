@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
+use App\Models\CmsGallery;
 use App\Models\CmsPage;
 use App\Models\CmsPost;
-use App\Models\CmsGallery;
 use App\Models\CmsTestimonial;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\Classroom;
 use Illuminate\Http\Request;
 
 class PublicSiteController extends Controller
@@ -35,8 +35,8 @@ class PublicSiteController extends Controller
         // Calculate real-time stats
         $studentCount = Student::where('status', 'active')->count();
         $teacherStaffCount = User::whereIn('role', [
-            'guru', 'staf_tu', 'admin', 'superadmin', 'bk', 
-            'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah'
+            'guru', 'staf_tu', 'admin', 'superadmin', 'bk',
+            'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah',
         ])->count();
         $classroomCount = Classroom::count();
 
@@ -45,11 +45,11 @@ class PublicSiteController extends Controller
             ->get();
 
         return view('welcome', compact(
-            'posts', 
-            'galleries', 
-            'testimonials', 
-            'studentCount', 
-            'teacherStaffCount', 
+            'posts',
+            'galleries',
+            'testimonials',
+            'studentCount',
+            'teacherStaffCount',
             'classroomCount',
             'navPages'
         ));
@@ -80,9 +80,9 @@ class PublicSiteController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('body', 'like', "%{$search}%");
+                    ->orWhere('body', 'like', "%{$search}%");
             });
         }
 
@@ -150,7 +150,7 @@ class PublicSiteController extends Controller
         }
 
         $galleries = $query->orderBy('order', 'asc')->paginate(12);
-        
+
         $categories = CmsGallery::active()
             ->whereNotNull('category')
             ->distinct()
@@ -169,6 +169,7 @@ class PublicSiteController extends Controller
     public function about()
     {
         $navPages = CmsPage::published()->inNavbar()->get();
+
         return view('public.about', compact('navPages'));
     }
 
@@ -178,6 +179,7 @@ class PublicSiteController extends Controller
     public function contact()
     {
         $navPages = CmsPage::published()->inNavbar()->get();
+
         return view('public.contact', compact('navPages'));
     }
 
@@ -187,6 +189,7 @@ class PublicSiteController extends Controller
     public function facilities()
     {
         $navPages = CmsPage::published()->inNavbar()->get();
+
         return view('public.facilities', compact('navPages'));
     }
 
@@ -197,6 +200,7 @@ class PublicSiteController extends Controller
     {
         $navPages = CmsPage::published()->inNavbar()->get();
         $achievements = CmsPost::published()->byCategory('prestasi')->latest('published_at')->get();
+
         return view('public.achievements', compact('achievements', 'navPages'));
     }
 
@@ -209,6 +213,7 @@ class PublicSiteController extends Controller
         $staff = User::whereIn('role', ['guru', 'staf_tu', 'bk', 'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah'])
             ->orderBy('name')
             ->get();
+
         return view('public.staff-directory', compact('staff', 'navPages'));
     }
 
@@ -226,6 +231,7 @@ class PublicSiteController extends Controller
     public function virtualTour()
     {
         $navPages = CmsPage::published()->inNavbar()->get();
+
         return view('public.virtual-tour', compact('navPages'));
     }
 }

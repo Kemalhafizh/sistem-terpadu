@@ -80,10 +80,10 @@ class ForumSeeder extends Seeder
             }
 
             $classroomGuru = $classroom->teacher_id;
-            
+
             // Thread 1: By Teacher
             $allThreads[] = ForumThread::create([
-                'title' => 'Tugas & Diskusi Materi Pembelajaran Kelas ' . $classroom->name,
+                'title' => 'Tugas & Diskusi Materi Pembelajaran Kelas '.$classroom->name,
                 'body' => 'Silakan posting pertanyaan atau tanggapan mengenai materi pelajaran yang kurang jelas di kelas kita.',
                 'user_id' => $classroomGuru,
                 'classroom_id' => $classroom->id,
@@ -96,7 +96,7 @@ class ForumSeeder extends Seeder
             // Thread 2: By Student
             $studentAuthor = $classStudents->random()->user;
             $allThreads[] = ForumThread::create([
-                'title' => 'Diskusi Kelompok Tugas Kerja Kelompok Kelas ' . $classroom->name,
+                'title' => 'Diskusi Kelompok Tugas Kerja Kelompok Kelas '.$classroom->name,
                 'body' => 'Teman-teman sekelas, mari kumpul setelah shalat dzuhur untuk membagi tugas kelompok fisika/ekonomi.',
                 'user_id' => $studentAuthor->id,
                 'classroom_id' => $classroom->id,
@@ -120,7 +120,7 @@ class ForumSeeder extends Seeder
             'Keren sekali programnya! Semoga istiqomah.',
             'Apakah tugas ini dikumpulkan secara mandiri atau per kelompok?',
             'Saya rasa ide tersebut sangat luar biasa, ayo segera kita eksekusi.',
-            'Terima kasih atas tanggapannya, sangat membantu menjelaskan keraguan saya.'
+            'Terima kasih atas tanggapannya, sangat membantu menjelaskan keraguan saya.',
         ];
 
         $replyCounter = 0;
@@ -145,7 +145,7 @@ class ForumSeeder extends Seeder
 
                 $parentReplyId = null;
                 // 30% chance this is a nested reply (to a previous reply on this thread)
-                if (!empty($threadReplies) && rand(1, 100) <= 30) {
+                if (! empty($threadReplies) && rand(1, 100) <= 30) {
                     $parentReplyId = $threadReplies[array_rand($threadReplies)]->id;
                 }
 
@@ -153,7 +153,7 @@ class ForumSeeder extends Seeder
                     'thread_id' => $thread->id,
                     'user_id' => $replier->id,
                     'parent_id' => $parentReplyId,
-                    'body' => $replySamples[array_rand($replySamples)] . ' (' . $replier->name . ')',
+                    'body' => $replySamples[array_rand($replySamples)].' ('.$replier->name.')',
                     'is_best_answer' => ($r === 0 && rand(1, 100) <= 20) ? true : false,
                 ]);
 

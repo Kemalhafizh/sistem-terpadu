@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\GenericExport;
 use App\Models\AcademicYear;
 use App\Models\Account;
 use App\Models\Billing;
@@ -9,10 +10,10 @@ use App\Models\Classroom;
 use App\Models\JournalEntry;
 use App\Models\Payment;
 use App\Models\Student;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FinancialReportController extends Controller
@@ -40,9 +41,9 @@ class FinancialReportController extends Controller
             ->get()
             ->groupBy(fn ($p) => Carbon::parse($p->payment_date)->translatedFormat('F Y'))
             ->map(fn ($group, $month) => (object) [
-            'month' => $month,
-            'total' => $group->sum('amount_paid'),
-        ])
+                'month' => $month,
+                'total' => $group->sum('amount_paid'),
+            ])
             ->values()
             ->take(6);
 
@@ -250,7 +251,7 @@ class FinancialReportController extends Controller
             $outstandingStudentsCount = Student::where('classroom_id', $class->id)
                 ->whereHas('billings', function ($q) use ($yearId) {
                     $q->when($yearId, fn ($sq) => $sq->where('academic_year_id', $yearId))
-                      ->where('remaining_balance', '>', 0);
+                        ->where('remaining_balance', '>', 0);
                 })
                 ->count();
 
@@ -272,7 +273,7 @@ class FinancialReportController extends Controller
                 ->where('classroom_id', $selectedClassroom->id)
                 ->whereHas('billings', function ($q) use ($yearId) {
                     $q->when($yearId, fn ($sq) => $sq->where('academic_year_id', $yearId))
-                      ->where('remaining_balance', '>', 0);
+                        ->where('remaining_balance', '>', 0);
                 })
                 ->get()
                 ->map(function ($student) use ($yearId) {
@@ -385,7 +386,7 @@ class FinancialReportController extends Controller
                 'name' => $account->name,
                 'total' => $total,
             ];
-        })->filter(fn($a) => $a->total != 0)->values();
+        })->filter(fn ($a) => $a->total != 0)->values();
 
         $totalRevenue = $revenueAccounts->sum('total');
 
@@ -401,14 +402,14 @@ class FinancialReportController extends Controller
                 'name' => $account->name,
                 'total' => $total,
             ];
-        })->filter(fn($a) => $a->total != 0)->values();
+        })->filter(fn ($a) => $a->total != 0)->values();
 
         $totalExpense = $expenseAccounts->sum('total');
         $netIncome = $totalRevenue - $totalExpense;
 
         $monthsList = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
-            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
         ];
         $yearsList = range(now()->year - 3, now()->year + 2);
 
@@ -460,7 +461,7 @@ class FinancialReportController extends Controller
                     $outstandingStudentsCount = Student::where('classroom_id', $class->id)
                         ->whereHas('billings', function ($q) use ($yearId) {
                             $q->when($yearId, fn ($sq) => $sq->where('academic_year_id', $yearId))
-                              ->where('remaining_balance', '>', 0);
+                                ->where('remaining_balance', '>', 0);
                         })
                         ->count();
 
@@ -484,12 +485,13 @@ class FinancialReportController extends Controller
                     ];
                 };
 
-                return Excel::download(new \App\Exports\GenericExport($classrooms, $headings, $mapCallback), 'laporan_tunggakan_kelas_'.date('Ymd').'.xlsx');
+                return Excel::download(new GenericExport($classrooms, $headings, $mapCallback), 'laporan_tunggakan_kelas_'.date('Ymd').'.xlsx');
             }
 
             if ($type === 'income_statement') {
                 $revenueAccounts = Account::where('type', 'revenue')->with(['lines'])->get()->map(function ($account) {
                     $total = $account->lines->sum('credit') - $account->lines->sum('debit');
+
                     return (object) [
                         'code' => $account->code,
                         'name' => $account->name,
@@ -498,6 +500,7 @@ class FinancialReportController extends Controller
                 });
                 $expenseAccounts = Account::where('type', 'expense')->with(['lines'])->get()->map(function ($account) {
                     $total = $account->lines->sum('debit') - $account->lines->sum('credit');
+
                     return (object) [
                         'code' => $account->code,
                         'name' => $account->name,
@@ -506,57 +509,63 @@ class FinancialReportController extends Controller
                 });
 
                 $rows = collect();
-                $rows->push((object)['code' => 'REVENUE (PENDAPATAN)', 'name' => '', 'total' => '']);
+                $rows->push((object) ['code' => 'REVENUE (PENDAPATAN)', 'name' => '', 'total' => '']);
                 foreach ($revenueAccounts as $r) {
                     $rows->push($r);
                 }
-                $rows->push((object)['code' => 'TOTAL PENDAPATAN', 'name' => '', 'total' => $revenueAccounts->sum('total')]);
-                $rows->push((object)['code' => '', 'name' => '', 'total' => '']);
-                $rows->push((object)['code' => 'EXPENSE (BEBAN OPERASIONAL)', 'name' => '', 'total' => '']);
+                $rows->push((object) ['code' => 'TOTAL PENDAPATAN', 'name' => '', 'total' => $revenueAccounts->sum('total')]);
+                $rows->push((object) ['code' => '', 'name' => '', 'total' => '']);
+                $rows->push((object) ['code' => 'EXPENSE (BEBAN OPERASIONAL)', 'name' => '', 'total' => '']);
                 foreach ($expenseAccounts as $e) {
                     $rows->push($e);
                 }
-                $rows->push((object)['code' => 'TOTAL BEBAN', 'name' => '', 'total' => $expenseAccounts->sum('total')]);
-                $rows->push((object)['code' => '', 'name' => '', 'total' => '']);
-                $rows->push((object)['code' => 'LABA/RUGI BERSIH', 'name' => '', 'total' => $revenueAccounts->sum('total') - $expenseAccounts->sum('total')]);
+                $rows->push((object) ['code' => 'TOTAL BEBAN', 'name' => '', 'total' => $expenseAccounts->sum('total')]);
+                $rows->push((object) ['code' => '', 'name' => '', 'total' => '']);
+                $rows->push((object) ['code' => 'LABA/RUGI BERSIH', 'name' => '', 'total' => $revenueAccounts->sum('total') - $expenseAccounts->sum('total')]);
 
                 $headings = ['Kode/Deskripsi', 'Nama Akun', 'Nominal (Rp)'];
                 $mapCallback = function ($row) {
                     return [$row->code, $row->name, $row->total];
                 };
 
-                return Excel::download(new \App\Exports\GenericExport($rows, $headings, $mapCallback), 'laporan_laba_rugi_'.date('Ymd').'.xlsx');
+                return Excel::download(new GenericExport($rows, $headings, $mapCallback), 'laporan_laba_rugi_'.date('Ymd').'.xlsx');
             }
 
             if ($type === 'balance_sheet') {
-                $assetAccounts = Account::where('type', 'asset')->with(['lines'])->get()->map(fn($a) => (object)['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('debit') - $a->lines->sum('credit')]);
-                $liabilityAccounts = Account::where('type', 'liability')->with(['lines'])->get()->map(fn($a) => (object)['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
-                $equityAccounts = Account::where('type', 'equity')->with(['lines'])->get()->map(fn($a) => (object)['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
+                $assetAccounts = Account::where('type', 'asset')->with(['lines'])->get()->map(fn ($a) => (object) ['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('debit') - $a->lines->sum('credit')]);
+                $liabilityAccounts = Account::where('type', 'liability')->with(['lines'])->get()->map(fn ($a) => (object) ['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
+                $equityAccounts = Account::where('type', 'equity')->with(['lines'])->get()->map(fn ($a) => (object) ['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
 
                 $rev = Account::where('type', 'revenue')->with(['lines'])->get()->sum(fn ($a) => $a->lines->sum('credit') - $a->lines->sum('debit'));
                 $exp = Account::where('type', 'expense')->with(['lines'])->get()->sum(fn ($a) => $a->lines->sum('debit') - $a->lines->sum('credit'));
                 $net = $rev - $exp;
 
                 $rows = collect();
-                $rows->push((object)['code' => 'ASSETS (AKTIVA)', 'name' => '', 'balance' => '']);
-                foreach ($assetAccounts as $a) { $rows->push($a); }
-                $rows->push((object)['code' => 'TOTAL ASSETS', 'name' => '', 'balance' => $assetAccounts->sum('balance')]);
-                $rows->push((object)['code' => '', 'name' => '', 'balance' => '']);
-                $rows->push((object)['code' => 'LIABILITIES (KEWAJIBAN)', 'name' => '', 'balance' => '']);
-                foreach ($liabilityAccounts as $l) { $rows->push($l); }
-                $rows->push((object)['code' => 'TOTAL LIABILITIES', 'name' => '', 'balance' => $liabilityAccounts->sum('balance')]);
-                $rows->push((object)['code' => '', 'name' => '', 'balance' => '']);
-                $rows->push((object)['code' => 'EQUITY (EKUITAS)', 'name' => '', 'balance' => '']);
-                foreach ($equityAccounts as $e) { $rows->push($e); }
-                $rows->push((object)['code' => 'LABA RUGI BERJALAN', 'name' => '', 'balance' => $net]);
-                $rows->push((object)['code' => 'TOTAL EQUITY', 'name' => '', 'balance' => $equityAccounts->sum('balance') + $net]);
+                $rows->push((object) ['code' => 'ASSETS (AKTIVA)', 'name' => '', 'balance' => '']);
+                foreach ($assetAccounts as $a) {
+                    $rows->push($a);
+                }
+                $rows->push((object) ['code' => 'TOTAL ASSETS', 'name' => '', 'balance' => $assetAccounts->sum('balance')]);
+                $rows->push((object) ['code' => '', 'name' => '', 'balance' => '']);
+                $rows->push((object) ['code' => 'LIABILITIES (KEWAJIBAN)', 'name' => '', 'balance' => '']);
+                foreach ($liabilityAccounts as $l) {
+                    $rows->push($l);
+                }
+                $rows->push((object) ['code' => 'TOTAL LIABILITIES', 'name' => '', 'balance' => $liabilityAccounts->sum('balance')]);
+                $rows->push((object) ['code' => '', 'name' => '', 'balance' => '']);
+                $rows->push((object) ['code' => 'EQUITY (EKUITAS)', 'name' => '', 'balance' => '']);
+                foreach ($equityAccounts as $e) {
+                    $rows->push($e);
+                }
+                $rows->push((object) ['code' => 'LABA RUGI BERJALAN', 'name' => '', 'balance' => $net]);
+                $rows->push((object) ['code' => 'TOTAL EQUITY', 'name' => '', 'balance' => $equityAccounts->sum('balance') + $net]);
 
                 $headings = ['Kode/Kategori', 'Nama Akun', 'Saldo (Rp)'];
                 $mapCallback = function ($row) {
                     return [$row->code, $row->name, $row->balance];
                 };
 
-                return Excel::download(new \App\Exports\GenericExport($rows, $headings, $mapCallback), 'neraca_keuangan_'.date('Ymd').'.xlsx');
+                return Excel::download(new GenericExport($rows, $headings, $mapCallback), 'neraca_keuangan_'.date('Ymd').'.xlsx');
             }
 
             if ($type === 'general_ledger') {
@@ -564,7 +573,7 @@ class FinancialReportController extends Controller
                 $rows = collect();
                 foreach ($entries as $e) {
                     foreach ($e->lines as $line) {
-                        $rows->push((object)[
+                        $rows->push((object) [
                             'date' => $e->entry_date,
                             'ref' => $e->reference,
                             'desc' => $e->description,
@@ -581,7 +590,7 @@ class FinancialReportController extends Controller
                     return [$row->date, $row->ref, $row->desc, $row->code, $row->name, $row->debit, $row->credit];
                 };
 
-                return Excel::download(new \App\Exports\GenericExport($rows, $headings, $mapCallback), 'buku_besar_'.date('Ymd').'.xlsx');
+                return Excel::download(new GenericExport($rows, $headings, $mapCallback), 'buku_besar_'.date('Ymd').'.xlsx');
             }
         }
 
@@ -600,21 +609,22 @@ class FinancialReportController extends Controller
 
                 $pdf = Pdf::loadView('finance.reports.income_statement', compact('revenueAccounts', 'totalRevenue', 'expenseAccounts', 'totalExpense', 'netIncome'));
                 $pdf->setPaper('A4', 'portrait');
+
                 return $pdf->download('laporan_laba_rugi_'.date('Ymd').'.pdf');
             }
 
             if ($type === 'balance_sheet') {
-                $assetAccounts = Account::where('type', 'asset')->with(['lines'])->get()->map(fn($a) => (object)['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('debit') - $a->lines->sum('credit')]);
+                $assetAccounts = Account::where('type', 'asset')->with(['lines'])->get()->map(fn ($a) => (object) ['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('debit') - $a->lines->sum('credit')]);
                 $totalAssets = $assetAccounts->sum('balance');
 
-                $liabilityAccounts = Account::where('type', 'liability')->with(['lines'])->get()->map(fn($a) => (object)['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
+                $liabilityAccounts = Account::where('type', 'liability')->with(['lines'])->get()->map(fn ($a) => (object) ['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
                 $totalLiabilities = $liabilityAccounts->sum('balance');
 
                 $revenueTotal = Account::where('type', 'revenue')->with(['lines'])->get()->sum(fn ($a) => $a->lines->sum('credit') - $a->lines->sum('debit'));
                 $expenseTotal = Account::where('type', 'expense')->with(['lines'])->get()->sum(fn ($a) => $a->lines->sum('debit') - $a->lines->sum('credit'));
                 $currentNetIncome = $revenueTotal - $expenseTotal;
 
-                $equityAccounts = Account::where('type', 'equity')->with(['lines'])->get()->map(fn($a) => (object)['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
+                $equityAccounts = Account::where('type', 'equity')->with(['lines'])->get()->map(fn ($a) => (object) ['code' => $a->code, 'name' => $a->name, 'balance' => $a->lines->sum('credit') - $a->lines->sum('debit')]);
                 $totalEquityBase = $equityAccounts->sum('balance');
                 $totalEquity = $totalEquityBase + $currentNetIncome;
                 $totalLiabilitiesAndEquity = $totalLiabilities + $totalEquity;
@@ -626,6 +636,7 @@ class FinancialReportController extends Controller
                     'totalLiabilitiesAndEquity'
                 ));
                 $pdf->setPaper('A4', 'portrait');
+
                 return $pdf->download('neraca_keuangan_'.date('Ymd').'.pdf');
             }
 
@@ -633,6 +644,7 @@ class FinancialReportController extends Controller
                 $entries = JournalEntry::with(['lines.account'])->orderBy('entry_date', 'desc')->get();
                 $pdf = Pdf::loadView('finance.reports.general_ledger', compact('entries'));
                 $pdf->setPaper('A4', 'portrait');
+
                 return $pdf->download('buku_besar_'.date('Ymd').'.pdf');
             }
         }
@@ -640,4 +652,3 @@ class FinancialReportController extends Controller
         return back()->with('error', 'Jenis laporan atau format tidak didukung.');
     }
 }
-

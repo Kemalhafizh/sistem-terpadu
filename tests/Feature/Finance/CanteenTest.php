@@ -1,12 +1,9 @@
 <?php
 
+use App\Models\CanteenMerchant;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\WadiahAccount;
-use App\Models\CanteenMerchant;
-use App\Models\CanteenTransaction;
 use App\Services\WadiahService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -14,7 +11,7 @@ beforeEach(function () {
     $this->parent = User::factory()->create(['role' => 'parent']);
     $this->student = Student::factory()->create(['parent_id' => $this->parent->id]);
     $this->wadiahService = app(WadiahService::class);
-    
+
     // Create merchant
     $this->merchant = CanteenMerchant::create([
         'name' => 'Kantin Sehat',
@@ -28,7 +25,7 @@ beforeEach(function () {
 
 test('admin can register merchant', function () {
     $potentialOwner = User::factory()->create(['role' => 'staf_tu']);
-    
+
     $response = $this->actingAs($this->admin)->post(route('admin.finance.canteen.merchants.store'), [
         'name' => 'Kantin Baru',
         'owner_user_id' => $potentialOwner->id,
@@ -36,14 +33,14 @@ test('admin can register merchant', function () {
 
     $response->assertStatus(302);
     $this->assertDatabaseHas('canteen_merchants', ['name' => 'Kantin Baru']);
-    
+
     $potentialOwner->refresh();
     expect($potentialOwner->role)->toBe('merchant');
 });
 
 test('cashless canteen POS transaction flow', function () {
     $account = $this->wadiahService->createAccount($this->student);
-    
+
     // Deposit money
     $this->wadiahService->deposit($account, 50000, $this->admin->id, 'Deposit');
 
@@ -71,7 +68,7 @@ test('cashless canteen POS transaction flow', function () {
 
 test('cashless canteen POS transaction fails if insufficient balance', function () {
     $account = $this->wadiahService->createAccount($this->student);
-    
+
     // Deposit small money
     $this->wadiahService->deposit($account, 5000, $this->admin->id, 'Deposit');
 
@@ -92,7 +89,7 @@ test('cashless canteen POS transaction fails if insufficient balance', function 
 
 test('cashless canteen POS transaction fails if daily spending limit exceeded', function () {
     $account = $this->wadiahService->createAccount($this->student);
-    
+
     // Deposit 100k
     $this->wadiahService->deposit($account, 100000, $this->admin->id, 'Deposit');
 
@@ -110,7 +107,7 @@ test('cashless canteen POS transaction fails if daily spending limit exceeded', 
 
     $response->assertStatus(422);
     $response->assertJsonPath('success', false);
-    
+
     // Check if the message indicates limit exceeded
     $errorMessage = $response->json('message');
     expect($errorMessage)->toContain('Transaksi ditolak. Batasan belanja harian anak');

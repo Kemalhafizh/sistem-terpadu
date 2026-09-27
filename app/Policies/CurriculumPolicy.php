@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
-use App\Models\Syllabus;
 use App\Models\LessonPlan;
+use App\Models\User;
 
 class CurriculumPolicy
 {
@@ -33,6 +32,7 @@ class CurriculumPolicy
         if (in_array($user->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin'])) {
             return true;
         }
+
         return $user->role === 'guru' && $rpp->user_id === $user->id;
     }
 
@@ -43,15 +43,15 @@ class CurriculumPolicy
 
     public function updateLessonPlan(User $user, LessonPlan $rpp): bool
     {
-        return $user->role === 'guru' && 
-               $rpp->user_id === $user->id && 
+        return $user->role === 'guru' &&
+               $rpp->user_id === $user->id &&
                in_array($rpp->status, ['draft', 'revision_needed']);
     }
 
     public function deleteLessonPlan(User $user, LessonPlan $rpp): bool
     {
-        return $user->role === 'guru' && 
-               $rpp->user_id === $user->id && 
+        return $user->role === 'guru' &&
+               $rpp->user_id === $user->id &&
                $rpp->status === 'draft';
     }
 

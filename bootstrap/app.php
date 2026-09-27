@@ -1,10 +1,22 @@
 <?php
 
+use App\Http\Middleware\AdminIpWhitelistMiddleware;
 use App\Http\Middleware\CheckTwoFactor;
+use App\Http\Middleware\CorrelationIdMiddleware;
+use App\Http\Middleware\EnsureElevatedSessionMiddleware;
 use App\Http\Middleware\EnsurePasswordChanged;
+use App\Http\Middleware\HoneypotTrapMiddleware;
+use App\Http\Middleware\IdempotencyMiddleware;
+use App\Http\Middleware\InvisibleHoneypotMiddleware;
+use App\Http\Middleware\PerformanceLogger;
 use App\Http\Middleware\RestrictImpersonation;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SessionFingerprintMiddleware;
+use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\SystemLockdownMiddleware;
+use App\Http\Middleware\UpdateActiveSession;
+use App\Http\Middleware\VerifyMfa;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -30,34 +42,34 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class,
-            'mfa' => \App\Http\Middleware\VerifyMfa::class,
-            'admin.ip' => \App\Http\Middleware\AdminIpWhitelistMiddleware::class,
-            'elevated' => \App\Http\Middleware\EnsureElevatedSessionMiddleware::class,
-            'idempotency' => \App\Http\Middleware\IdempotencyMiddleware::class,
+            'mfa' => VerifyMfa::class,
+            'admin.ip' => AdminIpWhitelistMiddleware::class,
+            'elevated' => EnsureElevatedSessionMiddleware::class,
+            'idempotency' => IdempotencyMiddleware::class,
         ]);
 
-        $middleware->prepend(\App\Http\Middleware\InvisibleHoneypotMiddleware::class);
-        $middleware->prepend(\App\Http\Middleware\HoneypotTrapMiddleware::class);
+        $middleware->prepend(InvisibleHoneypotMiddleware::class);
+        $middleware->prepend(HoneypotTrapMiddleware::class);
         $middleware->append(SecurityHeaders::class);
 
         $middleware->appendToGroup('web', [
             EnsurePasswordChanged::class,
             RestrictImpersonation::class,
             CheckTwoFactor::class,
-            \App\Http\Middleware\UpdateActiveSession::class,
-            \App\Http\Middleware\SetLocale::class,
-            \App\Http\Middleware\PerformanceLogger::class,
-            \App\Http\Middleware\SystemLockdownMiddleware::class,
-            \App\Http\Middleware\CorrelationIdMiddleware::class,
-            \App\Http\Middleware\SessionFingerprintMiddleware::class,
+            UpdateActiveSession::class,
+            SetLocale::class,
+            PerformanceLogger::class,
+            SystemLockdownMiddleware::class,
+            CorrelationIdMiddleware::class,
+            SessionFingerprintMiddleware::class,
         ]);
 
         $middleware->appendToGroup('api', [
-            \App\Http\Middleware\IdempotencyMiddleware::class,
+            IdempotencyMiddleware::class,
             // The mobile app talks only to the API, so without these its
             // requests never reached the APM latency/availability figures.
-            \App\Http\Middleware\PerformanceLogger::class,
-            \App\Http\Middleware\CorrelationIdMiddleware::class,
+            PerformanceLogger::class,
+            CorrelationIdMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

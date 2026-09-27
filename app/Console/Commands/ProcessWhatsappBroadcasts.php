@@ -35,7 +35,7 @@ class ProcessWhatsappBroadcasts extends Command
             ->where('scheduled_at', '<=', now())
             ->get();
 
-        $this->info('Found ' . $broadcasts->count() . ' broadcasts to dispatch.');
+        $this->info('Found '.$broadcasts->count().' broadcasts to dispatch.');
 
         foreach ($broadcasts as $broadcast) {
             $this->info("Dispatching broadcast: {$broadcast->title}");

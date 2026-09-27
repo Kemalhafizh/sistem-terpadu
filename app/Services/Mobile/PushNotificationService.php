@@ -11,21 +11,17 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class PushNotificationService
- * 
+ *
  * Enterprise Push Notification gateway for mobile clients.
  * Formats and distributes FCM v1 (Android) and APNs HTTP/2 (iOS) payloads,
  * manages device token lifecycles, and executes background sync pings.
- * 
- * @package App\Services\Mobile
  */
 class PushNotificationService
 {
     /**
      * Register or update a physical mobile device token for push notifications.
      *
-     * @param User $user
-     * @param array<string, mixed> $deviceData
-     * @return UserDeviceToken
+     * @param  array<string, mixed>  $deviceData
      */
     public function registerDeviceToken(User $user, array $deviceData): UserDeviceToken
     {
@@ -50,11 +46,7 @@ class PushNotificationService
     /**
      * Send push notification to a specific user across all their registered active devices.
      *
-     * @param User $user
-     * @param string $title
-     * @param string $body
-     * @param array<string, mixed> $data
-     * @param string $channel
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function sendToUser(User $user, string $title, string $body, array $data = [], string $channel = 'general'): array
@@ -103,11 +95,7 @@ class PushNotificationService
     /**
      * Broadcast push notification to all active devices belonging to users with a specific role.
      *
-     * @param string $role
-     * @param string $title
-     * @param string $body
-     * @param array<string, mixed> $data
-     * @param string $channel
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function sendToRole(string $role, string $title, string $body, array $data = [], string $channel = 'general'): array
@@ -133,8 +121,6 @@ class PushNotificationService
     /**
      * Send a Silent Background Notification for client-side offline data prefetching.
      *
-     * @param User $user
-     * @param string $syncType
      * @return array<string, mixed>
      */
     public function sendSilentSyncPing(User $user, string $syncType = 'all'): array
@@ -163,11 +149,7 @@ class PushNotificationService
     /**
      * Format standardized Google FCM v1 Message Structure.
      *
-     * @param string $token
-     * @param string $title
-     * @param string $body
-     * @param array<string, mixed> $data
-     * @param string $channel
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function formatFcmV1Payload(string $token, string $title, string $body, array $data, string $channel): array
@@ -199,11 +181,7 @@ class PushNotificationService
     /**
      * Format standardized Apple APNs HTTP/2 Message Structure.
      *
-     * @param string $token
-     * @param string $title
-     * @param string $body
-     * @param array<string, mixed> $data
-     * @param int $badge
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function formatApnsPayload(string $token, string $title, string $body, array $data, int $badge = 1): array
@@ -224,7 +202,6 @@ class PushNotificationService
     /**
      * Get all active registered devices for a user.
      *
-     * @param User $user
      * @return Collection<int, UserDeviceToken>
      */
     public function getActiveDevices(User $user): Collection
@@ -236,10 +213,6 @@ class PushNotificationService
 
     /**
      * Revoke and delete a specific device registration.
-     *
-     * @param User $user
-     * @param string $deviceId
-     * @return bool
      */
     public function revokeDevice(User $user, string $deviceId): bool
     {

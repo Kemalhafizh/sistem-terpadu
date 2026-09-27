@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Operations;
 
 use App\Http\Controllers\Controller;
-use App\Models\UtilityBill;
 use App\Models\CarbonEmission;
-use Illuminate\Http\Request;
+use App\Models\UtilityBill;
 
 class UtilityTrackerController extends Controller
 {
@@ -13,6 +12,7 @@ class UtilityTrackerController extends Controller
     {
         $bills = UtilityBill::latest()->get();
         $emissions = CarbonEmission::latest()->get();
+
         return view('facility.utility.dashboard', compact('bills', 'emissions'));
     }
 }

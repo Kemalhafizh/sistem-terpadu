@@ -29,7 +29,7 @@ class SurveyResponsesExport implements FromCollection, WithHeadings, WithTitle
 
             // Add identity columns based on anonymity status
             if ($this->survey->is_anonymous) {
-                $row['nama'] = 'Responden Anonim #' . $counter++;
+                $row['nama'] = 'Responden Anonim #'.$counter++;
                 $row['email'] = 'anonim@sultanagung1.sch.id';
             } else {
                 $row['nama'] = $response->user ? $response->user->name : 'N/A';
@@ -42,9 +42,9 @@ class SurveyResponsesExport implements FromCollection, WithHeadings, WithTitle
                 $ansVal = $answers[$question->id] ?? null;
 
                 if (is_array($ansVal)) {
-                    $row['q_' . $question->id] = implode(', ', $ansVal);
+                    $row['q_'.$question->id] = implode(', ', $ansVal);
                 } else {
-                    $row['q_' . $question->id] = $ansVal !== null ? (string)$ansVal : '-';
+                    $row['q_'.$question->id] = $ansVal !== null ? (string) $ansVal : '-';
                 }
             }
 
@@ -70,6 +70,6 @@ class SurveyResponsesExport implements FromCollection, WithHeadings, WithTitle
 
     public function title(): string
     {
-        return 'Respons ' . substr($this->survey->title, 0, 20);
+        return 'Respons '.substr($this->survey->title, 0, 20);
     }
 }

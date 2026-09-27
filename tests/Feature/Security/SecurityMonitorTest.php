@@ -2,26 +2,26 @@
 
 /** @var TestCase|stdClass $this */
 
-use App\Models\User;
-use App\Models\LoginAttempt;
 use App\Models\ActiveSession;
+use App\Models\LoginAttempt;
+use App\Models\User;
 use App\Services\SecurityMonitorService;
-use Tests\TestCase;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([
         'password' => Hash::make('password123'),
         'role' => 'admin',
     ]);
-    
+
     $this->guru = User::factory()->create([
         'password' => Hash::make('password123'),
         'role' => 'guru',
     ]);
-    
+
     $this->student = User::factory()->create([
         'password' => Hash::make('password123'),
         'role' => 'student',
@@ -48,7 +48,7 @@ test('auth attempts log successfully and failed logs record failure reason', fun
     // 2. Failed Login audit log test
     event(new Failed('web', $this->admin, [
         'email' => $this->admin->email,
-        'password' => 'wrong-password'
+        'password' => 'wrong-password',
     ]));
 
     $this->assertDatabaseHas('login_attempts', [
@@ -59,7 +59,7 @@ test('auth attempts log successfully and failed logs record failure reason', fun
 });
 
 test('detect brute force attempts from service', function () {
-    $service = new SecurityMonitorService();
+    $service = new SecurityMonitorService;
 
     // Before brute force
     expect($service->detectBruteForce())->toBeEmpty();
@@ -79,7 +79,7 @@ test('detect brute force attempts from service', function () {
     $bruteForceAlerts = $service->detectBruteForce();
     expect($bruteForceAlerts)->toHaveCount(1);
     expect($bruteForceAlerts[0]['ip_address'])->toBe('1.2.3.4');
-    expect((int)$bruteForceAlerts[0]['total_failures'])->toBe(5);
+    expect((int) $bruteForceAlerts[0]['total_failures'])->toBe(5);
 });
 
 test('unauthorized users cannot access security dashboard and sessions', function () {

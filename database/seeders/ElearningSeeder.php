@@ -3,13 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Classroom;
+use App\Models\ElearningAnnouncement;
 use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
-use App\Models\ElearningSubmission;
-use App\Models\ElearningAnnouncement;
 use App\Models\ElearningMaterialComment;
 use App\Models\ElearningMaterialView;
+use App\Models\ElearningSubmission;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -68,7 +68,7 @@ class ElearningSeeder extends Seeder
                 'announcements' => [
                     'Selamat datang di kelas Matematika Aljabar. Silakan download materi eksponen pertama.',
                     'Pengingat: Tugas Latihan Eksponen dikumpulkan paling lambat besok malam ya.',
-                ]
+                ],
             ],
             [
                 'subject_id' => $big->id,
@@ -88,7 +88,7 @@ class ElearningSeeder extends Seeder
                 ],
                 'announcements' => [
                     'Please read the past tense grammar summary before writing your personal experience recount text.',
-                ]
+                ],
             ],
             [
                 'subject_id' => $fis->id,
@@ -108,7 +108,7 @@ class ElearningSeeder extends Seeder
                 ],
                 'announcements' => [
                     'Praktikum Hukum Hooke dikerjakan secara individu menggunakan simulator lab virtual PHET.',
-                ]
+                ],
             ],
             [
                 'subject_id' => $pai->id,
@@ -128,7 +128,7 @@ class ElearningSeeder extends Seeder
                 ],
                 'announcements' => [
                     'Ujian Sumatif Bab Mawaris akan diadakan minggu depan. Persiapkan diri dengan membaca modul warisan.',
-                ]
+                ],
             ],
             [
                 'subject_id' => $sej->id,
@@ -148,7 +148,7 @@ class ElearningSeeder extends Seeder
                 ],
                 'announcements' => [
                     'Silakan tonton dokumenter reformasi 1998 yang saya sematkan di materi log.',
-                ]
+                ],
             ],
         ];
 
@@ -207,7 +207,7 @@ class ElearningSeeder extends Seeder
 
                 foreach ($submittingStudents as $student) {
                     $status = ['submitted', 'graded', 'graded', 'locked_cheated'][rand(0, 3)];
-                    
+
                     if ($status === 'locked_cheated') {
                         $score = null;
                         $feedback = 'Tugas dikunci karena melanggar batas perpindahan halaman ujian/tugas (Secure Mode).';
@@ -226,7 +226,7 @@ class ElearningSeeder extends Seeder
                         'elearning_assignment_id' => $assignment->id,
                         'student_id' => $student->id,
                         'submitted_at' => now()->subDays(rand(1, 5)),
-                        'file_path' => 'submissions/' . $student->nis . '_tugas.pdf',
+                        'file_path' => 'submissions/'.$student->nis.'_tugas.pdf',
                         'score' => $score,
                         'feedback' => $feedback,
                         'status' => $status,

@@ -10,7 +10,7 @@ class BullyingInvestigationLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'bullying_report_id', 'investigator_id', 'action', 'notes', 'is_confidential'
+        'bullying_report_id', 'investigator_id', 'action', 'notes', 'is_confidential',
     ];
 
     protected $casts = [

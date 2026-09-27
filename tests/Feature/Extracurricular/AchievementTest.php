@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Extracurricular;
-use App\Models\User;
 use App\Models\Student;
+use App\Models\User;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([

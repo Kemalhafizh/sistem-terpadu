@@ -11,6 +11,7 @@ class DripCampaignController extends Controller
     public function index()
     {
         $campaigns = DripCampaign::all();
+
         return view('drip-campaigns.analytics', compact('campaigns'));
     }
 
@@ -22,19 +23,22 @@ class DripCampaignController extends Controller
     public function store(Request $request)
     {
         DripCampaign::create($request->all());
+
         return redirect()->route('drip_campaigns.index');
     }
 
     public function builder($id)
     {
         $campaign = DripCampaign::with('steps.template')->findOrFail($id);
+
         return view('drip-campaigns.builder', compact('campaign'));
     }
 
     public function toggleStatus($id)
     {
         $campaign = DripCampaign::findOrFail($id);
-        $campaign->update(['is_active' => !$campaign->is_active]);
+        $campaign->update(['is_active' => ! $campaign->is_active]);
+
         return back();
     }
 }

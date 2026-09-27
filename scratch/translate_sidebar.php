@@ -1,8 +1,8 @@
 <?php
 
 $filePath = 'c:\project\portofolio\project-super-web\sistem-terpadu\resources\views\components\sidebar.blade.php';
-if (!file_exists($filePath)) {
-    die("Error: File not found at $filePath\n");
+if (! file_exists($filePath)) {
+    exit("Error: File not found at $filePath\n");
 }
 
 $content = file_get_contents($filePath);
@@ -232,7 +232,7 @@ foreach ($mappings as $mapping) {
 }
 
 if (file_put_contents($filePath, $content) === false) {
-    die("Error: Could not write file back to $filePath\n");
+    exit("Error: Could not write file back to $filePath\n");
 }
 
 echo "Success: Sidebar file translated completely.\n";

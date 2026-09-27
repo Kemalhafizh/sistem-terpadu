@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class RemedialSession extends Model
 {
@@ -13,7 +14,7 @@ class RemedialSession extends Model
     {
         static::creating(function ($model) {
             if (empty($model->uuid)) {
-                $model->uuid = (string) \Illuminate\Support\Str::uuid();
+                $model->uuid = (string) Str::uuid();
             }
         });
     }

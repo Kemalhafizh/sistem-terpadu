@@ -1,9 +1,10 @@
 <?php
+
 namespace Tests\Feature\Microlearning;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class MicrolearningSuiteTest extends TestCase
 {

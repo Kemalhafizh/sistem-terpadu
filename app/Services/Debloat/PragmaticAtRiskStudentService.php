@@ -30,9 +30,9 @@ class PragmaticAtRiskStudentService
         $violationPoints = StudentPointLog::where('student_id', $studentId)
             ->where(function ($q) {
                 $q->where('type', 'penalty')
-                  ->orWhere('type', 'VIOLATION')
-                  ->orWhere('type', 'violation')
-                  ->orWhere('points', '>', 0);
+                    ->orWhere('type', 'VIOLATION')
+                    ->orWhere('type', 'violation')
+                    ->orWhere('points', '>', 0);
             })
             ->sum('points');
 
@@ -80,8 +80,8 @@ class PragmaticAtRiskStudentService
         $bkTeacher = User::where('role', 'teacher')
             ->where(function ($q) {
                 $q->where('email', 'like', '%bk%')
-                  ->orWhere('name', 'like', '%BK%')
-                  ->orWhere('name', 'like', '%Bimbingan%');
+                    ->orWhere('name', 'like', '%BK%')
+                    ->orWhere('name', 'like', '%Bimbingan%');
             })->first() ?? User::where('role', 'teacher')->first();
 
         return AtRiskAlert::updateOrCreate(

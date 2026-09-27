@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use App\Models\Question;
 use App\Models\Student;
 use App\Models\Subject;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class AdaptiveLearningSeeder extends Seeder
 {
@@ -19,7 +18,7 @@ class AdaptiveLearningSeeder extends Seeder
             // Create dummy questions if none exist to avoid errors
             for ($i = 1; $i <= 50; $i++) {
                 $questions->push(Question::create([
-                    'content' => 'Pertanyaan dummy ' . $i,
+                    'content' => 'Pertanyaan dummy '.$i,
                     // add other required fields based on your DB schema
                 ]));
             }

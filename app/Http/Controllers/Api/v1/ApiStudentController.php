@@ -16,7 +16,6 @@ use App\Models\Billing;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
 use App\Models\Grade;
-use App\Models\QuestionBank;
 use App\Models\Schedule;
 use App\Services\CbtService;
 use App\Traits\ApiResponseTrait;
@@ -39,7 +38,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -53,7 +52,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student || !$student->classroom_id) {
+        if (! $student || ! $student->classroom_id) {
             return $this->successResponse([], 'Belum terdaftar di kelas manapun');
         }
 
@@ -71,7 +70,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -90,7 +89,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -109,7 +108,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -128,7 +127,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -147,7 +146,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -163,7 +162,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -179,7 +178,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -193,6 +192,7 @@ class ApiStudentController extends Controller
 
         $data = $exams->map(function ($e) use ($student) {
             $attempt = ExamAttempt::where('exam_id', $e->id)->where('student_id', $student->id)->latest()->first();
+
             return [
                 'id' => $e->id,
                 'uuid' => $e->uuid,
@@ -218,7 +218,7 @@ class ApiStudentController extends Controller
     public function cbtExamQuestions(Request $request, $examId, CbtService $cbtService)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -228,7 +228,7 @@ class ApiStudentController extends Controller
         Gate::authorize('take', $exam);
 
         // 2. Pastikan waktu ujian sedang berlangsung (mencegah kebocoran soal sebelum jadwal)
-        if (!$exam->isOngoing()) {
+        if (! $exam->isOngoing()) {
             return $this->errorResponse('Ujian belum dibuka atau waktu ujian telah berakhir.', 403);
         }
 
@@ -269,7 +269,7 @@ class ApiStudentController extends Controller
     public function cbtSubmitExam(Request $request, $examId, CbtService $cbtService)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -360,7 +360,7 @@ class ApiStudentController extends Controller
     public function payBilling(Request $request, $billingId)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -373,18 +373,18 @@ class ApiStudentController extends Controller
             'BRI' => '12888',
             default => '77888',
         };
-        $vaNumber = $vaPrefix . str_pad((string) ($student->nis ?? '001'), 11, '0', STR_PAD_LEFT);
+        $vaNumber = $vaPrefix.str_pad((string) ($student->nis ?? '001'), 11, '0', STR_PAD_LEFT);
 
         return $this->successResponse([
             'billing_id' => $billing->id,
             'category' => $billing->category->name ?? 'SPP',
             'amount' => (float) $billing->amount,
-            'amount_formatted' => 'Rp ' . number_format($billing->amount, 0, ',', '.'),
+            'amount_formatted' => 'Rp '.number_format($billing->amount, 0, ',', '.'),
             'bank' => strtoupper($bank),
             'va_number' => $vaNumber,
             'status' => 'pending',
             'expiry_time' => now()->addHours(24)->format('Y-m-d H:i:s'),
-            'qr_content' => "00020101021226590014ID.LINKAJA.WWW011893600000000000000002150000000000000005204000053033605802ID5924SMA ISLAM SULTAN AGUNG 16008SEMARANG61055012362140710SPP-" . $billing->id . "6304",
+            'qr_content' => '00020101021226590014ID.LINKAJA.WWW011893600000000000000002150000000000000005204000053033605802ID5924SMA ISLAM SULTAN AGUNG 16008SEMARANG61055012362140710SPP-'.$billing->id.'6304',
         ], 'Simulasi transaksi pembayaran berhasil dibuat');
     }
 
@@ -411,4 +411,3 @@ class ApiStudentController extends Controller
         return $this->successResponse(null, 'Notifikasi ditandai telah dibaca');
     }
 }
-

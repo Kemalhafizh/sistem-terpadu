@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\TahfidzLog;
 use App\Models\TahfidzTarget;
-use App\Models\AcademicYear;
 use App\Services\TahfidzService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class TahfidzController extends Controller
 {
@@ -32,6 +32,7 @@ class TahfidzController extends Controller
             $student = Student::where('user_id', $user->id)->firstOrFail();
             $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
             $surahs = $this->getSurahs();
+
             return view('tahfidz.dashboard', compact('student', 'progress', 'surahs', 'academicYear'));
         }
 
@@ -42,20 +43,21 @@ class TahfidzController extends Controller
                     'student' => null,
                     'progress' => null,
                     'students' => $students,
-                    'academicYear' => $academicYear
+                    'academicYear' => $academicYear,
                 ]);
             }
             $selectedStudentId = $request->get('student_id', $students->first()->id);
             $student = $students->firstWhere('id', $selectedStudentId) ?? $students->first();
             $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
             $surahs = $this->getSurahs();
+
             return view('tahfidz.dashboard', compact('student', 'progress', 'students', 'surahs', 'academicYear'));
         }
 
         // Guru / Admin / Superadmin / BK
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id');
-        if (!$classroomId) {
+        if (! $classroomId) {
             if ($user->role === 'guru') {
                 $myClassroom = Classroom::where('teacher_id', $user->id)->first();
                 $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
@@ -66,7 +68,7 @@ class TahfidzController extends Controller
 
         $classroom = $classroomId ? Classroom::find($classroomId) : null;
         $summary = $this->tahfidzService->getClassProgressSummary($classroomId);
-        
+
         $students = $classroom ? Student::where('classroom_id', $classroom->id)
             ->with(['user', 'tahfidzTargets' => function ($q) use ($academicYear) {
                 if ($academicYear) {
@@ -76,8 +78,8 @@ class TahfidzController extends Controller
             ->get() : collect();
 
         $recentLogs = $classroom ? TahfidzLog::whereHas('student', function ($q) use ($classroom) {
-                $q->where('classroom_id', $classroom->id);
-            })
+            $q->where('classroom_id', $classroom->id);
+        })
             ->with(['student.user', 'teacher'])
             ->latest()
             ->take(10)
@@ -118,13 +120,13 @@ class TahfidzController extends Controller
     public function bulkInputForm(Request $request)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id');
-        if (!$classroomId) {
+        if (! $classroomId) {
             if ($user->role === 'guru') {
                 $myClassroom = Classroom::where('teacher_id', $user->id)->first();
                 $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
@@ -146,7 +148,7 @@ class TahfidzController extends Controller
     public function storeBulk(Request $request)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -169,7 +171,7 @@ class TahfidzController extends Controller
         $count = 0;
 
         foreach ($request->setoran as $data) {
-            if (!isset($data['active']) || !$data['active']) {
+            if (! isset($data['active']) || ! $data['active']) {
                 continue;
             }
 
@@ -191,18 +193,18 @@ class TahfidzController extends Controller
     public function targetSettingForm(Request $request)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
         $academicYear = AcademicYear::current();
-        if (!$academicYear) {
+        if (! $academicYear) {
             return back()->with('error', 'Tahun akademik aktif tidak ditemukan.');
         }
 
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id');
-        if (!$classroomId) {
+        if (! $classroomId) {
             if ($user->role === 'guru') {
                 $myClassroom = Classroom::where('teacher_id', $user->id)->first();
                 $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
@@ -227,12 +229,12 @@ class TahfidzController extends Controller
     public function storeTargets(Request $request)
     {
         $user = auth()->user();
-        if (!in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
             abort(403, 'Akses ditolak.');
         }
 
         $academicYear = AcademicYear::current();
-        if (!$academicYear) {
+        if (! $academicYear) {
             return back()->with('error', 'Tahun akademik aktif tidak ditemukan.');
         }
 
@@ -247,7 +249,7 @@ class TahfidzController extends Controller
 
         foreach ($request->targets as $data) {
             $student = Student::findOrFail($data['student_id']);
-            
+
             TahfidzTarget::updateOrCreate(
                 [
                     'student_id' => $student->id,
@@ -324,8 +326,9 @@ class TahfidzController extends Controller
 
         $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
         $yearClean = str_replace('/', '-', $academicYear->year);
-        
+
         $pdf = Pdf::loadView('tahfidz.pdf_export', compact('student', 'progress', 'academicYear'));
+
         return $pdf->download("laporan_tahfidz_{$student->name}_{$yearClean}.pdf");
     }
 

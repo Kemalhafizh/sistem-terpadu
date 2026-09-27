@@ -14,7 +14,7 @@ return new class extends Migration
         // 1. Add detailed columns to mutabaah_logs
         Schema::table('mutabaah_logs', function (Blueprint $table) {
             $table->foreignId('mutabaah_item_id')->nullable()->change();
-            
+
             $table->tinyInteger('sholat_subuh')->default(0);       // 0=tidak, 1=ya, 2=berjamaah
             $table->tinyInteger('sholat_dzuhur')->default(0);
             $table->tinyInteger('sholat_ashar')->default(0);
@@ -74,7 +74,7 @@ return new class extends Migration
                 'dzikir_pagi',
                 'dzikir_sore',
                 'catatan_harian',
-                'score'
+                'score',
             ]);
         });
     }

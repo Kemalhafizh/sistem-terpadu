@@ -3,17 +3,11 @@
 namespace App\Services;
 
 use App\Models\Registration;
-use App\Models\SpmbPeriod;
 use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
-use App\Models\User;
 use App\Models\Student;
-use App\Models\Billing;
-use App\Models\PaymentCategory;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class SpmbService
 {
@@ -23,7 +17,7 @@ class SpmbService
     public function calculateApplicantScore(Registration $registration): float
     {
         $track = $registration->relationLoaded('spmbTrack') ? $registration->spmbTrack : $registration->load('spmbTrack')->spmbTrack;
-        if (!$track) {
+        if (! $track) {
             return 0.0;
         }
 
@@ -32,7 +26,7 @@ class SpmbService
             'rapor' => 40,
             'tes' => 30,
             'prestasi' => 15,
-            'tahfidz' => 15
+            'tahfidz' => 15,
         ];
 
         // 1. Rapor Score (Average)
@@ -155,14 +149,14 @@ class SpmbService
             ->get();
 
         $count = 0;
-        $regService = new RegistrationService();
+        $regService = new RegistrationService;
 
         foreach ($applicants as $applicant) {
             try {
                 $regService->convertToStudent($applicant);
                 $count++;
             } catch (\Exception $e) {
-                Log::error("Failed to convert applicant {$applicant->id} in bulk: " . $e->getMessage());
+                Log::error("Failed to convert applicant {$applicant->id} in bulk: ".$e->getMessage());
             }
         }
 

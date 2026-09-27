@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Family;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\FamilyLearningPlan;
 
 class FamilyLearningPlanController extends Controller
 {

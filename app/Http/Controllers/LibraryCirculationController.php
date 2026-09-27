@@ -231,7 +231,7 @@ class LibraryCirculationController extends Controller
             if (! $student) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Siswa dengan kode/NIS "' . $studentCode . '" tidak ditemukan.',
+                    'message' => 'Siswa dengan kode/NIS "'.$studentCode.'" tidak ditemukan.',
                 ], 404);
             }
 
@@ -240,14 +240,14 @@ class LibraryCirculationController extends Controller
             if (! $book) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Buku fisik dengan kode/barcode "' . $bookCode . '" tidak ditemukan.',
+                    'message' => 'Buku fisik dengan kode/barcode "'.$bookCode.'" tidak ditemukan.',
                 ], 404);
             }
 
             if (! $book->isAvailableForBorrow()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Buku "' . $book->title . '" sedang tidak tersedia untuk dipinjam (sedang dipinjam siswa lain / berstatus digital).',
+                    'message' => 'Buku "'.$book->title.'" sedang tidak tersedia untuk dipinjam (sedang dipinjam siswa lain / berstatus digital).',
                 ], 422);
             }
 
@@ -257,7 +257,7 @@ class LibraryCirculationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Peminjaman buku "' . $book->title . '" untuk siswa ' . $student->user->name . ' berhasil dicatat!',
+                'message' => 'Peminjaman buku "'.$book->title.'" untuk siswa '.$student->user->name.' berhasil dicatat!',
                 'student_name' => $student->user->name,
                 'book_title' => $book->title,
                 'due_date' => $dueAt->format('d-m-Y'),
@@ -266,7 +266,7 @@ class LibraryCirculationController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memproses peminjaman: ' . $e->getMessage(),
+                'message' => 'Gagal memproses peminjaman: '.$e->getMessage(),
             ], 400);
         }
     }
@@ -288,7 +288,7 @@ class LibraryCirculationController extends Controller
             if (! $book) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Buku dengan kode/barcode "' . $bookCode . '" tidak ditemukan.',
+                    'message' => 'Buku dengan kode/barcode "'.$bookCode.'" tidak ditemukan.',
                 ], 404);
             }
 
@@ -300,16 +300,16 @@ class LibraryCirculationController extends Controller
             if (! $loan) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Buku "' . $book->title . '" sedang tidak dalam status dipinjam.',
+                    'message' => 'Buku "'.$book->title.'" sedang tidak dalam status dipinjam.',
                 ], 422);
             }
 
             $returnedLoan = $this->libraryService->returnBook($loan, auth()->user());
             $fine = $returnedLoan->calculateFine();
 
-            $msg = 'Buku "' . $book->title . '" milik siswa ' . ($loan->student->user->name ?? 'Siswa') . ' berhasil dikembalikan!';
+            $msg = 'Buku "'.$book->title.'" milik siswa '.($loan->student->user->name ?? 'Siswa').' berhasil dikembalikan!';
             if ($fine > 0) {
-                $msg .= ' Terdapat denda keterlambatan sebesar Rp ' . number_format($fine, 0, ',', '.') . '.';
+                $msg .= ' Terdapat denda keterlambatan sebesar Rp '.number_format($fine, 0, ',', '.').'.';
             }
 
             return response()->json([
@@ -323,7 +323,7 @@ class LibraryCirculationController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memproses pengembalian: ' . $e->getMessage(),
+                'message' => 'Gagal memproses pengembalian: '.$e->getMessage(),
             ], 400);
         }
     }

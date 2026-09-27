@@ -11,7 +11,7 @@ class SafetyHeadcount extends Model
 
     protected $fillable = [
         'crisis_incident_id', 'classroom_id', 'assembly_point', 'expected_count',
-        'accounted_count', 'missing_count', 'missing_persons', 'status', 'verified_by', 'completed_at'
+        'accounted_count', 'missing_count', 'missing_persons', 'status', 'verified_by', 'completed_at',
     ];
 
     protected $casts = [

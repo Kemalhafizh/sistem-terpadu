@@ -2,11 +2,11 @@
 
 namespace App\Services\Integration;
 
-use App\Models\Student;
-use App\Models\Employee;
-use App\Models\Classroom;
-use App\Models\Attendance;
 use App\Exports\DapodikExport;
+use App\Models\Attendance;
+use App\Models\Classroom;
+use App\Models\Employee;
+use App\Models\Student;
 use Carbon\Carbon;
 
 class DapodikService
@@ -95,8 +95,8 @@ class DapodikService
         }
         $students = $query->get();
 
-        $startOfMonth = Carbon::parse($month . '-01')->startOfMonth();
-        $endOfMonth = Carbon::parse($month . '-01')->endOfMonth();
+        $startOfMonth = Carbon::parse($month.'-01')->startOfMonth();
+        $endOfMonth = Carbon::parse($month.'-01')->endOfMonth();
 
         $mapped = [];
         foreach ($students as $student) {
@@ -136,7 +136,7 @@ class DapodikService
             if ($type === 'students') {
                 if (empty($row['nisn'])) {
                     $rowErrors[] = 'NISN wajib diisi.';
-                } elseif (!preg_match('/^[0-9]{10}$/', $row['nisn'])) {
+                } elseif (! preg_match('/^[0-9]{10}$/', $row['nisn'])) {
                     $rowErrors[] = 'NISN harus tepat 10 digit angka.';
                 }
 
@@ -163,10 +163,10 @@ class DapodikService
                 }
             }
 
-            if (!empty($rowErrors)) {
+            if (! empty($rowErrors)) {
                 $warnings[] = [
                     'row' => $idx + 1,
-                    'identifier' => $row['nama'] ?? ('Baris ' . ($idx + 1)),
+                    'identifier' => $row['nama'] ?? ('Baris '.($idx + 1)),
                     'errors' => $rowErrors,
                 ];
             }
@@ -200,7 +200,7 @@ class DapodikService
             $month = $month ?? Carbon::now()->format('Y-m');
             $data = $this->exportAttendanceData($month, $classroomId);
             $headings = ['NISN', 'Nama Siswa', 'Rombel Kelas', 'Hadir (H)', 'Sakit (S)', 'Izin (I)', 'Alpa (A)'];
-            $title = 'Data Kehadiran ' . $month;
+            $title = 'Data Kehadiran '.$month;
         }
 
         return new DapodikExport($data, $headings, $title);

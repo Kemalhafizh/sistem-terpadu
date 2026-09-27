@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Services\Treasury;
 
-use App\Models\{PettyCashFund, PettyCashTransaction};
+use App\Models\PettyCashFund;
+use App\Models\PettyCashTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -11,8 +13,10 @@ use Illuminate\Validation\ValidationException;
  * transaction is approved. Spending cannot overdraw the fund and a
  * replenishment cannot lift it above its imprest amount.
  */
-class PettyCashService {
-    public function approve(PettyCashTransaction $transaction, int $approverId): PettyCashTransaction {
+class PettyCashService
+{
+    public function approve(PettyCashTransaction $transaction, int $approverId): PettyCashTransaction
+    {
         return DB::transaction(function () use ($transaction, $approverId) {
             $tx = PettyCashTransaction::whereKey($transaction->id)->lockForUpdate()->firstOrFail();
             $this->ensurePending($tx);
@@ -49,7 +53,8 @@ class PettyCashService {
         });
     }
 
-    public function reject(PettyCashTransaction $transaction, int $deciderId, string $reason): PettyCashTransaction {
+    public function reject(PettyCashTransaction $transaction, int $deciderId, string $reason): PettyCashTransaction
+    {
         return DB::transaction(function () use ($transaction, $deciderId, $reason) {
             $tx = PettyCashTransaction::whereKey($transaction->id)->lockForUpdate()->firstOrFail();
             $this->ensurePending($tx);
@@ -72,7 +77,8 @@ class PettyCashService {
      *
      * @return array<int, array{fund_id: int, fund_name: string, current: string, spending: string, replenishment: string, result: string, imprest: string, transactions: int, status: string}>
      */
-    public function legacyCorrectionPlan(?int $fundId = null): array {
+    public function legacyCorrectionPlan(?int $fundId = null): array
+    {
         $funds = PettyCashFund::query()
             ->when($fundId, fn ($q) => $q->whereKey($fundId))
             ->whereHas('transactions', fn ($q) => $q->unappliedApproved())
@@ -89,7 +95,8 @@ class PettyCashService {
      *
      * @return array{applied: array<int, array>, skipped: array<int, array>}
      */
-    public function applyLegacyCorrections(?int $fundId = null): array {
+    public function applyLegacyCorrections(?int $fundId = null): array
+    {
         $applied = [];
         $skipped = [];
 
@@ -119,7 +126,8 @@ class PettyCashService {
         return ['applied' => $applied, 'skipped' => $skipped];
     }
 
-    private function planFor(PettyCashFund $fund): array {
+    private function planFor(PettyCashFund $fund): array
+    {
         $legacy = PettyCashTransaction::where('fund_id', $fund->id)->unappliedApproved()->get(['type', 'amount']);
         $spending = $legacy->where('type', 'pengeluaran')->sum(fn ($t) => $this->cents($t->amount));
         $replenishment = $legacy->where('type', 'pengisian_ulang')->sum(fn ($t) => $this->cents($t->amount));
@@ -144,25 +152,30 @@ class PettyCashService {
         ];
     }
 
-    private function ensurePending(PettyCashTransaction $tx): void {
+    private function ensurePending(PettyCashTransaction $tx): void
+    {
         if ($tx->approval_status !== 'pending') {
             $this->fail('Transaksi ini sudah '.($tx->approval_status === 'approved' ? 'disetujui' : 'ditolak').' sebelumnya.');
         }
     }
 
-    private function fail(string $message): never {
+    private function fail(string $message): never
+    {
         throw ValidationException::withMessages(['approval' => $message]);
     }
 
-    private function cents(mixed $amount): int {
+    private function cents(mixed $amount): int
+    {
         return (int) round((float) ($amount ?? 0) * 100);
     }
 
-    private function money(int $cents): string {
+    private function money(int $cents): string
+    {
         return number_format($cents / 100, 2, '.', '');
     }
 
-    private function display(int $cents): string {
+    private function display(int $cents): string
+    {
         return number_format($cents / 100, 0, ',', '.');
     }
 }

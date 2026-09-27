@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\FinancialHealthMetric;
 use App\Services\Dashboard\FinancialScoreboardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

@@ -75,8 +75,8 @@ class SecurityAuditService
             'app_key' => [
                 'name' => 'Application Key Terpasang',
                 'description' => 'Digunakan untuk mengenkripsi cookie dan data sensitif.',
-                'passed' => !empty(config('app.key')) && str_contains(config('app.key'), 'base64:'),
-                'value' => !empty(config('app.key')) ? 'Terpasang (Aman)' : 'Kosong (Berbahaya)',
+                'passed' => ! empty(config('app.key')) && str_contains(config('app.key'), 'base64:'),
+                'value' => ! empty(config('app.key')) ? 'Terpasang (Aman)' : 'Kosong (Berbahaya)',
             ],
         ];
     }
@@ -129,12 +129,12 @@ class SecurityAuditService
             $totalRoutes++;
 
             // Identify sensitive modules
-            $isSensitive = str_contains($uri, 'admin') || 
-                           str_contains($uri, 'developer') || 
-                           str_contains($uri, 'compliance') || 
+            $isSensitive = str_contains($uri, 'admin') ||
+                           str_contains($uri, 'developer') ||
+                           str_contains($uri, 'compliance') ||
                            str_contains($uri, 'finance') ||
                            str_contains($uri, 'hrd');
-                           
+
             // Skip public auth pages
             if ($uri === '/' || str_contains($uri, 'login') || str_contains($uri, 'logout') || str_contains($uri, 'password') || str_contains($uri, 'preferences')) {
                 continue;
@@ -148,9 +148,9 @@ class SecurityAuditService
                 }
             }
 
-            if ($isSensitive && !$hasAuth) {
+            if ($isSensitive && ! $hasAuth) {
                 $vulnerable[] = [
-                    'uri' => '/' . ltrim($uri, '/'),
+                    'uri' => '/'.ltrim($uri, '/'),
                     'method' => implode('|', $route->methods()),
                     'middlewares' => implode(', ', $middlewares) ?: 'None',
                 ];
@@ -171,7 +171,7 @@ class SecurityAuditService
     {
         $routes = Route::getRoutes();
         $loginThrottled = false;
-        
+
         foreach ($routes as $route) {
             $uri = $route->uri();
             if (str_contains($uri, 'login') && in_array('POST', $route->methods())) {

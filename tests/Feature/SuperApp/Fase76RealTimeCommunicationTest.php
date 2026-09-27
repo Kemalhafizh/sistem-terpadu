@@ -29,7 +29,7 @@ class Fase76RealTimeCommunicationTest extends TestCase
     public function test_general_announcements_and_notifications_endpoint(): void
     {
         $user = User::factory()->create(['role' => 'student']);
-        
+
         $announcementResponse = $this->actingAs($user, 'sanctum')->getJson('/api/v1/announcements');
         $announcementResponse->assertStatus(200);
 

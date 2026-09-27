@@ -2,8 +2,6 @@
 
 namespace App\Services\Performance;
 
-use App\Models\SystemScalingConfig;
-
 class ScalingConfigService
 {
     /**

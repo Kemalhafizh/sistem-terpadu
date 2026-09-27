@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Crisis;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\EmergencyBroadcast;
 use App\Services\Crisis\EmergencyBroadcastService;
+use Illuminate\Http\Request;
 
 class EmergencyBroadcastController extends Controller
 {
@@ -19,6 +19,7 @@ class EmergencyBroadcastController extends Controller
     public function index()
     {
         $broadcasts = EmergencyBroadcast::latest()->get();
+
         return view('crisis.broadcast.index', compact('broadcasts'));
     }
 
@@ -37,8 +38,9 @@ class EmergencyBroadcastController extends Controller
             'channels' => 'required|array',
         ]);
         $validated['sent_by'] = auth()->id() ?? 1;
-        
+
         $this->service->sendBroadcast($validated);
+
         return redirect()->route('crisis.broadcast.index')->with('success', 'Broadcast sent.');
     }
 
@@ -46,6 +48,7 @@ class EmergencyBroadcastController extends Controller
     {
         $broadcast = EmergencyBroadcast::findOrFail($id);
         $stats = $this->service->getDeliveryStats($broadcast);
+
         return view('crisis.broadcast.show', compact('broadcast', 'stats'));
     }
 }

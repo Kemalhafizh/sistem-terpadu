@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\AcademicYear;
 use App\Models\Student;
 use App\Models\TahfidzLog;
 use App\Models\TahfidzTarget;
-use App\Models\AcademicYear;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +24,7 @@ class TahfidzService
     public function getStudentProgress(Student $student, ?AcademicYear $academicYear = null): array
     {
         $academicYear = $academicYear ?? AcademicYear::current();
-        if (!$academicYear) {
+        if (! $academicYear) {
             return [
                 'target' => null,
                 'logs' => collect(),
@@ -108,19 +108,29 @@ class TahfidzService
 
             if ($type === 'ziyadah') {
                 switch ($grade) {
-                    case 'A': $xpAmount = 15; break;
-                    case 'B': $xpAmount = 12; break;
-                    case 'C': $xpAmount = 8; break;
-                    case 'D': $xpAmount = 4; break;
-                    default: $xpAmount = 10; break;
+                    case 'A': $xpAmount = 15;
+                        break;
+                    case 'B': $xpAmount = 12;
+                        break;
+                    case 'C': $xpAmount = 8;
+                        break;
+                    case 'D': $xpAmount = 4;
+                        break;
+                    default: $xpAmount = 10;
+                        break;
                 }
             } else { // murajaah
                 switch ($grade) {
-                    case 'A': $xpAmount = 8; break;
-                    case 'B': $xpAmount = 6; break;
-                    case 'C': $xpAmount = 4; break;
-                    case 'D': $xpAmount = 2; break;
-                    default: $xpAmount = 5; break;
+                    case 'A': $xpAmount = 8;
+                        break;
+                    case 'B': $xpAmount = 6;
+                        break;
+                    case 'C': $xpAmount = 4;
+                        break;
+                    case 'D': $xpAmount = 2;
+                        break;
+                    default: $xpAmount = 5;
+                        break;
                 }
             }
 
@@ -142,13 +152,17 @@ class TahfidzService
     public function updateTargetAchievement(Student $student, ?AcademicYear $academicYear = null): ?TahfidzTarget
     {
         $academicYear = $academicYear ?? AcademicYear::current();
-        if (!$academicYear) return null;
+        if (! $academicYear) {
+            return null;
+        }
 
         $target = TahfidzTarget::where('student_id', $student->id)
             ->where('academic_year_id', $academicYear->id)
             ->first();
 
-        if (!$target) return null;
+        if (! $target) {
+            return null;
+        }
 
         // Sum ziyadah pages and distinct juz memorized in this academic year range
         $achievedPages = $student->tahfidzLogs()
@@ -205,8 +219,8 @@ class TahfidzService
         ]);
 
         // Award Target completion XP bonus (+50 XP) if transitioned to completed/exceeded
-        if (in_array($newStatus, ['completed', 'exceeded']) && !in_array($oldStatus, ['completed', 'exceeded'])) {
-            $this->gamificationService->awardXp($student, 50, 'tahfidz_target', "Berhasil mencapai target hafalan semester ini!");
+        if (in_array($newStatus, ['completed', 'exceeded']) && ! in_array($oldStatus, ['completed', 'exceeded'])) {
+            $this->gamificationService->awardXp($student, 50, 'tahfidz_target', 'Berhasil mencapai target hafalan semester ini!');
         }
 
         return $target;
@@ -218,7 +232,7 @@ class TahfidzService
     public function getClassProgressSummary(?int $classroomId = null): array
     {
         $academicYear = AcademicYear::current();
-        if (!$academicYear) {
+        if (! $academicYear) {
             return [
                 'status_distribution' => ['on_track' => 0, 'behind' => 0, 'exceeded' => 0, 'completed' => 0],
                 'average_completion_percent' => 0,
@@ -281,7 +295,9 @@ class TahfidzService
     public function getLeaderboard(?int $classroomId = null, int $limit = 10)
     {
         $academicYear = AcademicYear::current();
-        if (!$academicYear) return collect();
+        if (! $academicYear) {
+            return collect();
+        }
 
         $query = Student::with(['user', 'classroom'])
             ->withCount(['tahfidzLogs' => function ($q) use ($academicYear) {
@@ -289,7 +305,7 @@ class TahfidzService
             }])
             ->withSum(['tahfidzLogs as total_pages_memorized' => function ($q) use ($academicYear) {
                 $q->whereBetween('date', [$academicYear->start_date, $academicYear->end_date])
-                  ->where('type', 'ziyadah');
+                    ->where('type', 'ziyadah');
             }], 'pages_count')
             ->whereHas('tahfidzTargets', function ($q) use ($academicYear) {
                 $q->where('academic_year_id', $academicYear->id);
@@ -305,6 +321,7 @@ class TahfidzService
                     ->where('academic_year_id', $academicYear->id)
                     ->first();
                 $student->tahfidz_target = $target;
+
                 return $student;
             })
             ->sortByDesc(function ($student) {

@@ -13,7 +13,7 @@ class EventAttendanceEventFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->words(3, true) . ' Event',
+            'name' => $this->faker->words(3, true).' Event',
             'type' => $this->faker->randomElement(['upacara', 'sholat_dhuha', 'sholat_dzuhur', 'kultum', 'phbi', 'rapat_guru', 'osis', 'class_meeting', 'lainnya']),
             'event_date' => $this->faker->date(),
             'start_time' => '08:00:00',

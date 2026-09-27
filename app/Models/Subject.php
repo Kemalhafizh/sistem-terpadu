@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Subject extends Model
 {
@@ -22,7 +23,7 @@ class Subject extends Model
      */
     public static function allCached()
     {
-        return \Illuminate\Support\Facades\Cache::rememberForever('subjects_all', function () {
+        return Cache::rememberForever('subjects_all', function () {
             return self::orderBy('name')->get();
         });
     }
@@ -30,10 +31,10 @@ class Subject extends Model
     protected static function booted()
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('subjects_all');
+            Cache::forget('subjects_all');
         });
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('subjects_all');
+            Cache::forget('subjects_all');
         });
     }
 }

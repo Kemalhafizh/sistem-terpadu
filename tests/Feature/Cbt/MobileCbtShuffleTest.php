@@ -8,6 +8,7 @@ use App\Models\QuestionBank;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
+use App\Services\CbtService;
 use Laravel\Sanctum\Sanctum;
 
 /*
@@ -29,6 +30,7 @@ beforeEach(function () {
             'user_id' => $user->id,
             'classroom_id' => $this->classroom->id,
         ]);
+
         return [$user, $student];
     };
 
@@ -83,11 +85,13 @@ beforeEach(function () {
         foreach ($this->questions as $idx => $q) {
             $exam->questions()->attach($q->id, ['order' => $count - $idx, 'weight' => 1.00]);
         }
+
         return $exam;
     };
 
     $this->fetch = function (User $user, Exam $exam): array {
         Sanctum::actingAs($user);
+
         return $this->getJson("/api/v1/student/cbt/exams/{$exam->id}/questions")
             ->assertOk()
             ->json('data.questions');
@@ -312,7 +316,7 @@ test('autoGrade after force-close scores shuffled-option answers by original key
         'answers_snapshot' => $answers,
     ])->assertOk();
 
-    $attempt = app(\App\Services\CbtService::class)->autoGrade(
+    $attempt = app(CbtService::class)->autoGrade(
         ExamAttempt::where('exam_id', $exam->id)->where('student_id', $this->studentA->id)->first()
     );
 

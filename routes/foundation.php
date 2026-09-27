@@ -1,13 +1,14 @@
 <?php
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Foundation\FoundationController;
-use App\Http\Controllers\Foundation\FoundationUnitController;
-use App\Http\Controllers\Foundation\FoundationReportController;
-use App\Http\Controllers\Foundation\FoundationMeetingController;
-use App\Http\Controllers\Foundation\WakafAssetController;
-use App\Http\Controllers\Foundation\StaffRotationController;
-use App\Http\Controllers\Foundation\FoundationKpiController;
+
 use App\Http\Controllers\Foundation\AccreditationTrackerController;
+use App\Http\Controllers\Foundation\FoundationController;
+use App\Http\Controllers\Foundation\FoundationKpiController;
+use App\Http\Controllers\Foundation\FoundationMeetingController;
+use App\Http\Controllers\Foundation\FoundationReportController;
+use App\Http\Controllers\Foundation\FoundationUnitController;
+use App\Http\Controllers\Foundation\StaffRotationController;
+use App\Http\Controllers\Foundation\WakafAssetController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/foundation/dashboard', [FoundationController::class, 'dashboard'])->name('foundation.dashboard');

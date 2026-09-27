@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Green\CarbonMetricController;
-use App\Http\Controllers\Green\WasteManagementController;
-use App\Http\Controllers\Green\EcoProjectController;
 use App\Http\Controllers\Green\EcoChallengeController;
+use App\Http\Controllers\Green\EcoProjectController;
+use App\Http\Controllers\Green\WasteManagementController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('green-school')->group(function () {

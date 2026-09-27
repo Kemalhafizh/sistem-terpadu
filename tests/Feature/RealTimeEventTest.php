@@ -1,15 +1,13 @@
 <?php
 
-use App\Models\AcademicYear;
-use App\Models\Classroom;
-use App\Models\Student;
-use App\Models\User;
-use App\Models\ForumThread;
-use App\Models\ParentMessage;
 use App\Events\ChatMessageSent;
 use App\Events\ForumReplyPosted;
+use App\Models\AcademicYear;
+use App\Models\Classroom;
+use App\Models\ForumThread;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Broadcast;
 
 beforeEach(function () {
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
@@ -24,7 +22,7 @@ beforeEach(function () {
         'broadcasting.connections.pusher.options.host' => 'localhost',
         'broadcasting.connections.pusher.options.port' => 8080,
         'broadcasting.connections.pusher.options.scheme' => 'http',
-        
+
         'broadcasting.connections.reverb.driver' => 'pusher',
         'broadcasting.connections.reverb.key' => 'local-key',
         'broadcasting.connections.reverb.secret' => 'local-secret',
@@ -45,7 +43,7 @@ test('user channel is strictly authorized for the owner user only', function () 
     // Authorized user listening to their own channel
     $this->actingAs($userA)
         ->postJson('/broadcasting/auth', [
-            'channel_name' => 'private-user.' . $userA->id,
+            'channel_name' => 'private-user.'.$userA->id,
             'socket_id' => '1234.1234',
         ])
         ->assertStatus(200);
@@ -53,7 +51,7 @@ test('user channel is strictly authorized for the owner user only', function () 
     // Unauthorized user listening to someone else's user channel
     $this->actingAs($userB)
         ->postJson('/broadcasting/auth', [
-            'channel_name' => 'private-user.' . $userA->id,
+            'channel_name' => 'private-user.'.$userA->id,
             'socket_id' => '1234.1234',
         ])
         ->assertStatus(403);
@@ -73,7 +71,7 @@ test('chat channel is authorized only for student parent and homeroom teacher', 
     // Parent should be authorized
     $this->actingAs($parent)
         ->postJson('/broadcasting/auth', [
-            'channel_name' => 'private-chat.' . $student->id,
+            'channel_name' => 'private-chat.'.$student->id,
             'socket_id' => '1234.1234',
         ])
         ->assertStatus(200);
@@ -81,7 +79,7 @@ test('chat channel is authorized only for student parent and homeroom teacher', 
     // Teacher should be authorized
     $this->actingAs($teacher)
         ->postJson('/broadcasting/auth', [
-            'channel_name' => 'private-chat.' . $student->id,
+            'channel_name' => 'private-chat.'.$student->id,
             'socket_id' => '1234.1234',
         ])
         ->assertStatus(200);
@@ -89,7 +87,7 @@ test('chat channel is authorized only for student parent and homeroom teacher', 
     // Other user should not be authorized
     $this->actingAs($other)
         ->postJson('/broadcasting/auth', [
-            'channel_name' => 'private-chat.' . $student->id,
+            'channel_name' => 'private-chat.'.$student->id,
             'socket_id' => '1234.1234',
         ])
         ->assertStatus(403);

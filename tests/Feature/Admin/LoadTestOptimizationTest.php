@@ -1,37 +1,36 @@
 <?php
 
-use App\Models\User;
-use App\Models\Setting;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\Setting;
 use App\Models\Subject;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 test('cache warmup command caches all required settings and metadata', function () {
     // 1. Setup mock database records
     Setting::create(['key' => 'school_name', 'value' => 'SMA Islam Sultan Agung 1', 'group' => 'general', 'type' => 'text']);
     Setting::create(['key' => 'school_address', 'value' => 'Semarang', 'group' => 'general', 'type' => 'text']);
-    
+
     AcademicYear::create([
         'year' => '2026/2027',
         'semester' => 'Ganjil',
         'is_active' => true,
         'start_date' => '2026-07-01',
-        'end_date' => '2026-12-31'
+        'end_date' => '2026-12-31',
     ]);
 
     Classroom::create([
-        'name' => 'X-A', 
-        'grade_level' => 'X', 
-        'major' => 'MIPA', 
-        'academic_year' => '2026/2027'
+        'name' => 'X-A',
+        'grade_level' => 'X',
+        'major' => 'MIPA',
+        'academic_year' => '2026/2027',
     ]);
     Subject::create([
-        'name' => 'Matematika', 
-        'code' => 'MTK', 
-        'category' => 'Nasional', 
-        'kkm' => 75
+        'name' => 'Matematika',
+        'code' => 'MTK',
+        'category' => 'Nasional',
+        'kkm' => 75,
     ]);
 
     // Ensure cache is completely clear before warmup

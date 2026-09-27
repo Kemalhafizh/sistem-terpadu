@@ -25,7 +25,7 @@ class DocumentMobileApiController extends Controller
     public function reportList(Request $request)
     {
         $user = $request->user();
-        if (!in_array($user->role, ['student', 'siswa'], true)) {
+        if (! in_array($user->role, ['student', 'siswa'], true)) {
             return $this->successResponse([], 'Tidak ada rapor untuk peran ini.');
         }
 
@@ -37,6 +37,7 @@ class DocumentMobileApiController extends Controller
         $data = $pdfs->map(function (ReportCardPdf $pdf) {
             $template = $pdf->template;
             $year = $template?->academicYear;
+
             return [
                 'id' => $pdf->id,
                 'title' => $template?->name ?? 'Rapor',
@@ -63,7 +64,7 @@ class DocumentMobileApiController extends Controller
     {
         $user = $request->user();
         $student = $user->student;
-        if (!$student) {
+        if (! $student) {
             return $this->successResponse([], 'Tidak ada sertifikat untuk peran ini.');
         }
 
@@ -133,7 +134,7 @@ class DocumentMobileApiController extends Controller
             ->where('user_id', $request->user()->id)
             ->first();
 
-        if (!$ocrResult) {
+        if (! $ocrResult) {
             return $this->errorResponse('Hasil OCR tidak ditemukan.', 404);
         }
 

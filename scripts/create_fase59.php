@@ -1,9 +1,9 @@
 <?php
 
-$basePath = "c:/project/portofolio/project-super-web/sistem-terpadu";
+$basePath = 'c:/project/portofolio/project-super-web/sistem-terpadu';
 
 $files = [
-    "database/migrations/2026_11_03_000000_create_green_school_tables.php" => <<<EOT
+    'database/migrations/2026_11_03_000000_create_green_school_tables.php' => <<<EOT
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -79,7 +79,7 @@ return new class extends Migration
 };
 EOT
     ,
-    "app/Models/CarbonMetric.php" => <<<EOT
+    'app/Models/CarbonMetric.php' => <<<EOT
 <?php
 
 namespace App\Models;
@@ -114,7 +114,7 @@ class CarbonMetric extends Model
 }
 EOT
     ,
-    "app/Models/WasteLog.php" => <<<EOT
+    'app/Models/WasteLog.php' => <<<EOT
 <?php
 
 namespace App\Models;
@@ -148,7 +148,7 @@ class WasteLog extends Model
 }
 EOT
     ,
-    "app/Models/EcoProject.php" => <<<EOT
+    'app/Models/EcoProject.php' => <<<EOT
 <?php
 
 namespace App\Models;
@@ -186,7 +186,7 @@ class EcoProject extends Model
 }
 EOT
     ,
-    "app/Models/EcoParticipation.php" => <<<EOT
+    'app/Models/EcoParticipation.php' => <<<EOT
 <?php
 
 namespace App\Models;
@@ -225,7 +225,7 @@ class EcoParticipation extends Model
 }
 EOT
     ,
-    "app/Services/Green/EnvironmentalImpactService.php" => <<<EOT
+    'app/Services/Green/EnvironmentalImpactService.php' => <<<EOT
 <?php
 
 namespace App\Services\Green;
@@ -260,7 +260,7 @@ class EnvironmentalImpactService
 }
 EOT
     ,
-    "app/Services/Green/WasteTrackingService.php" => <<<EOT
+    'app/Services/Green/WasteTrackingService.php' => <<<EOT
 <?php
 
 namespace App\Services\Green;
@@ -286,7 +286,7 @@ class WasteTrackingService
 }
 EOT
     ,
-    "app/Services/Green/GreenCurriculumService.php" => <<<EOT
+    'app/Services/Green/GreenCurriculumService.php' => <<<EOT
 <?php
 
 namespace App\Services\Green;
@@ -312,7 +312,7 @@ class GreenCurriculumService
 }
 EOT
     ,
-    "app/Services/Green/GreenGamificationService.php" => <<<EOT
+    'app/Services/Green/GreenGamificationService.php' => <<<EOT
 <?php
 
 namespace App\Services\Green;
@@ -338,7 +338,7 @@ class GreenGamificationService
 }
 EOT
     ,
-    "app/Http/Controllers/Green/CarbonMetricController.php" => <<<EOT
+    'app/Http/Controllers/Green/CarbonMetricController.php' => <<<EOT
 <?php
 
 namespace App\Http\Controllers\Green;
@@ -371,7 +371,7 @@ class CarbonMetricController extends Controller
 }
 EOT
     ,
-    "app/Http/Controllers/Green/WasteManagementController.php" => <<<EOT
+    'app/Http/Controllers/Green/WasteManagementController.php' => <<<EOT
 <?php
 
 namespace App\Http\Controllers\Green;
@@ -404,7 +404,7 @@ class WasteManagementController extends Controller
 }
 EOT
     ,
-    "app/Http/Controllers/Green/EcoProjectController.php" => <<<EOT
+    'app/Http/Controllers/Green/EcoProjectController.php' => <<<EOT
 <?php
 
 namespace App\Http\Controllers\Green;
@@ -451,7 +451,7 @@ class EcoProjectController extends Controller
 }
 EOT
     ,
-    "app/Http/Controllers/Green/EcoChallengeController.php" => <<<EOT
+    'app/Http/Controllers/Green/EcoChallengeController.php' => <<<EOT
 <?php
 
 namespace App\Http\Controllers\Green;
@@ -483,7 +483,7 @@ class EcoChallengeController extends Controller
 }
 EOT
     ,
-    "resources/views/fase59/carbon/dashboard.blade.php" => <<<EOT
+    'resources/views/fase59/carbon/dashboard.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -505,7 +505,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/carbon/data-entry.blade.php" => <<<EOT
+    'resources/views/fase59/carbon/data-entry.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -523,7 +523,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/carbon/reports.blade.php" => <<<EOT
+    'resources/views/fase59/carbon/reports.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -541,7 +541,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/waste/tracker.blade.php" => <<<EOT
+    'resources/views/fase59/waste/tracker.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -559,7 +559,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/waste/log-entry.blade.php" => <<<EOT
+    'resources/views/fase59/waste/log-entry.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -577,7 +577,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/waste/bank-sampah.blade.php" => <<<EOT
+    'resources/views/fase59/waste/bank-sampah.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -595,7 +595,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/green-curriculum/project-list.blade.php" => <<<EOT
+    'resources/views/fase59/green-curriculum/project-list.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -613,7 +613,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/green-curriculum/sdg-mapping.blade.php" => <<<EOT
+    'resources/views/fase59/green-curriculum/sdg-mapping.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -631,7 +631,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/green-curriculum/impact-report.blade.php" => <<<EOT
+    'resources/views/fase59/green-curriculum/impact-report.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -649,7 +649,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/eco-challenge/challenges.blade.php" => <<<EOT
+    'resources/views/fase59/eco-challenge/challenges.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -667,7 +667,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/eco-challenge/leaderboard.blade.php" => <<<EOT
+    'resources/views/fase59/eco-challenge/leaderboard.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -685,7 +685,7 @@ EOT
 @endsection
 EOT
     ,
-    "resources/views/fase59/eco-challenge/submission.blade.php" => <<<EOT
+    'resources/views/fase59/eco-challenge/submission.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -703,7 +703,7 @@ EOT
 @endsection
 EOT
     ,
-    "routes/green_school.php" => <<<EOT
+    'routes/green_school.php' => <<<EOT
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -743,7 +743,7 @@ Route::middleware(['auth'])->group(function () {
 });
 EOT
     ,
-    "database/seeders/GreenSchoolSeeder.php" => <<<EOT
+    'database/seeders/GreenSchoolSeeder.php' => <<<EOT
 <?php
 
 namespace Database\Seeders;
@@ -806,7 +806,7 @@ class GreenSchoolSeeder extends Seeder
 }
 EOT
     ,
-    "tests/Feature/Green/GreenSchoolSuiteTest.php" => <<<EOT
+    'tests/Feature/Green/GreenSchoolSuiteTest.php' => <<<EOT
 <?php
 
 namespace Tests\Feature\Green;
@@ -853,13 +853,11 @@ EOT
 ];
 
 foreach ($files as $path => $content) {
-    $fullPath = $basePath . "/" . $path;
+    $fullPath = $basePath.'/'.$path;
     $dir = dirname($fullPath);
-    if (!is_dir($dir)) {
+    if (! is_dir($dir)) {
         mkdir($dir, 0777, true);
     }
     file_put_contents($fullPath, $content);
     echo "Created: $path\n";
 }
-
-?>

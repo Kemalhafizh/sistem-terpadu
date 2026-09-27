@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Services\GamificationService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class GamificationController extends Controller
     {
         $userId = $request->user()->id;
         $profile = $this->gamificationService->getProfile($userId);
+
         return $this->successResponse($profile, 'Gamification profile retrieved successfully');
     }
 
@@ -39,11 +41,11 @@ class GamificationController extends Controller
         // silently pretending a "monthly" cut actually happened.
         $user = $request->user();
 
-        $query = \App\Models\Student::with(['user', 'classroom'])
+        $query = Student::with(['user', 'classroom'])
             ->orderByDesc('total_xp');
 
         if ($scope === 'class') {
-            $requester = \App\Models\Student::where('user_id', $user->id)->first();
+            $requester = Student::where('user_id', $user->id)->first();
             if ($requester?->classroom_id) {
                 $query->where('classroom_id', $requester->classroom_id);
             }
@@ -69,6 +71,7 @@ class GamificationController extends Controller
     {
         $userId = $request->user()->id;
         $badges = $this->gamificationService->getBadgesCollection($userId);
+
         return $this->successResponse($badges, 'Badges collection retrieved successfully');
     }
 
@@ -93,9 +96,10 @@ class GamificationController extends Controller
     public function getStreakCalendar(Request $request)
     {
         $userId = $request->user()->id;
-        $student = \App\Models\Student::where('user_id', $userId)->first();
+        $student = Student::where('user_id', $userId)->first();
         $studentId = $student ? $student->id : $userId;
         $calendar = $this->gamificationService->getStreakCalendar($studentId);
+
         return $this->successResponse($calendar, 'Streak calendar retrieved successfully');
     }
 }

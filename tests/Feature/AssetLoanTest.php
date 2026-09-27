@@ -63,7 +63,7 @@ test('guru can submit a loan request for a borrowable and available asset', func
     ]);
 
     $response->assertRedirect(route('assets.loans.index'));
-    
+
     $this->assertDatabaseHas('asset_loans', [
         'asset_id' => $this->asset->id,
         'borrower_id' => $this->guru->id,
@@ -83,7 +83,7 @@ test('guru cannot borrow a non-borrowable or unavailable asset', function () {
     ]);
 
     $response->assertSessionHas('error', 'Aset saat ini tidak dapat dipinjam.');
-    
+
     // Restore borrowable but make it unavailable
     $this->asset->update(['is_borrowable' => true, 'status' => 'borrowed']);
 
@@ -111,7 +111,7 @@ test('waka sarpras can approve a loan and asset status updates to borrowed', fun
     ]);
 
     $response->assertRedirect(route('assets.loans.index'));
-    
+
     $loan->refresh();
     expect($loan->status)->toBe('approved');
     expect($loan->asset->status)->toBe('borrowed');
@@ -126,7 +126,7 @@ test('waka sarpras can record return of asset and updates condition and status',
         'purpose' => 'Belajar kelompok',
         'status' => 'approved',
     ]);
-    
+
     // Explicitly update asset status to borrowed as hooks would do
     $this->asset->update(['status' => 'borrowed']);
 
@@ -136,7 +136,7 @@ test('waka sarpras can record return of asset and updates condition and status',
     ]);
 
     $response->assertRedirect(route('assets.loans.index'));
-    
+
     $loan->refresh();
     expect($loan->status)->toBe('returned');
     expect($loan->return_condition)->toBe('damaged');
@@ -151,13 +151,13 @@ test('straight-line depreciation correctly calculates asset book value', functio
     // Depreciation per day = 10,000,000 / 1825 = 5479.452
     // Accumulated depreciation = 5479.452 * 730 = 3,999,999.96
     // Current value = 10,000,000 - 3,999,999.96 = 6,000,000.04
-    
+
     $currentVal = $this->asset->current_value;
-    
+
     // Let's assert that the calculated current value is around 6,000,000 (allowing minor leap year day diffs)
     expect((float) $currentVal)->toBeGreaterThan(5900000.00);
     expect((float) $currentVal)->toBeLessThan(6100000.00);
-    
+
     // Check when asset is older than useful life
     $oldAsset = Asset::create([
         'asset_code' => 'AST-OLD',
@@ -172,7 +172,7 @@ test('straight-line depreciation correctly calculates asset book value', functio
         'status' => 'available',
         'created_by' => $this->admin->id,
     ]);
-    
+
     expect((float) $oldAsset->current_value)->toBe(0.00);
 });
 

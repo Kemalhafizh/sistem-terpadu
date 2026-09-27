@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use App\Services\TotpSecurityService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin']);

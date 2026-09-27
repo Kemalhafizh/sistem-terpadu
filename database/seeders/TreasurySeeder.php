@@ -103,7 +103,7 @@ class TreasurySeeder extends Seeder
         usort($rows, fn ($a, $b) => $a['date'] <=> $b['date']);
 
         $balance = (float) $account->current_balance;
-        $csv = ["tanggal;keterangan;referensi;debit;kredit;saldo"];
+        $csv = ['tanggal;keterangan;referensi;debit;kredit;saldo'];
         foreach ($rows as $row) {
             $balance += $row['credit'] - $row['debit'];
             $csv[] = implode(';', [

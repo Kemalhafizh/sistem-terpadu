@@ -18,6 +18,7 @@ class InstructionalDesignService
                 $tiers['tier_1'][] = $studentId;
             }
         }
+
         return $tiers;
     }
 
@@ -33,9 +34,12 @@ class InstructionalDesignService
 
     public function analyzePlanEffectiveness(DifferentiatedPlan $plan, array $studentOutcomes): float
     {
-        if (empty($studentOutcomes)) return 0.0;
-        
-        $successCount = count(array_filter($studentOutcomes, fn($score) => $score >= 75));
+        if (empty($studentOutcomes)) {
+            return 0.0;
+        }
+
+        $successCount = count(array_filter($studentOutcomes, fn ($score) => $score >= 75));
+
         return ($successCount / count($studentOutcomes)) * 100;
     }
 }

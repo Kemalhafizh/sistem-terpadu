@@ -45,6 +45,7 @@ class CharityDonation extends Model
         if ($this->evidence_path) {
             return Storage::url($this->evidence_path);
         }
+
         return null;
     }
 }

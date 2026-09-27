@@ -23,7 +23,7 @@ class PlatformMaturitySeeder extends Seeder
         DeveloperApiKey::create([
             'user_id' => $superadmin->id,
             'app_name' => 'ISA1 Mobile Parent App Gateway',
-            'api_key' => 'isa1_live_' . Str::random(32),
+            'api_key' => 'isa1_live_'.Str::random(32),
             'scopes' => ['grades:read', 'attendance:read', 'notifications:send'],
             'is_active' => true,
             'last_used_at' => now(),

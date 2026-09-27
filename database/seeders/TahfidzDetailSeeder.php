@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\AcademicYear;
 use App\Models\Student;
 use App\Models\TahfidzLog;
 use App\Models\TahfidzTarget;
-use App\Models\AcademicYear;
 use App\Models\User;
 use App\Services\TahfidzService;
 use Illuminate\Database\Seeder;
@@ -16,18 +16,18 @@ class TahfidzDetailSeeder extends Seeder
     public function run(): void
     {
         $guruTahfidz = User::where('email', 'guru.tahfidz@sultanagung1.sch.id')->first();
-        if (!$guruTahfidz) {
+        if (! $guruTahfidz) {
             $guruTahfidz = User::where('role', 'guru')->first();
         }
 
         $activeYear = AcademicYear::current();
-        if (!$activeYear) {
+        if (! $activeYear) {
             $activeYear = AcademicYear::create([
                 'year' => '2025/2026',
                 'semester' => 'Genap',
                 'is_active' => true,
                 'start_date' => '2026-01-06',
-                'end_date' => '2026-06-21'
+                'end_date' => '2026-06-21',
             ]);
         }
 
@@ -88,10 +88,10 @@ class TahfidzDetailSeeder extends Seeder
             for ($i = 0; $i < $logCount; $i++) {
                 $surahIdx = rand(0, count($surahs) - 1);
                 $surah = $surahs[$surahIdx];
-                
+
                 $fromAyat = rand(1, max(1, $surah[2] - 10));
                 $toAyat = min($surah[2], $fromAyat + rand(3, 8));
-                
+
                 // Calculate pages count
                 $pages = rand(1, 2);
 

@@ -7,6 +7,8 @@ use App\Models\ThemePreset;
 use App\Models\UserThemePreference;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DesignSystemService
 {
@@ -20,6 +22,7 @@ class DesignSystemService
             if ($tokens->isEmpty()) {
                 return $this->getDefaultTokens();
             }
+
             return $tokens->groupBy('category')->toArray();
         });
     }
@@ -65,7 +68,7 @@ class DesignSystemService
     public function getActivePreset(): ThemePreset
     {
         $preset = ThemePreset::where('is_active', true)->orderByDesc('priority')->first();
-        if (!$preset) {
+        if (! $preset) {
             $preset = new ThemePreset([
                 'name' => 'Sultan Agung Green (Default)',
                 'slug' => 'default',
@@ -74,6 +77,7 @@ class DesignSystemService
                 'priority' => 0,
             ]);
         }
+
         return $preset;
     }
 
@@ -87,8 +91,8 @@ class DesignSystemService
 
         // 1. Check Exam Season (if exam active or UTS/UAS period)
         // Check if exams are currently active in DB
-        $hasActiveExam = \Illuminate\Support\Facades\Schema::hasTable('exams')
-            && \Illuminate\Support\Facades\DB::table('exams')
+        $hasActiveExam = Schema::hasTable('exams')
+            && DB::table('exams')
                 ->where('is_active', true)
                 ->whereDate('start_time', '<=', $now->toDateString())
                 ->whereDate('end_time', '>=', $now->toDateString())
@@ -120,7 +124,7 @@ class DesignSystemService
         $contextualPreset = $this->getContextualPreset();
         $tokens = $this->getDesignTokens();
 
-        if (!$userId) {
+        if (! $userId) {
             return [
                 'active_preset' => $contextualPreset,
                 'is_dark' => $contextualPreset === 'night_study',
@@ -131,7 +135,7 @@ class DesignSystemService
         }
 
         $pref = UserThemePreference::where('user_id', $userId)->first();
-        if (!$pref || $pref->auto_theme) {
+        if (! $pref || $pref->auto_theme) {
             return [
                 'active_preset' => $contextualPreset,
                 'is_dark' => $contextualPreset === 'night_study',

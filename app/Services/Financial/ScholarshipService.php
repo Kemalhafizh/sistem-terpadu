@@ -29,6 +29,7 @@ class ScholarshipService
     public function openApplications(ScholarshipProgram $program): ScholarshipProgram
     {
         $program->update(['status' => 'open']);
+
         return $program;
     }
 
@@ -53,13 +54,14 @@ class ScholarshipService
             'reviewed_by' => $reviewerId,
             'review_notes' => $notes,
         ]);
+
         return $application;
     }
 
     public function disburse(ScholarshipApplication $application, string $method, int $officerId): ScholarshipDisbursement
     {
         $program = $application->program;
-        $refNo = 'DISB-' . strtoupper(Str::random(6)) . '-' . date('Ymd');
+        $refNo = 'DISB-'.strtoupper(Str::random(6)).'-'.date('Ymd');
 
         $disbursement = ScholarshipDisbursement::create([
             'scholarship_application_id' => $application->id,

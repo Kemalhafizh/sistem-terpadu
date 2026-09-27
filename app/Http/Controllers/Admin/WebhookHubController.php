@@ -55,7 +55,7 @@ class WebhookHubController extends Controller
                 'is_active' => true,
             ]);
         } catch (\InvalidArgumentException $e) {
-            return back()->withInput()->with('error', 'Target URL Webhook ditolak demi keamanan (SSRF Protection): ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Target URL Webhook ditolak demi keamanan (SSRF Protection): '.$e->getMessage());
         }
 
         return back()->with('success', "Langganan Webhook [{$subscription->name}] berhasil mendaftar!");
@@ -98,7 +98,7 @@ class WebhookHubController extends Controller
                 return back()->with('error', "Pengiriman Ulang (Replay Webhook #{$delivery->id}) GAGAL (HTTP {$delivery->response_code}).");
             }
         } catch (\Throwable $e) {
-            return back()->with('error', 'Gagal memutar ulang webhook: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memutar ulang webhook: '.$e->getMessage());
         }
     }
 

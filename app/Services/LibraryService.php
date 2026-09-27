@@ -2,20 +2,21 @@
 
 namespace App\Services;
 
+use App\Jobs\SendLibraryDueReminderJob;
 use App\Models\Account;
 use App\Models\JournalEntry;
 use App\Models\JournalEntryLine;
 use App\Models\LibraryBook;
+use App\Models\LibraryCategory;
 use App\Models\LibraryLoan;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\WhatsappLog;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Models\LibraryCategory;
-use App\Services\WhatsappService;
-
 
 class LibraryService
 {
@@ -117,7 +118,7 @@ class LibraryService
             ]);
 
             // Dispatch reminder job H-1 jatuh tempo
-            \App\Jobs\SendLibraryDueReminderJob::dispatch($loan->id)->delay($dueAt->copy()->subDay());
+            SendLibraryDueReminderJob::dispatch($loan->id)->delay($dueAt->copy()->subDay());
 
             return $loan;
         });
@@ -295,7 +296,7 @@ class LibraryService
     /**
      * Get book recommendations based on student's favorite category or global popularity.
      */
-    public function getBookRecommendations(Student $student, int $limit = 6): \Illuminate\Support\Collection
+    public function getBookRecommendations(Student $student, int $limit = 6): Collection
     {
         $borrowedBookIds = LibraryLoan::where('student_id', $student->id)->pluck('library_book_id')->toArray();
 
@@ -351,11 +352,11 @@ class LibraryService
         $totalBorrowed = LibraryLoan::where('student_id', $student->id)->count();
 
         $physicalCount = LibraryLoan::where('student_id', $student->id)
-            ->whereHas('book', fn($q) => $q->where('type', 'physical'))
+            ->whereHas('book', fn ($q) => $q->where('type', 'physical'))
             ->count();
 
         $digitalCount = LibraryLoan::where('student_id', $student->id)
-            ->whereHas('book', fn($q) => $q->where('type', 'digital'))
+            ->whereHas('book', fn ($q) => $q->where('type', 'digital'))
             ->count();
 
         // Favorite category
@@ -399,7 +400,7 @@ class LibraryService
     /**
      * Get all currently overdue loans.
      */
-    public function getOverdueLoansSummary(): \Illuminate\Support\Collection
+    public function getOverdueLoansSummary(): Collection
     {
         return LibraryLoan::with(['student.user', 'student.classroom', 'book'])
             ->overdue()
@@ -410,14 +411,14 @@ class LibraryService
     /**
      * Send WhatsApp alert notification to student's parent/student for overdue book.
      */
-    public function sendOverdueWhatsAppReminder(int $loanId): \App\Models\WhatsappLog
+    public function sendOverdueWhatsAppReminder(int $loanId): WhatsappLog
     {
         $loan = LibraryLoan::with(['student.user', 'student.parent', 'book'])->findOrFail($loanId);
 
         // Prioritize parent number, fallback to student number
         $recipient = $loan->student->parent->phone_number ?? $loan->student->user->phone_number;
 
-        if (!$recipient) {
+        if (! $recipient) {
             throw new \Exception('Nomor telepon siswa maupun orang tua tidak terdaftar di sistem.');
         }
 

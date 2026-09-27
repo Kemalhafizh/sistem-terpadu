@@ -4,7 +4,6 @@ use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\OsisMember;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([

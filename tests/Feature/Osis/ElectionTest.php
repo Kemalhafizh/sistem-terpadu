@@ -2,11 +2,10 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\OsisCandidate;
+use App\Models\OsisElection;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\OsisElection;
-use App\Models\OsisCandidate;
-use App\Models\OsisVote;
 
 beforeEach(function () {
     $this->admin = User::factory()->create([

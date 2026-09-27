@@ -12,6 +12,7 @@ class AccommodationRegistryController extends Controller
     public function index()
     {
         $registries = AccommodationRegistry::with('student')->get();
+
         return view('fase58.accommodations.registry', compact('registries'));
     }
 
@@ -28,6 +29,7 @@ class AccommodationRegistryController extends Controller
         ]);
 
         AccommodationRegistry::create($validated);
+
         return redirect()->back()->with('success', 'Data akomodasi berhasil ditambahkan.');
     }
 
@@ -43,18 +45,21 @@ class AccommodationRegistryController extends Controller
         ]);
 
         $accommodation->update($validated);
+
         return redirect()->back()->with('success', 'Data akomodasi berhasil diperbarui.');
     }
 
     public function destroy(AccommodationRegistry $accommodation)
     {
         $accommodation->delete();
+
         return redirect()->back()->with('success', 'Data akomodasi berhasil dihapus.');
     }
 
     public function studentProfile(Student $student)
     {
         $accommodations = AccommodationRegistry::where('student_id', $student->id)->get();
+
         return view('fase58.accommodations.student-profile', compact('student', 'accommodations'));
     }
 }

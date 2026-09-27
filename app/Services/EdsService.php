@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\EdsAssessment;
+use App\Models\EdsIndicator;
 use App\Models\EdsPeriod;
 use App\Models\EdsStandard;
-use App\Models\EdsIndicator;
-use App\Models\EdsAssessment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -44,8 +44,8 @@ class EdsService
                         'name' => 'Lulusan memiliki kompetensi pada dimensi keterampilan',
                         'description' => 'Memiliki kemampuan berpikir dan bertindak kreatif, produktif, kritis, mandiri, kolaboratif, dan komunikatif.',
                         'order' => 3,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-2',
@@ -64,8 +64,8 @@ class EdsService
                         'name' => 'Kurikulum tingkat satuan pendidikan memuat karakteristik dan muatan lokal',
                         'description' => 'Menyediakan materi pelajaran bermuatan lokal dan pembinaan karakter yang khas.',
                         'order' => 2,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-3',
@@ -90,8 +90,8 @@ class EdsService
                         'name' => 'Pengawasan proses pembelajaran dilakukan secara berkala',
                         'description' => 'Pemantauan, supervisi, evaluasi, pelaporan, dan tindak lanjut pengawasan.',
                         'order' => 3,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-4',
@@ -110,8 +110,8 @@ class EdsService
                         'name' => 'Instrumen penilaian hasil belajar memenuhi persyaratan mutu',
                         'description' => 'Kesesuaian kisi-kisi soal dengan kompetensi dasar yang diujikan.',
                         'order' => 2,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-5',
@@ -130,8 +130,8 @@ class EdsService
                         'name' => 'Kompetensi pendidik dan tenaga kependidikan bersertifikasi standar nasional',
                         'description' => 'Memiliki sertifikat pendidik untuk menjamin kompetensi profesional.',
                         'order' => 2,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-6',
@@ -150,8 +150,8 @@ class EdsService
                         'name' => 'Prasarana sekolah memenuhi standar kapasitas',
                         'description' => 'Laboratorium IPA, laboratorium komputer, perpustakaan, UKS, dan sarana ibadah memadai.',
                         'order' => 2,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-7',
@@ -170,8 +170,8 @@ class EdsService
                         'name' => 'Keterlibatan pemangku kepentingan sekolah berjalan harmonis',
                         'description' => 'Hubungan kerja sama yang sinergis dengan komite sekolah dan orang tua.',
                         'order' => 2,
-                    ]
-                ]
+                    ],
+                ],
             ],
             [
                 'code' => 'SNP-8',
@@ -190,8 +190,8 @@ class EdsService
                         'name' => 'Pelaporan pertanggungjawaban keuangan sekolah tepat waktu',
                         'description' => 'Penyusunan laporan bulanan, semesteran, dan tahunan yang diaudit berkala.',
                         'order' => 2,
-                    ]
-                ]
+                    ],
+                ],
             ],
         ];
 
@@ -249,7 +249,7 @@ class EdsService
                 'average' => $avgScore,
                 'assessed_count' => $assessedCount,
                 'total_count' => $stdIndicatorCount,
-                'progress_percentage' => $stdIndicatorCount > 0 ? round(($assessedCount / $stdIndicatorCount) * 100) : 0
+                'progress_percentage' => $stdIndicatorCount > 0 ? round(($assessedCount / $stdIndicatorCount) * 100) : 0,
             ];
         }
 
@@ -271,7 +271,7 @@ class EdsService
     public function getSpiderChartData(EdsPeriod $period): array
     {
         $scoresData = $this->getStandardScores($period);
-        
+
         $categories = [];
         $seriesData = [];
 
@@ -285,9 +285,9 @@ class EdsService
             'series' => [
                 [
                     'name' => 'Skor Mutu',
-                    'data' => $seriesData
-                ]
-            ]
+                    'data' => $seriesData,
+                ],
+            ],
         ];
     }
 
@@ -315,7 +315,7 @@ class EdsService
                     'evidence' => $assessment ? $assessment->evidence : 'Belum diisi/dievaluasi.',
                     'recommendation' => $assessment ? $assessment->recommendation : 'Segera lakukan penilaian awal dan susun rencana perbaikan.',
                     'assessed_by' => $assessment ? $assessment->assessor?->name : null,
-                    'is_assessed' => !is_null($assessment)
+                    'is_assessed' => ! is_null($assessment),
                 ];
             }
         }
@@ -336,7 +336,7 @@ class EdsService
         foreach ($currentScores['standards'] as $code => $currData) {
             $prevVal = $previousScores['standards'][$code]['average'] ?? 0;
             $currVal = $currData['average'];
-            
+
             $difference = round($currVal - $prevVal, 2);
 
             $comparison[$code] = [
@@ -353,7 +353,7 @@ class EdsService
             'previous_period_name' => $previous->name,
             'current_overall_average' => $currentScores['overall_average'],
             'previous_overall_average' => $previousScores['overall_average'],
-            'overall_difference' => round($currentScores['overall_average'] - $previousScores['overall_average'], 2)
+            'overall_difference' => round($currentScores['overall_average'] - $previousScores['overall_average'], 2),
         ];
     }
 
@@ -373,7 +373,7 @@ class EdsService
             'schoolName' => school_name(),
             'schoolAddress' => school_address(),
             'schoolContact' => school_contact_line(['phone', 'email']),
-            'generatedAt' => now()->format('d-m-Y H:i')
+            'generatedAt' => now()->format('d-m-Y H:i'),
         ];
 
         // Configure dompdf and load HTML

@@ -39,7 +39,7 @@ class CharityCampaign extends Model
         return $query->where('is_active', true)
             ->where(function ($q) {
                 $q->whereNull('end_date')
-                  ->orWhere('end_date', '>=', now()->toDateString());
+                    ->orWhere('end_date', '>=', now()->toDateString());
             });
     }
 
@@ -53,6 +53,7 @@ class CharityCampaign extends Model
         }
 
         $percentage = ($this->collected_amount / $this->target_amount) * 100;
+
         return (float) min(100.00, round($percentage, 2));
     }
 }

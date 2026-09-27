@@ -23,6 +23,7 @@
         "barryvdh/laravel-debugbar": "^4.2",
         "fakerphp/faker": "^1.23",
         "knuckleswtf/scribe": "^5.10",
+        "larastan/larastan": "^3.12",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",

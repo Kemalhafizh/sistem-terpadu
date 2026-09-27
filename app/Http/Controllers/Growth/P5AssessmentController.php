@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Growth;
 
 use App\Http\Controllers\Controller;
-use App\Models\CharacterAssessment;
 use App\Models\CharacterDimension;
 use App\Models\MeritPoint;
 use App\Models\User;
@@ -15,6 +14,7 @@ class P5AssessmentController extends Controller
     public function dimensions()
     {
         $dimensions = CharacterDimension::orderBy('display_order')->get();
+
         return view('character.dimensions', compact('dimensions'));
     }
 

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // 68.1: Advanced WCAG 2.2 AA Compliance Engine
-        if (!Schema::hasTable('wcag_scan_reports')) {
+        if (! Schema::hasTable('wcag_scan_reports')) {
             Schema::create('wcag_scan_reports', function (Blueprint $table) {
                 $table->id();
                 $table->string('scanned_url');
@@ -21,7 +21,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('wcag_issues')) {
+        if (! Schema::hasTable('wcag_issues')) {
             Schema::create('wcag_issues', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('wcag_scan_report_id')->constrained('wcag_scan_reports')->cascadeOnDelete();
@@ -35,7 +35,7 @@ return new class extends Migration
         }
 
         // 68.2: Dynamic Localization Strings Database Store
-        if (!Schema::hasTable('localization_strings')) {
+        if (! Schema::hasTable('localization_strings')) {
             Schema::create('localization_strings', function (Blueprint $table) {
                 $table->id();
                 $table->string('group_name'); // navigation, auth, system, dashboard
@@ -50,7 +50,7 @@ return new class extends Migration
         }
 
         // 68.3: Voice Navigation Commands Dictionary
-        if (!Schema::hasTable('voice_navigation_commands')) {
+        if (! Schema::hasTable('voice_navigation_commands')) {
             Schema::create('voice_navigation_commands', function (Blueprint $table) {
                 $table->id();
                 $table->string('language_code', 5)->default('id'); // id, en, ar
@@ -63,7 +63,7 @@ return new class extends Migration
         }
 
         // 68.4: Theme & Universal Design Preferences
-        if (!Schema::hasTable('theme_preferences')) {
+        if (! Schema::hasTable('theme_preferences')) {
             Schema::create('theme_preferences', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

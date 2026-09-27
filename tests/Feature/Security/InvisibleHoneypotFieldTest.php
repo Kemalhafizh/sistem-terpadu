@@ -16,6 +16,6 @@ test('invisible honeypot middleware intercepts bot form submissions with filled 
     $response->assertSee('CYBER THREAT INTERCEPTION NOTICE');
 
     $ip = '127.0.0.1';
-    $banKey = 'banned_ip_' . md5($ip);
+    $banKey = 'banned_ip_'.md5($ip);
     expect(Cache::has($banKey))->toBeTrue();
 });

@@ -19,14 +19,27 @@ class FcmNotificationService
     }
 
     /**
+     * Send one push notification to several users in a single job.
+     *
+     * @param  array<int, int>  $userIds
+     */
+    public function sendToUsers(array $userIds, string $title, string $body, array $payload = [], string $channelId = 'channel_announcement'): void
+    {
+        if ($userIds !== []) {
+            SendFcmNotificationJob::dispatch(array_values($userIds), $title, $body, $payload, $channelId);
+        }
+    }
+
+    /**
      * Send push notification to users by role segment.
      */
     public function sendToRole(string $role, string $title, string $body, array $payload = [], string $channelId = 'channel_announcement'): int
     {
         $userIds = User::where('role', $role)->pluck('id')->toArray();
-        if (!empty($userIds)) {
+        if (! empty($userIds)) {
             SendFcmNotificationJob::dispatch($userIds, $title, $body, $payload, $channelId);
         }
+
         return count($userIds);
     }
 
@@ -54,8 +67,10 @@ class FcmNotificationService
         $device = UserDeviceToken::where('user_id', $userId)->where('device_token', $token)->first();
         if ($device) {
             $device->update(['is_active' => false]);
+
             return true;
         }
+
         return false;
     }
 }

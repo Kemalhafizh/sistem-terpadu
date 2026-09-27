@@ -9,7 +9,6 @@ use App\Models\Grade;
 use App\Models\Student;
 use App\Models\TahfidzRecord;
 use App\Models\User;
-use Carbon\Carbon;
 
 class MobileStudentHubService
 {
@@ -19,7 +18,7 @@ class MobileStudentHubService
     public function getStudentWidgets(User $user): array
     {
         $student = Student::where('user_id', $user->id)->first();
-        if (!$student) {
+        if (! $student) {
             return [
                 'student_name' => $user->name,
                 'active_tasks' => [],
@@ -33,7 +32,7 @@ class MobileStudentHubService
             ->latest()
             ->take(4)
             ->get()
-            ->map(fn($g) => [
+            ->map(fn ($g) => [
                 'subject' => $g->subject->name ?? 'Mata Pelajaran',
                 'score' => $g->score,
                 'type' => $g->type ?? 'UH',

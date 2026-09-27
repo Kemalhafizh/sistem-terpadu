@@ -43,7 +43,7 @@ class SopGovernanceService
 
         return SopDocument::create([
             'title' => $data['title'] ?? $oldSop->title,
-            'code' => $oldSop->code . '-V' . ($oldSop->version + 1),
+            'code' => $oldSop->code.'-V'.($oldSop->version + 1),
             'category' => $oldSop->category,
             'content_html' => $data['content_html'] ?? $oldSop->content_html,
             'version' => $oldSop->version + 1,

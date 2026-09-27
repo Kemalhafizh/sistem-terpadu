@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\LoginAttempt;
 use App\Models\ActiveSession;
-use Illuminate\Support\Facades\DB;
+use App\Models\LoginAttempt;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SecurityMonitorService
 {
@@ -31,7 +31,7 @@ class SecurityMonitorService
     public function getSecurityDashboardData(): array
     {
         $today = Carbon::today();
-        
+
         return [
             'total_attempts_today' => LoginAttempt::whereDate('created_at', $today)->count(),
             'successful_today' => LoginAttempt::whereDate('created_at', $today)->where('successful', true)->count(),
@@ -54,19 +54,19 @@ class SecurityMonitorService
         $startDate = Carbon::now()->subDays($days);
 
         $trends = LoginAttempt::select(
-            DB::raw("DATE(created_at) as date"),
-            DB::raw("SUM(CASE WHEN successful = 1 THEN 1 ELSE 0 END) as success_count"),
-            DB::raw("SUM(CASE WHEN successful = 0 THEN 1 ELSE 0 END) as failure_count")
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('SUM(CASE WHEN successful = 1 THEN 1 ELSE 0 END) as success_count'),
+            DB::raw('SUM(CASE WHEN successful = 0 THEN 1 ELSE 0 END) as failure_count')
         )
-        ->where('created_at', '>=', $startDate)
-        ->groupBy(DB::raw("DATE(created_at)"))
-        ->orderBy('date', 'asc')
-        ->get();
+            ->where('created_at', '>=', $startDate)
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->orderBy('date', 'asc')
+            ->get();
 
         return [
             'dates' => $trends->pluck('date')->toArray(),
-            'success' => $trends->pluck('success_count')->map(fn($v) => (int)$v)->toArray(),
-            'failure' => $trends->pluck('failure_count')->map(fn($v) => (int)$v)->toArray(),
+            'success' => $trends->pluck('success_count')->map(fn ($v) => (int) $v)->toArray(),
+            'failure' => $trends->pluck('failure_count')->map(fn ($v) => (int) $v)->toArray(),
         ];
     }
 }

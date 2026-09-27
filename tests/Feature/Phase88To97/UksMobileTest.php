@@ -13,18 +13,18 @@ beforeEach(function () {
 test('student can view uks visits', function () {
     $response = $this->actingAs($this->student)->getJson('/api/v1/uks/visits/my');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('student can view health screening details', function () {
     $response = $this->actingAs($this->student)->getJson('/api/v1/uks/screening');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data'])
-             ->assertJsonPath('data.student_id', $this->studentRecord->id)
+        ->assertJsonStructure(['success', 'data'])
+        ->assertJsonPath('data.student_id', $this->studentRecord->id)
              // No screening recorded yet: honest nulls, not invented measurements.
-             ->assertJsonPath('data.height_cm', null)
-             ->assertJsonPath('data.bmi', null)
-             ->assertJsonPath('data.last_screened_at', null);
+        ->assertJsonPath('data.height_cm', null)
+        ->assertJsonPath('data.bmi', null)
+        ->assertJsonPath('data.last_screened_at', null);
 });
 
 test('student account without a student record gets 404 instead of invented data', function () {

@@ -11,8 +11,7 @@ class AdminIpWhitelistMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,8 +26,8 @@ class AdminIpWhitelistMiddleware
 
         $clientIp = $request->ip();
 
-        if (!in_array($clientIp, $allowedIps) && !in_array('*', $allowedIps)) {
-            abort(403, 'Akses ditolak. Alamat IP Anda (' . $clientIp . ') tidak terdaftar dalam whitelist area administratif.');
+        if (! in_array($clientIp, $allowedIps) && ! in_array('*', $allowedIps)) {
+            abort(403, 'Akses ditolak. Alamat IP Anda ('.$clientIp.') tidak terdaftar dalam whitelist area administratif.');
         }
 
         return $next($request);

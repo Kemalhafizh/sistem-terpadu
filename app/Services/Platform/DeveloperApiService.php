@@ -12,7 +12,7 @@ class DeveloperApiService
         return DeveloperApiKey::create([
             'user_id' => $userId,
             'app_name' => $appName,
-            'api_key' => 'isa1_live_' . Str::random(32),
+            'api_key' => 'isa1_live_'.Str::random(32),
             'scopes' => $scopes,
             'is_active' => true,
         ]);

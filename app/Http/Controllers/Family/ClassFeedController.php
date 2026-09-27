@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Family;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ClassFeedPost;
+use Illuminate\Http\Request;
 
 class ClassFeedController extends Controller
 {
@@ -16,6 +16,7 @@ class ClassFeedController extends Controller
     public function timeline()
     {
         $posts = ClassFeedPost::with('teacher')->latest()->get();
+
         return view('fase62.class-feed.timeline', compact('posts'));
     }
 

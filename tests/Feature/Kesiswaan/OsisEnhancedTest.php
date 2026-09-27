@@ -3,14 +3,11 @@
 /** @var TestCase|stdClass $this */
 
 use App\Models\AcademicYear;
-use App\Models\OsisMember;
-use App\Models\OsisWorkProgram;
-use App\Models\OsisElection;
 use App\Models\OsisCandidate;
-use App\Models\OsisVote;
+use App\Models\OsisElection;
+use App\Models\OsisMember;
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -26,12 +23,12 @@ beforeEach(function () {
 
     $this->student1 = Student::factory()->create([
         'user_id' => $this->studentUser1->id,
-        'status' => 'active'
+        'status' => 'active',
     ]);
-    
+
     $this->student2 = Student::factory()->create([
         'user_id' => $this->studentUser2->id,
-        'status' => 'active'
+        'status' => 'active',
     ]);
 });
 

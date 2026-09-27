@@ -31,7 +31,7 @@ beforeEach(function () {
                 'pic' => 'Pak Guru',
                 'deadline' => Carbon::now()->addDays(2)->toDateString(),
                 'is_completed' => false,
-            ]
+            ],
         ],
         'status' => 'draft',
     ]);
@@ -90,7 +90,7 @@ test('authorized user can store new meeting note draft', function () {
                 'task' => 'Siapkan kartu tahfidz baru',
                 'pic' => 'Ustadz Ahmad',
                 'deadline' => Carbon::now()->addDays(5)->toDateString(),
-            ]
+            ],
         ],
     ]);
 
@@ -112,13 +112,13 @@ test('authorized user can view meeting note details with parsed markdown', funct
 test('authorized user can toggle action item completion status via ajax', function () {
     $response = $this->actingAs($this->guru)->post(route('meeting-notes.action-items.toggle', [
         'meeting_note' => $this->draftNote->id,
-        'itemId' => 1
+        'itemId' => 1,
     ]));
 
     $response->assertStatus(200);
     $response->assertJson([
         'success' => true,
-        'is_completed' => true
+        'is_completed' => true,
     ]);
 
     // Check database
@@ -155,7 +155,7 @@ test('finalized meeting note cannot be edited or updated', function () {
         'start_time' => '10:00',
     ]);
     $response2->assertRedirect(route('meeting-notes.show', $this->draftNote->id));
-    
+
     // Check title was NOT updated
     $note = MeetingNote::find($this->draftNote->id);
     $this->assertEquals('Rapat Kurikulum Khas SMA ISA 1', $note->title);

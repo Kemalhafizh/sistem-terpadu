@@ -33,7 +33,7 @@ class MobileV2ApiController extends Controller
             ],
             'hero' => [
                 'type' => 'academic_greeting',
-                'title' => 'Ahlan wa Sahlan, ' . ($user ? $user->name : 'Siswa Sulaone'),
+                'title' => 'Ahlan wa Sahlan, '.($user ? $user->name : 'Siswa Sulaone'),
                 'subtitle' => 'Tetap istiqomah dalam menuntut ilmu dan berakhlak mulia hari ini.',
                 'gradientStart' => '#0D5C3A',
                 'gradientEnd' => '#083823',
@@ -98,7 +98,7 @@ class MobileV2ApiController extends Controller
                 'message' => 'Buku "Tafsir Al-Azhar Jilid 1" yang Anda pinjam jatuh tempo dalam 2 hari.',
                 'ctaText' => 'Lihat Pinjaman',
                 'ctaRoute' => 'library_catalog',
-            ]
+            ],
         ], 'Smart Suggestions berhasil dimuat');
     }
 
@@ -191,8 +191,8 @@ class MobileV2ApiController extends Controller
             'activeDays' => [
                 '2026-09-01', '2026-09-02', '2026-09-03', '2026-09-04', '2026-09-05',
                 '2026-09-06', '2026-09-07', '2026-09-08', '2026-09-09', '2026-09-10',
-                '2026-09-11', '2026-09-12', '2026-09-13'
-            ]
+                '2026-09-11', '2026-09-12', '2026-09-13',
+            ],
         ], 'Kalender Streak berhasil dimuat');
     }
 
@@ -259,7 +259,7 @@ class MobileV2ApiController extends Controller
                 'title' => 'Peminjaman Buku E-Pustaka',
                 'type' => 'library',
                 'description' => 'Meminjam buku "Fisika Kuantum untuk SMA" - jatuh tempo 7 hari ke depan.',
-            ]
+            ],
         ], 'Live Feed Aktivitas Anak berhasil dimuat');
     }
 
@@ -273,7 +273,7 @@ class MobileV2ApiController extends Controller
             'attendancePercentage' => 100.0,
             'averageGrade' => 91.5,
             'ibadahScore' => 96,
-            'notes' => 'Performa belajar dan kedisiplinan ananda pekan ini sangat prima dan melampaui target KKTP.'
+            'notes' => 'Performa belajar dan kedisiplinan ananda pekan ini sangat prima dan melampaui target KKTP.',
         ], 'Weekly Digest berhasil dimuat');
     }
 
@@ -300,7 +300,7 @@ class MobileV2ApiController extends Controller
             'Jelaskan konsep Limit Trigonometri dengan cara mudah dipahami',
             'Bagaimana hukum bacaan Mad Lazim Mukhaffaf Kilmi?',
             'Bantu saya membuat kerangka esai tentang Peradaban Islam Andalusia',
-            'Berikan contoh soal UTBK Penalaran Matematika dan pembahasannya'
+            'Berikan contoh soal UTBK Penalaran Matematika dan pembahasannya',
         ], 'Rekomendasi prompt AI Tutor berhasil dimuat');
     }
 }

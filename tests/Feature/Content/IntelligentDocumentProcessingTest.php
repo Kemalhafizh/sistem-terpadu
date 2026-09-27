@@ -3,7 +3,6 @@
 use App\Models\OcrDocument;
 use App\Models\User;
 use App\Services\Content\OcrProcessingService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Admin PPDB IDP']);

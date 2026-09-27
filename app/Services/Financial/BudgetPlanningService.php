@@ -5,8 +5,6 @@ namespace App\Services\Financial;
 use App\Models\BudgetLineItem;
 use App\Models\BudgetPlan;
 use App\Models\BudgetRevision;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class BudgetPlanningService
 {
@@ -59,6 +57,7 @@ class BudgetPlanningService
     public function submitForApproval(BudgetPlan $plan): BudgetPlan
     {
         $plan->update(['status' => 'submitted']);
+
         return $plan;
     }
 
@@ -69,6 +68,7 @@ class BudgetPlanningService
             'approved_by' => $approverId,
             'approved_at' => now(),
         ]);
+
         return $plan;
     }
 

@@ -49,6 +49,7 @@ class AssetMaintenanceTicket extends Model
         if ($this->photo_evidence) {
             return Storage::url($this->photo_evidence);
         }
+
         return null;
     }
 

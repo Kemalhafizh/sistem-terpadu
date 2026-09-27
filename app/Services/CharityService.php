@@ -5,11 +5,11 @@ namespace App\Services;
 use App\Models\CharityCampaign;
 use App\Models\CharityDonation;
 use App\Models\Student;
-use App\Models\WadiahAccount;
 use App\Models\User;
+use App\Models\WadiahAccount;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Exception;
 
 class CharityService
 {
@@ -61,11 +61,11 @@ class CharityService
             $paymentMethod = $data['payment_method'];
 
             // Prepare donor name
-            $isAnonymous = !empty($data['is_anonymous']);
+            $isAnonymous = ! empty($data['is_anonymous']);
             $donorName = $isAnonymous ? 'Hamba Allah' : ($data['donor_name'] ?? $user->name);
 
             // Generate unique receipt number: ZIS-YYYYMMDD-RAND
-            $receiptNumber = 'ZIS-' . date('Ymd') . '-' . strtoupper(Str::random(6));
+            $receiptNumber = 'ZIS-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
             $donation = new CharityDonation([
                 'charity_campaign_id' => $campaign->id,
@@ -85,7 +85,7 @@ class CharityService
 
                 if ($user->role === 'student') {
                     $student = Student::where('user_id', $user->id)->first();
-                    
+
                     // Siswa limit donasi mandiri Rp 10.000
                     if ($amount > 10000) {
                         throw new Exception('Batas donasi mandiri siswa via E-Wallet maksimal adalah Rp 10.000 per transaksi.');
@@ -112,7 +112,7 @@ class CharityService
                     $account,
                     $amount,
                     $userId,
-                    'Donasi ' . ucfirst($campaign->type) . ': ' . $campaign->title
+                    'Donasi '.ucfirst($campaign->type).': '.$campaign->title
                 );
 
                 // Auto verify
@@ -121,6 +121,7 @@ class CharityService
             }
 
             $donation->save();
+
             return $donation;
         });
     }
@@ -130,7 +131,7 @@ class CharityService
      */
     public function verifyDonation(int $donationId, int $verifierId): CharityDonation
     {
-        return DB::transaction(function () use ($donationId, $verifierId) {
+        return DB::transaction(function () use ($donationId) {
             $donation = CharityDonation::lockForUpdate()->findOrFail($donationId);
 
             if ($donation->status === 'verified') {

@@ -9,7 +9,7 @@ beforeEach(function () {
 test('teacher can view journals list', function () {
     $response = $this->actingAs($this->guru)->getJson('/api/v1/teaching-journals/my');
     $response->assertStatus(200)
-             ->assertJsonStructure(['success', 'data']);
+        ->assertJsonStructure(['success', 'data']);
 });
 
 test('teacher can store teaching journal', function () {
@@ -22,5 +22,5 @@ test('teacher can store teaching journal', function () {
         'attendance_absent' => 1,
     ]);
     $response->assertStatus(201)
-             ->assertJson(['success' => true]);
+        ->assertJson(['success' => true]);
 });

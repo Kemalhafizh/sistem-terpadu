@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Inclusive\IepController;
-use App\Http\Controllers\Inclusive\DisabilityScreeningController;
-use App\Http\Controllers\Inclusive\DifferentiatedPlanController;
 use App\Http\Controllers\Inclusive\AccommodationRegistryController;
+use App\Http\Controllers\Inclusive\DifferentiatedPlanController;
+use App\Http\Controllers\Inclusive\DisabilityScreeningController;
+use App\Http\Controllers\Inclusive\IepController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('iep')->name('iep.')->group(function () {

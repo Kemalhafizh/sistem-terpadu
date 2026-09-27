@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Services\DataVisualizationService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class VizController extends Controller
     public function attendanceHeatmap()
     {
         $heatmap = $this->vizService->getAttendanceHeatmap();
+
         return $this->successResponse($heatmap, 'Attendance heatmap retrieved successfully');
     }
 
@@ -33,13 +35,14 @@ class VizController extends Controller
     public function gradeDistribution(int $examId)
     {
         $dist = $this->vizService->getGradeDistribution($examId);
+
         return $this->successResponse($dist, 'Grade distribution statistics retrieved successfully');
     }
 
     private function authorizeStudentAccess(Request $request, int $studentId): void
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             abort(401, 'Unauthenticated');
         }
 
@@ -50,10 +53,11 @@ class VizController extends Controller
 
         // 2. Parent: must be parent of this student
         if (in_array($user->role, ['parent', 'orangtua'], true)) {
-            $isChild = \App\Models\Student::where('parent_id', $user->id)->where('id', $studentId)->exists();
-            if (!$isChild) {
+            $isChild = Student::where('parent_id', $user->id)->where('id', $studentId)->exists();
+            if (! $isChild) {
                 abort(403, 'Akses ditolak. Anda bukan orang tua yang berwenang untuk siswa ini.');
             }
+
             return;
         }
 
@@ -64,6 +68,7 @@ class VizController extends Controller
             if ((int) $studentId !== $ownId) {
                 abort(403, 'Akses ditolak. Siswa dilarang melihat visualisasi radar/trend siswa lain.');
             }
+
             return;
         }
 
@@ -77,6 +82,7 @@ class VizController extends Controller
     {
         $this->authorizeStudentAccess($request, $studentId);
         $radar = $this->vizService->getStudentRadarChart($studentId);
+
         return $this->successResponse($radar, 'Student radar chart data retrieved successfully');
     }
 
@@ -87,6 +93,7 @@ class VizController extends Controller
     {
         $this->authorizeStudentAccess($request, $studentId);
         $trend = $this->vizService->getValueTrend($studentId);
+
         return $this->successResponse($trend, 'Student value trend data retrieved successfully');
     }
 
@@ -96,6 +103,7 @@ class VizController extends Controller
     public function classComparison()
     {
         $comparison = $this->vizService->getClassComparison();
+
         return $this->successResponse($comparison, 'Class benchmark comparisons retrieved successfully');
     }
 
@@ -105,6 +113,7 @@ class VizController extends Controller
     public function liveCounters()
     {
         $counters = $this->vizService->getLiveCounters();
+
         return $this->successResponse($counters, 'Live operational counters retrieved successfully');
     }
 }

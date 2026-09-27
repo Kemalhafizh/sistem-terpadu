@@ -30,7 +30,7 @@ test('admin can access security audit page and see compliance gauge', function (
 test('response contains required security headers', function () {
     $user = User::factory()->create(['role' => 'admin', 'must_change_password' => false]);
     $response = $this->actingAs($user)->get(route('admin.security.audit'));
-    
+
     $response->assertHeader('X-Content-Type-Options', 'nosniff');
     $response->assertHeader('X-Frame-Options', 'DENY');
     $response->assertHeader('X-XSS-Protection', '1; mode=block');

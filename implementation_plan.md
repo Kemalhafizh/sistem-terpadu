@@ -6190,7 +6190,7 @@ Skema infrastruktur dan *deployment* yang dirancang spesifik untuk **skala 1 ins
 
 ---
 
-## FASE 117: SISTEM MANAJEMEN AKADEMIK KELAS & SESI MENGAJAR GURU (UNIVERSITY-GRADE DIGITALIZATION) `[RANCANGAN BARU]`
+## FASE 117: SISTEM MANAJEMEN AKADEMIK KELAS & SESI MENGAJAR GURU (UNIVERSITY-GRADE DIGITALIZATION) `[SELESAI]`
 
 > **Tanggal Rancangan:** 27 September 2026
 > **Latar Belakang:** Audit kode sumber menemukan bahwa model `Attendance` (absensi siswa) dan `Schedule` (jadwal pelajaran) sudah ada, namun **TIDAK ADA** konsep "Sesi Kelas Hidup" (*Live Class Session*) yang memungkinkan guru memulai/mengakhiri kelas, membangkitkan QR khusus sesi, serta otomatis menandai Alpha siswa yang tidak absen. Sistem ini mendigitalkan alur KBM sekolah setara standar **perkuliahan universitas**, namun disesuaikan untuk konteks SMA Islam Sultan Agung 1 Semarang.
@@ -6431,3 +6431,31 @@ $schedule->call(function () {
 | Service baru | 1 (`ClassSessionService` — berisi logika start/end/rotate/auto-populate) |
 | Scheduler job baru | 1 (auto-close expired sessions) |
 | Test case | 15+ (validasi batasan waktu, duplikasi sesi, QR rotation, auto-alpha, override authorization) |
+
+### ✅ 117.8: Realisasi Implementasi (27 September 2026)
+
+Kontrak API lengkap untuk tim Android: [`docs/modules/class_sessions.md`](docs/modules/class_sessions.md).
+
+| Komponen | File |
+|----------|------|
+| Migrasi | `2026_12_21_000001_create_class_sessions_table.php`, `2026_12_21_000002_create_session_attendances_table.php` |
+| Model | `ClassSession`, `SessionAttendance` (+ factory `ClassSessionFactory`, `ScheduleFactory`) |
+| Service | `App\Services\Academic\ClassSessionService` (seluruh aturan bisnis 117.6 + aturan koreksi 77.6.3) |
+| Controller | `Api\v1\ClassSessionController`, `StudentSessionAttendanceController`, `AdminClassSessionController` |
+| Endpoint | 13 (7 guru, 2 siswa, 4 admin) |
+| Scheduler | `class-sessions:auto-close` — `everyMinute()->withoutOverlapping()` di `routes/console.php` |
+| Konfigurasi | `config/class_sessions.php` (toleransi mulai, auto-close, telat, rotasi QR, draf jurnal) |
+| Test | `tests/Feature/Academic/ClassSessionTest.php` — 32 kasus / 229 assertion |
+
+**Penyesuaian terhadap rancangan (dan alasannya):**
+1. **QR:** kolom `qr_token`/`qr_token_expires_at` diganti `qr_secret` per sesi. Token = `uuid.HMAC(uuid|jendela-30-detik)`, sehingga token sama di semua perangkat guru, polling tidak menulis ke DB, dan 1 jendela sebelumnya tetap diterima (scan yang sedang berjalan saat QR berganti tidak gagal). Secret dihapus saat sesi ditutup.
+2. **`schedule_id` nullable + `nullOnDelete`:** menghapus jadwal tidak menghapus (atau terblokir oleh) riwayat presensi. Kelas/mapel/guru disalin ke sesi.
+3. **Materialisasi sesi:** `GET today` membuat baris `scheduled` per jadwal (idempoten, aman terhadap race), supaya aplikasi selalu punya `id`/`uuid` stabil.
+4. **Jam pelajaran** diambil dari `SchedulePreset` aktif, karena `schedules` hanya menyimpan nomor jam (`session_start`/`session_end`), bukan jam dinding.
+5. **Status `telat`** otomatis saat scan lebih dari 15 menit setelah jam mulai (dihitung hadir di rekap).
+6. **Scheduler** didaftarkan di `routes/console.php` (Laravel 13 tidak memakai `Console/Kernel.php`).
+7. **Koreksi admin** mengikuti 77.6.3: kehadiran yang sudah tercatat tidak bisa dihapus. Setiap koreksi dicatat di `activity_logs`.
+8. **Integrasi opsional 77.10:** sesi yang diakhiri dengan topik otomatis membuat draf `TeachingJournal`.
+
+**Belum dikerjakan:** push pengingat 5 menit sebelum mulai/selesai dan rangkuman harian orang tua (77.7.1). Push yang sudah ada memakai `FcmNotificationService`, yang job-nya saat ini masih mock.
+

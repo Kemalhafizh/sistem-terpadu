@@ -1,30 +1,30 @@
 <?php
 
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
-use App\Models\Registration;
-use App\Models\PerformanceEvaluation;
-use App\Models\EmployeeTraining;
+use App\Models\Attendance;
+use App\Models\Billing;
 use App\Models\EmployeeDocument;
+use App\Models\EmployeeTraining;
 use App\Models\Extracurricular;
 use App\Models\ExtracurricularMember;
-use App\Models\OsisMember;
-use App\Models\OsisWorkProgram;
-use App\Models\OsisElection;
-use App\Models\OsisCandidate;
-use App\Models\OsisVote;
-use App\Models\StudentHealthRecord;
+use App\Models\Grade;
 use App\Models\HealthScreening;
 use App\Models\HealthScreeningResult;
+use App\Models\OsisCandidate;
+use App\Models\OsisElection;
+use App\Models\OsisMember;
+use App\Models\OsisVote;
+use App\Models\OsisWorkProgram;
+use App\Models\PerformanceEvaluation;
+use App\Models\Registration;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
+use App\Models\StudentHealthRecord;
 use App\Models\UksVisit;
-use App\Models\WhatsappTemplate;
 use App\Models\WhatsappAutomation;
 use App\Models\WhatsappBroadcast;
 use App\Models\WhatsappLog;
-use App\Models\Attendance;
-use App\Models\Grade;
-use App\Models\Billing;
+use App\Models\WhatsappTemplate;
 
 test('mega seeder v2 seeds all tables correctly and successfully', function () {
     // 1. Run seeders

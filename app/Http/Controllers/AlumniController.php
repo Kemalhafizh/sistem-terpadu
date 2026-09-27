@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlumniData;
-use App\Models\Student;
 use App\Models\Classroom;
+use App\Models\Student;
 use App\Services\AlumniEnhancedService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -38,7 +38,7 @@ class AlumniController extends Controller
             $search = $request->search;
             $query->whereHas('student', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('nisn', 'like', "%{$search}%");
+                    ->orWhere('nisn', 'like', "%{$search}%");
             });
         }
 
@@ -69,7 +69,7 @@ class AlumniController extends Controller
                 $q->whereHas('student', function ($sq) use ($search) {
                     $sq->where('name', 'like', "%{$search}%");
                 })->orWhere('institution_name', 'like', "%{$search}%")
-                  ->orWhere('current_position', 'like', "%{$search}%");
+                    ->orWhere('current_position', 'like', "%{$search}%");
             });
         }
 
@@ -125,7 +125,7 @@ class AlumniController extends Controller
     {
         $validated = $request->validate([
             'student_id' => 'required|exists:students,id',
-            'graduation_year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
+            'graduation_year' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'current_activity' => 'required|in:study,work,entrepreneur,unemployed,other',
             'institution_name' => 'nullable|string|max:255',
             'current_position' => 'nullable|string|max:255',
@@ -163,7 +163,7 @@ class AlumniController extends Controller
     public function update(Request $request, AlumniData $alumni)
     {
         $validated = $request->validate([
-            'graduation_year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
+            'graduation_year' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'current_activity' => 'required|in:study,work,entrepreneur,unemployed,other',
             'institution_name' => 'nullable|string|max:255',
             'current_position' => 'nullable|string|max:255',
@@ -223,7 +223,7 @@ class AlumniController extends Controller
         $request->validate([
             'student_ids' => 'required|array',
             'student_ids.*' => 'exists:students,id',
-            'graduation_year' => 'required|integer|min:2000|max:' . (date('Y') + 1),
+            'graduation_year' => 'required|integer|min:2000|max:'.(date('Y') + 1),
         ]);
 
         $count = $this->alumniEnhancedService->bulkGraduateStudents($request->student_ids, $request->graduation_year);
@@ -248,14 +248,14 @@ class AlumniController extends Controller
     public function exportExcel()
     {
         $headers = [
-            'Content-type'        => 'text/csv',
+            'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=data_alumni_sma_isa1.csv',
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0'
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
-        $callback = function() {
+        $callback = function () {
             $file = fopen('php://output', 'w');
             fputcsv($file, ['Nama Alumni', 'NISN', 'Tahun Kelulusan', 'Aktivitas Saat Ini', 'Nama Instansi', 'Posisi/Jurusan', 'Email', 'No Telepon', 'Kota', 'Provinsi']);
 
@@ -271,7 +271,7 @@ class AlumniController extends Controller
                     $al->email ?? '-',
                     $al->phone_number ?? '-',
                     $al->city ?? '-',
-                    $al->province ?? '-'
+                    $al->province ?? '-',
                 ]);
             }
             fclose($file);
@@ -286,7 +286,7 @@ class AlumniController extends Controller
     public function exportPdf($year)
     {
         $alumni = $this->alumniEnhancedService->generateAlumniBookData($year);
-        
+
         if ($alumni->isEmpty()) {
             return redirect()->back()->with('error', 'Tidak ada data alumni untuk angkatan tahun tersebut.');
         }

@@ -20,7 +20,7 @@ class MediaAssetService
         array $tags = [],
         bool $isPublic = false
     ): MediaAsset {
-        $filename = Str::slug(pathinfo($fileData['original_filename'], PATHINFO_FILENAME)) . '_' . time() . '.' . pathinfo($fileData['original_filename'], PATHINFO_EXTENSION);
+        $filename = Str::slug(pathinfo($fileData['original_filename'], PATHINFO_FILENAME)).'_'.time().'.'.pathinfo($fileData['original_filename'], PATHINFO_EXTENSION);
         $storagePath = $fileData['storage_path'] ?? "dam_assets/{$filename}";
 
         return MediaAsset::create([

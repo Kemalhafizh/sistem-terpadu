@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // 67.1: Visual Workflow Blueprints & Nodes (BPMN)
-        if (!Schema::hasTable('workflow_blueprints')) {
+        if (! Schema::hasTable('workflow_blueprints')) {
             Schema::create('workflow_blueprints', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -21,7 +21,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('workflow_nodes')) {
+        if (! Schema::hasTable('workflow_nodes')) {
             Schema::create('workflow_nodes', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('workflow_blueprint_id')->constrained('workflow_blueprints')->cascadeOnDelete();
@@ -34,7 +34,7 @@ return new class extends Migration
         }
 
         // 67.2: Document Approval Chain Engine
-        if (!Schema::hasTable('approval_chains')) {
+        if (! Schema::hasTable('approval_chains')) {
             Schema::create('approval_chains', function (Blueprint $table) {
                 $table->id();
                 $table->nullableMorphs('approvable');
@@ -46,7 +46,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('approval_requests')) {
+        if (! Schema::hasTable('approval_requests')) {
             Schema::create('approval_requests', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('approval_chain_id')->constrained('approval_chains')->cascadeOnDelete();
@@ -60,7 +60,7 @@ return new class extends Migration
         }
 
         // 67.3: Process Mining & Bottleneck Logs
-        if (!Schema::hasTable('process_mining_logs')) {
+        if (! Schema::hasTable('process_mining_logs')) {
             Schema::create('process_mining_logs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('approval_chain_id')->constrained('approval_chains')->cascadeOnDelete();
@@ -73,7 +73,7 @@ return new class extends Migration
         }
 
         // 67.4: SLA Definitions & Thresholds
-        if (!Schema::hasTable('sla_definitions')) {
+        if (! Schema::hasTable('sla_definitions')) {
             Schema::create('sla_definitions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('workflow_blueprint_id')->constrained('workflow_blueprints')->cascadeOnDelete();

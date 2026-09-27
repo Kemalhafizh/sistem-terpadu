@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Crisis;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\CrisisIncident;
 use App\Models\CrisisProtocol;
 use App\Services\Crisis\CrisisManagementService;
+use Illuminate\Http\Request;
 
 class CrisisController extends Controller
 {
     protected $service;
-    
+
     public function __construct(CrisisManagementService $service)
     {
         $this->service = $service;
@@ -21,6 +21,7 @@ class CrisisController extends Controller
     {
         $activeIncidents = CrisisIncident::whereNotIn('status', ['resolved', 'post_mortem'])->get();
         $protocols = CrisisProtocol::where('is_active', true)->get();
+
         return view('crisis.command-center', compact('activeIncidents', 'protocols'));
     }
 
@@ -38,10 +39,11 @@ class CrisisController extends Controller
             'description' => 'required|string',
             'location_detail' => 'nullable|string',
         ]);
-        
+
         $validated['reported_by'] = auth()->id() ?? 1;
 
         $this->service->declareIncident($validated);
+
         return redirect()->route('crisis.command_center')->with('success', 'Incident declared.');
     }
 
@@ -49,6 +51,7 @@ class CrisisController extends Controller
     {
         $incident = CrisisIncident::findOrFail($id);
         $timeline = $this->service->getIncidentTimeline($incident);
+
         return view('crisis.show', compact('incident', 'timeline'));
     }
 
@@ -61,6 +64,7 @@ class CrisisController extends Controller
         ]);
         $validated['responder_id'] = auth()->id() ?? 1;
         $this->service->logResponse($incident, $validated);
+
         return back()->with('success', 'Response logged.');
     }
 
@@ -68,12 +72,14 @@ class CrisisController extends Controller
     {
         $incident = CrisisIncident::findOrFail($id);
         $this->service->resolveIncident($incident, request('notes', ''));
+
         return back()->with('success', 'Incident resolved.');
     }
 
     public function protocols()
     {
         $protocols = CrisisProtocol::all();
+
         return view('crisis.protocols.index', compact('protocols'));
     }
 
@@ -93,12 +99,14 @@ class CrisisController extends Controller
         ]);
         $validated['approved_by'] = auth()->id() ?? 1;
         CrisisProtocol::create($validated);
+
         return redirect()->route('crisis.protocols.index')->with('success', 'Protocol created.');
     }
 
     public function postMortemReport($id)
     {
         $incident = CrisisIncident::findOrFail($id);
+
         return view('crisis.post-mortem', compact('incident'));
     }
 }

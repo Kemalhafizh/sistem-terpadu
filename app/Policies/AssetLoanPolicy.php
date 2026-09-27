@@ -9,7 +9,7 @@ class AssetLoanPolicy
 {
     public function viewAny(User $user): bool
     {
-        return !in_array($user->role, ['student', 'parent']);
+        return ! in_array($user->role, ['student', 'parent']);
     }
 
     public function view(User $user, AssetLoan $loan): bool
@@ -17,6 +17,7 @@ class AssetLoanPolicy
         if (in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah', 'staf_tu'])) {
             return true;
         }
+
         return $loan->borrower_id === $user->id;
     }
 

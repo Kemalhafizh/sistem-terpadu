@@ -1,7 +1,8 @@
 <?php
-$base_dir = "c:/project/portofolio/project-super-web/sistem-terpadu";
+
+$base_dir = 'c:/project/portofolio/project-super-web/sistem-terpadu';
 $files = [
-    "database/migrations/2026_10_30_000000_create_career_readiness_tables.php" => <<<'EOT'
+    'database/migrations/2026_10_30_000000_create_career_readiness_tables.php' => <<<'EOT'
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -120,7 +121,7 @@ return new class extends Migration
     }
 };
 EOT,
-    "app/Models/InternshipCompany.php" => <<<'EOT'
+    'app/Models/InternshipCompany.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -146,7 +147,7 @@ class InternshipCompany extends Model
     }
 }
 EOT,
-    "app/Models/InternshipApplication.php" => <<<'EOT'
+    'app/Models/InternshipApplication.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -189,7 +190,7 @@ class InternshipApplication extends Model
     }
 }
 EOT,
-    "app/Models/InternshipJournal.php" => <<<'EOT'
+    'app/Models/InternshipJournal.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -220,7 +221,7 @@ class InternshipJournal extends Model
     }
 }
 EOT,
-    "app/Models/UniversityCatalog.php" => <<<'EOT'
+    'app/Models/UniversityCatalog.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -247,7 +248,7 @@ class UniversityCatalog extends Model
     }
 }
 EOT,
-    "app/Models/CollegeApplication.php" => <<<'EOT'
+    'app/Models/CollegeApplication.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -279,7 +280,7 @@ class CollegeApplication extends Model
     }
 }
 EOT,
-    "app/Models/StudentShowcase.php" => <<<'EOT'
+    'app/Models/StudentShowcase.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -311,7 +312,7 @@ class StudentShowcase extends Model
     }
 }
 EOT,
-    "app/Models/ShowcaseEndorsement.php" => <<<'EOT'
+    'app/Models/ShowcaseEndorsement.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -338,7 +339,7 @@ class ShowcaseEndorsement extends Model
     }
 }
 EOT,
-    "app/Models/StudentWallet.php" => <<<'EOT'
+    'app/Models/StudentWallet.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -371,7 +372,7 @@ class StudentWallet extends Model
     }
 }
 EOT,
-    "app/Models/MiniBankTransaction.php" => <<<'EOT'
+    'app/Models/MiniBankTransaction.php' => <<<'EOT'
 <?php
 
 namespace App\Models;
@@ -397,7 +398,7 @@ class MiniBankTransaction extends Model
     }
 }
 EOT,
-    "app/Services/Student/InternshipService.php" => <<<'EOT'
+    'app/Services/Student/InternshipService.php' => <<<'EOT'
 <?php
 
 namespace App\Services\Student;
@@ -423,7 +424,7 @@ class InternshipService
     }
 }
 EOT,
-    "app/Services/Student/CollegeCounselingService.php" => <<<'EOT'
+    'app/Services/Student/CollegeCounselingService.php' => <<<'EOT'
 <?php
 
 namespace App\Services\Student;
@@ -443,7 +444,7 @@ class CollegeCounselingService
     }
 }
 EOT,
-    "app/Services/Student/ShowcaseService.php" => <<<'EOT'
+    'app/Services/Student/ShowcaseService.php' => <<<'EOT'
 <?php
 
 namespace App\Services\Student;
@@ -469,7 +470,7 @@ class ShowcaseService
     }
 }
 EOT,
-    "app/Services/Student/MiniBankingService.php" => <<<'EOT'
+    'app/Services/Student/MiniBankingService.php' => <<<'EOT'
 <?php
 
 namespace App\Services\Student;
@@ -526,7 +527,7 @@ class MiniBankingService
     }
 }
 EOT,
-    "app/Http/Controllers/Student/InternshipController.php" => <<<'EOT'
+    'app/Http/Controllers/Student/InternshipController.php' => <<<'EOT'
 <?php
 
 namespace App\Http\Controllers\Student;
@@ -570,7 +571,7 @@ class InternshipController extends Controller
     }
 }
 EOT,
-    "app/Http/Controllers/Student/CollegeCounselingController.php" => <<<'EOT'
+    'app/Http/Controllers/Student/CollegeCounselingController.php' => <<<'EOT'
 <?php
 
 namespace App\Http\Controllers\Student;
@@ -614,7 +615,7 @@ class CollegeCounselingController extends Controller
     }
 }
 EOT,
-    "app/Http/Controllers/Student/ShowcaseController.php" => <<<'EOT'
+    'app/Http/Controllers/Student/ShowcaseController.php' => <<<'EOT'
 <?php
 
 namespace App\Http\Controllers\Student;
@@ -663,7 +664,7 @@ class ShowcaseController extends Controller
     }
 }
 EOT,
-    "app/Http/Controllers/Student/MiniBankingController.php" => <<<'EOT'
+    'app/Http/Controllers/Student/MiniBankingController.php' => <<<'EOT'
 <?php
 
 namespace App\Http\Controllers\Student;
@@ -717,7 +718,7 @@ class MiniBankingController extends Controller
     }
 }
 EOT,
-    "resources/views/internships/portal.blade.php" => <<<'EOT'
+    'resources/views/internships/portal.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -751,7 +752,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/internships/monitoring.blade.php" => <<<'EOT'
+    'resources/views/internships/monitoring.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -767,7 +768,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/internships/company-directory.blade.php" => <<<'EOT'
+    'resources/views/internships/company-directory.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -783,7 +784,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/college-counseling/match-engine.blade.php" => <<<'EOT'
+    'resources/views/college-counseling/match-engine.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -817,7 +818,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/college-counseling/tracker.blade.php" => <<<'EOT'
+    'resources/views/college-counseling/tracker.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -833,7 +834,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/college-counseling/analytics.blade.php" => <<<'EOT'
+    'resources/views/college-counseling/analytics.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -849,7 +850,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/showcase/gallery.blade.php" => <<<'EOT'
+    'resources/views/showcase/gallery.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -871,7 +872,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/showcase/editor.blade.php" => <<<'EOT'
+    'resources/views/showcase/editor.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -887,7 +888,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/showcase/public-profile.blade.php" => <<<'EOT'
+    'resources/views/showcase/public-profile.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -903,7 +904,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/mini-bank/student-wallet.blade.php" => <<<'EOT'
+    'resources/views/mini-bank/student-wallet.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -923,7 +924,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/mini-bank/teller.blade.php" => <<<'EOT'
+    'resources/views/mini-bank/teller.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -939,7 +940,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "resources/views/mini-bank/literacy-dashboard.blade.php" => <<<'EOT'
+    'resources/views/mini-bank/literacy-dashboard.blade.php' => <<<'EOT'
 @extends('layouts.app')
 
 @section('content')
@@ -955,7 +956,7 @@ EOT,
 </div>
 @endsection
 EOT,
-    "database/seeders/CareerReadinessSeeder.php" => <<<'EOT'
+    'database/seeders/CareerReadinessSeeder.php' => <<<'EOT'
 <?php
 
 namespace Database\Seeders;
@@ -1038,7 +1039,7 @@ class CareerReadinessSeeder extends Seeder
     }
 }
 EOT,
-    "routes/career_readiness.php" => <<<'EOT'
+    'routes/career_readiness.php' => <<<'EOT'
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -1069,7 +1070,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 EOT,
-    "tests/Feature/Student/CareerReadinessSuiteTest.php" => <<<'EOT'
+    'tests/Feature/Student/CareerReadinessSuiteTest.php' => <<<'EOT'
 <?php
 
 namespace Tests\Feature\Student;
@@ -1120,12 +1121,12 @@ EOT
 ];
 
 foreach ($files as $filepath => $content) {
-    $full_path = $base_dir . '/' . $filepath;
+    $full_path = $base_dir.'/'.$filepath;
     $dir = dirname($full_path);
-    if (!is_dir($dir)) {
+    if (! is_dir($dir)) {
         mkdir($dir, 0755, true);
     }
     file_put_contents($full_path, $content);
 }
 
-echo "Files created successfully.";
+echo 'Files created successfully.';

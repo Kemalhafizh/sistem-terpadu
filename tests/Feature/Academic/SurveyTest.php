@@ -5,13 +5,13 @@
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Student;
-use App\Models\User;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
+use App\Models\User;
+use App\Models\WhatsappLog;
 use App\Services\SurveyAnalyticsService;
 use App\Services\WhatsappService;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -23,7 +23,7 @@ beforeEach(function () {
 
     $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
     $this->classroom = Classroom::factory()->create(['academic_year' => $this->academicYear->year]);
-    
+
     // Create Student model and link to studentUser
     $this->student = Student::factory()->create([
         'user_id' => $this->studentUser->id,
@@ -71,15 +71,15 @@ test('admin can create a survey with validation', function () {
                 'scale_min' => 1,
                 'scale_max' => 5,
                 'scale_min_label' => 'Sangat Kurang',
-                'scale_max_label' => 'Sangat Faham'
+                'scale_max_label' => 'Sangat Faham',
             ],
             [
                 'question_text' => 'Pilih fasilitas yang menurut Anda paling menunjang:',
                 'type' => 'checkbox',
                 'options' => ['Lab Komputer', 'Perpustakaan', 'WiFi Kelas'],
-                'is_required' => 0
-            ]
-        ]
+                'is_required' => 0,
+            ],
+        ],
     ];
 
     $response = $this->actingAs($this->admin)->post(route('surveys.store'), $data);
@@ -94,7 +94,7 @@ test('admin can create a survey with validation', function () {
     $this->assertDatabaseHas('survey_questions', [
         'survey_id' => $survey->id,
         'question_text' => 'Bagaimana pemahaman Anda terhadap materi?',
-        'type' => 'scale'
+        'type' => 'scale',
     ]);
 });
 
@@ -115,7 +115,7 @@ test('admin can activate survey and trigger WhatsApp broadcast', function () {
     $mockService->shouldReceive('sendMessage')
         ->once() // since only studentUser has a phone number mock potentially, let's verify chunk broadcast is triggered
         ->withAnyArgs()
-        ->andReturn(new \App\Models\WhatsappLog([
+        ->andReturn(new WhatsappLog([
             'recipient' => '6281234567890',
             'message' => 'Simulated message',
             'status' => 'sent',
@@ -171,13 +171,13 @@ test('respondent can fill out survey, enforcing single response restriction and 
         'type' => 'scale',
         'is_required' => true,
         'scale_min' => 1,
-        'scale_max' => 5
+        'scale_max' => 5,
     ]);
 
     $response = $this->actingAs($this->studentUser)->post(route('surveys.respond', $survey->uuid), [
         'answers' => [
-            $q1->id => 4
-        ]
+            $q1->id => 4,
+        ],
     ]);
 
     $response->assertRedirect(route('surveys.index'));
@@ -185,17 +185,17 @@ test('respondent can fill out survey, enforcing single response restriction and 
     // Check database has response
     $this->assertDatabaseHas('survey_responses', [
         'survey_id' => $survey->id,
-        'user_id' => $this->studentUser->id
+        'user_id' => $this->studentUser->id,
     ]);
 
     // Attempt second submission - must be rejected
     $response2 = $this->actingAs($this->studentUser)->post(route('surveys.respond', $survey->uuid), [
         'answers' => [
-            $q1->id => 5
-        ]
+            $q1->id => 5,
+        ],
     ]);
     $response2->assertRedirect();
-    
+
     // Anonymity check: The respondent model getter must mask user PII for anonymous surveys
     $surveyResponse = SurveyResponse::first();
     expect($surveyResponse->respondent)->toBeNull(); // Masked!
@@ -222,7 +222,7 @@ test('SurveyAnalyticsService computes correct metrics for scale and choices', fu
         'type' => 'scale',
         'is_required' => true,
         'scale_min' => 1,
-        'scale_max' => 5
+        'scale_max' => 5,
     ]);
 
     $qChoice = SurveyQuestion::create([
@@ -230,7 +230,7 @@ test('SurveyAnalyticsService computes correct metrics for scale and choices', fu
         'question_text' => 'Pilihan Makan',
         'type' => 'radio',
         'options' => ['Nasi', 'Roti', 'Mie'],
-        'is_required' => true
+        'is_required' => true,
     ]);
 
     // Responses setup
@@ -239,8 +239,8 @@ test('SurveyAnalyticsService computes correct metrics for scale and choices', fu
         'user_id' => $this->studentUser->id,
         'answers' => [
             $qScale->id => 4,
-            $qChoice->id => 'Nasi'
-        ]
+            $qChoice->id => 'Nasi',
+        ],
     ]);
 
     $user2 = User::factory()->create(['role' => 'student']);
@@ -249,8 +249,8 @@ test('SurveyAnalyticsService computes correct metrics for scale and choices', fu
         'user_id' => $user2->id,
         'answers' => [
             $qScale->id => 2,
-            $qChoice->id => 'Mie'
-        ]
+            $qChoice->id => 'Mie',
+        ],
     ]);
 
     $user3 = User::factory()->create(['role' => 'student']);
@@ -259,11 +259,11 @@ test('SurveyAnalyticsService computes correct metrics for scale and choices', fu
         'user_id' => $user3->id,
         'answers' => [
             $qScale->id => 2,
-            $qChoice->id => 'Nasi'
-        ]
+            $qChoice->id => 'Nasi',
+        ],
     ]);
 
-    $service = new SurveyAnalyticsService();
+    $service = new SurveyAnalyticsService;
     $analytics = $service->getAggregatedResults($survey);
 
     // Assert scale calculations: [4, 2, 2] -> Mean: 2.67, Median: 2
@@ -294,13 +294,13 @@ test('admin can access PDF report and Excel sheet exports', function () {
         'survey_id' => $survey->id,
         'question_text' => 'Tanya',
         'type' => 'text',
-        'is_required' => true
+        'is_required' => true,
     ]);
 
     SurveyResponse::create([
         'survey_id' => $survey->id,
         'user_id' => $this->studentUser->id,
-        'answers' => [$q->id => 'Jawaban']
+        'answers' => [$q->id => 'Jawaban'],
     ]);
 
     // Download PDF

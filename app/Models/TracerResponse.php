@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 class TracerResponse extends Model
 {
-    use \App\Traits\HasUuid;
+    use HasUuid;
 
     protected $fillable = [
         'alumni_data_id',

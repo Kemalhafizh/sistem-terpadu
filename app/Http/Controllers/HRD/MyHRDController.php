@@ -7,7 +7,7 @@ use App\Models\Employee;
 use App\Models\EmployeeAttendance;
 use App\Models\LeaveRequest;
 use App\Models\Payroll;
-use App\Models\Setting;
+use App\Support\School;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -64,7 +64,7 @@ class MyHRDController extends Controller
 
         // School coordinates for frontend geofencing feedback — the same
         // centre and radius every GPS check-in uses (App\Support\School).
-        $campus = \App\Support\School::campus();
+        $campus = School::campus();
         $schoolLat = $campus['latitude'];
         $schoolLong = $campus['longitude'];
         $schoolRadius = $campus['radius_meters'];
@@ -104,7 +104,7 @@ class MyHRDController extends Controller
 
         // Staff check-in used its own centre (-6.9535, 110.4355 — ~4.8 km from
         // the campus) and radius; it now shares App\Support\School::campus().
-        $campus = \App\Support\School::campus();
+        $campus = School::campus();
         $schoolLat = $campus['latitude'];
         $schoolLong = $campus['longitude'];
         $schoolRadius = $campus['radius_meters'];

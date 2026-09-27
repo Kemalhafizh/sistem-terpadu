@@ -1,15 +1,13 @@
 <?php
 
+use App\Models\AcademicYear;
+use App\Models\Classroom;
+use App\Models\HealthScreening;
 use App\Models\Student;
+use App\Models\StudentHealthRecord;
 use App\Models\UksMedicine;
 use App\Models\UksVisit;
 use App\Models\User;
-use App\Models\StudentHealthRecord;
-use App\Models\HealthScreening;
-use App\Models\HealthScreeningResult;
-use App\Models\UksMedicineRestock;
-use App\Models\AcademicYear;
-use App\Models\Classroom;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['role' => 'admin']);
@@ -17,10 +15,10 @@ beforeEach(function () {
     $this->student = Student::factory()->create();
     $this->classroom = Classroom::factory()->create();
     $this->student->update(['classroom_id' => $this->classroom->id]);
-    
+
     // Retrieve or create active academic year
     $this->academicYear = AcademicYear::where('is_active', true)->first();
-    if (!$this->academicYear) {
+    if (! $this->academicYear) {
         $this->academicYear = AcademicYear::factory()->create(['is_active' => true]);
     }
 });
@@ -52,14 +50,14 @@ test('staff can update student health record', function () {
     ]);
 
     $response->assertRedirect(route('uks.health-records.index'));
-    
+
     $record->refresh();
     expect($record->blood_type)->toBe('O');
     expect($record->allergies)->toBe(['Kacang', 'Udang']);
     expect($record->chronic_conditions)->toBe(['Asma']);
     expect($record->medications)->toBe(['Inhaler']);
     expect($record->vision_status)->toBe('minus');
-    expect((float)$record->height_cm)->toBe(170.5);
+    expect((float) $record->height_cm)->toBe(170.5);
 });
 
 test('staff can schedule and manage health screening', function () {
@@ -72,7 +70,7 @@ test('staff can schedule and manage health screening', function () {
     ]);
 
     $response->assertRedirect(route('uks.screenings.index'));
-    
+
     $screening = HealthScreening::where('title', 'Screening Gigi Semester 1')->first();
     expect($screening)->not->toBeNull();
     expect($screening->target_classrooms)->toBe([$this->classroom->id]);
@@ -94,8 +92,8 @@ test('staff can schedule and manage health screening', function () {
                 'dental_status' => 'Sehat',
                 'findings' => 'Tidak ada temuan klinis',
                 'recommendations' => 'Pertahankan kebersihan gigi',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect(route('uks.screenings.index'));
@@ -177,16 +175,16 @@ test('staff can edit UKS visit record', function () {
         'severity' => 'sedang',
         'disposition' => 'pulang',
         'medicines' => [
-            ['id' => $medicine->id, 'quantity' => 3]
-        ]
+            ['id' => $medicine->id, 'quantity' => 3],
+        ],
     ]);
 
     $response->assertRedirect(route('uks.visits.index'));
-    
+
     $visit->refresh();
     expect($visit->complaint)->toBe('Sakit maag akut');
     expect($visit->severity)->toBe('sedang');
-    
+
     // Antasida stock should be 10 (original) - 3 (new qty) = 7
     expect($medicine->refresh()->stock)->toBe(7);
 });

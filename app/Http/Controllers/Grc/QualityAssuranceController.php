@@ -37,7 +37,7 @@ class QualityAssuranceController extends Controller
         $createdBy = auth()->id();
         $cycle = $qaService->createCycle($request->all(), $createdBy);
 
-        return back()->with('success', "Siklus EDS [TA {$cycle->academic_year} " . ucfirst($cycle->semester) . "] berhasil dibuat!");
+        return back()->with('success', "Siklus EDS [TA {$cycle->academic_year} ".ucfirst($cycle->semester).'] berhasil dibuat!');
     }
 
     /**

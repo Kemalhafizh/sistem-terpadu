@@ -15,6 +15,7 @@ class Evaluation360Controller extends Controller
     public function cycles()
     {
         $cycles = Evaluation360Cycle::withCount('instruments')->latest()->get();
+
         return view('evaluation-360.cycles', compact('cycles'));
     }
 
@@ -80,6 +81,7 @@ class Evaluation360Controller extends Controller
     public function ranking()
     {
         $rankings = Evaluation360Summary::with('evaluatee')->orderByDesc('overall_score')->take(10)->get();
+
         return view('evaluation-360.ranking', compact('rankings'));
     }
 }

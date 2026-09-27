@@ -2,34 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Mobile;
+namespace App\Http\Controllers\Api\v1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\MobileAppConfig;
+use App\Support\School;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
  * Class MobileConfigController
- * 
+ *
  * Provides dynamic runtime configuration, minimum build version gates,
  * maintenance mode states, and feature flags for Android and iOS clients.
- * 
- * @package App\Http\Controllers\Api\V1\Mobile
  */
 class MobileConfigController extends Controller
 {
     /**
      * Retrieve remote app configuration and calculate version enforcement.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getConfig(Request $request): JsonResponse
     {
         $config = MobileAppConfig::first();
 
-        if (!$config) {
+        if (! $config) {
             $config = MobileAppConfig::create([
                 'app_name' => 'SISTA SMA Islam Sultan Agung 1',
                 'min_android_build' => 100,
@@ -82,12 +78,12 @@ class MobileConfigController extends Controller
             'features' => $config->active_features,
             'contact_support' => [
                 // Was a placeholder number and an address the school doesn't use.
-                'whatsapp' => \App\Support\School::whatsapp(),
-                'email' => \App\Support\School::email(),
+                'whatsapp' => School::whatsapp(),
+                'email' => School::email(),
             ],
             // The attendance geofence the check-in endpoints enforce, so the
             // app's pre-check uses the same point (it had its own constant).
-            'campus' => \App\Support\School::campus(),
+            'campus' => School::campus(),
         ], 200);
     }
 }

@@ -39,6 +39,7 @@ class QuestionBankController extends Controller
     public function create()
     {
         $subjects = Subject::all();
+
         return view('cbt.question-bank.create', compact('subjects'));
     }
 
@@ -96,6 +97,7 @@ class QuestionBankController extends Controller
     public function show(QuestionBank $questionBank)
     {
         $questionBank->load(['subject', 'creator']);
+
         return view('cbt.question-bank.show', compact('questionBank'));
     }
 
@@ -110,6 +112,7 @@ class QuestionBankController extends Controller
         }
 
         $subjects = Subject::all();
+
         return view('cbt.question-bank.edit', compact('questionBank', 'subjects'));
     }
 
@@ -181,7 +184,7 @@ class QuestionBankController extends Controller
         if ($questionBank->question_image) {
             Storage::disk('public')->delete($questionBank->question_image);
         }
-        
+
         $questionBank->delete();
 
         return redirect()->route('cbt.question-banks.index')

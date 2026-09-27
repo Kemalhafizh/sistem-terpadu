@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Employee;
-use App\Models\EmployeeTraining;
 use App\Models\User;
 
 beforeEach(function () {

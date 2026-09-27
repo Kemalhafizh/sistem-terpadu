@@ -3,7 +3,6 @@
 use App\Models\NotificationLog;
 use App\Models\User;
 use App\Services\Communication\NotificationDispatchService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin']);

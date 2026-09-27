@@ -12,7 +12,7 @@ class CounselingSeeder extends Seeder
     public function run(): void
     {
         $guruBk = User::where('email', 'guru.bk@sultanagung1.sch.id')->first();
-        if (!$guruBk) {
+        if (! $guruBk) {
             $guruBk = User::where('role', 'guru')->first();
         }
 

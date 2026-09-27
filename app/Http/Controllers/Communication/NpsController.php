@@ -11,12 +11,14 @@ class NpsController extends Controller
     public function dashboard()
     {
         $campaigns = NpsCampaign::all();
+
         return view('nps.dashboard', compact('campaigns'));
     }
 
     public function campaigns()
     {
         $campaigns = NpsCampaign::all();
+
         return view('nps.campaign-manager', compact('campaigns'));
     }
 
@@ -28,12 +30,14 @@ class NpsController extends Controller
     public function storeCampaign(Request $request)
     {
         NpsCampaign::create($request->all());
+
         return redirect()->route('nps.campaigns');
     }
 
     public function responses($campaignId)
     {
         $campaign = NpsCampaign::with('responses.parent')->findOrFail($campaignId);
+
         return view('nps.responses', compact('campaign'));
     }
 

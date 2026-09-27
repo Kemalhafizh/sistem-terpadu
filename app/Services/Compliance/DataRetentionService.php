@@ -2,8 +2,8 @@
 
 namespace App\Services\Compliance;
 
-use App\Models\RetentionPolicy;
 use App\Models\PurgeLog;
+use App\Models\RetentionPolicy;
 
 class DataRetentionService
 {

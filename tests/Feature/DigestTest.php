@@ -1,26 +1,26 @@
 <?php
 
+use App\Mail\ScheduledDigestMail;
 use App\Models\AcademicYear;
-use App\Models\User;
-use App\Models\Student;
-use App\Models\Classroom;
 use App\Models\Attendance;
 use App\Models\Billing;
-use App\Models\Ticket;
-use App\Models\SmartAlert;
+use App\Models\Classroom;
+use App\Models\ComplianceMilestone;
+use App\Models\ElearningAssignment;
+use App\Models\ElearningClass;
+use App\Models\ElearningSubmission;
+use App\Models\Grade;
 use App\Models\Payment;
 use App\Models\PaymentCategory;
-use App\Models\ComplianceMilestone;
-use App\Models\Grade;
-use App\Models\Subject;
-use App\Models\StudentPointLog;
-use App\Models\ElearningClass;
-use App\Models\ElearningAssignment;
-use App\Models\ElearningSubmission;
 use App\Models\ScheduledReport;
+use App\Models\SmartAlert;
+use App\Models\Student;
+use App\Models\StudentPointLog;
+use App\Models\Subject;
+use App\Models\Ticket;
+use App\Models\User;
 use App\Services\DigestService;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ScheduledDigestMail;
 
 beforeEach(function () {
     ScheduledReport::truncate();
@@ -60,7 +60,7 @@ test('admin can manage scheduled reports CRUD successfully', function () {
         'cron_expression' => '0 7 * * *',
         'delivery_method' => 'email',
         'recipients' => [
-            ['type' => 'email', 'value' => 'admin@smaisa1.sch.id']
+            ['type' => 'email', 'value' => 'admin@smaisa1.sch.id'],
         ],
         'attach_pdf' => 1,
         'is_active' => 1,
@@ -82,7 +82,7 @@ test('admin can manage scheduled reports CRUD successfully', function () {
         'cron_expression' => '0 8 * * *',
         'delivery_method' => 'both',
         'recipients' => [
-            ['type' => 'email', 'value' => 'it-admin@smaisa1.sch.id']
+            ['type' => 'email', 'value' => 'it-admin@smaisa1.sch.id'],
         ],
         'attach_pdf' => 1,
         'is_active' => 1,
@@ -133,7 +133,7 @@ test('daily admin digest compiles correct metrics from SISTA core modules', func
     ]);
 
     // 2. 1 Helpdesk Ticket today
-    $ticket = new Ticket();
+    $ticket = new Ticket;
     $ticket->reporter_id = $studentUser->id;
     $ticket->title = 'Wifi terputus di kelas X-A';
     $ticket->category = 'it';
@@ -143,14 +143,14 @@ test('daily admin digest compiles correct metrics from SISTA core modules', func
     $ticket->save();
 
     // 3. 1 SPP Billing today
-    $paymentCategory = new PaymentCategory();
+    $paymentCategory = new PaymentCategory;
     $paymentCategory->id = 1;
     $paymentCategory->name = 'SPP';
     $paymentCategory->default_amount = 500000;
     $paymentCategory->is_monthly = true;
     $paymentCategory->save();
 
-    $billing = new Billing();
+    $billing = new Billing;
     $billing->student_id = $student->id;
     $billing->payment_category_id = $paymentCategory->id;
     $billing->academic_year_id = $academicYear->id;
@@ -161,7 +161,7 @@ test('daily admin digest compiles correct metrics from SISTA core modules', func
     $billing->save();
 
     // 4. 1 active SmartAlert today
-    $alert = new SmartAlert();
+    $alert = new SmartAlert;
     $alert->type = 'finance';
     $alert->alertable_type = Student::class;
     $alert->alertable_id = $student->id;
@@ -183,8 +183,8 @@ test('daily admin digest compiles correct metrics from SISTA core modules', func
 test('weekly parent digest fetches correct assignments and grades for student', function () {
     $studentUser = User::factory()->create(['role' => 'student']);
     $student = Student::factory()->create(['user_id' => $studentUser->id]);
-    
-    $subject = new Subject();
+
+    $subject = new Subject;
     $subject->code = 'KIM-X';
     $subject->name = 'Kimia';
     $subject->category = 'Nasional';
@@ -203,7 +203,7 @@ test('weekly parent digest fetches correct assignments and grades for student', 
     ]);
 
     // 1. Grade this week
-    $grade = new Grade();
+    $grade = new Grade;
     $grade->student_id = $student->id;
     $grade->subject_id = $subject->id;
     $grade->recorded_by = $teacher->id;
@@ -229,7 +229,7 @@ test('weekly parent digest fetches correct assignments and grades for student', 
         'description' => 'Kelas E-Learning Kimia.',
     ]);
 
-    $assignment = new ElearningAssignment();
+    $assignment = new ElearningAssignment;
     $assignment->elearning_class_id = $elearningClass->id;
     $assignment->title = 'Tugas Stoikiometri';
     $assignment->description = 'Selesaikan nomor 1-5.';
@@ -255,7 +255,7 @@ test('scheduled report dispatch sends out emails successfully', function () {
         'report_type' => 'daily_admin',
         'cron_expression' => '* * * * *',
         'recipients' => [
-            ['type' => 'email', 'value' => 'boss@smaisa1.sch.id']
+            ['type' => 'email', 'value' => 'boss@smaisa1.sch.id'],
         ],
         'delivery_method' => 'email',
         'attach_pdf' => false,
@@ -281,7 +281,7 @@ test('console command scheduler matches cron minutes and triggers due digests', 
         'report_type' => 'daily_admin',
         'cron_expression' => '* * * * *',
         'recipients' => [
-            ['type' => 'email', 'value' => 'staff@smaisa1.sch.id']
+            ['type' => 'email', 'value' => 'staff@smaisa1.sch.id'],
         ],
         'delivery_method' => 'email',
         'attach_pdf' => false,
@@ -294,7 +294,7 @@ test('console command scheduler matches cron minutes and triggers due digests', 
         'report_type' => 'daily_admin',
         'cron_expression' => '* * * * *',
         'recipients' => [
-            ['type' => 'email', 'value' => 'staff@smaisa1.sch.id']
+            ['type' => 'email', 'value' => 'staff@smaisa1.sch.id'],
         ],
         'delivery_method' => 'email',
         'attach_pdf' => false,

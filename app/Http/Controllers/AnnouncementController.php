@@ -6,10 +6,10 @@ use App\Events\CampusAnnouncementEvent;
 use App\Models\Announcement;
 use App\Models\Classroom;
 use App\Models\User;
-use App\Models\AnnouncementRead;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AnnouncementController extends Controller
 {
@@ -79,7 +79,7 @@ class AnnouncementController extends Controller
         event(new CampusAnnouncementEvent([
             'id' => $announcement->id,
             'title' => $announcement->title,
-            'summary' => \Illuminate\Support\Str::limit(strip_tags($announcement->content), 140),
+            'summary' => Str::limit(strip_tags($announcement->content), 140),
             'category' => $announcement->category,
             'priority' => $announcement->priority,
             'timestamp' => $announcement->created_at->toIso8601String(),
@@ -92,9 +92,9 @@ class AnnouncementController extends Controller
     {
         // View policy check: All authenticated users can view, but let's register the read log
         $user = Auth::user();
-        
+
         $readRecord = $announcement->reads()->where('user_id', $user->id)->first();
-        if (!$readRecord) {
+        if (! $readRecord) {
             $announcement->reads()->create([
                 'user_id' => $user->id,
                 'read_at' => now(),
@@ -166,14 +166,14 @@ class AnnouncementController extends Controller
     public function destroy(Announcement $announcement)
     {
         $this->authorize('delete', $announcement);
-        
+
         if ($announcement->image_path) {
             Storage::disk('public')->delete($announcement->image_path);
         }
         if ($announcement->attachment_path) {
             Storage::disk('public')->delete($announcement->attachment_path);
         }
-        
+
         $announcement->delete();
 
         return redirect()->route('announcements.index')->with('success', 'Pengumuman berhasil dihapus.');
@@ -182,19 +182,20 @@ class AnnouncementController extends Controller
     public function pin(Announcement $announcement)
     {
         $this->authorize('update', $announcement);
-        
+
         $announcement->update([
-            'is_pinned' => !$announcement->is_pinned
+            'is_pinned' => ! $announcement->is_pinned,
         ]);
 
         $message = $announcement->is_pinned ? 'Pengumuman berhasil di-pin di dasbor.' : 'Pin pengumuman berhasil dilepas.';
+
         return back()->with('success', $message);
     }
 
     public function acknowledge(Announcement $announcement)
     {
         $user = Auth::user();
-        
+
         $readRecord = $announcement->reads()->where('user_id', $user->id)->first();
         if ($readRecord) {
             $readRecord->update([
@@ -227,13 +228,13 @@ class AnnouncementController extends Controller
         }
 
         if ($announcement->target_classroom_id) {
-            $query->where(function($q) use ($announcement) {
-                $q->whereHas('student', function($sq) use ($announcement) {
+            $query->where(function ($q) use ($announcement) {
+                $q->whereHas('student', function ($sq) use ($announcement) {
                     $sq->where('classroom_id', $announcement->target_classroom_id);
                 })
-                ->orWhereHas('children', function($sq) use ($announcement) {
-                    $sq->where('classroom_id', $announcement->target_classroom_id);
-                });
+                    ->orWhereHas('children', function ($sq) use ($announcement) {
+                        $sq->where('classroom_id', $announcement->target_classroom_id);
+                    });
             });
         }
 
@@ -241,8 +242,8 @@ class AnnouncementController extends Controller
         $reads = $announcement->reads->keyBy('user_id');
 
         $totalTarget = $targetUsers->count();
-        $totalRead = $targetUsers->filter(fn($u) => isset($reads[$u->id]))->count();
-        $totalAcknowledged = $targetUsers->filter(fn($u) => isset($reads[$u->id]) && $reads[$u->id]->acknowledged_at !== null)->count();
+        $totalRead = $targetUsers->filter(fn ($u) => isset($reads[$u->id]))->count();
+        $totalAcknowledged = $targetUsers->filter(fn ($u) => isset($reads[$u->id]) && $reads[$u->id]->acknowledged_at !== null)->count();
 
         return view('announcements.receipts', compact('announcement', 'targetUsers', 'reads', 'totalTarget', 'totalRead', 'totalAcknowledged'));
     }

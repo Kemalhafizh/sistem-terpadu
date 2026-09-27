@@ -22,7 +22,7 @@ class DataAnonymizerService
         $suffix = substr($nik, -2);
         $maskedLength = max(0, $len - 6);
 
-        return $prefix . str_repeat('*', $maskedLength) . $suffix;
+        return $prefix.str_repeat('*', $maskedLength).$suffix;
     }
 
     /**
@@ -40,7 +40,7 @@ class DataAnonymizerService
         $suffix = substr($phone, -4);
         $maskedLength = max(0, $len - 8);
 
-        return $prefix . str_repeat('*', $maskedLength) . $suffix;
+        return $prefix.str_repeat('*', $maskedLength).$suffix;
     }
 
     /**
@@ -57,14 +57,14 @@ class DataAnonymizerService
         $len = strlen($username);
 
         if ($len <= 2) {
-            $maskedUsername = substr($username, 0, 1) . '*';
+            $maskedUsername = substr($username, 0, 1).'*';
         } else {
             $firstChar = substr($username, 0, 1);
             $lastChar = substr($username, -1);
-            $maskedUsername = $firstChar . str_repeat('*', 3) . $lastChar;
+            $maskedUsername = $firstChar.str_repeat('*', 3).$lastChar;
         }
 
-        return $maskedUsername . '@' . $domain;
+        return $maskedUsername.'@'.$domain;
     }
 
     /**

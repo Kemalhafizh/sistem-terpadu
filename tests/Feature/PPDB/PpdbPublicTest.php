@@ -1,13 +1,13 @@
 <?php
 
 use App\Models\AcademicYear;
-use App\Models\SpmbPeriod;
-use App\Models\SpmbWave;
-use App\Models\SpmbTrack;
 use App\Models\Registration;
+use App\Models\SpmbPeriod;
+use App\Models\SpmbTrack;
+use App\Models\SpmbWave;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
 
 beforeEach(function () {
     $this->academicYear = AcademicYear::create([

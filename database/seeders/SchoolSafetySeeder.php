@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class SchoolSafetySeeder extends Seeder
 {
@@ -24,6 +24,7 @@ class SchoolSafetySeeder extends Seeder
             DB::table('zone_breaches')->insert([
                 ['student_id' => 1, 'zone_name' => 'Area Parkir', 'breach_type' => 'unauthorized_exit', 'breach_time' => Carbon::now(), 'detected_by' => 'CAM-05'],
             ]);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
     }
 }

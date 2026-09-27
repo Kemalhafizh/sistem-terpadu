@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Services\StudentProfile360Service;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class StudentProfileApiController extends Controller
 {
@@ -31,7 +31,7 @@ class StudentProfileApiController extends Controller
         // If logged in as parent, they can only view their own children
         if ($user->role === 'parent') {
             $childUserIds = $user->children ? $user->children->pluck('user_id')->filter()->toArray() : [];
-            if ($targetId !== $user->id && !in_array($targetId, $childUserIds, true)) {
+            if ($targetId !== $user->id && ! in_array($targetId, $childUserIds, true)) {
                 abort(403, 'Akses ditolak. Anda hanya berhak mengakses profil anak Anda.');
             }
         }

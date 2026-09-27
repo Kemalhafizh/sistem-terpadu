@@ -2,8 +2,6 @@
 
 namespace App\Services\Integration;
 
-use App\Models\User;
-
 class GraphqlService
 {
     /**
@@ -63,6 +61,7 @@ class GraphqlService
     public function validateSchema(string $query): bool
     {
         $trimmed = trim($query);
+
         return ! empty($trimmed) && (str_contains($trimmed, 'query') || str_contains($trimmed, 'mutation') || str_starts_with($trimmed, '{'));
     }
 

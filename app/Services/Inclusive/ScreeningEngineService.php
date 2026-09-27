@@ -2,8 +2,6 @@
 
 namespace App\Services\Inclusive;
 
-use App\Models\ScreeningResult;
-
 class ScreeningEngineService
 {
     public function evaluateResponses(array $responses): int
@@ -12,6 +10,7 @@ class ScreeningEngineService
         foreach ($responses as $response) {
             $score += (int) ($response['value'] ?? 0);
         }
+
         return $score;
     }
 
@@ -22,6 +21,7 @@ class ScreeningEngineService
         } elseif ($totalScore > 10) {
             return 'moderate';
         }
+
         return 'low';
     }
 

@@ -26,7 +26,7 @@ class CbtEnterpriseApiController extends Controller
     public function encryptedPayload(Request $request, $id)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -44,7 +44,7 @@ class CbtEnterpriseApiController extends Controller
     public function decryptionKey(Request $request, $id)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -53,7 +53,7 @@ class CbtEnterpriseApiController extends Controller
 
         $result = $this->enterpriseService->getDecryptionKey($exam, $student);
 
-        if (!$result['accessible']) {
+        if (! $result['accessible']) {
             return $this->errorResponse($result['message'], 403);
         }
 
@@ -66,7 +66,7 @@ class CbtEnterpriseApiController extends Controller
     public function microSync(Request $request, $id)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 
@@ -88,7 +88,7 @@ class CbtEnterpriseApiController extends Controller
     public function uploadEssay(Request $request, $id)
     {
         $student = $request->user()->student;
-        if (!$student) {
+        if (! $student) {
             return $this->errorResponse('Data siswa tidak ditemukan', 404);
         }
 

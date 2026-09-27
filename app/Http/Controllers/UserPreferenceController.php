@@ -11,10 +11,11 @@ class UserPreferenceController extends Controller
      */
     public function setLocale(Request $request, string $locale)
     {
-        if (!in_array($locale, ['id', 'en', 'ar'])) {
+        if (! in_array($locale, ['id', 'en', 'ar'])) {
             if ($request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => 'Language not supported'], 400);
             }
+
             return back()->with('error', 'Bahasa tidak didukung / Language not supported.');
         }
 
@@ -43,7 +44,7 @@ class UserPreferenceController extends Controller
      */
     public function setTheme(Request $request, string $theme)
     {
-        if (!in_array($theme, ['light', 'dark', 'system'])) {
+        if (! in_array($theme, ['light', 'dark', 'system'])) {
             return back()->with('error', 'Tema tidak valid / Invalid theme.');
         }
 

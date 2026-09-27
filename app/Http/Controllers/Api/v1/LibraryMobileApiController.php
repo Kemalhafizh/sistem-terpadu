@@ -115,7 +115,7 @@ class LibraryMobileApiController extends Controller
         $isStaff = in_array($user->role, ['admin', 'superadmin', 'guru', 'teacher', 'pustakawan', 'petugas_perpustakaan'], true);
 
         if ($request->filled('student_id')) {
-            if (! $isStaff && $user->student && (string)$user->student->id !== (string)$request->student_id && (string)$user->student->nis !== (string)$request->student_id) {
+            if (! $isStaff && $user->student && (string) $user->student->id !== (string) $request->student_id && (string) $user->student->nis !== (string) $request->student_id) {
                 return response()->json([
                     'error' => 'Akses ditolak.',
                     'message' => 'Siswa dilarang melakukan peminjaman atas nama identitas siswa lain.',

@@ -128,7 +128,7 @@ class BusinessRuleEngineService
 
         return match ($actionType) {
             'issue_counseling_ticket' => [
-                'ticket_no' => 'BK-' . rand(1000, 9999),
+                'ticket_no' => 'BK-'.rand(1000, 9999),
                 'status' => 'ISSUED',
                 'whatsapp_notification' => 'SENT_TO_PARENT',
             ],
@@ -137,7 +137,7 @@ class BusinessRuleEngineService
                 'payroll_status' => 'DEDUCTION_APPLIED',
             ],
             'issue_warning_letter_sp1' => [
-                'sp_number' => 'SP1/SMA-SA1/' . date('Y/m'),
+                'sp_number' => 'SP1/SMA-SA1/'.date('Y/m'),
                 'status' => 'GENERATED',
                 'homeroom_notification' => 'NOTIFIED',
             ],

@@ -85,12 +85,12 @@ class ExamPolicy
      */
     public function take(User $user, Exam $exam): bool
     {
-        if (!in_array($user->role, ['siswa', 'student'])) {
+        if (! in_array($user->role, ['siswa', 'student'])) {
             return false;
         }
 
         $student = $user->student;
-        if (!$student) {
+        if (! $student) {
             return false;
         }
 

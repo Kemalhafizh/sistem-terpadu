@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('face_biometric_profiles')) {
+        if (! Schema::hasTable('face_biometric_profiles')) {
             Schema::create('face_biometric_profiles', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->unique()->constrained('users')->cascadeOnDelete();
@@ -23,7 +23,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('frictionless_attendance_logs')) {
+        if (! Schema::hasTable('frictionless_attendance_logs')) {
             Schema::create('frictionless_attendance_logs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
@@ -39,7 +39,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('room_occupancy_sensors')) {
+        if (! Schema::hasTable('room_occupancy_sensors')) {
             Schema::create('room_occupancy_sensors', function (Blueprint $table) {
                 $table->id();
                 $table->string('room_name', 128)->unique();
@@ -56,7 +56,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('energy_saving_logs')) {
+        if (! Schema::hasTable('energy_saving_logs')) {
             Schema::create('energy_saving_logs', function (Blueprint $table) {
                 $table->id();
                 $table->string('room_name', 128);

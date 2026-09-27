@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('cloud_cluster_metrics')) {
+        if (! Schema::hasTable('cloud_cluster_metrics')) {
             Schema::create('cloud_cluster_metrics', function (Blueprint $table) {
                 $table->id();
                 $table->string('node_name', 64);
@@ -25,7 +25,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('edge_cache_nodes')) {
+        if (! Schema::hasTable('edge_cache_nodes')) {
             Schema::create('edge_cache_nodes', function (Blueprint $table) {
                 $table->id();
                 $table->string('node_location', 128);

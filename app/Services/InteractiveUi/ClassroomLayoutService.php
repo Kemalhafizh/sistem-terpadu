@@ -29,6 +29,7 @@ class ClassroomLayoutService
             $layout = ClassroomLayout::find($layoutId);
             if ($layout) {
                 $layout->update($payload);
+
                 return $layout;
             }
         }

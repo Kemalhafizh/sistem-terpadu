@@ -5,8 +5,8 @@ namespace App\Services\Crisis;
 use App\Models\CrisisIncident;
 use App\Models\CrisisProtocol;
 use App\Models\CrisisResponseLog;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class CrisisManagementService
 {
@@ -15,20 +15,21 @@ class CrisisManagementService
         $data['uuid'] = (string) Str::uuid();
         $data['detected_at'] = now();
         $data['status'] = 'detected';
+
         return CrisisIncident::create($data);
     }
 
     public function logResponse(CrisisIncident $incident, array $data): CrisisResponseLog
     {
         $data['crisis_incident_id'] = $incident->id;
-        
+
         if ($incident->status === 'detected') {
             $incident->update([
                 'status' => 'responding',
                 'responded_at' => now(),
             ]);
         }
-        
+
         return CrisisResponseLog::create($data);
     }
 
@@ -50,7 +51,10 @@ class CrisisManagementService
 
     public function calculateResponseTime(CrisisIncident $incident): int
     {
-        if (!$incident->responded_at || !$incident->detected_at) return 0;
+        if (! $incident->responded_at || ! $incident->detected_at) {
+            return 0;
+        }
+
         return $incident->detected_at->diffInSeconds($incident->responded_at);
     }
 

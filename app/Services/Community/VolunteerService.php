@@ -2,8 +2,8 @@
 
 namespace App\Services\Community;
 
-use App\Models\VolunteerOpportunity;
 use App\Models\VolunteerLog;
+use App\Models\VolunteerOpportunity;
 
 class VolunteerService
 {

@@ -10,7 +10,7 @@ class PdplPrivacySeeder extends Seeder
 {
     public function run(): void
     {
-        $service = new DataAnonymizerService();
+        $service = new DataAnonymizerService;
 
         // Verify PII masking rules
         assert($service->maskNik('3374012304950001') === '3374**********01');

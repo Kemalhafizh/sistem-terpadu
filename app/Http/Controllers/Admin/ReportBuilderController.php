@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\CustomReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\CustomReport;
 use App\Services\ReportBuilderService;
-use App\Exports\CustomReportExport;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportBuilderController extends Controller
@@ -28,7 +28,7 @@ class ReportBuilderController extends Controller
         if ($user->role !== 'admin' && $user->role !== 'superadmin') {
             $query->where(function ($q) use ($user) {
                 $q->where('is_shared', true)
-                  ->orWhere('created_by', $user->id);
+                    ->orWhere('created_by', $user->id);
             });
         }
 
@@ -83,9 +83,9 @@ class ReportBuilderController extends Controller
     public function show(CustomReport $report)
     {
         $user = auth()->user();
-        
+
         // Guard access
-        if ($user->role !== 'admin' && $user->role !== 'superadmin' && !$report->is_shared && $report->created_by !== $user->id) {
+        if ($user->role !== 'admin' && $user->role !== 'superadmin' && ! $report->is_shared && $report->created_by !== $user->id) {
             abort(403, 'Anda tidak memiliki akses ke laporan ini.');
         }
 
@@ -93,7 +93,7 @@ class ReportBuilderController extends Controller
             $data = $this->service->executeQuery($report->config);
             $sources = $this->service->getAvailableSources();
             $sourceConfig = $sources[$report->config['source']];
-            
+
             $headings = [];
             foreach ($report->config['columns'] as $col) {
                 $headings[$col] = $sourceConfig['columns'][$col]['label'] ?? $col;
@@ -102,7 +102,7 @@ class ReportBuilderController extends Controller
             return view('admin.report-builder.show', compact('report', 'data', 'headings', 'sources'));
         } catch (\Exception $e) {
             return redirect()->route('admin.report-builder.index')
-                ->with('error', 'Gagal menjalankan laporan: ' . $e->getMessage());
+                ->with('error', 'Gagal menjalankan laporan: '.$e->getMessage());
         }
     }
 
@@ -125,10 +125,10 @@ class ReportBuilderController extends Controller
 
             // Limit preview to 10 rows for snappy dynamic render
             $data = $this->service->executeQuery($config)->take(10);
-            
+
             $sources = $this->service->getAvailableSources();
             $sourceConfig = $sources[$request->source];
-            
+
             $headings = [];
             foreach ($request->columns as $col) {
                 $headings[$col] = $sourceConfig['columns'][$col]['label'] ?? $col;
@@ -150,35 +150,36 @@ class ReportBuilderController extends Controller
     public function exportPdf(CustomReport $report)
     {
         $user = auth()->user();
-        if ($user->role !== 'admin' && $user->role !== 'superadmin' && !$report->is_shared && $report->created_by !== $user->id) {
+        if ($user->role !== 'admin' && $user->role !== 'superadmin' && ! $report->is_shared && $report->created_by !== $user->id) {
             abort(403);
         }
 
         $data = $this->service->executeQuery($report->config);
         $sources = $this->service->getAvailableSources();
         $sourceConfig = $sources[$report->config['source']];
-        
+
         $headings = [];
         foreach ($report->config['columns'] as $col) {
             $headings[$col] = $sourceConfig['columns'][$col]['label'] ?? $col;
         }
 
         $pdf = Pdf::loadView('admin.report-builder.pdf', compact('report', 'data', 'headings'));
+
         return $pdf->setPaper('a4', 'landscape')
-            ->download('Laporan_' . str_replace(' ', '_', $report->name) . '.pdf');
+            ->download('Laporan_'.str_replace(' ', '_', $report->name).'.pdf');
     }
 
     public function exportExcel(CustomReport $report)
     {
         $user = auth()->user();
-        if ($user->role !== 'admin' && $user->role !== 'superadmin' && !$report->is_shared && $report->created_by !== $user->id) {
+        if ($user->role !== 'admin' && $user->role !== 'superadmin' && ! $report->is_shared && $report->created_by !== $user->id) {
             abort(403);
         }
 
         $data = $this->service->executeQuery($report->config);
         $sources = $this->service->getAvailableSources();
         $sourceConfig = $sources[$report->config['source']];
-        
+
         $headings = [];
         foreach ($report->config['columns'] as $col) {
             $headings[] = $sourceConfig['columns'][$col]['label'] ?? $col;
@@ -186,7 +187,7 @@ class ReportBuilderController extends Controller
 
         return Excel::download(
             new CustomReportExport($data, $headings, $report->config['columns']),
-            'Laporan_' . str_replace(' ', '_', $report->name) . '.xlsx'
+            'Laporan_'.str_replace(' ', '_', $report->name).'.xlsx'
         );
     }
 

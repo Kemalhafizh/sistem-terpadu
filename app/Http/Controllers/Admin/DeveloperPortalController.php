@@ -14,27 +14,27 @@ class DeveloperPortalController extends Controller
     public function index(Request $request, $category = null, $page = null)
     {
         $docsDir = base_path('docs');
-        
+
         // Default to README
         $selectedFile = 'README.md';
         $title = 'Introduction';
-        
-        if ($category && !$page) {
+
+        if ($category && ! $page) {
             // Root doc file (e.g. /developer/ARCHITECTURE)
             $safeCategory = preg_replace('/[^a-zA-Z0-9_-]/', '', $category);
-            $selectedFile = $safeCategory . '.md';
+            $selectedFile = $safeCategory.'.md';
             $title = ucwords(str_replace('_', ' ', $safeCategory));
         } elseif ($category && $page) {
             // Subdirectory doc file (e.g. /developer/adr/001-service-pattern)
             $safeCategory = preg_replace('/[^a-zA-Z0-9_-]/', '', $category);
             $safePage = preg_replace('/[^a-zA-Z0-9_-]/', '', $page);
-            $selectedFile = $safeCategory . '/' . $safePage . '.md';
+            $selectedFile = $safeCategory.'/'.$safePage.'.md';
             $title = ucwords(str_replace('-', ' ', $safePage));
         }
 
-        $fullPath = $docsDir . '/' . $selectedFile;
+        $fullPath = $docsDir.'/'.$selectedFile;
 
-        if (!File::exists($fullPath)) {
+        if (! File::exists($fullPath)) {
             abort(404, 'Dokumentasi tidak ditemukan.');
         }
 
@@ -73,7 +73,7 @@ class DeveloperPortalController extends Controller
                 ['label' => 'Modul 10: Custom Report Builder', 'route' => route('developer.subpage', ['category' => 'modules', 'page' => 'report_builder'])],
                 ['label' => 'Modul Tambahan: AI Chatbot (Lokal)', 'route' => route('developer.subpage', ['category' => 'modules', 'page' => 'chatbot'])],
                 ['label' => 'Modul Tambahan: Gamifikasi Sekolah', 'route' => route('developer.subpage', ['category' => 'modules', 'page' => 'gamification'])],
-            ]
+            ],
         ];
 
         return view('docs.index', compact('htmlContent', 'navigation', 'title', 'selectedFile'));
@@ -89,8 +89,9 @@ class DeveloperPortalController extends Controller
         $markdown = preg_replace_callback('/```(\w*)\n([\s\S]*?)\n```/', function ($matches) use (&$codeBlocks) {
             $lang = $matches[1] ?: 'code';
             $code = htmlspecialchars($matches[2]);
-            $placeholder = '<!--CODE_BLOCK_' . count($codeBlocks) . '-->';
+            $placeholder = '<!--CODE_BLOCK_'.count($codeBlocks).'-->';
             $codeBlocks[] = "<pre class=\"bg-gray-950 p-5 rounded-2xl border border-white/5 font-mono text-sm text-gray-300 overflow-x-auto my-6 shadow-inner\"><code class=\"language-{$lang}\">{$code}</code></pre>";
+
             return $placeholder;
         }, $markdown);
 
@@ -98,8 +99,9 @@ class DeveloperPortalController extends Controller
         $inlineCode = [];
         $markdown = preg_replace_callback('/`([^`]+)`/', function ($matches) use (&$inlineCode) {
             $code = htmlspecialchars($matches[1]);
-            $placeholder = '<!--INLINE_CODE_' . count($inlineCode) . '-->';
+            $placeholder = '<!--INLINE_CODE_'.count($inlineCode).'-->';
             $inlineCode[] = "<code class=\"bg-white/5 px-2 py-0.5 rounded-lg font-mono text-pink-400 text-sm border border-white/5\">{$code}</code>";
+
             return $placeholder;
         }, $markdown);
 
@@ -108,7 +110,7 @@ class DeveloperPortalController extends Controller
         $markdown = preg_replace_callback('/^>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n>\s*([\s\S]*?)(?=\n\n|\n[^\s>])/m', function ($matches) {
             $type = strtoupper($matches[1]);
             $text = trim(preg_replace('/^>\s?/m', '', $matches[2]));
-            
+
             $bg = 'bg-blue-500/10 border-blue-500/30 text-blue-300';
             $icon = 'ℹ';
             if ($type === 'TIP') {
@@ -121,7 +123,7 @@ class DeveloperPortalController extends Controller
                 $bg = 'bg-red-500/10 border-red-500/30 text-red-300';
                 $icon = '';
             }
-            
+
             return "<div class=\"p-4 my-6 rounded-2xl border {$bg} flex gap-3 items-start\"><span class=\"text-xl\">{$icon}</span><div><strong class=\"block text-sm uppercase tracking-wider mb-1\">{$type}</strong><span class=\"text-sm leading-relaxed\">{$text}</span></div></div>";
         }, $markdown);
 
@@ -150,13 +152,15 @@ class DeveloperPortalController extends Controller
                 if (preg_match('/^\|\s*:?-+:?\s*\|/', $row)) {
                     continue;
                 }
-                
+
                 $cols = array_filter(explode('|', $row), function ($val) {
                     return $val !== '';
                 });
                 $cols = array_map('trim', $cols);
-                
-                if (empty($cols)) continue;
+
+                if (empty($cols)) {
+                    continue;
+                }
 
                 if ($isHeader) {
                     $htmlTable .= '<thead class="bg-white/5 font-outfit text-white border-b border-white/5"><tr>';
@@ -174,6 +178,7 @@ class DeveloperPortalController extends Controller
                 }
             }
             $htmlTable .= '</tbody></table></div>';
+
             return $htmlTable;
         }, $markdown);
 
@@ -186,17 +191,17 @@ class DeveloperPortalController extends Controller
 
         // Restore protected elements
         foreach ($codeBlocks as $index => $html) {
-            $markdown = str_replace('<!--CODE_BLOCK_' . $index . '-->', $html, $markdown);
+            $markdown = str_replace('<!--CODE_BLOCK_'.$index.'-->', $html, $markdown);
         }
         foreach ($inlineCode as $index => $html) {
-            $markdown = str_replace('<!--INLINE_CODE_' . $index . '-->', $html, $markdown);
+            $markdown = str_replace('<!--INLINE_CODE_'.$index.'-->', $html, $markdown);
         }
 
         // Separate paragraphs by double linebreaks, except inside tags
         $lines = explode("\n\n", $markdown);
         foreach ($lines as &$line) {
             $line = trim($line);
-            if ($line && !str_starts_with($line, '<h') && !str_starts_with($line, '<div') && !str_starts_with($line, '<pre') && !str_starts_with($line, '<ul') && !str_starts_with($line, '<table') && !str_starts_with($line, '<block')) {
+            if ($line && ! str_starts_with($line, '<h') && ! str_starts_with($line, '<div') && ! str_starts_with($line, '<pre') && ! str_starts_with($line, '<ul') && ! str_starts_with($line, '<table') && ! str_starts_with($line, '<block')) {
                 $line = "<p class=\"text-gray-400 leading-relaxed my-4\">{$line}</p>";
             }
         }

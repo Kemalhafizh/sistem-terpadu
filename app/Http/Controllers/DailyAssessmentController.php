@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
-use App\Models\Classroom;
-use App\Models\Subject;
 use App\Models\Student;
-use App\Models\AcademicYear;
+use App\Models\Subject;
 use App\Services\DailyAssessmentService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class DailyAssessmentController extends Controller
 {
@@ -28,7 +27,7 @@ class DailyAssessmentController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        
+
         $classrooms = Classroom::all();
         $subjects = Subject::all();
 
@@ -83,10 +82,11 @@ class DailyAssessmentController extends Controller
 
         try {
             $assessment = $this->service->createAssessment($data);
+
             return redirect()->route('daily-assessments.input-scores', $assessment->id)
                 ->with('success', 'Penilaian harian berhasil dibuat. Silakan masukkan nilai siswa.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal membuat penilaian: ' . $e->getMessage())->withInput();
+            return back()->with('error', 'Gagal membuat penilaian: '.$e->getMessage())->withInput();
         }
     }
 
@@ -100,23 +100,29 @@ class DailyAssessmentController extends Controller
 
         $scores = $assessment->scores;
         $totalStudents = $scores->count();
-        $validScores = $scores->filter(fn($s) => $s->final_score !== null);
-        
+        $validScores = $scores->filter(fn ($s) => $s->final_score !== null);
+
         $average = $validScores->isEmpty() ? 0 : round($validScores->avg('final_score'), 1);
         $kkm = $assessment->effective_kkm;
 
-        $passedCount = $scores->filter(fn($s) => $s->is_passed)->count();
-        $remedialCount = $scores->filter(fn($s) => $s->needs_remedial && $s->remedial_status !== 'completed')->count();
+        $passedCount = $scores->filter(fn ($s) => $s->is_passed)->count();
+        $remedialCount = $scores->filter(fn ($s) => $s->needs_remedial && $s->remedial_status !== 'completed')->count();
 
         // Distribution brackets
         $distribution = [0, 0, 0, 0, 0];
         foreach ($validScores as $s) {
             $val = $s->final_score;
-            if ($val >= 90) $distribution[4]++;
-            elseif ($val >= 80) $distribution[3]++;
-            elseif ($val >= 70) $distribution[2]++;
-            elseif ($val >= 60) $distribution[1]++;
-            else $distribution[0]++;
+            if ($val >= 90) {
+                $distribution[4]++;
+            } elseif ($val >= 80) {
+                $distribution[3]++;
+            } elseif ($val >= 70) {
+                $distribution[2]++;
+            } elseif ($val >= 60) {
+                $distribution[1]++;
+            } else {
+                $distribution[0]++;
+            }
         }
 
         return view('daily-assessments.show', compact('assessment', 'scores', 'totalStudents', 'average', 'passedCount', 'remedialCount', 'distribution', 'kkm'));
@@ -146,10 +152,11 @@ class DailyAssessmentController extends Controller
 
         try {
             $this->service->batchStoreScores($id, $request->grades);
+
             return redirect()->route('daily-assessments.show', $id)
                 ->with('success', 'Nilai siswa berhasil disimpan.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menyimpan nilai: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan nilai: '.$e->getMessage());
         }
     }
 
@@ -197,10 +204,11 @@ class DailyAssessmentController extends Controller
 
         try {
             $this->service->storeRemedial($scoreId, (float) $request->remedial_score, $request->notes);
+
             return redirect()->route('daily-assessments.remedial')
                 ->with('success', 'Nilai remedial berhasil disimpan.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menyimpan nilai remedial: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan nilai remedial: '.$e->getMessage());
         }
     }
 
@@ -231,6 +239,7 @@ class DailyAssessmentController extends Controller
         $pdf->setPaper('a4', 'portrait');
 
         $safeTitle = str_replace(' ', '_', $assessment->title);
+
         return $pdf->download("Daftar_Nilai_Harian_{$safeTitle}.pdf");
     }
 }

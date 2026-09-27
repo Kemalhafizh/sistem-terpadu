@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicYear;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
 use App\Services\RemedialWorkflowService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DailyAssessmentMobileApiController extends Controller
 {
@@ -54,7 +55,7 @@ class DailyAssessmentMobileApiController extends Controller
             'subject_id' => $request->subject_id,
             'classroom_id' => $request->classroom_id,
             'teacher_id' => $request->user()->id,
-            'academic_year_id' => \App\Models\AcademicYear::where('is_active', true)->first()->id ?? 1,
+            'academic_year_id' => AcademicYear::where('is_active', true)->first()->id ?? 1,
             'title' => $request->title,
             'type' => $request->input('type', 'ulangan_harian'),
             'assessment_date' => $request->assessment_date,
@@ -131,6 +132,7 @@ class DailyAssessmentMobileApiController extends Controller
             ->get()
             ->map(function ($scoreItem) use ($studentId) {
                 $finalScore = $this->remedialService->getFinalScore($studentId, $scoreItem->daily_assessment_id);
+
                 return [
                     'id' => $scoreItem->id,
                     'assessment_title' => $scoreItem->assessment->title ?? 'PH',

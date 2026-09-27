@@ -91,7 +91,7 @@ class DailyAssessmentSeeder extends Seeder
                 for ($k = 1; $k <= 2; $k++) {
                     $type = $types[array_rand($types)];
                     $titles = $assessmentTitles[$type];
-                    $title = $titles[array_rand($titles)] . ' - ' . $subject->name;
+                    $title = $titles[array_rand($titles)].' - '.$subject->name;
 
                     $kkm = $subject->kkm ?: 75;
 
@@ -105,14 +105,14 @@ class DailyAssessmentSeeder extends Seeder
                         'assessment_date' => now()->subDays(rand(1, 45))->format('Y-m-d'),
                         'max_score' => 100,
                         'kkm' => $kkm,
-                        'description' => 'Penilaian berkelanjutan modul ' . $subject->name . ' untuk melacak pemahaman belajar siswa.',
+                        'description' => 'Penilaian berkelanjutan modul '.$subject->name.' untuk melacak pemahaman belajar siswa.',
                     ]);
 
                     // Seed scores for all students in this classroom
                     foreach ($students as $student) {
                         $score = rand(55, 99); // Generates some below KKM and some above
                         $needsRemedial = $score < $kkm;
-                        
+
                         $remedialScore = null;
                         $remedialStatus = 'not_needed';
                         $notes = null;

@@ -25,7 +25,7 @@ class RoleBasedRateLimiterMiddleware
         };
 
         $identifier = $user ? "user:{$user->id}" : "ip:{$request->ip()}";
-        $cacheKey = "rate_limit:" . md5($identifier . ":" . date('YmdHi'));
+        $cacheKey = 'rate_limit:'.md5($identifier.':'.date('YmdHi'));
 
         $attempts = (int) Cache::get($cacheKey, 0) + 1;
         Cache::put($cacheKey, $attempts, 60);

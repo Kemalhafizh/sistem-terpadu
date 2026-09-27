@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Mobile;
+namespace App\Http\Controllers\Api\v1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Services\Mobile\GeofenceAttendanceService;
@@ -11,26 +11,18 @@ use Illuminate\Http\Request;
 
 /**
  * Class MobileAttendanceController
- * 
+ *
  * Manages mobile geolocation clock-in, anti-mock GPS enforcement,
  * and dynamic rotating TOTP QR token generation for contactless campus access.
- * 
- * @package App\Http\Controllers\Api\V1\Mobile
  */
 class MobileAttendanceController extends Controller
 {
-    /**
-     * @param GeofenceAttendanceService $geofenceService
-     */
     public function __construct(
         protected GeofenceAttendanceService $geofenceService
     ) {}
 
     /**
      * Verify GPS coordinates against campus radius and record check-in.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function gpsCheckin(Request $request): JsonResponse
     {
@@ -58,9 +50,6 @@ class MobileAttendanceController extends Controller
 
     /**
      * Generate Dynamic Rotating TOTP QR Token (valid for 30s) to display on student/staff phone.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function generateDynamicQr(Request $request): JsonResponse
     {
@@ -71,9 +60,6 @@ class MobileAttendanceController extends Controller
 
     /**
      * Verify a scanned Dynamic TOTP QR Token at the gate attendance terminal.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function verifyDynamicQr(Request $request): JsonResponse
     {

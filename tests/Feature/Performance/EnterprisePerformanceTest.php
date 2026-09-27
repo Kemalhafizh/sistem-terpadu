@@ -1,13 +1,10 @@
 <?php
 
-use App\Models\QueryPerformanceLog;
-
 use App\Models\User;
 use App\Services\Performance\AssetOptimizationService;
 use App\Services\Performance\LoadTestService;
 use App\Services\Performance\QueryOptimizerService;
 use App\Services\Performance\ScalingConfigService;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'admin', 'name' => 'Performance Engineer']);

@@ -125,7 +125,7 @@ class ExtracurricularService
             ],
             [
                 'status' => 'H',
-                'notes' => 'Presensi latihan mobile' . ($qrPayload ? " (QR: {$qrPayload})" : ''),
+                'notes' => 'Presensi latihan mobile'.($qrPayload ? " (QR: {$qrPayload})" : ''),
             ]
         );
     }
@@ -144,6 +144,7 @@ class ExtracurricularService
             $paginator->getCollection()->transform(function ($item) {
                 return $item->toMobileItemArray();
             });
+
             return $paginator;
         }
 

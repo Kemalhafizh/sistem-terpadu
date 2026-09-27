@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Extracurricular;
-use App\Models\ExtracurricularMember;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\Extracurricular;
+use App\Models\ExtracurricularMember;
 use App\Models\Student;
 use App\Models\User;
 
@@ -62,8 +62,8 @@ test('admin can input extracurricular grades for members', function () {
                 'member_id' => $this->member->id,
                 'grade' => 'A',
                 'description' => 'Sangat aktif berpartisipasi dalam debat bahasa Inggris.',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     $response->assertRedirect();

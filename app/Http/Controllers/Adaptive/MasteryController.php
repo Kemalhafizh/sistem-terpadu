@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Adaptive;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class MasteryController extends Controller
 {

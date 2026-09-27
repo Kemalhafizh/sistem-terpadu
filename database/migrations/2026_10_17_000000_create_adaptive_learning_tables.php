@@ -31,7 +31,7 @@ return new class extends Migration
             $table->integer('items_attempted')->default(0);
             $table->timestamp('last_estimated_at')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['student_id', 'subject_id']);
         });
 

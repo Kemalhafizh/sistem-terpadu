@@ -71,9 +71,9 @@ class UtbkService
     public function getTryoutQuestions($tryoutId)
     {
         $tryout = Tryout::findOrFail($tryoutId);
-        
+
         if ($tryout->status !== 'active') {
-            throw new Exception("Tryout ini tidak sedang aktif.");
+            throw new Exception('Tryout ini tidak sedang aktif.');
         }
 
         return TryoutQuestion::where('tryout_id', $tryoutId)
@@ -89,7 +89,7 @@ class UtbkService
     {
         return DB::transaction(function () use ($tryoutId, $studentId, $answers) {
             $tryout = Tryout::findOrFail($tryoutId);
-            
+
             // Validate timer (basic implementation)
             if (now() > $tryout->end_time) {
                 // allow slight grace period, or just accept if auto-submitted
@@ -97,15 +97,15 @@ class UtbkService
 
             // Check if already attempted
             if (TryoutAttempt::where('tryout_id', $tryoutId)->where('student_id', $studentId)->exists()) {
-                throw new Exception("Anda sudah mengerjakan tryout ini.");
+                throw new Exception('Anda sudah mengerjakan tryout ini.');
             }
 
             $questions = TryoutQuestion::where('tryout_id', $tryoutId)->get()->keyBy('id');
-            
+
             $responsesBySubtest = [
                 'TPS' => [],
                 'Literasi Bahasa' => [],
-                'Penalaran Matematika' => []
+                'Penalaran Matematika' => [],
             ];
 
             // Group responses
@@ -113,11 +113,11 @@ class UtbkService
                 $sub = $q->sub_test;
                 $studentAnswer = $answers[$q->id] ?? null;
                 $isCorrect = ($studentAnswer === $q->correct_answer) ? 1 : 0;
-                
+
                 $responsesBySubtest[$sub][] = [
                     'difficulty_b' => $q->difficulty_b,
                     'discrimination_a' => $q->discrimination_a,
-                    'is_correct' => $isCorrect
+                    'is_correct' => $isCorrect,
                 ];
             }
 
@@ -126,9 +126,10 @@ class UtbkService
             foreach ($responsesBySubtest as $sub => $items) {
                 if (empty($items)) {
                     $scores[$sub] = 0;
+
                     continue;
                 }
-                
+
                 $theta = $this->estimateThetaMLE($items);
                 // Scale theta (-3 to +3) to UTBK score (300 to 1000), mean 500, stddev 150
                 $utbkScore = 500 + ($theta * 150);
@@ -161,30 +162,36 @@ class UtbkService
     private function estimateThetaMLE(array $items, $maxIter = 10, $epsilon = 0.001)
     {
         $theta = 0.0; // Initial guess
-        
+
         // Edge case: all correct or all wrong
         $correctCount = array_sum(array_column($items, 'is_correct'));
-        if ($correctCount == 0) return -3.0;
-        if ($correctCount == count($items)) return 3.0;
+        if ($correctCount == 0) {
+            return -3.0;
+        }
+        if ($correctCount == count($items)) {
+            return 3.0;
+        }
 
         for ($i = 0; $i < $maxIter; $i++) {
             $numerator = 0;
             $denominator = 0;
 
             foreach ($items as $item) {
-                $a = (float)$item['discrimination_a'];
-                $b = (float)$item['difficulty_b'];
+                $a = (float) $item['discrimination_a'];
+                $b = (float) $item['difficulty_b'];
                 $u = $item['is_correct'];
 
                 $p = 1.0 / (1.0 + exp(-$a * ($theta - $b)));
                 // To avoid division by zero or NaN
                 $p = max(0.0001, min(0.9999, $p));
-                
+
                 $numerator += $a * ($u - $p);
                 $denominator += $a * $a * $p * (1 - $p);
             }
 
-            if ($denominator == 0) break;
+            if ($denominator == 0) {
+                break;
+            }
 
             $delta = $numerator / $denominator;
             $theta += $delta;
@@ -193,7 +200,7 @@ class UtbkService
                 break;
             }
         }
-        
+
         return max(-3.0, min(3.0, $theta));
     }
 
@@ -204,12 +211,12 @@ class UtbkService
     {
         // Get average total score from attempts
         $avgScore = TryoutAttempt::where('student_id', $studentId)->avg('total_score');
-        
-        if (!$avgScore) {
+
+        if (! $avgScore) {
             return [
                 'estimated_score' => 0,
                 'recommendations' => [],
-                'message' => 'Anda belum memiliki skor tryout.'
+                'message' => 'Anda belum memiliki skor tryout.',
             ];
         }
 
@@ -220,15 +227,18 @@ class UtbkService
             ->get()
             ->map(function ($p) use ($avgScore) {
                 $chance = 'Rendah';
-                if ($avgScore >= $p->passing_grade + 20) $chance = 'Tinggi';
-                elseif ($avgScore >= $p->passing_grade - 10) $chance = 'Sedang';
+                if ($avgScore >= $p->passing_grade + 20) {
+                    $chance = 'Tinggi';
+                } elseif ($avgScore >= $p->passing_grade - 10) {
+                    $chance = 'Sedang';
+                }
 
                 return [
                     'university' => $p->university_name,
                     'program' => $p->program_name,
                     'category' => $p->cluster,
                     'passing_grade' => $p->passing_grade,
-                    'acceptance_chance' => $chance
+                    'acceptance_chance' => $chance,
                 ];
             });
 

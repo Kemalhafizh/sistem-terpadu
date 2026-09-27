@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Campus;
 
 use App\Http\Controllers\Controller;
 use App\Models\TicketedEvent;
-use App\Models\EventTicket;
 use App\Services\Campus\EventTicketingService;
 use Illuminate\Http\Request;
 
@@ -20,6 +19,7 @@ class EventTicketingController extends Controller
     public function index()
     {
         $events = TicketedEvent::latest()->get();
+
         return view('events.manager', compact('events'));
     }
 
@@ -37,16 +37,18 @@ class EventTicketingController extends Controller
             'venue' => 'required|string',
             'max_capacity' => 'required|integer',
         ]);
-        
+
         $data['organizer_id'] = auth()->id() ?? 1;
 
         $this->eventService->createEvent($data);
+
         return back()->with('success', 'Event created successfully');
     }
 
     public function salesDashboard()
     {
         $events = TicketedEvent::withCount('tickets')->get();
+
         return view('events.sales-dashboard', compact('events'));
     }
 
@@ -58,9 +60,10 @@ class EventTicketingController extends Controller
     public function scanTicket(Request $request)
     {
         $request->validate(['ticket_code' => 'required|string']);
-        
+
         try {
             $this->eventService->scanTicket($request->ticket_code);
+
             return back()->with('success', 'Ticket scanned successfully');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
