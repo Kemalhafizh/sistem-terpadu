@@ -1945,22 +1945,10 @@ parameters:
 			path: app/Jobs/SendWhatsappBroadcastJob.php
 
 		-
-			message: '#^Class App\\Models\\Question not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/CatItemResponse.php
-
-		-
 			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Models/Employee.php
-
-		-
-			message: '#^Class App\\Models\\Question not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/IrtItemParameter.php
 
 		-
 			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'

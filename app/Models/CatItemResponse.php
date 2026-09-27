@@ -38,6 +38,6 @@ class CatItemResponse extends Model
 
     public function question()
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(QuestionBank::class, 'question_id');
     }
 }

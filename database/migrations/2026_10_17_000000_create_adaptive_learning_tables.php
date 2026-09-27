@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('irt_item_parameters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('question_id')->constrained('question_banks')->cascadeOnDelete();
             $table->decimal('difficulty', 8, 4)->default(0);
             $table->decimal('discrimination', 8, 4)->default(1);
             $table->decimal('guessing', 8, 4)->default(0);
@@ -56,7 +56,7 @@ return new class extends Migration
         Schema::create('cat_item_responses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cat_session_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('question_id')->constrained();
+            $table->foreignId('question_id')->constrained('question_banks');
             $table->integer('sequence_number');
             $table->boolean('is_correct');
             $table->decimal('theta_before', 8, 4);
