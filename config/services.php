@@ -43,6 +43,16 @@ return [
         'sso_domain' => env('GOOGLE_SSO_DOMAIN'),
     ],
 
+    // Firebase Cloud Messaging HTTP v1 (push notifications to the mobile app).
+    // credentials: path to the service-account JSON key file, or the JSON
+    // itself. project_id defaults to the one inside the key. Without
+    // credentials, pushes are only logged.
+    'fcm' => [
+        'credentials' => env('FCM_CREDENTIALS'),
+        'project_id' => env('FCM_PROJECT_ID'),
+        'timeout' => (int) env('FCM_TIMEOUT', 10),
+    ],
+
     // Fonnte WhatsApp gateway. The admin settings page (whatsapp_api_token,
     // whatsapp_sandbox_mode) takes precedence; these are the fallbacks.
     'whatsapp' => [

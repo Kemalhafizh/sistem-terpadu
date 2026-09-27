@@ -896,6 +896,143 @@ class ClassSessionService
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // Reminders & parent digest (77.7.1)
+    // ─────────────────────────────────────────────────────────────────────
+
+    /**
+     * Push the teacher "starts in N minutes" for lessons about to begin and
+     * "ends in N minutes" for active lessons about to finish. Each reminder
+     * is claimed with a conditional UPDATE, so it goes out once even if the
+     * scheduler overlaps or runs on several servers.
+     *
+     * @return array{start: int, end: int}
+     */
+    public function sendDueReminders(?Carbon $now = null): array
+    {
+        $now ??= now();
+        $lead = max(1, (int) config('class_sessions.reminder_lead_minutes', 5));
+        $date = $now->toDateString();
+        $sent = ['start' => 0, 'end' => 0];
+
+        // Starting soon: only materialise the timetable entries that are due.
+        $schedules = Schedule::where('day', self::dayName($now))
+            ->when(AcademicYear::current(), fn ($q, $year) => $q->where('academic_year_id', $year->id))
+            ->get();
+        foreach ($schedules as $schedule) {
+            $times = $this->resolveTimes($schedule);
+            if (! $times || ! $this->isDueWithin(Carbon::parse("{$date} {$times['start']}"), $now, $lead)) {
+                continue;
+            }
+            $session = $this->materialize($schedule, $date);
+            if ($session && $this->claimReminder($session, 'start_reminder_sent_at', ClassSession::STATUS_SCHEDULED, $now)) {
+                $session->loadMissing(['subject', 'classroom']);
+                $this->push([$session->teacher_id],
+                    "Sesi {$session->subject?->name} {$session->classroom?->name} dimulai {$lead} menit lagi",
+                    'Tap untuk memulai kelas.',
+                    ['type' => 'class_session_start_reminder', 'session_id' => (string) $session->id, 'schedule_id' => (string) $schedule->id]
+                );
+                $sent['start']++;
+            }
+        }
+
+        // Ending soon: active lessons today.
+        $active = $this->withListData(ClassSession::active()->forDate($date))->get();
+        foreach ($active as $session) {
+            if (! $this->isDueWithin($session->scheduledEndAt(), $now, $lead)
+                || ! $this->claimReminder($session, 'end_reminder_sent_at', ClassSession::STATUS_ACTIVE, $now)) {
+                continue;
+            }
+            $this->push([$session->teacher_id],
+                "Sesi {$session->subject?->name} {$session->classroom?->name} berakhir {$lead} menit lagi",
+                $session->absent_count > 0 ? "{$session->absent_count} siswa belum absen." : 'Semua siswa sudah tercatat.',
+                ['type' => 'class_session_end_reminder', 'session_id' => (string) $session->id]
+            );
+            $sent['end']++;
+        }
+
+        return $sent;
+    }
+
+    /**
+     * One push per child to the parent (students.parent_id) summarising the
+     * lessons actually held that day, e.g. "6/7 sesi hadir. Alpha:
+     * Matematika (Jam ke-3)." Children with no held lesson get nothing.
+     *
+     * @return int pushes dispatched
+     */
+    public function sendParentDigest(string $date): int
+    {
+        $rows = SessionAttendance::query()
+            ->join('class_sessions as cs', 'cs.id', '=', 'session_attendances.class_session_id')
+            ->join('students as st', 'st.id', '=', 'session_attendances.student_id')
+            ->leftJoin('subjects as sub', 'sub.id', '=', 'cs.subject_id')
+            ->whereNull('cs.deleted_at')
+            ->whereIn('cs.status', ClassSession::HELD_STATUSES)
+            ->where('cs.session_date', $date)
+            ->whereNotNull('st.parent_id')
+            ->orderBy('cs.scheduled_start')
+            ->get([
+                'session_attendances.student_id',
+                'session_attendances.status',
+                'st.parent_id',
+                'cs.jam_ke',
+                'sub.name as subject_name',
+            ])
+            ->groupBy('student_id');
+
+        if ($rows->isEmpty()) {
+            return 0;
+        }
+
+        $names = Student::with('user:id,name')->whereIn('id', $rows->keys())->get()
+            ->mapWithKeys(fn (Student $st) => [$st->id => $st->user?->name ?? 'Ananda']);
+
+        $sent = 0;
+        foreach ($rows as $studentId => $lessons) {
+            $present = $lessons->whereIn('status', SessionAttendance::PRESENT_STATUSES)->count();
+            $late = $lessons->where('status', SessionAttendance::STATUS_TELAT)->count();
+            $excused = $lessons->whereIn('status', [SessionAttendance::STATUS_SAKIT, SessionAttendance::STATUS_IZIN])->count();
+            $alpha = $lessons->where('status', SessionAttendance::STATUS_ALPHA)
+                ->map(fn ($l) => ($l->subject_name ?? 'Mapel')." (Jam ke-{$l->jam_ke})")
+                ->implode(', ');
+
+            $body = "{$present}/{$lessons->count()} sesi hadir.";
+            if ($alpha !== '') {
+                $body .= " Alpha: {$alpha}.";
+            }
+            if ($late > 0) {
+                $body .= " Terlambat: {$late}.";
+            }
+            if ($excused > 0) {
+                $body .= " Sakit/izin: {$excused}.";
+            }
+
+            $this->push([(int) $lessons->first()->parent_id],
+                "Kehadiran {$names[$studentId]} hari ini",
+                $body,
+                ['type' => 'class_session_daily_digest', 'student_id' => (string) $studentId, 'date' => $date]
+            );
+            $sent++;
+        }
+
+        return $sent;
+    }
+
+    /** Is $at in the next $minutes (after now, at most $minutes away)? */
+    private function isDueWithin(Carbon $at, Carbon $now, int $minutes): bool
+    {
+        return $at->gt($now) && $at->lte($now->copy()->addMinutes($minutes));
+    }
+
+    private function claimReminder(ClassSession $session, string $column, string $status, Carbon $now): bool
+    {
+        return ClassSession::whereKey($session->id)
+            ->where('status', $status)
+            ->whereNull($column)
+            ->update([$column => $now]) === 1;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // Push notifications (77.7.1)
     // ─────────────────────────────────────────────────────────────────────
 
@@ -947,7 +1084,7 @@ class ClassSessionService
 
         try {
             foreach (array_chunk(array_values(array_unique($userIds)), 500) as $chunk) {
-                $this->fcm->sendToUsers($chunk, $title, $body, $payload, 'channel_class_session');
+                $this->fcm->sendToUsers($chunk, $title, $body, $payload, 'attendance_alerts');
             }
         } catch (Throwable $e) {
             Log::warning('ClassSession: push notification failed', ['title' => $title, 'error' => $e->getMessage()]);

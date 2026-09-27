@@ -1,0 +1,3 @@
+10049	IGNORE	(Non-Storable Content: informational, not a vulnerability)
+10109	IGNORE	(Modern Web Application: informational, not a vulnerability)
+10055	WARN	(CSP: unsafe-inline/unsafe-eval are still allowed for scripts - keep visible)

@@ -32,4 +32,11 @@ return [
     // When a session ends with a topic, create a draft TeachingJournal for it.
     'create_teaching_journal_draft' => (bool) env('CLASS_SESSION_JOURNAL_DRAFT', true),
 
+    // Teachers get a push this many minutes before a lesson starts and before
+    // an active lesson ends (class-sessions:remind, every minute).
+    'reminder_lead_minutes' => (int) env('CLASS_SESSION_REMINDER_LEAD_MINUTES', 5),
+
+    // Daily per-child attendance summary pushed to parents (class-sessions:parent-digest).
+    'parent_digest_time' => env('CLASS_SESSION_PARENT_DIGEST_TIME', '17:00'),
+
 ];

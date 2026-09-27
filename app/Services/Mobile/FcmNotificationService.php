@@ -51,6 +51,8 @@ class FcmNotificationService
         return UserDeviceToken::updateOrCreate(
             ['user_id' => $user->id, 'device_token' => $token],
             [
+                // SendFcmNotificationJob reads fcm_token first (the app's registration path).
+                'fcm_token' => $token,
                 'device_type' => $deviceType,
                 'device_name' => $deviceName,
                 'is_active' => true,
