@@ -102,6 +102,32 @@ class OsisController extends Controller
         return view('extracurricular.osis.edit_transaction', compact('transaction'));
     }
 
+    public function updateTransaction(Request $request, $id)
+    {
+        $transaction = OsisTransaction::findOrFail($id);
+
+        $validated = $request->validate([
+            'type' => 'required|in:income,expense',
+            'amount' => 'required|numeric|min:1',
+            'description' => 'required|string|max:255',
+            'category' => 'required|string|in:Iuran,Sponsor,Kegiatan,Perlengkapan,Lainnya',
+            'transaction_date' => 'required|date',
+            'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        ]);
+
+        if ($request->hasFile('receipt')) {
+            if ($transaction->receipt_path) {
+                Storage::disk('public')->delete($transaction->receipt_path);
+            }
+            $validated['receipt_path'] = $request->file('receipt')->store('uploads/osis/receipts', 'public');
+        }
+        unset($validated['receipt']);
+
+        $transaction->update($validated);
+
+        return redirect()->route('osis.dashboard')->with('success', 'Transaksi kas OSIS berhasil diperbarui.');
+    }
+
     public function deleteTransaction($id)
     {
         $transaction = OsisTransaction::findOrFail($id);

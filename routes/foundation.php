@@ -10,14 +10,20 @@ use App\Http\Controllers\Foundation\StaffRotationController;
 use App\Http\Controllers\Foundation\WakafAssetController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/foundation/dashboard', [FoundationController::class, 'dashboard'])->name('foundation.dashboard');
-    Route::resource('/foundation/units', FoundationUnitController::class, ['as' => 'foundation.units']);
-    Route::resource('/foundation/reports', FoundationReportController::class, ['as' => 'foundation.reports']);
-    Route::resource('/foundation/meetings', FoundationMeetingController::class, ['as' => 'foundation.meetings']);
-    Route::get('/foundation/wakaf/{wakaf}/utilization', [WakafAssetController::class, 'utilization'])->name('foundation.wakaf.utilization');
-    Route::resource('/foundation/wakaf', WakafAssetController::class, ['as' => 'foundation.wakaf']);
-    Route::resource('/foundation/rotation', StaffRotationController::class, ['as' => 'foundation.rotation']);
-    Route::get('/foundation/kpi/scorecard', [FoundationKpiController::class, 'scorecard'])->name('foundation.kpi.scorecard');
-    Route::resource('/foundation/accreditation', AccreditationTrackerController::class, ['as' => 'foundation.accreditation']);
+// Foundation (yayasan) governance: school leadership only. `->names()` gives
+// foundation.units.index etc. — the old ['as' => 'foundation.units'] produced
+// foundation.units.units.index, so every redirect after store() was a 500.
+// The controllers implement index/create/store/show only.
+Route::middleware(['auth', 'role:kepala_sekolah'])->prefix('foundation')->name('foundation.')->group(function () {
+    Route::get('dashboard', [FoundationController::class, 'dashboard'])->name('dashboard');
+    Route::get('kpi/scorecard', [FoundationKpiController::class, 'scorecard'])->name('kpi.scorecard');
+    Route::get('wakaf/{wakaf}/utilization', [WakafAssetController::class, 'utilization'])->name('wakaf.utilization');
+
+    $only = ['index', 'create', 'store', 'show'];
+    Route::resource('units', FoundationUnitController::class)->only($only);
+    Route::resource('reports', FoundationReportController::class)->only($only);
+    Route::resource('meetings', FoundationMeetingController::class)->only($only);
+    Route::resource('wakaf', WakafAssetController::class)->only($only);
+    Route::resource('rotation', StaffRotationController::class)->only($only);
+    Route::resource('accreditation', AccreditationTrackerController::class)->only($only);
 });

@@ -128,9 +128,15 @@
 
                 <!-- Tombol Aksi -->
                 <div class="pt-6 border-t border-gray-100 dark:border-gray-700/50 flex justify-end gap-2">
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-8 text-xs font-bold transition-all shadow-md">
-                        {{ $existingResponse ? ' Perbarui Respons' : ' Kirim Kuesioner' }}
-                    </button>
+                    @if (in_array(auth()->user()->role, ['admin', 'superadmin'], true))
+                        <p class="text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-xl py-2 px-4">
+                            Mode pratinjau admin: kuesioner hanya dapat diisi oleh alumni yang bersangkutan.
+                        </p>
+                    @else
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-8 text-xs font-bold transition-all shadow-md">
+                            {{ $existingResponse ? ' Perbarui Respons' : ' Kirim Kuesioner' }}
+                        </button>
+                    @endif
                 </div>
             </form>
         </div>

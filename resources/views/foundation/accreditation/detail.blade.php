@@ -1,14 +1,21 @@
 @extends('layouts.app')
 @section('content')
-<div class="rounded-3xl card border border-gray-150 dark:border-gray-700 shadow-sm p-6">
-    <div class="flex items-center space-x-2 mb-4">
-        <svg class="w-6 h-6 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-        <h1 class="text-2xl font-black text-gray-900 dark:text-white">Detail Akreditasi {{ school_name() }}</h1>
-    </div>
-    <div class="text-sm text-gray-600 dark:text-gray-300 divide-y">
-        <div class="py-2">
-            <p class="font-bold text-emerald-600 dark:text-emerald-400">Konten Detail Akreditasi</p>
-        </div>
-    </div>
+<div class="space-y-6 max-w-3xl">
+    <x-page-header :title="'Akreditasi '.($record->unit?->unit_name ?? '-')" :subtitle="$record->accreditation_body">
+        <x-slot name="actions">
+            <a href="{{ route('foundation.accreditation.index') }}" class="text-sm font-bold text-indigo-600 hover:underline">&larr; Semua akreditasi</a>
+        </x-slot>
+    </x-page-header>
+
+    <x-form.card>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div><dt class="text-xs font-bold uppercase text-gray-500">Peringkat</dt><dd class="text-2xl font-black text-gray-900 dark:text-white">{{ $record->accreditation_grade }}</dd></div>
+            <div><dt class="text-xs font-bold uppercase text-gray-500">Nilai</dt><dd class="text-2xl font-black text-gray-900 dark:text-white">{{ $record->accreditation_score !== null ? (float) $record->accreditation_score : '-' }}</dd></div>
+            <div><dt class="text-xs font-bold uppercase text-gray-500">Masa berlaku</dt><dd>{{ $record->valid_from->format('d M Y') }} – {{ $record->valid_until->format('d M Y') }}</dd></div>
+            <div><dt class="text-xs font-bold uppercase text-gray-500">Status</dt><dd>{{ $statuses[$record->status] ?? $record->status }}{{ $record->valid_until->isPast() ? ' (masa berlaku habis)' : '' }}</dd></div>
+            <div><dt class="text-xs font-bold uppercase text-gray-500">Nomor sertifikat</dt><dd>{{ $record->certificate_number ?? '-' }}</dd></div>
+            <div><dt class="text-xs font-bold uppercase text-gray-500">Unit</dt><dd>{{ $record->unit?->unit_name }} {{ $record->unit ? '('.$record->unit->unit_code.')' : '' }}</dd></div>
+        </dl>
+    </x-form.card>
 </div>
 @endsection

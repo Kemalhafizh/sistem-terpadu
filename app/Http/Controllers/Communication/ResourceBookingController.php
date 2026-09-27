@@ -87,11 +87,13 @@ class ResourceBookingController extends Controller
      */
     public function checkAvailability(Request $request, ResourceBookingService $bookingService)
     {
-        $resourceId = (int) $request->query('resource_id');
-        $start = $request->query('start');
-        $end = $request->query('end');
+        $validated = $request->validate([
+            'resource_id' => ['required', 'integer'],
+            'start' => ['required', 'date'],
+            'end' => ['required', 'date', 'after:start'],
+        ]);
 
-        $isAvailable = $bookingService->checkAvailability($resourceId, $start, $end);
+        $isAvailable = $bookingService->checkAvailability((int) $validated['resource_id'], $validated['start'], $validated['end']);
 
         return response()->json([
             'is_available' => $isAvailable,

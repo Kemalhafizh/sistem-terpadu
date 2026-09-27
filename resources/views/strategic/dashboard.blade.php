@@ -2,14 +2,35 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
-                <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                Rencana Strategis (RENSTRA) & Balanced Scorecard
-            </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Tata Kelola Perencanaan Strategis {{ school_name() }}</p>
+    <x-page-header title="Rencana Strategis (RENSTRA) & Balanced Scorecard" :subtitle="'Tata Kelola Perencanaan Strategis '.school_name()" />
+    @include('strategic._nav')
+
+    @if ($activePlan)
+        <x-form.card>
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-indigo-600">RENSTRA aktif {{ $activePlan->start_year }}–{{ $activePlan->end_year }}</p>
+                    <h2 class="text-xl font-black text-gray-900 dark:text-white mt-1">{{ $activePlan->title }}</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-2"><span class="font-bold">Visi:</span> {{ $activePlan->vision }}</p>
+                </div>
+                <a href="{{ route('strategic.plan.show', $activePlan->id) }}" class="shrink-0 text-sm font-bold text-indigo-600 hover:underline">Lihat detail &rarr;</a>
+            </div>
+        </x-form.card>
+
+        @php($kpis = $activePlan->objectives->flatMap->kpis)
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <x-form.card><p class="text-xs font-bold uppercase text-gray-500">Sasaran strategis</p><p class="text-3xl font-black text-gray-900 dark:text-white">{{ $activePlan->objectives->count() }}</p></x-form.card>
+            <x-form.card><p class="text-xs font-bold uppercase text-gray-500">Indikator kinerja (KPI)</p><p class="text-3xl font-black text-gray-900 dark:text-white">{{ $kpis->count() }}</p></x-form.card>
+            <x-form.card>
+                <p class="text-xs font-bold uppercase text-gray-500">KPI mencapai target</p>
+                <p class="text-3xl font-black text-emerald-600">{{ $kpis->filter(fn ($k) => $k->polarity === 'lower_is_better' ? $k->current_value <= $k->target_value : $k->current_value >= $k->target_value)->count() }}</p>
+            </x-form.card>
         </div>
-    </div>
+    @else
+        <x-form.card>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Belum ada RENSTRA berstatus aktif.</p>
+            <a href="{{ route('strategic.plan.create') }}" class="inline-flex mt-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2.5 px-5 text-sm font-bold">Buat RENSTRA</a>
+        </x-form.card>
+    @endif
 </div>
 @endsection

@@ -17,4 +17,8 @@ class KpiMeasurement extends Model
         'analysis',
         'recorded_by',
     ];
+
+    protected $casts = [
+        'measurement_date' => 'date',
+    ];
 }
