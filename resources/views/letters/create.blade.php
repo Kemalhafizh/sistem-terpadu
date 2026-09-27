@@ -22,10 +22,10 @@
              employee_id: '',
              field_values: {},
              notes: '',
-             students: @json($students),
-             employees: @json($employees),
-             bodyTemplate: @json($template->body_template),
-             requiredFields: @json($template->required_fields),
+             students: {{ Js::from($students) }},
+             employees: {{ Js::from($employees) }},
+             bodyTemplate: {{ Js::from($template->body_template) }},
+             requiredFields: {{ Js::from($template->required_fields) }},
              
              init() {
                  // Initialize dynamic field_values keys from required_fields excluding student_id and employee_id
