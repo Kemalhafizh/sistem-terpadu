@@ -103,4 +103,4 @@ Kontrak lengkap (bentuk JSON, pesan error, aturan waktu): [`docs/modules/class_s
 *   `GET /api/v1/teacher/class-sessions/{sessionId}/qr` : QR berputar 30 detik untuk ditampilkan guru.
 *   `GET …/{sessionId}/students`, `POST …/{sessionId}/attendance/manual`, `POST …/{sessionId}/attendance/bulk` : Daftar hadir & absensi manual.
 *   `POST /api/v1/student/class-session/scan-qr`, `GET /api/v1/student/class-session/active` : Scan QR & banner sesi aktif siswa.
-*   `GET /api/v1/admin/class-sessions`, `GET …/{sessionId}/attendances`, `PUT …/attendances/{attendanceId}/override`, `GET …/reports` : Monitoring, koreksi beralasan, dan rekap (role `admin,superadmin,waka_kurikulum,staf_tu`).
+*   `GET /api/v1/admin/class-sessions`, `GET …/{sessionId}/attendances`, `PUT …/attendances/{attendanceId}/override`, `GET …/reports` : Monitoring, koreksi beralasan, dan rekap (role `admin,superadmin,waka_kurikulum,staf_tu`; `kepala_sekolah` baca saja).
