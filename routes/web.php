@@ -599,10 +599,12 @@ Route::middleware('auth')->group(function () {
     Route::post('ocr/{id}/apply', [OcrDocumentController::class, 'applyToRegistration'])->name('ocr.apply');
 
     // Multi-Format Export Engine & Data Interoperability
-    Route::get('exports', [ExportEngineController::class, 'selectFormat'])->name('exports.index');
-    Route::post('exports/generate', [ExportEngineController::class, 'generateExport'])->name('exports.generate');
-    Route::get('exports/{id}/download', [ExportEngineController::class, 'downloadExport'])->name('exports.download');
-    Route::get('exports/history', [ExportEngineController::class, 'exportHistory'])->name('exports.history');
+    Route::middleware('role:staf_tu,waka_kurikulum,waka_sarpras,kepala_sekolah,admin,superadmin')->group(function () {
+        Route::get('exports', [ExportEngineController::class, 'selectFormat'])->name('exports.index');
+        Route::post('exports/generate', [ExportEngineController::class, 'generateExport'])->name('exports.generate');
+        Route::get('exports/{id}/download', [ExportEngineController::class, 'downloadExport'])->whereNumber('id')->name('exports.download');
+        Route::get('exports/history', [ExportEngineController::class, 'exportHistory'])->name('exports.history');
+    });
 
     // BAN-SM Accreditation Readiness Dashboard & Evidence Collector
     Route::get('accreditation', [AccreditationController::class, 'dashboard'])->name('accreditation.dashboard');

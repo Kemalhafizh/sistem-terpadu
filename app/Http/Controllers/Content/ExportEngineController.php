@@ -5,74 +5,94 @@ namespace App\Http\Controllers\Content;
 use App\Http\Controllers\Controller;
 use App\Models\ExportJob;
 use App\Services\Content\ExportEngineService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ExportEngineController extends Controller
 {
     /**
-     * Display Multi-Format Export Engine Format Selector & History.
+     * Export form and the latest jobs.
      */
-    public function selectFormat()
+    public function selectFormat(Request $request)
     {
-        $exportHistory = ExportJob::with('user')
-            ->orderBy('created_at', 'desc')
-            ->take(25)
-            ->get();
+        $exportHistory = $this->visibleJobs($request)->take(25)->get();
+        $entities = ExportEngineService::entitiesFor($request->user()->role);
+        $formats = ExportEngineService::FORMATS;
 
-        return view('content.exports.format-selector', compact('exportHistory'));
+        return view('content.exports.format-selector', compact('exportHistory', 'entities', 'formats'));
     }
 
     /**
-     * Trigger batch export generation.
+     * Build an export file from the database.
      */
     public function generateExport(Request $request, ExportEngineService $exportService)
     {
-        $request->validate([
+        $validated = $request->validate([
             'job_name' => 'required|string|max:200',
-            'entity_type' => 'required|string',
-            'format' => 'required|in:pdf_a,xlsx,csv,json_ld,xml_dapodik',
+            'entity_type' => ['required', Rule::in(array_keys(ExportEngineService::entitiesFor($request->user()->role)))],
+            'format' => ['required', Rule::in(array_keys(ExportEngineService::FORMATS))],
+        ], [
+            'entity_type.in' => 'Anda tidak berwenang mengekspor data tersebut.',
         ]);
 
-        $userId = auth()->id();
         $job = $exportService->queueExport(
-            $request->job_name,
-            $request->entity_type,
-            $request->format,
-            $userId
+            $validated['job_name'],
+            $validated['entity_type'],
+            $validated['format'],
+            $request->user()->id
         );
 
-        return back()->with('success', "Proses ekspor berkas [{$job->job_name}] berformat [".strtoupper($job->format).'] berhasil dijalankan!');
-    }
-
-    /**
-     * Download completed export file.
-     */
-    public function downloadExport(int $id)
-    {
-        $job = ExportJob::findOrFail($id);
-
-        if ($job->status !== 'completed' || ! $job->file_path) {
-            return back()->with('error', 'Berkas ekspor belum selesai diproses atau gagal.');
+        if ($job->status !== 'completed') {
+            return back()->with('error', "Ekspor [{$job->job_name}] gagal dibuat. Silakan coba lagi atau hubungi admin.");
         }
 
-        // Return inline dummy text download stream for demonstration
-        $content = "SISTA EXPORT ENGINE -- SULTAN AGUNG 1\nFORMAT: ".strtoupper($job->format)."\nJOB: {$job->job_name}\nCREATED AT: {$job->created_at}\nSTATUS: VALID VERIFIED";
-
-        return response($content, 200, [
-            'Content-Type' => 'text/plain',
-            'Content-Disposition' => "attachment; filename=\"{$job->job_name}.txt\"",
-        ]);
+        return back()->with('success', "Ekspor [{$job->job_name}] siap diunduh ({$job->formatted_size}).");
     }
 
     /**
-     * View Export History Log.
+     * Stream the stored export file.
      */
-    public function exportHistory()
+    public function downloadExport(Request $request, int $id)
     {
-        $history = ExportJob::with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $job = $this->visibleJobs($request)->findOrFail($id);
+
+        if ($job->status !== 'completed' || ! $job->file_path || ! Storage::disk(ExportEngineService::DISK)->exists($job->file_path)) {
+            return back()->with('error', 'Berkas ekspor belum selesai, gagal dibuat, atau sudah tidak tersedia. Silakan buat ulang.');
+        }
+
+        $format = ExportEngineService::FORMATS[$job->format] ?? ExportEngineService::FORMATS['csv'];
+
+        return Storage::disk(ExportEngineService::DISK)->download(
+            $job->file_path,
+            $job->job_name.'.'.$format['ext'],
+            ['Content-Type' => $format['mime']]
+        );
+    }
+
+    /**
+     * Export history.
+     */
+    public function exportHistory(Request $request)
+    {
+        $history = $this->visibleJobs($request)->paginate(20);
 
         return view('content.exports.history', compact('history'));
+    }
+
+    /**
+     * Admins see every job; everyone else only their own. Export files hold
+     * personal data, so a guessed id must not hand someone else's file over.
+     */
+    private function visibleJobs(Request $request): Builder
+    {
+        $query = ExportJob::with('user')->orderByDesc('created_at');
+
+        if (! in_array($request->user()->role, ['admin', 'superadmin'], true)) {
+            $query->where('requested_by', $request->user()->id);
+        }
+
+        return $query;
     }
 }

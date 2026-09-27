@@ -388,6 +388,99 @@ class AnalyticsService
     }
 
     /**
+     * Absence heatmap: classroom × school day, from the daily roll call
+     * (`attendances` rows without a schedule_id).
+     *
+     * The columns are the last $days dates on which *any* class had a daily
+     * roll call, so weekends and holidays drop out on their own instead of
+     * being guessed from the weekday. A cell a class never recorded is null
+     * ("belum diabsen"), never 0 — an unrecorded day is not a perfect day.
+     *
+     * @return array{dates: list<string>, rows: list<array{classroom_id: int, name: string, cells: list<array{date: string, rate: float|null, absent: int, total: int}>, average: float|null}>, summary: array{school_days: int, average_rate: float|null, worst: array{name: string, rate: float}|null, missing_cells: int}}
+     */
+    public function getClassroomAbsenceHeatmap(int $days = 14): array
+    {
+        $days = max(1, min($days, 60));
+
+        $dates = DB::table('attendances')
+            ->whereNull('schedule_id')
+            ->whereDate('date', '<=', now()->toDateString())
+            ->selectRaw('DATE(date) as day')
+            ->distinct()
+            ->orderByDesc('day')
+            ->limit($days)
+            ->pluck('day')
+            ->map(fn ($d) => substr((string) $d, 0, 10))
+            ->reverse()
+            ->values()
+            ->all();
+
+        $counts = [];
+        if ($dates !== []) {
+            $rows = DB::table('attendances')
+                ->whereNull('schedule_id')
+                ->whereDate('date', '>=', $dates[0])
+                ->whereDate('date', '<=', end($dates))
+                ->selectRaw("classroom_id, DATE(date) as day, count(*) as total, sum(case when status in ('S','I','A') then 1 else 0 end) as absent")
+                ->groupBy('classroom_id', 'day')
+                ->get();
+            foreach ($rows as $row) {
+                $counts[(int) $row->classroom_id][substr((string) $row->day, 0, 10)] = [(int) $row->absent, (int) $row->total];
+            }
+        }
+
+        $classrooms = DB::table('classrooms')->orderBy('grade_level')->orderBy('name')->get(['id', 'name']);
+
+        $heatRows = [];
+        $missing = 0;
+        $allAbsent = 0;
+        $allTotal = 0;
+        $worst = null;
+        foreach ($classrooms as $classroom) {
+            $cells = [];
+            $absentSum = 0;
+            $totalSum = 0;
+            foreach ($dates as $date) {
+                [$absent, $total] = $counts[$classroom->id][$date] ?? [0, 0];
+                if ($total === 0) {
+                    $missing++;
+                }
+                $cells[] = [
+                    'date' => $date,
+                    'rate' => $total > 0 ? round($absent / $total * 100, 1) : null,
+                    'absent' => $absent,
+                    'total' => $total,
+                ];
+                $absentSum += $absent;
+                $totalSum += $total;
+            }
+            $average = $totalSum > 0 ? round($absentSum / $totalSum * 100, 1) : null;
+            if ($average !== null && ($worst === null || $average > $worst['rate'])) {
+                $worst = ['name' => $classroom->name, 'rate' => $average];
+            }
+            $allAbsent += $absentSum;
+            $allTotal += $totalSum;
+            $heatRows[] = [
+                'classroom_id' => (int) $classroom->id,
+                'name' => $classroom->name,
+                'cells' => $cells,
+                'average' => $average,
+            ];
+        }
+
+        return [
+            'dates' => $dates,
+            'rows' => $heatRows,
+            'summary' => [
+                'school_days' => count($dates),
+                'average_rate' => $allTotal > 0 ? round($allAbsent / $allTotal * 100, 1) : null,
+                'worst' => $worst,
+                'missing_cells' => $dates === [] ? 0 : $missing,
+            ],
+        ];
+    }
+
+    /**
      * Clear all analytics cache.
      */
     public function clearCache(): void
