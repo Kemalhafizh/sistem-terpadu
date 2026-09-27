@@ -96,3 +96,11 @@ Semua endpoint ini dilindungi middleware `role:guru,bk`:
 *   `GET /api/v1/teacher/classes` : Daftar kelas yang diampu guru.
 *   `POST /api/v1/teacher/attendance` : Input absensi harian kelas secara massal (*bulk*).
 *   `POST /api/v1/teacher/journals` : Entri jurnal mengajar baru harian kelas.
+### E. Sesi Kelas Hidup & Presensi Per-Mapel (FASE 117)
+Kontrak lengkap (bentuk JSON, pesan error, aturan waktu): [`docs/modules/class_sessions.md`](modules/class_sessions.md).
+*   `GET /api/v1/teacher/class-sessions/today` : Sesi kelas guru hari ini (dimaterialisasi dari jadwal).
+*   `POST /api/v1/teacher/class-sessions/{scheduleId}/start` / `POST …/{sessionId}/end` : Mulai / akhiri kelas.
+*   `GET /api/v1/teacher/class-sessions/{sessionId}/qr` : QR berputar 30 detik untuk ditampilkan guru.
+*   `GET …/{sessionId}/students`, `POST …/{sessionId}/attendance/manual`, `POST …/{sessionId}/attendance/bulk` : Daftar hadir & absensi manual.
+*   `POST /api/v1/student/class-session/scan-qr`, `GET /api/v1/student/class-session/active` : Scan QR & banner sesi aktif siswa.
+*   `GET /api/v1/admin/class-sessions`, `GET …/{sessionId}/attendances`, `PUT …/attendances/{attendanceId}/override`, `GET …/reports` : Monitoring, koreksi beralasan, dan rekap (role `admin,superadmin,waka_kurikulum,staf_tu`).
