@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Libre+Barcode+128&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css'])
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -76,25 +76,11 @@
                         <p class="text-[10px] text-gray-500 font-medium mt-0.5 truncate">Penulis: {{ $book->author ?? 'Sekolah' }}</p>
                     </div>
 
-                    <!-- Visual Barcode Display -->
-                    <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 text-center space-y-1">
-                        <!-- Simulated Barcode Lines -->
-                        <div class="h-10 w-full flex items-center justify-center space-x-[2px] px-2 overflow-hidden">
-                            @php
-                                $codeStr = $book->barcode ?? $book->uuid ?? ('BK-' . str_pad($book->id, 6, '0', STR_PAD_LEFT));
-                                $codeLength = strlen($codeStr);
-                            @endphp
-                            @for($i = 0; $i < 38; $i++)
-                                @php
-                                    $w = ($i % 3 == 0) ? 'w-1.5' : (($i % 2 == 0) ? 'w-1' : 'w-0.5');
-                                    $h = ($i % 5 == 0) ? 'h-full bg-gray-900' : 'h-[85%] bg-gray-800';
-                                @endphp
-                                <div class="{{ $w }} {{ $h }} rounded-sm"></div>
-                            @endfor
-                        </div>
-                        <span class="block font-mono font-bold text-xs tracking-widest text-gray-900">
-                            {{ $book->barcode ?? $book->uuid ?? ('BK-' . str_pad($book->id, 6, '0', STR_PAD_LEFT)) }}
-                        </span>
+                    <!-- Scannable label: the same code the circulation scanner looks up (LibraryBook::byCode) -->
+                    @php($code = $book->barcode ?: $book->uuid)
+                    <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200 flex items-center gap-3">
+                        <div class="book-qr shrink-0 bg-white p-1 rounded" data-code="{{ $code }}" role="img" aria-label="QR kode buku {{ $code }}"></div>
+                        <span class="font-mono font-bold text-[11px] tracking-wider text-gray-900 break-all leading-snug">{{ $code }}</span>
                     </div>
 
                     <!-- Footer Info -->
@@ -111,5 +97,11 @@
         </div>
     </div>
 
+    <script src="{{ asset('vendor/qrcodejs-1.0.0/qrcode.min.js') }}"></script>
+    <script>
+        document.querySelectorAll('.book-qr').forEach(function (el) {
+            new QRCode(el, { text: el.dataset.code, width: 64, height: 64, colorDark: '#111827', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+        });
+    </script>
 </body>
 </html>

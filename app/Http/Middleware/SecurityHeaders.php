@@ -31,15 +31,15 @@ class SecurityHeaders
             $response->header('X-Frame-Options', 'DENY');
             $response->header('X-XSS-Protection', '1; mode=block');
             $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
-            $response->header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
+            $response->header('Permissions-Policy', 'camera=(self), microphone=(), geolocation=(self)');
 
             // Content-Security-Policy configuration
             $csp = "default-src 'self'; "
-                 ."script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://sandbox.midtrans.com; "
+                 ."script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.midtrans.com https://app.sandbox.midtrans.com; "
                  ."style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
                  ."font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; "
                  ."img-src 'self' data: https:; "
-                 ."frame-src 'self' https://app.midtrans.com https://sandbox.midtrans.com; "
+                 ."frame-src 'self' https://app.midtrans.com https://app.sandbox.midtrans.com; "
                  ."connect-src 'self' ws: wss: https://api.sandbox.midtrans.com https://api.midtrans.com; "
                  // Directives that don't fall back to default-src (ZAP 10055):
                  // no <base> hijacking, forms only post back to this app, the

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Perpustakaan | {{ $student->user->name }}</title>
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css'])
     <style>
         /* Gaya Khusus Cetak Kartu */
         @media print {
@@ -139,7 +139,7 @@
     </div>
 
     <!-- QRCode.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nOMILqofLYLT3ILRSJKfxTMc13YJLOKIyVU9Yu0WaqtVzRTtO9aOPLRODtNy8WMTGs1TLyeeIEGA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('vendor/qrcodejs-1.0.0/qrcode.min.js') }}"></script>
     <script>
         // Generate QR Code untuk NIS Siswa
         window.addEventListener('DOMContentLoaded', () => {

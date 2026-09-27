@@ -122,4 +122,9 @@ test('librarian can access barcode printable page', function () {
     $response->assertStatus(200);
     $response->assertSee('Fisika Kuantum Praktis');
     $response->assertSee('BK-999000111');
+    // A real, scannable QR of the code the circulation scanner looks up, not decorative bars.
+    $response->assertSee('data-code="BK-999000111"', false);
+    $response->assertSee('vendor/qrcodejs-1.0.0/qrcode.min.js');
+    $response->assertDontSee('Simulated Barcode');
+    expect(\App\Models\LibraryBook::byCode('BK-999000111')->value('id'))->toBe($this->book->id);
 });

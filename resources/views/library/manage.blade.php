@@ -49,7 +49,7 @@
                                 <td class="px-8 py-5 text-right">
                                     <div class="flex justify-end items-center gap-1.5">
                                         @if($book->type == 'physical')
-                                            <button onclick="showBookBarcode('{{ $book->uuid }}', '{{ addslashes($book->title) }}', '{{ addslashes($book->author ?? 'Sekolah') }}')" class="p-2 bg-gray-50 text-emerald-500 rounded-lg hover:bg-emerald-50 hover:text-emerald-600 transition-all" title="Cetak QR Label Buku">
+                                            <button onclick="showBookBarcode({{ Js::from($book->uuid) }}, {{ Js::from($book->title) }}, {{ Js::from($book->author ?? 'Sekolah') }})" class="p-2 bg-gray-50 text-emerald-500 rounded-lg hover:bg-emerald-50 hover:text-emerald-600 transition-all" title="Cetak QR Label Buku">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 16h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             </button>
                                         @endif
@@ -78,10 +78,17 @@
     </div>
 
     <!-- QRCode.js & SweetAlert2 CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nOMILqofLYLT3ILRSJKfxTMc13YJLOKIyVU9Yu0WaqtVzRTtO9aOPLRODtNy8WMTGs1TLyeeIEGA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('vendor/qrcodejs-1.0.0/qrcode.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function showBookBarcode(uuid, title, author) {
+        const qrLibUrl = @js(asset('vendor/qrcodejs-1.0.0/qrcode.min.js'));
+        const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        function showBookBarcode(rawUuid, rawTitle, rawAuthor) {
+            // Book titles are free text: escape before they go into HTML.
+            const uuid = escapeHtml(rawUuid);
+            const title = escapeHtml(rawTitle);
+            const author = escapeHtml(rawAuthor);
             Swal.fire({
                 title: 'Label QR Code Buku',
                 html: `
@@ -111,7 +118,7 @@
                                 .uuid { font-size: 8px; color: #10b981; font-weight: 900; letter-spacing: 2px; margin-top: 12px; font-family: monospace; }
                                 #print-qrcode { display: flex; justify-content: center; }
                             </style>
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+                            <script src="${qrLibUrl}"><\/script>
                         </head>
                         <body>
                             <div class="label-card">

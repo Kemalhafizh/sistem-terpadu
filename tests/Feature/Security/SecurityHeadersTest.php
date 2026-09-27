@@ -18,7 +18,7 @@ class SecurityHeadersTest extends TestCase
         $response->assertHeader('X-Frame-Options', 'DENY');
         $response->assertHeader('X-XSS-Protection', '1; mode=block');
         $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $response->assertHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
+        $response->assertHeader('Permissions-Policy', 'camera=(self), microphone=(), geolocation=(self)');
     }
 
     public function test_security_headers_are_present_on_authenticated_routes()

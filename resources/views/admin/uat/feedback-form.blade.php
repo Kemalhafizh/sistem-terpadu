@@ -205,7 +205,7 @@
                         return;
                     }
                     const script = document.createElement('script');
-                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    script.src = @js(asset('vendor/html2canvas-1.4.1/html2canvas.min.js'));
                     script.async = true;
                     script.onload = () => resolve(window.html2canvas);
                     script.onerror = (err) => reject(err);

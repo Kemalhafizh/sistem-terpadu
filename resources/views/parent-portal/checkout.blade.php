@@ -136,7 +136,7 @@
 
   @push('scripts')
   <!-- Integrasi SDK Snap JS Midtrans Sandbox -->
-  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+  <script src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
   <!-- SweetAlert2 untuk Notifikasi Premium -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
