@@ -163,12 +163,6 @@ parameters:
 			path: app/Http/Controllers/AlumniController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/AlumniController.php
-
-		-
 			message: '#^Relation ''children'' is not found in App\\Models\\User model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -301,12 +295,6 @@ parameters:
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
 			message: '#^Relation ''assessment'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -344,12 +332,6 @@ parameters:
 
 		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/GamificationController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/GamificationController.php
@@ -400,12 +382,6 @@ parameters:
 			message: '#^Relation ''subject'' is not found in App\\Models\\TeachingJournal model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Http/Controllers/Api/v1/SchoolOperationsApiController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
 			path: app/Http/Controllers/Api/v1/SchoolOperationsApiController.php
 
 		-
@@ -479,18 +455,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/AttendanceController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AttendanceController.php
-
-		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Controllers/Auth/GoogleSsoController.php
 
 		-
 			message: '#^Relation ''tickets'' is not found in App\\Models\\TicketedEvent model\.$#'
@@ -586,12 +550,6 @@ parameters:
 			message: '#^Relation ''creator'' is not found in App\\Models\\StudentPointLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Http/Controllers/CounselingController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Http/Controllers/CounselingController.php
 
 		-
@@ -787,18 +745,6 @@ parameters:
 			path: app/Http/Controllers/DashboardController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Debloat/PragmaticDebloatApiController.php
-
-		-
 			message: '#^Relation ''academicYear'' is not found in App\\Models\\EdsPeriod model\.$#'
 			identifier: larastan.relationExistence
 			count: 6
@@ -847,12 +793,6 @@ parameters:
 			path: app/Http/Controllers/EventAttendanceController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/EventAttendanceController.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\QuestionBank model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -880,12 +820,6 @@ parameters:
 			message: '#^Relation ''advisor'' is not found in App\\Models\\Extracurricular model\.$#'
 			identifier: larastan.relationExistence
 			count: 7
-			path: app/Http/Controllers/ExtracurricularController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Http/Controllers/ExtracurricularController.php
 
 		-
@@ -997,12 +931,6 @@ parameters:
 			path: app/Http/Controllers/FinanceController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/FinanceController.php
-
-		-
 			message: '#^Relation ''academicYear'' is not found in App\\Models\\Billing model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1054,12 +982,6 @@ parameters:
 			message: '#^Relation ''students'' is not found in App\\Models\\Classroom model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Http/Controllers/FinancialReportController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
 			path: app/Http/Controllers/FinancialReportController.php
 
 		-
@@ -1115,12 +1037,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/GradeController.php
 
 		-
 			message: '#^Relation ''wellbeingResponses'' is not found in App\\Models\\User model\.$#'
@@ -1237,12 +1153,6 @@ parameters:
 			path: app/Http/Controllers/LibraryCirculationController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/LibraryCirculationController.php
-
-		-
 			message: '#^Relation ''category'' is not found in App\\Models\\LibraryBook model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1303,12 +1213,6 @@ parameters:
 			path: app/Http/Controllers/MpkController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/MutabaahController.php
-
-		-
 			message: '#^Relation ''verifier'' is not found in App\\Models\\MutabaahLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1316,12 +1220,6 @@ parameters:
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\StudentMutation model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/MutationController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/MutationController.php
@@ -1346,12 +1244,6 @@ parameters:
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\OsisMember model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/OsisController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Http/Controllers/OsisController.php
@@ -1405,12 +1297,6 @@ parameters:
 			path: app/Http/Controllers/ParentPortalController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ParentPortalController.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1420,12 +1306,6 @@ parameters:
 			message: '#^Relation ''pointLogs'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/PointController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Http/Controllers/PointController.php
 
 		-
@@ -1442,12 +1322,6 @@ parameters:
 
 		-
 			message: '#^Relation ''portfolioItems'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/PortfolioController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Http/Controllers/PortfolioController.php
@@ -1472,12 +1346,6 @@ parameters:
 
 		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ReportCardController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/ReportCardController.php
@@ -1639,12 +1507,6 @@ parameters:
 			path: app/Http/Controllers/StudentController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/StudentController.php
-
-		-
 			message: '#^Relation ''academicYear'' is not found in App\\Models\\Billing model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1702,12 +1564,6 @@ parameters:
 			message: '#^Relation ''teacher'' is not found in App\\Models\\TahfidzLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Http/Controllers/TahfidzController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Http/Controllers/TahfidzController.php
 
 		-
@@ -1849,12 +1705,6 @@ parameters:
 			path: app/Http/Controllers/UksController.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 5
-			path: app/Http/Controllers/UksController.php
-
-		-
 			message: '#^Relation ''creator'' is not found in App\\Models\\WhatsappBroadcast model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1903,12 +1753,6 @@ parameters:
 			path: app/Http/Controllers/WorkflowController.php
 
 		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Middleware/AdminIpWhitelistMiddleware.php
-
-		-
 			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1933,28 +1777,10 @@ parameters:
 			path: app/Jobs/SendWhatsappBroadcastJob.php
 
 		-
-			message: '#^Class App\\Models\\Question not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/CatItemResponse.php
-
-		-
 			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Models/Employee.php
-
-		-
-			message: '#^Class App\\Models\\Question not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Models/IrtItemParameter.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Models/Student.php
 
 		-
 			message: '#^Relation ''template'' is not found in App\\Models\\WhatsappAutomation model\.$#'
@@ -1990,12 +1816,6 @@ parameters:
 			message: '#^Relation ''tracerResponse'' is not found in App\\Models\\AlumniData model\.$#'
 			identifier: larastan.relationExistence
 			count: 3
-			path: app/Services/AlumniEnhancedService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Services/AlumniEnhancedService.php
 
 		-
@@ -2071,12 +1891,6 @@ parameters:
 			path: app/Services/Debloat/PragmaticAtRiskStudentService.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Debloat/PragmaticAtRiskStudentService.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -2110,12 +1924,6 @@ parameters:
 			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Services/DigestService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Services/DigestService.php
 
 		-
@@ -2239,12 +2047,6 @@ parameters:
 			path: app/Services/ElearningService.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/ElearningService.php
-
-		-
 			message: '#^Relation ''candidates'' is not found in App\\Models\\OsisElection model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -2281,12 +2083,6 @@ parameters:
 			path: app/Services/GamificationService.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/GamificationService.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -2294,12 +2090,6 @@ parameters:
 
 		-
 			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/ImportExportService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/ImportExportService.php
@@ -2320,12 +2110,6 @@ parameters:
 			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Services/Integration/DapodikService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
 			path: app/Services/Integration/DapodikService.php
 
 		-
@@ -2353,12 +2137,6 @@ parameters:
 			path: app/Services/Integration/EmisService.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Integration/EmisService.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -2366,12 +2144,6 @@ parameters:
 
 		-
 			message: '#^Relation ''employee'' is not found in App\\Models\\User model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Services/Integration/SyncMapperService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Services/Integration/SyncMapperService.php
@@ -2395,19 +2167,7 @@ parameters:
 			path: app/Services/LibraryService.php
 
 		-
-			message: '#^Call to static method where\(\) on an unknown class App\\Models\\TahfidzRecord\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/Services/Mobile/MobileSyncService.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/PredictiveAnalyticsService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/PredictiveAnalyticsService.php
@@ -2476,12 +2236,6 @@ parameters:
 			message: '#^Relation ''pointLogs'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Services/SmartAlertService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Services/SmartAlertService.php
 
 		-
@@ -2581,12 +2335,6 @@ parameters:
 			path: app/Services/TahfidzService.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/TahfidzService.php
-
-		-
 			message: '#^Relation ''transactions'' is not found in App\\Models\\PettyCashFund model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -2657,12 +2405,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 6
 			path: app/Services/WhatsappAutomationService.php
-
-		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 2
-			path: app/Services/WhatsappService.php
 
 		-
 			message: '#^Relation ''approvals'' is not found in App\\Models\\WorkflowRequest model\.$#'
