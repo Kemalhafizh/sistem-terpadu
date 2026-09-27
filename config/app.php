@@ -136,4 +136,15 @@ return [
     */
     'uat_mode' => env('UAT_MODE', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin IP Whitelist
+    |--------------------------------------------------------------------------
+    |
+    | Comma-separated list of IPs allowed through the `admin.ip` middleware.
+    | Use "*" to allow every address.
+    |
+    */
+    'admin_allowed_ips' => env('ADMIN_ALLOWED_IPS', '127.0.0.1,::1'),
+
 ];

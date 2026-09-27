@@ -15,8 +15,8 @@ class AdminIpWhitelistMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // IP Whitelist konfigurasi (Bisa diisi via env ADMIN_ALLOWED_IPS)
-        $allowedIpsConfig = env('ADMIN_ALLOWED_IPS', '127.0.0.1,::1');
+        // IP Whitelist konfigurasi (config/app.php, diisi via env ADMIN_ALLOWED_IPS)
+        $allowedIpsConfig = (string) config('app.admin_allowed_ips', '127.0.0.1,::1');
         $allowedIps = array_filter(array_map('trim', explode(',', $allowedIpsConfig)));
 
         // Izinkan semua akses jika di environment testing atau local pengembangan jika diizinkan

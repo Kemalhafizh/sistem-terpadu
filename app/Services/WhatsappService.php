@@ -22,8 +22,8 @@ class WhatsappService
         $normalized = $this->normalizePhoneNumber($recipient);
 
         // 2. Check if sandbox/mock mode is active
-        // Prioritize settings table, fallback to env configuration
-        $isSandbox = Setting::get('whatsapp_sandbox_mode', '1') === '1' || env('WHATSAPP_GATEWAY_SANDBOX', true);
+        // Prioritize settings table, fallback to config/services.php
+        $isSandbox = Setting::get('whatsapp_sandbox_mode', '1') === '1' || config('services.whatsapp.sandbox');
 
         if ($isSandbox) {
             // Simulate delivery failure if phone number contains "999" (great for error state testing)
@@ -48,7 +48,7 @@ class WhatsappService
         }
 
         // 3. Active production sending via Fonnte API
-        $token = Setting::get('whatsapp_api_token') ?: env('WHATSAPP_API_TOKEN');
+        $token = Setting::get('whatsapp_api_token') ?: config('services.whatsapp.api_token');
 
         if (! $token) {
             return WhatsappLog::create([

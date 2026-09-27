@@ -487,12 +487,6 @@ parameters:
 			path: app/Http/Controllers/AttendanceController.php
 
 		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Controllers/Auth/GoogleSsoController.php
-
-		-
 			message: '#^Relation ''tickets'' is not found in App\\Models\\TicketedEvent model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1915,12 +1909,6 @@ parameters:
 			path: app/Http/Controllers/WorkflowController.php
 
 		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Middleware/AdminIpWhitelistMiddleware.php
-
-		-
 			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -2651,12 +2639,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 6
 			path: app/Services/WhatsappAutomationService.php
-
-		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 2
-			path: app/Services/WhatsappService.php
 
 		-
 			message: '#^Relation ''approvals'' is not found in App\\Models\\WorkflowRequest model\.$#'

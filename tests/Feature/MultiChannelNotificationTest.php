@@ -14,6 +14,8 @@ use App\Notifications\StudentPointNotification;
 use App\Services\AttendanceService;
 use App\Services\WhatsappService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 
 uses(RefreshDatabase::class);
 
@@ -44,6 +46,33 @@ test('whatsapp service mock logs failed status when number contains 999 or faile
 
     expect($log->status)->toBe('failed');
     expect($log->error_message)->toContain('Simulated WhatsApp Gateway delivery failure');
+});
+
+test('whatsapp service reads sandbox flag and api token from config when settings are empty', function () {
+    // Survives `php artisan config:cache`, unlike the env() calls it replaced.
+    Setting::set('whatsapp_sandbox_mode', '0');
+    config([
+        'services.whatsapp.sandbox' => false,
+        'services.whatsapp.api_token' => 'config-token-123',
+    ]);
+    Http::fake(['api.fonnte.com/*' => Http::response(['status' => true])]);
+
+    $log = (new WhatsappService)->sendMessage('0812345678', 'Live Message', 'test');
+
+    expect($log->status)->toBe('sent');
+    Http::assertSent(fn (Request $request) => $request->hasHeader('Authorization', 'config-token-123')
+        && $request['target'] === '62812345678');
+});
+
+test('whatsapp service stays in sandbox when config sandbox flag is on', function () {
+    Setting::set('whatsapp_sandbox_mode', '0');
+    config(['services.whatsapp.sandbox' => true]);
+    Http::fake();
+
+    $log = (new WhatsappService)->sendMessage('0812345678', 'Test Message', 'test');
+
+    expect($log->status)->toBe('sent');
+    Http::assertNothingSent();
 });
 
 test('alpa attendance automatically triggers student attendance notification to parent', function () {

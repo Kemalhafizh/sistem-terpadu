@@ -245,12 +245,26 @@ test('admin ip whitelist middleware blocks non whitelisted ip addresses', functi
 
     // Set allowed IP into env config
     config(['app.env' => 'production']);
-    putenv('ADMIN_ALLOWED_IPS=192.168.1.100');
+    config(['app.admin_allowed_ips' => '192.168.1.100']);
 
     $response = $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.5'])
         ->get('/admin/test-ip-protection');
 
     $response->assertStatus(403);
+});
+
+test('admin ip whitelist middleware allows ip addresses listed in config', function () {
+    Route::get('/admin/test-ip-allowed', function () {
+        return 'admin secret data';
+    })->middleware(['web', 'admin.ip']);
+
+    app()->detectEnvironment(fn () => 'production');
+    config(['app.env' => 'production', 'app.admin_allowed_ips' => '10.0.0.1, 192.168.1.100']);
+
+    $this->withServerVariables(['REMOTE_ADDR' => '192.168.1.100'])
+        ->get('/admin/test-ip-allowed')
+        ->assertOk()
+        ->assertSee('admin secret data');
 });
 
 test('security check dns command executes successfully', function () {
