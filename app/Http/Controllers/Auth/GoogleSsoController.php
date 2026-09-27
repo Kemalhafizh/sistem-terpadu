@@ -34,8 +34,10 @@ class GoogleSsoController extends Controller
 
         $email = $googleUser->getEmail();
 
-        // 1. Validasi Domain Sekolah (jika dikonfigurasi di .env)
-        $allowedDomain = env('GOOGLE_SSO_DOMAIN');
+        // 1. Validasi Domain Sekolah (GOOGLE_SSO_DOMAIN → config/services.php).
+        // Must go through config(): env() is null after `config:cache`, which
+        // silently switched this restriction off in production.
+        $allowedDomain = config('services.google.sso_domain');
         if ($allowedDomain) {
             $emailDomain = Str::after($email, '@');
             if (strcasecmp($emailDomain, $allowedDomain) !== 0) {

@@ -220,11 +220,17 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // === FASE 117: KOREKSI & REKAP PRESENSI SESI KELAS (WAKA KURIKULUM / TU / ADMIN) ===
-        Route::prefix('admin/class-sessions')->middleware('role:admin,superadmin,waka_kurikulum,staf_tu')->group(function () {
-            Route::get('/', [AdminClassSessionController::class, 'index']);
-            Route::get('reports', [AdminClassSessionController::class, 'attendanceReport']);
-            Route::get('{sessionId}/attendances', [AdminClassSessionController::class, 'sessionAttendances'])->whereNumber('sessionId');
-            Route::put('attendances/{attendanceId}/override', [AdminClassSessionController::class, 'overrideAttendance'])->whereNumber('attendanceId');
+        Route::prefix('admin/class-sessions')->group(function () {
+            // Monitoring & rekap: kepala sekolah boleh membaca.
+            Route::middleware('role:admin,superadmin,waka_kurikulum,staf_tu,kepala_sekolah')->group(function () {
+                Route::get('/', [AdminClassSessionController::class, 'index']);
+                Route::get('reports', [AdminClassSessionController::class, 'attendanceReport']);
+                Route::get('{sessionId}/attendances', [AdminClassSessionController::class, 'sessionAttendances'])->whereNumber('sessionId');
+            });
+            // Koreksi presensi tetap hanya Waka Kurikulum / TU / Admin (aturan 117.6 #8).
+            Route::put('attendances/{attendanceId}/override', [AdminClassSessionController::class, 'overrideAttendance'])
+                ->middleware('role:admin,superadmin,waka_kurikulum,staf_tu')
+                ->whereNumber('attendanceId');
         });
 
         // === FASE 88: BANK SOAL TERPUSAT & AUTO-GENERATE UJIAN CBT ===

@@ -51,6 +51,8 @@ scheduled ──Mulai Kelas──▶ active ──Akhiri Kelas──▶ complete
 
 ### Waka Kurikulum / TU / Admin — `role: admin, superadmin, waka_kurikulum, staf_tu`
 
+`kepala_sekolah` bisa **membaca** ketiga endpoint GET (daftar, detail, rekap), tetapi tidak bisa mengoreksi (PUT override → 403).
+
 | Method | Path | Keterangan |
 |---|---|---|
 | GET | `admin/class-sessions` | Query opsional: `date`, `teacher_id`, `classroom_id`, `subject_id`, `status`, `page`, `per_page` (≤100) |

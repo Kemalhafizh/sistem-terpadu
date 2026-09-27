@@ -39,6 +39,15 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
+        // Only accounts on this e-mail domain may sign in with Google (empty = any).
+        'sso_domain' => env('GOOGLE_SSO_DOMAIN'),
+    ],
+
+    // Fonnte WhatsApp gateway. The admin settings page (whatsapp_api_token,
+    // whatsapp_sandbox_mode) takes precedence; these are the fallbacks.
+    'whatsapp' => [
+        'token' => env('WHATSAPP_API_TOKEN'),
+        'sandbox' => (bool) env('WHATSAPP_GATEWAY_SANDBOX', true),
     ],
 
     'midtrans' => [

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CatItemResponse extends Model
 {
@@ -36,8 +37,9 @@ class CatItemResponse extends Model
         return $this->belongsTo(CatSession::class, 'cat_session_id');
     }
 
-    public function question()
+    /** The CBT bank item (question_banks) this row is about. */
+    public function question(): BelongsTo
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(QuestionBank::class, 'question_id');
     }
 }

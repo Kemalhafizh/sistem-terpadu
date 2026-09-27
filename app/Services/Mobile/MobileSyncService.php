@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services\Mobile;
 
+use App\Models\AcademicEvent;
+use App\Models\Announcement;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Grade;
 use App\Models\MobileSyncLog;
 use App\Models\Student;
-use App\Models\TahfidzRecord;
+use App\Models\TahfidzLog;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -22,6 +24,10 @@ use Carbon\Carbon;
  */
 class MobileSyncService
 {
+    private const STUDENT_ROLES = ['student', 'siswa'];
+
+    private const PARENT_ROLES = ['parent', 'orang_tua'];
+
     /**
      * Pull delta changes since a given timestamp.
      *
@@ -33,56 +39,60 @@ class MobileSyncService
         $recordsCount = 0;
         $deltaData = [];
 
-        // 1. General School Announcements Delta
-        if (class_exists(Announcement::class)) {
-            $announcements = Announcement::where('updated_at', '>=', $since)
-                ->orderBy('updated_at', 'desc')
-                ->take(50)
-                ->get()
-                ->map(fn ($a) => [
-                    'id' => $a->id,
-                    'title' => $a->title,
-                    'content' => strip_tags((string) ($a->content ?? $a->body ?? '')),
-                    'category' => $a->category ?? 'general',
-                    'updated_at' => $a->updated_at->toIso8601String(),
-                ]);
-            $deltaData['announcements'] = $announcements;
-            $recordsCount += $announcements->count();
-        }
+        // 1. General School Announcements Delta — same audience rule as
+        // ApiGeneralController::announcements(). (This and the calendar block
+        // used to sit behind class_exists() on unimported names, which never
+        // resolved, so both were silently missing from every delta.)
+        $announcements = Announcement::where('is_active', true)
+            ->where(fn ($q) => $q->whereNull('target_role')->orWhere('target_role', $user->role))
+            ->where('updated_at', '>=', $since)
+            ->orderBy('updated_at', 'desc')
+            ->take(50)
+            ->get()
+            ->map(fn ($a) => [
+                'id' => $a->id,
+                'title' => $a->title,
+                'content' => strip_tags((string) $a->content),
+                'category' => $a->category ?? 'general',
+                'updated_at' => $a->updated_at->toIso8601String(),
+            ]);
+        $deltaData['announcements'] = $announcements;
+        $recordsCount += $announcements->count();
 
         // 2. Academic Calendar Events Delta
-        if (class_exists(AcademicCalendar::class)) {
-            $calendar = AcademicCalendar::where('updated_at', '>=', $since)
-                ->orderBy('event_date', 'asc')
-                ->take(50)
-                ->get()
-                ->map(fn ($c) => [
-                    'id' => $c->id,
-                    'title' => $c->title ?? $c->event_name,
-                    'event_date' => $c->event_date ?? $c->start_date,
-                    'is_holiday' => (bool) ($c->is_holiday ?? false),
-                    'updated_at' => $c->updated_at->toIso8601String(),
-                ]);
-            $deltaData['calendar'] = $calendar;
-            $recordsCount += $calendar->count();
-        }
+        $calendar = AcademicEvent::active()
+            ->forRole($user->role)
+            ->where('updated_at', '>=', $since)
+            ->orderBy('start_date', 'asc')
+            ->take(50)
+            ->get()
+            ->map(fn ($c) => [
+                'id' => $c->id,
+                'title' => $c->title,
+                'event_date' => $c->start_date?->toDateString(),
+                'event_type' => $c->event_type,
+                'is_holiday' => $c->event_type === 'holiday',
+                'updated_at' => $c->updated_at->toIso8601String(),
+            ]);
+        $deltaData['calendar'] = $calendar;
+        $recordsCount += $calendar->count();
 
         // 3. Role-Scoped Academic & Student Delta
-        if ($user->role === 'student') {
+        if (in_array($user->role, self::STUDENT_ROLES, true)) {
             $student = Student::where('user_id', $user->id)->first();
             if ($student) {
                 $studentDelta = $this->getStudentDelta($student, $since);
                 $deltaData['student_data'] = $studentDelta;
                 $recordsCount += ($studentDelta['total_records'] ?? 0);
             }
-        } elseif ($user->role === 'parent') {
-            $students = Student::where('parent_user_id', $user->id)->get();
+        } elseif (in_array($user->role, self::PARENT_ROLES, true)) {
+            $students = Student::with('user')->where('parent_id', $user->id)->get();
             $childrenDelta = [];
             foreach ($students as $student) {
                 $sDelta = $this->getStudentDelta($student, $since);
                 $childrenDelta[] = [
                     'student_id' => $student->id,
-                    'student_name' => $student->nama_lengkap ?? $student->name,
+                    'student_name' => $student->user?->name,
                     'delta' => $sDelta,
                 ];
                 $recordsCount += ($sDelta['total_records'] ?? 0);
@@ -161,16 +171,19 @@ class MobileSyncService
         $total += $bills->count();
 
         // Qur'an Tahfidz Progress Records
-        $tahfidz = TahfidzRecord::where('student_id', $student->id)
+        // Keys follow tahfidz_logs (same names as the app's other tahfidz models).
+        $tahfidz = TahfidzLog::where('student_id', $student->id)
             ->where('updated_at', '>=', $since)
             ->get()
             ->map(fn ($t) => [
                 'id' => $t->id,
+                'surah_number' => $t->surah_number,
                 'surah_name' => $t->surah_name,
-                'start_ayah' => $t->start_ayah,
-                'end_ayah' => $t->end_ayah,
-                'assessment_date' => $t->assessment_date,
-                'fluency_score' => $t->fluency_score,
+                'from_ayat' => $t->from_ayat,
+                'to_ayat' => $t->to_ayat,
+                'type' => $t->type,
+                'grade' => $t->grade,
+                'date' => $t->date?->toDateString(),
                 'updated_at' => $t->updated_at->toIso8601String(),
             ]);
         $total += $tahfidz->count();

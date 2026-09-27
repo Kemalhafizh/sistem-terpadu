@@ -19,7 +19,12 @@ class Fase78HardwareIntegrationApiTest extends TestCase
 
         $response = $this->actingAs($user, 'sanctum')->getJson('/api/v1/mobile/attendance/dynamic-qr');
         $response->assertStatus(200);
-        $response->assertJsonStructure(['success', 'qr_token', 'expires_in_seconds', 'timestamp']);
+        $response->assertJsonStructure(['success', 'qr_token', 'qr_payload', 'expires_in_seconds', 'timestamp', 'generated_at']);
+
+        // Contract of Android's DynamicQrResponse(qr_payload: String, expires_in_seconds: Int, timestamp: Long).
+        expect($response->json('qr_payload'))->toBe($response->json('qr_token'))
+            ->and($response->json('timestamp'))->toBeInt()
+            ->and($response->json('expires_in_seconds'))->toBeInt()->toBeBetween(1, 30);
 
         $token = $response->json('qr_token');
         $verifyRes = $this->actingAs($user, 'sanctum')->postJson('/api/v1/mobile/attendance/verify-qr', [

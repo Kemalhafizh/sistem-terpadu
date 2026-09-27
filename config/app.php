@@ -69,6 +69,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin IP Whitelist
+    |--------------------------------------------------------------------------
+    |
+    | Comma-separated IPs allowed through the `admin.ip` middleware ("*" = any).
+    | Read via config(): env() returns null once `config:cache` has run.
+    |
+    */
+
+    'admin_allowed_ips' => env('ADMIN_ALLOWED_IPS', '127.0.0.1,::1'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |

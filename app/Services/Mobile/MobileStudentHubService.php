@@ -7,7 +7,7 @@ namespace App\Services\Mobile;
 use App\Models\Attendance;
 use App\Models\Grade;
 use App\Models\Student;
-use App\Models\TahfidzRecord;
+use App\Models\TahfidzLog;
 use App\Models\User;
 
 class MobileStudentHubService
@@ -39,10 +39,12 @@ class MobileStudentHubService
             ])
             ->toArray();
 
-        // 2. Tahfidz Progress
-        $latestTahfidz = class_exists(TahfidzRecord::class) ? TahfidzRecord::where('student_id', $student->id)
-            ->latest()
-            ->first() : null;
+        // 2. Tahfidz Progress (was class_exists() on a model that never
+        // existed, so latest_tahfidz was always null)
+        $latestTahfidz = TahfidzLog::where('student_id', $student->id)
+            ->orderByDesc('date')
+            ->orderByDesc('id')
+            ->first();
 
         // 3. Attendance Percentage
         $attendanceCount = Attendance::where('student_id', $student->id)->count();
@@ -57,8 +59,8 @@ class MobileStudentHubService
             'recent_grades' => $recentGrades,
             'latest_tahfidz' => $latestTahfidz ? [
                 'surah' => $latestTahfidz->surah_name,
-                'ayah' => "Ayat {$latestTahfidz->start_ayah} - {$latestTahfidz->end_ayah}",
-                'score' => $latestTahfidz->fluency_score,
+                'ayah' => "Ayat {$latestTahfidz->from_ayat} - {$latestTahfidz->to_ayat}",
+                'score' => $latestTahfidz->grade,
             ] : null,
             'flashcards_available' => 12,
         ];

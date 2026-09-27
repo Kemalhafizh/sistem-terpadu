@@ -597,3 +597,20 @@ test('rekap presensi per siswa, kelas, dan mapel', function () {
     $this->actingAs($admin)->getJson('/api/v1/admin/class-sessions/reports?start_date=2026-10-31&end_date=2026-10-01')
         ->assertStatus(422)->assertJsonPath('success', false);
 });
+
+test('kepala sekolah bisa membaca daftar, detail, dan rekap sesi tetapi tidak bisa mengoreksi', function () {
+    $id = ($this->startSession)()->json('data.id');
+    $this->actingAs($this->teacher)->postJson("/api/v1/teacher/class-sessions/{$id}/end")->assertOk();
+    $kepsek = User::factory()->create(['role' => 'kepala_sekolah']);
+
+    $this->actingAs($kepsek)->getJson('/api/v1/admin/class-sessions')->assertOk()->assertJsonPath('data.total', 1);
+    $this->actingAs($kepsek)->getJson("/api/v1/admin/class-sessions/{$id}/attendances")->assertOk()->assertJsonCount(3, 'data');
+    $this->actingAs($kepsek)->getJson('/api/v1/admin/class-sessions/reports?start_date=2026-10-01&end_date=2026-10-31')
+        ->assertOk()->assertJsonPath('data.summary.total_alpha', 3);
+
+    $attendance = SessionAttendance::first();
+    $this->actingAs($kepsek)->putJson("/api/v1/admin/class-sessions/attendances/{$attendance->id}/override", [
+        'status' => 'izin', 'reason' => 'Kepala sekolah mencoba koreksi',
+    ])->assertForbidden();
+    expect($attendance->fresh()->status)->toBe('alpha');
+});
