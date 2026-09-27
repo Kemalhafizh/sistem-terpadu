@@ -58,6 +58,8 @@ class ClassSession extends Model
         'notes',
         'is_auto_closed',
         'teaching_journal_id',
+        'start_reminder_sent_at',
+        'end_reminder_sent_at',
     ];
 
     protected $hidden = ['qr_secret'];
@@ -67,6 +69,8 @@ class ClassSession extends Model
         'actual_start' => 'datetime',
         'actual_end' => 'datetime',
         'is_auto_closed' => 'boolean',
+        'start_reminder_sent_at' => 'datetime',
+        'end_reminder_sent_at' => 'datetime',
     ];
 
     public function schedule(): BelongsTo

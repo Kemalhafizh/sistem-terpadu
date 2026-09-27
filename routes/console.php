@@ -17,6 +17,9 @@ Schedule::command('app:send-event-reminders')->dailyAt('07:00');
 
 // FASE 117: tutup otomatis sesi kelas yang lupa diakhiri guru (jam selesai + 5 menit)
 Schedule::command('class-sessions:auto-close')->everyMinute()->withoutOverlapping();
+// FASE 77.7.1: pengingat guru 5 menit sebelum mulai/selesai + rangkuman harian orang tua
+Schedule::command('class-sessions:remind')->everyMinute()->withoutOverlapping();
+Schedule::command('class-sessions:parent-digest')->dailyAt(config('class_sessions.parent_digest_time', '17:00'))->onOneServer();
 
 // WhatsApp Broadcast & Automation Triggers
 Schedule::command('whatsapp:process-broadcasts')->everyMinute();
