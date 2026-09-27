@@ -165,8 +165,13 @@ class GeofenceAttendanceService
         return [
             'success' => true,
             'qr_token' => $token,
+            // Android's DynamicQrResponse reads the QR content from qr_payload
+            // (same token; qr_token stays for gate terminals) and timestamp as
+            // a Long — an ISO string there made Gson reject the whole response.
+            'qr_payload' => $token,
             'expires_in_seconds' => 30 - (time() % 30),
-            'timestamp' => now()->toIso8601String(),
+            'timestamp' => now()->getTimestamp(),
+            'generated_at' => now()->toIso8601String(),
         ];
     }
 
@@ -196,7 +201,7 @@ class GeofenceAttendanceService
 
             $secretKey = (string) config('app.key', 'SISTA_SA1_SECRET');
             $expectedHash = hash_hmac('sha256', "USER:{$decoded['u']}:SLICE:{$decoded['ts']}", $secretKey);
-            if (substr($expectedHash, 0, 16) !== $decoded['sig']) {
+            if (! hash_equals(substr($expectedHash, 0, 16), (string) $decoded['sig'])) {
                 return ['valid' => false, 'message' => 'Tanda tangan digital QR tidak valid'];
             }
 
