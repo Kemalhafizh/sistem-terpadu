@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Mobile;
 
-use App\Models\MobileAppConfig;
+use App\Models\AcademicEvent;
+use App\Models\AcademicYear;
+use App\Models\Announcement;
 use App\Models\User;
 use App\Models\UserDeviceToken;
-use App\Services\Mobile\GeofenceAttendanceService;
 use App\Services\Mobile\PushNotificationService;
+use App\Support\School;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -175,8 +177,8 @@ class MobileGatewaySuiteTest extends TestCase
 
         // 2. Mock Location Rejected
         $mockRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => \App\Support\School::campus()['latitude'],
-            'longitude' => \App\Support\School::campus()['longitude'],
+            'latitude' => School::campus()['latitude'],
+            'longitude' => School::campus()['longitude'],
             'accuracy_meters' => 10.0,
             'is_mock_location' => true,
         ]);
@@ -185,8 +187,8 @@ class MobileGatewaySuiteTest extends TestCase
 
         // 3. Valid Checkin within Campus Coordinates
         $validRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => \App\Support\School::campus()['latitude'],
-            'longitude' => \App\Support\School::campus()['longitude'],
+            'latitude' => School::campus()['latitude'],
+            'longitude' => School::campus()['longitude'],
             'accuracy_meters' => 12.0,
             'is_mock_location' => false,
         ]);
@@ -221,7 +223,7 @@ class MobileGatewaySuiteTest extends TestCase
 
         $response = $this->actingAs($user)
             ->withHeader('X-Device-ID', 'mobile-test-device-001')
-            ->getJson('/api/v1/mobile/sync/pull?since=' . urlencode(now()->subDays(7)->toIso8601String()));
+            ->getJson('/api/v1/mobile/sync/pull?since='.urlencode(now()->subDays(7)->toIso8601String()));
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -235,6 +237,53 @@ class MobileGatewaySuiteTest extends TestCase
             'user_id' => $user->id,
             'device_id' => 'mobile-test-device-001',
         ]);
+    }
+
+    public function test_mobile_delta_sync_pull_includes_announcements_and_calendar(): void
+    {
+        $user = User::factory()->create(['role' => 'student']);
+        $academicYear = AcademicYear::factory()->create();
+
+        $announcement = Announcement::factory()->create([
+            'title' => 'Libur Semester Ganjil',
+            'content' => '<p>Sekolah libur mulai pekan depan.</p>',
+            'category' => 'akademik',
+        ]);
+
+        $holiday = AcademicEvent::create([
+            'title' => 'Libur Maulid Nabi',
+            'event_type' => 'holiday',
+            'start_date' => now()->addDays(3),
+            'academic_year_id' => $academicYear->id,
+            'created_by' => $user->id,
+        ]);
+
+        $staleEvent = AcademicEvent::create([
+            'title' => 'Rapat Lama',
+            'event_type' => 'meeting',
+            'start_date' => now()->subDays(20),
+            'academic_year_id' => $academicYear->id,
+            'created_by' => $user->id,
+        ]);
+        $staleEvent->timestamps = false;
+        $staleEvent->forceFill(['updated_at' => now()->subDays(20)])->save();
+
+        $response = $this->actingAs($user)
+            ->withHeader('X-Device-ID', 'mobile-test-device-002')
+            ->getJson('/api/v1/mobile/sync/pull?since='.urlencode(now()->subDays(7)->toIso8601String()));
+
+        $response->assertStatus(200)
+            ->assertJsonCount(1, 'delta.announcements')
+            ->assertJsonPath('delta.announcements.0.id', $announcement->id)
+            ->assertJsonPath('delta.announcements.0.content', 'Sekolah libur mulai pekan depan.')
+            ->assertJsonPath('delta.announcements.0.category', 'akademik')
+            ->assertJsonCount(1, 'delta.calendar')
+            ->assertJsonPath('delta.calendar.0.id', $holiday->id)
+            ->assertJsonPath('delta.calendar.0.title', 'Libur Maulid Nabi')
+            ->assertJsonPath('delta.calendar.0.is_holiday', true);
+
+        $this->assertNotNull($response->json('delta.calendar.0.event_date'));
+        $this->assertGreaterThanOrEqual(2, $response->json('records_synced'));
     }
 
     public function test_well_known_manifests_for_android_and_ios_deep_linking(): void

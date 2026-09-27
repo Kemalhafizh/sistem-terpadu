@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Mobile;
+namespace App\Http\Controllers\Api\v1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\MobileBiometricCredential;
@@ -22,7 +22,7 @@ use Throwable;
  * Handles multi-device token registration, biometric challenge-response verification,
  * and remote session management.
  * 
- * @package App\Http\Controllers\Api\V1\Mobile
+ * @package App\Http\Controllers\Api\v1\Mobile
  */
 class MobileAuthController extends Controller
 {

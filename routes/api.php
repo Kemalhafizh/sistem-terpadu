@@ -9,12 +9,12 @@ use App\Http\Controllers\Api\v1\ApiStudentController;
 use App\Http\Controllers\Api\v1\ApiParentController;
 use App\Http\Controllers\Api\v1\ApiTeacherController;
 use App\Http\Controllers\Api\v1\ApiGeneralController;
-use App\Http\Controllers\Api\V1\StudentApiController;
-use App\Http\Controllers\Api\V1\ExternalIntegrationApiController;
-use App\Http\Controllers\Api\V1\Mobile\MobileAuthController;
-use App\Http\Controllers\Api\V1\Mobile\MobileConfigController;
-use App\Http\Controllers\Api\V1\Mobile\MobileAttendanceController;
-use App\Http\Controllers\Api\V1\Mobile\MobileSyncController;
+use App\Http\Controllers\Api\v1\StudentApiController;
+use App\Http\Controllers\Api\v1\ExternalIntegrationApiController;
+use App\Http\Controllers\Api\v1\Mobile\MobileAuthController;
+use App\Http\Controllers\Api\v1\Mobile\MobileConfigController;
+use App\Http\Controllers\Api\v1\Mobile\MobileAttendanceController;
+use App\Http\Controllers\Api\v1\Mobile\MobileSyncController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -456,7 +456,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     // FASE 69: SUPER APP ENTERPRISE API & MOBILE GATEWAY
     // =====================================================================
     Route::prefix('mobile')->group(function () {
-      Route::post('geofence/checkin', [\App\Http\Controllers\Api\V1\Mobile\GeofenceController::class, 'checkin']);
+      Route::post('geofence/checkin', [\App\Http\Controllers\Api\v1\Mobile\GeofenceController::class, 'checkin']);
     });
 
     // =====================================================================

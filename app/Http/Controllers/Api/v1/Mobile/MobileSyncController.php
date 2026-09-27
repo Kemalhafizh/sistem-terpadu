@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Mobile;
+namespace App\Http\Controllers\Api\v1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Services\Mobile\MobileSyncService;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
  * Provides delta-syncing endpoints for mobile applications, allowing client-side
  * SQLite / Room / CoreData caches to pull only updated and new records.
  * 
- * @package App\Http\Controllers\Api\V1\Mobile
+ * @package App\Http\Controllers\Api\v1\Mobile
  */
 class MobileSyncController extends Controller
 {

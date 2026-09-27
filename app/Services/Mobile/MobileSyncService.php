@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\Mobile;
 
+use App\Models\AcademicEvent;
+use App\Models\Announcement;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Grade;
@@ -15,21 +17,16 @@ use Carbon\Carbon;
 
 /**
  * Class MobileSyncService
- * 
+ *
  * Aggregates delta modifications for client-side SQLite/Room offline caching.
  * Compiles updates across school announcements, calendar, student academic grades,
  * daily attendances, tuition fees (SPP), and Qur'an tahfidz logs.
- * 
- * @package App\Services\Mobile
  */
 class MobileSyncService
 {
     /**
      * Pull delta changes since a given timestamp.
      *
-     * @param User $user
-     * @param string|null $sinceTimestamp
-     * @param string $deviceId
      * @return array<string, mixed>
      */
     public function pullDelta(User $user, ?string $sinceTimestamp = null, string $deviceId = 'default'): array
@@ -39,38 +36,34 @@ class MobileSyncService
         $deltaData = [];
 
         // 1. General School Announcements Delta
-        if (class_exists(Announcement::class)) {
-            $announcements = Announcement::where('updated_at', '>=', $since)
-                ->orderBy('updated_at', 'desc')
-                ->take(50)
-                ->get()
-                ->map(fn($a) => [
-                    'id' => $a->id,
-                    'title' => $a->title,
-                    'content' => strip_tags((string) ($a->content ?? $a->body ?? '')),
-                    'category' => $a->category ?? 'general',
-                    'updated_at' => $a->updated_at->toIso8601String(),
-                ]);
-            $deltaData['announcements'] = $announcements;
-            $recordsCount += $announcements->count();
-        }
+        $announcements = Announcement::where('updated_at', '>=', $since)
+            ->orderBy('updated_at', 'desc')
+            ->take(50)
+            ->get()
+            ->map(fn (Announcement $a) => [
+                'id' => $a->id,
+                'title' => $a->title,
+                'content' => strip_tags((string) $a->content),
+                'category' => $a->category ?? 'umum',
+                'updated_at' => $a->updated_at->toIso8601String(),
+            ]);
+        $deltaData['announcements'] = $announcements;
+        $recordsCount += $announcements->count();
 
         // 2. Academic Calendar Events Delta
-        if (class_exists(AcademicCalendar::class)) {
-            $calendar = AcademicCalendar::where('updated_at', '>=', $since)
-                ->orderBy('event_date', 'asc')
-                ->take(50)
-                ->get()
-                ->map(fn($c) => [
-                    'id' => $c->id,
-                    'title' => $c->title ?? $c->event_name,
-                    'event_date' => $c->event_date ?? $c->start_date,
-                    'is_holiday' => (bool) ($c->is_holiday ?? false),
-                    'updated_at' => $c->updated_at->toIso8601String(),
-                ]);
-            $deltaData['calendar'] = $calendar;
-            $recordsCount += $calendar->count();
-        }
+        $calendar = AcademicEvent::where('updated_at', '>=', $since)
+            ->orderBy('start_date', 'asc')
+            ->take(50)
+            ->get()
+            ->map(fn (AcademicEvent $c) => [
+                'id' => $c->id,
+                'title' => $c->title,
+                'event_date' => $c->start_date?->toIso8601String(),
+                'is_holiday' => $c->event_type === 'holiday',
+                'updated_at' => $c->updated_at->toIso8601String(),
+            ]);
+        $deltaData['calendar'] = $calendar;
+        $recordsCount += $calendar->count();
 
         // 3. Role-Scoped Academic & Student Delta
         if ($user->role === 'student') {
@@ -115,8 +108,6 @@ class MobileSyncService
     /**
      * Get delta changes specific to a student entity.
      *
-     * @param Student $student
-     * @param Carbon $since
      * @return array<string, mixed>
      */
     public function getStudentDelta(Student $student, Carbon $since): array
@@ -127,7 +118,7 @@ class MobileSyncService
         $grades = Grade::where('student_id', $student->id)
             ->where('updated_at', '>=', $since)
             ->get()
-            ->map(fn($g) => [
+            ->map(fn ($g) => [
                 'id' => $g->id,
                 'subject_name' => $g->subject->name ?? 'Mata Pelajaran',
                 'type' => $g->type ?? 'UH',
@@ -140,7 +131,7 @@ class MobileSyncService
         $attendances = Attendance::where('student_id', $student->id)
             ->where('updated_at', '>=', $since)
             ->get()
-            ->map(fn($att) => [
+            ->map(fn ($att) => [
                 'id' => $att->id,
                 'date' => $att->date,
                 'status' => $att->status,
@@ -155,7 +146,7 @@ class MobileSyncService
             $bills = Billing::where('student_id', $student->id)
                 ->where('updated_at', '>=', $since)
                 ->get()
-                ->map(fn($b) => [
+                ->map(fn ($b) => [
                     'id' => $b->id,
                     'bill_code' => $b->bill_code ?? $b->code ?? 'SPP-001',
                     'title' => $b->title ?? 'Tagihan SPP',
@@ -171,7 +162,7 @@ class MobileSyncService
         $tahfidz = TahfidzRecord::where('student_id', $student->id)
             ->where('updated_at', '>=', $since)
             ->get()
-            ->map(fn($t) => [
+            ->map(fn ($t) => [
                 'id' => $t->id,
                 'surah_name' => $t->surah_name,
                 'start_ayah' => $t->start_ayah,
