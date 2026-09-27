@@ -67,7 +67,7 @@
                 </h4>
                 @if($avgScore >= 85)
                     <p class="text-xs text-emerald-800 mt-2 leading-relaxed font-bold">
-                        Masya Allah! Istiqomah ibadah Anda berada di level istimewa. Pertahankan amalan berjamaah Anda dan jadilah teladan kebaikan di lingkungan SMA Islam Sultan Agung 1 Semarang. Semoga menjadi pemberat amal kebaikan kelak. Amin.
+                        Masya Allah! Istiqomah ibadah Anda berada di level istimewa. Pertahankan amalan berjamaah Anda dan jadilah teladan kebaikan di lingkungan {{ school_name() }}. Semoga menjadi pemberat amal kebaikan kelak. Amin.
                     </p>
                 @elseif($avgScore >= 70)
                     <p class="text-xs text-emerald-800 mt-2 leading-relaxed font-bold">

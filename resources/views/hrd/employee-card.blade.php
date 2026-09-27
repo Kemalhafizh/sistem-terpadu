@@ -105,7 +105,7 @@
     <div class="card">
         <!-- Header -->
         <div class="logo-section">YBWSA</div>
-        <div class="school-name">SMA Islam Sultan Agung 1</div>
+        <div class="school-name">{{ school_short_name() }}</div>
         
         <div class="divider"></div>
         <div class="card-title">Kartu Pegawai</div>

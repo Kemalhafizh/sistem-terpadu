@@ -18,7 +18,7 @@
                      Peta Geografis Sebaran Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Visualisasi lokasi domisili alumni SMA Islam Sultan Agung 1 Semarang secara geografis.
+                    Visualisasi lokasi domisili alumni {{ school_name() }} secara geografis.
                 </p>
             </div>
             <a href="{{ route('alumni.directory') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">

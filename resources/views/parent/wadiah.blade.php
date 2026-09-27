@@ -5,7 +5,7 @@
         <h2 class="font-black text-3xl text-gray-900 dark:text-white leading-tight tracking-tight">
           Portal Orang Tua <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Premium</span>
         </h2>
-        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">SMA Islam Sultan Agung 1 Semarang</p>
+        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">{{ school_name() }}</p>
       </div>
       
       <!-- Child Switcher Tab -->

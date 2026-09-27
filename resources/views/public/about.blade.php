@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>Tentang Kami - SMA Islam Sultan Agung 1 Semarang</title>
-    <meta name="description" content="Mengenal lebih dekat SMA Islam Sultan Agung 1 Semarang — sejarah, visi misi, dan komitmen kami dalam membentuk generasi berilmu, beriman, dan berakhlak mulia.">
+    <title>Tentang Kami - {{ school_name() }}</title>
+    <meta name="description" content="Mengenal lebih dekat {{ school_name() }} — sejarah, visi misi, dan komitmen kami dalam membentuk generasi berilmu, beriman, dan berakhlak mulia.">
 @endsection
 
 @section('content')
@@ -31,7 +31,7 @@
                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
                 </div>
 
-                <p class="text-primary-600 font-black tracking-[0.25em] uppercase text-[10px] mb-4">SMA Islam Sultan Agung 1 Semarang</p>
+                <p class="text-primary-600 font-black tracking-[0.25em] uppercase text-[10px] mb-4">{{ school_name() }}</p>
                 <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6 leading-tight">
                     Membentuk Generasi<br>
                     <span class="bg-gradient-to-r from-primary-600 to-emerald-500 bg-clip-text text-transparent">Berilmu, Beriman</span><br>
@@ -62,13 +62,13 @@
             <div class="lg:col-span-3 space-y-6">
                 <div class="glass rounded-[2rem] p-8 md:p-10 border border-slate-200/80 shadow-sm hover:shadow-lg transition-shadow duration-300">
                     <p class="text-slate-600 text-base leading-relaxed font-medium mb-6">
-                        SMA Islam Sultan Agung 1 Semarang didirikan pada tahun 1963 oleh Yayasan Badan Wakaf Sultan Agung (YBWSA) sebagai bagian dari upaya besar mencerdaskan kehidupan bangsa yang berlandaskan nilai-nilai Islam. Berawal dari beberapa ruang kelas sederhana di kawasan Kaligawe, sekolah ini terus tumbuh menjadi lembaga pendidikan Islam terkemuka di Kota Semarang.
+                        {{ school_name() }} didirikan pada tahun 1963 oleh {{ school_foundation_name() }} sebagai bagian dari upaya besar mencerdaskan kehidupan bangsa yang berlandaskan nilai-nilai Islam. Berawal dari beberapa ruang kelas sederhana di kawasan Kaligawe, sekolah ini terus tumbuh menjadi lembaga pendidikan Islam terkemuka di Kota Semarang.
                     </p>
                     <p class="text-slate-600 text-base leading-relaxed font-medium mb-6">
-                        Seiring perjalanan waktu, SMA Islam Sultan Agung 1 terus berinovasi dalam metode pembelajaran, mengembangkan kurikulum yang memadukan pendidikan umum berkualitas tinggi dengan penanaman akidah dan akhlak mulia. Berbagai prestasi akademik maupun non-akademik telah diraih oleh para siswa di tingkat regional, nasional, hingga internasional.
+                        Seiring perjalanan waktu, {{ school_short_name() }} terus berinovasi dalam metode pembelajaran, mengembangkan kurikulum yang memadukan pendidikan umum berkualitas tinggi dengan penanaman akidah dan akhlak mulia. Berbagai prestasi akademik maupun non-akademik telah diraih oleh para siswa di tingkat regional, nasional, hingga internasional.
                     </p>
                     <p class="text-slate-600 text-base leading-relaxed font-medium">
-                        Kini, dengan fasilitas modern dan tenaga pendidik profesional, SMA Islam Sultan Agung 1 Semarang terus berkomitmen untuk menjadi sekolah Islam unggulan yang menghasilkan lulusan berkarakter, berdaya saing global, dan bermanfaat bagi umat.
+                        Kini, dengan fasilitas modern dan tenaga pendidik profesional, {{ school_name() }} terus berkomitmen untuk menjadi sekolah Islam unggulan yang menghasilkan lulusan berkarakter, berdaya saing global, dan bermanfaat bagi umat.
                     </p>
                 </div>
 
@@ -195,14 +195,14 @@
                         <span class="w-8 h-px bg-primary-600 mr-3"></span>Sambutan Kepala Sekolah
                     </p>
                     <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-6">
-                        Selamat Datang di<br>SMA Islam Sultan Agung 1
+                        Selamat Datang di<br>{{ school_short_name() }}
                     </h2>
                     <div class="space-y-4">
                         <p class="text-slate-600 text-base leading-relaxed font-medium">
                             <em class="text-slate-800 font-bold">Assalamu'alaikum Warahmatullahi Wabarakatuh,</em>
                         </p>
                         <p class="text-slate-600 text-base leading-relaxed font-medium">
-                            Puji syukur kehadirat Allah SWT atas segala rahmat dan karunia-Nya. Kami menyambut dengan hangat seluruh pengunjung website resmi SMA Islam Sultan Agung 1 Semarang. Sekolah kami senantiasa berkomitmen untuk memberikan pendidikan terbaik yang memadukan keunggulan akademik dengan pembinaan karakter Islami.
+                            Puji syukur kehadirat Allah SWT atas segala rahmat dan karunia-Nya. Kami menyambut dengan hangat seluruh pengunjung website resmi {{ school_name() }}. Sekolah kami senantiasa berkomitmen untuk memberikan pendidikan terbaik yang memadukan keunggulan akademik dengan pembinaan karakter Islami.
                         </p>
                         <p class="text-slate-600 text-base leading-relaxed font-medium">
                             Kami percaya bahwa setiap siswa memiliki potensi luar biasa yang perlu dikembangkan secara holistik. Melalui program pembelajaran yang inovatif, bimbingan yang penuh kasih sayang, dan lingkungan yang kondusif, kami berupaya mewujudkan generasi muda yang siap menghadapi tantangan masa depan.
@@ -210,7 +210,7 @@
                     </div>
                     <div class="mt-8 pt-6 border-t border-slate-200/60">
                         <p class="font-black text-slate-900 text-base">Kepala Sekolah</p>
-                        <p class="text-slate-500 text-sm font-bold">SMA Islam Sultan Agung 1 Semarang</p>
+                        <p class="text-slate-500 text-sm font-bold">{{ school_name() }}</p>
                     </div>
                 </div>
             </div>

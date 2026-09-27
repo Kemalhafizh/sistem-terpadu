@@ -218,9 +218,9 @@
     <div class="certificate-inner">
         <!-- Kop Surat YBWSA / SMA -->
         <div class="kop-surat">
-            <p class="yayasan">Yayasan Badan Wakaf Sultan Agung</p>
-            <h1 class="sekolah">SMA Islam Sultan Agung 1 Semarang</h1>
-            <p class="alamat">Jl. Mataram No.657, Wonodri, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah 50242</p>
+            <p class="yayasan">{{ school_foundation_name(false) }}</p>
+            <h1 class="sekolah">{{ school_name() }}</h1>
+            <p class="alamat">{{ school_address() }}</p>
             <div class="kop-line"></div>
         </div>
 
@@ -269,8 +269,8 @@
             <div class="signature-section">
                 <p class="signature-date">Semarang, {{ $donation->created_at->translatedFormat('d F Y') }}</p>
                 <p class="signature-title">Kepala Sekolah,</p>
-                <p class="signature-name">Dr. H. Tjoek Subhan Sulchan</p>
-                <p class="signature-desc">SMA Islam Sultan Agung 1 Semarang</p>
+                <p class="signature-name">{{ signature_name(school_principal_name()) }}</p>
+                <p class="signature-desc">{{ school_name() }}</p>
             </div>
             
             <div class="clear"></div>

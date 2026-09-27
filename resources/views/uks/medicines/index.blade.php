@@ -13,7 +13,7 @@
                     </a>
                     {{ __('Inventaris Obat UKS') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • MANAJEMEN STOK & KADALUWARSA</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • MANAJEMEN STOK & KADALUWARSA</p>
             </div>
             
             <button type="button" @click="$dispatch('open-modal', 'add-medicine-modal')"

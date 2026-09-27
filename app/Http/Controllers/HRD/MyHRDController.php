@@ -62,10 +62,12 @@ class MyHRDController extends Controller
             ->latest('month')
             ->get();
 
-        // School coordinates for frontend geofencing feedback
-        $schoolLat = Setting::get('school_latitude', '-6.9535');
-        $schoolLong = Setting::get('school_longitude', '110.4355');
-        $schoolRadius = Setting::get('school_attendance_radius', '100');
+        // School coordinates for frontend geofencing feedback — the same
+        // centre and radius every GPS check-in uses (App\Support\School).
+        $campus = \App\Support\School::campus();
+        $schoolLat = $campus['latitude'];
+        $schoolLong = $campus['longitude'];
+        $schoolRadius = $campus['radius_meters'];
 
         return view('hrd.my_portal.index', compact(
             'employee',
@@ -100,10 +102,12 @@ class MyHRDController extends Controller
             'date' => $today,
         ]);
 
-        // Get school settings for geofencing
-        $schoolLat = (float) Setting::get('school_latitude', '-6.9535');
-        $schoolLong = (float) Setting::get('school_longitude', '110.4355');
-        $schoolRadius = (float) Setting::get('school_attendance_radius', '100');
+        // Staff check-in used its own centre (-6.9535, 110.4355 — ~4.8 km from
+        // the campus) and radius; it now shares App\Support\School::campus().
+        $campus = \App\Support\School::campus();
+        $schoolLat = $campus['latitude'];
+        $schoolLong = $campus['longitude'];
+        $schoolRadius = $campus['radius_meters'];
 
         // Extract user coordinates from request
         $userLat = $request->input('lat');
@@ -196,10 +200,10 @@ class MyHRDController extends Controller
 
         $payroll->load('employee.user');
 
-        $schoolName = Setting::get('school_name', 'SMA Islam Sultan Agung 1');
-        $schoolAddress = Setting::get('school_address', 'Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242');
-        $schoolPhone = Setting::get('school_phone', '(024) 8313922');
-        $schoolEmail = Setting::get('school_email', 'info@smaisla1smg.sch.id');
+        $schoolName = school_name();
+        $schoolAddress = school_address();
+        $schoolPhone = school_phone();
+        $schoolEmail = school_email();
 
         $pdf = Pdf::loadView('hrd.payrolls.pdf', compact('payroll', 'schoolName', 'schoolAddress', 'schoolPhone', 'schoolEmail'));
 

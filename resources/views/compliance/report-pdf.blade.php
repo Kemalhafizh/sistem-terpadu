@@ -185,7 +185,7 @@
             </td>
             <td class="title-cell">
                 <div class="school-name">{{ $schoolName }}</div>
-                <div class="school-subtitle">SMA Islam Sultan Agung 1 Semarang</div>
+                <div class="school-subtitle">{{ school_name() }}</div>
                 <div class="school-address">{{ $schoolAddress }}</div>
             </td>
         </tr>
@@ -272,7 +272,7 @@
             </td>
             <td class="title-cell">
                 <div class="school-name">{{ $schoolName }}</div>
-                <div class="school-subtitle">SMA Islam Sultan Agung 1 Semarang</div>
+                <div class="school-subtitle">{{ school_name() }}</div>
             </td>
         </tr>
     </table>
@@ -357,14 +357,14 @@
             <td class="signature-cell">
                 <div>Mengetahui,</div>
                 <div class="signature-title">Waka Bidang Kurikulum</div>
-                <div class="signature-pad">Drs. H. Mulyono, M.Pd</div>
-                <div class="signature-title">NIP. 19740512 200312 1 002</div>
+                <div class="signature-pad">{{ signature_name(null) }}</div>
+                <div class="signature-title">{{ signature_nip(null) }}</div>
             </td>
             <td class="signature-cell">
                 <div>Semarang, {{ now()->format('d F Y') }}</div>
                 <div class="signature-title">Kepala Sekolah</div>
-                <div class="signature-pad">Dra. Hj. Wahyu Ningsih, M.Pd</div>
-                <div class="signature-title">NIP. 19710825 199803 2 001</div>
+                <div class="signature-pad">{{ signature_name(school_principal_name()) }}</div>
+                <div class="signature-title">{{ signature_nip(school_principal_nip()) }}</div>
             </td>
         </tr>
     </table>

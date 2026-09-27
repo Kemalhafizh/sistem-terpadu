@@ -63,7 +63,7 @@
             <div class="lg:col-span-3 bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-bold text-lg text-slate-800 dark:text-white">Grid Waktu Pembelajaran Mingguan</h3>
-                    <span class="text-xs text-slate-500">SMA Islam Sultan Agung 1 Semarang</span>
+                    <span class="text-xs text-slate-500">{{ school_name() }}</span>
                 </div>
 
                 <div class="overflow-x-auto">

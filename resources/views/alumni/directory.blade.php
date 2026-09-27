@@ -8,7 +8,7 @@
                      Direktori & Jaringan Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Jelajahi profil alumni SMA Islam Sultan Agung 1 Semarang lintas angkatan.
+                    Jelajahi profil alumni {{ school_name() }} lintas angkatan.
                 </p>
             </div>
             <div class="flex gap-2">

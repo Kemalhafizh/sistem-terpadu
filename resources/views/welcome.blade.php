@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Portal Sekolah & Sistem Terpadu - SMA Islam Sultan Agung 1 Semarang</title>
+  <title>Portal Sekolah & Sistem Terpadu - {{ school_name() }}</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Sistem Informasi Sekolah Terpadu (SISTA) SMA Islam Sultan Agung 1 Semarang. Portal layanan informasi akademik, keuangan, keagamaan, dan pendaftaran siswa baru secara online.">
-  <meta name="keywords" content="sista, sma islam sultan agung 1 semarang, sultan agung, sekolah islam semarang, portal sekolah, spmb online">
-  <meta name="author" content="SMA Islam Sultan Agung 1 Semarang">
+  <meta name="description" content="Sistem Informasi Sekolah Terpadu (SISTA) {{ school_name() }}. Portal layanan informasi akademik, keuangan, keagamaan, dan pendaftaran siswa baru secara online.">
+  <meta name="keywords" content="sista, {{ mb_strtolower(school_name()) }}, sultan agung, sekolah islam semarang, portal sekolah, spmb online">
+  <meta name="author" content="{{ school_name() }}">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:site_name" content="SISTA SMA Islam Sultan Agung 1 Semarang">
-  <meta property="og:title" content="Portal Sekolah & Sistem Terpadu - SMA Islam Sultan Agung 1 Semarang">
-  <meta property="og:description" content="Portal layanan informasi akademik, keuangan, keagamaan, dan pendaftaran siswa baru secara online di SMA Islam Sultan Agung 1 Semarang.">
+  <meta property="og:site_name" content="SISTA {{ school_name() }}">
+  <meta property="og:title" content="Portal Sekolah & Sistem Terpadu - {{ school_name() }}">
+  <meta property="og:description" content="Portal layanan informasi akademik, keuangan, keagamaan, dan pendaftaran siswa baru secara online di {{ school_name() }}.">
   <meta property="og:image" content="{{ asset('images/logo-kotak.png') }}">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="{{ url()->current() }}">
-  <meta property="twitter:title" content="Portal Sekolah & Sistem Terpadu - SMA Islam Sultan Agung 1 Semarang">
-  <meta property="twitter:description" content="Portal layanan informasi akademik, keuangan, keagamaan, dan pendaftaran siswa baru secara online di SMA Islam Sultan Agung 1 Semarang.">
+  <meta property="twitter:title" content="Portal Sekolah & Sistem Terpadu - {{ school_name() }}">
+  <meta property="twitter:description" content="Portal layanan informasi akademik, keuangan, keagamaan, dan pendaftaran siswa baru secara online di {{ school_name() }}.">
   <meta property="twitter:image" content="{{ asset('images/logo-kotak.png') }}">
 
   <!-- PWA & Favicon Set -->
@@ -58,7 +58,9 @@
   {
    "@context": "https://schema.org",
    "@type": "School",
-   "name": "SMA Islam Sultan Agung 1 Semarang",
+   @endverbatim
+   "name": @json(school_name()),
+  @verbatim
    "address": {
     "@type": "PostalAddress",
     "streetAddress": "Jl. Mataram No.657, Wonodri",
@@ -67,10 +69,10 @@
     "postalCode": "50242",
     "addressCountry": "ID"
    },
-   "telephone": "(024) 6580019",
-   "email": "info@sultanagung1.sch.id"
+   @endverbatim
+   "telephone": @json(school_phone()),
+   "email": @json(school_email())
   }
-  @endverbatim
   </script>
 
   <style>
@@ -639,7 +641,7 @@
     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-15"></div>
     <div class="w-full px-6 relative z-10 text-center mb-12">
       <h2 class="text-3xl md:text-4xl font-black mb-4">Apa Kata Mereka?</h2>
-      <p class="text-teal-200">Suara dari alumni, guru, dan wali murid tentang SMA Islam Sultan Agung 1.</p>
+      <p class="text-teal-200">Suara dari alumni, guru, dan wali murid tentang {{ school_short_name() }}.</p>
     </div>
 
     <div x-data="testimonialCarousel()" class="relative w-full px-6">
@@ -789,7 +791,7 @@
               <div class="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center shrink-0 border border-slate-800 mr-4">
                 <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8"></path></svg>
               </div>
-              <span class="text-slate-400 text-sm font-medium">info@sultanagung1.sch.id</span>
+              <span class="text-slate-400 text-sm font-medium">{{ school_email() }}</span>
             </li>
           </ul>
         </div>

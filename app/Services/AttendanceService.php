@@ -95,12 +95,11 @@ class AttendanceService
      */
     public function verifySchoolGeofence(float $latitude, float $longitude): array
     {
-        $brandingService = app(\App\Domains\School\Services\SchoolBrandingDomainService::class);
-        $profile = $brandingService->getSchoolProfile();
+        $campus = \App\Support\School::campus();
 
-        $schoolLat = (float) ($profile['latitude'] ?? -6.9859);
-        $schoolLng = (float) ($profile['longitude'] ?? 110.4398);
-        $allowedRadius = (float) ($profile['geofence_radius'] ?? 200);
+        $schoolLat = $campus['latitude'];
+        $schoolLng = $campus['longitude'];
+        $allowedRadius = $campus['radius_meters'];
 
         $distance = $this->calculateDistanceInMeters($latitude, $longitude, $schoolLat, $schoolLng);
         $isWithinGeofence = $distance <= $allowedRadius;
@@ -109,8 +108,9 @@ class AttendanceService
             'is_valid' => $isWithinGeofence,
             'distance_meters' => round($distance, 2),
             'allowed_radius_meters' => $allowedRadius,
-            'school_name' => $profile['school_name'],
-            'maps_url' => $profile['maps_url'] ?? 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA',
+            'school_name' => \App\Support\School::name(),
+            // Only a link the admin actually saved (the old fallback link was unverified).
+            'maps_url' => \App\Models\Setting::get('school_maps_url') ?: null,
             'latitude' => $schoolLat,
             'longitude' => $schoolLng,
         ];

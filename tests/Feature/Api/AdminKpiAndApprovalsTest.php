@@ -6,6 +6,7 @@ use App\Models\AcademicYear;
 use App\Models\Billing;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
+use App\Models\Payment;
 use App\Models\PaymentCategory;
 use App\Models\Student;
 use App\Models\Subject;
@@ -147,6 +148,47 @@ class AdminKpiAndApprovalsTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('data.cbt_server_usage.active_sessions', 2);
         $response->assertJsonPath('data.cbt_server_usage.sessions_today', 3);
+    }
+
+    /**
+     * FASE 76.2 finding: monthly_revenue used to query `payment_date` on the
+     * `billings` table — a column that only exists on `payments`. SQLite
+     * silently treats an unknown double-quoted identifier as a string
+     * literal (so this returned 0 locally and in every test), but MySQL
+     * throws "Unknown column", which would 500 the whole KPI endpoint in
+     * production. It also never scoped by year, so the same month of every
+     * previous year was summed in.
+     */
+    public function test_kpi_monthly_revenue_dari_tabel_payments_bulan_dan_tahun_berjalan()
+    {
+        Sanctum::actingAs($this->adminUser);
+
+        $year = AcademicYear::create(['year' => '2026/2027', 'semester' => 'Ganjil', 'is_active' => true]);
+        $student = Student::factory()->create();
+        $category = PaymentCategory::create(['name' => 'SPP Bulanan', 'default_amount' => 500000, 'is_monthly' => true]);
+        $billing = Billing::factory()->create([
+            'student_id' => $student->id,
+            'payment_category_id' => $category->id,
+            'academic_year_id' => $year->id,
+            'status' => 'paid',
+        ]);
+
+        $pay = fn (int $amount, $date) => Payment::factory()->create([
+            'billing_id' => $billing->id,
+            'created_by' => $this->adminUser->id,
+            'amount_paid' => $amount,
+            'payment_date' => $date->toDateString(),
+        ]);
+
+        $pay(300000, now()->startOfMonth());
+        $pay(200000, now()->startOfMonth());
+        $pay(999000, now()->startOfMonth()->subYear());          // same month, last year — must be excluded
+        $pay(777000, now()->startOfMonth()->subMonthNoOverflow()); // previous month — must be excluded
+
+        $response = $this->getJson('/api/v1/mobile/admin/kpi');
+
+        $response->assertStatus(200);
+        $this->assertEquals(500000.0, $response->json('data.monthly_revenue'));
     }
 
     public function test_kpi_detail_tidak_mengarang_persentase_kehadiran_guru()

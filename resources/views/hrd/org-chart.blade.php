@@ -8,7 +8,7 @@
                      Struktur Organisasi Sekolah (Organogram)
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Bagan hierarki komando dan koordinasi kerja KBM SMA Islam Sultan Agung 1 Semarang.
+                    Bagan hierarki komando dan koordinasi kerja KBM {{ school_name() }}.
                 </p>
             </div>
             <a href="{{ route('hrd.dashboard') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
@@ -72,7 +72,7 @@
                         
                     </div>
                     <h4 class="font-extrabold text-xs text-gray-800 dark:text-white leading-tight">
-                        {{ $kepsek->user->name ?? 'Drs. H. Soetarto, M.Pd.' }}
+                        {{ $kepsek->user->name ?? (school_principal_name() ?: 'Kepala sekolah belum ditetapkan') }}
                     </h4>
                     <span class="block text-[9px] text-gray-400 font-bold uppercase mt-1">Kepala Sekolah</span>
                     <p class="text-[9px] text-indigo-500 font-bold mt-0.5">{{ $kepsek->employee_number ?? 'ADM-2026-0001' }}</p>

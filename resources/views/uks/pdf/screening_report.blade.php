@@ -72,9 +72,9 @@
 
     <div class="header">
         <h2>Laporan Screening Kesehatan Berkala</h2>
-        <h3>SMA Islam Sultan Agung 1 Semarang</h3>
+        <h3>{{ school_name() }}</h3>
         <div style="font-size: 9px; margin-top: 5px; color: #666;">
-            Jl. Mataram No.657, Wonodri, Semarang • Telp: (024) 6580019
+            {{ school_contact_line(['address', 'phone'], ' • ') }}
         </div>
     </div>
 

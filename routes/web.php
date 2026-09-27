@@ -1772,7 +1772,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/apm')->name('admin.observability.apm.')->group(function () {
         Route::get('/', [ApmObservabilityController::class, 'dashboard'])->name('index');
-        Route::get('trace', [ApmObservabilityController::class, 'simulateTrace'])->name('trace');
+        Route::get('trace', [ApmObservabilityController::class, 'trace'])->name('trace');
     });
 
     Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/security/rbac')->name('admin.security.rbac.')->group(function () {

@@ -9,15 +9,14 @@ use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\Student;
+use App\Support\School;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GeofenceController extends Controller
 {
-    // SMA Islam Sultan Agung 1 Semarang Geolocation Center
-    public const CAMPUS_LATITUDE = -6.996160;
-    public const CAMPUS_LONGITUDE = 110.428510;
-    public const GEOFENCE_RADIUS_METERS = 250.0;
+    // Campus centre and radius: App\Support\School::campus(), shared by every
+    // GPS check-in path.
 
     /**
      * Calculate Haversine distance in meters.
@@ -58,22 +57,23 @@ class GeofenceController extends Controller
             ], 422);
         }
 
+        $campus = School::campus();
         $distance = self::calculateHaversineDistance(
             (float) $validated['latitude'],
             (float) $validated['longitude'],
-            self::CAMPUS_LATITUDE,
-            self::CAMPUS_LONGITUDE
+            $campus['latitude'],
+            $campus['longitude']
         );
 
-        $isInside = $distance <= self::GEOFENCE_RADIUS_METERS;
+        $isInside = $distance <= $campus['radius_meters'];
 
         if (!$isInside) {
             return response()->json([
                 'success' => false,
                 'status' => 'out_of_bounds',
                 'distance_meters' => round($distance, 1),
-                'max_radius_meters' => self::GEOFENCE_RADIUS_METERS,
-                'message' => 'Presensi ditolak: Anda berada di luar radius kampus (' . round($distance, 1) . 'm > ' . self::GEOFENCE_RADIUS_METERS . 'm).',
+                'max_radius_meters' => $campus['radius_meters'],
+                'message' => 'Presensi ditolak: Anda berada di luar radius kampus (' . round($distance, 1) . 'm > ' . round($campus['radius_meters']) . 'm).',
             ], 422);
         }
 

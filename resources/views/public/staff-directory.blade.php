@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>Direktori Guru & Staff - SMA Islam Sultan Agung 1 Semarang</title>
-    <meta name="description" content="Direktori lengkap guru pengajar, tenaga kependidikan, dan staff SMA Islam Sultan Agung 1 Semarang.">
+    <title>Direktori Guru & Staff - {{ school_name() }}</title>
+    <meta name="description" content="Direktori lengkap guru pengajar, tenaga kependidikan, dan staff {{ school_name() }}.">
 @endsection
 
 @section('content')
@@ -22,7 +22,7 @@
             <span class="text-[10px] font-black text-primary-700 uppercase tracking-[0.2em]">Tim Kami</span>
         </div>
         <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Direktori Guru & Tenaga Kependidikan</h2>
-        <p class="text-slate-500 text-lg font-medium leading-relaxed">Para pendidik dan tenaga kependidikan yang berdedikasi dalam membentuk generasi unggul di SMA Islam Sultan Agung 1 Semarang.</p>
+        <p class="text-slate-500 text-lg font-medium leading-relaxed">Para pendidik dan tenaga kependidikan yang berdedikasi dalam membentuk generasi unggul di {{ school_name() }}.</p>
     </div>
 
     @php

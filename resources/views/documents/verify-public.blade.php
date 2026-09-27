@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Verifikasi Keabsahan Dokumen Resmi — SMA Islam Sultan Agung 1 Semarang</title>
+    <title>Verifikasi Keabsahan Dokumen Resmi — {{ school_name() }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-slate-900 text-gray-100 min-h-screen flex items-center justify-center p-4 antialiased font-sans">
@@ -15,7 +15,7 @@
             <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider">
                 PORTAL VERIFIKASI KEABSAHAN DOKUMEN PUBLIK
             </span>
-            <h1 class="text-xl font-black text-white tracking-tight">SMA ISLAM SULTAN AGUNG 1 SEMARANG</h1>
+            <h1 class="text-xl font-black text-white tracking-tight">{{ mb_strtoupper(school_name()) }}</h1>
             <p class="text-xs text-gray-400">Pusat Validasi Tanda Tangan Digital & E-Stamp Kriptografi SHA-256</p>
         </div>
 
@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <h2 class="text-sm font-black text-emerald-400 uppercase tracking-wide">DOKUMEN DIJAMIN ABSAH & ASLI</h2>
-                    <p class="text-xs text-emerald-200/80">Dokumen terverifikasi resmi diterbitkan oleh SMA Islam Sultan Agung 1 Semarang.</p>
+                    <p class="text-xs text-emerald-200/80">Dokumen terverifikasi resmi diterbitkan oleh {{ school_name() }}.</p>
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
         @endif
 
         <div class="pt-4 border-t border-slate-700 text-center text-[10px] font-mono text-gray-500 space-y-1">
-            <p>Yayasan Badan Wakaf Sultan Agung (YBWSA)</p>
+            <p>{{ school_foundation_name() }}</p>
             <p>Sistem Terpadu Akademik & Manajemen Sekolah (SISTA) &copy; 2026</p>
         </div>
 

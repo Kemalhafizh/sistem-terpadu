@@ -163,7 +163,7 @@
     <!-- Kop Surat -->
     <div class="header">
         <h2>{{ $schoolName }}</h2>
-        <p>{{ $schoolAddress }} | Telp: (024) 6580824 | Email: info@sultanagung1.sch.id</p>
+        <p>{{ school_contact_line() }}</p>
     </div>
 
     <!-- Judul Laporan -->
@@ -322,9 +322,8 @@
                         <p>Semarang, {{ \Carbon\Carbon::now()->format('d F Y') }}</p>
                         <p>Kepala Sekolah,</p>
                         <br><br><br><br>
-                        <p><strong>___________________________________</strong></p>
-                        <p><strong>Drs. H. Anis Wahdi, M.Pd</strong></p>
-                        <p>NIP. 196803211993031002</p>
+                                                <p><strong>{{ signature_name(school_principal_name()) }}</strong></p>
+                        <p>{{ signature_nip(school_principal_nip()) }}</p>
                     </div>
                 </td>
             </tr>

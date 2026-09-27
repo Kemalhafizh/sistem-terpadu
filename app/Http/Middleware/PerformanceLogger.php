@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Observability\RequestMetricsRecorder;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PerformanceLogger
 {
+    public function __construct(private RequestMetricsRecorder $recorder) {}
+
     /**
      * Handle an incoming request.
      */
@@ -30,18 +33,31 @@ class PerformanceLogger
         $endTime = microtime(true);
         $durationMs = ($endTime - $startTime) * 1000;
         $peakMemory = memory_get_peak_usage(true); // real allocated size
+        // Set by CorrelationIdMiddleware, which runs inside this middleware.
+        $correlationId = $request->headers->get('X-Correlation-ID');
 
-        // Filter queries that exceed 500ms
-        $slowQueries = array_filter($queries, function ($q) {
-            return $q['time_ms'] >= 500;
+        // Every request feeds the APM dashboard's real P50/P90/P99 and
+        // availability (it used to show fixed numbers).
+        $this->recorder->record(
+            $request->method(),
+            $request->path(),
+            $response->getStatusCode(),
+            $durationMs,
+            $correlationId,
+            $endTime
+        );
+
+        $slowQueryMs = (float) config('apm.slow_query_ms', 500);
+        $slowQueries = array_filter($queries, function ($q) use ($slowQueryMs) {
+            return $q['time_ms'] >= $slowQueryMs;
         });
 
-        // Threshold slow request: > 1000ms OR peak memory > 128MB OR has slow queries
-        $isSlowRequest = $durationMs >= 1000;
+        // Threshold slow request OR peak memory > 128MB OR has slow queries
+        $isSlowRequest = $durationMs >= (float) config('apm.slow_request_ms', 1000);
         $isHighMemory = !app()->environment('testing') && $peakMemory >= (128 * 1024 * 1024); // 128MB
 
         if ($isSlowRequest || $isHighMemory || !empty($slowQueries)) {
-            $this->logPerformance($request, $durationMs, $peakMemory, array_values($slowQueries));
+            $this->logPerformance($request, $durationMs, $peakMemory, array_values($slowQueries), $correlationId, $response->getStatusCode());
         }
 
         return $response;
@@ -50,11 +66,11 @@ class PerformanceLogger
     /**
      * Log the slow performance request to the JSON log.
      */
-    protected function logPerformance(Request $request, float $durationMs, int $peakMemory, array $slowQueries): void
+    protected function logPerformance(Request $request, float $durationMs, int $peakMemory, array $slowQueries, ?string $correlationId = null, ?int $status = null): void
     {
         try {
             $logPath = storage_path('logs/observability.json');
-            
+
             // Ensure the directory exists
             $logDir = dirname($logPath);
             if (!file_exists($logDir)) {
@@ -64,8 +80,11 @@ class PerformanceLogger
             $logEntry = [
                 'timestamp' => now()->toIso8601String(),
                 'type' => 'performance',
-                'url' => $request->fullUrl(),
+                // Path only: the full URL could carry tokens in its query string.
+                'url' => '/'.ltrim($request->path(), '/'),
                 'method' => $request->method(),
+                'status' => $status,
+                'correlation_id' => $correlationId,
                 'user_id' => auth()->id(),
                 'duration_ms' => round($durationMs, 2),
                 'memory_mb' => round($peakMemory / 1024 / 1024, 2),

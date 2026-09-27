@@ -75,6 +75,9 @@ class AppServiceProvider extends ServiceProvider
     // Register Counseling Policy
     Gate::policy(CounselingSession::class, CounselingSessionPolicy::class);
 
+    // Register Student Showcase Policy
+    Gate::policy(\App\Models\StudentShowcase::class, \App\Policies\StudentShowcasePolicy::class);
+
     // Register Forum Policy
     Gate::policy(ForumThread::class, ForumPolicy::class);
     Gate::policy(ForumReply::class, ForumPolicy::class);

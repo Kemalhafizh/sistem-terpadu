@@ -86,7 +86,7 @@
 
             <td class="label-cell">
                 <div class="label-sticker">
-                    <div class="school-header">SMA ISLAM SULTAN AGUNG 1</div>
+                    <div class="school-header">{{ mb_strtoupper(school_short_name()) }}</div>
                     <div style="border-bottom: 1px solid #e5e7eb; margin-bottom: 6px;"></div>
                     <div class="asset-name">{{ Str::limit($asset->name, 38) }}</div>
                     

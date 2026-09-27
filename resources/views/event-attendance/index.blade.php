@@ -6,7 +6,7 @@
                     {{ __('Presensi Kegiatan & Acara Sekolah') }}
                 </h2>
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">
-                    SMA Islam Sultan Agung 1 Semarang
+                    {{ school_name() }}
                 </p>
             </div>
             <div class="flex items-center space-x-2">

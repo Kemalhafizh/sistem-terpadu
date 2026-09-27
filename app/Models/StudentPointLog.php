@@ -55,11 +55,9 @@ class StudentPointLog extends Model
             if ($student) {
                 $totalPoints = $student->total_points;
                 
-                $thresholds = [
-                    100 => 'SP3',
-                    75 => 'SP2',
-                    50 => 'SP1',
-                ];
+                // Highest level first, so only the top applicable SP is issued.
+                $thresholds = array_flip(\App\Models\WarningLetter::THRESHOLDS);
+                krsort($thresholds);
 
                 foreach ($thresholds as $threshold => $level) {
                     if ($totalPoints >= $threshold) {

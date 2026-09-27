@@ -8,7 +8,7 @@
                 <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                 Tantangan Eco
             </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 font-bold">SMA Islam Sultan Agung 1 Semarang</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 font-bold">{{ school_name() }}</p>
         </div>
     </div>
     

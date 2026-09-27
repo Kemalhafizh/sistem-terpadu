@@ -8,7 +8,7 @@
                      Laporan Kehadiran Bulanan Pegawai
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Rekapitulasi absensi presensi bulanan guru dan staf SMA Islam Sultan Agung 1 Semarang.
+                    Rekapitulasi absensi presensi bulanan guru dan staf {{ school_name() }}.
                 </p>
             </div>
             <div class="flex gap-2">

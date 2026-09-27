@@ -2,26 +2,24 @@
 
 namespace Database\Seeders;
 
-use App\Models\Setting;
+use App\Domains\School\Services\SchoolBrandingDomainService;
 use Illuminate\Database\Seeder;
 
 class SchoolBrandingSeeder extends Seeder
 {
+    /**
+     * Seeds nothing on purpose. This used to write an invented NPSN
+     * (20328888), a placeholder principal ("Drs. H. Ahmad Dahlan, M.Pd.") with
+     * a made-up NIP, a phone number and e-mail the school does not use, and
+     * campus coordinates ~1.3 km off — all of which printed on official
+     * documents and moved the attendance geofence.
+     *
+     * Institutional data now falls back to config/school.php (checked against
+     * the school's own website); the principal's name and NIP stay empty until
+     * an admin enters them, and Admin > Profil Sekolah says so.
+     */
     public function run(): void
     {
-        Setting::set('school_name', 'SMA Islam Sultan Agung 1 Semarang');
-        Setting::set('foundation_name', 'Yayasan Badan Wakaf Sultan Agung (YBWSA)');
-        Setting::set('school_npsn', '20328888');
-        Setting::set('school_akreditasi', 'A (Unggul)');
-        Setting::set('school_address', 'Jl. Mataram No. 657 Semarang, Jawa Tengah 50242');
-        Setting::set('school_phone', '(024) 8314941');
-        Setting::set('school_email', 'info@smaislam1-smg.sch.id');
-        Setting::set('principal_name', 'Drs. H. Ahmad Dahlan, M.Pd.');
-        Setting::set('principal_nip', '196807151994031005');
-        Setting::set('active_academic_year', '2026/2027 Semester Ganjil');
-        Setting::set('school_maps_url', 'https://maps.app.goo.gl/2Lp8Pa6BVvmHE1VJA');
-        Setting::set('school_latitude', '-6.9859');
-        Setting::set('school_longitude', '110.4398');
-        Setting::set('school_geofence_radius', '200');
+        SchoolBrandingDomainService::forgetCache();
     }
 }

@@ -10,11 +10,10 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            // General
-            ['key' => 'school_name', 'value' => 'Sistem Terpadu Academy', 'group' => 'general', 'type' => 'text'],
-            ['key' => 'school_address', 'value' => 'Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242', 'group' => 'general', 'type' => 'textarea'],
-            ['key' => 'school_phone', 'value' => '021-1234567', 'group' => 'general', 'type' => 'text'],
-            ['key' => 'school_email', 'value' => 'info@sistem-terpadu.sch.id', 'group' => 'general', 'type' => 'text'],
+            // General — the school's identity (name, address, phone, e-mail,
+            // NPSN, principal) is not seeded: it comes from config/school.php
+            // until an admin saves it in Admin > Profil Sekolah. This used to
+            // seed "Sistem Terpadu Academy" and a Jakarta (021) number.
             ['key' => 'school_logo', 'value' => null, 'group' => 'general', 'type' => 'image'],
 
             // Academic

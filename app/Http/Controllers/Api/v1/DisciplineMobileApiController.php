@@ -25,13 +25,21 @@ class DisciplineMobileApiController extends Controller
         if (in_array($user->role, ['student', 'siswa'])) {
             return $user->student;
         } elseif (in_array($user->role, ['parent', 'orangtua'])) {
-            // Asumsi 1 parent = 1 student aktif untuk versi mobile (bisa dimodif via query param)
+            // A parent may have several children. The app identifies a child
+            // by uuid (all it learns from parent/children); student_id is kept
+            // for older clients. Either way the child must belong to this
+            // parent — someone else's child resolves to null (404).
             $query = \App\Models\Student::where('parent_id', $user->id);
-            $studentId = $request->query('student_id');
-            if ($studentId) {
-                return $query->where('id', $studentId)->first();
+            if ($request->filled('student_uuid')) {
+                return $query->where('uuid', (string) $request->query('student_uuid'))->first();
             }
-            return $query->first();
+            if ($request->filled('student_id')) {
+                return $query->where('id', $request->query('student_id'))->first();
+            }
+            // No child chosen: a stable default (oldest record) instead of
+            // whatever row the database happened to return first. The
+            // summary names the child, so the app can show whose data it is.
+            return $query->orderBy('id')->first();
         }
         
         throw new Exception("Role tidak memiliki data siswa.");
@@ -44,6 +52,12 @@ class DisciplineMobileApiController extends Controller
             if (!$student) return $this->errorResponse('Siswa tidak ditemukan.', 404);
 
             $data = $this->disciplineService->getSummary($student);
+            // Whose numbers these are — essential for a parent with several children.
+            $data['student'] = [
+                'uuid' => $student->uuid,
+                'name' => $student->name,
+                'classroom' => $student->classroom?->name,
+            ];
             return $this->successResponse($data, 'Ringkasan poin kedisiplinan berhasil diambil');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 400);
@@ -73,7 +87,7 @@ class DisciplineMobileApiController extends Controller
             $student = $this->resolveStudent($request);
             if (!$student) return $this->errorResponse('Siswa tidak ditemukan.', 404);
 
-            $data = $this->disciplineService->getWarningLetters($student);
+            $data = $this->disciplineService->getWarningLetters($student, $request->user());
             return $this->successResponse($data, 'Daftar surat peringatan berhasil diambil');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 400);

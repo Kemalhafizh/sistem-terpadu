@@ -192,15 +192,15 @@
 </head>
 <body>
 
-    <!-- Kop Surat Khas SMA Islam Sultan Agung 1 -->
+    <!-- Kop Surat Khas {{ school_short_name() }} -->
     <table class="header-table">
         <tr>
             <!-- Placeholder logo space to keep layout, using high contrast typography and layout -->
             <td class="header-text">
-                <h1>Yayasan Badan Wakaf Sultan Agung</h1>
-                <h2>SMA Islam Sultan Agung 1 Semarang</h2>
-                <p>Jalan Mataram No. 657 Semarang 50242, Jawa Tengah | Telepon: (024) 8313364</p>
-                <p>Website: www.smaislam-sula1.sch.id | Email: info@smaislam-sula1.sch.id</p>
+                <h1>{{ school_foundation_name(false) }}</h1>
+                <h2>{{ school_name() }}</h2>
+                <p>{{ school_contact_line(['address', 'phone']) }}</p>
+                <p>{{ school_contact_line(['website', 'email']) }}</p>
             </td>
         </tr>
     </table>
@@ -289,10 +289,10 @@
                 <p style="margin: 0 0 5px 0; font-size: 10px; color: #4b5563;">Semarang, {{ now()->translatedFormat('d F Y') }}</p>
                 <p class="signature-title" style="margin: 0 0 45px 0; font-weight: bold; text-transform: uppercase;">
                     Mengetahui,<br>
-                    Waka Kesiswaan SMA Islam Sultan Agung 1
+                    Waka Kesiswaan {{ school_short_name() }}
                 </p>
-                <p class="signature-name" style="margin: 0;">Drs. H. M. Said, M.Pd.</p>
-                <p class="signature-nip" style="margin: 0;">NIP. 19740812 200212 1 002</p>
+                <p class="signature-name" style="margin: 0;">{{ signature_name(null) }}</p>
+                <p class="signature-nip" style="margin: 0;">{{ signature_nip(null) }}</p>
             </td>
         </tr>
     </table>

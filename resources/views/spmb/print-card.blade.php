@@ -110,7 +110,7 @@
     <div class="card">
         <div class="header">
             <h2>KARTU PESERTA SELEKSI MASUK (SPMB)</h2>
-            <p>SMA Islam Sultan Agung 1 Semarang</p>
+            <p>{{ school_name() }}</p>
         </div>
 
         <div class="content">
@@ -162,7 +162,7 @@
                 <li>Simpan kartu peserta ini dengan baik sebagai bukti pendaftaran resmi.</li>
                 <li>Gunakan Nomor Pendaftaran di atas untuk memeriksa pengumuman seleksi di website SPMB.</li>
                 <li>Jika memilih Jalur Prestasi/Tahfidz, harap membawa berkas asli sertifikat/piagam saat tes wawancara.</li>
-                <li>Informasi lebih lanjut hubungi Panitia SPMB SMA Islam Sultan Agung 1 Semarang.</li>
+                <li>Informasi lebih lanjut hubungi Panitia SPMB {{ school_name() }}.</li>
             </ol>
         </div>
     </div>

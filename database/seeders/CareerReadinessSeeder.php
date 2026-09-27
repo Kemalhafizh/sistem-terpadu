@@ -60,7 +60,7 @@ class CareerReadinessSeeder extends Seeder
             'project_title' => 'Sistem Pertanian Hidroponik Cerdas',
             'description' => 'Proyek IoT untuk memonitor tanaman hidroponik.',
             'is_public' => true,
-            'view_count' => 150
+            // view_count starts at 0 and only real views raise it (it used to be seeded as 150).
         ]);
 
         $wallet = StudentWallet::create([

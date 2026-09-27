@@ -43,11 +43,11 @@
     <div class="invoice-container">
         <!-- School Kop Surat -->
         <div class="header">
-            <h1 class="school-name">Yayasan Badan Wakaf Sultan Agung</h1>
-            <h2 class="school-subtitle">SMA ISLAM SULTAN AGUNG 1 SEMARANG</h2>
+            <h1 class="school-name">{{ school_foundation_name(false) }}</h1>
+            <h2 class="school-subtitle">{{ mb_strtoupper(school_name()) }}</h2>
             <p class="school-info">
-                Terakreditasi A (Unggul) &bull; Jl. Mataram No.657, Wonodri, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah 50242<br>
-                Telp: (024) 8313922 | Email: info@smaisla1smg.sch.id | Website: smaisla1smg.sch.id
+                @if(school_accreditation())Terakreditasi {{ school_accreditation() }} &bull; @endif{{ school_address() }}<br>
+                {{ school_contact_line(['phone', 'email', 'website']) }}
             </p>
         </div>
 
@@ -137,7 +137,7 @@
             <div class="instructions-title">Petunjuk & Prosedur Pembayaran:</div>
             <ul class="instructions-list">
                 <li>Pembayaran dapat dilakukan melalui **Transfer Bank** ke rekening resmi sekolah:
-                    <br>&bull; **Bank Jateng Syariah** &bull; No. Rekening: **503-222-1110** a.n. **SMA Islam Sultan Agung 1 Semarang**
+                    <br>&bull; **Bank Jateng Syariah** &bull; No. Rekening: **503-222-1110** a.n. **{{ school_name() }}**
                 </li>
                 <li>Tuliskan **Nama Lengkap Siswa, Kelas, dan NIS** pada berita transfer untuk memudahkan verifikasi manual.</li>
                 <li>Setelah melakukan pembayaran, mohon unggah bukti bayar via portal siswa SISTA atau bawa bukti cetak ke petugas keuangan sekolah.</li>
@@ -156,7 +156,7 @@
                 <p>Semarang, {{ date('d F Y') }}</p>
                 <p>Kepala Urusan Tata Usaha,</p>
                 <div class="signature-space"></div>
-                <p><strong>Drs. H. Mulyono, M.Pd</strong></p>
+                <p><strong>{{ signature_name(null) }}</strong></p>
             </div>
             <div class="clear"></div>
         </div>

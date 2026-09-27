@@ -114,5 +114,8 @@ test('admin can delete an announcement', function () {
     $response->assertRedirect();
     $response->assertSessionHas('success');
 
-    $this->assertDatabaseMissing('announcements', ['id' => $announcement->id]);
+    // Announcement uses SoftDeletes (migration 2026_09_19_215736), so the row
+    // stays with deleted_at set and disappears from normal queries.
+    $this->assertSoftDeleted('announcements', ['id' => $announcement->id]);
+    expect(Announcement::find($announcement->id))->toBeNull();
 });

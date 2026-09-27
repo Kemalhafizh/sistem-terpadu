@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use App\Support\LogTail;
 
 class HealthCheck extends Command
 {
@@ -115,10 +116,10 @@ class HealthCheck extends Command
       $usedPercentage = round((($total - $free) / $total) * 100, 2);
       
       $status = ' HEALTHY';
-      if ($usedPercentage > 90) {
+      if ($usedPercentage > config('health.disk_critical_percent', 90)) {
         $status = ' CRITICAL';
         $isHealthy = false;
-      } elseif ($usedPercentage > 80) {
+      } elseif ($usedPercentage > config('health.disk_warning_percent', 80)) {
         $status = ' WARNING';
         $isHealthy = false;
       }
@@ -164,16 +165,18 @@ class HealthCheck extends Command
     try {
       $logPath = storage_path('logs/laravel.log');
       if (file_exists($logPath)) {
-        $logContent = file_get_contents($logPath);
-        
-        // Parse last 1000 lines for recent ERROR logs
-        $lines = explode("\n", $logContent);
-        $logCount = count($lines);
-        $startLine = max(0, $logCount - 1500);
-        
+        // Only the end of the log is read. file_get_contents() on the whole
+        // file hit PHP's memory limit once the log grew (a fatal error, not
+        // an Exception), so the health check itself crashed.
+        $lines = LogTail::lines(
+          $logPath,
+          (int) config('health.log_tail_bytes', 1024 * 1024),
+          (int) config('health.log_tail_lines', 1500)
+        );
+
         $errorCount = 0;
-        for ($i = $startLine; $i < $logCount; $i++) {
-          if (str_contains($lines[$i], '.ERROR:') || str_contains($lines[$i], '.CRITICAL:') || str_contains($lines[$i], '.EMERGENCY:')) {
+        foreach ($lines as $line) {
+          if (str_contains($line, '.ERROR:') || str_contains($line, '.CRITICAL:') || str_contains($line, '.EMERGENCY:')) {
             $errorCount++;
           }
         }

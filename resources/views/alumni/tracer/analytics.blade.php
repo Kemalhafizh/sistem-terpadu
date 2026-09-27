@@ -8,7 +8,7 @@
                      Analisis & Evaluasi Tracer Study
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Hasil kuesioner pelacakan aktivitas dan kepuasan alumni SMA Islam Sultan Agung 1 Semarang.
+                    Hasil kuesioner pelacakan aktivitas dan kepuasan alumni {{ school_name() }}.
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">

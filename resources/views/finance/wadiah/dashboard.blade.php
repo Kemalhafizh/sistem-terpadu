@@ -9,7 +9,7 @@
                      Dashboard Tabungan Wadiah
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Kelola simpanan wadiah dan transaksi cashless siswa SMA Islam Sultan Agung 1 Semarang.
+                    Kelola simpanan wadiah dan transaksi cashless siswa {{ school_name() }}.
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">

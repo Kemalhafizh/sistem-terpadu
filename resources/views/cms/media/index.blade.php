@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-widest text-teal-600">SMA ISLAM SULTAN AGUNG 1 • ASET DIGITAL</p>
+                <p class="text-[10px] font-black uppercase tracking-widest text-teal-600">{{ mb_strtoupper(school_short_name()) }} • ASET DIGITAL</p>
                 <h2 class="font-extrabold text-xl text-gray-800 dark:text-gray-100 leading-tight mt-1">
                     {{ __('Perpustakaan Media') }}
                 </h2>

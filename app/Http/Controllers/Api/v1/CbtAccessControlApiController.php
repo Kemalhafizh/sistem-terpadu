@@ -198,6 +198,32 @@ class CbtAccessControlApiController extends Controller
     }
 
     /**
+     * List the exams the authenticated teacher operates (UTS/UAS as operator,
+     * other types as creator) that are published and not yet ended — the
+     * exams they can open in the proctor screen.
+     */
+    public function teacherExams(Request $request)
+    {
+        $exams = $this->accessControlService->examsOperatedBy($request->user())->get();
+
+        $data = $exams->map(fn (Exam $exam) => [
+            'id' => $exam->id,
+            'title' => $exam->title,
+            'type' => $exam->type,
+            'subject' => $exam->subject?->name,
+            'classroom' => $exam->classroom?->name,
+            'start_time' => $exam->start_time?->toIso8601String(),
+            'end_time' => $exam->end_time?->toIso8601String(),
+            'duration_minutes' => $exam->duration_minutes,
+            'total_questions' => $exam->total_questions,
+            'mobile_only' => (bool) $exam->mobile_only,
+            'is_ongoing' => $exam->isOngoing(),
+        ])->values();
+
+        return $this->successResponse($data, 'Daftar ujian yang Anda awasi berhasil diambil');
+    }
+
+    /**
      * Get active exam entry token (Teacher/Operator only).
      */
     public function getToken(Request $request, $id)

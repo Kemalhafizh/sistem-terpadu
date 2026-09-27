@@ -11,7 +11,7 @@
             <div class="relative z-10">
                 <h3 class="text-2xl font-black mb-2">Halo, {{ $alumni->student->user->name }}!</h3>
                 <p class="text-primary-100 text-sm max-w-2xl leading-relaxed">
-                    Terima kasih telah berkontribusi untuk kemajuan almamater tercinta. Tracer study ini bertujuan untuk melacak serapan lulusan, keselarasan kurikulum, serta mendapatkan masukan berharga dari Anda demi perbaikan Sistem Terpadu SMA Islam Sultan Agung 1.
+                    Terima kasih telah berkontribusi untuk kemajuan almamater tercinta. Tracer study ini bertujuan untuk melacak serapan lulusan, keselarasan kurikulum, serta mendapatkan masukan berharga dari Anda demi perbaikan Sistem Terpadu {{ school_short_name() }}.
                 </p>
                 <div class="mt-4 inline-flex items-center px-3 py-1 bg-white/10 backdrop-blur-md rounded-xl text-xs font-bold text-primary-200">
                     Graduation Year: {{ $alumni->graduation_year }}

@@ -76,7 +76,7 @@
                     A
                 </div>
                 <div>
-                    <h2 class="text-[9px] font-black text-gray-800 uppercase tracking-widest leading-none">SMA Islam Sultan Agung 1</h2>
+                    <h2 class="text-[9px] font-black text-gray-800 uppercase tracking-widest leading-none">{{ school_short_name() }}</h2>
                     <p class="text-[7px] font-bold text-emerald-600 uppercase tracking-wider mt-0.5">KARTU ANGGOTA PERPUSTAKAAN</p>
                 </div>
             </div>

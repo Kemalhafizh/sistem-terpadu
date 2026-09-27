@@ -8,7 +8,7 @@
                 <h2 class="font-black text-3xl text-gray-900 dark:text-white leading-tight tracking-tight mt-2">
                     Dompet Digital <span class="bg-gradient-to-r from-primary-600 to-emerald-600 bg-clip-text text-transparent">Wadiah</span>
                 </h2>
-                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">Layanan transaksi cashless siswa SMA Islam Sultan Agung 1 Semarang</p>
+                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">Layanan transaksi cashless siswa {{ school_name() }}</p>
             </div>
             
             <div class="flex items-center gap-3">

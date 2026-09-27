@@ -147,6 +147,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
       Route::post('cbt/exams/{id}/proctor/extend-time', [\App\Http\Controllers\Api\v1\CbtEnterpriseApiController::class, 'proctorExtendTime']);
 
       // FASE 87: CBT Token Distribution & Student Reset
+      Route::get('cbt/exams', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'teacherExams']);
       Route::get('cbt/exams/{id}/token', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'getToken']);
       Route::post('cbt/exams/{id}/token/regenerate', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'regenerateToken']);
       Route::post('cbt/exams/{id}/token/reset-student', [\App\Http\Controllers\Api\v1\CbtAccessControlApiController::class, 'resetStudent']);

@@ -5,7 +5,7 @@
     <div class="mb-8">
         <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
             <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            Dasbor Pengunjung SMA Islam Sultan Agung 1 Semarang
+            Dasbor Pengunjung {{ school_name() }}
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Manajemen log kunjungan kampus</p>
     </div>

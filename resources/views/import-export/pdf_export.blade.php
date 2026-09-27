@@ -86,7 +86,7 @@
 
     <!-- School Header / Kop Surat -->
     <div class="header">
-        <h1 class="school-name">SMA Islam Sultan Agung 1 Semarang</h1>
+        <h1 class="school-name">{{ school_name() }}</h1>
         <p class="school-subtitle">Sistem Informasi Sekolah Terpadu SISTA</p>
     </div>
 
@@ -126,7 +126,7 @@
 
     <!-- Footer PDF -->
     <div class="footer">
-        SMA Islam Sultan Agung 1 Semarang — Dokumen Resmi Laporan SISTA — Halaman 1 dari 1
+        {{ school_name() }} — Dokumen Resmi Laporan SISTA — Halaman 1 dari 1
     </div>
 
 </body>

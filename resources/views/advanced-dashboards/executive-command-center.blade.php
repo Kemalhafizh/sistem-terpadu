@@ -6,7 +6,7 @@
                     {{ __('Pusat Komando Eksekutif (Executive Command Center)') }}
                 </h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                    Pemantauan kinerja institusi, metrik langsung, dan KPI operasional SMA Islam Sultan Agung 1 Semarang.
+                    Pemantauan kinerja institusi, metrik langsung, dan KPI operasional {{ school_name() }}.
                 </p>
             </div>
             <button onclick="window.location.reload()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-sm font-semibold shadow-sm transition-all flex items-center space-x-2">

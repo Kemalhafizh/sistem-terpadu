@@ -10,6 +10,17 @@ class WarningLetter extends Model
 {
     use HasFactory;
 
+    /**
+     * Net point balance at which each warning letter is issued automatically
+     * (StudentPointLog::booted). The mobile summary reads the same table so
+     * the "next SP" it shows can never drift from what is actually issued.
+     */
+    public const THRESHOLDS = [
+        'SP1' => 50,
+        'SP2' => 75,
+        'SP3' => 100,
+    ];
+
     protected $fillable = [
         'student_id',
         'level',

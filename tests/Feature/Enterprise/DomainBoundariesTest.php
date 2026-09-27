@@ -70,14 +70,18 @@ test('admin can view and update school branding profile via controller', functio
     $responsePost = $this->actingAs($this->admin)->post(route('admin.school.branding.update'), [
         'school_name' => 'SMA Islam Sultan Agung 1 Semarang Enterprise',
         'foundation_name' => 'Yayasan Badan Wakaf Sultan Agung (YBWSA)',
-        'school_npsn' => '20328888',
-        'school_akreditasi' => 'A (Unggul)',
-        'school_address' => 'Jl. Mataram No. 657 Semarang, Jawa Tengah 50242',
-        'school_phone' => '(024) 8314941',
-        'school_email' => 'info@smaislam1-smg.sch.id',
-        'principal_name' => 'Drs. H. Ahmad Dahlan, M.Pd.',
-        'principal_nip' => '196807151994031005',
-        'active_academic_year' => '2026/2027 Semester Ganjil',
+        // Neutral test values — the placeholder NPSN/principal that used to
+        // be here were the ones printing on real kop surat.
+        'school_npsn' => '12345678',
+        'school_akreditasi' => 'A',
+        'school_address' => 'Jl. Contoh No. 1',
+        'school_phone' => '(024) 0000000',
+        'school_email' => 'info@contoh.sch.id',
+        'principal_name' => 'Kepala Contoh, S.Pd.',
+        'principal_nip' => '198001012005011001',
+        'school_latitude' => '-6.99',
+        'school_longitude' => '110.43',
+        'school_geofence_radius' => '150',
     ]);
 
     $responsePost->assertStatus(302);
@@ -85,5 +89,9 @@ test('admin can view and update school branding profile via controller', functio
 
     $service = new SchoolBrandingDomainService();
     $profile = $service->getSchoolProfile();
-    expect($profile['school_name'])->toBe('SMA Islam Sultan Agung 1 Semarang Enterprise');
+    expect($profile['school_name'])->toBe('SMA Islam Sultan Agung 1 Semarang Enterprise')
+        ->and($profile['principal_name'])->toBe('Kepala Contoh, S.Pd.');
+
+    // These were on the form but never validated, so they were silently dropped.
+    expect(\App\Support\School::campus())->toBe(['latitude' => -6.99, 'longitude' => 110.43, 'radius_meters' => 150.0]);
 });

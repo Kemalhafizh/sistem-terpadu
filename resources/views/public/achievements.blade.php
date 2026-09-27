@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>Prestasi Sekolah - SMA Islam Sultan Agung 1 Semarang</title>
-    <meta name="description" content="Daftar prestasi dan pencapaian gemilang siswa-siswi serta civitas akademika SMA Islam Sultan Agung 1 Semarang di berbagai bidang kompetisi.">
+    <title>Prestasi Sekolah - {{ school_name() }}</title>
+    <meta name="description" content="Daftar prestasi dan pencapaian gemilang siswa-siswi serta civitas akademika {{ school_name() }} di berbagai bidang kompetisi.">
 @endsection
 
 @section('content')
@@ -22,7 +22,7 @@
             <span class="text-[10px] font-black text-amber-700 uppercase tracking-[0.2em]">Hall of Fame</span>
         </div>
         <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Prestasi & Pencapaian</h2>
-        <p class="text-slate-500 text-lg font-medium leading-relaxed">Catatan gemilang perjalanan siswa-siswi dan civitas akademika SMA Islam Sultan Agung 1 Semarang dalam menorehkan prestasi di berbagai bidang.</p>
+        <p class="text-slate-500 text-lg font-medium leading-relaxed">Catatan gemilang perjalanan siswa-siswi dan civitas akademika {{ school_name() }} dalam menorehkan prestasi di berbagai bidang.</p>
     </div>
 
     @if(isset($achievements) && $achievements->count() > 0)

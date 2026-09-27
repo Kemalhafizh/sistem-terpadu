@@ -13,7 +13,7 @@
                     <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
                         {{ __('Laporan Screening: ' . $screening->title) }}
                     </h2>
-                    <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • ANALISA & PROFIL KESEHATAN</p>
+                    <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • ANALISA & PROFIL KESEHATAN</p>
                 </div>
             </div>
 

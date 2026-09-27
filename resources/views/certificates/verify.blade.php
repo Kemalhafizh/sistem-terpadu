@@ -7,7 +7,7 @@
             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         </div>
         <h1 class="text-2xl font-black text-gray-900 dark:text-white">Sertifikat Digital Sah & Terverifikasi</h1>
-        <p class="text-xs text-gray-500">SMA Islam Sultan Agung 1 Semarang</p>
+        <p class="text-xs text-gray-500">{{ school_name() }}</p>
 
         <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-2xl text-left space-y-2 border border-gray-200 dark:border-gray-700 text-sm">
             <div class="flex justify-between">

@@ -32,7 +32,7 @@
                             KATEGORI RATA-RATA EDS
                         </span>
                         <h3 class="text-3xl font-black tracking-tight">{{ $results['overall_category'] }}</h3>
-                        <p class="text-xs text-gray-300">SMA Islam Sultan Agung 1 Semarang — SPMI Internal</p>
+                        <p class="text-xs text-gray-300">{{ school_name() }} — SPMI Internal</p>
                     </div>
 
                     <div class="text-center bg-slate-800/80 p-6 rounded-2xl border border-slate-700/80 shrink-0 min-w-[200px]">

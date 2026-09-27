@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-[10px] font-black uppercase tracking-widest text-teal-600">SMA ISLAM SULTAN AGUNG 1 • OPTIMASI MESIN PENCARI</p>
+                <p class="text-[10px] font-black uppercase tracking-widest text-teal-600">{{ mb_strtoupper(school_short_name()) }} • OPTIMASI MESIN PENCARI</p>
                 <h2 class="font-extrabold text-xl text-gray-800 dark:text-gray-100 leading-tight mt-1">
                     {{ __('Pengaturan SEO Global') }}
                 </h2>
@@ -136,7 +136,7 @@
                                 id="seo_og_title"
                                 name="seo_og_title"
                                 value="{{ $seo['og_title'] }}"
-                                placeholder="SISTA — SMA Islam Sultan Agung 1 Semarang"
+                                placeholder="SISTA — {{ school_name() }}"
                                 class="block w-full rounded-2xl border-gray-200 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 dark:focus:ring-teal-800 focus:ring-opacity-50 text-sm font-medium transition-all placeholder:text-gray-300 dark:placeholder:text-gray-600"
                             >
                             <p class="text-xs text-gray-400 dark:text-gray-500 flex items-center space-x-1.5">

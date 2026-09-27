@@ -10,7 +10,7 @@
                     </span>
                     {{ __('Cockpit Pembina Ekstrakurikuler') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • PANEL MANAJEMEN GURU PEMBINA</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • PANEL MANAJEMEN GURU PEMBINA</p>
             </div>
         </div>
     </x-slot>

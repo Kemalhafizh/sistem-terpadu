@@ -5,7 +5,7 @@
     <div class="mb-8">
         <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
             <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-            Katalog Koperasi SMA Islam Sultan Agung 1
+            Katalog Koperasi {{ school_short_name() }}
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Pemesanan seragam dan atribut sekolah</p>
     </div>

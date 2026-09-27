@@ -111,7 +111,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                 <div>
                     <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Matriks Peran & Hak Akses Enterprise (RBAC Matrix)</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Pemetaan hak akses granular per peran pengguna pada SMA Islam Sultan Agung 1 Semarang.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Pemetaan hak akses granular per peran pengguna pada {{ school_name() }}.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

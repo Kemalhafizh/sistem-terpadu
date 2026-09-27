@@ -78,8 +78,8 @@
 
     <div class="header">
         <h1>LAPORAN HASIL BELAJAR SISWA</h1>
-        <h1>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h1>
-        <p>Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242</p>
+        <h1>{{ mb_strtoupper(school_name()) }}</h1>
+        <p>{{ school_address() }}</p>
     </div>
 
     <table class="student-info">

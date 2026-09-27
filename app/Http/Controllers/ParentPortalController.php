@@ -420,7 +420,7 @@ class ParentPortalController extends Controller
         DB::transaction(function () use ($billing) {
             Payment::create([
                 'billing_id' => $billing->id,
-                'created_by' => 1, // System / Admin
+                'created_by' => null, // dikonfirmasi payment gateway, bukan petugas
                 'amount_paid' => $billing->remaining_balance,
                 'payment_date' => now(),
                 'payment_method' => 'transfer',

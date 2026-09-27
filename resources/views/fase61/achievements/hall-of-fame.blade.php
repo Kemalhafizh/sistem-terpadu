@@ -10,7 +10,7 @@
     </div>
     
     <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
-        <p class="text-sm text-gray-600 dark:text-gray-300 font-bold mb-4">SMA Islam Sultan Agung 1 Semarang</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300 font-bold mb-4">{{ school_name() }}</p>
         
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

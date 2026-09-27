@@ -8,7 +8,7 @@
                      Dashboard Kepegawaian & HRD
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Ringkasan data, pelatihan, evaluasi, dan dokumen kepegawaian SMA Islam Sultan Agung 1 Semarang.
+                    Ringkasan data, pelatihan, evaluasi, dan dokumen kepegawaian {{ school_name() }}.
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">

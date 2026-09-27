@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\Setting;
 use App\Models\StudentPointLog;
 use App\Notifications\Channels\WhatsappChannel;
 use Illuminate\Bus\Queueable;
@@ -52,7 +51,7 @@ class StudentPointNotification extends Notification
     $pointsLabel = $this->pointLog->type === 'reward' ? '+'.$this->pointLog->points : '-'.$this->pointLog->points;
     $categoryName = $this->pointLog->category?->name ?? 'Poin Kedisiplinan';
     $description = $this->pointLog->description;
-    $schoolName = Setting::get('school_name', 'SMA Islam Sultan Agung 1');
+    $schoolName = school_name();
 
     return "Assalamu'alaikum Bapak/Ibu Wali Murid dari *{$studentName}*,\n\n".
         "Menginfokan dari bagian bimbingan konseling (BK) *{$schoolName}* bahwa ananda baru saja mencatat data poin kedisiplinan:\n\n".

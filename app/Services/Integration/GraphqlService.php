@@ -26,9 +26,9 @@ class GraphqlService
             return [
                 'data' => [
                     'institution' => [
-                        'name' => 'SMA Islam Sultan Agung 1 Semarang',
-                        'npsn' => '20328888',
-                        'foundation' => 'YBWSA',
+                        'name' => school_name(),
+                        'npsn' => school_npsn() ?: null,
+                        'foundation' => school_foundation_name(),
                     ],
                 ],
             ];

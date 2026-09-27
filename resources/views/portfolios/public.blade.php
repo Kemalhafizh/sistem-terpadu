@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>e-Portfolio {{ $student->name }} — SMA Islam Sultan Agung 1</title>
-    <meta name="description" content="Lembar portofolio digital prestasi resmi milik {{ $student->name }}, siswa aktif SMA Islam Sultan Agung 1 Semarang. Terverifikasi oleh sistem sekolah.">
+    <title>e-Portfolio {{ $student->name }} — {{ school_short_name() }}</title>
+    <meta name="description" content="Lembar portofolio digital prestasi resmi milik {{ $student->name }}, siswa aktif {{ school_name() }}. Terverifikasi oleh sistem sekolah.">
 @endsection
 
 @section('content')
@@ -31,7 +31,7 @@
             </h2>
 
             <p class="text-sm font-semibold text-slate-500">
-                NISN: {{ $student->nisn }} • Kelas: {{ $student->classroom->name ?? 'Wali Kelas' }} • SMA Islam Sultan Agung 1 Semarang
+                NISN: {{ $student->nisn }} • Kelas: {{ $student->classroom->name ?? 'Wali Kelas' }} • {{ school_name() }}
             </p>
         </div>
     </div>

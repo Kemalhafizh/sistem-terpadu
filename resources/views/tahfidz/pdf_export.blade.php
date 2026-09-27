@@ -207,10 +207,10 @@
                 <div style="width: 55px; height: 55px; background-color: #0f5132; color: white; border-radius: 50%; display: inline-block; line-height: 55px; font-weight: bold; font-size: 10px;">SA-1</div>
             </td>
             <td class="header-text">
-                <h1>Yayasan Badan Wakaf Sultan Agung</h1>
-                <h2>SMA Islam Sultan Agung 1 Semarang</h2>
-                <p>Jalan Mataram No. 657, Wonodri, Semarang 50242 | Telp. (024) 6580019</p>
-                <p>Website: www.smaislasa1.sch.id | E-mail: info@smaislasa1.sch.id</p>
+                <h1>{{ school_foundation_name(false) }}</h1>
+                <h2>{{ school_name() }}</h2>
+                <p>{{ school_contact_line(['address', 'phone']) }}</p>
+                <p>{{ school_contact_line(['website', 'email']) }}</p>
             </td>
         </tr>
     </table>
@@ -361,8 +361,8 @@
             <td>
                 <div class="sig-title">Mengetahui, Kepala Sekolah</div>
                 <div style="height: 50px;"></div>
-                <div class="sig-name">Drs. H. Soleh, M.Pd</div>
-                <div class="sig-nip">NIP. 19680312 199403 1 005</div>
+                <div class="sig-name">{{ signature_name(school_principal_name()) }}</div>
+                <div class="sig-nip">{{ signature_nip(school_principal_nip()) }}</div>
             </td>
         </tr>
     </table>

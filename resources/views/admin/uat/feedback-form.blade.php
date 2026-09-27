@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-black tracking-wide text-white">Feedback UAT</h3>
-                    <p class="text-[10px] font-semibold text-emerald-400">SMA Islam Sultan Agung 1</p>
+                    <p class="text-[10px] font-semibold text-emerald-400">{{ school_short_name() }}</p>
                 </div>
             </div>
             <button @click="closeModal()" class="text-gray-400 hover:text-white transition-all">

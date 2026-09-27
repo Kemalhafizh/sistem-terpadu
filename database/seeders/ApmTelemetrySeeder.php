@@ -9,10 +9,11 @@ class ApmTelemetrySeeder extends Seeder
 {
     public function run(): void
     {
-        $service = new ApmTelemetryService();
-        $metrics = $service->getTelemetryMetrics();
+        // Smoke check only: the service must build without exceptions. It no
+        // longer returns fixed numbers, so there is nothing to assert about the
+        // values — on a fresh install with no recorded requests they are null.
+        $metrics = app(ApmTelemetryService::class)->getTelemetryMetrics();
 
-        // Verify telemetry metrics can be retrieved without exceptions
-        assert($metrics['latency']['p99'] <= 100.0);
+        assert(array_key_exists('p99', $metrics['latency']));
     }
 }

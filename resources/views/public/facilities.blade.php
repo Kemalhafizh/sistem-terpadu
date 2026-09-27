@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>Fasilitas Sekolah - SMA Islam Sultan Agung 1 Semarang</title>
-    <meta name="description" content="Sarana dan prasarana modern SMA Islam Sultan Agung 1 Semarang — laboratorium, perpustakaan, masjid, lapangan olahraga, dan fasilitas penunjang lainnya.">
+    <title>Fasilitas Sekolah - {{ school_name() }}</title>
+    <meta name="description" content="Sarana dan prasarana modern {{ school_name() }} — laboratorium, perpustakaan, masjid, lapangan olahraga, dan fasilitas penunjang lainnya.">
 @endsection
 
 @section('content')

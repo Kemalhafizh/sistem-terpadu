@@ -19,7 +19,7 @@
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ $asset->asset_code }}" alt="QR Code" class="w-32 h-32 mb-4">
                     <div class="font-mono font-black text-lg tracking-tighter mb-2">{{ $asset->asset_code }}</div>
                     <div class="text-sm font-bold text-gray-800 uppercase px-4 py-1 bg-yellow-300 rounded-lg mb-4">{{ $asset->name }}</div>
-                    <div class="text-[10px] font-bold text-gray-400">SMA ISLAM SULTAN AGUNG 1</div>
+                    <div class="text-[10px] font-bold text-gray-400">{{ mb_strtoupper(school_short_name()) }}</div>
                     
                     <button onclick="window.print()" class="mt-6 w-full py-3 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs hover:bg-gray-200 transition-all flex items-center justify-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>

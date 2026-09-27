@@ -110,7 +110,7 @@
     <script>
         function copyInviteMessage(name) {
             const inviteLink = `${window.location.origin}/alumni/tracer-study`;
-            const text = `Assalamu'alaikum wr. wb. Halo ${name}, mohon bantuan Anda untuk meluangkan waktu sejenak mengisi kuesioner Tracer Study alumni SMA Islam Sultan Agung 1 Semarang melalui tautan berikut:\n\n ${inviteLink}\n\nMasukan Anda sangat berharga bagi akreditasi dan peningkatan kualitas kurikulum sekolah kita. Terima kasih banyak atas partisipasinya!`;
+            const text = `Assalamu'alaikum wr. wb. Halo ${name}, mohon bantuan Anda untuk meluangkan waktu sejenak mengisi kuesioner Tracer Study alumni ${@js(school_name())} melalui tautan berikut:\n\n ${inviteLink}\n\nMasukan Anda sangat berharga bagi akreditasi dan peningkatan kualitas kurikulum sekolah kita. Terima kasih banyak atas partisipasinya!`;
             
             navigator.clipboard.writeText(text).then(function() {
                 alert('Draf pesan WhatsApp untuk ' + name + ' berhasil disalin ke clipboard!');

@@ -8,7 +8,7 @@
                      Dashboard Analytics Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Statistik penyerapan lulusan SMA Islam Sultan Agung 1 Semarang.
+                    Statistik penyerapan lulusan {{ school_name() }}.
                 </p>
             </div>
             <div class="flex gap-2">

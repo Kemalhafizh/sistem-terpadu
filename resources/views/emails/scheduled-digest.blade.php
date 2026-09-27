@@ -67,7 +67,7 @@
             <!-- Header -->
             <div class="header">
                 <h1>{{ $digestName }}</h1>
-                <p>Sistem Informasi Terpadu SMA Islam Sultan Agung 1</p>
+                <p>Sistem Informasi Terpadu {{ school_short_name() }}</p>
             </div>
             
             <!-- Content -->
@@ -77,7 +77,7 @@
             
             <!-- Footer -->
             <div class="footer">
-                <p>© {{ date('Y') }} SMA Islam Sultan Agung 1 Semarang. All Rights Reserved.</p>
+                <p>© {{ date('Y') }} {{ school_name() }}. All Rights Reserved.</p>
                 <p style="font-weight: normal; color: #94a3b8; margin-top: 10px;">Email ini dikirimkan secara otomatis oleh sistem reporting terjadwal SISTA. Harap tidak membalas email ini secara langsung.</p>
             </div>
         </div>

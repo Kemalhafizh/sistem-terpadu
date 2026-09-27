@@ -16,9 +16,9 @@
   <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-xl space-y-6 max-w-3xl mx-auto">
     <!-- Print Header Kop Surat -->
     <div class="print-header text-center border-b-2 border-gray-900 pb-4">
-      <h1 class="text-xl font-black text-gray-900 uppercase">YAYASAN BADAN WAKAF SULTAN AGUNG</h1>
-      <h2 class="text-lg font-extrabold text-gray-800 uppercase">SMA ISLAM SULTAN AGUNG 1 SEMARANG</h2>
-      <p class="text-xs text-gray-600 font-semibold">Jl. Mataram No. 657, Semarang | Telp: (024) 8312137 | Website: sultanagung1.sch.id</p>
+      <h1 class="text-xl font-black text-gray-900 uppercase">{{ mb_strtoupper(school_foundation_name(false)) }}</h1>
+      <h2 class="text-lg font-extrabold text-gray-800 uppercase">{{ mb_strtoupper(school_name()) }}</h2>
+      <p class="text-xs text-gray-600 font-semibold">{{ school_contact_line(['address', 'phone', 'website']) }}</p>
     </div>
 
     <div class="text-center space-y-1">
@@ -57,8 +57,8 @@
         <p class="font-bold underline">(.......................................)</p>
       </div>
       <div class="text-center space-y-12">
-        <p>Semarang, 26 Juli 2026<br>Wali Kelas X MIPA 1</p>
-        <p class="font-bold underline">NIP. 19850615 201001 1 002</p>
+        <p>Semarang, {{ now()->translatedFormat('d F Y') }}<br>Wali Kelas</p>
+        <p class="font-bold underline">{{ signature_nip(null) }}</p>
       </div>
     </div>
   </div>

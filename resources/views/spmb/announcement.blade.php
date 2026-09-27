@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hasil Seleksi SPMB | SMA Islam Sultan Agung 1 Semarang</title>
+  <title>Hasil Seleksi SPMB | {{ school_name() }}</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{{ asset('images/logo-kotak.png') }}">
@@ -119,7 +119,7 @@
                      DITERIMA / PASSED
                   </div>
                   <p class="text-[11px] text-slate-500 mt-3 max-w-sm mx-auto leading-relaxed">
-                    Selamat! Anda dinyatakan lulus seleksi masuk SMA Islam Sultan Agung 1 Semarang. Silakan melakukan proses daftar ulang.
+                    Selamat! Anda dinyatakan lulus seleksi masuk {{ school_name() }}. Silakan melakukan proses daftar ulang.
                   </p>
                   @if(!$registration->has_reregistered)
                     <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs font-semibold text-amber-800 text-center">
@@ -166,7 +166,7 @@
 
   <!-- Footer -->
   <footer class="bg-slate-50 border-t border-slate-200/50 py-6 text-center">
-    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">&copy; {{ date('Y') }} SMA Islam Sultan Agung 1 Semarang. All Rights Reserved.</p>
+    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">&copy; {{ date('Y') }} {{ school_name() }}. All Rights Reserved.</p>
   </footer>
 
 </body>

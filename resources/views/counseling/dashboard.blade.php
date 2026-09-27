@@ -10,7 +10,7 @@
                     </span>
                     {{ __('Bimbingan & Konseling (BK Online)') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • LAYANAN KESEJAHTERAAN & KONSELING SISWA</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • LAYANAN KESEJAHTERAAN & KONSELING SISWA</p>
             </div>
             
             <div class="flex flex-wrap gap-2">

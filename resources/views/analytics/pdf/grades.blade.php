@@ -18,8 +18,8 @@
 </head>
 <body>
     <div class="header">
-        <h2>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h2>
-        <p>Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242 | Telp: (024) 6580824 | Email: info@sultanagung1.sch.id</p>
+        <h2>{{ mb_strtoupper(school_name()) }}</h2>
+        <p>{{ school_contact_line() }}</p>
         <h3 style="margin: 15px 0 0 0; text-decoration: underline;">LAPORAN ANALITIK PRESTASI AKADEMIK & NILAI SISWA</h3>
     </div>
 

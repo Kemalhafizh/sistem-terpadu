@@ -62,7 +62,7 @@
                     <!-- Header -->
                     <div class="border-b border-gray-200 pb-2 flex items-center justify-between">
                         <div>
-                            <span class="text-[8px] font-black uppercase tracking-widest text-teal-700 block">SMA ISLAM SULTAN AGUNG 1</span>
+                            <span class="text-[8px] font-black uppercase tracking-widest text-teal-700 block">{{ mb_strtoupper(school_short_name()) }}</span>
                             <span class="text-[9px] font-bold text-gray-500 uppercase">Perpustakaan Digital SISTA</span>
                         </div>
                         <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[9px] font-mono font-bold">

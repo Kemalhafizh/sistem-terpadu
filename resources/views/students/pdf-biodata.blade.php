@@ -168,10 +168,10 @@
             @endif
             
             <div class="school-info">
-                <h1 class="school-name">{{ $settings['school_name'] ?? 'SMA Islam Sultan Agung 1' }}</h1>
+                <h1 class="school-name">{{ $settings['school_name'] ?? school_name() }}</h1>
                 <div class="school-details">
-                    {{ $settings['school_address'] ?? 'Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242' }}<br>
-                    Telp: {{ $settings['school_phone'] ?? '-' }} | Email: {{ $settings['school_email'] ?? '-' }}
+                    {{ school_address() }}<br>
+                    {{ school_contact_line(['phone', 'email']) }}
                 </div>
             </div>
         </div>

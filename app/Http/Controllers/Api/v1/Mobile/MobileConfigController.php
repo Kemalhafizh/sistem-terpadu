@@ -81,9 +81,13 @@ class MobileConfigController extends Controller
             ],
             'features' => $config->active_features,
             'contact_support' => [
-                'whatsapp' => '+6281234567890',
-                'email' => 'support@sultanagung1.sch.id',
+                // Was a placeholder number and an address the school doesn't use.
+                'whatsapp' => \App\Support\School::whatsapp(),
+                'email' => \App\Support\School::email(),
             ],
+            // The attendance geofence the check-in endpoints enforce, so the
+            // app's pre-check uses the same point (it had its own constant).
+            'campus' => \App\Support\School::campus(),
         ], 200);
     }
 }

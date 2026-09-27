@@ -176,7 +176,7 @@
                             <div class="text-xs font-semibold text-blue-800 dark:text-blue-300 space-y-1">
                                 <p class="font-black uppercase tracking-wider text-[9px] text-blue-400">Rekening Tujuan</p>
                                 <p class="text-sm font-bold text-gray-800 dark:text-white">Bank Syariah Indonesia (BSI)</p>
-                                <p>Yayasan Badan Wakaf Sultan Agung (YBWSA)</p>
+                                <p>{{ school_foundation_name() }}</p>
                                 <p class="font-black text-gray-800 dark:text-white mt-1">No. Rekening: 123-456-7890</p>
                             </div>
 
@@ -199,7 +199,7 @@
                             <p class="font-black uppercase tracking-wider text-[9px] text-amber-500">Instruksi Pembayaran Tunai</p>
                             <p class="text-sm font-bold text-gray-800 dark:text-white">Melalui Staf Tata Usaha (TU)</p>
                             <p class="font-medium text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                                Silakan kunjungi ruang TU SMA Islam Sultan Agung 1 Semarang dan temui petugas administrasi keuangan untuk menyerahkan donasi tunai Anda dengan menunjukkan nomor resi setelah menekan tombol simpan.
+                                Silakan kunjungi ruang TU {{ school_name() }} dan temui petugas administrasi keuangan untuk menyerahkan donasi tunai Anda dengan menunjukkan nomor resi setelah menekan tombol simpan.
                             </p>
                         </div>
 

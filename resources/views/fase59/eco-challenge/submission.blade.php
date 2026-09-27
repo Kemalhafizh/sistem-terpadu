@@ -8,7 +8,7 @@
                 <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 Kirim Bukti Partisipasi
             </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 font-bold">SMA Islam Sultan Agung 1 Semarang</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 font-bold">{{ school_name() }}</p>
         </div>
     </div>
     

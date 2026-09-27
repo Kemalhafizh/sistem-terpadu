@@ -370,8 +370,9 @@ class EdsService
             'academicYear' => $period->academicYear,
             'scoresData' => $scoresData,
             'gapData' => $gapData,
-            'schoolName' => 'SMA Islam Sultan Agung 1 Semarang',
-            'schoolAddress' => 'Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242',
+            'schoolName' => school_name(),
+            'schoolAddress' => school_address(),
+            'schoolContact' => school_contact_line(['phone', 'email']),
             'generatedAt' => now()->format('d-m-Y H:i')
         ];
 

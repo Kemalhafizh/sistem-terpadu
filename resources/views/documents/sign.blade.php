@@ -43,7 +43,7 @@
                     </div>
                     <div class="space-y-1">
                         <h4 class="text-sm font-bold text-gray-900 dark:text-white">{{ auth()->user()->name }}</h4>
-                        <p class="text-xs font-mono text-gray-500">{{ $signature->signer_role }} — SMA Islam Sultan Agung 1 Semarang</p>
+                        <p class="text-xs font-mono text-gray-500">{{ $signature->signer_role }} — {{ school_name() }}</p>
                         <p class="text-[11px] font-mono text-indigo-600 dark:text-indigo-400">Algoritma: SHA-256 Cryptographic Digest + QR Verification Code</p>
                     </div>
                 </div>

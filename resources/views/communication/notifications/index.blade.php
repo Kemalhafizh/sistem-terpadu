@@ -10,7 +10,7 @@
                     </span>
                     Unified Notification Center & Enterprise Inbox
                 </h2>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pusat pesan dan pengumuman terpadu lintas sistem SMA Islam Sultan Agung 1 Semarang.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pusat pesan dan pengumuman terpadu lintas sistem {{ school_name() }}.</p>
             </div>
             <div class="flex items-center gap-3">
                 <a href="{{ route('notifications.preferences') }}" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold transition-all flex items-center gap-2">

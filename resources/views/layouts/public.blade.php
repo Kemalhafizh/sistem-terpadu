@@ -7,11 +7,11 @@
   @yield('seo_meta')
 
   <!-- SEO Meta Tags & Open Graph -->
-  <meta name="keywords" content="sista, sma islam sultan agung 1 semarang, sultan agung, sekolah islam semarang, portal sekolah, spmb online">
-  <meta name="author" content="SMA Islam Sultan Agung 1 Semarang">
+  <meta name="keywords" content="sista, {{ mb_strtolower(school_name()) }}, sultan agung, sekolah islam semarang, portal sekolah, spmb online">
+  <meta name="author" content="{{ school_name() }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url()->current() }}">
-  <meta property="og:site_name" content="SISTA SMA Islam Sultan Agung 1 Semarang">
+  <meta property="og:site_name" content="SISTA {{ school_name() }}">
   <meta property="og:image" content="{{ asset('images/logo-kotak.png') }}">
   <meta property="twitter:card" content="summary">
   <meta property="twitter:image" content="{{ asset('images/logo-kotak.png') }}">
@@ -29,7 +29,9 @@
   {
    "@context": "https://schema.org",
    "@type": "School",
-   "name": "SMA Islam Sultan Agung 1 Semarang",
+   @endverbatim
+   "name": @json(school_name()),
+  @verbatim
    "address": {
     "@type": "PostalAddress",
     "streetAddress": "Jl. Mataram No.657, Wonodri",
@@ -38,10 +40,10 @@
     "postalCode": "50242",
     "addressCountry": "ID"
    },
-   "telephone": "(024) 6580019",
-   "email": "info@sultanagung1.sch.id"
+   @endverbatim
+   "telephone": @json(school_phone()),
+   "email": @json(school_email())
   }
-  @endverbatim
   </script>
 
   <!-- Fonts -->
@@ -324,7 +326,7 @@
               <div class="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center shrink-0 border border-slate-800 mr-4">
                 <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8"></path></svg>
               </div>
-              <span class="text-slate-400 text-sm font-medium">info@sultanagung1.sch.id</span>
+              <span class="text-slate-400 text-sm font-medium">{{ school_email() }}</span>
             </li>
           </ul>
         </div>

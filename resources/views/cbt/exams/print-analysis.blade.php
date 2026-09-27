@@ -128,7 +128,7 @@
 
     <!-- School Header -->
     <div class="header">
-        <h1 class="school-name">SMA Islam Sultan Agung 1 Semarang</h1>
+        <h1 class="school-name">{{ school_name() }}</h1>
         <p class="school-subtitle">Sistem Informasi Sekolah Terpadu SISTA</p>
     </div>
 
@@ -234,7 +234,7 @@
 
     <!-- Footer PDF -->
     <div class="footer">
-        SMA Islam Sultan Agung 1 Semarang — Laporan Analisis Butir Soal Resmi SISTA
+        {{ school_name() }} — Laporan Analisis Butir Soal Resmi SISTA
     </div>
 
 </body>

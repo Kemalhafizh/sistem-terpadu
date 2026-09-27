@@ -43,9 +43,9 @@
         <!-- Formal Kop Surat -->
         <div class="border-b-2 border-slate-900 pb-6 flex items-center justify-between">
             <div class="space-y-1">
-                <span class="text-xs font-black uppercase tracking-widest text-emerald-700">YAYASAN BADAN WAKAF SULTAN AGUNG (YBWSA)</span>
-                <h2 class="text-xl font-black text-slate-900 tracking-tight">SMA ISLAM SULTAN AGUNG 1 SEMARANG</h2>
-                <p class="text-xs text-slate-500">Jl. Mataram No. 657 Semarang | Telp: (024) 8314941 | Sistem Terpadu (SISTA)</p>
+                <span class="text-xs font-black uppercase tracking-widest text-emerald-700">{{ mb_strtoupper(school_foundation_name()) }}</span>
+                <h2 class="text-xl font-black text-slate-900 tracking-tight">{{ mb_strtoupper(school_name()) }}</h2>
+                <p class="text-xs text-slate-500">{{ school_contact_line(['address', 'phone']) }} | Sistem Terpadu (SISTA)</p>
             </div>
             <div class="text-right space-y-1">
                 <span class="inline-block px-3 py-1 bg-slate-100 text-slate-800 rounded-lg text-[10px] font-mono font-bold uppercase border border-slate-300">DOKUMEN INTERAL AUDIT</span>
@@ -146,7 +146,7 @@
                 </div>
                 <div>
                     <p class="font-black text-slate-900 underline">{{ auth()->user()->name ?? 'Staf Keuangan SISTA' }}</p>
-                    <p class="text-[10px] text-slate-400 font-mono">NIP: 198503122010011002</p>
+                    <p class="text-[10px] text-slate-400 font-mono">{{ signature_nip(auth()->user()?->employee?->employee_number, 'No. Pegawai: ') }}</p>
                 </div>
             </div>
             <div class="space-y-16">
@@ -154,8 +154,8 @@
                     <p class="font-bold text-slate-700">Mengetahui,<br>Kepala Sekolah / Ketua YBWSA</p>
                 </div>
                 <div>
-                    <p class="font-black text-slate-900 underline">Drs. H. Ahmad Dahlan, M.Pd.</p>
-                    <p class="text-[10px] text-slate-400 font-mono">NIP: 196807151994031005</p>
+                    <p class="font-black text-slate-900 underline">{{ \App\Support\School::principalName() ?? '(nama kepala sekolah belum diisi)' }}</p>
+                    <p class="text-[10px] text-slate-400 font-mono">NIP: {{ \App\Support\School::principalNip() ?? '—' }}</p>
                 </div>
             </div>
         </div>

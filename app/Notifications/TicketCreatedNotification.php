@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\Setting;
 use App\Models\Ticket;
 use App\Notifications\Channels\WhatsappChannel;
 use Illuminate\Bus\Queueable;
@@ -53,7 +52,7 @@ class TicketCreatedNotification extends Notification
    */
   public function toWhatsapp(object $notifiable): string
   {
-    $schoolName = Setting::get('school_name', 'SMA Islam Sultan Agung 1');
+    $schoolName = school_name();
     $ticketNum = $this->ticket->ticket_number;
     $title = $this->ticket->title;
     $priority = strtoupper($this->ticket->priority);

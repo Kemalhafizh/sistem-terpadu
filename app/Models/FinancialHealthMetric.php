@@ -18,9 +18,11 @@ class FinancialHealthMetric extends Model
         'projected_revenue',
         'fee_collection_rate',
         'expense_distribution',
+        'details',
     ];
 
     protected $casts = [
+        'details' => 'array',
         'report_date' => 'date',
         'cash_reserve' => 'decimal:2',
         'monthly_burn_rate' => 'decimal:2',

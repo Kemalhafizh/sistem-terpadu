@@ -8,6 +8,7 @@ use App\Events\AttendanceLoggedEvent;
 use App\Models\Attendance;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\School;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,10 +22,9 @@ use Illuminate\Support\Facades\Cache;
  */
 class GeofenceAttendanceService
 {
-    // SMA Islam Sultan Agung 1 Semarang Coordinates (Jl. Mataram No.657, Wonodri, Semarang)
-    public const CAMPUS_LATITUDE = -6.996160;
-    public const CAMPUS_LONGITUDE = 110.428510;
-    public const MAX_ALLOWED_RADIUS_METERS = 250.0;
+    // Campus centre and radius come from App\Support\School::campus() — the
+    // single source every GPS check-in path shares (they used to disagree by
+    // up to ~4.8 km).
 
     /**
      * Validate mobile GPS coordinates against campus geofence boundary.
@@ -64,18 +64,19 @@ class GeofenceAttendanceService
         }
 
         // 3. Precise Haversine Great-Circle Distance
+        $campus = School::campus();
         $distance = $this->calculateHaversineDistance(
             $latitude,
             $longitude,
-            self::CAMPUS_LATITUDE,
-            self::CAMPUS_LONGITUDE
+            $campus['latitude'],
+            $campus['longitude']
         );
 
-        if ($distance > self::MAX_ALLOWED_RADIUS_METERS) {
+        if ($distance > $campus['radius_meters']) {
             return [
                 'success' => false,
                 'code' => 'OUTSIDE_GEOFENCE_RADIUS',
-                'message' => 'Anda berada di luar radius kampus SMA Islam Sultan Agung 1 (Jarak: ' . round($distance) . 'm, Maksimal: ' . self::MAX_ALLOWED_RADIUS_METERS . 'm).',
+                'message' => 'Anda berada di luar radius kampus ' . School::shortName() . ' (Jarak: ' . round($distance) . 'm, Maksimal: ' . round($campus['radius_meters']) . 'm).',
                 'distance_meters' => round($distance, 1),
             ];
         }

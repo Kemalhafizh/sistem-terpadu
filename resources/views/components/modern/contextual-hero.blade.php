@@ -1,6 +1,6 @@
 @props([
     'title' => 'Ahlan wa Sahlan',
-    'subtitle' => 'Selamat datang di Ekosistem Terpadu SMA Islam Sultan Agung 1',
+    'subtitle' => 'Selamat datang di Ekosistem Terpadu ' . school_short_name(),
     'gradientFrom' => '#0D5C3A',
     'gradientTo' => '#063823',
     'icon' => null,

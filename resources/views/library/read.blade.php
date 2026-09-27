@@ -76,7 +76,7 @@
 
     <!-- Footer Copyright Status -->
     <footer class="bg-gray-900 border-t border-gray-800 px-6 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider z-20">
-        &copy; {{ date('Y') }} SMA Islam Sultan Agung 1. Hak Cipta Dilindungi. Dilarang menggandakan atau menyebarluaskan dokumen ini.
+        &copy; {{ date('Y') }} {{ school_short_name() }}. Hak Cipta Dilindungi. Dilarang menggandakan atau menyebarluaskan dokumen ini.
     </footer>
 
     <!-- JavaScript Proteksi Keamanan Premium -->

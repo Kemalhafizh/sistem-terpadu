@@ -12,7 +12,7 @@
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
                     {{ __('Catat Kunjungan UKS Baru') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • INPUT MEDIS SISWA</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • INPUT MEDIS SISWA</p>
             </div>
         </div>
     </x-slot>

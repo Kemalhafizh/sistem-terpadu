@@ -103,8 +103,8 @@ class ExportEngineService
     private function getSampleDataForEntity(string $entityType): array
     {
         return [
-            'institution' => 'SMA Islam Sultan Agung 1 Semarang',
-            'npsn' => '20328888',
+            'institution' => school_name(),
+            'npsn' => school_npsn() ?: null,
             'entity' => $entityType,
             'timestamp' => now()->toIso8601String(),
             'records_count' => 150,

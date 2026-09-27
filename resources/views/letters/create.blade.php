@@ -186,10 +186,10 @@
                                     <div class="w-[60px] h-[60px] bg-gray-150 border border-gray-400 rounded-full flex items-center justify-center text-[10px] font-sans font-bold">LOGO</div>
                                 </div>
                                 <div class="flex-grow text-center">
-                                    <h2 class="m-0 text-[14pt] uppercase font-bold">Yayasan Badan Wakaf Sultan Agung</h2>
-                                    <h1 class="m-0 text-[16pt] uppercase font-bold tracking-wide">SMA Islam Sultan Agung 1</h1>
-                                    <p class="m-0 text-[9pt] italic leading-tight">Terakreditasi A (Unggul)</p>
-                                    <p class="m-0 text-[9pt] italic leading-tight">Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242, Telp: (024) 8313922 | Email: info@smaislam-sa1.sch.id</p>
+                                    <h2 class="m-0 text-[14pt] uppercase font-bold">{{ school_foundation_name(false) }}</h2>
+                                    <h1 class="m-0 text-[16pt] uppercase font-bold tracking-wide">{{ school_short_name() }}</h1>
+                                    @if(school_accreditation())<p class="m-0 text-[9pt] italic leading-tight">Terakreditasi {{ school_accreditation() }}</p>@endif
+                                    <p class="m-0 text-[9pt] italic leading-tight">{{ school_contact_line() }}</p>
                                 </div>
                             </div>
                         @endif
@@ -225,7 +225,7 @@
                                 @endif
                             </div>
 
-                            <p class="m-0 font-bold underline">{{ $template->signer_name ?? 'Drs. H. Soetarto, M.Pd.' }}</p>
+                            <p class="m-0 font-bold underline">{{ signature_name($template->signer_name ?: school_principal_name()) }}</p>
                             <p class="m-0 text-sm">NIP. [NIP Pegawai terkait]</p>
                         </div>
                     </div>

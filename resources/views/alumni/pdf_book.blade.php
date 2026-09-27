@@ -75,9 +75,9 @@
 
     <!-- Kop Surat Sekolah -->
     <div class="header">
-        <h1>SMA Islam Sultan Agung 1</h1>
-        <h2>Yayasan Badan Wakaf Sultan Agung</h2>
-        <p>Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242</p>
+        <h1>{{ school_short_name() }}</h1>
+        <h2>{{ school_foundation_name(false) }}</h2>
+        <p>{{ school_address() }}</p>
     </div>
 
     <!-- Judul Dokumen -->
@@ -135,7 +135,8 @@
     <div class="footer">
         <p>Semarang, {{ now()->translatedFormat('d F Y') }}</p>
         <p style="margin-top: 5px; margin-bottom: 60px;">Kepala Sekolah,</p>
-        <p style="font-weight: bold; text-decoration: underline;">Drs. H. Soetarto, M.Pd.</p>
+        <p style="font-weight: bold; text-decoration: underline;">{{ signature_name(school_principal_name()) }}</p>
+        <p>{{ signature_nip(school_principal_nip()) }}</p>
     </div>
 
 </body>

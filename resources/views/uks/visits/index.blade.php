@@ -12,7 +12,7 @@
                     </a>
                     {{ __('Daftar Kunjungan UKS') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • CATATAN MEDIS KUNJUNGAN</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • CATATAN MEDIS KUNJUNGAN</p>
             </div>
             
             <a href="{{ route('uks.visits.create') }}" class="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-teal-600/10">

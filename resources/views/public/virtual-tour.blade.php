@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>Virtual Tour - SMA Islam Sultan Agung 1 Semarang</title>
-    <meta name="description" content="Jelajahi kampus SMA Islam Sultan Agung 1 Semarang secara virtual. Lihat fasilitas gedung utama, area olahraga, masjid dan taman sekolah.">
+    <title>Virtual Tour - {{ school_name() }}</title>
+    <meta name="description" content="Jelajahi kampus {{ school_name() }} secara virtual. Lihat fasilitas gedung utama, area olahraga, masjid dan taman sekolah.">
 @endsection
 
 @section('content')
@@ -22,7 +22,7 @@
             <span class="text-[10px] font-black text-indigo-700 uppercase tracking-[0.2em]">Tur 360°</span>
         </div>
         <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Virtual Tour Sekolah</h2>
-        <p class="text-slate-500 text-lg font-medium leading-relaxed">Jelajahi kampus kami secara virtual dan rasakan pengalaman menjadi bagian dari keluarga besar SMA Islam Sultan Agung 1 Semarang.</p>
+        <p class="text-slate-500 text-lg font-medium leading-relaxed">Jelajahi kampus kami secara virtual dan rasakan pengalaman menjadi bagian dari keluarga besar {{ school_name() }}.</p>
     </div>
 
     {{-- 360° Viewer Placeholder --}}

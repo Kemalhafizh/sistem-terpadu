@@ -18,6 +18,7 @@ use App\Models\ExamAttempt;
 use App\Models\Grade;
 use App\Models\QuestionBank;
 use App\Models\Schedule;
+use App\Services\CbtService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -214,7 +215,7 @@ class ApiStudentController extends Controller
     /**
      * Get Questions for Specific CBT Exam
      */
-    public function cbtExamQuestions(Request $request, $examId)
+    public function cbtExamQuestions(Request $request, $examId, CbtService $cbtService)
     {
         $student = $request->user()->student;
         if (!$student) {
@@ -237,33 +238,19 @@ class ApiStudentController extends Controller
             return $this->errorResponse('Sesi ujian telah selesai atau akses ditutup oleh pengawas.', 403);
         }
 
-        $questions = $exam->questions->map(function ($q, $index) {
-            $rawOptions = is_array($q->options) ? $q->options : (json_decode($q->options, true) ?: []);
-            $formattedOptions = [];
-            foreach ($rawOptions as $key => $opt) {
-                if (is_array($opt)) {
-                    $formattedOptions[] = [
-                        'key' => $opt['key'] ?? (string) $key,
-                        'text' => $opt['text'] ?? '',
-                        'image_url' => $opt['image_url'] ?? $opt['image'] ?? null,
-                    ];
-                } else {
-                    $formattedOptions[] = [
-                        'key' => (string) $key,
-                        'text' => (string) $opt,
-                        'image_url' => null,
-                    ];
-                }
-            }
-            return [
-                'id' => $q->id,
-                'number' => $index + 1,
-                'question_text' => $q->question_text,
-                'image_url' => $q->question_image,
-                'question_image' => $q->question_image,
-                'options' => $formattedOptions,
-            ];
-        });
+        // Honors shuffle_questions / shuffle_options with the same per-student
+        // seeded order as the web take view and the encrypted vault payload.
+        // Option keys stay the original ones (only display order changes), so
+        // submit / micro-sync / force-close answers need no key mapping.
+        $questions = collect($cbtService->buildStudentQuestionSet($exam, $student, $attempt))
+            ->map(fn (array $item) => [
+                'id' => $item['question']->id,
+                'number' => $item['number'],
+                'question_text' => $item['question']->question_text,
+                'image_url' => $item['question']->question_image,
+                'question_image' => $item['question']->question_image,
+                'options' => $item['options'],
+            ]);
 
         return $this->successResponse([
             'exam' => [
@@ -279,7 +266,7 @@ class ApiStudentController extends Controller
     /**
      * Submit Answers for CBT Exam and Auto-Grade
      */
-    public function cbtSubmitExam(Request $request, $examId)
+    public function cbtSubmitExam(Request $request, $examId, CbtService $cbtService)
     {
         $student = $request->user()->student;
         if (!$student) {
@@ -299,18 +286,19 @@ class ApiStudentController extends Controller
         $totalQuestions = $exam->questions->count();
         $correctCount = 0;
 
+        // Graded by original option key, so the per-student shuffled display
+        // order (see cbtExamQuestions) never affects scoring. A numeric answer
+        // is treated as an index into the *authored* option order.
         foreach ($exam->questions as $q) {
             $userAns = $answers[$q->id] ?? null;
-            if ($userAns !== null) {
-                $options = is_array($q->options) ? array_values($q->options) : (json_decode($q->options, true) ?: []);
-                $correctIndex = is_numeric($q->correct_answer) ? (int) $q->correct_answer : array_search($q->correct_answer, $options);
-                if (is_numeric($userAns) && (int) $userAns === (int) $correctIndex) {
-                    $correctCount++;
-                } elseif (isset($options[$userAns]) && $options[$userAns] == $q->correct_answer) {
-                    $correctCount++;
-                } elseif ((string) $userAns === (string) $q->correct_answer) {
-                    $correctCount++;
-                }
+            if ($userAns === null || $userAns === '') {
+                continue;
+            }
+            $authored = $cbtService->formatOptions(is_array($q->options) ? $q->options : []);
+            $userKey = $this->resolveOptionKey($userAns, $authored);
+            $correctKey = $this->resolveOptionKey($q->correct_answer, $authored);
+            if (($userKey !== null && $userKey === $correctKey) || (string) $userAns === (string) $q->correct_answer) {
+                $correctCount++;
             }
         }
 
@@ -340,6 +328,30 @@ class ApiStudentController extends Controller
             'passed' => $passed,
             'submitted_at' => now()->format('Y-m-d H:i:s'),
         ], 'Hasil ujian CBT berhasil dinilai secara otomatis');
+    }
+
+    /**
+     * Map an answer / answer key (option key, authored index, or option text)
+     * to the original option key, or null if it matches none.
+     */
+    private function resolveOptionKey($value, array $authoredOptions): ?string
+    {
+        $value = trim((string) $value);
+        foreach ($authoredOptions as $opt) {
+            if (strcasecmp($opt['key'], $value) === 0) {
+                return $opt['key'];
+            }
+        }
+        if (ctype_digit($value) && isset($authoredOptions[(int) $value])) {
+            return $authoredOptions[(int) $value]['key'];
+        }
+        foreach ($authoredOptions as $opt) {
+            if ($opt['text'] !== '' && $opt['text'] === $value) {
+                return $opt['key'];
+            }
+        }
+
+        return null;
     }
 
     /**

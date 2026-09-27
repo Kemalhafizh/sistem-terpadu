@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\ExamAttempt;
+use App\Models\Payment;
 use App\Models\Student;
 use App\Models\WorkflowRequest;
 use Illuminate\Http\Request;
@@ -96,9 +97,13 @@ class AdminMobileDashboardController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'monthly_revenue' => Billing::where('status', 'paid')
+                // Cash actually received this calendar month. Previously queried
+                // `payment_date` on `billings`, a column that only exists on
+                // `payments` — silently 0 on SQLite, "Unknown column" (HTTP 500
+                // for this whole endpoint) on MySQL — and never scoped by year.
+                'monthly_revenue' => (float) Payment::whereYear('payment_date', now()->year)
                     ->whereMonth('payment_date', now()->month)
-                    ->sum('amount'),
+                    ->sum('amount_paid'),
                 'active_teachers' => \App\Models\User::whereIn('role', ['guru', 'teacher'])->count(),
                 'avg_student_points' => \App\Models\StudentPointLog::avg('points') ?? 0,
                 'spp_payment_ratio_by_cohort' => $sppRatioByYear,

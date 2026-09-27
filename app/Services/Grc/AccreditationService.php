@@ -135,8 +135,8 @@ class AccreditationService
         $overall = $this->calculateOverallScore();
 
         return [
-            'institution' => 'SMA Islam Sultan Agung 1 Semarang',
-            'npsn' => '20328888',
+            'institution' => school_name(),
+            'npsn' => school_npsn() ?: null,
             'generated_at' => now()->format('d M Y H:i:s T'),
             'overall_readiness_score' => $overall['overall_score'],
             'accreditation_grade' => $overall['grade'],

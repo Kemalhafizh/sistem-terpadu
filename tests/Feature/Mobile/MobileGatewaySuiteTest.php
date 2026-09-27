@@ -175,8 +175,8 @@ class MobileGatewaySuiteTest extends TestCase
 
         // 2. Mock Location Rejected
         $mockRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => GeofenceAttendanceService::CAMPUS_LATITUDE,
-            'longitude' => GeofenceAttendanceService::CAMPUS_LONGITUDE,
+            'latitude' => \App\Support\School::campus()['latitude'],
+            'longitude' => \App\Support\School::campus()['longitude'],
             'accuracy_meters' => 10.0,
             'is_mock_location' => true,
         ]);
@@ -185,8 +185,8 @@ class MobileGatewaySuiteTest extends TestCase
 
         // 3. Valid Checkin within Campus Coordinates
         $validRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => GeofenceAttendanceService::CAMPUS_LATITUDE,
-            'longitude' => GeofenceAttendanceService::CAMPUS_LONGITUDE,
+            'latitude' => \App\Support\School::campus()['latitude'],
+            'longitude' => \App\Support\School::campus()['longitude'],
             'accuracy_meters' => 12.0,
             'is_mock_location' => false,
         ]);

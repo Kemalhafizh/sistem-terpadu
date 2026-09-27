@@ -33,8 +33,8 @@
             <table style="border:none; margin:0;">
                 <tr>
                     <td style="border:none;">
-                        <h1 class="school-name">SMA ISLAM SULTAN AGUNG 1</h1>
-                        <p class="school-info">Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242<br>Telp: (024) 8313922 | Email: info@smaisla1smg.sch.id</p>
+                        <h1 class="school-name">{{ mb_strtoupper(school_short_name()) }}</h1>
+                        <p class="school-info">{{ school_address() }}<br>{{ school_contact_line(['phone', 'email']) }}</p>
                     </td>
                     <td style="border:none; text-align:right; vertical-align:top;">
                         <div style="font-weight:bold; font-size:14px;">KUITANSI PEMBAYARAN</div>
@@ -92,7 +92,7 @@
                 <p>Semarang, {{ \Carbon\Carbon::parse($payment->payment_date)->translatedFormat('d F Y') }}</p>
                 <p>Petugas Keuangan,</p>
                 <div class="signature-space"></div>
-                <p><strong>{{ $payment?->creator?->name ?? 'Admin Keuangan' }}</strong></p>
+                <p><strong>{{ $payment?->creator?->name ?? 'Dibayar online (dikonfirmasi payment gateway)' }}</strong></p>
             </div>
             <div class="clear"></div>
         </div>

@@ -136,7 +136,7 @@
                 <!-- signer_name -->
                 <div>
                     <label for="signer_name" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Nama Penandatangan</label>
-                    <input type="text" name="signer_name" id="signer_name" required placeholder="Drs. H. Soetarto, M.Pd." class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <input type="text" name="signer_name" id="signer_name" required placeholder="Nama lengkap &amp; gelar penanda tangan" class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                 </div>
 
                 <!-- signer_title -->

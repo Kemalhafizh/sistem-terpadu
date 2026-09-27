@@ -290,9 +290,9 @@
             </td>
             <td class="school-info">
                 <div class="school-foundation">YAYASAN BADAN PENDIDIKAN DAN SOSIAL SULTAN AGUNG</div>
-                <div class="school-name">SMA ISLAM SULTAN AGUNG 1 SEMARANG</div>
-                <div class="school-address">Jl. Mataram No. 657, Wonodri, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah 50242</div>
-                <div class="school-contact">Telp: (024) 8316532 | Email: smaisa1_smg@yahoo.co.id | Website: www.smaisa1semarang.sch.id</div>
+                <div class="school-name">{{ mb_strtoupper(school_name()) }}</div>
+                <div class="school-address">{{ school_address() }}</div>
+                <div class="school-contact">{{ school_contact_line(['phone', 'email', 'website']) }}</div>
             </td>
         </tr>
     </table>

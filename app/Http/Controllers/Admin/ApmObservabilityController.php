@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\ApmTelemetryService;
+use App\Services\ObservabilityService;
+use App\Services\Observability\RequestMetricsRecorder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ApmObservabilityController extends Controller
@@ -20,40 +23,52 @@ class ApmObservabilityController extends Controller
     }
 
     /**
-     * Simulate Distributed Tracing Lookup by Correlation ID.
+     * Look up a real request by its X-Correlation-ID.
+     *
+     * This used to "simulate" a trace: any id — even one never issued —
+     * came back with the same three invented spans and 47 ms total. It now
+     * returns what was actually recorded for that id: the request itself
+     * (method, path, status, duration) and any slow queries PerformanceLogger
+     * captured during it. There is no per-component span timing in this app,
+     * so none is shown.
      */
-    public function simulateTrace(Request $request)
+    public function trace(Request $request, RequestMetricsRecorder $recorder, ObservabilityService $observability): JsonResponse
     {
-        $correlationId = $request->get('correlation_id', (string) \Illuminate\Support\Str::uuid());
+        $validated = $request->validate([
+            'correlation_id' => ['required', 'string', 'max:64', 'regex:/^[A-Za-z0-9._-]+$/'],
+        ]);
+        $correlationId = $validated['correlation_id'];
 
-        $spans = [
-            [
-                'span_id' => 'SPAN-01-HTTP',
-                'name' => 'HTTP GET /api/v1/gateway/student/me',
-                'service' => 'SISTA API Gateway',
-                'duration_ms' => 38.4,
-                'status' => 'OK 200',
-            ],
-            [
-                'span_id' => 'SPAN-02-AUTH',
-                'name' => 'Sanctum Bearer Token Authentication',
-                'service' => 'App\\Http\\Middleware\\RoleBasedRateLimiterMiddleware',
-                'duration_ms' => 8.2,
-                'status' => 'OK 200',
-            ],
-            [
-                'span_id' => 'SPAN-03-CACHE',
-                'name' => 'RequestLifetimeCache Lookup [school_profile]',
-                'service' => 'App\\Services\\RequestLifetimeCacheService',
-                'duration_ms' => 0.4,
-                'status' => 'CACHE HIT (0ms)',
-            ],
-        ];
+        $requests = collect($recorder->findByCorrelationId($correlationId))
+            ->map(fn (array $s) => [
+                'recorded_at' => date(DATE_ATOM, (int) $s['at']),
+                'method' => $s['method'],
+                'path' => $s['path'],
+                'status' => $s['status'],
+                'duration_ms' => $s['duration_ms'],
+            ])
+            ->values();
+
+        if ($requests->isEmpty()) {
+            return response()->json([
+                'found' => false,
+                'correlation_id' => $correlationId,
+                'message' => 'Tidak ada request tercatat dengan Correlation ID ini (mungkin sudah terhapus dari catatan terbaru, atau tidak pernah ada).',
+            ], 404);
+        }
+
+        $slowQueries = collect($observability->getSlowRequests())
+            ->filter(fn (array $entry) => ($entry['correlation_id'] ?? null) === $correlationId)
+            ->flatMap(fn (array $entry) => $entry['slow_queries'] ?? [])
+            ->map(fn (array $q) => ['sql' => $q['sql'] ?? '', 'time_ms' => $q['time_ms'] ?? 0])
+            ->values();
 
         return response()->json([
+            'found' => true,
             'correlation_id' => $correlationId,
-            'total_latency_ms' => 47.0,
-            'spans' => $spans,
+            'total_latency_ms' => round((float) $requests->sum('duration_ms'), 2),
+            'requests' => $requests,
+            'slow_queries' => $slowQueries,
         ]);
     }
 }

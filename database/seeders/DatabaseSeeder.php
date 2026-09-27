@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
                 AssetMaintenanceTicketSeeder::class,
                 LibraryBarcodeSeeder::class,
                 FinancialAuditSeeder::class,
+                TreasurySeeder::class,              // bank statement reconciled by the real service, petty cash via approvals
                 SecurityThreatSeeder::class,
                 SchoolBrandingSeeder::class,
                 QueueDemoSeeder::class,

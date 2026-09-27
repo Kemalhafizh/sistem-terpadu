@@ -10,7 +10,7 @@
                     </span>
                     {{ __('Pengajuan Sesi Konseling Baru') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • PENGAJUAN PERTEMUAN GURU BK</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • PENGAJUAN PERTEMUAN GURU BK</p>
             </div>
             
             <div>

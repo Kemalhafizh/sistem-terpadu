@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="pt-6 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center text-xs text-gray-500 font-mono">
-                    <p>Yayasan Badan Wakaf Sultan Agung (YBWSA)</p>
+                    <p>{{ school_foundation_name() }}</p>
                     <p>SISTA Enterprise GRC Subsystem &copy; 2026</p>
                 </div>
             </div>

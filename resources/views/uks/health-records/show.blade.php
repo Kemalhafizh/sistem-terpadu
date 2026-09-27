@@ -12,7 +12,7 @@
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
                     {{ __('Detail Rekam Medis: ' . $student->user->name) }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 • EDIT KARTU MEDIS</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_short_name()) }} • EDIT KARTU MEDIS</p>
             </div>
         </div>
     </x-slot>

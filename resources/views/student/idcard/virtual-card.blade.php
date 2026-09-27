@@ -4,7 +4,7 @@
 <div class="max-w-md mx-auto space-y-6">
     <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm text-center">
         <h1 class="text-xl font-black text-gray-900 dark:text-white">Kartu Pelajar Digital (Digital Student ID)</h1>
-        <p class="text-xs text-gray-500 mt-1">SMA Islam Sultan Agung 1 Semarang</p>
+        <p class="text-xs text-gray-500 mt-1">{{ school_name() }}</p>
     </div>
 
     <!-- Virtual Card UI -->

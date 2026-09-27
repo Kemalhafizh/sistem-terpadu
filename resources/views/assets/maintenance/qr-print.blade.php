@@ -232,7 +232,7 @@
             @foreach($assets as $asset)
                 <div class="sticker-box">
                     <div>
-                        <div class="school-title">SMA Islam Sultan Agung 1</div>
+                        <div class="school-title">{{ school_short_name() }}</div>
                         <div class="school-location">Semarang</div>
                         <div class="divider"></div>
                         <div class="asset-name" title="{{ $asset->name }}">{{ $asset->name }}</div>

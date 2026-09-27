@@ -131,10 +131,10 @@
 
     <!-- Kop Surat -->
     <div class="kop-surat">
-        <div class="kop-instansi">Yayasan Badan Wakaf Sultan Agung</div>
-        <div class="kop-sekolah">SMA Islam Sultan Agung 1 Semarang</div>
+        <div class="kop-instansi">{{ school_foundation_name(false) }}</div>
+        <div class="kop-sekolah">{{ school_name() }}</div>
         <div class="kop-alamat">
-            Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242 | Telp: (024) 8313922 | Email: info@smaisla1smg.sch.id
+            {{ school_contact_line() }}
         </div>
     </div>
 
@@ -344,10 +344,10 @@
     <div class="signature-container">
         <div class="signature-box" style="float: left;">
             Mengetahui,<br>
-            Kepala Sekolah SMA Islam Sultan Agung 1<br>
+            Kepala Sekolah {{ school_short_name() }}<br>
             <div class="signature-space"></div>
-            <span class="signature-name">Drs. H. Soetrisno, M.Pd.</span><br>
-            NIP. 19720512 199803 1 002
+            <span class="signature-name">{{ signature_name(school_principal_name()) }}</span><br>
+            {{ signature_nip(school_principal_nip()) }}
         </div>
         
         <div class="signature-box" style="float: right; text-align: right;">

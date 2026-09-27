@@ -131,9 +131,9 @@
 <body>
 
     <div class="header">
-        <h1>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h1>
+        <h1>{{ mb_strtoupper(school_name()) }}</h1>
         <h2>Laporan Analisis Risiko & Smart Alerts (SISTA)</h2>
-        <p>Alamat: Jl. Sukarno-Hatta No.4 Semarang | Telp: (024) 6712345</p>
+        <p>Alamat: {{ school_contact_line(['address', 'phone']) }}</p>
     </div>
 
     <table class="meta-info">
@@ -229,7 +229,7 @@
     </table>
 
     <div class="footer">
-        Halaman 1 dari 1 — Laporan Sistem Informasi Terpadu SISTA (SMA Islam Sultan Agung 1 Semarang)
+        Halaman 1 dari 1 — Laporan Sistem Informasi Terpadu SISTA ({{ school_name() }})
     </div>
 
 </body>

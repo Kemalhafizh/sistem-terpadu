@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>Galeri Dokumentasi & Potret Kegiatan - SMA Islam Sultan Agung 1 Semarang</title>
-    <meta name="description" content="Dokumentasi foto kegiatan belajar mengajar, sarana prasarana, fasilitas penunjang, dan prestasi di SMA Islam Sultan Agung 1 Semarang.">
+    <title>Galeri Dokumentasi & Potret Kegiatan - {{ school_name() }}</title>
+    <meta name="description" content="Dokumentasi foto kegiatan belajar mengajar, sarana prasarana, fasilitas penunjang, dan prestasi di {{ school_name() }}.">
 @endsection
 
 @section('content')

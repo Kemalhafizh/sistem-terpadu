@@ -7,7 +7,7 @@
             <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
             Progres IEP
         </h1>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">SMA Islam Sultan Agung 1 Semarang - Pemantauan Progres</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ school_name() }} - Pemantauan Progres</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">

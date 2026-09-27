@@ -99,8 +99,8 @@ class QualityAssuranceService
         $results = $this->calculateResults($cycleId);
 
         return [
-            'institution' => 'SMA Islam Sultan Agung 1 Semarang',
-            'npsn' => '20328888',
+            'institution' => school_name(),
+            'npsn' => school_npsn() ?: null,
             'report_title' => "Laporan Evaluasi Diri Sekolah (EDS) — TA {$results['academic_year']} " . ucfirst($results['semester']),
             'overall_score' => $results['overall_mean'],
             'overall_rating' => $results['overall_category'],

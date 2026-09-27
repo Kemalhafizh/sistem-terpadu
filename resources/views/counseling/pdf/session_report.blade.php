@@ -132,11 +132,11 @@
 <div class="container">
     <!-- Kop Surat Resmi -->
     <div class="header">
-        <h1>YAYASAN BADAN WAKAF SULTAN AGUNG</h1>
-        <h1>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h1>
-        <h2>TERAKREDITASI A (UNGGUL)</h2>
+        <h1>{{ mb_strtoupper(school_foundation_name(false)) }}</h1>
+        <h1>{{ mb_strtoupper(school_name()) }}</h1>
+        @if(school_accreditation())<h2>TERAKREDITASI {{ mb_strtoupper(school_accreditation()) }}</h2>@endif
         <div class="address">
-            Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242 • Telp: (024) 8313922 • Email: info@smaisla1smg.sch.id
+            {{ school_contact_line(['address', 'phone', 'email'], ' • ') }}
         </div>
     </div>
 
@@ -145,7 +145,7 @@
     <div class="title-sub">Nomor: BK/{{ $session->scheduled_at->format('Y/m') }}/{{ str_pad($session->id, 4, '0', STR_PAD_LEFT) }}</div>
 
     <p style="font-size: 10.5pt; text-align: justify; margin-bottom: 20px;">
-        Pada hari ini, <strong>{{ $session->scheduled_at->translatedFormat('l') }}</strong> tanggal <strong>{{ $session->scheduled_at->translatedFormat('d F Y') }}</strong>, telah diselenggarakan sesi layanan Bimbingan dan Konseling (BK) di Unit Bimbingan Konseling SMA Islam Sultan Agung 1 Semarang, dengan detail pelaksanaan sebagai berikut:
+        Pada hari ini, <strong>{{ $session->scheduled_at->translatedFormat('l') }}</strong> tanggal <strong>{{ $session->scheduled_at->translatedFormat('d F Y') }}</strong>, telah diselenggarakan sesi layanan Bimbingan dan Konseling (BK) di Unit Bimbingan Konseling {{ school_name() }}, dengan detail pelaksanaan sebagai berikut:
     </p>
 
     <!-- Meta Identitas -->
@@ -216,10 +216,10 @@
             <tr>
                 <td colspan="2" style="padding-top: 30px;">
                     <div>Mengetahui,</div>
-                    <div>Kepala Sekolah SMA Islam Sultan Agung 1,</div>
+                    <div>Kepala Sekolah {{ school_short_name() }},</div>
                     <div class="signature-space"></div>
-                    <div class="signer-name">Drs. H. Soetarto, M.M.</div>
-                    <div class="signer-title">NIP. 19680321 199403 1 002</div>
+                    <div class="signer-name">{{ signature_name(school_principal_name()) }}</div>
+                    <div class="signer-title">{{ signature_nip(school_principal_nip()) }}</div>
                 </td>
             </tr>
         </table>
@@ -228,7 +228,7 @@
     <!-- Footer Note Rahasia -->
     <div class="footer-note">
         Dokumen ini bersifat RAHASIA dan dilindungi oleh kode etik Bimbingan & Konseling Sekolah.<br>
-        Dicetak secara otomatis melalui Sistem Terpadu SMA Islam Sultan Agung 1.
+        Dicetak secara otomatis melalui Sistem Terpadu {{ school_short_name() }}.
     </div>
 
 </div>

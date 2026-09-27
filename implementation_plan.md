@@ -6187,3 +6187,247 @@ Skema infrastruktur dan *deployment* yang dirancang spesifik untuk **skala 1 ins
 ### 116.4: Pragmatic Deployment Strategy
 - [ ] **Simple Maintenance Mode:** Tidak membutuhkan *Zero-Downtime Pipeline* yang mahal dan berlebihan. Cukup buat skrip bash deployment (`deploy.sh`) yang secara terotomatisasi menjalankan `php artisan down` (*maintenance screen* bersahabat untuk siswa), melakukan `git pull`, `php artisan migrate`, `composer install`, lalu `php artisan up`.
 - [ ] **Jadwal Rilis Terencana:** Proses *deployment* ini biasanya hanya memakan waktu 1-3 menit dan dapat dijadwalkan secara aman pada malam hari (Pukul 22:00 ke atas) saat *traffic* KBM sekolah sedang libur/kosong.
+
+---
+
+## FASE 117: SISTEM MANAJEMEN AKADEMIK KELAS & SESI MENGAJAR GURU (UNIVERSITY-GRADE DIGITALIZATION) `[RANCANGAN BARU]`
+
+> **Tanggal Rancangan:** 27 September 2026
+> **Latar Belakang:** Audit kode sumber menemukan bahwa model `Attendance` (absensi siswa) dan `Schedule` (jadwal pelajaran) sudah ada, namun **TIDAK ADA** konsep "Sesi Kelas Hidup" (*Live Class Session*) yang memungkinkan guru memulai/mengakhiri kelas, membangkitkan QR khusus sesi, serta otomatis menandai Alpha siswa yang tidak absen. Sistem ini mendigitalkan alur KBM sekolah setara standar **perkuliahan universitas**, namun disesuaikan untuk konteks SMA Islam Sultan Agung 1 Semarang.
+> **Prioritas:** P0 (Kritis) — Target Oktober 2026
+> **Prerequisite:** Model `Schedule`, `Attendance`, `Classroom`, `Subject`, `ScheduleTime`, `TeachingJournal` sudah ada.
+
+### 🗃️ 117.1: Tabel Database Baru — `class_sessions` (Sesi Kelas Hidup)
+
+Model ini adalah **jantung** dari seluruh sistem baru. Setiap kali guru memulai kelas, satu baris `class_session` dibuat. Saat guru mengakhiri kelas (atau waktu habis), sesi ditutup dan siswa yang belum tercatat otomatis dianggap Alpha.
+
+```php
+// database/migrations/xxxx_create_class_sessions_table.php
+Schema::create('class_sessions', function (Blueprint $table) {
+    $table->id();
+    $table->uuid('uuid')->unique();                    // Digunakan sebagai payload QR (mencegah brute-force ID)
+    $table->foreignId('schedule_id')->constrained();   // Referensi ke jadwal resmi semester
+    $table->foreignId('teacher_id')->constrained('users'); // Guru pengampu
+    $table->foreignId('classroom_id')->constrained();  // Kelas yang diajar (X-1, X-2, dll)
+    $table->foreignId('subject_id')->constrained();    // Mata pelajaran
+    $table->foreignId('academic_year_id')->constrained();
+    $table->date('session_date');                       // Tanggal pelaksanaan kelas
+    $table->integer('jam_ke');                          // Jam ke-berapa (1,2,3... sesuai ScheduleTime)
+    $table->time('scheduled_start');                    // Waktu mulai resmi menurut jadwal
+    $table->time('scheduled_end');                      // Waktu selesai resmi menurut jadwal
+    $table->timestamp('actual_start')->nullable();     // Waktu guru benar-benar menekan "Mulai Kelas"
+    $table->timestamp('actual_end')->nullable();        // Waktu guru menekan "Akhiri Kelas" atau auto-close
+    $table->enum('status', ['scheduled', 'active', 'completed', 'cancelled', 'auto_closed'])->default('scheduled');
+    $table->string('qr_token', 64)->nullable();        // Token QR unik yang dibangkitkan saat sesi dimulai (rotate setiap 30 detik)
+    $table->timestamp('qr_token_expires_at')->nullable(); // Waktu kedaluwarsa QR token saat ini
+    $table->text('notes')->nullable();                 // Catatan guru tentang KBM hari ini
+    $table->string('topic')->nullable();               // Materi/topik yang diajarkan di sesi ini
+    $table->boolean('is_auto_closed')->default(false); // Apakah sesi ditutup otomatis oleh sistem
+    $table->timestamps();
+
+    // Composite unique: 1 guru hanya bisa punya 1 sesi aktif per jadwal per hari
+    $table->unique(['schedule_id', 'session_date'], 'uniq_session_per_schedule_date');
+});
+```
+
+### 🗃️ 117.2: Tabel Database Baru — `session_attendances` (Presensi Per-Sesi Kelas)
+
+Berbeda dari tabel `attendances` lama yang hanya mencatat kehadiran harian, tabel ini mencatat kehadiran **per jam pelajaran / per sesi kelas** — setara dengan sistem perkuliahan.
+
+```php
+// database/migrations/xxxx_create_session_attendances_table.php
+Schema::create('session_attendances', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('class_session_id')->constrained()->onDelete('cascade');
+    $table->foreignId('student_id')->constrained();
+    $table->enum('status', ['hadir', 'alpha', 'sakit', 'izin', 'telat'])->default('alpha');
+    $table->enum('check_in_method', ['qr_scan', 'manual_teacher', 'auto_alpha'])->default('auto_alpha');
+    $table->timestamp('checked_in_at')->nullable();    // Waktu siswa berhasil absen QR/manual
+    $table->foreignId('recorded_by')->nullable()->constrained('users'); // Siapa yang mengabsen (guru/admin/siswa sendiri)
+    $table->text('notes')->nullable();                 // Catatan khusus (misal: "Terlambat 10 menit karena upacara")
+    $table->boolean('is_override')->default(false);    // Apakah ini koreksi oleh Waka Kurikulum / TU
+    $table->foreignId('override_by')->nullable()->constrained('users'); // Siapa yang mengoreksi
+    $table->timestamp('override_at')->nullable();
+    $table->string('override_reason')->nullable();     // Alasan koreksi (wajib diisi)
+    $table->timestamps();
+
+    // 1 siswa hanya bisa punya 1 record per sesi kelas
+    $table->unique(['class_session_id', 'student_id'], 'uniq_student_per_session');
+});
+```
+
+### 🏗️ 117.3: Model Eloquent & Relasi
+
+```php
+// app/Models/ClassSession.php
+class ClassSession extends Model
+{
+    use HasUuid, SoftDeletes;
+
+    // Relasi
+    public function schedule()     { return $this->belongsTo(Schedule::class); }
+    public function teacher()      { return $this->belongsTo(User::class, 'teacher_id'); }
+    public function classroom()    { return $this->belongsTo(Classroom::class); }
+    public function subject()      { return $this->belongsTo(Subject::class); }
+    public function academicYear() { return $this->belongsTo(AcademicYear::class); }
+    public function attendances()  { return $this->hasMany(SessionAttendance::class); }
+
+    // Scopes
+    public function scopeActive($q)    { return $q->where('status', 'active'); }
+    public function scopeForToday($q)  { return $q->where('session_date', today()); }
+    public function scopeForTeacher($q, $teacherId) { return $q->where('teacher_id', $teacherId); }
+
+    // Business Logic: Apakah sesi ini masih dalam batas waktu jadwal?
+    public function isWithinScheduledTime(): bool
+    {
+        $now = now();
+        $start = Carbon::parse($this->session_date . ' ' . $this->scheduled_start)->subMinutes(10); // Toleransi 10 menit sebelum
+        $end = Carbon::parse($this->session_date . ' ' . $this->scheduled_end)->addMinutes(5);       // Toleransi 5 menit setelah
+        return $now->between($start, $end);
+    }
+
+    // Business Logic: Generate QR Token yang berputar setiap 30 detik
+    public function rotateQrToken(): string
+    {
+        $token = Str::random(48);
+        $this->update([
+            'qr_token' => hash('sha256', $token . $this->uuid),
+            'qr_token_expires_at' => now()->addSeconds(30),
+        ]);
+        return $token; // Token mentah dikirim ke layar guru, hash-nya disimpan di DB
+    }
+}
+
+// app/Models/SessionAttendance.php
+class SessionAttendance extends Model
+{
+    public function classSession() { return $this->belongsTo(ClassSession::class); }
+    public function student()      { return $this->belongsTo(Student::class); }
+    public function recorder()     { return $this->belongsTo(User::class, 'recorded_by'); }
+    public function overrider()    { return $this->belongsTo(User::class, 'override_by'); }
+}
+```
+
+### 🌐 117.4: API Endpoints Backend — Guru (REST)
+
+```php
+// routes/api.php — Tambahkan di dalam blok Route::prefix('teacher')
+Route::prefix('class-sessions')->group(function () {
+    // === SESI KELAS ===
+    Route::get('today', [ClassSessionController::class, 'todaySessions']);
+    // Daftar sesi kelas hari ini berdasarkan jadwal guru yang login.
+    // Response: Array of ClassSession dengan status (scheduled/active/completed)
+
+    Route::post('{scheduleId}/start', [ClassSessionController::class, 'startSession']);
+    // Guru menekan "Mulai Kelas". Validasi:
+    // 1. Apakah sekarang masih dalam rentang waktu jadwal? (±10 menit toleransi)
+    // 2. Apakah belum ada sesi aktif untuk jadwal ini hari ini?
+    // 3. Apakah guru yang login = guru yang dijadwalkan?
+    // Jika lolos: Buat ClassSession (status='active'), generate QR token awal,
+    //            auto-populate session_attendances untuk SEMUA siswa di kelas tersebut dengan status='alpha'.
+
+    Route::post('{sessionId}/end', [ClassSessionController::class, 'endSession']);
+    // Guru menekan "Akhiri Kelas". Set status='completed', actual_end=now().
+    // Semua siswa yang masih berstatus 'alpha' di session_attendances tetap alpha (final).
+
+    Route::get('{sessionId}/qr', [ClassSessionController::class, 'getActiveQr']);
+    // Ambil QR token terkini untuk ditampilkan di layar guru.
+    // QR di-rotate setiap 30 detik oleh backend (via Scheduler atau lazy rotation saat endpoint dipanggil).
+
+    // === ABSENSI MANUAL OLEH GURU ===
+    Route::get('{sessionId}/students', [ClassSessionController::class, 'sessionStudentList']);
+    // Daftar semua siswa di kelas tersebut beserta status absensi real-time (hadir/alpha/sakit/izin).
+
+    Route::post('{sessionId}/attendance/manual', [ClassSessionController::class, 'manualAttendance']);
+    // Guru menandai siswa secara manual. Body: { student_id, status: 'hadir'|'sakit'|'izin'|'alpha' }
+    // Hanya bisa dilakukan saat sesi berstatus 'active'.
+
+    Route::post('{sessionId}/attendance/bulk', [ClassSessionController::class, 'bulkManualAttendance']);
+    // Guru menandai banyak siswa sekaligus. Body: { attendances: [{ student_id, status }, ...] }
+});
+
+// === ABSENSI SISWA MANDIRI (SCAN QR) ===
+Route::prefix('student/class-session')->group(function () {
+    Route::post('scan-qr', [StudentSessionAttendanceController::class, 'scanQr']);
+    // Siswa scan QR dari layar guru.
+    // Body: { qr_token: string (raw token) }
+    // Validasi:
+    // 1. Cari ClassSession aktif yang QR token hash-nya cocok dan belum expired.
+    // 2. Pastikan siswa terdaftar di kelas tersebut (classroom_id).
+    // 3. Pastikan sesi masih berstatus 'active'.
+    // 4. Pastikan siswa belum pernah absen di sesi ini.
+    // Jika lolos: Update session_attendances.status = 'hadir', check_in_method = 'qr_scan', checked_in_at = now().
+
+    Route::get('active', [StudentSessionAttendanceController::class, 'activeSession']);
+    // Cek apakah ada sesi kelas yang sedang aktif untuk kelas siswa saat ini.
+});
+
+// === KOREKSI ABSENSI OLEH WAKA KURIKULUM / TU / ADMIN ===
+Route::prefix('admin/class-sessions')->middleware('role:admin,superadmin,waka_kurikulum,staf_tu')->group(function () {
+    Route::get('/', [AdminClassSessionController::class, 'index']);
+    // Daftar semua sesi kelas (filter: tanggal, guru, kelas, status). Paginated.
+
+    Route::get('{sessionId}/attendances', [AdminClassSessionController::class, 'sessionAttendances']);
+    // Detail absensi per sesi — untuk audit dan koreksi.
+
+    Route::put('attendances/{attendanceId}/override', [AdminClassSessionController::class, 'overrideAttendance']);
+    // Koreksi status absensi siswa. Body: { status: 'hadir'|'sakit'|'izin', reason: string (wajib) }
+    // Set is_override=true, override_by=auth()->id(), override_at=now(), override_reason.
+    // Mencatat log audit.
+
+    Route::get('reports', [AdminClassSessionController::class, 'attendanceReport']);
+    // Laporan rekapitulasi absensi per kelas / per mata pelajaran / per siswa dalam rentang tanggal.
+});
+```
+
+### ⏰ 117.5: Auto-Close Sesi Kelas (Laravel Scheduler)
+
+```php
+// app/Console/Kernel.php — Tambahkan di method schedule()
+$schedule->call(function () {
+    // Cari semua sesi kelas berstatus 'active' yang waktu jadwal selesainya
+    // sudah lewat lebih dari 5 menit toleransi.
+    ClassSession::where('status', 'active')
+        ->get()
+        ->filter(fn ($session) => now()->greaterThan(
+            Carbon::parse($session->session_date . ' ' . $session->scheduled_end)->addMinutes(5)
+        ))
+        ->each(function ($session) {
+            $session->update([
+                'status' => 'auto_closed',
+                'actual_end' => now(),
+                'is_auto_closed' => true,
+            ]);
+            // Semua siswa yang masih 'alpha' tetap alpha (tidak berubah).
+            // Log aktivitas: "Sesi kelas {subject} di {classroom} ditutup otomatis oleh sistem."
+        });
+})->everyMinute()->name('auto-close-expired-sessions')->withoutOverlapping();
+```
+
+### 🔒 117.6: Aturan Bisnis (Business Rules — WAJIB DIPATUHI)
+
+| No | Aturan | Implementasi |
+|:--:|--------|--------------|
+| 1 | Guru **hanya bisa** memulai kelas jika saat ini berada dalam rentang waktu jadwal ±10 menit | Validasi `isWithinScheduledTime()` pada `startSession` |
+| 2 | Guru **hanya bisa** memulai kelas yang **dijadwalkan untuknya** (bukan kelas guru lain) | Validasi `$schedule->teacher_id === auth()->id()` |
+| 3 | **1 sesi kelas per jadwal per hari** — mencegah duplikasi | Unique constraint `['schedule_id', 'session_date']` |
+| 4 | QR Token **berputar setiap 30 detik** — mencegah screenshot/forward QR ke teman | `rotateQrToken()` + `qr_token_expires_at` |
+| 5 | Siswa **hanya bisa scan QR** jika terdaftar di kelas tersebut | Validasi `Student::classroom_id === ClassSession::classroom_id` |
+| 6 | Jika sesi berakhir dan siswa belum tercatat — **otomatis Alpha** | Default status `auto_alpha` saat record di-populate di `startSession` |
+| 7 | Guru bisa pilih status siswa: **Hadir, Alpha, Sakit, atau Izin** | Dropdown pilihan pada `manualAttendance` endpoint |
+| 8 | **Hanya Waka Kurikulum, TU, atau Admin** yang bisa mengoreksi absensi setelah sesi berakhir | Middleware `role:admin,waka_kurikulum,staf_tu` pada `overrideAttendance` |
+| 9 | Koreksi absensi **wajib menyertakan alasan** | Validasi `'reason' => 'required|string|min:10'` |
+| 10 | Sesi **otomatis ditutup** jika guru lupa menekan "Akhiri Kelas" dan waktu jadwal sudah lewat 5 menit | Laravel Scheduler `everyMinute()` di Kernel.php |
+| 11 | **Tidak ada absensi retroaktif oleh siswa** — siswa yang telat/tidak terabsen harus minta koreksi ke Waka/TU | Endpoint `scanQr` hanya bekerja saat sesi berstatus `active` |
+
+### 📊 117.7: Statistik Target Implementasi Backend
+
+| Komponen | Jumlah |
+|----------|--------|
+| Tabel database baru | 2 (`class_sessions`, `session_attendances`) |
+| Model Eloquent baru | 2 (`ClassSession`, `SessionAttendance`) |
+| Controller baru | 3 (`ClassSessionController`, `StudentSessionAttendanceController`, `AdminClassSessionController`) |
+| API Endpoint baru | ~12 endpoint |
+| Service baru | 1 (`ClassSessionService` — berisi logika start/end/rotate/auto-populate) |
+| Scheduler job baru | 1 (auto-close expired sessions) |
+| Test case | 15+ (validasi batasan waktu, duplikasi sesi, QR rotation, auto-alpha, override authorization) |

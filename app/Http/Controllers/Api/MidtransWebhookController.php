@@ -84,7 +84,7 @@ class MidtransWebhookController extends Controller
                 // Tambahkan entri pembayaran baru
                 Payment::create([
                     'billing_id' => $billingLock->id,
-                    'created_by' => 1, // System / Admin
+                    'created_by' => null, // dikonfirmasi payment gateway, bukan petugas
                     'amount_paid' => (float) $grossAmount,
                     'payment_date' => now()->toDateString(),
                     'payment_method' => 'transfer',

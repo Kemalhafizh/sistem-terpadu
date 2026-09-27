@@ -270,7 +270,7 @@
                   </div>
                   <div>
                     <h4 class="text-lg font-black text-gray-900 dark:text-white">{{ __('dashboard.widget_attendance_today') }}</h4>
-                    <p class="text-xs text-gray-400 dark:text-gray-500 font-bold mt-0.5">SMA Islam Sultan Agung 1 • {{ $todayAttendanceDateFormatted }}</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 font-bold mt-0.5">{{ school_short_name() }} • {{ $todayAttendanceDateFormatted }}</p>
                   </div>
                 </div>
                 <div class="flex items-center space-x-6">

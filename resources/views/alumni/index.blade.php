@@ -8,7 +8,7 @@
                      Kelola Data Alumni
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Administrasi dan pelacakan kelulusan siswa SMA Islam Sultan Agung 1 Semarang.
+                    Administrasi dan pelacakan kelulusan siswa {{ school_name() }}.
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">

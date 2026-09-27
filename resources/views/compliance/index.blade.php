@@ -8,7 +8,7 @@
                     <span></span> Audit & Kepatuhan Akreditasi
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Pusat kendali persiapan akreditasi sekolah SMA Islam Sultan Agung 1 Semarang terintegrasi data riil sistem.
+                    Pusat kendali persiapan akreditasi sekolah {{ school_name() }} terintegrasi data riil sistem.
                 </p>
             </div>
             <div class="flex flex-wrap gap-2">

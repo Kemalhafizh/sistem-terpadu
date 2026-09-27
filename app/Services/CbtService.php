@@ -18,21 +18,35 @@ class CbtService
             return $attempt->question_order;
         }
 
-        $questions = $exam->questions;
-        
-        if ($exam->shuffle_questions) {
-            $questionIds = $questions->pluck('id')->toArray();
-            $seed = $student->id * 7919 + $exam->id * 104729;
-            $shuffledIds = $this->deterministicShuffle($questionIds, $seed);
-        } else {
-            // Sort by pivot order or id
-            $shuffledIds = $questions->sortBy(function ($q) {
-                return $q->pivot->order ?? 0;
-            })->pluck('id')->toArray();
-        }
+        $shuffledIds = $this->computeQuestionOrder($exam, $student->id);
 
         $attempt->update(['question_order' => $shuffledIds]);
         return $shuffledIds;
+    }
+
+    /**
+     * Deterministic question order for a student (seeded by student + exam),
+     * or authored pivot order when shuffle_questions is off. Pure — never persists.
+     */
+    public function computeQuestionOrder(Exam $exam, int $studentId): array
+    {
+        if ($exam->shuffle_questions) {
+            $questionIds = $exam->questions->pluck('id')->toArray();
+            $seed = $studentId * 7919 + $exam->id * 104729;
+            return $this->deterministicShuffle($questionIds, $seed);
+        }
+
+        return $this->authoredQuestionIds($exam);
+    }
+
+    /**
+     * Question ids in authored (pivot `order`) sequence.
+     */
+    private function authoredQuestionIds(Exam $exam): array
+    {
+        return $exam->questions->sortBy(function ($q) {
+            return $q->pivot->order ?? 0;
+        })->pluck('id')->values()->toArray();
     }
 
     /**
@@ -47,6 +61,84 @@ class CbtService
 
         $seed = $studentId * 7919 + $examId * 104729 + $question->id;
         return $this->deterministicShuffleAssociative($options, $seed);
+    }
+
+    /**
+     * Options in the order a student should see them: shuffled (original keys
+     * kept, only display order changes — same as the web take view) when the
+     * exam has shuffle_options on, otherwise authored order.
+     */
+    public function getDisplayOptions(Exam $exam, QuestionBank $question, int $studentId): array
+    {
+        if ($exam->shuffle_options && $question->type === 'multiple_choice') {
+            return $this->getShuffledOptions($question, $studentId, $exam->id);
+        }
+
+        return is_array($question->options) ? $question->options : [];
+    }
+
+    /**
+     * Ordered, per-student question set for the mobile API and the encrypted
+     * vault payload, so both agree with each other and with the web path.
+     * Reuses the attempt's stored question_order when there is an attempt
+     * (initializing it if empty); without one, computes the same seeded order
+     * without persisting it.
+     *
+     * @return array<int, array{question: QuestionBank, number: int, options: array}>
+     */
+    public function buildStudentQuestionSet(Exam $exam, Student $student, ?ExamAttempt $attempt = null): array
+    {
+        $orderedIds = $attempt
+            ? $this->getOrInitializeQuestionOrder($exam, $student, $attempt)
+            : $this->computeQuestionOrder($exam, $student->id);
+
+        $questions = $exam->questions->keyBy('id');
+
+        // Questions attached after the order was stored are appended in authored order.
+        $orderedIds = array_merge($orderedIds, array_values(array_diff($this->authoredQuestionIds($exam), $orderedIds)));
+
+        $set = [];
+        $number = 1;
+        foreach ($orderedIds as $qId) {
+            $question = $questions->get($qId);
+            if (!$question) {
+                continue;
+            }
+            $set[] = [
+                'question' => $question,
+                'number' => $number++,
+                'options' => $this->formatOptions($this->getDisplayOptions($exam, $question, $student->id)),
+            ];
+        }
+
+        return $set;
+    }
+
+    /**
+     * Normalize both stored option shapes — ['A' => 'text'] and
+     * [['key' => 'A', 'text' => ..., 'image_url' => ...]] — into a list of
+     * ['key', 'text', 'image_url'], preserving the given order.
+     */
+    public function formatOptions(array $options): array
+    {
+        $formatted = [];
+        foreach ($options as $key => $opt) {
+            if (is_array($opt)) {
+                $formatted[] = [
+                    'key' => (string) ($opt['key'] ?? $key),
+                    'text' => (string) ($opt['text'] ?? ''),
+                    'image_url' => $opt['image_url'] ?? $opt['image'] ?? null,
+                ];
+            } else {
+                $formatted[] = [
+                    'key' => (string) $key,
+                    'text' => (string) $opt,
+                    'image_url' => null,
+                ];
+            }
+        }
+
+        return $formatted;
     }
 
     /**

@@ -9,7 +9,6 @@ use App\Models\ClassroomLayout;
 use App\Models\DataStory;
 use App\Models\DigitalMagazine;
 use App\Models\ExecutiveKpi;
-use App\Models\FinancialHealthMetric;
 use App\Models\KanbanBoard;
 use App\Models\KanbanTask;
 use App\Models\LocalizationString;
@@ -142,16 +141,9 @@ class ExtendedDiamondSeeder extends Seeder
             );
         }
 
-        FinancialHealthMetric::firstOrCreate(
-            ['report_date' => now()->toDateString()],
-            [
-                'cash_reserve' => 1500000000.00,
-                'monthly_burn_rate' => 180000000.00,
-                'projected_revenue' => 220000000.00,
-                'fee_collection_rate' => 96.4,
-                'expense_distribution' => ['gaji' => 55, 'operasional' => 20, 'sarpras' => 15, 'dakwah' => 10],
-            ]
-        );
+        // Financial health metrics are no longer seeded with made-up figures:
+        // FinancialScoreboardService computes them from real transactions
+        // whenever the scoreboard is opened.
 
         // 3. FASE 66 Seeding
         DigitalMagazine::firstOrCreate(

@@ -267,7 +267,7 @@ class ApiParentController extends Controller
         $message->setRelation('sender', $user);
         event(new ChatMessageSent($message));
 
-        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 210);
+        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 201);
     }
 
     /**

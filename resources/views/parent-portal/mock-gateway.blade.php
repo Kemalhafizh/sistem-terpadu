@@ -81,7 +81,7 @@
             </div>
 
             <p class="text-[9px] text-center text-slate-500 uppercase tracking-widest">
-                SMA ISLAM SULTAN AGUNG 1 SEMARANG • PORTAL PENGEMBANGAN
+                {{ mb_strtoupper(school_name()) }} • PORTAL PENGEMBANGAN
             </p>
         </div>
     </div>

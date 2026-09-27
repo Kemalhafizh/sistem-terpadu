@@ -6,7 +6,7 @@
                     {{ __('Aksi Cepat Orang Tua') }}
                 </h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                    {{ $data['parent_name'] ?? 'Wali Murid' }} &bull; SMA Islam Sultan Agung 1 Semarang
+                    {{ $data['parent_name'] ?? 'Wali Murid' }} &bull; {{ school_name() }}
                 </p>
             </div>
         </div>

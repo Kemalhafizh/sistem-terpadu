@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\Attendance;
-use App\Models\Setting;
 use App\Notifications\Channels\WhatsappChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -54,7 +53,7 @@ class StudentAttendanceNotification extends Notification
   {
     $studentName = $this->attendance->student?->name ?? 'Siswa';
     $dateFormatted = date('d-m-Y', strtotime($this->attendance->date));
-    $schoolName = Setting::get('school_name', 'SMA Islam Sultan Agung 1');
+    $schoolName = school_name();
     $notes = $this->attendance->notes ? "\n *Keterangan:* ".$this->attendance->notes : '';
 
     return "Assalamu'alaikum Bapak/Ibu Wali Murid dari *{$studentName}*,\n\n".

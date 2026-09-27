@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\Billing;
-use App\Models\Setting;
 use App\Notifications\Channels\WhatsappChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -48,7 +47,7 @@ class BillingReminderNotification extends Notification
     $categoryName = $this->billing->category?->name ?? 'SPP/Uang Gedung';
     $amountFormatted = 'Rp '.number_format($this->billing->remaining_balance, 0, ',', '.');
     $dueDateFormatted = date('d-m-Y', strtotime($this->billing->due_date));
-    $schoolName = Setting::get('school_name', 'SMA Islam Sultan Agung 1');
+    $schoolName = school_name();
 
     return "Assalamu'alaikum Bapak/Ibu Wali Murid dari *{$studentName}*,\n\n".
         "Menginfokan tagihan pendidikan ananda yang belum terselesaikan di *{$schoolName}*:\n".

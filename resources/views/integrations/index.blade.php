@@ -133,7 +133,7 @@
                             <span class="w-3 h-3 rounded-full bg-gray-600"></span>
                         </div>
                         <h4 class="text-xl font-bold text-gray-100">{{ $yayasan->name }}</h4>
-                        <p class="text-sm text-gray-400 mt-3 leading-relaxed">Konektor sinkronisasi dinamis real-time dengan sistem database Yayasan Badan Wakaf Sultan Agung.</p>
+                        <p class="text-sm text-gray-400 mt-3 leading-relaxed">Konektor sinkronisasi dinamis real-time dengan sistem database {{ school_foundation_name(false) }}.</p>
                         
                         <div class="mt-6 space-y-2 text-xs text-gray-400">
                             <p class="flex items-center space-x-2">

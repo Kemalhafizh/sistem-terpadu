@@ -92,9 +92,9 @@
 
     <!-- Kop Surat Sekolah -->
     <div class="header">
-        <h1>SMA Islam Sultan Agung 1</h1>
-        <h2>Yayasan Badan Wakaf Sultan Agung</h2>
-        <p>Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242</p>
+        <h1>{{ school_short_name() }}</h1>
+        <h2>{{ school_foundation_name(false) }}</h2>
+        <p>{{ school_address() }}</p>
     </div>
 
     <!-- Judul Dokumen -->

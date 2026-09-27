@@ -86,7 +86,7 @@
 
     <!-- Formal Header -->
     <div class="header">
-        <h1>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h1>
+        <h1>{{ mb_strtoupper(school_name()) }}</h1>
         <h2>SISTEM INFORMASI SEKOLAH TERPADU (SISTA)</h2>
         <div class="report-title">{{ $report->name }}</div>
     </div>
@@ -150,7 +150,7 @@
 
     <!-- Footer Page Numbering -->
     <div class="footer">
-        Dokumen ini dihasilkan secara otomatis oleh Sistem Terpadu SMA Islam Sultan Agung 1. Halaman 1
+        Dokumen ini dihasilkan secara otomatis oleh Sistem Terpadu {{ school_short_name() }}. Halaman 1
     </div>
 
 </body>

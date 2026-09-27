@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('seo_meta')
-    <title>{{ $page->title }} - SMA Islam Sultan Agung 1 Semarang</title>
+    <title>{{ $page->title }} - {{ school_name() }}</title>
     @if($page->meta_description)
         <meta name="description" content="{{ $page->meta_description }}">
     @endif

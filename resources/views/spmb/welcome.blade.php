@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sistem Penerimaan Murid Baru (SPMB) | SMA Islam Sultan Agung 1 Semarang</title>
+  <title>Sistem Penerimaan Murid Baru (SPMB) | {{ school_name() }}</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{{ asset('images/logo-kotak.png') }}">

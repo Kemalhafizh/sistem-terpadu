@@ -352,7 +352,7 @@ class ApiTeacherController extends Controller
         $message->setRelation('sender', $user);
         event(new ChatMessageSent($message));
 
-        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 210);
+        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 201);
     }
 
     /**
@@ -360,78 +360,126 @@ class ApiTeacherController extends Controller
      */
     public function storeExamWithQuestions(Request $request)
     {
-        $request->validate([
+        \Illuminate\Support\Facades\Gate::authorize('create', \App\Models\Exam::class);
+
+        // No client-supplied token: the entry token is issued only by
+        // CbtAccessControlService (5-minute lifetime) via GET cbt/exams/{id}/token.
+        // No subject/grade/academic-year fallbacks either — every value is real.
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'subject_id' => 'nullable|exists:subjects,id',
-            'subject_name' => 'nullable|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'passing_score' => 'nullable|numeric',
-            'token' => 'nullable|string',
-            'questions' => 'required|array|min:1',
-            'questions.*.question_text' => 'required|string',
-            'questions.*.options' => 'required|array',
-            'questions.*.correct_answer' => 'required|string',
+            'subject_id' => 'required|integer|exists:subjects,id',
+            'classroom_id' => 'required|integer|exists:classrooms,id',
+            'duration_minutes' => 'required|integer|min:5|max:300',
+            'passing_score' => 'required|numeric|min:0|max:100',
+            'max_violations' => 'sometimes|integer|min:1|max:10',
+            'shuffle_questions' => 'sometimes|boolean',
+            'shuffle_options' => 'sometimes|boolean',
+            'mobile_only' => 'sometimes|boolean',
+            'questions' => 'required|array|min:1|max:200',
+            'questions.*.question_text' => 'required|string|max:10000',
+            'questions.*.image_url' => 'nullable|string|max:2048|url:http,https',
+            'questions.*.options' => 'required|array|min:2|max:5',
+            'questions.*.options.*.key' => 'required|string|in:A,B,C,D,E',
+            'questions.*.options.*.text' => 'nullable|string|max:5000',
+            'questions.*.options.*.image_url' => 'nullable|string|max:2048|url:http,https',
+            'questions.*.correct_answer' => 'required|string|in:A,B,C,D,E',
+            'questions.*.weight' => 'nullable|numeric|min:0.01|max:999.99',
         ]);
+
+        $validator->after(function ($v) use ($request) {
+            if ($v->errors()->isNotEmpty()) {
+                return;
+            }
+            foreach ($request->input('questions', []) as $i => $q) {
+                $keys = array_column($q['options'], 'key');
+                if (count($keys) !== count(array_unique($keys))) {
+                    $v->errors()->add("questions.$i.options", 'Soal #' . ($i + 1) . ': kunci pilihan jawaban tidak boleh ganda.');
+                }
+                if (!in_array($q['correct_answer'], $keys, true)) {
+                    $v->errors()->add("questions.$i.correct_answer", 'Soal #' . ($i + 1) . ': kunci jawaban harus salah satu pilihan yang ada.');
+                }
+                foreach ($q['options'] as $opt) {
+                    if (blank($opt['text'] ?? null) && blank($opt['image_url'] ?? null)) {
+                        $v->errors()->add("questions.$i.options", 'Soal #' . ($i + 1) . ": pilihan {$opt['key']} harus berisi teks atau gambar.");
+                    }
+                }
+            }
+        });
+
+        $validator->validate();
+
+        $activeYear = AcademicYear::where('is_active', true)->first();
+        if (!$activeYear) {
+            return $this->errorResponse('Tahun ajaran aktif belum diatur. Hubungi admin sekolah.', 422);
+        }
 
         $teacher = $request->user();
-        $activeYear = AcademicYear::where('is_active', true)->first() ?: AcademicYear::first();
-        $subjectId = $request->subject_id;
-        if (!$subjectId && $request->subject_name) {
-            $subject = \App\Models\Subject::where('name', 'like', '%' . $request->subject_name . '%')->first();
-            $subjectId = $subject ? $subject->id : 1;
-        }
+        $classroom = Classroom::findOrFail($request->integer('classroom_id'));
+        $questions = $request->input('questions');
 
-        $token = $request->token ?: 'SA1-' . rand(1000, 9999);
-
-        $exam = \App\Models\Exam::create([
-            'uuid' => (string) \Illuminate\Support\Str::uuid(),
-            'title' => $request->title,
-            'subject_id' => $subjectId ?: 1,
-            'classroom_id' => $request->classroom_id ?: null,
-            'academic_year_id' => $activeYear ? $activeYear->id : 1,
-            'created_by' => $teacher->id,
-            'type' => 'ulangan_harian',
-            'start_time' => now(),
-            'end_time' => now()->addDays(7),
-            'duration_minutes' => (int) $request->duration_minutes,
-            'total_questions' => count($request->questions),
-            'token' => $token,
-            'passing_score' => (float) ($request->passing_score ?: 75.0),
-            'status' => 'published',
-            'shuffle_questions' => (bool) $request->input('shuffle_questions', true),
-            'shuffle_options' => (bool) $request->input('shuffle_options', true),
-            'is_secure_mode' => (bool) $request->input('require_kiosk_mode', true),
-        ]);
-
-        foreach ($request->questions as $index => $qData) {
-            $qBank = \App\Models\QuestionBank::create([
-                'subject_id' => $subjectId ?: 1,
+        $exam = \Illuminate\Support\Facades\DB::transaction(function () use ($request, $teacher, $classroom, $activeYear, $questions) {
+            $exam = \App\Models\Exam::create([
+                'title' => $request->input('title'),
+                'subject_id' => $request->integer('subject_id'),
+                'classroom_id' => $classroom->id,
+                'academic_year_id' => $activeYear->id,
                 'created_by' => $teacher->id,
-                'question_text' => $qData['question_text'],
-                'question_image' => $qData['image_url'] ?? $qData['question_image'] ?? null,
-                'type' => 'multiple_choice',
-                'options' => $qData['options'],
-                'correct_answer' => $qData['correct_answer'] ?? 'A',
-                'grade_level' => 'XII',
+                'type' => 'ulangan_harian',
+                'start_time' => now(),
+                'end_time' => now()->addDays(7),
+                'duration_minutes' => $request->integer('duration_minutes'),
+                'total_questions' => count($questions),
+                'passing_score' => (float) $request->input('passing_score'),
+                'max_violations' => $request->integer('max_violations', 3),
+                'status' => 'published',
+                'shuffle_questions' => $request->boolean('shuffle_questions', true),
+                'shuffle_options' => $request->boolean('shuffle_options', true),
+                'mobile_only' => $request->boolean('mobile_only', true),
             ]);
 
-            \DB::table('exam_questions')->insert([
-                'exam_id' => $exam->id,
-                'question_bank_id' => $qBank->id,
-                'order' => $index + 1,
-                'weight' => (float) ($qData['weight'] ?? 10.0),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+            foreach ($questions as $index => $qData) {
+                $qBank = \App\Models\QuestionBank::create([
+                    'subject_id' => $exam->subject_id,
+                    'created_by' => $teacher->id,
+                    'question_text' => $qData['question_text'],
+                    'question_image' => $qData['image_url'] ?? null,
+                    'type' => 'multiple_choice',
+                    'options' => array_map(fn ($o) => [
+                        'key' => $o['key'],
+                        'text' => $o['text'] ?? '',
+                        'image_url' => $o['image_url'] ?? null,
+                    ], $qData['options']),
+                    'correct_answer' => $qData['correct_answer'],
+                    'grade_level' => $classroom->grade_level,
+                ]);
+
+                $exam->questions()->attach($qBank->id, [
+                    'order' => $index + 1,
+                    'weight' => (float) ($qData['weight'] ?? 10.0),
+                ]);
+            }
+
+            return $exam->refresh()->load(['subject', 'classroom']);
+        });
 
         return $this->successResponse([
             'exam_id' => $exam->id,
             'uuid' => $exam->uuid,
             'title' => $exam->title,
-            'token' => $token,
-            'total_questions' => count($request->questions),
-        ], 'Jadwal ujian dan bank soal berhasil diterbitkan', 201);
+            'type' => $exam->type,
+            'status' => $exam->status,
+            'subject' => $exam->subject?->name,
+            'classroom' => $exam->classroom?->name,
+            'start_time' => $exam->start_time?->toIso8601String(),
+            'end_time' => $exam->end_time?->toIso8601String(),
+            'duration_minutes' => $exam->duration_minutes,
+            'total_questions' => $exam->total_questions,
+            'created_by' => $exam->created_by,
+            'operator_id' => $exam->operator_id,
+            // Same rule as GET cbt/exams/{id}/token — tells the app whether it
+            // may open the proctor screen (which fetches the real token).
+            'can_view_token' => app(\App\Services\CbtAccessControlService::class)->canViewToken($teacher, $exam),
+        ], 'Ujian dan bank soal berhasil diterbitkan', 201);
     }
 
     /**

@@ -37,32 +37,11 @@ return new class extends Migration
             $table->unique(['employee_id', 'month', 'year']);
         });
 
-        // Insert new settings for GPS Geofencing and Payroll Engine
+        // Insert new settings for the Payroll Engine
         $settings = [
-            [
-                'key' => 'school_latitude',
-                'value' => '-6.9535',
-                'group' => 'system',
-                'type' => 'text',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'key' => 'school_longitude',
-                'value' => '110.4355',
-                'group' => 'system',
-                'type' => 'text',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'key' => 'school_attendance_radius',
-                'value' => '100',
-                'group' => 'system',
-                'type' => 'text',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            // No campus coordinates here any more: this used to insert
+            // -6.9535 / 110.4355 with a 100 m radius, ~4.8 km from the school.
+            // The geofence now comes from App\Support\School::campus().
             [
                 'key' => 'payroll_late_deduction',
                 'value' => '25000',

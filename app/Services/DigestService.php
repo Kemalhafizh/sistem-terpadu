@@ -378,11 +378,12 @@ class DigestService
                 </style>
             </head>
             <body>
-                <!-- Kop Surat SMA Islam Sultan Agung 1 -->
+                <!-- Kop surat: identity from App\Support\School (this used an invented
+                     'Jalan Pahlawan No. 1' address and a (024) 123456 number). -->
                 <div class='kop-surat'>
-                    <h2>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h2>
-                    <p>Jalan Pahlawan No. 1, Semarang, Jawa Tengah | Telp: (024) 123456</p>
-                    <p style='font-size: 9px; font-weight: normal; color: #94a3b8; margin-top: 3px;'>TERAKREDITASI A • STATUS DIGITAL ENTERPRISE INTEGRATED PLATFORM</p>
+                    <h2>" . e(mb_strtoupper(school_name())) . "</h2>
+                    <p>" . e(school_contact_line(['address', 'phone'])) . "</p>
+                    " . (school_accreditation() !== '' ? "<p style='font-size: 9px; font-weight: normal; color: #94a3b8; margin-top: 3px;'>TERAKREDITASI " . e(mb_strtoupper(school_accreditation())) . "</p>" : '') . "
                 </div>
                 
                 <div class='pdf-title'>{$title}</div>

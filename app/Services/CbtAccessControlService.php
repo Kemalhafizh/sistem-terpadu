@@ -60,6 +60,28 @@ class CbtAccessControlService
     }
 
     /**
+     * Exams this user personally operates — the same ownership rule as
+     * canViewToken() (minus the admin bypass), so every exam returned here
+     * can actually be opened in the proctor screen. Only published exams that
+     * have not ended yet are relevant for proctoring.
+     */
+    public function examsOperatedBy(User $user)
+    {
+        return Exam::query()
+            ->where('status', 'published')
+            ->where('end_time', '>=', now())
+            ->where(function ($q) use ($user) {
+                $q->where(function ($q) use ($user) {
+                    $q->whereIn('type', ['uts', 'uas'])->where('operator_id', $user->id);
+                })->orWhere(function ($q) use ($user) {
+                    $q->whereNotIn('type', ['uts', 'uas'])->where('created_by', $user->id);
+                });
+            })
+            ->with(['subject', 'classroom'])
+            ->orderBy('start_time');
+    }
+
+    /**
      * Check if the given platform is allowed for this exam.
      */
     public function isPlatformAllowed(Exam $exam, string $platform): bool

@@ -54,6 +54,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->appendToGroup('api', [
             \App\Http\Middleware\IdempotencyMiddleware::class,
+            // The mobile app talks only to the API, so without these its
+            // requests never reached the APM latency/availability figures.
+            \App\Http\Middleware\PerformanceLogger::class,
+            \App\Http\Middleware\CorrelationIdMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -271,8 +271,8 @@
             <p>Semarang, {{ $payroll->payment_date ? $payroll->payment_date->translatedFormat('d F Y') : now()->translatedFormat('d F Y') }}</p>
             <p class="signature-title">Bendahara Sekolah,</p>
             <div class="signature-space"></div>
-            <p class="signature-name">Hj. Siti Aminah, S.E.</p>
-            <p class="signature-title">NIP. 19780512 200502 2 001</p>
+            <p class="signature-name">{{ signature_name(null) }}</p>
+            <p class="signature-title">{{ signature_nip(null) }}</p>
         </div>
         <div style="clear: both;"></div>
     </div>

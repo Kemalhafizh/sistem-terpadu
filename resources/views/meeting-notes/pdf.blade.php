@@ -46,11 +46,11 @@
     <div class="container">
         <!-- School Kop Surat -->
         <div class="header">
-            <h1 class="school-name">Yayasan Badan Wakaf Sultan Agung</h1>
-            <h2 class="school-subtitle">SMA ISLAM SULTAN AGUNG 1 SEMARANG</h2>
+            <h1 class="school-name">{{ school_foundation_name(false) }}</h1>
+            <h2 class="school-subtitle">{{ mb_strtoupper(school_name()) }}</h2>
             <p class="school-info">
-                Terakreditasi A (Unggul) &bull; Jl. Mataram No.657, Wonodri, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah 50242<br>
-                Telp: (024) 8313922 | Email: info@smaisla1smg.sch.id | Website: smaisla1smg.sch.id
+                @if(school_accreditation())Terakreditasi {{ school_accreditation() }} &bull; @endif{{ school_address() }}<br>
+                {{ school_contact_line(['phone', 'email', 'website']) }}
             </p>
         </div>
 

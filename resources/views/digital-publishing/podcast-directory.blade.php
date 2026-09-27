@@ -6,7 +6,7 @@
                     {{ __('Direktori Podcast & Audio Edukasi Islam') }}
                 </h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                    Kajian agama Islam, motivasi belajar, dan materi audio interaktif SMA Islam Sultan Agung 1 Semarang.
+                    Kajian agama Islam, motivasi belajar, dan materi audio interaktif {{ school_name() }}.
                 </p>
             </div>
             <button onclick="document.getElementById('newPodcastModal').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-sm font-semibold shadow-sm transition-all flex items-center space-x-2">

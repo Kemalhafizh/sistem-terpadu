@@ -37,35 +37,18 @@ class CbtEnterpriseService
             ]
         );
 
-        $orderedIds = $this->cbtService->getOrInitializeQuestionOrder($exam, $student, $attempt);
-        $questions = $exam->questions->keyBy('id');
-
+        // Same per-student order as GET student/cbt/exams/{id}/questions and the web take view.
         $payload = [];
-        $number = 1;
-        foreach ($orderedIds as $qId) {
-            if (isset($questions[$qId])) {
-                $q = $questions[$qId];
-                $shuffledOptions = $this->cbtService->getShuffledOptions($q, $student->id, $exam->id);
-                
-                $optionsFormatted = [];
-                if (is_array($shuffledOptions)) {
-                    foreach ($shuffledOptions as $key => $val) {
-                        $optionsFormatted[] = [
-                            'key' => (string) $key,
-                            'text' => (string) $val,
-                        ];
-                    }
-                }
-
-                $payload[] = [
-                    'id' => $q->id,
-                    'number' => $number++,
-                    'type' => $q->type,
-                    'question_text' => $q->question_text,
-                    'image_url' => $q->question_image ? url($q->question_image) : null,
-                    'options' => $optionsFormatted,
-                ];
-            }
+        foreach ($this->cbtService->buildStudentQuestionSet($exam, $student, $attempt) as $item) {
+            $q = $item['question'];
+            $payload[] = [
+                'id' => $q->id,
+                'number' => $item['number'],
+                'type' => $q->type,
+                'question_text' => $q->question_text,
+                'image_url' => $q->question_image ? url($q->question_image) : null,
+                'options' => $item['options'],
+            ];
         }
 
         $jsonPayload = json_encode([

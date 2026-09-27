@@ -130,9 +130,9 @@
         <table class="header-table">
             <tr>
                 <td align="center" style="line-height: 1.3;">
-                    <span class="header-title-main">Yayasan Badan Wakaf Sultan Agung</span><br>
-                    <span class="header-title-sub">SMA ISLAM SULTAN AGUNG 1 SEMARANG</span><br>
-                    <span class="header-address">Jl. Mataram No.657, Semarang, Jawa Tengah. Telp: (024) 8313527 | Website: www.smaisla1.sch.id</span>
+                    <span class="header-title-main">{{ school_foundation_name(false) }}</span><br>
+                    <span class="header-title-sub">{{ mb_strtoupper(school_name()) }}</span><br>
+                    <span class="header-address">{{ school_contact_line(['address', 'phone', 'website']) }}</span>
                 </td>
             </tr>
         </table>
@@ -264,13 +264,13 @@
                             <strong>Catatan Keamanan:</strong><br>
                             1. Dokumen ini dicetak secara resmi melalui sistem informasi SISTA (Sistem Informasi Sekolah Terpadu).<br>
                             2. Simpan cetakan laporan mutasi ini sebagai bukti transaksi keuangan wadiah yang sah.<br>
-                            3. Jika terdapat selisih pencatatan, harap segera melapor ke bagian Staf Keuangan SMA Islam Sultan Agung 1.
+                            3. Jika terdapat selisih pencatatan, harap segera melapor ke bagian Staf Keuangan {{ school_short_name() }}.
                         </div>
                     </td>
                     <td width="40%" align="right" valign="top">
                         <div style="text-align: center; display: inline-block;">
                             Semarang, {{ now()->translatedFormat('d F Y') }}<br>
-                            <strong>Staf Keuangan SMA Islam Sultan Agung 1</strong>
+                            <strong>Staf Keuangan {{ school_short_name() }}</strong>
                             <br><br><br><br>
                             ___________________________________<br>
                             Keuangan Syariah / Operator SISTA

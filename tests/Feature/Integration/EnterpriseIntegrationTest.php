@@ -33,7 +33,8 @@ test('graphql service resolves query and mutation payloads', function () {
         'query' => '{ institution { name npsn } }',
     ]);
     $endpointResponse->assertStatus(200);
-    $endpointResponse->assertJsonPath('data.institution.npsn', '20328888');
+    // The school's NPSN from Profil Sekolah / config — was a hard-coded placeholder (20328888).
+    $endpointResponse->assertJsonPath('data.institution.npsn', config('school.npsn'));
 });
 
 test('admin can register api clients and view usage stats', function () {

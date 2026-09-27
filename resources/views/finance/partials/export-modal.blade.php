@@ -176,9 +176,9 @@
                                     ST
                                 </div>
                                 <div class="text-left">
-                                    <h4 class="font-black text-base tracking-tight leading-none text-slate-950">SMA ISLAM SULTAN AGUNG 1</h4>
+                                    <h4 class="font-black text-base tracking-tight leading-none text-slate-950">{{ mb_strtoupper(school_short_name()) }}</h4>
                                     <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Sistem Terpadu Manajemen Akademik</p>
-                                    <p class="text-[8px] text-slate-400 mt-0.5 leading-none">Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242</p>
+                                    <p class="text-[8px] text-slate-400 mt-0.5 leading-none">{{ school_address() }}</p>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -275,7 +275,7 @@
                                 <div class="w-32 border-b border-dashed border-slate-300"></div>
                             </div>
                             <p class="font-black text-slate-950 underline uppercase" x-text="signatureName"></p>
-                            <p class="text-[9px] text-slate-400 font-bold mt-0.5 uppercase tracking-wide">SMA ISLAM SULTAN AGUNG 1</p>
+                            <p class="text-[9px] text-slate-400 font-bold mt-0.5 uppercase tracking-wide">{{ mb_strtoupper(school_short_name()) }}</p>
                         </div>
                     </div>
                 </div>

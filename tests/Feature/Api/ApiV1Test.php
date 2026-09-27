@@ -257,17 +257,39 @@ test('orang tua dapat berkonsultasi via chat dan memicu event ChatMessageSent', 
     Event::fake();
     Sanctum::actingAs($this->parentUser);
 
+    // student_uuid, not the numeric id — the app only ever learns a child's uuid.
     $response = $this->postJson('/api/v1/parent/messages', [
         'recipient_id' => $this->teacherUser->id,
-        'student_id' => $this->student->id,
+        'student_uuid' => $this->student->uuid,
         'message' => 'Halo Bapak/Ibu Guru, bagaimana prestasi belajar anak saya hari ini?',
     ]);
 
-    $response->assertStatus(210)
+    // Was a non-standard 210 in both the controller and this test.
+    $response->assertStatus(201)
         ->assertJsonPath('success', true)
         ->assertJsonPath('data.message', 'Halo Bapak/Ibu Guru, bagaimana prestasi belajar anak saya hari ini?');
 
     Event::assertDispatched(ChatMessageSent::class);
+});
+
+test('guru dapat membalas pesan wali murid dengan status 201', function () {
+    Event::fake();
+
+    // A reply is allowed once a thread about this student exists.
+    Sanctum::actingAs($this->parentUser);
+    $this->postJson('/api/v1/parent/messages', [
+        'recipient_id' => $this->teacherUser->id,
+        'student_uuid' => $this->student->uuid,
+        'message' => 'Assalamualaikum Bapak/Ibu Guru.',
+    ])->assertStatus(201);
+
+    Sanctum::actingAs($this->teacherUser);
+    $this->postJson('/api/v1/teacher/messages', [
+        'student_uuid' => $this->student->uuid,
+        'message' => 'Waalaikumsalam, ananda baik-baik saja.',
+    ])->assertStatus(201)
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('data.message', 'Waalaikumsalam, ananda baik-baik saja.');
 });
 
 // ── 4. GURU SCOPED ENDPOINTS ─────────────────────────────────────────────────

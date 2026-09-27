@@ -8,7 +8,7 @@
                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 Dasbor Turnover
             </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-300">SMA Islam Sultan Agung 1 Semarang</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">{{ school_name() }}</p>
         </div>
     </div>
     

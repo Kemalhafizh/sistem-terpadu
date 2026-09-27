@@ -130,9 +130,9 @@
 
     <!-- Official Header -->
     <div class="header">
-        <h2>YAYASAN BADAN WAKAF SULTAN AGUNG</h2>
-        <h1>SMA ISLAM SULTAN AGUNG 1 SEMARANG</h1>
-        <p>Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242</p>
+        <h2>{{ mb_strtoupper(school_foundation_name(false)) }}</h2>
+        <h1>{{ mb_strtoupper(school_name()) }}</h1>
+        <p>{{ school_address() }}</p>
     </div>
 
     <div class="doc-title">LAPORAN HASIL ANALISIS SURVEI DIGITAL</div>
@@ -261,7 +261,7 @@
         <div class="signature-box" style="float: left;">
             <p>Mengetahui,<br>Kepala Sekolah</p>
             <div class="signature-space"></div>
-            <p><strong>Kepala Sekolah SMA Islam Sultan Agung 1</strong></p>
+            <p><strong>Kepala Sekolah {{ school_short_name() }}</strong></p>
         </div>
         
         <div class="signature-box" style="float: right;">

@@ -8,7 +8,7 @@
                     </span>
                     {{ __('Dashboard OSIS & Kesiswaan') }}
                 </h2>
-                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">SMA ISLAM SULTAN AGUNG 1 SEMARANG</p>
+                <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ mb_strtoupper(school_name()) }}</p>
             </div>
             
             <div class="flex flex-wrap gap-2">

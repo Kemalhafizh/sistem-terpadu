@@ -99,7 +99,7 @@
 
     <div class="header">
         <h2>Laporan Rekapitulasi Mutaba'ah Siswa</h2>
-        <h3>SMA Islam Sultan Agung 1 Semarang</h3>
+        <h3>{{ school_name() }}</h3>
         <p style="margin: 5px 0 0 0; font-size: 10px; color: #666;">
             Sistem Terpadu Akademik & Keislaman (SISTA)
         </p>
@@ -176,10 +176,10 @@
         <tr>
             <td>
                 Mengetahui,<br>
-                Kepala Sekolah SMA Islam Sultan Agung 1
+                Kepala Sekolah {{ school_short_name() }}
                 <div class="signature-space"></div>
-                <strong>{{ $kepsekName ?? 'Drs. H. Soleh, M.Pd.' }}</strong><br>
-                NIP. -
+                <strong>{{ signature_name($kepsekName ?? school_principal_name()) }}</strong><br>
+                {{ signature_nip(school_principal_nip()) }}
             </td>
             <td>
                 Semarang, {{ now()->translatedFormat('d F Y') }}<br>

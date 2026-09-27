@@ -7,7 +7,7 @@
             <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             Panduan Pendampingan - {{ $task->student->name ?? 'Siswa' }}
         </h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">SMA Islam Sultan Agung 1 Semarang</p>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{{ school_name() }}</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 mb-6">

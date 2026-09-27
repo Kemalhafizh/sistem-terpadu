@@ -8,7 +8,7 @@
                      Kalender Agenda & Latihan Ekskul
                 </h2>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Jadwal latihan rutin kesiswaan SMA Islam Sultan Agung 1 Semarang.
+                    Jadwal latihan rutin kesiswaan {{ school_name() }}.
                 </p>
             </div>
             <a href="{{ route('ekskul.index') }}" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-4 text-xs font-bold transition-all">
