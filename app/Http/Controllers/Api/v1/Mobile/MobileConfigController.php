@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Mobile;
+namespace App\Http\Controllers\Api\v1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Models\MobileAppConfig;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
  * Provides dynamic runtime configuration, minimum build version gates,
  * maintenance mode states, and feature flags for Android and iOS clients.
  * 
- * @package App\Http\Controllers\Api\V1\Mobile
+ * @package App\Http\Controllers\Api\v1\Mobile
  */
 class MobileConfigController extends Controller
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1\Mobile;
+namespace App\Http\Controllers\Api\v1\Mobile;
 
 use App\Http\Controllers\Controller;
 use App\Services\Mobile\GeofenceAttendanceService;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
  * Manages mobile geolocation clock-in, anti-mock GPS enforcement,
  * and dynamic rotating TOTP QR token generation for contactless campus access.
  * 
- * @package App\Http\Controllers\Api\V1\Mobile
+ * @package App\Http\Controllers\Api\v1\Mobile
  */
 class MobileAttendanceController extends Controller
 {
