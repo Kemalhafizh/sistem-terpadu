@@ -8,10 +8,12 @@ use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Classroom;
+use App\Models\DailyAssessment;
 use App\Models\Grade;
 use App\Models\Payment;
 use App\Models\PaymentCategory;
 use App\Models\ReportCard;
+use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TahfidzLog;
@@ -39,15 +41,15 @@ class MobileAnalyticsService
         $classroom = $student->classroom;
         $currentYear = AcademicYear::current();
 
-        $overallAverage = round((float) Grade::where('student_id', $student->id)
+        $overallAverage = $this->roundedOrNull(Grade::where('student_id', $student->id)
             ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id))
-            ->avg('score'), 1);
+            ->avg('score'));
 
         $attendanceQuery = Attendance::where('student_id', $student->id)
             ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id));
         $totalAttendance = $attendanceQuery->count();
         $hadirCount = (clone $attendanceQuery)->where('status', 'H')->count();
-        $attendanceRate = $totalAttendance > 0 ? round(($hadirCount / $totalAttendance) * 100, 1) : 0.0;
+        $attendanceRate = $totalAttendance > 0 ? round(($hadirCount / $totalAttendance) * 100, 1) : null;
 
         $reportCards = ReportCard::where('student_id', $student->id)
             ->with('academicYear')
@@ -56,12 +58,12 @@ class MobileAnalyticsService
             ->get()
             ->reverse();
 
-        $classSize = $classroom?->students()->count() ?? 0;
+        // The class size back then is not stored; today's would be a guess.
         $semesterTrends = $reportCards->map(fn ($rc) => [
             'semesterName' => $rc->academicYear ? "{$rc->academicYear->year} {$rc->academicYear->semester}" : 'Semester',
             'gpaScore' => (float) $rc->average_score,
-            'rankInClass' => (int) ($rc->rank_in_class ?? 0),
-            'totalStudents' => $classSize,
+            'rankInClass' => $rc->rank_in_class !== null ? (int) $rc->rank_in_class : null,
+            'totalStudents' => null,
         ])->values()->toArray();
 
         $bySubject = Grade::where('student_id', $student->id)
@@ -88,39 +90,69 @@ class MobileAnalyticsService
             ->map(fn ($item) => ['first' => $item['name'], 'second' => $item['avg']])
             ->toArray();
 
+        // Every subject graded this year; competencyRadar keeps its six for older apps.
+        $subjects = $bySubject->map(fn ($grades) => [
+            'name' => $grades->first()->subject->name,
+            'average' => round((float) $grades->avg('score'), 1),
+            'kkm' => (float) ($grades->first()->subject->kkm ?? 75),
+            'gradesCount' => $grades->count(),
+        ])->sortBy('name')->values()->toArray();
+
         return [
             'studentName' => $student->user->name ?? '',
             'className' => $classroom->name ?? '',
             'overallAverage' => $overallAverage,
             'attendanceRate' => $attendanceRate,
+            'attendanceRecorded' => $totalAttendance,
             'semesterTrends' => $semesterTrends,
             'competencyRadar' => $competencyRadar,
             'topSubjects' => $topSubjects,
+            'subjects' => $subjects,
         ];
     }
 
     /**
-     * The requesting teacher's real (classroom, subject) teaching
-     * assignments — not a hardcoded pair. Derived from Grade.recorded_by
-     * rather than the Schedule table: this dataset's `schedules` table is
-     * empty (0 rows), while every one of the 5640+ real Grade rows has a
-     * genuine recorded_by teacher, making grading activity the only actual
-     * signal available for "which (class, subject) does this teacher
-     * teach." If Schedule data is populated later, prefer it there instead.
+     * The (classroom, subject) pairs the teacher teaches in the active
+     * academic year: from the timetable, the teacher's daily assessments,
+     * and the grades they recorded. Any one of them may be empty (the
+     * timetable often is), so all three count.
+     *
+     * @return list<array{classroomId: int, subjectId: int, className: string, subjectName: string, academicYear: string}>
      */
     public function teacherClasses(User $teacher): array
     {
-        return Grade::where('recorded_by', $teacher->id)
-            ->with('subject', 'student.classroom')
-            ->get()
-            ->filter(fn ($g) => $g->subject && $g->student?->classroom)
-            ->unique(fn ($g) => $g->student->classroom_id.'-'.$g->subject_id)
-            ->map(fn ($g) => [
-                'className' => $g->student->classroom->name,
-                'subjectName' => $g->subject->name,
+        $yearId = AcademicYear::current()?->id;
+        $pair = fn ($row) => ['classroom_id' => (int) $row->classroom_id, 'subject_id' => (int) $row->subject_id];
+
+        $pairs = Schedule::where('teacher_id', $teacher->id)
+            ->when($yearId, fn ($q) => $q->where('academic_year_id', $yearId))
+            ->get(['classroom_id', 'subject_id'])->map($pair)
+            ->concat(DailyAssessment::where('teacher_id', $teacher->id)
+                ->when($yearId, fn ($q) => $q->where('academic_year_id', $yearId))
+                ->get(['classroom_id', 'subject_id'])->map($pair))
+            ->concat(Grade::where('grades.recorded_by', $teacher->id)
+                ->when($yearId, fn ($q) => $q->where('grades.academic_year_id', $yearId))
+                ->join('students', 'students.id', '=', 'grades.student_id')
+                ->whereNotNull('students.classroom_id')
+                ->distinct()
+                ->get(['students.classroom_id', 'grades.subject_id'])->map($pair))
+            ->unique(fn ($p) => $p['classroom_id'].'-'.$p['subject_id']);
+
+        $classrooms = Classroom::whereIn('id', $pairs->pluck('classroom_id'))->get()->keyBy('id');
+        $subjects = Subject::whereIn('id', $pairs->pluck('subject_id'))->get()->keyBy('id');
+
+        return $pairs
+            ->filter(fn ($p) => $classrooms->has($p['classroom_id']) && $subjects->has($p['subject_id']))
+            ->map(fn ($p) => [
+                'classroomId' => $p['classroom_id'],
+                'subjectId' => $p['subject_id'],
+                'className' => $classrooms[$p['classroom_id']]->name,
+                'subjectName' => $subjects[$p['subject_id']]->name,
+                'academicYear' => (string) $classrooms[$p['classroom_id']]->academic_year,
             ])
+            ->sortBy([['className', 'asc'], ['subjectName', 'asc']])
             ->values()
-            ->toArray();
+            ->all();
     }
 
     public function classPerformance(Classroom $classroom, Subject $subject): array
@@ -136,12 +168,13 @@ class MobileAnalyticsService
             ->get();
 
         $scores = $grades->map(fn ($g) => (float) $g->score);
-        $classAverage = $scores->isNotEmpty() ? round($scores->avg(), 1) : 0.0;
-        $highestScore = $scores->isNotEmpty() ? (int) round($scores->max()) : 0;
-        $lowestScore = $scores->isNotEmpty() ? (int) round($scores->min()) : 0;
+        // Null until something is graded: 0 would read as a class that failed.
+        $classAverage = $scores->isNotEmpty() ? round($scores->avg(), 1) : null;
+        $highestScore = $scores->isNotEmpty() ? (int) round($scores->max()) : null;
+        $lowestScore = $scores->isNotEmpty() ? (int) round($scores->min()) : null;
         $passRate = $scores->isNotEmpty()
             ? round(($scores->filter(fn ($s) => $s >= $kkm)->count() / $scores->count()) * 100, 1)
-            : 0.0;
+            : null;
 
         $bucketDefs = [
             ['label' => '< 75', 'min' => 0, 'max' => 74.99],
@@ -183,10 +216,13 @@ class MobileAnalyticsService
                 ];
             })
             ->filter()
+            ->sortBy('currentScore')
             ->values()
             ->toArray();
 
         return [
+            'classroomId' => $classroom->id,
+            'subjectId' => $subject->id,
             'className' => $classroom->name,
             'subjectName' => $subject->name,
             'teacherName' => $teacherName,
@@ -194,6 +230,10 @@ class MobileAnalyticsService
             'highestScore' => $highestScore,
             'lowestScore' => $lowestScore,
             'passRatePercentage' => $passRate,
+            'kkm' => $kkm,
+            'scoresCount' => $total,
+            'studentsGraded' => $grades->pluck('student_id')->unique()->count(),
+            'studentsCount' => $studentIds->count(),
             'distributionBuckets' => $distributionBuckets,
             'atRiskStudents' => $atRiskStudents,
         ];
@@ -204,16 +244,15 @@ class MobileAnalyticsService
         $classroom = $student->classroom;
         $currentYear = AcademicYear::current();
 
-        $academicScore = round((float) Grade::where('student_id', $student->id)
+        $academicScore = $this->roundedOrNull(Grade::where('student_id', $student->id)
             ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id))
-            ->avg('score'), 1);
+            ->avg('score'));
 
-        $classAverageScore = 0.0;
-        if ($classroom) {
-            $classAverageScore = round((float) Grade::whereIn('student_id', $classroom->students()->pluck('id'))
+        $classAverageScore = $classroom
+            ? $this->roundedOrNull(Grade::whereIn('student_id', $classroom->students()->pluck('id'))
                 ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id))
-                ->avg('score'), 1);
-        }
+                ->avg('score'))
+            : null;
 
         $tahfidzTarget = $currentYear
             ? TahfidzTarget::where('student_id', $student->id)->where('academic_year_id', $currentYear->id)->first()
@@ -228,14 +267,19 @@ class MobileAnalyticsService
             'childClass' => $classroom->name ?? '',
             'academicScore' => $academicScore,
             'classAverageScore' => $classAverageScore,
-            'tahfidzCurrentJuz' => (int) ($tahfidzTarget->achieved_juz ?? 0),
-            'tahfidzTargetJuz' => (int) ($tahfidzTarget->target_juz ?? 0),
+            // Null without a target for this year: "0 of 0 juz" is not a record.
+            'tahfidzCurrentJuz' => $tahfidzTarget ? (int) $tahfidzTarget->achieved_juz : null,
+            'tahfidzTargetJuz' => $tahfidzTarget ? (int) $tahfidzTarget->target_juz : null,
             'totalSurahCompleted' => $totalSurahCompleted,
             'attendanceHeatmap' => $this->buildAttendanceHeatmap($student->id),
         ];
     }
 
-    /** One entry per day of the current month up to today; days with no real Attendance row are honestly "LIBUR" rather than guessed. */
+    /**
+     * One entry per day of the current month up to today. A day without an
+     * attendance row is "KOSONG": it may be a holiday or simply not recorded
+     * yet, and calling it "LIBUR" would be a guess.
+     */
     private function buildAttendanceHeatmap(int $studentId): array
     {
         $startOfMonth = now()->startOfMonth();
@@ -256,7 +300,7 @@ class MobileAnalyticsService
                 'I' => 'IZIN',
                 'S' => 'SAKIT',
                 'A' => 'ALPA',
-                default => 'LIBUR',
+                default => 'KOSONG',
             };
             $heatmap[] = [
                 'dayNumber' => (int) $cursor->format('j'),
@@ -449,5 +493,10 @@ class MobileAnalyticsService
             'bills' => (clone $bills)->count(),
             'bills_paid' => (clone $bills)->where('status', 'paid')->count(),
         ];
+    }
+
+    private function roundedOrNull(mixed $average): ?float
+    {
+        return $average === null ? null : round((float) $average, 1);
     }
 }
