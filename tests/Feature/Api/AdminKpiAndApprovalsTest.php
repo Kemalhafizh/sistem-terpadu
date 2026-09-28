@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Models\AcademicYear;
+use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
@@ -11,10 +12,10 @@ use App\Models\PaymentCategory;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
-use App\Models\WorkflowDefinition;
-use App\Models\WorkflowRequest;
+use App\Services\WorkflowService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Tests\Concerns\StartsWorkflows;
 use Tests\TestCase;
 
 /**
@@ -24,7 +25,7 @@ use Tests\TestCase;
  */
 class AdminKpiAndApprovalsTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, StartsWorkflows;
 
     protected User $adminUser;
 
@@ -36,36 +37,21 @@ class AdminKpiAndApprovalsTest extends TestCase
 
     public function test_pending_approvals_mengembalikan_daftar_nyata_bukan_hanya_jumlah()
     {
-        Sanctum::actingAs($this->adminUser);
-
         $requester = User::factory()->create(['role' => 'guru']);
-        $definition = WorkflowDefinition::create([
-            'name' => 'Pengajuan Cuti',
-            'code' => 'LEAVE-001',
-            'is_active' => true,
-            'steps' => [['order' => 1, 'role' => 'kepsek'], ['order' => 2, 'role' => 'admin']],
-        ]);
+        $kepsek = User::factory()->create(['role' => 'kepsek']);
+        $pending = $this->startLeaveWorkflow($requester, ['kepsek', 'admin'], 'Pengajuan Cuti', 'Cuti sakit 3 hari');
 
-        $pending = WorkflowRequest::create([
-            'definition_id' => $definition->id,
-            'requester_id' => $requester->id,
-            'requestable_type' => 'App\\Models\\User',
-            'requestable_id' => $requester->id,
-            'status' => 'pending',
-            'notes' => 'Cuti sakit 3 hari',
-            'current_step' => 1,
-            'due_at' => now()->addDays(2),
-        ]);
+        // Step 1 belongs to the kepsek: the admin has nothing to decide yet.
+        Sanctum::actingAs($this->adminUser);
+        $this->getJson('/api/v1/mobile/admin/approvals')->assertOk()->assertJsonCount(0, 'data');
 
-        // An already-approved request must NOT show up in the pending list.
-        WorkflowRequest::create([
-            'definition_id' => $definition->id,
-            'requester_id' => $requester->id,
-            'requestable_type' => 'App\\Models\\User',
-            'requestable_id' => $requester->id,
-            'status' => 'approved',
-            'current_step' => 2,
-        ]);
+        Sanctum::actingAs($kepsek);
+        $this->postJson("/api/v1/mobile/admin/approvals/{$pending->id}/action", ['action' => 'approve'])->assertOk();
+
+        // A finished request never shows up.
+        $done = $this->startLeaveWorkflow($requester, ['admin']);
+        Sanctum::actingAs($this->adminUser);
+        $this->postJson("/api/v1/mobile/admin/approvals/{$done->id}/action", ['action' => 'approve'])->assertOk();
 
         $response = $this->getJson('/api/v1/mobile/admin/approvals');
 
@@ -76,9 +62,66 @@ class AdminKpiAndApprovalsTest extends TestCase
             'type_name' => 'Pengajuan Cuti',
             'requester_name' => $requester->name,
             'notes' => 'Cuti sakit 3 hari',
-            'current_step' => 1,
+            'current_step' => 2,
             'total_steps' => 2,
         ]);
+    }
+
+    public function test_persetujuan_mengikuti_langkah_dan_tidak_melompati_penyetuju()
+    {
+        $requester = User::factory()->create(['role' => 'guru']);
+        $kepsek = User::factory()->create(['role' => 'kepsek']);
+        $request = $this->startLeaveWorkflow($requester, ['kepsek', 'admin']);
+
+        // The web's "waiting for you" list and the mobile list share this query;
+        // it used to be empty for everyone.
+        $workflow = app(WorkflowService::class);
+        $this->assertSame([$request->id], $workflow->getPendingForUser($kepsek)->pluck('id')->all());
+        $this->assertSame([], $workflow->getPendingForUser($this->adminUser)->pluck('id')->all());
+
+        // The admin used to approve the whole request at step 1 in one tap.
+        Sanctum::actingAs($this->adminUser);
+        $this->postJson("/api/v1/mobile/admin/approvals/{$request->id}/action", ['action' => 'approve'])->assertForbidden();
+        $this->assertSame('pending', $request->fresh()->status);
+
+        // The kepsek approves step 1: the request moves on, it is not finished.
+        Sanctum::actingAs($kepsek);
+        $this->postJson("/api/v1/mobile/admin/approvals/{$request->id}/action", ['action' => 'approve'])
+            ->assertOk()->assertJsonPath('message', 'Disetujui. Pengajuan diteruskan ke langkah berikutnya.');
+        $this->assertSame('in_review', $request->fresh()->status);
+        $this->assertSame('pending', $request->requestable->fresh()->status);
+
+        // The admin decides the last step, and the leave request itself is approved.
+        Sanctum::actingAs($this->adminUser);
+        $this->postJson("/api/v1/mobile/admin/approvals/{$request->id}/action", ['action' => 'approve'])
+            ->assertOk()->assertJsonPath('message', 'Pengajuan disetujui.');
+        $this->assertSame('approved', $request->fresh()->status);
+        $this->assertSame('approved', $request->requestable->fresh()->status);
+    }
+
+    public function test_dashboard_menghitung_kehadiran_hari_ini_dari_status_nyata()
+    {
+        // Statuses are H/S/I/A; the old query counted "present"/"late" and read 0% every day.
+        $year = AcademicYear::create(['year' => '2026/2027', 'semester' => 'Ganjil', 'is_active' => true]);
+        $recorder = User::factory()->create(['role' => 'guru']);
+        foreach (['H', 'H', 'H', 'S'] as $status) {
+            $student = Student::factory()->create();
+            Attendance::create([
+                'student_id' => $student->id, 'academic_year_id' => $year->id, 'classroom_id' => $student->classroom_id,
+                'date' => now()->toDateString(), 'status' => $status, 'recorded_by' => $recorder->id,
+            ]);
+        }
+
+        Sanctum::actingAs($this->adminUser);
+        $this->getJson('/api/v1/mobile/admin/dashboard')->assertOk()
+            ->assertJsonPath('data.attendance_rate', 75)
+            ->assertJsonPath('data.total_students', 4);
+    }
+
+    public function test_dashboard_tanpa_presensi_hari_ini_tidak_mengarang_persentase()
+    {
+        Sanctum::actingAs($this->adminUser);
+        $this->getJson('/api/v1/mobile/admin/dashboard')->assertOk()->assertJsonPath('data.attendance_rate', null);
     }
 
     public function test_kpi_detail_menghitung_rasio_spp_per_tahun_ajaran_dari_data_nyata()

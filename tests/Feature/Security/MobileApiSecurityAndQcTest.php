@@ -12,16 +12,15 @@ use App\Models\Evaluation360Instrument;
 use App\Models\LibraryBook;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\WorkflowDefinition;
-use App\Models\WorkflowRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
+use Tests\Concerns\StartsWorkflows;
 use Tests\TestCase;
 
 class MobileApiSecurityAndQcTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, StartsWorkflows;
 
     protected User $adminUser;
 
@@ -83,21 +82,7 @@ class MobileApiSecurityAndQcTest extends TestCase
         $this->getJson('/api/v1/mobile/admin/kpi')->assertStatus(403);
 
         // 2. Student attempting to approve workflow -> 403
-        $def = WorkflowDefinition::create([
-            'name' => 'Pengadaan Barang',
-            'code' => 'PROC-001',
-            'is_active' => true,
-            'steps' => [['order' => 1, 'role' => 'admin']],
-        ]);
-        $req = WorkflowRequest::create([
-            'definition_id' => $def->id,
-            'requester_id' => $this->teacherUser->id,
-            'requestable_type' => 'App\Models\User',
-            'requestable_id' => $this->teacherUser->id,
-            'status' => 'pending',
-            'notes' => 'Permohonan pengadaan',
-            'current_step' => 1,
-        ]);
+        $req = $this->startLeaveWorkflow($this->teacherUser, ['admin'], 'Pengadaan Barang', 'Permohonan pengadaan');
 
         $this->postJson("/api/v1/mobile/admin/approvals/{$req->id}/action", [
             'action' => 'approve',

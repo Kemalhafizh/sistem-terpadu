@@ -5,18 +5,17 @@ namespace Tests\Feature\Api;
 use App\Jobs\ProcessOcrDocument;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\WorkflowDefinition;
-use App\Models\WorkflowRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
+use Tests\Concerns\StartsWorkflows;
 use Tests\TestCase;
 
 class AdminDocumentMobileApiTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, StartsWorkflows;
 
     protected User $adminUser;
 
@@ -66,22 +65,7 @@ class AdminDocumentMobileApiTest extends TestCase
     {
         Sanctum::actingAs($this->kepsekUser);
 
-        $definition = WorkflowDefinition::create([
-            'name' => 'Pengajuan Dana',
-            'code' => 'FIN-001',
-            'is_active' => true,
-            'steps' => [['order' => 1, 'role' => 'kepsek']],
-        ]);
-
-        $workflowRequest = WorkflowRequest::create([
-            'definition_id' => $definition->id,
-            'requester_id' => $this->teacherUser->id,
-            'requestable_type' => 'App\Models\User',
-            'requestable_id' => $this->teacherUser->id,
-            'status' => 'pending',
-            'notes' => 'Pengajuan Dana ATK',
-            'current_step' => 1,
-        ]);
+        $workflowRequest = $this->startLeaveWorkflow($this->teacherUser, ['kepsek'], 'Pengajuan Dana', 'Pengajuan Dana ATK');
 
         // Test approve
         $response = $this->postJson("/api/v1/mobile/admin/approvals/{$workflowRequest->id}/action", [
@@ -94,6 +78,8 @@ class AdminDocumentMobileApiTest extends TestCase
             'id' => $workflowRequest->id,
             'status' => 'approved',
         ]);
+        // The record behind the request is approved too, not left pending.
+        $this->assertSame('approved', $workflowRequest->requestable->fresh()->status);
 
         // Test cannot reject already approved request
         $responseReject = $this->postJson("/api/v1/mobile/admin/approvals/{$workflowRequest->id}/action", [

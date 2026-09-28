@@ -226,10 +226,7 @@ class DashboardController extends Controller
             $latestSmartAlerts = SmartAlert::where('status', 'active')->latest()->take(5)->get()->toArray();
 
             // --- 6. Approval Pending ---
-            $pendingApprovalsCount = WorkflowRequest::whereIn('status', ['pending', 'in_review'])
-                ->whereHas('currentApproval', function ($q) use ($user) {
-                    $q->where('role', $user->role);
-                })->count();
+            $pendingApprovalsCount = WorkflowRequest::awaitingDecisionBy($user)->count();
 
             // --- 7. Top 5 Siswa XP ---
             $topXpStudents = Student::with('user', 'classroom')->orderByDesc('total_xp')->take(5)->get()->toArray();
@@ -381,10 +378,7 @@ class DashboardController extends Controller
         // 6. Recent notifications
         $recentNotifications = [];
 
-        $pendingApprovals = WorkflowRequest::whereIn('status', ['pending', 'in_review'])
-            ->whereHas('currentApproval', function ($q) use ($user) {
-                $q->where('role', $user->role);
-            })
+        $pendingApprovals = WorkflowRequest::awaitingDecisionBy($user)
             ->with(['requester', 'definition'])
             ->latest()
             ->take(5)

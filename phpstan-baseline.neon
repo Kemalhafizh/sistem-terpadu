@@ -139,18 +139,6 @@ parameters:
 			path: app/Http/Controllers/AnnouncementController.php
 
 		-
-			message: '#^Relation ''definition'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/AdminMobileDashboardController.php
-
-		-
-			message: '#^Relation ''requester'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/AdminMobileDashboardController.php
-
-		-
 			message: '#^Relation ''recipient'' is not found in App\\Models\\ParentMessage model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -493,27 +481,9 @@ parameters:
 			path: app/Http/Controllers/DashboardController.php
 
 		-
-			message: '#^Relation ''currentApproval'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''definition'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/DashboardController.php
-
-		-
 			message: '#^Relation ''pointLogs'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''requester'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Http/Controllers/DashboardController.php
 
 		-
@@ -1322,27 +1292,9 @@ parameters:
 			path: app/Http/Controllers/WhatsappController.php
 
 		-
-			message: '#^Relation ''approvals'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/WorkflowController.php
-
-		-
-			message: '#^Relation ''definition'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: app/Http/Controllers/WorkflowController.php
-
-		-
 			message: '#^Relation ''requestable'' is not found in App\\Models\\WorkflowRequest model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
-			path: app/Http/Controllers/WorkflowController.php
-
-		-
-			message: '#^Relation ''requester'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Http/Controllers/WorkflowController.php
 
 		-
@@ -1801,26 +1753,3 @@ parameters:
 			count: 6
 			path: app/Services/WhatsappAutomationService.php
 
-		-
-			message: '#^Relation ''approvals'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/WorkflowService.php
-
-		-
-			message: '#^Relation ''currentApproval'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/WorkflowService.php
-
-		-
-			message: '#^Relation ''definition'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/WorkflowService.php
-
-		-
-			message: '#^Relation ''requester'' is not found in App\\Models\\WorkflowRequest model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/WorkflowService.php

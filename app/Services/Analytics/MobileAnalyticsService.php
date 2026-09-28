@@ -321,7 +321,8 @@ class MobileAnalyticsService
             ],
             [
                 'title' => 'Kehadiran Hari Ini',
-                'value' => "{$attendanceTodayPercentage}%",
+                // "–" until something is recorded today: 0% would read as nobody came.
+                'value' => $attendanceTodayTotal > 0 ? "{$attendanceTodayPercentage}%" : '–',
                 'changeText' => $attendanceTodayTotal > 0
                     ? "{$attendanceTodayHadir} dari {$attendanceTodayTotal} presensi tercatat"
                     : 'Belum ada presensi tercatat hari ini',
@@ -339,7 +340,7 @@ class MobileAnalyticsService
             ],
             [
                 'title' => 'Rasio Penagihan SPP',
-                'value' => "{$collectionRate}%",
+                'value' => $billedThisMonth > 0 ? "{$collectionRate}%" : '–',
                 'changeText' => $billedThisMonth > 0 ? 'Dibanding total tagihan SPP bulan ini' : 'Belum ada tagihan SPP bulan ini',
                 'isPositiveTrend' => $collectionRate >= 80,
                 'progress' => min($collectionRate / 100, 1.0),

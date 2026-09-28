@@ -11,13 +11,15 @@ use App\Models\Payment;
 use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\User;
-use App\Models\WorkflowApproval;
 use App\Models\WorkflowRequest;
+use App\Services\WorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdminMobileDashboardController extends Controller
 {
+    public function __construct(private readonly WorkflowService $workflow) {}
+
     private function authorizeAdmin(Request $request): void
     {
         $role = $request->user()?->role;
@@ -32,25 +34,23 @@ class AdminMobileDashboardController extends Controller
     public function dashboard(Request $request)
     {
         $this->authorizeAdmin($request);
-        $studentCount = Student::count();
-        $unpaidBillings = Billing::where('status', 'unpaid')->sum('amount');
 
-        // Attendance today rate approximation
-        $totalStudents = $studentCount > 0 ? $studentCount : 1;
-        $attendedToday = Attendance::whereDate('date', now()->toDateString())
-            ->whereIn('status', ['present', 'late'])
-            ->count();
-        $attendanceRate = round(($attendedToday / $totalStudents) * 100, 2);
-
-        $pendingApprovals = WorkflowRequest::where('status', 'pending')->count();
+        // Attendance statuses are H/S/I/A: counting "present"/"late" matched nothing,
+        // so this read 0% every day. The rate is over today's recorded attendance,
+        // and null until anything has been recorded today.
+        $today = Attendance::whereDate('date', now()->toDateString())->toBase()
+            ->selectRaw("COUNT(*) as total, SUM(CASE WHEN status = 'H' THEN 1 ELSE 0 END) as present")->first();
+        $recorded = (int) ($today->total ?? 0);
 
         return response()->json([
             'success' => true,
             'data' => [
-                'total_students' => $studentCount,
-                'unpaid_billings' => (float) $unpaidBillings,
-                'attendance_rate' => $attendanceRate,
-                'pending_approvals' => $pendingApprovals,
+                'total_students' => Student::where('status', 'active')->count(),
+                // What is still owed: unpaid and partly paid bills, by remaining balance.
+                'unpaid_billings' => (float) Billing::whereIn('status', ['unpaid', 'partial'])->sum('remaining_balance'),
+                'attendance_rate' => $recorded > 0 ? round((int) $today->present / $recorded * 100, 2) : null,
+                // Requests waiting on this account's step, not every open request.
+                'pending_approvals' => $this->workflow->getPendingForUser($request->user())->count(),
             ],
         ]);
     }
@@ -162,19 +162,17 @@ class AdminMobileDashboardController extends Controller
     }
 
     /**
-     * FASE 71.4 follow-up: list pending approval requests — previously only
-     * the count was exposed (dashboard()'s pending_approvals), with no way
-     * for the mobile app to fetch the actual items to act on.
+     * Requests whose current step belongs to this account's role (or was
+     * delegated to it) — the ones it can actually decide.
      */
     public function pendingApprovals(Request $request)
     {
         $this->authorizeAdmin($request);
 
-        $requests = WorkflowRequest::where('status', 'pending')
-            ->with(['definition:id,name,code,steps', 'requester:id,name,role'])
-            ->orderBy('due_at')
-            ->orderBy('created_at')
-            ->get()
+        $requests = $this->workflow->getPendingForUser($request->user())
+            ->load(['definition:id,name,code,steps', 'requester:id,name,role'])
+            ->sortBy(fn (WorkflowRequest $wr) => [$wr->due_at?->timestamp ?? PHP_INT_MAX, $wr->created_at?->timestamp])
+            ->values()
             ->map(function (WorkflowRequest $wr) {
                 $totalSteps = is_array($wr->definition?->steps) ? count($wr->definition->steps) : null;
 
@@ -200,7 +198,10 @@ class AdminMobileDashboardController extends Controller
     }
 
     /**
-     * State machine processing for Approvals
+     * Decides the current step through the workflow engine, as the web does:
+     * only the step's role (or its delegate) may decide, approval advances to
+     * the next step, and the final decision updates the request's record.
+     * This used to mark any request approved outright, skipping every step.
      */
     public function processApproval(Request $request, $id)
     {
@@ -212,36 +213,29 @@ class AdminMobileDashboardController extends Controller
 
         $workflowRequest = WorkflowRequest::findOrFail($id);
 
-        if ($workflowRequest->status !== 'pending') {
+        if (! in_array($workflowRequest->status, ['pending', 'in_review'], true)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Hanya request dengan status pending yang dapat diproses.',
+                'message' => 'Pengajuan ini sudah diputuskan.',
             ], 400);
         }
 
-        $newStatus = $request->action === 'approve' ? 'approved' : 'rejected';
-
-        $workflowRequest->update([
-            'status' => $newStatus,
-            // Assuming there is some notes field or audit trailing in the actual DB
-        ]);
-
-        // Normally, we'd log this into an audit trail table (e.g. WorkflowApproval)
-        if (class_exists(WorkflowApproval::class)) {
-            WorkflowApproval::create([
-                'request_id' => $workflowRequest->id,
-                'approver_id' => $request->user()->id,
-                'role' => $request->user()->role,
-                'decision' => $newStatus,
-                'remarks' => $request->notes,
-                'step_order' => $workflowRequest->current_step ?? 1,
-                'decided_at' => now(),
-            ]);
+        if ($request->action === 'approve') {
+            $this->workflow->approve($workflowRequest, $request->user(), $request->notes);
+        } else {
+            $this->workflow->reject($workflowRequest, $request->user(), $request->notes);
         }
+
+        $workflowRequest->refresh();
+        $message = match ($workflowRequest->status) {
+            'approved' => 'Pengajuan disetujui.',
+            'rejected' => 'Pengajuan ditolak.',
+            default => 'Disetujui. Pengajuan diteruskan ke langkah berikutnya.',
+        };
 
         return response()->json([
             'success' => true,
-            'message' => "Request berhasil di-$newStatus.",
+            'message' => $message,
             'data' => $workflowRequest,
         ]);
     }
