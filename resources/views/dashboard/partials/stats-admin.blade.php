@@ -1,5 +1,6 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
     <!-- Pendaftar SPMB (New) -->
+    @canVisit('spmb.admin.index')
     <a href="{{ route('spmb.admin.index') }}" class="bg-linear-to-br from-primary-900 to-primary-800 rounded-4xl p-6 shadow-xl shadow-primary-900/20 border border-primary-700/50 flex items-center hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative text-white">
         <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/10 transition-colors"></div>
         <div class="p-4 bg-white/10 backdrop-blur-md rounded-2xl mr-4 relative z-10 border border-white/10 group-hover:scale-110 transition-transform">
@@ -16,6 +17,7 @@
             </div>
         @endif
     </a>
+    @endcanVisit
 
     <!-- Total Siswa -->
     <div class="bg-white rounded-4xl p-6 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 border border-gray-100 flex items-center hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative">

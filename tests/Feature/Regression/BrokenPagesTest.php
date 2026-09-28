@@ -63,7 +63,8 @@ test('silabus bisa diunduh dari bank silabus', function () {
 
 test('pratinjau tracer study admin tidak lagi membuat data palsu', function () {
     // Used to call Student::factory() / AlumniData::factory() (dev-only classes) in production.
-    $this->actingAs($this->admin)->get(route('alumni.tracer-study.form'))->assertRedirect(route('alumni.tracer-study.analytics'));
+    // The alumni form is role:student; an admin reads results on the analytics page instead.
+    $this->actingAs($this->admin)->get(route('alumni.tracer-study.form'))->assertForbidden();
     expect(Student::count())->toBe(0)->and(AlumniData::count())->toBe(0);
 
     $this->post(route('alumni.tracer-study.submit'), [])->assertForbidden();

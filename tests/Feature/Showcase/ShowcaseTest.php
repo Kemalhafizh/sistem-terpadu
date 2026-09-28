@@ -84,11 +84,11 @@ test('hanya siswa yang dapat mengunggah karya', function () {
         'project_title' => 'X', 'description' => 'Y',
     ])->assertForbidden();
 
-    // Admins pass every policy (Gate::before), but still can't publish as a student.
+    // Admin is an operator, not a student: no blanket Gate::before pass any more.
     $admin = User::factory()->create(['role' => 'admin']);
     $this->actingAs($admin)->post(route('showcase.store'), [
         'project_title' => 'X', 'description' => 'Y',
-    ])->assertSessionHasErrors('project_title');
+    ])->assertForbidden();
 
     expect(StudentShowcase::count())->toBe(0);
 });

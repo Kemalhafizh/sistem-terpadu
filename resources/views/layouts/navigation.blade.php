@@ -20,9 +20,11 @@
 
         <!-- Logo (Mobile Only) -->
         <div class="shrink-0 flex items-center md:hidden ms-2">
+          @canVisit('dashboard')
           <a href="{{ route('dashboard') }}">
             <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
           </a>
+          @endcanVisit
         </div>
 
         <!-- Navigation Links -->
@@ -90,7 +92,9 @@
                 <p class="text-xs text-gray-400 italic">{{ __('navigation.no_notifications') }}</p>
               </div>
             </div>
+            @canVisit('notifications.index')
             <a href="{{ route('notifications.index') }}" class="block p-3 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest border-t border-gray-50 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">{{ __('navigation.view_all') }}</a>
+            @endcanVisit
           </div>
         </div>
 

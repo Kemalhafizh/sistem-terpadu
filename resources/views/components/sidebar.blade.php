@@ -49,6 +49,7 @@
             $inactiveClass = "text-primary-100 hover:bg-primary-800/60 hover:text-white";
         @endphp
 
+        @canVisit('dashboard')
         <a href="{{ route('dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('dashboard') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.dashboard') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -56,7 +57,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.dashboard') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('calendar.index')
         <a href="{{ route('calendar.index') }}" class="{{ $linkClass }} {{ request()->routeIs('calendar.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.calendar') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -64,6 +67,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.calendar') }}</div>
         </a>
+        @endcanVisit
 
         <a href="{{ auth()->user()->role === 'student' ? route('gamification.my-progress') : route('gamification.leaderboard') }}" class="{{ $linkClass }} {{ request()->routeIs('gamification.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.gamification') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -76,6 +80,7 @@
         </a>
 
         @if(!in_array(auth()->user()->role, ['student', 'parent']))
+        @canVisit('teaching-journals.index')
         <a href="{{ route('teaching-journals.index') }}" class="{{ $linkClass }} {{ request()->routeIs('teaching-journals.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.journal') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -85,7 +90,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.journal') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('meeting-notes.index')
         <a href="{{ route('meeting-notes.index') }}" class="{{ $linkClass }} {{ request()->routeIs('meeting-notes.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.meeting_notes') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -95,9 +102,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.meeting_notes') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']))
+        @canVisit('curriculum.index')
         <a href="{{ route('curriculum.index') }}" class="{{ $linkClass }} {{ request()->routeIs('curriculum.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.curriculum') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -107,9 +116,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.curriculum') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         @if(in_array(auth()->user()->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']))
+        @canVisit('eds.index')
         <a href="{{ route('eds.index') }}" class="{{ $linkClass }} {{ request()->routeIs('eds.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.eds') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -119,8 +130,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.eds') }}</div>
         </a>
+        @endcanVisit
         @endif
         
+        @canVisit('my-hrd.portal')
         <a href="{{ route('my-hrd.portal') }}" class="{{ $linkClass }} {{ request()->routeIs('my-hrd.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.hrd_portal') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
@@ -128,7 +141,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.hrd_portal') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('helpdesk.tickets.index')
         <a href="{{ route('helpdesk.tickets.index') }}" class="{{ $linkClass }} {{ request()->routeIs('helpdesk.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.helpdesk') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -138,8 +153,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.helpdesk') }}</div>
         </a>
+        @endcanVisit
 
         @if(!in_array(auth()->user()->role, ['student', 'parent']))
+        @canVisit('assets.loans.index')
         <a href="{{ route('assets.loans.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.loans.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.asset_loans') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -149,9 +166,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.asset_loans') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @canVisit('announcements.index')
         <a href="{{ route('announcements.index') }}" class="{{ $linkClass }} {{ request()->routeIs('announcements.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.announcements') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
@@ -159,6 +178,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.announcements') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('assets.index')
         <a href="{{ route('assets.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.assets') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
@@ -166,6 +187,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.assets') }}</div>
         </a>
+        @endcanVisit
         @endif
         
         {{-- Master Data: Hanya Admin & Kepsek --}}
@@ -193,12 +215,13 @@
                 $tahfidzRoute = route('tahfidz.show', auth()->user()->student->id);
             } elseif(auth()->user()->role === 'parent' && auth()->user()->children->first()) {
                 $tahfidzRoute = route('tahfidz.show', auth()->user()->children->first()->id);
-            } elseif(in_array(auth()->user()->role, ['admin', 'superadmin', 'guru', 'bk', 'kepala_sekolah', 'staf_tu'])) {
-                $firstStudent = \App\Models\Student::first();
-                $tahfidzRoute = $firstStudent ? route('tahfidz.show', $firstStudent->id) : route('students.index');
+            } elseif(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'tahfidz.dashboard')) {
+                // Staff get the Tahfidz overview, not an arbitrary "first student".
+                $tahfidzRoute = route('tahfidz.dashboard');
             }
         @endphp
 
+        @if($tahfidzRoute !== '#')
         <a href="{{ $tahfidzRoute }}" class="{{ $linkClass }} {{ request()->routeIs('tahfidz.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.tahfidz') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 19 7.5 19s3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 19 16.5 19c-1.746 0-3.332-.477-4.5-1.253"></path></svg>
@@ -206,7 +229,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.tahfidz') }}</div>
         </a>
+        @endif
 
+        @canVisit('mutabaah.index')
         <a href="{{ route('mutabaah.index') }}" class="{{ $linkClass }} {{ request()->routeIs('mutabaah.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.mutabaah') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -214,7 +239,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.mutabaah') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('event-attendance.index')
         <a href="{{ route('event-attendance.index') }}" class="{{ $linkClass }} {{ request()->routeIs('event-attendance.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.event_attendance') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -222,6 +249,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.event_attendance') }}</div>
         </a>
+        @endcanVisit
 
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_personnel') }}</p>
@@ -230,6 +258,7 @@
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_personnel') }}">•</p>
         </div>
         @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @canVisit('users.index')
         <a href="{{ route('users.index') }}" class="{{ $linkClass }} {{ request()->routeIs('users.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.users') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -237,6 +266,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.users') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('admin.logs')
         <a href="{{ route('admin.logs') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.logs') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.audit_logs') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -244,6 +275,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.audit_logs') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('admin.settings.index')
         <a href="{{ route('admin.settings.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.settings.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.system_settings') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -251,7 +284,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.system_settings') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('admin.chatbot.faqs')
         <a href="{{ route('admin.chatbot.faqs') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.chatbot.*') ? $activeClass : $inactiveClass }}" title="Kelola FAQ Chatbot">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -261,8 +296,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Kelola FAQ Chatbot</div>
         </a>
+        @endcanVisit
 
         @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'staf_tu']))
+        @canVisit('import-export.index')
         <a href="{{ route('import-export.index') }}" class="{{ $linkClass }} {{ request()->routeIs('import-export.*') ? $activeClass : $inactiveClass }}" title="Import / Export Hub">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -272,7 +309,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Import/Export Hub</div>
         </a>
+        @endcanVisit
 
+        @canVisit('admin.scheduled-reports.index')
         <a href="{{ route('admin.scheduled-reports.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.scheduled-reports.*') ? $activeClass : $inactiveClass }}" title="Laporan Terjadwal">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -282,7 +321,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Laporan Terjadwal</div>
         </a>
+        @endcanVisit
 
+        @canVisit('admin.integrations.index')
         <a href="{{ route('admin.integrations.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.integrations.*') ? $activeClass : $inactiveClass }}" title="Integrasi Pemerintah">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -292,7 +333,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Integrasi Pemerintah</div>
         </a>
+        @endcanVisit
 
+        @canVisit('admin.appearance.index')
         <a href="{{ route('admin.appearance.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.appearance.*') ? $activeClass : $inactiveClass }}" title="Kustomisasi Tampilan">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -303,6 +346,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Kustomisasi Tampilan</div>
         </a>
+        @endcanVisit
         @endif
         @endif
         
@@ -314,6 +358,7 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_academic') }}">•</p>
         </div>
+        @canVisit('academic-years.index')
         <a href="{{ route('academic-years.index') }}" class="{{ $linkClass }} {{ request()->routeIs('academic-years.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.academic_years') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
@@ -321,6 +366,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.academic_years') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('subjects.index')
         <a href="{{ route('subjects.index') }}" class="{{ $linkClass }} {{ request()->routeIs('subjects.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.subjects') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -328,6 +375,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.subjects') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('classrooms.index')
         <a href="{{ route('classrooms.index') }}" class="{{ $linkClass }} {{ request()->routeIs('classrooms.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.classrooms') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
@@ -335,6 +384,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.classrooms') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('students.index')
         <a href="{{ route('students.index') }}" class="{{ $linkClass }} {{ request()->routeIs('students.index') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.students') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -342,6 +393,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.students') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('mutations.index')
         <a href="{{ route('mutations.index') }}" class="{{ $linkClass }} {{ request()->routeIs('mutations.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.student_mutations') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
@@ -349,6 +402,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.student_mutations') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('alumni.index')
         <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.alumni') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
@@ -356,7 +411,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.alumni') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('schedules.grid')
         <a href="{{ route('schedules.grid') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.grid') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_plotting') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -364,7 +421,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_plotting') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('schedules.presets.index')
         <a href="{{ route('schedules.presets.index') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.presets.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_presets') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -372,7 +431,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_presets') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('schedules.teacher')
         <a href="{{ route('schedules.teacher') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.teacher') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_teacher') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -380,7 +441,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_teacher') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('schedules.room')
         <a href="{{ route('schedules.room') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.room') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_room') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -388,7 +451,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_room') }}</div>
         </a>
+        @endcanVisit
 
+        @canVisit('schedules.conflicts')
         <a href="{{ route('schedules.conflicts') }}" class="{{ $linkClass }} {{ request()->routeIs('schedules.conflicts') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.schedule_conflicts') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -396,6 +461,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.schedule_conflicts') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- Modul Kesiswaan: Admin, Waka Kesiswaan, BK, Guru, Staf TU --}}
@@ -408,6 +474,7 @@
         </div>
         
         @if(auth()->user()->hasRole('waka_kesiswaan') || auth()->user()->hasRole('bk') || auth()->user()->isAdmin())
+        @canVisit('points.index')
         <a href="{{ route('points.index') }}" class="{{ $linkClass }} {{ request()->routeIs('points.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.points') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -415,6 +482,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.points') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('point-categories.index')
         <a href="{{ route('point-categories.index') }}" class="{{ $linkClass }} {{ request()->routeIs('point-categories.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.point_categories') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
@@ -422,9 +491,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.point_categories') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- UKS Digital --}}
+        @canVisit('uks.dashboard')
         <a href="{{ route('uks.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('uks.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.uks') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -434,9 +505,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.uks') }}</div>
         </a>
+        @endcanVisit
 
         {{-- Kelola Ekskul --}}
         @if(in_array(auth()->user()->role, ['guru', 'bk', 'waka_kesiswaan', 'admin', 'superadmin']))
+        @canVisit('ekskul.manage')
         <a href="{{ route('ekskul.manage') }}" class="{{ $linkClass }} {{ request()->routeIs('ekskul.manage') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.ekskul') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -446,10 +519,12 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ekskul') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- Keuangan OSIS --}}
         @if(in_array(auth()->user()->role, ['waka_kesiswaan', 'admin', 'superadmin']))
+        @canVisit('osis.dashboard')
         <a href="{{ route('osis.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('osis.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.osis') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -459,6 +534,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.osis') }}</div>
         </a>
+        @endcanVisit
         @endif
         @endif
 
@@ -489,6 +565,7 @@
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_sarpras') }}">•</p>
         </div>
         @if(auth()->user()->hasRole('waka_sarpras') || auth()->user()->isAdmin())
+        @canVisit('assets.index')
         <a href="{{ route('assets.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.index') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.inventaris_assets') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
@@ -496,7 +573,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.inventaris_assets') }}</div>
         </a>
+        @endcanVisit
         @endif
+        @canVisit('assets.maintenances.index')
         <a href="{{ route('assets.maintenances.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.maintenances.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.assets_maintenance') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -507,6 +586,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.assets_maintenance') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('assets.depreciation')
         <a href="{{ route('assets.depreciation') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.depreciation') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.assets_depreciation') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -516,6 +597,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.assets_depreciation') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- Modul Humas: Admin, Waka Humas --}}
@@ -526,6 +608,7 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_humas') }}">•</p>
         </div>
+        @canVisit('announcements.index')
         <a href="{{ route('announcements.index') }}" class="{{ $linkClass }} {{ request()->routeIs('announcements.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.news_announcements') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
@@ -533,6 +616,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.news_announcements') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- Modul Administrasi: Admin, Staf TU --}}
@@ -543,6 +627,7 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_administration') }}">•</p>
         </div>
+        @canVisit('finance.billings.index')
         <a href="{{ route('finance.billings.index') }}" class="{{ $linkClass }} {{ request()->routeIs('finance.billings.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.finance_administration') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -550,7 +635,9 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.finance_administration') }}</div>
         </a>
+        @endcanVisit
         @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @canVisit('finance.reports.executive')
         <a href="{{ route('finance.reports.executive') }}" class="{{ $linkClass }} {{ request()->routeIs('finance.reports.executive') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.finance_analysis') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -558,9 +645,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.finance_analysis') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         @if(in_array(auth()->user()->role, ['kepala_sekolah', 'admin', 'superadmin']))
+        @canVisit('analytics.index')
         <a href="{{ route('analytics.index') }}" class="{{ $linkClass }} {{ request()->routeIs('analytics.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.school_analytics') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -570,9 +659,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.school_analytics') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         @if(in_array(auth()->user()->role, ['superadmin', 'admin', 'staf_tu', 'kepala_sekolah']))
+        @canVisit('letters.index')
         <a href="{{ route('letters.index') }}" class="{{ $linkClass }} {{ request()->routeIs('letters.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.digital_letters') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -582,6 +673,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.digital_letters') }}</div>
         </a>
+        @endcanVisit
         @endif
         @endif
 
@@ -593,6 +685,7 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_staff') }}">•</p>
         </div>
+        @canVisit('hrd.employees.index')
         <a href="{{ route('hrd.employees.index') }}" class="{{ $linkClass }} {{ request()->routeIs('hrd.employees.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.employee_directory') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -600,6 +693,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.employee_directory') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- Modul Guru: Guru, Admin --}}
@@ -610,6 +704,7 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_teacher') }}">•</p>
         </div>
+        @canVisit('attendances.create')
         <a href="{{ route('attendances.create') }}" class="{{ $linkClass }} {{ request()->routeIs('attendances.create') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.student_attendance') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -617,6 +712,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.student_attendance') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('attendances.index')
         <a href="{{ route('attendances.index') }}" class="{{ $linkClass }} {{ request()->routeIs('attendances.index') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.attendance_recap') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -624,6 +721,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.attendance_recap') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('grades.create')
         <a href="{{ route('grades.create') }}" class="{{ $linkClass }} {{ request()->routeIs('grades.create') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.grade_input') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -631,6 +730,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.grade_input') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('grades.index')
         <a href="{{ route('grades.index') }}" class="{{ $linkClass }} {{ request()->routeIs('grades.index') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.grade_recap') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -638,6 +739,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.grade_recap') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('daily-assessments.index')
         <a href="{{ route('daily-assessments.index') }}" class="{{ $linkClass }} {{ request()->routeIs('daily-assessments.*') && !request()->routeIs('daily-assessments.remedial') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.daily_assessments') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -645,6 +748,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.daily_assessments') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('daily-assessments.remedial')
         <a href="{{ route('daily-assessments.remedial') }}" class="{{ $linkClass }} {{ request()->routeIs('daily-assessments.remedial') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.remedial_list') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -652,6 +757,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.remedial_list') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('report-cards.index')
         <a href="{{ route('report-cards.index') }}" class="{{ $linkClass }} {{ request()->routeIs('report-cards.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.ledger_report') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 19 7.5 19s3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 19 16.5 19c-1.746 0-3.332-.477-4.5-1.253"></path></svg>
@@ -659,6 +766,8 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ledger_report') }}</div>
         </a>
+        @endcanVisit
+        @canVisit('todos.index')
         <a href="{{ route('todos.index') }}" class="{{ $linkClass }} {{ request()->routeIs('todos.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.todo_agenda') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
@@ -666,9 +775,11 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.todo_agenda') }}</div>
         </a>
+        @endcanVisit
         @endif
 
         {{-- Ekstrakurikuler --}}
+        @canVisit('ekskul.index')
         <a href="{{ route('ekskul.index') }}" class="{{ $linkClass }} {{ request()->routeIs('ekskul.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.ekskul') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -676,6 +787,7 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ekskul') }}</div>
         </a>
+        @endcanVisit
 
         {{-- Smart Library --}}
         <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
@@ -684,6 +796,7 @@
         <div class="mt-8 mb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest opacity-50" title="{{ __('navigation.header_learning_resources') }}">•</p>
         </div>
+        @canVisit('library.index')
         <a href="{{ route('library.index') }}" class="{{ $linkClass }} {{ request()->routeIs('library.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.library') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -691,8 +804,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.library') }}</div>
         </a>
+        @endcanVisit
 
         {{-- E-Learning Ringan --}}
+        @canVisit('elearning.index')
         <a href="{{ route('elearning.index') }}" class="{{ $linkClass }} {{ request()->routeIs('elearning.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.e_learning') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
@@ -700,8 +815,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.e_learning') }}</div>
         </a>
+        @endcanVisit
 
         {{-- Ujian Online CBT --}}
+        @canVisit('cbt.exams.index')
         <a href="{{ route('cbt.exams.index') }}" class="{{ $linkClass }} {{ request()->routeIs('cbt.exams.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.cbt') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -709,8 +826,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.cbt') }}</div>
         </a>
+        @endcanVisit
 
         {{-- Forum Diskusi --}}
+        @canVisit('forum.index')
         <a href="{{ route('forum.index') }}" class="{{ $linkClass }} {{ request()->routeIs('forum.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.forum') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -720,8 +839,10 @@
             </div>
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.forum') }}</div>
         </a>
+        @endcanVisit
 
         {{-- Survei Digital --}}
+        @canVisit('surveys.index')
         <a href="{{ route('surveys.index') }}" class="{{ $linkClass }} {{ request()->routeIs('surveys.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.surveys') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -745,46 +866,57 @@
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.microlearning') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Advanced HR & Wellbeing --}}
+        @canVisit('recruitment.kanban')
         <a href="{{ route('recruitment.kanban') }}" class="{{ $linkClass }} {{ request()->routeIs('recruitment.*') || request()->routeIs('compensation.*') || request()->routeIs('wellness.*') || request()->routeIs('turnover.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.recruitment') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-emerald-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.recruitment') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Smart Campus & Visitor Ops --}}
+        @canVisit('visitors.dashboard')
         <a href="{{ route('visitors.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('visitors.*') || request()->routeIs('store.*') || request()->routeIs('canteen.*') || request()->routeIs('events.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.smart_campus') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-cyan-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.smart_campus') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Omnichannel Hub & PR --}}
+        @canVisit('omnichannel.dashboard')
         <a href="{{ route('omnichannel.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('omnichannel.*') || request()->routeIs('drip_campaigns.*') || request()->routeIs('nps.*') || request()->routeIs('pr.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.omnichannel') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-indigo-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.omnichannel') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Data Engineering & NLQ Intelligence --}}
+        @canVisit('data_engineering.streams')
         <a href="{{ route('data_engineering.streams') }}" class="{{ $linkClass }} {{ request()->routeIs('data_engineering.*') || request()->routeIs('nlq.*') || request()->routeIs('report_scheduler.*') || request()->routeIs('data_quality.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.data_intelligence') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-purple-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.data_intelligence') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Career Readiness & Mini Banking --}}
+        @canVisit('internships.portal')
         <a href="{{ route('internships.portal') }}" class="{{ $linkClass }} {{ request()->routeIs('internships.*') || request()->routeIs('college_counseling.*') || request()->routeIs('showcase.*') || request()->routeIs('mini_bank.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.career_readiness') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-rose-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.career_readiness') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Enterprise Diamond Ecosystem (Fase 57-62) --}}
         <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
@@ -795,52 +927,64 @@
         </div>
 
         {{-- Islamic EdTech & Tahsin --}}
+        @canVisit('tahsin.index')
         <a href="{{ route('tahsin.index') }}" class="{{ $linkClass }} {{ request()->routeIs('tahsin.*') || request()->routeIs('islamic_events.*') || request()->routeIs('spiritual.*') || request()->routeIs('dawah.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.islamic_tech') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-emerald-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332-.477-4.5 1.253"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.islamic_tech') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Inclusive Education & IEP --}}
+        @canVisit('iep.index')
         <a href="{{ route('iep.index') }}" class="{{ $linkClass }} {{ request()->routeIs('iep.*') || request()->routeIs('screening.*') || request()->routeIs('differentiation.*') || request()->routeIs('accommodations.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.inclusive_education') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-sky-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.inclusive_education') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Green School & Sustainability --}}
+        @canVisit('carbon.dashboard')
         <a href="{{ route('carbon.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('carbon.*') || request()->routeIs('waste.*') || request()->routeIs('eco_projects.*') || request()->routeIs('eco_challenges.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.green_school') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-lime-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.green_school') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Advanced School Safety & CCTV --}}
+        @canVisit('cctv.index')
         <a href="{{ route('cctv.index') }}" class="{{ $linkClass }} {{ request()->routeIs('cctv.*') || request()->routeIs('emergency_alerts.*') || request()->routeIs('safety_drills.*') || request()->routeIs('geofencing.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.school_safety') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-red-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.school_safety') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Alumni Relations & Endowment --}}
+        @canVisit('alumni.index')
         <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') || request()->routeIs('crowdfunding.*') || request()->routeIs('hall_of_fame.*') || request()->routeIs('endowment.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.alumni_relations') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-teal-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.alumni_relations') }}</span>
             </div>
         </a>
+        @endcanVisit
 
         {{-- Parent Collaboration 2.0 --}}
+        @canVisit('homework_copilot.dashboard')
         <a href="{{ route('homework_copilot.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('homework_copilot.*') || request()->routeIs('class_feed.*') || request()->routeIs('family_plan.*') || request()->routeIs('parent_skills.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.family_engagement') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-violet-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.family_engagement') }}</span>
             </div>
         </a>
+        @endcanVisit
         @endif
 
     </nav>
