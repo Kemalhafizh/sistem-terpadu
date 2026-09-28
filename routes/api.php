@@ -234,7 +234,8 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // === FASE 88: BANK SOAL TERPUSAT & AUTO-GENERATE UJIAN CBT ===
-        Route::prefix('question-bank')->group(function () {
+        // Bank soal: guru & waka kurikulum (sebelumnya terbuka untuk semua akun, termasuk siswa).
+        Route::prefix('question-bank')->middleware('role:guru,teacher,waka_kurikulum')->group(function () {
             Route::get('categories', [QuestionBankApiController::class, 'getCategories']);
             Route::get('items', [QuestionBankApiController::class, 'getItems']);
             Route::post('items', [QuestionBankApiController::class, 'store']);
@@ -243,33 +244,48 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
         // === FASE 89: E-RAPOR KURIKULUM MERDEKA ===
         Route::prefix('rapor')->group(function () {
-            Route::get('current', [ERaporApiController::class, 'getCurrentRapor']);
-            Route::get('child/{childId}', [ERaporApiController::class, 'getChildRapor']);
-            Route::post('generate-pdf', [ERaporApiController::class, 'generatePdf']);
+            Route::get('current', [ERaporApiController::class, 'getCurrentRapor'])->middleware('role:student,siswa');
+            // Pemilik data dicek di controller (StudentDataAccess): ortu hanya anaknya.
+            Route::get('child/{childId}', [ERaporApiController::class, 'getChildRapor'])
+                ->middleware('role:parent,orang_tua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
+            Route::post('generate-pdf', [ERaporApiController::class, 'generatePdf'])
+                ->middleware('role:student,siswa,parent,orang_tua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
         });
 
         // === FASE 91: PENILAIAN HARIAN & REMEDIAL WORKFLOW ===
         Route::prefix('assessments')->group(function () {
-            Route::get('teacher', [DailyAssessmentMobileApiController::class, 'teacherAssessments']);
-            Route::post('teacher', [DailyAssessmentMobileApiController::class, 'storeAssessment']);
-            Route::post('{id}/batch-scores', [DailyAssessmentMobileApiController::class, 'batchScores']);
-            Route::post('{id}/auto-remedial', [DailyAssessmentMobileApiController::class, 'autoRemedial']);
-            Route::get('student', [DailyAssessmentMobileApiController::class, 'studentAssessments']);
-            Route::get('student/remedials', [DailyAssessmentMobileApiController::class, 'studentRemedials']);
-            Route::post('remedials/{sessionId}/score', [DailyAssessmentMobileApiController::class, 'submitRemedialScore']);
+            // Guru: hanya penilaian miliknya (dicek di controller).
+            Route::middleware('role:guru,teacher')->group(function () {
+                Route::get('teacher', [DailyAssessmentMobileApiController::class, 'teacherAssessments']);
+                Route::post('teacher', [DailyAssessmentMobileApiController::class, 'storeAssessment']);
+                Route::post('{id}/batch-scores', [DailyAssessmentMobileApiController::class, 'batchScores'])->whereNumber('id');
+                Route::post('{id}/auto-remedial', [DailyAssessmentMobileApiController::class, 'autoRemedial'])->whereNumber('id');
+                Route::post('remedials/{sessionId}/score', [DailyAssessmentMobileApiController::class, 'submitRemedialScore'])->whereNumber('sessionId');
+            });
+            Route::middleware('role:student,siswa')->group(function () {
+                Route::get('student', [DailyAssessmentMobileApiController::class, 'studentAssessments']);
+                Route::get('student/remedials', [DailyAssessmentMobileApiController::class, 'studentRemedials']);
+            });
         });
 
         // === FASE 90: E-LEARNING MOBILE LMS TERPADU ===
         Route::prefix('elearning')->group(function () {
-            Route::get('classes/student', [ElearningMobileApiController::class, 'studentClasses']);
-            Route::get('classes/{classId}/materials', [ElearningMobileApiController::class, 'studentMaterials']);
-            Route::get('classes/{classId}/assignments', [ElearningMobileApiController::class, 'studentAssignments']);
-            Route::post('assignments/{id}/submit', [ElearningMobileApiController::class, 'submitAssignment']);
-            Route::get('classes/teacher', [ElearningMobileApiController::class, 'teacherClasses']);
-            Route::post('classes/{classId}/materials', [ElearningMobileApiController::class, 'storeMaterial']);
-            Route::post('classes/{classId}/assignments', [ElearningMobileApiController::class, 'storeAssignment']);
-            Route::get('assignments/{id}/submissions', [ElearningMobileApiController::class, 'getSubmissions']);
-            Route::post('submissions/{id}/grade', [ElearningMobileApiController::class, 'gradeSubmission']);
+            // Keanggotaan kelas & kepemilikan dicek di controller (StudentDataAccess).
+            Route::middleware('role:student,siswa')->group(function () {
+                Route::get('classes/student', [ElearningMobileApiController::class, 'studentClasses']);
+                Route::post('assignments/{id}/submit', [ElearningMobileApiController::class, 'submitAssignment'])->whereNumber('id');
+            });
+            Route::middleware('role:student,siswa,guru,teacher')->group(function () {
+                Route::get('classes/{classId}/materials', [ElearningMobileApiController::class, 'studentMaterials'])->whereNumber('classId');
+                Route::get('classes/{classId}/assignments', [ElearningMobileApiController::class, 'studentAssignments'])->whereNumber('classId');
+            });
+            Route::middleware('role:guru,teacher')->group(function () {
+                Route::get('classes/teacher', [ElearningMobileApiController::class, 'teacherClasses']);
+                Route::post('classes/{classId}/materials', [ElearningMobileApiController::class, 'storeMaterial'])->whereNumber('classId');
+                Route::post('classes/{classId}/assignments', [ElearningMobileApiController::class, 'storeAssignment'])->whereNumber('classId');
+                Route::get('assignments/{id}/submissions', [ElearningMobileApiController::class, 'getSubmissions'])->whereNumber('id');
+                Route::post('submissions/{id}/grade', [ElearningMobileApiController::class, 'gradeSubmission'])->whereNumber('id');
+            });
         });
 
         // === FASE 92: BIMBINGAN KONSELING (BK) MOBILE & AT-RISK MONITORING ===

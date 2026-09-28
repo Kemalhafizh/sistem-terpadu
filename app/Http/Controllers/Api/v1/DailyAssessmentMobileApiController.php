@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
+use App\Models\RemedialSession;
+use App\Models\Student;
 use App\Services\RemedialWorkflowService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -73,14 +76,30 @@ class DailyAssessmentMobileApiController extends Controller
 
     public function batchScores(Request $request, int $id): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), DailyAssessment::findOrFail($id)->teacher_id);
+
         $request->validate([
             'scores' => 'required|array|min:1',
-            'scores.*.student_id' => 'required|exists:users,id',
+            // daily_assessment_scores.student_id references students.id (not users.id).
+            'scores.*.student_id' => 'required|integer|exists:students,id',
             'scores.*.score' => 'required|numeric|min:0|max:100',
             'scores.*.notes' => 'nullable|string',
         ]);
 
         $assessment = DailyAssessment::findOrFail($id);
+
+        // Only students of the assessed classroom can receive a score.
+        $studentIds = collect($request->scores)->pluck('student_id')->map(fn ($v) => (int) $v)->unique();
+        $outside = $studentIds->diff(
+            Student::whereIn('id', $studentIds)->where('classroom_id', $assessment->classroom_id)->pluck('id')
+        );
+        if ($outside->isNotEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sebagian siswa bukan anggota kelas penilaian ini.',
+                'errors' => ['scores' => ['Siswa di luar kelas: '.$outside->implode(', ')]],
+            ], 422);
+        }
 
         foreach ($request->scores as $item) {
             DailyAssessmentScore::updateOrCreate(
@@ -112,6 +131,8 @@ class DailyAssessmentMobileApiController extends Controller
 
     public function autoRemedial(Request $request, int $id): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), DailyAssessment::findOrFail($id)->teacher_id);
+
         $deadline = $request->input('deadline');
         $result = $this->remedialService->autoAssignRemedial($id, $request->user()->id, $deadline);
 
@@ -164,6 +185,8 @@ class DailyAssessmentMobileApiController extends Controller
 
     public function submitRemedialScore(Request $request, int $sessionId): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), RemedialSession::with('assessment')->findOrFail($sessionId)->assessment?->teacher_id);
+
         $request->validate([
             'score' => 'required|numeric|min:0|max:100',
             'teacher_notes' => 'nullable|string',

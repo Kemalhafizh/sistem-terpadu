@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\AcademicYear;
 use App\Models\ReportCardTemplate;
 use App\Services\ERaporPdfService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -31,6 +31,8 @@ class ERaporApiController extends Controller
 
     public function getChildRapor(Request $request, int $childId): JsonResponse
     {
+        StudentDataAccess::authorizeStudentUser($request->user(), $childId);
+
         $reportData = $this->service->getStudentReport($childId);
 
         return response()->json([
@@ -47,28 +49,16 @@ class ERaporApiController extends Controller
         ]);
 
         $studentId = (int) ($request->input('student_id') ?: $request->user()->id);
-        $reportCardId = $request->input('report_card_id');
+        StudentDataAccess::authorizeStudentUser($request->user(), $studentId);
 
+        // No template means rapor has not been set up yet: say so. This used to
+        // invent an academic year ("2025/2026") and a template on the spot.
+        $reportCardId = $request->input('report_card_id') ?: ReportCardTemplate::latest()->value('id');
         if (! $reportCardId) {
-            $template = ReportCardTemplate::latest()->first();
-            if (! $template) {
-                $academicYear = AcademicYear::firstOrCreate(
-                    ['year' => '2025/2026', 'semester' => 'Ganjil'],
-                    [
-                        'is_active' => true,
-                        'start_date' => now()->startOfYear(),
-                        'end_date' => now()->endOfYear(),
-                    ]
-                );
-                $template = ReportCardTemplate::create([
-                    'name' => 'Rapor Semester Standar SISTA',
-                    'academic_year_id' => $academicYear->id,
-                    'semester' => 'ganjil',
-                    'phase' => 'F',
-                    'created_by' => $request->user()->id,
-                ]);
-            }
-            $reportCardId = $template->id;
+            return response()->json([
+                'success' => false,
+                'message' => 'Template rapor belum dibuat oleh sekolah.',
+            ], 422);
         }
 
         $pdf = $this->service->generateSinglePdf(

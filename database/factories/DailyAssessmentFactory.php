@@ -21,7 +21,7 @@ class DailyAssessmentFactory extends Factory
             'teacher_id' => User::factory()->state(['role' => 'guru']),
             'academic_year_id' => AcademicYear::factory(),
             'title' => $this->faker->sentence(3),
-            'type' => $this->faker->randomElement(['harian', 'tugas', 'kuis']),
+            'type' => $this->faker->randomElement(['ulangan_harian', 'tugas', 'kuis']),
             'assessment_date' => $this->faker->date(),
             'max_score' => 100.00,
             'kkm' => 75.00,

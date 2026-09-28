@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\ElearningAssignment;
+use App\Models\ElearningClass;
 use App\Models\ElearningMaterial;
 use App\Models\ElearningSubmission;
 use App\Services\ElearningMobileService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -31,6 +33,8 @@ class ElearningMobileApiController extends Controller
 
     public function studentMaterials(Request $request, int $classId): JsonResponse
     {
+        StudentDataAccess::authorizeClassMember($request->user(), ElearningClass::findOrFail($classId));
+
         $materials = $this->service->getClassMaterials($classId);
 
         return response()->json([
@@ -41,6 +45,8 @@ class ElearningMobileApiController extends Controller
 
     public function studentAssignments(Request $request, int $classId): JsonResponse
     {
+        StudentDataAccess::authorizeClassMember($request->user(), ElearningClass::findOrFail($classId));
+
         $assignments = $this->service->getClassAssignments($classId, $request->user()->id);
 
         return response()->json([
@@ -51,6 +57,8 @@ class ElearningMobileApiController extends Controller
 
     public function submitAssignment(Request $request, int $id): JsonResponse
     {
+        StudentDataAccess::authorizeClassMember($request->user(), ElearningAssignment::with('elearningClass')->findOrFail($id)->elearningClass);
+
         $request->validate([
             'content' => 'nullable|string',
             'file' => 'nullable|file|max:10240|mimes:pdf,doc,docx,ppt,pptx,zip,jpg,png',
@@ -82,6 +90,8 @@ class ElearningMobileApiController extends Controller
 
     public function storeMaterial(Request $request, int $classId): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), ElearningClass::findOrFail($classId)->teacher_id);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
@@ -111,6 +121,8 @@ class ElearningMobileApiController extends Controller
 
     public function storeAssignment(Request $request, int $classId): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), ElearningClass::findOrFail($classId)->teacher_id);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -134,6 +146,8 @@ class ElearningMobileApiController extends Controller
 
     public function getSubmissions(Request $request, int $id): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), ElearningAssignment::with('elearningClass')->findOrFail($id)->elearningClass?->teacher_id);
+
         $submissions = ElearningSubmission::with('student')
             ->where('elearning_assignment_id', $id)
             ->latest()
@@ -147,6 +161,8 @@ class ElearningMobileApiController extends Controller
 
     public function gradeSubmission(Request $request, int $id): JsonResponse
     {
+        StudentDataAccess::authorizeTeacherOwns($request->user(), ElearningSubmission::with('assignment.elearningClass')->findOrFail($id)->assignment?->elearningClass?->teacher_id);
+
         $request->validate([
             'score' => 'required|integer|min:0|max:100',
             'feedback' => 'nullable|string',
