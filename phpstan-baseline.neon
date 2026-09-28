@@ -325,12 +325,6 @@ parameters:
 			path: app/Http/Controllers/Api/v1/DocumentMobileApiController.php
 
 		-
-			message: '#^Relation ''student'' is not found in App\\Models\\ElearningSubmission model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ElearningMobileApiController.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -632,12 +626,6 @@ parameters:
 			path: app/Http/Controllers/DailyAssessmentController.php
 
 		-
-			message: '#^Relation ''assignment'' is not found in App\\Models\\ElearningSubmission model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/DashboardController.php
-
-		-
 			message: '#^Relation ''author'' is not found in App\\Models\\ForumThread model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -686,12 +674,6 @@ parameters:
 			path: app/Http/Controllers/DashboardController.php
 
 		-
-			message: '#^Relation ''elearningClass'' is not found in App\\Models\\ElearningAssignment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/DashboardController.php
-
-		-
 			message: '#^Relation ''pointLogs'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -725,12 +707,6 @@ parameters:
 			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''submissions'' is not found in App\\Models\\ElearningAssignment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Http/Controllers/DashboardController.php
 
 		-
@@ -1899,12 +1875,6 @@ parameters:
 			path: app/Services/DigestService.php
 
 		-
-			message: '#^Relation ''elearningClass'' is not found in App\\Models\\ElearningAssignment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/DigestService.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1992,12 +1962,6 @@ parameters:
 			message: '#^Relation ''classroom'' is not found in App\\Models\\ElearningClass model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Services/ElearningMobileService.php
-
-		-
-			message: '#^Relation ''elearningClass'' is not found in App\\Models\\ElearningAssignment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Services/ElearningMobileService.php
 
 		-
@@ -2174,18 +2138,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/QuestionBankService.php
-
-		-
-			message: '#^Relation ''assessment'' is not found in App\\Models\\RemedialSession model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/RemedialWorkflowService.php
-
-		-
-			message: '#^Relation ''assigner'' is not found in App\\Models\\RemedialSession model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/RemedialWorkflowService.php
 
 		-
 			message: '#^Relation ''scores'' is not found in App\\Models\\DailyAssessment model\.$#'

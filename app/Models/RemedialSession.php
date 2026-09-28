@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class RemedialSession extends Model
@@ -28,17 +29,17 @@ class RemedialSession extends Model
         'deadline' => 'datetime',
     ];
 
-    public function assessment()
+    public function assessment(): BelongsTo
     {
         return $this->belongsTo(DailyAssessment::class, 'daily_assessment_id');
     }
 
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(User::class, 'student_id');
     }
 
-    public function assigner()
+    public function assigner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_by');
     }
