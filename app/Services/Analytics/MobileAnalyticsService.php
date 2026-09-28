@@ -288,8 +288,13 @@ class MobileAnalyticsService
         $now = now();
         $monthKeys = [$now->format('m'), self::INDONESIAN_MONTHS[$now->month]];
 
+        // `month` carries no year, so without the academic year last year's
+        // September bills would count as this September's.
+        $activeYearId = AcademicYear::current()?->id;
+
         $billedThisMonth = (float) Billing::whereIn('payment_category_id', $monthlyCategoryIds)
             ->whereIn('month', $monthKeys)
+            ->when($activeYearId, fn ($q) => $q->where('academic_year_id', $activeYearId))
             ->sum('amount');
 
         $startOfMonth = $now->copy()->startOfMonth()->toDateString();
@@ -326,7 +331,7 @@ class MobileAnalyticsService
                 'changeText' => $attendanceTodayTotal > 0
                     ? "{$attendanceTodayHadir} dari {$attendanceTodayTotal} presensi tercatat"
                     : 'Belum ada presensi tercatat hari ini',
-                'isPositiveTrend' => $attendanceTodayPercentage >= 90,
+                'isPositiveTrend' => $attendanceTodayTotal === 0 || $attendanceTodayPercentage >= 90,
                 'progress' => $attendanceTodayPercentage / 100,
                 'description' => 'Persentase status Hadir dari seluruh presensi yang sudah tercatat hari ini.',
             ],
@@ -354,6 +359,95 @@ class MobileAnalyticsService
             'attendanceTodayPercentage' => $attendanceTodayPercentage,
             'totalSppCollected' => 'Rp '.number_format($collectedThisMonth, 0, ',', '.'),
             'collectionRatePercentage' => $collectionRate,
+            // Raw figures for clients that format and chart for themselves.
+            // A rate is null when there is nothing to divide by, never 0.
+            'attendance' => [
+                'today' => $this->attendanceBreakdown($today),
+                'days' => $this->attendanceDays($now->copy()->subDays(13)->toDateString(), $today),
+            ],
+            'spp' => [
+                'month' => self::INDONESIAN_MONTHS[$now->month].' '.$now->year,
+                ...$this->sppSettlement($monthlyCategoryIds->all(), $monthKeys, $activeYearId),
+                'received_this_month' => $collectedThisMonth,
+                'received_last_month' => $collectedLastMonth,
+                'received_change_pct' => $collectedLastMonth > 0
+                    ? round((($collectedThisMonth - $collectedLastMonth) / $collectedLastMonth) * 100, 1)
+                    : null,
+            ],
+        ];
+    }
+
+    /**
+     * Today's attendance records by status (H/S/I/A).
+     *
+     * @return array{recorded: int, present: int, sick: int, permit: int, absent: int, rate: float|null}
+     */
+    private function attendanceBreakdown(string $date): array
+    {
+        $counts = Attendance::whereDate('date', $date)
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+        $recorded = (int) $counts->sum();
+        $present = (int) ($counts['H'] ?? 0);
+
+        return [
+            'recorded' => $recorded,
+            'present' => $present,
+            'sick' => (int) ($counts['S'] ?? 0),
+            'permit' => (int) ($counts['I'] ?? 0),
+            'absent' => (int) ($counts['A'] ?? 0),
+            'rate' => $recorded > 0 ? round($present / $recorded * 100, 1) : null,
+        ];
+    }
+
+    /**
+     * Presence rate for each day in the range that has records, oldest
+     * first. Days without records (weekends, holidays) are left out rather
+     * than reported as 0%.
+     *
+     * @return list<array{date: string, recorded: int, present: int, rate: float}>
+     */
+    private function attendanceDays(string $from, string $to): array
+    {
+        return Attendance::whereBetween('date', [$from, $to])
+            ->selectRaw("date, count(*) as recorded, sum(case when status = 'H' then 1 else 0 end) as present")
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->map(fn ($row) => [
+                'date' => Carbon::parse($row->getAttribute('date'))->toDateString(),
+                'recorded' => (int) $row->getAttribute('recorded'),
+                'present' => (int) $row->getAttribute('present'),
+                'rate' => round((int) $row->getAttribute('present') / max(1, (int) $row->getAttribute('recorded')) * 100, 1),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * How much of this month's SPP bills is paid off: billed amount, the
+     * part settled, and how many bills are fully paid.
+     *
+     * @param  array<int, int>  $categoryIds
+     * @param  array<int, string>  $monthKeys
+     * @return array{billed: float, settled: float, settled_rate: float|null, bills: int, bills_paid: int}
+     */
+    private function sppSettlement(array $categoryIds, array $monthKeys, ?int $academicYearId): array
+    {
+        $bills = Billing::whereIn('payment_category_id', $categoryIds)
+            ->whereIn('month', $monthKeys)
+            ->when($academicYearId, fn ($q) => $q->where('academic_year_id', $academicYearId));
+        $billed = (float) (clone $bills)->sum('amount');
+        $outstanding = (float) (clone $bills)->sum('remaining_balance');
+        $settled = max(0.0, $billed - $outstanding);
+
+        return [
+            'billed' => $billed,
+            'settled' => $settled,
+            'settled_rate' => $billed > 0 ? round($settled / $billed * 100, 1) : null,
+            'bills' => (clone $bills)->count(),
+            'bills_paid' => (clone $bills)->where('status', 'paid')->count(),
         ];
     }
 }
