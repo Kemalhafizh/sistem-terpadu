@@ -572,12 +572,6 @@ parameters:
 			path: app/Http/Controllers/DashboardController.php
 
 		-
-			message: '#^Relation ''billings'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/DashboardController.php
-
-		-
 			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -843,12 +837,6 @@ parameters:
 
 		-
 			message: '#^Relation ''billing'' is not found in App\\Models\\Payment model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/FinancialReportController.php
-
-		-
-			message: '#^Relation ''billings'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Http/Controllers/FinancialReportController.php
