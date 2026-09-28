@@ -27,7 +27,8 @@ class Fase78HardwareIntegrationApiTest extends TestCase
             ->and($response->json('expires_in_seconds'))->toBeInt()->toBeBetween(1, 30);
 
         $token = $response->json('qr_token');
-        $verifyRes = $this->actingAs($user, 'sanctum')->postJson('/api/v1/mobile/attendance/verify-qr', [
+        $scanner = User::factory()->create(['role' => 'staf_tu']);
+        $verifyRes = $this->actingAs($scanner, 'sanctum')->postJson('/api/v1/mobile/attendance/verify-qr', [
             'qr_token' => $token,
         ]);
         $verifyRes->assertStatus(200);

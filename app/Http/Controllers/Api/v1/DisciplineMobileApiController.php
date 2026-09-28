@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Services\DisciplineService;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class DisciplineMobileApiController extends Controller
         $user = $request->user();
         if (in_array($user->role, ['student', 'siswa'])) {
             return $user->student;
-        } elseif (in_array($user->role, ['parent', 'orangtua'])) {
+        } elseif (in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
             // A parent may have several children. The app identifies a child
             // by uuid (all it learns from parent/children); student_id is kept
             // for older clients. Either way the child must belong to this

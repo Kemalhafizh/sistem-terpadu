@@ -15,9 +15,19 @@ class Fase71BlockchainWeb3Test extends TestCase
     public function test_issue_and_verify_blockchain_credential(): void
     {
         $student = User::factory()->create(['role' => 'student', 'name' => 'Ahmad Dahlan']);
+        $registrar = User::factory()->create(['role' => 'staf_tu']);
 
-        // 1. Issue Credential
-        $issueRes = $this->actingAs($student, 'sanctum')->postJson('/api/v1/blockchain/credentials/issue', [
+        // A student cannot mint their own diploma.
+        $this->actingAs($student, 'sanctum')->postJson('/api/v1/blockchain/credentials/issue', [
+            'student_id' => $student->id,
+            'credential_type' => 'diploma',
+            'certificate_number' => 'DIPLOMA-SELF-ISSUED',
+            'metadata' => ['gpa' => 4.0],
+        ])->assertForbidden();
+
+        // 1. The school issues the credential to the student
+        $issueRes = $this->actingAs($registrar, 'sanctum')->postJson('/api/v1/blockchain/credentials/issue', [
+            'student_id' => $student->id,
             'credential_type' => 'diploma',
             'certificate_number' => 'DIPLOMA-YBWSA-2026-00981',
             'metadata' => [

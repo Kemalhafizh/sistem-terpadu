@@ -165,7 +165,9 @@ class SyncConsistencyTest extends TestCase
      */
     public function test_payload_error_422_tetap_dalam_bentuk_envelope_standar()
     {
-        $response = $this->actingAs($this->user)
+        // GPS check-in is a student feature.
+        $student = User::factory()->create(['role' => 'student']);
+        $response = $this->actingAs($student)
             ->postJson('/api/v1/mobile/attendance/gps-checkin', []);
 
         $response->assertStatus(422);

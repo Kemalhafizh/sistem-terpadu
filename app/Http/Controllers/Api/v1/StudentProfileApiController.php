@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Services\StudentProfile360Service;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -19,22 +20,14 @@ class StudentProfileApiController extends Controller
     protected function resolveAuthorizedStudentId(Request $request, $id): int
     {
         $user = $request->user();
+        $ownProfile = in_array($user->role, StudentDataAccess::STUDENT_ROLES, true);
+        if (! ($id && is_numeric($id)) && ! $ownProfile) {
+            abort(422, 'Parameter id siswa wajib diisi.');
+        }
         $targetId = ($id && is_numeric($id)) ? (int) $id : $user->id;
 
-        // If logged in as student, they can ONLY view their own profile
-        if (in_array($user->role, ['student', 'siswa'], true)) {
-            if ($targetId !== $user->id) {
-                abort(403, 'Akses ditolak. Anda hanya berhak mengakses profil Anda sendiri.');
-            }
-        }
-
-        // If logged in as parent, they can only view their own children
-        if ($user->role === 'parent') {
-            $childUserIds = $user->children ? $user->children->pluck('user_id')->filter()->toArray() : [];
-            if ($targetId !== $user->id && ! in_array($targetId, $childUserIds, true)) {
-                abort(403, 'Akses ditolak. Anda hanya berhak mengakses profil anak Anda.');
-            }
-        }
+        // Students see themselves, parents their own children, staff anyone.
+        StudentDataAccess::authorizeStudentUser($user, $targetId);
 
         return $targetId;
     }

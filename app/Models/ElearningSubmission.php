@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ElearningSubmission extends Model
 {
@@ -24,12 +25,12 @@ class ElearningSubmission extends Model
         'violation_count' => 'integer',
     ];
 
-    public function assignment()
+    public function assignment(): BelongsTo
     {
         return $this->belongsTo(ElearningAssignment::class, 'elearning_assignment_id');
     }
 
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }

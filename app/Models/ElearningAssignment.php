@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ElearningAssignment extends Model
 {
@@ -27,12 +29,12 @@ class ElearningAssignment extends Model
         'max_violations' => 'integer',
     ];
 
-    public function elearningClass()
+    public function elearningClass(): BelongsTo
     {
         return $this->belongsTo(ElearningClass::class, 'elearning_class_id');
     }
 
-    public function submissions()
+    public function submissions(): HasMany
     {
         return $this->hasMany(ElearningSubmission::class);
     }

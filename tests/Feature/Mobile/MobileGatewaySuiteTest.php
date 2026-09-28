@@ -203,7 +203,12 @@ class MobileGatewaySuiteTest extends TestCase
 
         $token = $qrGenRes->json('qr_token');
 
-        $verifyRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/verify-qr', [
+        // The student shows the QR; a teacher's phone scans it. A student
+        // cannot act as the scanner.
+        $this->actingAs($user)->postJson('/api/v1/mobile/attendance/verify-qr', ['qr_token' => $token])->assertForbidden();
+
+        $scanner = User::factory()->create(['role' => 'guru']);
+        $verifyRes = $this->actingAs($scanner)->postJson('/api/v1/mobile/attendance/verify-qr', [
             'qr_token' => $token,
         ]);
 
