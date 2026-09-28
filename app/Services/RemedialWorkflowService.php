@@ -61,6 +61,10 @@ class RemedialWorkflowService
         return $session;
     }
 
+    /**
+     * @param  int  $studentId  students.id — the key of daily_assessment_scores. Remedial
+     *                          sessions are keyed by the student's users.id instead.
+     */
     public function getFinalScore(int $studentId, int $assessmentId): float
     {
         $original = DailyAssessmentScore::where('daily_assessment_id', $assessmentId)
@@ -68,7 +72,7 @@ class RemedialWorkflowService
             ->value('score') ?? 0.0;
 
         $remedial = RemedialSession::where('daily_assessment_id', $assessmentId)
-            ->where('student_id', $studentId)
+            ->where('student_id', Student::whereKey($studentId)->value('user_id'))
             ->where('status', 'completed')
             ->first();
 

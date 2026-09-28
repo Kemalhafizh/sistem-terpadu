@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
 
@@ -44,12 +45,14 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function parent()
+    /** @return BelongsTo<User, $this> */
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'parent_id');
     }
 
-    public function classroom()
+    /** @return BelongsTo<Classroom, $this> */
+    public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
     }
@@ -98,7 +101,8 @@ class Student extends Model
         return (int) $this->pointLogs()->sum('points');
     }
 
-    public function billings()
+    /** @return HasMany<Billing, $this> */
+    public function billings(): HasMany
     {
         return $this->hasMany(Billing::class);
     }
