@@ -20,12 +20,22 @@ class ParentPortalController extends Controller
         $this->parentService = $parentService;
     }
 
-    private function authorizeChildAccess(Request $request, ?int $childId = null): int
+    /**
+     * @param  int|string|null  $child  students.id or the student's uuid (the only id the
+     *                                  app has, from parent/children); null = the first child.
+     */
+    private function authorizeChildAccess(Request $request, int|string|null $child = null): int
     {
         $user = $request->user();
         if (! $user) {
             abort(401, 'Unauthenticated');
         }
+
+        $childId = match (true) {
+            $child === null => null,
+            is_int($child), ctype_digit($child) => (int) $child,
+            default => Student::where('uuid', $child)->value('id') ?? abort(404, 'Data siswa tidak ditemukan.'),
+        };
 
         // 1. Superadmin may look at any child, but must say which one.
         if ($user->role === 'superadmin') {
@@ -54,9 +64,9 @@ class ParentPortalController extends Controller
 
         // 3. Student / Siswa: only allowed to view their own profile/feed
         if (in_array($user->role, ['student', 'siswa'], true)) {
-            $student = $user->student;
-            $ownId = $student ? (int) $student->id : 1;
-            if ($childId !== null && (int) $childId !== $ownId) {
+            // Never fall back to another student's id when the account has no profile.
+            $ownId = (int) ($user->student?->id ?? abort(404, 'Data siswa tidak ditemukan.'));
+            if ($childId !== null && $childId !== $ownId) {
                 abort(403, 'Akses ditolak. Siswa dilarang menginspeksi aktivitas siswa lain.');
             }
 
@@ -71,7 +81,7 @@ class ParentPortalController extends Controller
      */
     public function activityFeed(Request $request, $childId = null)
     {
-        $resolvedId = $this->authorizeChildAccess($request, $childId !== null ? (int) $childId : null);
+        $resolvedId = $this->authorizeChildAccess($request, $childId);
         $feed = $this->parentService->getChildActivityFeed($resolvedId);
 
         return $this->successResponse($feed, 'Child activity feed retrieved successfully');
@@ -82,7 +92,7 @@ class ParentPortalController extends Controller
      */
     public function weeklyDigest(Request $request, $childId = null)
     {
-        $resolvedId = $this->authorizeChildAccess($request, $childId !== null ? (int) $childId : null);
+        $resolvedId = $this->authorizeChildAccess($request, $childId);
         $digest = $this->parentService->generateWeeklyDigest($resolvedId);
 
         return $this->successResponse($digest, 'Weekly digest retrieved successfully');
@@ -93,7 +103,7 @@ class ParentPortalController extends Controller
      */
     public function benchmarkClass(Request $request, $childId = null)
     {
-        $resolvedId = $this->authorizeChildAccess($request, $childId !== null ? (int) $childId : null);
+        $resolvedId = $this->authorizeChildAccess($request, $childId);
         $benchmark = $this->parentService->getChildVsClassAverage($resolvedId);
 
         return $this->successResponse($benchmark, 'Benchmark class comparison retrieved successfully');

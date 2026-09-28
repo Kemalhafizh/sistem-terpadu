@@ -6,6 +6,7 @@ use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LibraryLoan extends Model
 {
@@ -37,7 +38,8 @@ class LibraryLoan extends Model
         return $this->belongsTo(Student::class);
     }
 
-    public function book()
+    /** @return BelongsTo<LibraryBook, $this> */
+    public function book(): BelongsTo
     {
         return $this->belongsTo(LibraryBook::class, 'library_book_id');
     }
