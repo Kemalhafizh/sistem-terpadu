@@ -258,13 +258,7 @@ class WorkflowService
      */
     public function getPendingForUser(User $user)
     {
-        return WorkflowRequest::whereIn('status', ['pending', 'in_review'])
-            ->whereHas('currentApproval', function ($query) use ($user) {
-                $query->where(function ($q) use ($user) {
-                    $q->where('role', $user->role)
-                        ->whereNull('delegated_to_id');
-                })->orWhere('delegated_to_id', $user->id);
-            })
+        return WorkflowRequest::awaitingDecisionBy($user)
             ->with(['requester', 'definition', 'approvals'])
             ->latest()
             ->get();

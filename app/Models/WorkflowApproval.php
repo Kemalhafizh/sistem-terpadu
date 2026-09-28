@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WorkflowApproval extends Model
 {
@@ -26,17 +27,20 @@ class WorkflowApproval extends Model
         'decided_at' => 'datetime',
     ];
 
-    public function request()
+    /** @return BelongsTo<WorkflowRequest, $this> */
+    public function request(): BelongsTo
     {
         return $this->belongsTo(WorkflowRequest::class, 'request_id');
     }
 
-    public function approver()
+    /** @return BelongsTo<User, $this> */
+    public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approver_id');
     }
 
-    public function delegatedTo()
+    /** @return BelongsTo<User, $this> */
+    public function delegatedTo(): BelongsTo
     {
         return $this->belongsTo(User::class, 'delegated_to_id');
     }
