@@ -182,7 +182,7 @@ test('visibility violations AJAX increment properly and lock student submission'
     ]);
 });
 
-test('universal IT admin and teacher bypasses security log violation counts', function () {
+test('an admin cannot report exam violations as if they were a student', function () {
     $class = ElearningClass::create([
         'subject_id' => $this->subject->id,
         'classroom_id' => $this->classroom->id,
@@ -200,13 +200,7 @@ test('universal IT admin and teacher bypasses security log violation counts', fu
         'max_violations' => 3,
     ]);
 
-    // Admin hits violation route
-    $response = $this->actingAs($this->admin)->post(route('elearning.assignment.violation', $assignment->uuid));
-    $response->assertOk();
-
-    // Check it doesn't log standard student cheating
-    $response->assertJson([
-        'success' => true,
-        'locked' => false,
-    ]);
+    // The route is role:student; only superadmin bypasses role checks now.
+    $this->actingAs($this->admin)->post(route('elearning.assignment.violation', $assignment->uuid))
+        ->assertForbidden();
 });

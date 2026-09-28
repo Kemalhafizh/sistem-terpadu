@@ -15,10 +15,6 @@ class TeacherTodoController extends Controller
     {
         $user = Auth::user();
 
-        if (! in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
-            abort(403);
-        }
-
         $query = TeacherTodo::where('user_id', $user->id);
 
         // Filter by status
@@ -92,10 +88,6 @@ class TeacherTodoController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-
-        if (! in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
-            abort(403);
-        }
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -219,10 +211,6 @@ class TeacherTodoController extends Controller
     public function todayTasks()
     {
         $user = Auth::user();
-
-        if (! in_array($user->role, ['guru', 'admin', 'waka_kurikulum', 'waka_kesiswaan', 'waka_humas', 'waka_sarpras', 'staf_tu', 'bk'])) {
-            abort(403);
-        }
 
         $todayTodos = TeacherTodo::where('user_id', $user->id)
             ->pending()

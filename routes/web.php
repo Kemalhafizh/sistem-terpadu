@@ -176,6 +176,7 @@ use App\Http\Controllers\UX\TranslationController;
 use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
+use App\Models\TeachingJournal;
 use Illuminate\Support\Facades\Route;
 use Knuckles\Scribe\ScribeServiceProvider;
 
@@ -786,7 +787,8 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::get('teaching-journals/export/pdf', [TeachingJournalController::class, 'exportPdf'])->name('teaching-journals.export-pdf');
     Route::post('teaching-journals/{teaching_journal}/review', [TeachingJournalController::class, 'review'])->name('teaching-journals.review');
-    Route::resource('teaching-journals', TeachingJournalController::class);
+    Route::resource('teaching-journals', TeachingJournalController::class)
+        ->middlewareFor('index', 'can:viewAny,'.TeachingJournal::class);
 
     // =========================================================
     // STUDENT SELF-SERVICE
@@ -869,12 +871,17 @@ Route::middleware('auth')->group(function () {
         Route::post('daily-assessments/{daily_assessment}/store-scores', [DailyAssessmentController::class, 'storeScores'])->name('daily-assessments.store-scores');
         Route::get('daily-assessments/{daily_assessment}/export-pdf', [DailyAssessmentController::class, 'exportPdf'])->name('daily-assessments.pdf');
 
-        // Agenda & Todo List Guru
-        Route::get('todos', [TeacherTodoController::class, 'index'])->name('todos.index');
-        Route::post('todos', [TeacherTodoController::class, 'store'])->name('todos.store');
-        Route::patch('todos/{todo}/toggle', [TeacherTodoController::class, 'toggle'])->name('todos.toggle');
-        Route::put('todos/{todo}', [TeacherTodoController::class, 'update'])->name('todos.update');
-        Route::delete('todos/{todo}', [TeacherTodoController::class, 'destroy'])->name('todos.destroy');
+        // Agenda & Todo List: every staff member keeps their own list. One rule
+        // here (it used to disagree with a second list inside the controller).
+        Route::withoutMiddleware('role:guru,bk,admin,superadmin')
+            ->middleware('role:guru,bk,waka_kurikulum,waka_kesiswaan,waka_humas,waka_sarpras,staf_tu,admin')
+            ->group(function () {
+                Route::get('todos', [TeacherTodoController::class, 'index'])->name('todos.index');
+                Route::post('todos', [TeacherTodoController::class, 'store'])->name('todos.store');
+                Route::patch('todos/{todo}/toggle', [TeacherTodoController::class, 'toggle'])->name('todos.toggle');
+                Route::put('todos/{todo}', [TeacherTodoController::class, 'update'])->name('todos.update');
+                Route::delete('todos/{todo}', [TeacherTodoController::class, 'destroy'])->name('todos.destroy');
+            });
         Route::get('todos/today', [TeacherTodoController::class, 'todayTasks'])->name('todos.today');
     });
 

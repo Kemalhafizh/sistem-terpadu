@@ -23,11 +23,13 @@
         </div>
 
         <!-- Aktifkan Tahun Ajaran Button -->
+        @canVisit('academic-years.index')
         <a href="{{ route('academic-years.index') }}" class="group bg-white rounded-3xl p-6 shadow-sm border-2 border-dashed border-primary-200 flex items-center justify-center hover:bg-primary-50 hover:border-primary-400 transition-all">
             <div class="text-center">
                 <p class="text-primary-600 font-bold text-sm group-hover:scale-105 transition-transform">{{ __('dashboard.manage_academic_year') }}</p>
             </div>
         </a>
+        @endcanVisit
     </div>
 
     <!-- Recent Subjects List -->

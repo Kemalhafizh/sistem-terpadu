@@ -44,6 +44,7 @@ use App\Policies\StudentShowcasePolicy;
 use App\Policies\UksPolicy;
 use App\Policies\WorkflowPolicy;
 use App\Services\AppearanceService;
+use App\Support\Access\RouteAccess;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -52,6 +53,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Notifications\Events\NotificationSent;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -75,8 +77,14 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::shouldBeStrict(! $this->app->isProduction());
         // Absolute Access for IT Admin / SuperAdmin
+        // Menus show a link only when its route would let this user in (same
+        // role: rule the request is judged by). See App\Support\Access\RouteAccess.
+        Blade::if('canVisit', fn (string $routeName) => RouteAccess::allowsRoute(auth()->user(), $routeName));
+
+        // Only superadmin bypasses every ability. Admin rights are granted
+        // explicitly in each policy/gate (operator scope), not by default.
         Gate::before(function ($user, $ability) {
-            if ($user->role === 'admin' || $user->role === 'superadmin') {
+            if ($user->role === 'superadmin') {
                 return true;
             }
         });

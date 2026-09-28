@@ -24,7 +24,9 @@
             </span>
             {{ __('dashboard.spmb_command_center') }}
         </h3>
+        @canVisit('spmb.admin.index')
         <a href="{{ route('spmb.admin.index') }}" class="text-xs font-bold text-primary-600 hover:underline">{{ __('dashboard.manage_registration_complete') }}</a>
+        @endcanVisit
     </div>
 
     <!-- Stats Cards -->

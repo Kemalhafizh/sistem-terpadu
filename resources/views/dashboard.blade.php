@@ -50,11 +50,13 @@
                 </p>
               </div>
             </div>
+            @canVisit('smart-alerts.index')
             <a href="{{ route('smart-alerts.index') }}" 
               class="w-full md:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 active:scale-95 shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 shrink-0">
               <span>{{ __('dashboard.open_predictive_dashboard') }}</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </a>
+            @endcanVisit
           </div>
         @endif
       @endif
@@ -244,18 +246,26 @@
                      {{ __('dashboard.quick_access') }}
                   </h4>
                   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    @canVisit('mutabaah.index')
                     <a href="{{ route('mutabaah.index') }}" class="bg-slate-800/80 hover:bg-slate-700/80 p-4 rounded-2xl transition-all border border-slate-700 hover:border-emerald-500">
                       <p class="text-sm font-bold">{{ __('dashboard.islamic_tahfidz_module') }}</p>
                     </a>
+                    @endcanVisit
+                    @canVisit('points.index')
                     <a href="{{ route('points.index') }}" class="bg-slate-800/80 hover:bg-slate-700/80 p-4 rounded-2xl transition-all border border-slate-700 hover:border-red-500">
                       <p class="text-sm font-bold">{{ __('dashboard.bk_discipline_module') }}</p>
                     </a>
+                    @endcanVisit
+                    @canVisit('finance.billings.index')
                     <a href="{{ route('finance.billings.index') }}" class="bg-slate-800/80 hover:bg-slate-700/80 p-4 rounded-2xl transition-all border border-slate-700 hover:border-blue-500">
                       <p class="text-sm font-bold">{{ __('dashboard.finance_spp_module') }}</p>
                     </a>
+                    @endcanVisit
+                    @canVisit('users.index')
                     <a href="{{ route('users.index') }}" class="bg-slate-800/80 hover:bg-slate-700/80 p-4 rounded-2xl transition-all border border-slate-700 hover:border-purple-500">
                       <p class="text-sm font-bold">{{ __('dashboard.user_teacher_management') }}</p>
                     </a>
+                    @endcanVisit
                   </div>
                 </div>
               </div>
@@ -635,9 +645,11 @@
                     <p class="text-xs text-gray-400 dark:text-gray-500 font-bold mt-0.5">{{ $journalTodayFilled ? 'Sudah Diisi Hari Ini' : 'Belum Diisi Hari Ini' }}</p>
                   </div>
                 </div>
+                @canVisit('teaching-journals.create')
                 <a href="{{ route('teaching-journals.create') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-wider">
                   {{ $journalTodayFilled ? 'Input Baru' : 'Isi Jurnal' }}
                 </a>
+                @endcanVisit
               </div>
             </div>
 
@@ -733,9 +745,11 @@
                          {{ $todoDueTodayCount }} Hari Ini
                       </span>
                     @endif
+                    @canVisit('todos.index')
                     <a href="{{ route('todos.index') }}" class="px-2.5 py-1 bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-violet-100 transition-all">
                       Lihat Semua ({{ $todoPendingCount ?? 0 }})
                     </a>
+                    @endcanVisit
                   </div>
                 </div>
 
