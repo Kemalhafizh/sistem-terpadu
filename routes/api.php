@@ -260,6 +260,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::middleware('role:guru,teacher')->group(function () {
                 Route::get('teacher', [DailyAssessmentMobileApiController::class, 'teacherAssessments']);
                 Route::post('teacher', [DailyAssessmentMobileApiController::class, 'storeAssessment']);
+                Route::get('{id}/scores', [DailyAssessmentMobileApiController::class, 'assessmentScores'])->whereNumber('id');
                 Route::post('{id}/batch-scores', [DailyAssessmentMobileApiController::class, 'batchScores'])->whereNumber('id');
                 Route::post('{id}/auto-remedial', [DailyAssessmentMobileApiController::class, 'autoRemedial'])->whereNumber('id');
                 Route::post('remedials/{sessionId}/score', [DailyAssessmentMobileApiController::class, 'submitRemedialScore'])->whereNumber('sessionId');

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DailyAssessmentScore extends Model
 {
@@ -26,12 +27,14 @@ class DailyAssessmentScore extends Model
         'remedial_score' => 'decimal:2',
     ];
 
-    public function dailyAssessment()
+    /** @return BelongsTo<DailyAssessment, $this> */
+    public function dailyAssessment(): BelongsTo
     {
         return $this->belongsTo(DailyAssessment::class);
     }
 
-    public function student()
+    /** @return BelongsTo<Student, $this> */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }

@@ -25,9 +25,11 @@ class DailyAssessmentMobileApiController extends Controller
     public function teacherAssessments(Request $request): JsonResponse
     {
         $teacherId = $request->user()->id;
-        $assessments = DailyAssessment::with(['subject', 'classroom'])
+        // scored_count counts entered scores only: the web creates a blank row per
+        // student when an assessment is made. students_count is the class size.
+        $assessments = DailyAssessment::with(['subject', 'classroom' => fn ($q) => $q->withCount('students')])
             ->where('teacher_id', $teacherId)
-            ->withCount('scores')
+            ->withCount(['scores', 'scores as scored_count' => fn ($q) => $q->whereNotNull('score')])
             ->latest()
             ->get();
 
@@ -72,6 +74,54 @@ class DailyAssessmentMobileApiController extends Controller
             'message' => 'Penilaian harian berhasil dibuat',
             'data' => $assessment,
         ], 201);
+    }
+
+    /**
+     * The assessed class with each student's current score, so the teacher edits
+     * what is stored instead of starting blank. `score` is null until entered.
+     */
+    public function assessmentScores(Request $request, int $id): JsonResponse
+    {
+        $assessment = DailyAssessment::with(['subject:id,name', 'classroom:id,name'])->findOrFail($id);
+        StudentDataAccess::authorizeTeacherOwns($request->user(), $assessment->teacher_id);
+
+        $scores = DailyAssessmentScore::where('daily_assessment_id', $id)->get()->keyBy('student_id');
+
+        // name is an accessor over the related User, so sort after loading.
+        $students = Student::where('classroom_id', $assessment->classroom_id)
+            ->select('id', 'user_id', 'nis', 'nisn')
+            ->with('user:id,name')
+            ->get()
+            ->sortBy('name')
+            ->values()
+            ->map(function (Student $student) use ($scores) {
+                $row = $scores->get($student->id);
+
+                return [
+                    'student_id' => $student->id,
+                    'name' => $student->name,
+                    'nis' => $student->nis,
+                    'nisn' => $student->nisn,
+                    'score' => $row?->score !== null ? (float) $row->score : null,
+                    'notes' => $row?->notes,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'assessment' => [
+                    'id' => $assessment->id,
+                    'title' => $assessment->title,
+                    'assessment_date' => $assessment->assessment_date?->toDateString(),
+                    'kkm' => (float) $assessment->kkm,
+                    'max_score' => (float) $assessment->max_score,
+                    'subject_name' => $assessment->subject?->name,
+                    'classroom_name' => $assessment->classroom?->name,
+                ],
+                'students' => $students,
+            ],
+        ]);
     }
 
     public function batchScores(Request $request, int $id): JsonResponse
@@ -145,24 +195,30 @@ class DailyAssessmentMobileApiController extends Controller
 
     public function studentAssessments(Request $request): JsonResponse
     {
-        $studentId = $request->user()->id;
+        // Scores are keyed by students.id, not the signed-in users.id: looking them up
+        // by users.id returned whichever student happened to have that id.
+        $student = Student::where('user_id', $request->user()->id)->first();
+        if (! $student) {
+            return response()->json(['success' => true, 'data' => []]);
+        }
 
-        $scores = DailyAssessmentScore::with(['assessment.subject', 'assessment.classroom'])
-            ->where('student_id', $studentId)
+        $scores = DailyAssessmentScore::with(['dailyAssessment.subject', 'dailyAssessment.classroom'])
+            ->where('student_id', $student->id)
+            ->whereNotNull('score')
             ->latest()
             ->get()
-            ->map(function ($scoreItem) use ($studentId) {
-                $finalScore = $this->remedialService->getFinalScore($studentId, $scoreItem->daily_assessment_id);
+            ->map(function ($scoreItem) use ($student) {
+                $finalScore = $this->remedialService->getFinalScore($student->id, $scoreItem->daily_assessment_id);
 
                 return [
                     'id' => $scoreItem->id,
-                    'assessment_title' => $scoreItem->assessment->title ?? 'PH',
-                    'subject_name' => $scoreItem->assessment->subject->name ?? 'Mapel',
-                    'assessment_date' => $scoreItem->assessment->assessment_date,
-                    'kkm' => (float) ($scoreItem->assessment->kkm ?? 75.0),
+                    'assessment_title' => $scoreItem->dailyAssessment->title ?? 'PH',
+                    'subject_name' => $scoreItem->dailyAssessment->subject->name ?? 'Mapel',
+                    'assessment_date' => $scoreItem->dailyAssessment->assessment_date,
+                    'kkm' => (float) ($scoreItem->dailyAssessment->kkm ?? 75.0),
                     'original_score' => (float) $scoreItem->score,
                     'final_score' => $finalScore,
-                    'is_tuntas' => $finalScore >= (float) ($scoreItem->assessment->kkm ?? 75.0),
+                    'is_tuntas' => $finalScore >= (float) ($scoreItem->dailyAssessment->kkm ?? 75.0),
                 ];
             });
 

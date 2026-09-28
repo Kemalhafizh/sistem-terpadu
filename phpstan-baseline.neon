@@ -271,12 +271,6 @@ parameters:
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
 
 		-
-			message: '#^Relation ''students'' is not found in App\\Models\\Classroom model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -293,30 +287,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
-			message: '#^Relation ''assessment'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/DailyAssessmentMobileApiController.php
-
-		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/DailyAssessmentMobileApiController.php
-
-		-
-			message: '#^Relation ''scores'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/DailyAssessmentMobileApiController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/DailyAssessmentMobileApiController.php
 
 		-
 			message: '#^Relation ''template'' is not found in App\\Models\\ReportCardPdf model\.$#'
@@ -588,42 +558,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Http/Controllers/CurriculumController.php
-
-		-
-			message: '#^Relation ''academicYear'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/DailyAssessmentController.php
-
-		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: app/Http/Controllers/DailyAssessmentController.php
-
-		-
-			message: '#^Relation ''dailyAssessment'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/DailyAssessmentController.php
-
-		-
-			message: '#^Relation ''scores'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: app/Http/Controllers/DailyAssessmentController.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/DailyAssessmentController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 4
-			path: app/Http/Controllers/DailyAssessmentController.php
 
 		-
 			message: '#^Relation ''author'' is not found in App\\Models\\ForumThread model\.$#'
@@ -950,12 +884,6 @@ parameters:
 			path: app/Http/Controllers/FinancialReportController.php
 
 		-
-			message: '#^Relation ''students'' is not found in App\\Models\\Classroom model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/FinancialReportController.php
-
-		-
 			message: '#^Relation ''author'' is not found in App\\Models\\ForumReply model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1221,12 +1149,6 @@ parameters:
 			path: app/Http/Controllers/ParentPortalController.php
 
 		-
-			message: '#^Relation ''dailyAssessment'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ParentPortalController.php
-
-		-
 			message: '#^Relation ''payments'' is not found in App\\Models\\Billing model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1435,12 +1357,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Student/ShowcaseController.php
-
-		-
-			message: '#^Relation ''dailyAssessment'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/StudentAcademicController.php
 
 		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
@@ -1827,18 +1743,6 @@ parameters:
 			path: app/Services/Communication/MessagingService.php
 
 		-
-			message: '#^Relation ''dailyAssessment'' is not found in App\\Models\\DailyAssessmentScore model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Services/DailyAssessmentService.php
-
-		-
-			message: '#^Relation ''scores'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/DailyAssessmentService.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -2138,12 +2042,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/QuestionBankService.php
-
-		-
-			message: '#^Relation ''scores'' is not found in App\\Models\\DailyAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/RemedialWorkflowService.php
 
 		-
 			message: '#^Relation ''asset'' is not found in App\\Models\\AssetLoan model\.$#'

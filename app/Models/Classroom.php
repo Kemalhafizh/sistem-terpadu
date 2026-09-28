@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 
 class Classroom extends Model
@@ -18,7 +19,8 @@ class Classroom extends Model
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    public function students()
+    /** @return HasMany<Student, $this> */
+    public function students(): HasMany
     {
         return $this->hasMany(Student::class);
     }
