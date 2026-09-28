@@ -52,7 +52,23 @@ it('does not report zeros for a student with no records', function () {
         ->assertJsonPath('overallAverage', null)
         ->assertJsonPath('attendanceRate', null)
         ->assertJsonPath('attendanceRecorded', 0)
-        ->assertJsonPath('competencyRadar', []);
+        ->assertJsonPath('competencyRadar', [])
+        ->assertJsonPath('subjects', []);
+});
+
+it('lists every graded subject against its KKM', function () {
+    $student = studentIn($this->classroom);
+    $mapel = collect(['Biologi', 'Fisika', 'Kimia', 'Matematika', 'Sejarah', 'Sosiologi', 'Ekonomi'])
+        ->map(fn ($name) => $name === 'Fisika' ? $this->fisika : Subject::factory()->create(['name' => $name, 'kkm' => 70]));
+    $mapel->each(fn ($subject) => grade($student, $subject, 80, $this->year->id, $this->guru->id));
+    grade($student, $this->fisika, 60, $this->year->id, $this->guru->id, 'tugas');
+    Sanctum::actingAs($student->user);
+
+    $subjects = $this->getJson('/api/v1/analytics/student/summary')->assertOk()->json('subjects');
+
+    expect($subjects)->toHaveCount(7)
+        ->and($subjects[0]['name'])->toBe('Biologi')
+        ->and(collect($subjects)->firstWhere('name', 'Fisika'))->toBe(['name' => 'Fisika', 'average' => 70, 'kkm' => 75, 'gradesCount' => 2]);
 });
 
 it('lists this year\'s classes from assessments and grades, with ids', function () {

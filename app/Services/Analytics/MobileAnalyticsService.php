@@ -90,6 +90,14 @@ class MobileAnalyticsService
             ->map(fn ($item) => ['first' => $item['name'], 'second' => $item['avg']])
             ->toArray();
 
+        // Every subject graded this year; competencyRadar keeps its six for older apps.
+        $subjects = $bySubject->map(fn ($grades) => [
+            'name' => $grades->first()->subject->name,
+            'average' => round((float) $grades->avg('score'), 1),
+            'kkm' => (float) ($grades->first()->subject->kkm ?? 75),
+            'gradesCount' => $grades->count(),
+        ])->sortBy('name')->values()->toArray();
+
         return [
             'studentName' => $student->user->name ?? '',
             'className' => $classroom->name ?? '',
@@ -99,6 +107,7 @@ class MobileAnalyticsService
             'semesterTrends' => $semesterTrends,
             'competencyRadar' => $competencyRadar,
             'topSubjects' => $topSubjects,
+            'subjects' => $subjects,
         ];
     }
 
