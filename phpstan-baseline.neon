@@ -169,19 +169,7 @@ parameters:
 			path: app/Http/Controllers/Api/v1/ApiParentController.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiParentController.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiStudentController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/ApiStudentController.php
@@ -251,13 +239,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/DocumentMobileApiController.php
-
-		-
-			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Api/v1/LibraryMobileApiController.php
-
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\LibraryLoan model\.$#'
@@ -506,12 +487,6 @@ parameters:
 			path: app/Http/Controllers/DashboardController.php
 
 		-
-			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/DashboardController.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -549,12 +524,6 @@ parameters:
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Http/Controllers/DashboardController.php
@@ -878,12 +847,6 @@ parameters:
 			path: app/Http/Controllers/ImportExportController.php
 
 		-
-			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/LibraryCirculationController.php
-
-		-
 			message: '#^Relation ''creator'' is not found in App\\Models\\LibraryLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -993,12 +956,6 @@ parameters:
 			path: app/Http/Controllers/ParentPortalController.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ParentPortalController.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1039,12 +996,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Http/Controllers/QuestionBankController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ReportCardController.php
 
 		-
 			message: '#^Relation ''assets'' is not found in App\\Models\\Room model\.$#'
@@ -1159,12 +1110,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Student/ShowcaseController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/StudentAcademicController.php
 
 		-
 			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
@@ -1407,12 +1352,6 @@ parameters:
 			path: app/Http/Controllers/WorkflowController.php
 
 		-
-			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Jobs/SendLibraryDueReminderJob.php
-
-		-
 			message: '#^Relation ''student'' is not found in App\\Models\\LibraryLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1485,12 +1424,6 @@ parameters:
 			path: app/Services/Analytics/MobileAnalyticsService.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Services/Analytics/MobileAnalyticsService.php
-
-		-
 			message: '#^Relation ''menu'' is not found in App\\Models\\MealPlan model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1509,28 +1442,10 @@ parameters:
 			path: app/Services/Communication/MessagingService.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Dashboard/TeacherPerformance360Service.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Debloat/PragmaticSyncService.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/Debloat/PragmaticSyncService.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/DigestService.php
 
 		-
 			message: '#^Relation ''category'' is not found in App\\Models\\StudentPointLog model\.$#'
@@ -1701,13 +1616,6 @@ parameters:
 			path: app/Services/Integration/SyncMapperService.php
 
 		-
-			message: '#^Relation ''book'' is not found in App\\Models\\LibraryLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 6
-			path: app/Services/LibraryService.php
-
-
-		-
 			message: '#^Relation ''student'' is not found in App\\Models\\LibraryLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1787,12 +1695,6 @@ parameters:
 
 		-
 			message: '#^Relation ''healthRecord'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/StudentProfile360Service.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/StudentProfile360Service.php

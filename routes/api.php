@@ -249,9 +249,9 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('current', [ERaporApiController::class, 'getCurrentRapor'])->middleware('role:student,siswa');
             // Pemilik data dicek di controller (StudentDataAccess): ortu hanya anaknya.
             Route::get('child/{childId}', [ERaporApiController::class, 'getChildRapor'])
-                ->middleware('role:parent,orang_tua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
+                ->middleware('role:parent,orang_tua,orangtua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
             Route::post('generate-pdf', [ERaporApiController::class, 'generatePdf'])
-                ->middleware('role:student,siswa,parent,orang_tua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
+                ->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
         });
 
         // === FASE 91: PENILAIAN HARIAN & REMEDIAL WORKFLOW ===
@@ -606,7 +606,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('student/summary', [MobileAnalyticsController::class, 'studentSummary'])->middleware('role:student,siswa');
             Route::get('teacher/my-classes', [MobileAnalyticsController::class, 'teacherClasses'])->middleware('role:guru,teacher,bk,admin,superadmin,kepala_sekolah');
             Route::get('teacher/class-performance', [MobileAnalyticsController::class, 'classPerformance'])->middleware('role:guru,teacher,bk,admin,superadmin,kepala_sekolah');
-            Route::get('parent/child-progress', [MobileAnalyticsController::class, 'parentChildProgress'])->middleware('role:parent,orang_tua');
+            Route::get('parent/child-progress', [MobileAnalyticsController::class, 'parentChildProgress'])->middleware('role:parent,orang_tua,orangtua,wali_murid');
             Route::get('executive/kpi', [MobileAnalyticsController::class, 'executiveKpi'])->middleware('role:admin,superadmin,kepala_sekolah,staf_tu');
         });
 

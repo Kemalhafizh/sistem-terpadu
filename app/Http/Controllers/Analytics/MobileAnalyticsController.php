@@ -67,9 +67,14 @@ class MobileAnalyticsController extends Controller
 
     public function parentChildProgress(Request $request): JsonResponse
     {
-        $requestedId = $request->query('student_id');
+        // student_id is students.id or the uuid from parent/children; none = the first child.
+        $requested = (string) $request->query('student_id', '');
         $query = Student::where('parent_id', $request->user()->id);
-        $student = $requestedId ? $query->where('id', $requestedId)->first() : $query->first();
+        $student = match (true) {
+            $requested === '' => $query->first(),
+            ctype_digit($requested) => $query->where('id', (int) $requested)->first(),
+            default => $query->where('uuid', $requested)->first(),
+        };
 
         if (! $student) {
             return response()->json(['message' => 'Data anak tidak ditemukan untuk akun ini.'], 404);

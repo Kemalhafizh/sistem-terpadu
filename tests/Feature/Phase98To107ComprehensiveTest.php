@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Student;
 use App\Models\User;
 
 beforeEach(function () {
@@ -191,18 +192,22 @@ test('Fase 105: Offline-first sync delta, batch processing and version check wor
 });
 
 test('Fase 106: Parent portal activity feed, weekly digest, benchmarks and actions work', function () {
+    // A student sees only their own profile; an account without one gets nothing
+    // (it used to fall back to students.id = 1).
+    $own = Student::factory()->create(['user_id' => $this->user->id])->id;
+
     // 1. Activity Feed
-    $feedResp = $this->actingAs($this->user)->getJson('/api/v1/parent/child/1/feed');
+    $feedResp = $this->actingAs($this->user)->getJson("/api/v1/parent/child/{$own}/feed");
     $feedResp->assertStatus(200)
         ->assertJsonStructure(['success', 'data']);
 
     // 2. Weekly Digest
-    $digestResp = $this->actingAs($this->user)->getJson('/api/v1/parent/child/1/digest');
+    $digestResp = $this->actingAs($this->user)->getJson("/api/v1/parent/child/{$own}/digest");
     $digestResp->assertStatus(200)
         ->assertJsonStructure(['success', 'data' => ['weekStart', 'attendancePercentage', 'averageGrade', 'ibadahScore', 'highlights']]);
 
     // 3. Class Benchmark
-    $benchResp = $this->actingAs($this->user)->getJson('/api/v1/parent/child/1/benchmark');
+    $benchResp = $this->actingAs($this->user)->getJson("/api/v1/parent/child/{$own}/benchmark");
     $benchResp->assertStatus(200)
         ->assertJsonStructure(['success', 'data']);
 
