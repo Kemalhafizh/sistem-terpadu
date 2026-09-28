@@ -45,12 +45,14 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function parent()
+    /** @return BelongsTo<User, $this> */
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'parent_id');
     }
 
-    public function classroom()
+    /** @return BelongsTo<Classroom, $this> */
+    public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
     }

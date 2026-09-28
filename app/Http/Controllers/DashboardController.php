@@ -121,7 +121,7 @@ class DashboardController extends Controller
 
             case 'waka_kesiswaan':
                 $data = $this->getAdminStats($user);
-                $data['recent_students'] = Student::with('classroom.user')->latest()->take(5)->get();
+                $data['recent_students'] = Student::with(['user', 'classroom'])->latest()->take(5)->get();
                 break;
 
             case 'guru':
