@@ -134,3 +134,29 @@ test('students cannot use the question bank', function () {
     Sanctum::actingAs($this->studentUser);
     $this->getJson('/api/v1/question-bank/items')->assertForbidden();
 });
+
+test('a parent account of any spelling sees only their own child\'s 360 profile', function () {
+    // "orang_tua" parents used to skip the parent check and read any student.
+    $orangTua = User::factory()->create(['role' => 'orang_tua', 'must_change_password' => false]);
+    Student::factory()->create(['user_id' => User::factory()->create(['role' => 'student'])->id, 'parent_id' => $orangTua->id]);
+
+    Sanctum::actingAs($orangTua);
+    $this->getJson("/api/v1/profile/student/{$this->studentUser->id}")->assertForbidden();
+
+    Sanctum::actingAs($this->parent);
+    $this->getJson("/api/v1/profile/student/{$this->studentUser->id}")->assertOk();
+});
+
+test('accounts outside school roles cannot read student profiles or health records', function () {
+    Sanctum::actingAs(User::factory()->create(['role' => 'merchant', 'must_change_password' => false]));
+
+    $this->getJson("/api/v1/profile/student/{$this->studentUser->id}")->assertForbidden();
+    $this->getJson("/api/v1/uks/screening/{$this->studentRecord->id}")->assertForbidden();
+});
+
+test('orang_tua parents reach the parent API like any parent', function () {
+    $orangTua = User::factory()->create(['role' => 'orang_tua', 'must_change_password' => false]);
+    Sanctum::actingAs($orangTua);
+
+    $this->getJson('/api/v1/parent/children')->assertOk();
+});

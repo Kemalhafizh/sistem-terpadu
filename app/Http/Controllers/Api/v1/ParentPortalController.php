@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Services\ParentExperienceService;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
@@ -26,13 +27,17 @@ class ParentPortalController extends Controller
             abort(401, 'Unauthenticated');
         }
 
-        // 1. Admin / Superadmin has global access
-        if (in_array($user->role, ['admin', 'superadmin'], true)) {
-            return $childId ?? 1;
+        // 1. Superadmin may look at any child, but must say which one.
+        if ($user->role === 'superadmin') {
+            if ($childId === null) {
+                abort(422, 'Parameter child_id wajib diisi.');
+            }
+
+            return $childId;
         }
 
         // 2. Parent / Orangtua: must be registered parent of this child
-        if (in_array($user->role, ['parent', 'orangtua'], true)) {
+        if (in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
             $studentQuery = Student::where('parent_id', $user->id);
             if ($childId !== null) {
                 $child = $studentQuery->where('id', $childId)->first();

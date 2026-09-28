@@ -6,6 +6,7 @@ use App\Models\PointCategory;
 use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\WarningLetter;
+use App\Support\Access\StudentDataAccess;
 use Exception;
 
 class DisciplineService
@@ -107,7 +108,7 @@ class DisciplineService
         // Same rule signWarningLetter() enforces, so the app only offers the
         // signature pad to someone whose signature the server will accept.
         $viewerIsThisParent = $viewer
-            && in_array($viewer->role, ['parent', 'orangtua'], true)
+            && in_array($viewer->role, StudentDataAccess::PARENT_ROLES, true)
             && $student->parent_id === $viewer->id;
 
         return WarningLetter::where('student_id', $student->id)
@@ -136,7 +137,7 @@ class DisciplineService
         $letter = WarningLetter::findOrFail($letterId);
 
         // Validasi: yang sign harus parent dari siswa yang bersangkutan
-        if ($user->role !== 'parent' && $user->role !== 'orangtua') {
+        if (! in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
             throw new Exception('Akses ditolak. Hanya orang tua/wali yang dapat menandatangani surat peringatan.');
         }
 

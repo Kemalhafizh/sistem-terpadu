@@ -14,6 +14,7 @@ use App\Models\Grade;
 use App\Models\ParentMessage;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class ApiParentController extends Controller
     {
         $user = $request->user();
 
-        if ($user->role !== 'parent') {
+        if (! in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
             return $this->errorResponse('Unauthorized access', 403);
         }
 

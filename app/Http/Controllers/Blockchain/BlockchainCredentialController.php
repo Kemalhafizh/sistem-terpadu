@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Blockchain;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlockchainCredential;
+use App\Models\User;
 use App\Services\Blockchain\BlockchainCredentialService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,13 +20,20 @@ class BlockchainCredentialController extends Controller
     public function issue(Request $request): JsonResponse
     {
         $validated = $request->validate([
+            'student_id' => 'required|integer|exists:users,id',
             'credential_type' => 'required|string|in:diploma,transcript,achievement,tahfidz_sanad',
             'certificate_number' => 'required|string|unique:blockchain_credentials,certificate_number',
             'metadata' => 'required|array',
         ]);
 
+        // The school issues to a student (or alumnus); never to itself.
+        $recipient = User::findOrFail($validated['student_id']);
+        if (! in_array($recipient->role, ['student', 'siswa', 'alumni'], true)) {
+            abort(422, 'Kredensial hanya dapat diterbitkan untuk siswa atau alumni.');
+        }
+
         $credential = $this->credentialService->issueCredential(
-            $request->user(),
+            $recipient,
             $validated['credential_type'],
             $validated['certificate_number'],
             $validated['metadata']

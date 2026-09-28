@@ -299,7 +299,12 @@ class MobileApiSecurityAndQcTest extends TestCase
      */
     public function test_utbk_submit_handles_null_student_cleanly(): void
     {
-        $userWithoutStudent = User::factory()->create(['role' => 'guru']);
+        // Non-students never reach the endpoint at all…
+        Sanctum::actingAs(User::factory()->create(['role' => 'guru']));
+        $this->postJson('/api/v1/utbk/tryouts/1/submit', ['answers' => [1 => 'A']])->assertForbidden();
+
+        // …and a student account without its student record gets a clear 422.
+        $userWithoutStudent = User::factory()->create(['role' => 'student']);
         Sanctum::actingAs($userWithoutStudent);
 
         $response = $this->postJson('/api/v1/utbk/tryouts/1/submit', [

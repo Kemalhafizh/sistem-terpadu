@@ -26,9 +26,19 @@ class Fase72SmartCampusIot2Test extends TestCase
         $enrollRes->assertStatus(200);
         $enrollRes->assertJsonPath('success', true);
 
-        // 2. Match at Gate Terminal with close vector
+        // 2. Match at Gate Terminal with close vector. Only the gate's
+        // operator account may log attendance; a student may not.
         $capturedVector = array_fill(0, 512, 0.151); // very close Euclidean distance
-        $matchRes = $this->actingAs($student, 'sanctum')->postJson('/api/v1/iot/face/match', [
+        $gate = [
+            'gate_camera_id' => 'CAM-GATE-NORTH-01',
+            'gate_location' => 'Gerbang Utama Sultan Agung',
+            'captured_vector' => $capturedVector,
+            'liveness_verified' => true,
+        ];
+        $this->actingAs($student, 'sanctum')->postJson('/api/v1/iot/face/match', $gate)->assertForbidden();
+
+        $gateOperator = User::factory()->create(['role' => 'operator']);
+        $matchRes = $this->actingAs($gateOperator, 'sanctum')->postJson('/api/v1/iot/face/match', [
             'gate_camera_id' => 'CAM-GATE-NORTH-01',
             'gate_location' => 'Gerbang Utama Sultan Agung',
             'captured_vector' => $capturedVector,

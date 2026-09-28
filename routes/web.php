@@ -812,7 +812,7 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // PARENT PORTAL â€” Area Premium Wali Murid
     // =========================================================
-    Route::middleware(['role:parent'])->prefix('parent-portal')->name('parent-portal.')->group(function () {
+    Route::middleware(['role:parent,orang_tua,orangtua,wali_murid'])->prefix('parent-portal')->name('parent-portal.')->group(function () {
         Route::get('/', [ParentPortalController::class, 'dashboard'])->name('dashboard');
         Route::get('child/{student}/report-card', [ParentPortalController::class, 'viewReportCard'])->name('report-card');
         Route::get('child/{student}/schedule', [ParentPortalController::class, 'viewSchedule'])->name('schedule');

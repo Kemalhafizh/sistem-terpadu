@@ -16,7 +16,8 @@ class StudentDataAccess
 {
     public const STUDENT_ROLES = ['student', 'siswa'];
 
-    public const PARENT_ROLES = ['parent', 'orang_tua', 'wali_murid'];
+    /** Every spelling of "parent" the school's accounts use. */
+    public const PARENT_ROLES = ['parent', 'orang_tua', 'orangtua', 'wali_murid'];
 
     public const TEACHER_ROLES = ['guru', 'teacher'];
 

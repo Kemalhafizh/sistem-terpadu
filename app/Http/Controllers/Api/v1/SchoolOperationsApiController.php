@@ -15,6 +15,7 @@ use App\Models\TeachingJournal;
 use App\Models\UksMedicine;
 use App\Models\UksVisit;
 use App\Notifications\UksVisitNotification;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -318,7 +319,7 @@ class SchoolOperationsApiController extends Controller
             return $own;
         }
 
-        if ($user->role === 'parent') {
+        if (in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
             if (! $requestedStudentId) {
                 abort(422, 'Parameter student_id wajib diisi untuk melihat data UKS anak.');
             }
