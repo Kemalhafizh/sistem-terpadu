@@ -107,3 +107,31 @@ test('the bill shortcut appears only when a bill is actually open', function () 
     $ids = collect($this->getJson('/api/v1/parent/actions')->assertOk()->json('data'))->pluck('id');
     expect($ids)->not->toContain('pay_spp');
 });
+
+test('the child summary says "no data" instead of 100% attendance or an average of 0', function () {
+    Sanctum::actingAs($this->parent);
+
+    $this->getJson("/api/v1/parent/child/{$this->child->uuid}/summary")->assertOk()
+        ->assertJsonPath('data.statistics.attendance_rate', null)
+        ->assertJsonPath('data.statistics.average_grade', null)
+        ->assertJsonPath('data.statistics.total_bk_points', 0);
+});
+
+test('the child summary counts this year only and never counts achievements as violations', function () {
+    $lastYear = AcademicYear::factory()->create(['is_active' => false]);
+    Attendance::create([
+        'student_id' => $this->child->id, 'academic_year_id' => $lastYear->id, 'classroom_id' => $this->classroom->id,
+        'date' => '2025-10-01', 'status' => 'A', 'recorded_by' => $this->teacher->id,
+    ]);
+    ($this->attend)($this->child, '2026-09-29', 'H');
+    ($this->attend)($this->child, '2026-09-30', 'S');
+    ($this->grade)($this->child, 'uh', 70);
+    StudentPointLog::create(['student_id' => $this->child->id, 'type' => 'reward', 'points' => 20, 'description' => 'Juara', 'created_by' => $this->teacher->id]);
+    StudentPointLog::create(['student_id' => $this->child->id, 'type' => 'penalty', 'points' => 5, 'description' => 'Terlambat', 'created_by' => $this->teacher->id]);
+
+    Sanctum::actingAs($this->parent);
+    $this->getJson("/api/v1/parent/child/{$this->child->uuid}/summary")->assertOk()
+        ->assertJsonPath('data.statistics.attendance_rate', 50)
+        ->assertJsonPath('data.statistics.average_grade', 70)
+        ->assertJsonPath('data.statistics.total_bk_points', 5);
+});

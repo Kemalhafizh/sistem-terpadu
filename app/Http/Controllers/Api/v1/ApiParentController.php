@@ -10,6 +10,7 @@ use App\Http\Resources\GradeResource;
 use App\Http\Resources\ParentMessageResource;
 use App\Http\Resources\PointLogResource;
 use App\Http\Resources\StudentResource;
+use App\Models\AcademicYear;
 use App\Models\Grade;
 use App\Models\ParentMessage;
 use App\Models\Student;
@@ -64,19 +65,22 @@ class ApiParentController extends Controller
             return $student;
         }
 
-        // 1. Rata-rata Nilai
-        $gradesAvg = round(Grade::where('student_id', $student->id)->avg('score') ?? 0, 2);
+        // This academic year, as the app labels it. No records means "no data" (null),
+        // not 100% attendance or an average of 0.
+        $year = AcademicYear::current();
+        $inYear = fn ($q) => $year ? $q->where('academic_year_id', $year->id) : $q;
 
-        // 2. Kehadiran Rate (%)
-        $totalDays = $student->attendances()->count();
-        $presentDays = $student->attendances()->where('status', 'H')->count();
-        $attendanceRate = $totalDays > 0 ? round(($presentDays / $totalDays) * 100, 2) : 100.00;
+        $gradesAvg = $inYear(Grade::where('student_id', $student->id))->avg('score');
 
-        // 3. Jumlah Tagihan Belum Lunas
+        $attendance = $inYear($student->attendances())->toBase()
+            ->selectRaw("COUNT(*) as total, SUM(CASE WHEN status = 'H' THEN 1 ELSE 0 END) as present")->first();
+        $totalDays = (int) ($attendance->total ?? 0);
+        $attendanceRate = $totalDays > 0 ? round(((int) $attendance->present / $totalDays) * 100, 2) : null;
+
         $unpaidBillings = $student->billings()->where('status', '!=', 'paid')->count();
 
-        // 4. Total Poin Pelanggaran BK
-        $totalPoints = (int) $student->pointLogs()->sum('points');
+        // Violation points only: reward points are achievements, not violations.
+        $totalPoints = (int) $student->pointLogs()->where('type', '!=', 'reward')->sum('points');
 
         return $this->successResponse([
             'student' => [
@@ -87,7 +91,7 @@ class ApiParentController extends Controller
                 'homeroom_teacher' => $student->classroom->teacher->name ?? null,
             ],
             'statistics' => [
-                'average_grade' => $gradesAvg,
+                'average_grade' => $gradesAvg === null ? null : round((float) $gradesAvg, 2),
                 'attendance_rate' => $attendanceRate,
                 'unpaid_billings_count' => $unpaidBillings,
                 'total_bk_points' => $totalPoints,
