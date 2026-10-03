@@ -72,36 +72,7 @@ class DashboardController extends Controller
 
     private function getAnnouncements(User $user)
     {
-        return Announcement::where('is_active', true)
-            ->where(function ($query) {
-                $query->whereNull('expires_at')
-                    ->orWhere('expires_at', '>', now());
-            })
-            ->where(function ($query) use ($user) {
-                $query->where(function ($q) use ($user) {
-                    $q->whereNull('target_role')
-                        ->orWhere('target_role', $user->role);
-                });
-
-                if (in_array($user->role, ['student', 'parent'])) {
-                    $student = $user->role === 'student' ? $user->student : $user->children()->first();
-                    $classId = $student?->classroom_id;
-
-                    $query->where(function ($q) use ($classId) {
-                        $q->whereNull('target_classroom_id')
-                            ->when($classId, fn ($sq) => $sq->orWhere('target_classroom_id', $classId));
-                    });
-                }
-
-                if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
-                    $query->orWhereNotNull('id');
-                }
-            })
-            ->with('creator')
-            ->orderByDesc('is_pinned')
-            ->latest()
-            ->take(5)
-            ->get();
+        return Announcement::visibleTo($user)->with('creator')->take(5)->get();
     }
 
     private function getRoleSpecificData(User $user)

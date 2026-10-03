@@ -159,14 +159,7 @@ class MobileDataController extends Controller
     public function getAnnouncements(Request $request)
     {
         $user = $request->user();
-        $announcements = Announcement::where('is_active', true)
-            ->where(function ($query) use ($user) {
-                $query->whereNull('target_role')
-                    ->orWhere('target_role', $user->role);
-            })
-            ->latest()
-            ->take(10)
-            ->get();
+        $announcements = Announcement::visibleTo($user)->with('creator')->take(10)->get();
 
         return $this->successResponse(AnnouncementResource::collection($announcements));
     }
