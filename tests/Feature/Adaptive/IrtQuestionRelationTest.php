@@ -1,11 +1,15 @@
 <?php
 
 use App\Models\CatItemResponse;
+use App\Models\Exam;
+use App\Models\ExamAttempt;
 use App\Models\IrtItemParameter;
 use App\Models\QuestionBank;
+use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
 use App\Services\Adaptive\IrtCalibrationService;
+use Illuminate\Support\Str;
 
 /*
  * Regression: irt_item_parameters / cat_item_responses referenced a
@@ -27,6 +31,13 @@ beforeEach(function () {
 });
 
 test('kalibrasi IRT tersimpan untuk soal bank CBT', function () {
+    $exam = Exam::factory()->create(['subject_id' => $this->question->subject_id]);
+    $exam->questions()->attach($this->question->id, ['order' => 1]);
+    ExamAttempt::create([
+        'uuid' => (string) Str::uuid(), 'exam_id' => $exam->id, 'student_id' => Student::factory()->create()->id,
+        'answers' => [$this->question->id => 'B'], 'started_at' => now()->subHour(), 'submitted_at' => now(), 'status' => 'submitted',
+    ]);
+
     $item = app(IrtCalibrationService::class)->calibrateItem($this->question->id);
 
     expect($item->exists)->toBeTrue()

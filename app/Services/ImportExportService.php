@@ -14,6 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ImportExportService
@@ -410,12 +411,16 @@ class ImportExportService
 
                 } elseif ($module === 'employees') {
                     // 1. Create User
-                    $empNum = ($mappedData['employee_number'] ?? null) ?: rand(100000, 999999);
+                    // The employee number is the initial password. Without one there is
+                    // no password anyone knows, so set an unguessable one and let the
+                    // employee activate the account through "lupa password". (This used
+                    // to be rand(100000, 999999): a 6-digit password nobody was told.)
+                    $initialPassword = ($mappedData['employee_number'] ?? null) ?: Str::password(32);
                     $user = User::create([
                         'name' => $mappedData['name'],
                         'email' => $mappedData['email'],
                         'phone_number' => $mappedData['phone_number'] ?? null,
-                        'password' => Hash::make($empNum),
+                        'password' => Hash::make($initialPassword),
                         'role' => $mappedData['role'],
                         'must_change_password' => true,
                     ]);

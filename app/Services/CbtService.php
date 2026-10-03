@@ -145,6 +145,20 @@ class CbtService
     }
 
     /**
+     * Whether a student's answer to a bank question is correct. Shared by
+     * auto-grading and IRT calibration so both judge answers the same way.
+     */
+    public static function isCorrectAnswer(QuestionBank $question, mixed $answer): bool
+    {
+        if ($question->type === 'multiple_choice') {
+            return strtoupper(trim((string) $answer)) === strtoupper(trim((string) $question->correct_answer));
+        }
+
+        // True/false and essay: case-insensitive exact match.
+        return strtolower(trim((string) $answer)) === strtolower(trim((string) $question->correct_answer));
+    }
+
+    /**
      * Auto-grades an exam attempt based on correct answers and question weights.
      */
     public function autoGrade(ExamAttempt $attempt): ExamAttempt
@@ -168,16 +182,7 @@ class CbtService
             if (is_null($studentAnswer) || $studentAnswer === '') {
                 $unansweredCount++;
             } else {
-                $isCorrect = false;
-
-                if ($question->type === 'multiple_choice') {
-                    $isCorrect = (strtoupper(trim($studentAnswer)) === strtoupper(trim($question->correct_answer)));
-                } elseif ($question->type === 'true_false') {
-                    $isCorrect = (strtolower(trim($studentAnswer)) === strtolower(trim($question->correct_answer)));
-                } else {
-                    // Essay: Simple case-insensitive exact trim match for automated lifecycle testing
-                    $isCorrect = (strtolower(trim($studentAnswer)) === strtolower(trim($question->correct_answer)));
-                }
+                $isCorrect = self::isCorrectAnswer($question, $studentAnswer);
 
                 if ($isCorrect) {
                     $correctCount++;

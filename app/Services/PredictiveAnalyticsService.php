@@ -136,36 +136,49 @@ class PredictiveAnalyticsService
     }
 
     /**
-     * Generate trend forecast using simple moving average.
+     * Monthly trend of a metric over the last $months months, plus a 3-month
+     * simple-moving-average projection.
+     *
+     * Supported metric: 'finance' = percentage of the billed amount that has
+     * been paid, for billings due in that month. Months without billings are
+     * null (no data), not a made-up value; the projection only uses real
+     * months and is null when there are none. (This used to plot rand(80, 95).)
+     *
+     * @return list<array{month: string, actual: float|null, forecast: float|null}>
      */
     public function generateTrendForecast(string $metric, int $months = 6): array
     {
-        // Mocking moving average calculation for demonstration based on metric type
-        $data = [];
-        $currentDate = now();
-
-        for ($i = $months; $i >= 1; $i--) {
-            $month = $currentDate->copy()->subMonths($i)->format('Y-m');
-            // Generate some plausible historical data based on metric
-            $val = $metric === 'finance' ? rand(80, 95) : rand(90, 98);
-            $data[] = [
-                'month' => $month,
-                'actual' => $val,
-                'forecast' => null,
-            ];
+        if ($metric !== 'finance') {
+            throw new \InvalidArgumentException("Metrik tren [{$metric}] belum memiliki sumber data.");
         }
 
-        // Calculate Simple Moving Average for next 3 months
-        $historicalValues = array_column($data, 'actual');
+        $start = now()->startOfMonth()->subMonths($months);
+        $end = now()->startOfMonth()->subDay();
+
+        $rates = DB::table('billings')
+            ->whereBetween('due_date', [$start->toDateString(), $end->toDateString()])
+            ->get(['due_date', 'amount', 'remaining_balance'])
+            ->groupBy(fn ($row) => substr((string) $row->due_date, 0, 7))
+            ->map(function ($rows) {
+                $total = (float) $rows->sum('amount');
+
+                return $total > 0 ? round(($total - (float) $rows->sum('remaining_balance')) / $total * 100, 1) : null;
+            });
+
+        $data = [];
+        for ($i = $months; $i >= 1; $i--) {
+            $month = now()->startOfMonth()->subMonths($i)->format('Y-m');
+            $data[] = ['month' => $month, 'actual' => $rates[$month] ?? null, 'forecast' => null];
+        }
+
+        $history = array_values(array_filter(array_column($data, 'actual'), fn ($v) => $v !== null));
         for ($i = 0; $i < 3; $i++) {
-            $month = $currentDate->copy()->addMonths($i)->format('Y-m');
-            $avg = count($historicalValues) > 0 ? array_sum(array_slice($historicalValues, -3)) / 3 : 90;
-            $data[] = [
-                'month' => $month,
-                'actual' => null,
-                'forecast' => round($avg, 1),
-            ];
-            $historicalValues[] = $avg;
+            $window = array_slice($history, -3);
+            $avg = $window === [] ? null : round(array_sum($window) / count($window), 1);
+            $data[] = ['month' => now()->startOfMonth()->addMonths($i)->format('Y-m'), 'actual' => null, 'forecast' => $avg];
+            if ($avg !== null) {
+                $history[] = $avg;
+            }
         }
 
         return $data;
@@ -183,10 +196,11 @@ class PredictiveAnalyticsService
         $attendance = 100 - $riskData['attendance_risk'];
         $behavior = 100 - $riskData['behavior_risk'];
 
-        // Additional mock dimensions for complete radar
-        $elearning = rand(60, 100);
-        $tahfidz = rand(50, 100);
-        $extracurricular = rand(70, 100);
+        // No scoring source is defined yet for these three dimensions; they
+        // are null (no data) instead of the random 50–100 values they used to be.
+        $elearning = null;
+        $tahfidz = null;
+        $extracurricular = null;
 
         return [
             'labels' => ['Akademik', 'Kehadiran', 'Perilaku', 'E-Learning', 'Tahfidz', 'Ekstrakurikuler'],

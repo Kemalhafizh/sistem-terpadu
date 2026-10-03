@@ -25,8 +25,12 @@
                 <!-- Forecast Line Chart -->
                 <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                     <h4 class="text-lg font-black text-gray-900 dark:text-white mb-2">Proyeksi Collection Rate</h4>
-                    <p class="text-xs text-gray-400 font-bold mb-6">Analisis Historis dan Proyeksi AI (Moving Average)</p>
-                    <div id="financeForecastChart" class="w-full h-80"></div>
+                    <p class="text-xs text-gray-400 font-bold mb-6">Persentase tagihan terbayar per bulan jatuh tempo; proyeksi = rata-rata bergerak 3 bulan</p>
+                    @if (collect($forecast)->whereNotNull('actual')->isEmpty())
+                        <p class="text-sm text-gray-500 font-bold">Belum ada tagihan jatuh tempo dalam 6 bulan terakhir, jadi belum ada tren yang bisa dihitung.</p>
+                    @else
+                        <div id="financeForecastChart" class="w-full h-80"></div>
+                    @endif
                 </div>
 
                 <div class="bg-amber-50 dark:bg-amber-900/20 rounded-[2.5rem] p-8 shadow-sm border border-amber-100 dark:border-amber-800/50 flex flex-col justify-center">
@@ -52,6 +56,8 @@
             const textColor = isDark ? '#cbd5e1' : '#475569';
             const gridColor = isDark ? '#334155' : '#e2e8f0';
 
+            const chartEl = document.querySelector("#financeForecastChart");
+            if (!chartEl) return;
             const forecastData = @json($forecast);
             const months = forecastData.map(d => d.month);
             const actual = forecastData.map(d => d.actual);
@@ -64,14 +70,14 @@
                     { name: 'Proyeksi (%)', data: projected }
                 ],
                 xaxis: { categories: months, labels: { style: { colors: textColor } } },
-                yaxis: { labels: { style: { colors: textColor } } },
+                yaxis: { min: 0, max: 100, labels: { style: { colors: textColor } } },
                 colors: ['#10b981', '#f59e0b'],
                 stroke: { width: [3, 3], dashArray: [0, 5], curve: 'smooth' },
                 grid: { borderColor: gridColor },
                 legend: { labels: { colors: textColor } },
                 tooltip: { theme: isDark ? 'dark' : 'light' }
             };
-            new ApexCharts(document.querySelector("#financeForecastChart"), options).render();
+            new ApexCharts(chartEl, options).render();
         });
     </script>
 </x-app-layout>

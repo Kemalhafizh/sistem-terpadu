@@ -41,7 +41,9 @@ class BlockchainCredentialService
             'merkle_root' => $merkleRoot,
             'transaction_hash' => $mockTxHash,
             'contract_address' => $contractAddress,
-            'block_number' => random_int(18000000, 19000000),
+            // Nothing is broadcast to a chain yet, so there is no block to point
+            // at. This used to be random_int(18000000, 19000000).
+            'block_number' => null,
             'issued_at' => now(),
             'metadata_json' => $metadata,
         ]);
