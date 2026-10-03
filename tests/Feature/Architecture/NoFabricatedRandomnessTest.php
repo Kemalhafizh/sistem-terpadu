@@ -41,17 +41,6 @@ class NoFabricatedRandomnessTest extends TestCase
 
     /** @var array<string, array<string, int>> file => call => how many remain */
     private const DEBT = [
-        // Identitas palsu: NIK, KK, NISN, nomor ijazah dan akta acak sebagai "hasil OCR".
-        'app/Services/Content/OcrProcessingService.php' => ['rand' => 5],
-        // Riwayat tren dan dimensi radar (e-learning, tahfidz, ekskul) diacak.
-        'app/Services/PredictiveAnalyticsService.php' => ['rand' => 5],
-        // Parameter IRT dan item CAT diacak, bukan dikalibrasi dari jawaban.
-        'app/Services/Adaptive/IrtCalibrationService.php' => ['rand' => 4],
-        'app/Services/Adaptive/CatEngineService.php' => ['rand' => 1],
-        // "Nomor blok" kredensial blockchain diacak.
-        'app/Services/Blockchain/BlockchainCredentialService.php' => ['random_int' => 1],
-        // Nomor pegawai acak saat kolom impor kosong.
-        'app/Services/ImportExportService.php' => ['rand' => 1],
         // Nomor tiket BK acak dan klaim WhatsApp terkirim.
         'app/Services/BusinessRuleEngineService.php' => ['rand' => 1],
         // Jurnal "berhasil disimpan & disahkan" dengan id acak.
