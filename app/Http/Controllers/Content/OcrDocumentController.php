@@ -37,7 +37,7 @@ class OcrDocumentController extends Controller
         $doc = $ocrService->processDocument($filePath, $request->document_type, $userId);
 
         return redirect()->route('ocr.review', $doc->id)
-            ->with('success', "Dokumen [{$doc->document_type}] berhasil di-ekstraksi oleh OCR Engine (Confidence: ".($doc->confidence_score * 100).'%)!');
+            ->with('info', "Dokumen [{$doc->document_type}] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.");
     }
 
     /**

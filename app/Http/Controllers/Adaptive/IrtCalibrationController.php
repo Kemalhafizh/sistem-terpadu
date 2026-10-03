@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Adaptive;
 
 use App\Http\Controllers\Controller;
+use App\Services\Adaptive\IrtCalibrationService;
 
 class IrtCalibrationController extends Controller
 {
@@ -11,10 +12,15 @@ class IrtCalibrationController extends Controller
         return view('adaptive.calibration.dashboard');
     }
 
-    public function batchCalibrate($examId)
+    public function batchCalibrate($examId, IrtCalibrationService $calibration)
     {
-        // logic
-        return redirect()->back();
+        $result = $calibration->batchCalibrateExam((int) $examId);
+
+        if ($result['calibrated_count'] === 0) {
+            return redirect()->back()->with('info', 'Belum ada jawaban siswa pada ujian ini, jadi belum ada soal yang bisa dikalibrasi.');
+        }
+
+        return redirect()->back()->with('success', "{$result['calibrated_count']} soal dikalibrasi dari jawaban siswa; {$result['skipped_count']} soal belum memiliki jawaban.");
     }
 
     public function itemDetail($questionId)

@@ -183,8 +183,7 @@ test('tidak ada kontak, NPSN, atau pejabat karangan yang ditulis lagi di view at
         'Soetarto', 'Mulyono', 'Anis Wahdi', 'M. Said, M.Pd', 'H. Soleh', 'Soetrisno', 'Wahyu Ningsih', 'Tjoek Subhan', 'Hj. Siti Aminah, S.E.',
     ];
     $found = [];
-    $files = Finder::create()->files()->in([resource_path('views'), app_path()])->name('*.php')
-        ->notPath('Services/Content/OcrProcessingService.php'); // simulated OCR sample, not school identity
+    $files = Finder::create()->files()->in([resource_path('views'), app_path()])->name('*.php');
     foreach ($files as $file) {
         $contents = file_get_contents($file->getRealPath());
         foreach ($planted as $needle) {

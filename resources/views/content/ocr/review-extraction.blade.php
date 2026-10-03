@@ -31,7 +31,7 @@
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Berkas Pemindaian Fisik</h3>
                         <span class="px-2.5 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 font-mono text-[10px] font-bold rounded">
-                            Confidence: {{ number_format(($doc->confidence_score ?? 0) * 100, 1) }}%
+                            {{ $doc->confidence_score === null ? 'Diisi manual' : 'Confidence: '.number_format($doc->confidence_score * 100, 1).'%' }}
                         </span>
                     </div>
 

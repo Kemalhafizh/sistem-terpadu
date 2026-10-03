@@ -22,7 +22,7 @@
             <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-4">
                 <div class="border-b border-gray-100 dark:border-gray-700 pb-3">
                     <h3 class="text-base font-black text-gray-900 dark:text-white">Unggah Dokumen Scan Baru Untuk Ekstraksi OCR</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">Pilih jenis dokumen dan nama berkas scan untuk diproses oleh OCR Engine.</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Pilih jenis dokumen dan nama berkas scan. Mesin OCR belum terpasang: data diisi manual pada layar review.</p>
                 </div>
 
                 <form action="{{ route('ocr.upload') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -39,7 +39,7 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Berkas Pemindaian (Scan File)</label>
-                        <input type="text" name="file_name" required value="Scan_KTP_OrangTua_Raihan.jpg" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5">
+                        <input type="text" name="file_name" required value="" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl border border-gray-300 dark:border-gray-700 text-sm px-4 py-2.5">
                     </div>
 
                     <div>
@@ -79,7 +79,7 @@
                                     <td class="px-6 py-4 font-mono text-gray-500 text-[11px] truncate max-w-[200px]">{{ $doc->original_file_path }}</td>
                                     <td class="px-6 py-4 font-mono">
                                         <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 rounded font-bold">
-                                            {{ number_format(($doc->confidence_score ?? 0) * 100, 1) }}%
+                                            {{ $doc->confidence_score === null ? 'manual' : number_format($doc->confidence_score * 100, 1).'%' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4">

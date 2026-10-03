@@ -9,37 +9,37 @@ beforeEach(function () {
     $this->ocrService = app(OcrProcessingService::class);
 });
 
-test('ocr processing service extracts structured fields for ktp and ijazah', function () {
-    $ktpDoc = $this->ocrService->processDocument(
-        'scans/ktp_ortu.jpg',
-        'ktp',
-        $this->user->id
-    );
+test('tanpa mesin OCR, dokumen disimpan menunggu input manual tanpa data karangan', function () {
+    // This used to "extract" the same invented person for every file, with a
+    // random NIK / KK / NISN / ijazah / akta number.
+    foreach (['ktp' => 'nik', 'kk' => 'no_kk', 'ijazah' => 'nisn', 'akta' => 'no_akta'] as $type => $numberField) {
+        $doc = $this->ocrService->processDocument("scans/{$type}.jpg", $type, $this->user->id);
 
-    expect($ktpDoc->id)->not()->toBeNull();
-    expect($ktpDoc->extracted_data)->toHaveKey('nik');
-    expect($ktpDoc->confidence_score)->toBeGreaterThanOrEqual(0.90);
+        expect($doc->status)->toBe('pending')
+            ->and($doc->confidence_score)->toBeNull()
+            ->and($doc->processed_at)->toBeNull()
+            ->and($doc->extracted_data)->toHaveKey($numberField)
+            ->and(array_filter($doc->extracted_data, fn ($value) => $value !== null))->toBe([]);
+    }
 
-    $ijazahDoc = $this->ocrService->processDocument(
-        'scans/ijazah_smp.jpg',
-        'ijazah',
-        $this->user->id
-    );
-
-    expect($ijazahDoc->extracted_data)->toHaveKey('nomor_ijazah');
-    expect($ijazahDoc->extracted_data)->toHaveKey('nisn');
+    // Same input, same output: nothing random left.
+    expect($this->ocrService->extractFields('a.jpg', 'ktp'))->toBe($this->ocrService->extractFields('b.jpg', 'ktp'));
 });
 
-test('ocr service maps extracted data to student profile format', function () {
-    $doc = $this->ocrService->processDocument(
-        'scans/ijazah_sample.jpg',
-        'ijazah',
-        $this->user->id
-    );
+test('profil siswa dari dokumen OCR hanya berisi data yang diverifikasi petugas', function () {
+    $doc = $this->ocrService->processDocument('scans/ijazah_sample.jpg', 'ijazah', $this->user->id);
+
+    expect($this->ocrService->mapToStudentProfile($doc->id))->each->toBe('');
+
+    $this->ocrService->validateExtraction($doc->id, ['nama_siswa' => 'Aisyah Putri', 'nisn' => '0081234567', 'sekolah_asal' => 'SMP Negeri 2']);
 
     $profile = $this->ocrService->mapToStudentProfile($doc->id);
-    expect($profile['name'])->toBe('Muhammad Raihan');
-    expect($profile['previous_school'])->toBe('SMP Islam Sultan Agung 1 Semarang');
+    expect($profile['name'])->toBe('Aisyah Putri')
+        ->and($profile['nisn'])->toBe('0081234567')
+        ->and($profile['previous_school'])->toBe('SMP Negeri 2')
+        // The birth place used to default to "Semarang".
+        ->and($profile['birth_place'])->toBe('')
+        ->and($doc->fresh()->status)->toBe('completed');
 });
 
 test('admin can view ocr console and upload scanned document via controller', function () {
@@ -51,8 +51,8 @@ test('admin can view ocr console and upload scanned document via controller', fu
         'file_name' => 'Scan_KTP_Tes.jpg',
     ]);
 
-    $uploadResponse->assertRedirect();
-    expect(OcrDocument::where('document_type', 'ktp')->exists())->toBeTrue();
+    $uploadResponse->assertRedirect()->assertSessionHas('info');
+    expect(OcrDocument::where('document_type', 'ktp')->sole()->status)->toBe('pending');
 });
 
 test('user can view side by side review view and apply verified data', function () {
