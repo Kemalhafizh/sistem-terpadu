@@ -115,3 +115,13 @@ it('no longer lets the web page open an announcement meant for others', function
 
     $this->actingAs($siswa)->get(route('announcements.show', $staffOnly))->assertNotFound();
 });
+
+it('links the cover and attachment on the public disk, as absolute urls', function () {
+    $item = announce(['image_path' => 'announcements/sampul.png', 'attachment_path' => 'announcements/attachments/edaran.pdf']);
+    Sanctum::actingAs(User::factory()->create(['role' => 'guru', 'must_change_password' => false]));
+
+    $data = $this->getJson("/api/v1/announcements/{$item->id}")->assertOk()->json('data');
+
+    expect($data['cover_image_url'])->toStartWith('http')->toEndWith('/storage/announcements/sampul.png')
+        ->and($data['attachment_url'])->toEndWith('/storage/announcements/attachments/edaran.pdf');
+});
