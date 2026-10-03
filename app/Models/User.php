@@ -157,7 +157,8 @@ class User extends Authenticatable
     public function generateTwoFactorCode()
     {
         $this->timestamps = false;
-        $this->two_factor_code = rand(100000, 999999);
+        // random_int: a code someone could predict defeats the second factor.
+        $this->two_factor_code = random_int(100000, 999999);
         $this->two_factor_expires_at = now()->addMinutes(10)->toDateTimeString();
         $this->save();
     }
