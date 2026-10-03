@@ -90,17 +90,9 @@ class AnnouncementController extends Controller
 
     public function show(Announcement $announcement)
     {
-        // View policy check: All authenticated users can view, but let's register the read log
         $user = Auth::user();
-
-        $readRecord = $announcement->reads()->where('user_id', $user->id)->first();
-        if (! $readRecord) {
-            $announcement->reads()->create([
-                'user_id' => $user->id,
-                'read_at' => now(),
-            ]);
-            $announcement->increment('read_count');
-        }
+        abort_unless($announcement->canBeSeenBy($user), 404);
+        $announcement->recordReadBy($user);
 
         return view('announcements.show', compact('announcement'));
     }
@@ -195,20 +187,8 @@ class AnnouncementController extends Controller
     public function acknowledge(Announcement $announcement)
     {
         $user = Auth::user();
-
-        $readRecord = $announcement->reads()->where('user_id', $user->id)->first();
-        if ($readRecord) {
-            $readRecord->update([
-                'acknowledged_at' => now(),
-            ]);
-        } else {
-            $announcement->reads()->create([
-                'user_id' => $user->id,
-                'read_at' => now(),
-                'acknowledged_at' => now(),
-            ]);
-            $announcement->increment('read_count');
-        }
+        abort_unless($announcement->canBeSeenBy($user), 404);
+        $announcement->acknowledgeBy($user);
 
         return back()->with('success', 'Terima kasih, Anda telah mengonfirmasi bahwa Anda telah membaca dan memahami pengumuman ini.');
     }

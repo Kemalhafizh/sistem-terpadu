@@ -40,13 +40,13 @@ class MobileSyncService
         $deltaData = [];
 
         // 1. General School Announcements Delta — same audience rule as
-        // ApiGeneralController::announcements(). (This and the calendar block
-        // used to sit behind class_exists() on unimported names, which never
-        // resolved, so both were silently missing from every delta.)
-        $announcements = Announcement::where('is_active', true)
-            ->where(fn ($q) => $q->whereNull('target_role')->orWhere('target_role', $user->role))
+        // ApiGeneralController::announcements(), via Announcement::visibleTo().
+        // (This and the calendar block used to sit behind class_exists() on
+        // unimported names, which never resolved, so both were silently
+        // missing from every delta.)
+        $announcements = Announcement::visibleTo($user)
             ->where('updated_at', '>=', $since)
-            ->orderBy('updated_at', 'desc')
+            ->reorder('updated_at', 'desc')
             ->take(50)
             ->get()
             ->map(fn ($a) => [

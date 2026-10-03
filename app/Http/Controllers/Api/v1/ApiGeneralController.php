@@ -23,7 +23,8 @@ class ApiGeneralController extends Controller
     /**
      * Get Announcements
      *
-     * Mengambil daftar 20 pengumuman aktif sekolah terbaru yang didelegasikan untuk tipe peran Anda.
+     * Pengumuman aktif yang ditujukan untuk akun ini (peran dan kelas), yang di-pin lebih dulu,
+     * beserta status baca dan konfirmasi akun ini.
      *
      * @authenticated
      */
@@ -31,16 +32,10 @@ class ApiGeneralController extends Controller
     {
         $user = $request->user();
 
-        $announcements = Announcement::where('is_active', true)
-            ->where(function ($query) use ($user) {
-                $query->whereNull('target_role')
-                    ->orWhere('target_role', $user->role);
-            })
-            ->when($request->filled('category'), function ($query) use ($request) {
-                $query->where('category', $request->input('category'));
-            })
-            ->latest()
-            ->take(20)
+        $announcements = Announcement::visibleTo($user)
+            ->with(['creator', 'targetClassroom', 'reads' => fn ($q) => $q->where('user_id', $user->id)])
+            ->when($request->filled('category'), fn ($q) => $q->where('category', $request->input('category')))
+            ->take(30)
             ->get();
 
         return $this->successResponse(AnnouncementResource::collection($announcements), 'Pengumuman sekolah berhasil diambil');
@@ -49,26 +44,49 @@ class ApiGeneralController extends Controller
     /**
      * Get Announcement Detail
      *
-     * Mengambil rincian satu pengumuman, dengan validasi peran yang sama seperti daftar pengumuman.
+     * Rincian satu pengumuman untuk akun ini. Membukanya dicatat sebagai sudah dibaca,
+     * sama seperti di web, sehingga tanda terima admin ikut menghitung pembaca dari aplikasi.
      *
      * @authenticated
      */
     public function announcementDetail(Request $request, int $id)
     {
         $user = $request->user();
-
-        $announcement = Announcement::where('is_active', true)
-            ->where(function ($query) use ($user) {
-                $query->whereNull('target_role')
-                    ->orWhere('target_role', $user->role);
-            })
-            ->find($id);
+        $announcement = Announcement::visibleTo($user)->with(['creator', 'targetClassroom'])->find($id);
 
         if (! $announcement) {
             return $this->errorResponse('Pengumuman tidak ditemukan', 404);
         }
 
+        $announcement->recordReadBy($user);
+        $announcement->load(['reads' => fn ($q) => $q->where('user_id', $user->id)]);
+
         return $this->successResponse(new AnnouncementResource($announcement), 'Detail pengumuman berhasil diambil');
+    }
+
+    /**
+     * Acknowledge Announcement
+     *
+     * Konfirmasi bahwa akun ini sudah membaca dan memahami pengumuman yang mewajibkannya.
+     *
+     * @authenticated
+     */
+    public function acknowledgeAnnouncement(Request $request, int $id)
+    {
+        $user = $request->user();
+        $announcement = Announcement::visibleTo($user)->with(['creator', 'targetClassroom'])->find($id);
+
+        if (! $announcement) {
+            return $this->errorResponse('Pengumuman tidak ditemukan', 404);
+        }
+        if (! $announcement->require_acknowledgement) {
+            return $this->errorResponse('Pengumuman ini tidak memerlukan konfirmasi.', 422);
+        }
+
+        $announcement->acknowledgeBy($user);
+        $announcement->load(['reads' => fn ($q) => $q->where('user_id', $user->id)]);
+
+        return $this->successResponse(new AnnouncementResource($announcement), 'Terima kasih, konfirmasi Anda sudah tercatat.');
     }
 
     /**
@@ -94,18 +112,68 @@ class ApiGeneralController extends Controller
     /**
      * Get Notifications
      *
-     * Mengambil seluruh riwayat notifikasi in-app pengguna.
+     * 50 notifikasi terbaru akun ini.
      *
      * @authenticated
      */
     public function notifications(Request $request)
     {
-        $user = $request->user();
-        $notifications = $user->notifications()
-            ->latest()
-            ->take(50)
-            ->get();
+        $notifications = $request->user()->notifications()->latest()->take(50)->get();
 
         return $this->successResponse(NotificationResource::collection($notifications), 'Notifikasi berhasil diambil');
+    }
+
+    /**
+     * Unread Notification Count
+     *
+     * @authenticated
+     */
+    public function unreadNotificationCount(Request $request)
+    {
+        return $this->successResponse(['count' => $request->user()->unreadNotifications()->count()]);
+    }
+
+    /**
+     * Mark Notification Read
+     *
+     * @authenticated
+     */
+    public function markNotificationRead(Request $request, string $id)
+    {
+        $notification = $request->user()->notifications()->find($id);
+        if (! $notification) {
+            return $this->errorResponse('Notifikasi tidak ditemukan', 404);
+        }
+        $notification->markAsRead();
+
+        return $this->successResponse(new NotificationResource($notification), 'Notifikasi ditandai sudah dibaca');
+    }
+
+    /**
+     * Mark All Notifications Read
+     *
+     * @authenticated
+     */
+    public function markAllNotificationsRead(Request $request)
+    {
+        $updated = $request->user()->unreadNotifications()->update(['read_at' => now()]);
+
+        return $this->successResponse(['updated' => $updated], 'Semua notifikasi ditandai sudah dibaca');
+    }
+
+    /**
+     * Delete Notification
+     *
+     * @authenticated
+     */
+    public function deleteNotification(Request $request, string $id)
+    {
+        $notification = $request->user()->notifications()->find($id);
+        if (! $notification) {
+            return $this->errorResponse('Notifikasi tidak ditemukan', 404);
+        }
+        $notification->delete();
+
+        return $this->successResponse(null, 'Notifikasi dihapus');
     }
 }

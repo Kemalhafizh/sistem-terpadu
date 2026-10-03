@@ -519,9 +519,14 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
         // === UNIVERSAL GENERAL ===
         Route::get('announcements', [ApiGeneralController::class, 'announcements']);
-        Route::get('announcements/{id}', [ApiGeneralController::class, 'announcementDetail']);
+        Route::get('announcements/{id}', [ApiGeneralController::class, 'announcementDetail'])->whereNumber('id');
+        Route::post('announcements/{id}/acknowledge', [ApiGeneralController::class, 'acknowledgeAnnouncement'])->whereNumber('id');
         Route::get('calendar', [ApiGeneralController::class, 'calendarEvents']);
         Route::get('notifications', [ApiGeneralController::class, 'notifications']);
+        Route::get('notifications/unread-count', [ApiGeneralController::class, 'unreadNotificationCount']);
+        Route::post('notifications/read-all', [ApiGeneralController::class, 'markAllNotificationsRead']);
+        Route::post('notifications/{id}/read', [ApiGeneralController::class, 'markNotificationRead'])->whereUuid('id');
+        Route::delete('notifications/{id}', [ApiGeneralController::class, 'deleteNotification'])->whereUuid('id');
 
         // =====================================================================
         // BACKWARD COMPATIBLE DATA ENDPOINTS (USED BY LEGACY SUITE)
