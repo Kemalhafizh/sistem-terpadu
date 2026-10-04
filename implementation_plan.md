@@ -6462,3 +6462,93 @@ Kontrak API lengkap untuk tim Android: [`docs/modules/class_sessions.md`](docs/m
 - Rangkuman harian orang tua (`class-sessions:parent-digest`, 17:00).
 - `SendFcmNotificationJob` kini benar-benar mengirim lewat FCM HTTP v1 (`FcmHttpV1Client`, aktif bila `FCM_CREDENTIALS` diisi). Job ini dulu hanya mock dan membaca kolom `device_token`, padahal aplikasi menyimpan token di `fcm_token`.
 
+
+---
+
+## FASE 118: PERBAIKAN BROKEN ACCESS CONTROL PADA MODUL FASE 45–62 `[RANCANGAN BARU]`
+
+> **Tanggal Rancangan:** 4 Oktober 2026
+> **Pelaksana:** Agent Backend (repo `sistem-terpadu`). Tidak ada perubahan di `sista-android`, karena semua route yang bocor adalah route **web**, bukan `/api/v1`.
+> **Prioritas:** P0 (Kritis). Kerjakan sebelum fitur baru apa pun.
+> **Prerequisite:** `RoleMiddleware` (hanya superadmin yang tembus semua), `RouteAccess`/`@canVisit`, dan `App\Support\Access\StudentDataAccess` sudah ada (commit `84611b7`).
+
+### 118.0: Temuan Audit
+
+Ada 17 file route yang di-`require` dari `routes/web.php` dan hanya dijaga `auth` (atau `auth` + `verified`), tanpa `role:` ataupun `can:`. Akibatnya **setiap akun yang login, termasuk siswa dan orang tua, bisa membuka sekaligus mengubah data** di modul-modul ini. Controller di belakangnya juga tidak memanggil `authorize()`/`Gate` (14 dari 16 folder controller tidak punya pengecekan sama sekali).
+
+| File route | Route | Route tulis | Guard peran | Sensitivitas |
+|---|---:|---:|:---:|---|
+| `treasury.php` | 22 | 11 | ❌ | **Sangat tinggi**: rekening bank, kas kecil, rekonsiliasi, pembayaran vendor |
+| `crisis.php` | 21 | 7 | ❌ | **Sangat tinggi**: laporan bullying (identitas korban), deklarasi krisis, broadcast darurat |
+| `recruitment.php` | 5 | 0 | ❌ | **Tinggi**: kompensasi & kesejahteraan pegawai |
+| `inclusive_education.php` | 24 | 9 | ❌ | **Tinggi**: data siswa berkebutuhan khusus |
+| `family_engagement.php` | 17 | 7 | ❌ | Tinggi: data keluarga |
+| `campus_ops.php` | 19 | 8 | ❌ | Sedang: tamu & operasional |
+| `data_engineering.php` | 13 | 4 | ❌ | Sedang: laporan & kualitas data seluruh sekolah |
+| `school_safety.php` | 4 | 0 | ❌ | Sedang: CCTV/keamanan fisik |
+| `extended_diamond.php` | 48 | 22 | ❌ | Campuran, perlu dipilah per prefix |
+| `knowledge.php` | 12 | 11 | ❌ | Sedang: ruang kolaborasi guru |
+| `adaptive.php`, `microlearning.php`, `career_readiness.php` | 47 | 11 | ❌ | Rendah–sedang: sebagian memang untuk siswa |
+| `alumni_relations.php`, `omnichannel.php`, `islamic_tech.php`, `green_school.php` | 38 | 2 | ❌ | Rendah–sedang |
+
+Masalah turunan yang ikut ditemukan:
+- **Menu ikut bocor.** `RouteAccess::allows()` mengembalikan `true` untuk route tanpa aturan, sehingga `@canVisit('recruitment.kanban')` dan `@canVisit('data_engineering.streams')` di `resources/views/components/sidebar.blade.php` **menampilkan menu itu ke siswa dan orang tua.**
+- **Sukses palsu (melanggar CLAUDE.md aturan 2).** `Green/WasteManagementController::storeLog()` menjawab "Log sampah tersimpan." tanpa menyimpan apa pun, dan `updateLog()` kosong.
+- **Status dokumen tidak akurat.** FASE 45–62 di "Status Tracker" ditandai `Selesai ✅`, padahal modul-modulnya terbuka untuk semua peran dan sebagian masih berupa stub.
+
+### 118.1: Pasang `role:` di Setiap Group Route
+
+Pakai `RoleMiddleware` yang sudah ada. Untuk peran berejaan ganda, rujuk konstanta di `StudentDataAccess`, jangan literal. Pisahkan aturan **lihat** dari **ubah** bila memang berbeda.
+
+Pemetaan awal (usulan PM). Keputusan bisnis finalnya ada di pemilik produk, dan setiap penyimpangan dicatat beserta alasannya di 118.6:
+
+| Modul | Lihat | Ubah |
+|---|---|---|
+| Treasury (semua) | `staf_tu`, `kepala_sekolah`, `admin` | `staf_tu`, `admin` |
+| Crisis: command center, declare, protocols, broadcast | `kepala_sekolah`, `waka_kesiswaan`, `waka_sarpras`, `admin` | sama |
+| Crisis: headcount insiden | guru (`TEACHER_ROLES`) + pimpinan | guru + pimpinan |
+| Anti-bullying: **form lapor** (`bullying/report` GET/POST) | semua user login, **tetap terbuka** | semua user login |
+| Anti-bullying: daftar, detail, statistik | `bk`, `waka_kesiswaan`, `kepala_sekolah`, `admin` | sama |
+| Recruitment / compensation / wellness | samakan dengan group `hrd.` di `web.php:1205` (`admin`, `superadmin`, `kepala_sekolah`). **Tidak ada peran `hrd`** di seeder, jadi jangan membuatnya diam-diam | sama |
+| Inclusive education | `bk`, `guru`, `waka_kesiswaan`, `waka_kurikulum`, `kepala_sekolah`, `admin` + scoping per kelas/siswa | `bk`, `waka_kesiswaan`, `admin` |
+| Data engineering | `admin`, `kepala_sekolah` | `admin` |
+| School safety / campus ops | `staf_tu`, `waka_sarpras`, `kepala_sekolah`, `admin` | `staf_tu`, `waka_sarpras`, `admin` |
+| Knowledge hub | guru + pimpinan | guru + pimpinan |
+| Family engagement | dipilah per route: bagian ortu pakai `PARENT_ROLES` + scoping anak sendiri, bagian manajemen untuk staf | — |
+| Adaptive, microlearning, career readiness | dipilah per route: bagian belajar untuk siswa (`STUDENT_ROLES`, hanya data dirinya sendiri), bagian manajemen/analitik untuk guru/pimpinan | — |
+| `extended_diamond.php` | pilah per prefix (`mobile.`, `interactive.`, `dashboards.`, `publishing.`, …). Dasbor eksekutif hanya untuk pimpinan | — |
+| Alumni, omnichannel, islamic tech, green school | tentukan per route, defaultnya staf/pimpinan | staf/pimpinan |
+
+### 118.2: Kepemilikan Data (Anti-IDOR)
+
+Route dengan `{id}` atau model binding (mis. `crisis/incident/{id}`, `crisis/bullying/{id}`, `treasury/reconciliation/{id}/review`, resource `accounts`) wajib punya pengecekan kepemilikan atau cakupan lewat Policy + `can:`/`authorize()`, mengikuti CLAUDE.md aturan 3: siswa hanya dirinya, ortu hanya anaknya, guru hanya kelas yang diajar tahun ajaran ini.
+
+### 118.3: Hapus Sukses Palsu
+
+- Untuk `Green/WasteManagementController::storeLog()` dan `updateLog()`, pilih salah satu: implementasikan simpan sungguhan (dengan validasi + test), **atau** cabut route-nya dan sembunyikan menunya. Dilarang mengembalikan pesan sukses tanpa menyimpan.
+- Sapu semua controller modul FASE 45–62 dengan pola `// Implementation`, method kosong, atau redirect sukses tanpa operasi DB. Daftarkan temuannya di 118.6.
+
+### 118.4: `RouteAccess` Gagal Tertutup untuk Menu Internal
+
+Setelah 118.1 selesai, nyalakan *deny-by-default* untuk route web ber-`auth` tanpa aturan, **kecuali whitelist eksplisit** (dashboard, profil, notifikasi, logout, dll.). Dengan begitu menu yang lupa diberi peran tidak lagi muncul untuk semua orang. Whitelist disimpan di satu tempat dan dipakai juga oleh test 118.5.
+
+### 118.5: Test Regresi (Wajib, CLAUDE.md aturan 4)
+
+1. **Test arsitektur.** Iterasi semua route web yang memakai middleware `auth`. Setiap route WAJIB punya `role:` atau `can:`, kecuali yang ada di whitelist. Test gagal bila ada route baru tanpa guard.
+2. **Test per modul.** Akun `siswa` dan `orang_tua`:
+   - mendapat **403** di GET index dan POST store pada treasury, crisis (daftar/detail bullying), recruitment, dan data engineering;
+   - mendapat **200** di form lapor bullying.
+
+   Peran yang berhak mendapat 200.
+3. **Test menu.** Render sidebar sebagai siswa dan pastikan tautan `recruitment.kanban`, `data_engineering.streams`, dan `treasury.*` tidak muncul.
+4. **Test sukses palsu.** POST `green-school/waste/store` harus benar-benar menambah baris, atau route-nya sudah tidak ada.
+
+### 118.6: Kriteria Selesai
+
+- [ ] Tidak ada route web ber-`auth` tanpa `role:`/`can:` selain whitelist yang ditegakkan test 118.5.1.
+- [ ] Siswa & orang tua mendapat 403 di semua modul internal di tabel 118.0.
+- [ ] Sidebar siswa/ortu tidak lagi menampilkan menu internal (cek manual 1x + test 118.5.3).
+- [ ] Tidak ada lagi controller yang menjawab sukses tanpa menyimpan.
+- [ ] `vendor/bin/pint`, `php artisan test`, dan `vendor/bin/phpstan analyse` hijau.
+- [ ] Bagian ini diperbarui menjadi `[SELESAI]` dan dilengkapi tabel peran final per modul, termasuk alasan bila menyimpang dari usulan 118.1.
+- [ ] Status FASE 45–62 di "Status Tracker" dikoreksi bila ada modul yang ternyata masih stub.
