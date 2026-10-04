@@ -331,12 +331,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('medicines', [SchoolOperationsApiController::class, 'uksMedicines'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru');
         });
 
-        // === FASE 97: JURNAL MENGAJAR GURU & AGENDA KELAS ===
-        Route::prefix('teaching-journals')->middleware('role:admin,superadmin,guru')->group(function () {
-            Route::get('my', [SchoolOperationsApiController::class, 'teacherJournals']);
-            Route::post('/', [SchoolOperationsApiController::class, 'storeTeacherJournal']);
-        });
-
         // =====================================================================
         // FASE 108: PERPUSTAKAAN DIGITAL MOBILE API
         // =====================================================================

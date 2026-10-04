@@ -235,12 +235,6 @@ parameters:
 			path: app/Http/Controllers/Api/v1/LibraryMobileApiController.php
 
 		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\TeachingJournal model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/SchoolOperationsApiController.php
-
-		-
 			message: '#^Relation ''period'' is not found in App\\Models\\SpmbWave model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -248,12 +242,6 @@ parameters:
 
 		-
 			message: '#^Relation ''spmbTrack'' is not found in App\\Models\\Registration model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/SchoolOperationsApiController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\TeachingJournal model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/SchoolOperationsApiController.php
