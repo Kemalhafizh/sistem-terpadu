@@ -10,7 +10,7 @@
         <p class="text-primary-100 opacity-90 max-w-xl font-medium leading-relaxed">
             @switch(Auth::user()->role)
                 @case('kepala_sekolah')
-                    {{ __('dashboard.welcome_desc_kepala_sekolah') }}
+                    {{ __('dashboard.welcome_desc_kepala_sekolah', school_placeholders()) }}
                     @break
                 @case('waka_kurikulum')
                     {{ __('dashboard.welcome_desc_waka_kurikulum') }}
@@ -19,7 +19,7 @@
                     {{ __('dashboard.welcome_desc_waka_kesiswaan') }}
                     @break
                 @default
-                    {{ __('dashboard.welcome_desc_default') }}
+                    {{ __('dashboard.welcome_desc_default', school_placeholders()) }}
             @endswitch
         </p>
     </div>

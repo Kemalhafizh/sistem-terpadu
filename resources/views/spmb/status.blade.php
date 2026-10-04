@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ __('spmb.check_status') }} | Sultan Agung 1 Semarang</title>
+  <title>{{ __('spmb.check_status') }} | {{ school_name() }}</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{{ asset('images/logo-kotak.png') }}">
@@ -76,7 +76,7 @@
 
     <div class="text-center mb-8 mt-6">
       <div class="mx-auto w-14 h-14 bg-white rounded-2xl flex items-center justify-center p-1.5 shadow-sm border border-slate-100 mb-4">
-        <img src="{{ asset('images/logo-kotak.png') }}" alt="Sultan Agung 1" class="h-full object-contain">
+        <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain">
       </div>
       <h2 class="text-2xl font-black text-slate-900 tracking-tight">{{ __('spmb.status_header') }}</h2>
       <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">{{ __('spmb.status_subheader') }}</p>

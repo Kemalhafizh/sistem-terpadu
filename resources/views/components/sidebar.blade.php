@@ -26,7 +26,7 @@
             <div x-show="!sidebarCollapsed" class="whitespace-nowrap transition-opacity duration-300">
                 @if($appearance->app_name === 'Sistem Terpadu SMA ISA 1')
                     <h1 class="text-sm font-extrabold text-white leading-tight uppercase tracking-tight">SMA Islam</h1>
-                    <p class="text-[10px] font-semibold text-primary-300 tracking-widest uppercase">Sultan Agung 1</p>
+                    <p class="text-[10px] font-semibold text-primary-300 tracking-widest uppercase">{{ school_short_name() }}</p>
                 @else
                     <h1 class="text-sm font-extrabold text-white leading-tight uppercase tracking-tight overflow-hidden text-ellipsis max-w-[150px]" title="{{ $appearance->app_name }}">
                         {{ Str::limit($appearance->app_name, 20) }}

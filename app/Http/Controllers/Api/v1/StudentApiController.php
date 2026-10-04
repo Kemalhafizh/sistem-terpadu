@@ -22,7 +22,7 @@ class StudentApiController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
-                'school' => 'SMA Islam Sultan Agung 1 Semarang',
+                'school' => school_name(),
             ],
         ]);
     }

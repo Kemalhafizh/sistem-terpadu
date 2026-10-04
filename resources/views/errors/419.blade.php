@@ -9,7 +9,7 @@
 @section('code', '419')
 @section('message', 'Sesi Kadaluarsa')
 
-@section('description', 'Keamanan sistem mendeteksi Anda terlalu lama meninggalkan halaman ini. Demi keamanan data Sultan Agung 1, silakan muat ulang halaman atau login kembali.')
+@section('description', 'Keamanan sistem mendeteksi Anda terlalu lama meninggalkan halaman ini. Demi keamanan data '.school_short_name().', silakan muat ulang halaman atau login kembali.')
 
 @section('buttons')
 <div class="space-y-4 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row justify-center" style="display: flex; gap: 1rem; justify-content: center; align-items: center;">

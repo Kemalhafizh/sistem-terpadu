@@ -3,7 +3,7 @@
 return [
     // Admissions & Welcome Page
     'spmb_title' => 'Penerimaan Siswa Baru (SPMB)',
-    'spmb_desc' => 'Bergabunglah bersama keluarga besar SMA Islam Sultan Agung 1 Semarang. Sekolah pilihan terbaik untuk membentuk akhlak mulia dan kompetensi unggul masa depan.',
+    'spmb_desc' => 'Bergabunglah bersama keluarga besar :school. Sekolah pilihan terbaik untuk membentuk akhlak mulia dan kompetensi unggul masa depan.',
     'cta_register' => 'Daftar Sekarang',
     'cta_check_status' => 'Cek Status Pendaftaran',
     'back_to_home' => 'Kembali ke Beranda',
@@ -42,11 +42,11 @@ return [
 
     // Result Card
     'card_title_approved' => 'Selamat, Anda Dinyatakan LULUS!',
-    'card_desc_approved' => 'Selamat bergabung sebagai siswa baru di SMA Islam Sultan Agung 1 Semarang. Silakan lakukan proses daftar ulang di loket administrasi sekolah.',
+    'card_desc_approved' => 'Selamat bergabung sebagai siswa baru di :school. Silakan lakukan proses daftar ulang di loket administrasi sekolah.',
     'card_title_pending' => 'Pendaftaran Sedang Ditinjau',
     'card_desc_pending' => 'Berkas pendaftaran Anda sedang dalam antrean verifikasi oleh tim panitia SPMB. Silakan cek halaman ini secara berkala.',
     'card_title_rejected' => 'Mohon Maaf, Anda Belum Lulus',
-    'card_desc_rejected' => 'Terima kasih atas minat Anda mendaftar di SMA Islam Sultan Agung 1 Semarang. Tetap semangat dan jangan menyerah!',
+    'card_desc_rejected' => 'Terima kasih atas minat Anda mendaftar di :school. Tetap semangat dan jangan menyerah!',
 
     // Success Page
     'success_title' => 'Pendaftaran Berhasil Dikirim!',
@@ -64,8 +64,8 @@ return [
     'hero_badge' => 'Penerimaan Siswa Baru Tahun Ajaran 2026/2027',
     'hero_title_1' => 'Masa Depan Gemilang',
     'hero_title_2' => 'Dimulai Dari',
-    'hero_title_3' => 'Sultan Agung 1.',
-    'hero_desc_welcome' => 'Portal resmi Sistem Penerimaan Murid Baru (SPMB) SMA Islam Sultan Agung 1 Semarang. Tempat terbaik untuk membentuk generasi islami yang cerdas, berdaya saing global, dan berakhlak mulia.',
+    'hero_title_3' => ':school_short.',
+    'hero_desc_welcome' => 'Portal resmi Sistem Penerimaan Murid Baru (SPMB) :school. Tempat terbaik untuk membentuk generasi islami yang cerdas, berdaya saing global, dan berakhlak mulia.',
     'btn_start_registration' => 'Mulai Pendaftaran',
     'btn_learn_flow' => 'Pelajari Alur',
 

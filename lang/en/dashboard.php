@@ -5,10 +5,10 @@ return [
     'welcome' => 'Welcome Back',
     'welcome_back' => 'Welcome',
     'system_info' => 'System Information',
-    'welcome_desc_kepala_sekolah' => 'Monitor academic health and discipline of SMA Islam Sultan Agung 1 in one executive dashboard.',
+    'welcome_desc_kepala_sekolah' => 'Monitor academic health and discipline of :school_short in one executive dashboard.',
     'welcome_desc_waka_kurikulum' => 'Manage curriculum dynamics, schedules, and student academic progress independently and flexibly.',
     'welcome_desc_waka_kesiswaan' => 'Monitor discipline and character building of students to realize the Khaira Ummah generation.',
-    'welcome_desc_default' => 'Sultan Agung 1 Integrated System is ready to assist your educational service activities today.',
+    'welcome_desc_default' => ':school_short Integrated System is ready to assist your educational service activities today.',
 
     // General Titles & Controls
     'dashboard_title' => 'Main Dashboard',

@@ -38,7 +38,7 @@ class AppearanceService
                 'font_family' => 'Inter',
                 'custom_css' => null,
                 'login_background_path' => null,
-                'footer_text' => '© 2026 SMA Islam Sultan Agung 1 Semarang',
+                'footer_text' => '© '.now()->year.' '.school_name(),
             ]);
         }
 

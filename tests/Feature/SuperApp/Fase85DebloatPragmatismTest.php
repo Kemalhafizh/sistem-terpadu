@@ -5,6 +5,7 @@ namespace Tests\Feature\SuperApp;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classroom;
+use App\Models\Setting;
 use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\User;
@@ -56,6 +57,8 @@ class Fase85DebloatPragmatismTest extends TestCase
      */
     public function test_issue_and_verify_digital_certificate_without_blockchain(): void
     {
+        // The signer comes from the school settings (there is no made-up default any more).
+        Setting::set('principal_name', 'Kepala Contoh, S.Pd.');
         Sanctum::actingAs($this->studentUser);
 
         // 1. Issue certificate

@@ -237,7 +237,7 @@ class MobileV2ApiController extends Controller
                 'timestamp' => time() * 1000 - 3600000,
                 'title' => 'Presensi Masuk Kampus',
                 'type' => 'attendance',
-                'description' => 'Ahmad Kemal Hafizh telah tiba di Kampus SMA Islam Sultan Agung 1 Semarang pukul 06.45 WIB.',
+                'description' => 'Ahmad Kemal Hafizh telah tiba di Kampus '.school_name().' pukul 06.45 WIB.',
             ],
             [
                 'id' => 'act_2',

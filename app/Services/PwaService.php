@@ -12,9 +12,9 @@ class PwaService
     public function getManifest(): array
     {
         return [
-            'name' => 'SISTA — SMA Islam Sultan Agung 1 Semarang',
+            'name' => 'SISTA — '.school_name(),
             'short_name' => 'Sulaone',
-            'description' => 'SuperApp Ekosistem Sekolah Terpadu SMA Islam Sultan Agung 1 Semarang (YBWSA)',
+            'description' => 'SuperApp Ekosistem Sekolah Terpadu '.school_name(),
             'start_url' => '/',
             'display' => 'standalone',
             'background_color' => '#080C14',

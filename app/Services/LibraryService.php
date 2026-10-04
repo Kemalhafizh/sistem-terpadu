@@ -435,7 +435,7 @@ class LibraryService
         $message .= "- Terlambat: {$daysLate} hari\n";
         $message .= "- Akumulasi Denda: Rp {$fine}\n\n";
         $message .= "Mohon untuk segera mengingatkan anak Anda agar mengembalikan buku tersebut ke perpustakaan sekolah.\n\n";
-        $message .= "Salam,\nPerpustakaan SMA Islam Sultan Agung 1 Semarang";
+        $message .= "Salam,\nPerpustakaan ".school_name();
 
         return app(WhatsappService::class)->sendMessage($recipient, $message, 'library_overdue_reminder');
     }

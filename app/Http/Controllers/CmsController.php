@@ -492,8 +492,8 @@ class CmsController extends Controller
 
         $seo = [
             'title_template' => Setting::get('seo_title_template', 'SISTA | {title}'),
-            'meta_description' => Setting::get('seo_meta_description', 'Website Resmi SMA Islam Sultan Agung 1 Semarang.'),
-            'og_title' => Setting::get('seo_og_title', 'SMA Islam Sultan Agung 1 Semarang'),
+            'meta_description' => Setting::get('seo_meta_description', 'Website Resmi '.school_name().'.'),
+            'og_title' => Setting::get('seo_og_title', school_name()),
         ];
 
         return view('cms.seo.index', compact('seo'));

@@ -158,7 +158,7 @@
       <div class="flex items-center space-x-3">
         <a href="{{ route('home') }}" class="flex items-center space-x-3">
           <div class="h-12 w-auto flex items-center justify-center p-1.5 rounded-xl bg-white shadow-sm border border-slate-100">
-            <img src="{{ asset('images/logo-lonjong.png') }}" alt="Sultan Agung 1" class="h-full object-contain" 
+            <img src="{{ asset('images/logo-lonjong.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain" 
                onerror="this.parentElement.innerHTML = '<span class=\'text-primary-700 font-bold text-sm px-2\'>SA-1</span>'">
           </div>
           <div>
@@ -268,7 +268,7 @@
         <div class="space-y-8">
           <div class="h-14 w-auto inline-flex items-center justify-center p-2 rounded-2xl bg-white shadow-xl">
             <img src="{{ asset('images/logo-lonjong.png') }}" alt="SA 1" class="h-full object-contain" onerror="this.style.display='none'">
-            <span class="ml-3 font-black text-slate-900 text-sm tracking-tight uppercase">Sultan Agung 1</span>
+            <span class="ml-3 font-black text-slate-900 text-sm tracking-tight uppercase">{{ school_short_name() }}</span>
           </div>
           <p class="text-slate-400 text-base leading-relaxed font-medium">
             {{ __('public.footer_tagline') }}
@@ -334,7 +334,7 @@
 
       <div class="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
         <p class="text-slate-500 text-sm font-medium">
-          &copy; {{ date('Y') }} {{ __('public.footer_copyright') }}
+          &copy; {{ date('Y') }} {{ __('public.footer_copyright', school_placeholders()) }}
         </p>
         <div class="flex space-x-8">
           <a href="#" class="text-slate-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors">Privacy Policy</a>

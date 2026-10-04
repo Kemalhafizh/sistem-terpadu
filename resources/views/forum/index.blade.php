@@ -32,7 +32,7 @@
                         Diskusikan Pelajaran & Berbagi Pengetahuan
                     </h3>
                     <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-                        Selamat datang di forum terpadu Sultan Agung 1. Ajukan pertanyaan seputar materi pelajaran, jawab kegelisahan akademik teman sekelas, dan dapatkan bimbingan langsung dari guru-guru ahli.
+                        Selamat datang di forum terpadu {{ school_short_name() }}. Ajukan pertanyaan seputar materi pelajaran, jawab kegelisahan akademik teman sekelas, dan dapatkan bimbingan langsung dari guru-guru ahli.
                     </p>
                 </div>
             </div>

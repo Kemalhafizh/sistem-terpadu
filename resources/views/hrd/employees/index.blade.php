@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="font-black text-2xl text-gray-900 tracking-tight">Manajemen Pegawai & Guru</h2>
-                <p class="text-sm text-gray-500 font-medium">Direktori seluruh SDM Yayasan Sultan Agung 1.</p>
+                <p class="text-sm text-gray-500 font-medium">Direktori seluruh SDM {{ school_short_name() }}.</p>
             </div>
             <a href="{{ route('hrd.employees.create') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-widest hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:border-primary-800 focus:ring ring-primary-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-lg shadow-primary-500/30">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>

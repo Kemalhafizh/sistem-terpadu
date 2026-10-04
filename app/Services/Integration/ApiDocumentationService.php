@@ -13,7 +13,7 @@ class ApiDocumentationService
             'openapi' => '3.0.3',
             'info' => [
                 'title' => 'SISTA Enterprise Core API',
-                'description' => 'Dokumentasi Resmi Public REST & GraphQL API SMA Islam Sultan Agung 1 Semarang.',
+                'description' => 'Dokumentasi Resmi Public REST & GraphQL API '.school_name().'.',
                 'version' => '2.0.0',
             ],
             'servers' => [
