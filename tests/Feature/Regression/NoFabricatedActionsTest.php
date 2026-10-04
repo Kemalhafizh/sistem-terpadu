@@ -3,6 +3,7 @@
 use App\Exceptions\AiUnavailableException;
 use App\Models\AlumniData;
 use App\Models\BpaRuleExecution;
+use App\Models\Classroom;
 use App\Models\QuestionBank;
 use App\Models\Student;
 use App\Models\Subject;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Services\AiCopilotService;
 use App\Services\AlumniEnhancedService;
 use App\Services\BusinessRuleEngineService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 /*
@@ -129,3 +131,66 @@ test('AI yang gagal atau menjawab tanpa soal menjadi pesan galat, bukan soal pal
     'HTTP 401' => [[['error' => 'unauthorized'], 401], 'HTTP 401'],
     'bukan JSON' => [[['candidates' => [['content' => ['parts' => [['text' => 'Maaf, saya tidak bisa.']]]]]]], 'tidak berisi soal'],
 ]);
+
+// ── AI lesson plans (RPP) ───────────────────────────────────────────────────
+
+function rppRequest(array $overrides = []): array
+{
+    return $overrides + [
+        'subject_id' => Subject::factory()->create(['name' => 'Fisika'])->id,
+        'classroom_id' => Classroom::factory()->create()->id,
+        'topic' => 'Hukum Newton',
+        'competencies' => 'Menganalisis gaya, Menerapkan hukum II Newton',
+    ];
+}
+
+test('templat RPP dipilih sendiri, diberi label, dan memakai identitas sekolah dari pengaturan', function () {
+    config(['school.name' => 'SMA Contoh Nusantara']);
+
+    $rpp = $this->actingAs(User::factory()->create(['role' => 'guru']))
+        ->post(route('academic.copilot.rpp.generate'), rppRequest(['provider' => 'local_fallback']))
+        ->assertOk()
+        ->viewData('rppContent');
+
+    // (The page layout carries the theme name elsewhere, so check the RPP itself.)
+    expect($rpp)->toContain('Templat, bukan hasil AI')
+        ->toContain('SMA Contoh Nusantara')
+        ->toContain('Hukum Newton')
+        ->not->toContain('Sultan Agung')
+        ->not->toContain('2 x 45');
+});
+
+test('RPP dengan AI yang gagal menjadi pesan galat, bukan templat yang menyamar', function (string $provider, ?string $key, ?array $fake, string $expected) {
+    if ($fake !== null) {
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::response(...$fake)]);
+    }
+
+    $this->actingAs(User::factory()->create(['role' => 'guru']))->from(route('academic.copilot.rpp'))
+        ->post(route('academic.copilot.rpp.generate'), rppRequest(['provider' => $provider, 'api_key' => $key]))
+        ->assertRedirect(route('academic.copilot.rpp'))
+        ->assertSessionHas('error', fn ($m) => str_contains($m, $expected) && ! str_contains($m, 'kunci-rahasia'))
+        ->assertSessionMissing('_old_input.api_key');
+})->with([
+    'tanpa API key' => ['gemini', null, null, 'membutuhkan OpenAI atau Gemini'],
+    'HTTP 500' => ['gemini', 'kunci-rahasia', [['error' => 'internal'], 500], 'HTTP 500'],
+    'jawaban kosong' => ['gemini', 'kunci-rahasia', [['candidates' => [['content' => ['parts' => [['text' => '  ']]]]]]], 'Jawaban AI kosong'],
+]);
+
+test('koneksi AI yang putus tidak membocorkan URL berisi API key', function () {
+    Http::fake(fn () => throw new ConnectionException('cURL error 28 for https://generativelanguage.googleapis.com/...?key=kunci-rahasia'));
+
+    expect(fn () => app(AiCopilotService::class)->generateLessonPlan(['topic' => 'Optik'], 'kunci-rahasia', 'gemini'))
+        ->toThrow(fn (AiUnavailableException $e) => expect($e->getMessage())->not->toContain('kunci-rahasia')->toContain('Gagal menghubungi'));
+});
+
+test('RPP dari Gemini ditampilkan apa adanya dan prompt memakai nama sekolah dari pengaturan', function () {
+    config(['school.name' => 'SMA Contoh Nusantara']);
+    Http::fake(['generativelanguage.googleapis.com/*' => Http::response(['candidates' => [['content' => ['parts' => [['text' => '# RPP Hukum Newton dari AI']]]]]])]);
+
+    $this->actingAs(User::factory()->create(['role' => 'guru']))
+        ->post(route('academic.copilot.rpp.generate'), rppRequest(['provider' => 'gemini', 'api_key' => 'kunci-uji']))
+        ->assertOk()
+        ->assertViewHas('rppContent', '# RPP Hukum Newton dari AI');
+
+    Http::assertSent(fn ($request) => str_contains($request->body(), 'SMA Contoh Nusantara') && ! str_contains($request->body(), 'Sultan Agung'));
+});

@@ -9,7 +9,16 @@ use Illuminate\Support\Facades\Http;
 class AiCopilotService
 {
     /**
-     * Generate RPP Lesson Plan (Markdown format).
+     * Generate an RPP lesson plan (Markdown).
+     *
+     * 'local_fallback' is an explicit choice: a blank RPP template for the
+     * teacher to fill in, labelled as such. Any other provider must produce an
+     * AI result or fail with a message. It used to swap in the template
+     * silently when the key was missing or the AI failed (pasting the raw
+     * exception, which for Gemini contains the API key), so the template
+     * looked like an AI answer.
+     *
+     * @throws AiUnavailableException
      */
     public function generateLessonPlan(array $params, ?string $apiKey = null, ?string $provider = 'local_fallback', ?string $customEndpoint = null): string
     {
@@ -18,14 +27,19 @@ class AiCopilotService
         $gradeLevel = $params['grade_level'] ?? 'X';
         $competencies = $params['competencies'] ?? 'Kompetensi Dasar';
 
-        // Check if we should use fallback
-        if (empty($apiKey) || $provider === 'local_fallback') {
+        if ($provider === 'local_fallback') {
             return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies);
         }
 
+        if (empty($apiKey) || ! in_array($provider, ['openai', 'gemini'], true)) {
+            throw new AiUnavailableException('Pembuatan RPP dengan AI membutuhkan OpenAI atau Gemini beserta API key-nya. Pilih "Templat RPP" untuk kerangka kosong tanpa AI.');
+        }
+
+        $school = school_name();
+
         try {
             $prompt = "Buatlah RPP (Rencana Pelaksanaan Pembelajaran) Kurikulum Merdeka lengkap dengan bahasa Indonesia yang formal, detail, dan rapi untuk:
-- Sekolah: SMA Islam Sultan Agung 1 Semarang
+- Sekolah: {$school}
 - Mata Pelajaran: {$subject}
 - Kelas/Fase: {$gradeLevel}
 - Topik/Materi: {$topic}
@@ -41,6 +55,7 @@ Harus memuat bagian:
 
 Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungkus markdown tambahan.";
 
+            $text = null;
             if ($provider === 'openai') {
                 $endpoint = $customEndpoint ?: 'https://api.openai.com/v1/chat/completions';
                 $response = Http::withToken($apiKey)->timeout(30)->post($endpoint, [
@@ -51,11 +66,8 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
                     ],
                     'temperature' => 0.7,
                 ]);
-
-                if ($response->successful()) {
-                    return $response->json('choices.0.message.content');
-                }
-            } elseif ($provider === 'gemini') {
+                $text = $response->successful() ? $response->json('choices.0.message.content') : null;
+            } else {
                 $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                     'contents' => [
                         'parts' => [
@@ -63,17 +75,21 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
                         ],
                     ],
                 ]);
-
-                if ($response->successful()) {
-                    return $response->json('candidates.0.content.parts.0.text');
-                }
+                $text = $response->successful() ? $response->json('candidates.0.content.parts.0.text') : null;
             }
-
-            // Fallback if API response is not successful
-            return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies)."\n\n*(Catatan: Terjadi kendala saat menghubungi API AI, dialihkan ke model template lokal)*";
         } catch (Exception $e) {
-            return $this->generateLocalFallbackRpp($subject, $topic, $gradeLevel, $competencies)."\n\n*(Catatan: Gagal memicu AI ({$e->getMessage()}), dialihkan ke model template lokal)*";
+            // Not $e->getMessage(): for Gemini it can contain the request URL, and the API key is in it.
+            throw new AiUnavailableException('Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.', 0, $e);
         }
+
+        if (! $response->successful()) {
+            throw new AiUnavailableException("Layanan AI menolak permintaan (HTTP {$response->status()}). Periksa API key lalu coba lagi.");
+        }
+        if (! is_string($text) || trim($text) === '') {
+            throw new AiUnavailableException('Jawaban AI kosong. Coba lagi.');
+        }
+
+        return $text;
     }
 
     /**
@@ -185,7 +201,7 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
     }
 
     /**
-     * Local fallback template system for RPP (Offline).
+     * Blank RPP template (no AI), chosen explicitly as 'local_fallback'.
      */
     private function generateLocalFallbackRpp(string $subject, string $topic, string $gradeLevel, string $competencies): string
     {
@@ -195,14 +211,18 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
             $compBullets .= "- Siswa mampu menelaah dan menguasai tentang: {$comp}\n";
         }
 
+        $school = school_name();
+
         return "# RENCANA PELAKSANAAN PEMBELAJARAN (RPP) KURIKULUM MERDEKA
 
+> **Templat, bukan hasil AI.** Kerangka ini diisi dari topik dan kompetensi yang Anda masukkan. Sesuaikan isinya sebelum disimpan.
+
 ## 1. IDENTITAS MODUL
-- **Nama Sekolah**: SMA Islam Sultan Agung 1 Semarang
+- **Nama Sekolah**: {$school}
 - **Mata Pelajaran**: {$subject}
 - **Kelas / Fase**: Kelas {$gradeLevel}
 - **Topik Utama**: {$topic}
-- **Alokasi Waktu**: 2 Jam Pelajaran (2 x 45 Menit)
+- **Alokasi Waktu**: _(isi sesuai jadwal)_
 
 ---
 
@@ -220,20 +240,20 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
 ---
 
 ## 4. LANGKAH-LANGKAH PEMBELAJARAN
-### A. Kegiatan Pendahuluan (15 Menit)
+### A. Kegiatan Pendahuluan
 1. Guru membuka kelas dengan salam islami, tadarus pagi singkat, dan berdoa bersama.
 2. Guru memeriksa kehadiran siswa dan kesiapan ruang kelas.
 3. **Apersepsi**: Guru memberikan pertanyaan pemantik terkait tema **{$topic}** dalam kehidupan sehari-hari.
 4. Guru menyampaikan tujuan pembelajaran yang ingin dicapai hari ini.
 
-### B. Kegiatan Inti (60 Menit)
+### B. Kegiatan Inti
 1. **Stimulus**: Guru menyajikan data/kasus singkat yang relevan dengan **{$topic}**.
 2. **Identifikasi Masalah**: Siswa secara individu mengidentifikasi tantangan utama dari stimulus yang diberikan.
 3. **Pengumpulan Data**: Siswa berdiskusi dalam kelompok kecil untuk menelaah aspek kompetensi: *\"{$competencies}\"*.
 4. **Pembuktian**: Kelompok merancang model pemecahan masalah sesuai panduan buku ajar.
 5. **Menarik Kesimpulan**: Beberapa kelompok mempresentasikan hasil diskusi di depan kelas, ditanggapi kelompok lain.
 
-### C. Kegiatan Penutup (15 Menit)
+### C. Kegiatan Penutup
 1. Siswa bersama guru melakukan refleksi atas pembelajaran yang telah berlangsung.
 2. Guru memberikan apresiasi atas partisipasi aktif siswa selama proses diskusi kelompok.
 3. Guru menyimpulkan poin-poin penting dari materi pembelajaran **{$topic}**.
@@ -250,7 +270,7 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
 
 ## 6. MEDIA & SUMBER BELAJAR
 - Buku Paket Guru & Siswa Kurikulum Merdeka Kemendikbudristek.
-- Slide Presentasi Proyektor SMA Islam Sultan Agung 1.
+- Slide presentasi guru.
 - Lembar Kerja Kelompok (LKK) Siswa.";
     }
 }
