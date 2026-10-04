@@ -7,6 +7,7 @@ use App\Models\AcademicYear;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
 use App\Models\RemedialSession;
+use App\Models\Schedule;
 use App\Models\Student;
 use App\Services\RemedialWorkflowService;
 use App\Support\Access\StudentDataAccess;
@@ -56,11 +57,24 @@ class DailyAssessmentMobileApiController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        // Assessments used to land in academic year 1 when none was active, and
+        // any teacher could create one for any class and subject.
+        $year = AcademicYear::current();
+        if (! $year) {
+            return response()->json(['success' => false, 'message' => __('Tahun akademik aktif tidak ditemukan')], 400);
+        }
+        if (! Schedule::teaches($request->user(), (int) $request->classroom_id, (int) $request->subject_id, $year->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.'),
+            ], 403);
+        }
+
         $assessment = DailyAssessment::create([
             'subject_id' => $request->subject_id,
             'classroom_id' => $request->classroom_id,
             'teacher_id' => $request->user()->id,
-            'academic_year_id' => AcademicYear::where('is_active', true)->first()->id ?? 1,
+            'academic_year_id' => $year->id,
             'title' => $request->title,
             'type' => $request->input('type', 'ulangan_harian'),
             'assessment_date' => $request->assessment_date,
@@ -71,7 +85,7 @@ class DailyAssessmentMobileApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Penilaian harian berhasil dibuat',
+            'message' => __('Penilaian harian berhasil dibuat'),
             'data' => $assessment,
         ], 201);
     }
@@ -146,8 +160,8 @@ class DailyAssessmentMobileApiController extends Controller
         if ($outside->isNotEmpty()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sebagian siswa bukan anggota kelas penilaian ini.',
-                'errors' => ['scores' => ['Siswa di luar kelas: '.$outside->implode(', ')]],
+                'message' => __('Sebagian siswa bukan anggota kelas penilaian ini.'),
+                'errors' => ['scores' => [__('Siswa di luar kelas: :ids', ['ids' => $outside->implode(', ')])]],
             ], 422);
         }
 
@@ -170,7 +184,7 @@ class DailyAssessmentMobileApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Nilai siswa berhasil disimpan secara massal',
+            'message' => __('Nilai siswa berhasil disimpan secara massal'),
             'data' => [
                 'total_saved' => count($request->scores),
                 'students_under_kkm' => $totalUnder,
@@ -188,7 +202,7 @@ class DailyAssessmentMobileApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Otomasi penugasan remedial berhasil. {$result['assigned_to_remedial']} siswa ditugaskan remedial.",
+            'message' => __('Otomasi penugasan remedial berhasil. Siswa yang ditugaskan remedial: :count.', ['count' => $result['assigned_to_remedial']]),
             'data' => $result,
         ]);
     }
@@ -256,7 +270,7 @@ class DailyAssessmentMobileApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Nilai remedial siswa berhasil disimpan',
+            'message' => __('Nilai remedial siswa berhasil disimpan'),
             'data' => $session,
         ]);
     }

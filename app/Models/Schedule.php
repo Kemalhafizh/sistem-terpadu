@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Schedule extends Model
 {
@@ -61,5 +62,34 @@ class Schedule extends Model
             ->where('subject_id', $subjectId)
             ->where('academic_year_id', $academicYearId)
             ->exists();
+    }
+
+    /**
+     * The classrooms [teacher] may take attendance for and see the roster of:
+     * the ones they have a lesson in this academic year, and the one they are
+     * homeroom teacher of this year. Without an active year there is none.
+     *
+     * @return Collection<int, int>
+     */
+    public static function classroomIdsFor(User $teacher, ?AcademicYear $year): Collection
+    {
+        if (! $year) {
+            return collect();
+        }
+
+        return self::where('teacher_id', $teacher->id)
+            ->where('academic_year_id', $year->id)
+            ->pluck('classroom_id')
+            ->concat(Classroom::where('teacher_id', $teacher->id)->where('academic_year', $year->year)->pluck('id'))
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+    }
+
+    /** May [teacher] see the roster of and record attendance for [classroomId]? Superadmin always may. */
+    public static function coversClassroom(User $teacher, int $classroomId, ?AcademicYear $year): bool
+    {
+        return $teacher->role === 'superadmin'
+            || self::classroomIdsFor($teacher, $year)->contains($classroomId);
     }
 }

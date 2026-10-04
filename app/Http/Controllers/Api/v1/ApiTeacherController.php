@@ -43,11 +43,17 @@ class ApiTeacherController extends Controller
     {
         $user = $request->user();
 
-        $schedules = Schedule::where('teacher_id', $user->id)
-            ->with(['subject', 'classroom', 'teacher'])
-            ->get();
+        // This year's lessons only: earlier years' rows used to count towards
+        // "jam mengajar minggu ini" and today's list on the app's home.
+        $year = AcademicYear::current();
+        $schedules = $year
+            ? Schedule::where('teacher_id', $user->id)
+                ->where('academic_year_id', $year->id)
+                ->with(['subject', 'classroom', 'teacher'])
+                ->get()
+            : collect();
 
-        return $this->successResponse(ScheduleResource::collection($schedules), 'Jadwal mengajar berhasil diambil');
+        return $this->successResponse(ScheduleResource::collection($schedules), __('Jadwal mengajar berhasil diambil'));
     }
 
     /**
@@ -61,14 +67,9 @@ class ApiTeacherController extends Controller
     {
         $user = $request->user();
 
-        // Cari kelas di mana guru adalah wali kelas
-        // ATAU kelas di mana guru memiliki jadwal mengajar
-        $classroomIdsFromSchedules = Schedule::where('teacher_id', $user->id)
-            ->pluck('classroom_id')
-            ->toArray();
-
-        $classrooms = Classroom::where('teacher_id', $user->id)
-            ->orWhereIn('id', $classroomIdsFromSchedules)
+        // Classes taught or homeroomed this academic year; earlier years' classes
+        // used to be counted as "kelas diampu" too.
+        $classrooms = Classroom::whereIn('id', Schedule::classroomIdsFor($user, AcademicYear::current()))
             ->withCount('students')
             ->get();
 
@@ -83,7 +84,7 @@ class ApiTeacherController extends Controller
             ];
         });
 
-        return $this->successResponse($data, 'Daftar kelas berhasil diambil');
+        return $this->successResponse($data, __('Daftar kelas berhasil diambil'));
     }
 
     /**
@@ -95,6 +96,11 @@ class ApiTeacherController extends Controller
      */
     public function classStudents(Request $request, $classroomId)
     {
+        // Any teacher could list any class's roster before.
+        if (! Schedule::coversClassroom($request->user(), (int) $classroomId, AcademicYear::current())) {
+            return $this->errorResponse(__('Anda tidak mengajar di kelas ini pada tahun ajaran aktif.'), 403);
+        }
+
         // name is a getNameAttribute() accessor proxying the related User,
         // not a real column — selecting/ordering by it directly against the
         // students table silently returned the literal string "name" for
@@ -114,7 +120,7 @@ class ApiTeacherController extends Controller
                 'gender' => $s->gender,
             ]);
 
-        return $this->successResponse($students, 'Daftar siswa rombel kelas berhasil diambil');
+        return $this->successResponse($students, __('Daftar siswa rombel kelas berhasil diambil'));
     }
 
     /**
@@ -146,7 +152,16 @@ class ApiTeacherController extends Controller
 
         $activeYear = AcademicYear::current();
         if (! $activeYear) {
-            return $this->errorResponse('Tahun akademik aktif tidak ditemukan', 400);
+            return $this->errorResponse(__('Tahun akademik aktif tidak ditemukan'), 400);
+        }
+
+        // Any teacher could record attendance for any class before.
+        if (! Schedule::coversClassroom($request->user(), (int) $request->classroom_id, $activeYear)) {
+            return $this->errorResponse(__('Anda tidak mengajar di kelas ini pada tahun ajaran aktif.'), 403);
+        }
+        if ($request->schedule_id
+            && ! Schedule::whereKey($request->schedule_id)->where('classroom_id', $request->classroom_id)->exists()) {
+            return $this->errorResponse(__('Jadwal ini bukan jadwal kelas tersebut.'), 422);
         }
 
         $recordedCount = 0;
@@ -178,7 +193,7 @@ class ApiTeacherController extends Controller
 
         return $this->successResponse([
             'recorded_count' => $recordedCount,
-        ], 'Absensi berhasil disimpan');
+        ], __('Absensi berhasil disimpan'));
     }
 
     /**
@@ -195,7 +210,7 @@ class ApiTeacherController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(TeachingJournalResource::collection($journals), 'Jurnal mengajar berhasil diambil');
+        return $this->successResponse(TeachingJournalResource::collection($journals), __('Jurnal mengajar berhasil diambil'));
     }
 
     /**
@@ -237,7 +252,7 @@ class ApiTeacherController extends Controller
 
         $activeYear = AcademicYear::current();
         if (! $activeYear) {
-            return $this->errorResponse('Tahun akademik aktif tidak ditemukan', 400);
+            return $this->errorResponse(__('Tahun akademik aktif tidak ditemukan'), 400);
         }
 
         if (! Schedule::teaches($request->user(), (int) $request->classroom_id, (int) $request->subject_id, $activeYear->id)) {
@@ -267,7 +282,7 @@ class ApiTeacherController extends Controller
             'status' => 'draft', // Draf default sebelum di-review
         ]);
 
-        return $this->successResponse(new TeachingJournalResource($journal), 'Jurnal mengajar berhasil disimpan', 201);
+        return $this->successResponse(new TeachingJournalResource($journal), __('Jurnal mengajar berhasil disimpan'), 201);
     }
 
     /**
