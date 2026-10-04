@@ -36,7 +36,7 @@ class ClassSessionController extends Controller
     {
         $sessions = $this->sessions->todaySessionsForTeacher($request->user());
 
-        return $this->successResponse(ClassSessionResource::collection($sessions), 'Sesi kelas hari ini berhasil diambil');
+        return $this->successResponse(ClassSessionResource::collection($sessions), __('Sesi kelas hari ini berhasil diambil'));
     }
 
     /**
@@ -55,7 +55,7 @@ class ClassSessionController extends Controller
             $data = $this->validateEnvelope($request, ['topic' => 'nullable|string|max:200']);
             $session = $this->sessions->start($request->user(), $scheduleId, $data['topic'] ?? null);
 
-            return $this->successResponse(new ClassSessionResource($session), 'Sesi kelas dimulai', 201);
+            return $this->successResponse(new ClassSessionResource($session), __('Sesi kelas dimulai'), 201);
         });
     }
 
@@ -79,7 +79,7 @@ class ClassSessionController extends Controller
             ]);
             $session = $this->sessions->end($request->user(), $sessionId, $data['notes'] ?? null, $data['topic'] ?? null);
 
-            return $this->successResponse(new ClassSessionResource($session), 'Sesi kelas diakhiri');
+            return $this->successResponse(new ClassSessionResource($session), __('Sesi kelas diakhiri'));
         });
     }
 
@@ -110,7 +110,7 @@ class ClassSessionController extends Controller
     {
         return $this->handle(fn () => $this->successResponse(
             SessionAttendanceResource::collection($this->sessions->roster($request->user(), $sessionId)),
-            'Daftar hadir sesi berhasil diambil'
+            __('Daftar hadir sesi berhasil diambil')
         ));
     }
 
@@ -137,7 +137,7 @@ class ClassSessionController extends Controller
                 $request->user(), $sessionId, (int) $data['student_id'], $data['status'], $data['notes'] ?? null
             );
 
-            return $this->successResponse(new SessionAttendanceResource($attendance), 'Presensi siswa diperbarui');
+            return $this->successResponse(new SessionAttendanceResource($attendance), __('Presensi siswa diperbarui'));
         });
     }
 

@@ -140,21 +140,31 @@ Isi `qr_token` di-encode **apa adanya** ke QR. Token sama untuk semua perangkat 
 
 ---
 
-## 4. Pesan Error yang Dicocokkan Aplikasi
+## 4. Kode Error yang Dibaca Aplikasi
 
-| HTTP | `message` | Kapan |
-|---|---|---|
-| 422 | `QR token sudah kedaluwarsa` | Token lebih tua dari 1 jendela, atau tanda tangan token salah |
-| 403 | `Anda tidak terdaftar di kelas ini` | Siswa bukan anggota kelas sesi |
-| 409 | `Anda sudah tercatat hadir di sesi ini` | Scan kedua. `data = { status, checked_in_at }` |
-| 409 | `Sesi kelas sudah berakhir` | Sesi completed/auto_closed/cancelled (tidak ada absen retroaktif) |
-| 409 | `Sesi kelas belum dimulai` | QR dari sesi yang belum dimulai |
-| 422 | `QR tidak valid. Pastikan Anda memindai QR sesi kelas dari layar guru.` | Isi QR bukan QR sesi |
-| 422 | `Kelas baru bisa dimulai pukul HH:mm.` / `Waktu jadwal kelas ini sudah lewat.` | Mulai di luar jendela waktu |
-| 403 | `Anda tidak dijadwalkan mengajar pada jadwal ini.` | Guru lain mencoba memulai kelas |
-| 409 | `Sesi kelas ini sudah dimulai.` | Mulai dua kali. `data = { session_id }` |
-| 409 | `Absensi manual hanya bisa dilakukan saat sesi kelas aktif. …` | Absensi manual setelah sesi berakhir |
-| 422 | `Presensi berstatus 'hadir' tidak dapat dikoreksi. …` | Koreksi yang akan menghapus kehadiran |
+Setiap penolakan membawa `error_code` yang tetap. `message` ditulis dalam bahasa pengguna (`users.preferred_locale`, lalu `Accept-Language`), jadi aplikasi **tidak boleh** mencocokkan teksnya. Teks Indonesia di bawah hanya contoh.
+
+| HTTP | `error_code` | Contoh `message` (id) | Kapan |
+|---|---|---|---|
+| 422 | `qr_expired` | `QR token sudah kedaluwarsa` | Token lebih tua dari 1 jendela, atau tanda tangan token salah |
+| 422 | `qr_invalid` | `QR tidak valid. Pastikan Anda memindai QR sesi kelas dari layar guru.` | Isi QR bukan QR sesi |
+| 403 | `not_enrolled` | `Anda tidak terdaftar di kelas ini` | Siswa bukan anggota kelas sesi |
+| 409 | `already_checked_in` | `Anda sudah tercatat hadir di sesi ini` | Scan kedua. `data = { status, checked_in_at }` |
+| 409 | `session_ended` | `Sesi kelas sudah berakhir.` | Sesi completed/auto_closed/cancelled (tidak ada absen retroaktif) |
+| 409 | `session_not_started` | `Sesi kelas belum dimulai.` | QR dari sesi yang belum dimulai |
+| 409 | `qr_not_active` | `QR hanya tersedia saat sesi kelas aktif.` | Meminta QR untuk sesi yang tidak aktif |
+| 422 | `outside_schedule_window` | `Kelas baru bisa dimulai pukul 06:50.` | Mulai di luar jendela waktu atau di hari lain |
+| 403 | `not_your_schedule` | `Anda tidak dijadwalkan mengajar pada jadwal ini.` | Guru lain mencoba memulai atau mengelola kelas |
+| 409 | `session_already_started` | `Sesi kelas ini sudah dimulai.` | Mulai dua kali. `data = { session_id }` |
+| 409 | `session_already_ended` | `Sesi kelas ini sudah berakhir hari ini.` | Mulai lagi setelah selesai. `data = { session_id }` |
+| 409 | `manual_not_active` | `Absensi manual hanya bisa dilakukan saat sesi kelas aktif. …` | Absensi manual setelah sesi berakhir |
+| 422 | `transition_not_allowed` | `Presensi berstatus Hadir tidak dapat dikoreksi. …` | Koreksi yang akan menghapus kehadiran |
+| 422 | `status_unchanged` | `Status presensi sudah Hadir.` | Koreksi ke status yang sama |
+| 404 | `schedule_not_found`, `session_not_found`, `attendance_not_found`, `student_not_found`, `student_not_in_session` | | Data tidak ada |
+| 422 | `schedule_not_current_year`, `lesson_hours_missing`, `unknown_status` | | Data jadwal atau permintaan tidak lengkap |
+| 409 | `session_not_held` | | Koreksi untuk sesi yang tidak dilaksanakan |
+
+`tests/Feature/Academic/ClassSessionTest.php` memastikan setiap `ClassSessionException` membawa kode.
 
 **Aturan koreksi** (77.6.3): `alpha → hadir/sakit/izin`, `sakit/izin → hadir`, `telat → hadir`. Kehadiran yang sudah tercatat tidak bisa diubah menjadi alpha. Setiap koreksi dicatat di `activity_logs` (`session_attendance.override`) beserta alasannya.
 

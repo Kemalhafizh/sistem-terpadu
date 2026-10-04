@@ -308,7 +308,8 @@ test('tidak ada absensi retroaktif setelah sesi berakhir', function () {
 
     ($this->scan)($this->students[0], $token)
         ->assertStatus(409)
-        ->assertJsonPath('message', 'Sesi kelas sudah berakhir');
+        ->assertJsonPath('message', 'Sesi kelas sudah berakhir.')
+        ->assertJsonPath('error_code', 'session_ended');
 });
 
 test('siswa yang baru masuk kelas setelah sesi dimulai tetap bisa absen', function () {
@@ -509,7 +510,8 @@ test('kehadiran yang tercatat tidak bisa dihapus lewat koreksi', function () {
     $this->actingAs($admin)->putJson("/api/v1/admin/class-sessions/attendances/{$attendance->id}/override", [
         'status' => 'sakit', 'reason' => 'Mencoba mengubah kehadiran',
     ])->assertStatus(422)
-        ->assertJsonPath('message', "Presensi berstatus 'hadir' tidak dapat dikoreksi. Kehadiran yang sudah tercatat tidak boleh dihapus.");
+        ->assertJsonPath('message', 'Presensi berstatus Hadir tidak dapat dikoreksi. Kehadiran yang sudah tercatat tidak boleh dihapus.')
+        ->assertJsonPath('error_code', 'transition_not_allowed');
 
     expect($attendance->fresh()->status)->toBe('hadir');
 });
@@ -613,4 +615,45 @@ test('kepala sekolah bisa membaca daftar, detail, dan rekap sesi tetapi tidak bi
         'status' => 'izin', 'reason' => 'Kepala sekolah mencoba koreksi',
     ])->assertForbidden();
     expect($attendance->fresh()->status)->toBe('alpha');
+});
+
+// ── Bahasa pengguna dan kode galat ──────────────────────────────────────
+// The app used to tell refusals apart by looking for Indonesian phrases in
+// the message. Messages now follow the user's language, so every refusal
+// carries a stable error_code instead.
+
+test('penolakan memakai bahasa pengguna dan membawa kode tetap', function () {
+    $this->teacher->update(['preferred_locale' => 'en']);
+    $this->travelTo(Carbon::parse(MONDAY.' 06:00:00'));
+
+    ($this->startSession)()
+        ->assertStatus(422)
+        ->assertJsonPath('message', 'The class can start from 06:50.')
+        ->assertJsonPath('error_code', 'outside_schedule_window');
+});
+
+test('siswa berbahasa arab mendapat penolakan scan dalam bahasa arab', function () {
+    $id = ($this->startSession)()->json('data.id');
+    $token = ($this->qrToken)($id);
+    $student = $this->students[0];
+    $student->user->update(['preferred_locale' => 'ar']);
+
+    ($this->scan)($student, $token)->assertOk();
+    ($this->scan)($student, $token)
+        ->assertStatus(409)
+        ->assertJsonPath('message', 'تم تسجيل حضورك في هذه الحصة بالفعل')
+        ->assertJsonPath('error_code', 'already_checked_in');
+
+    ($this->scan)($student, 'bukan-qr-sesi')
+        ->assertJsonPath('error_code', 'qr_invalid');
+});
+
+test('setiap penolakan sesi kelas membawa error_code', function () {
+    $source = file_get_contents(app_path('Services/Academic/ClassSessionService.php'));
+    preg_match_all('/new ClassSessionException\((.*?)\);/s', $source, $throws);
+
+    expect($throws[1])->not->toBeEmpty();
+    foreach ($throws[1] as $args) {
+        expect(preg_match("/errorCode: '|'[a-z_]+'\s*\)?\s*$/", trim($args)))->toBe(1, "Tanpa error_code: {$args}");
+    }
 });

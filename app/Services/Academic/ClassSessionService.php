@@ -187,22 +187,22 @@ class ClassSessionService
 
         $schedule = Schedule::find($scheduleId);
         if (! $schedule) {
-            throw new ClassSessionException('Jadwal tidak ditemukan.', 404);
+            throw new ClassSessionException(__('Jadwal tidak ditemukan.'), 404, errorCode: 'schedule_not_found');
         }
         if ((int) $schedule->teacher_id !== (int) $teacher->id) {
-            throw new ClassSessionException('Anda tidak dijadwalkan mengajar pada jadwal ini.', 403);
+            throw new ClassSessionException(__('Anda tidak dijadwalkan mengajar pada jadwal ini.'), 403, errorCode: 'not_your_schedule');
         }
         if ($schedule->day !== self::dayName($now)) {
-            throw new ClassSessionException("Jadwal ini untuk hari {$schedule->day}, bukan hari ini.", 422);
+            throw new ClassSessionException(__('Jadwal ini untuk hari :day, bukan hari ini.', ['day' => __((string) $schedule->day)]), 422, errorCode: 'outside_schedule_window');
         }
         $currentYear = AcademicYear::current();
         if ($currentYear && (int) $schedule->academic_year_id !== (int) $currentYear->id) {
-            throw new ClassSessionException('Jadwal ini bukan milik tahun ajaran aktif.', 422);
+            throw new ClassSessionException(__('Jadwal ini bukan milik tahun ajaran aktif.'), 422, errorCode: 'schedule_not_current_year');
         }
 
         $session = $this->materialize($schedule, $now->toDateString());
         if (! $session) {
-            throw new ClassSessionException('Jam pelajaran untuk jadwal ini belum dikonfigurasi. Hubungi Waka Kurikulum.', 422);
+            throw new ClassSessionException(__('Jam pelajaran untuk jadwal ini belum dikonfigurasi. Hubungi Waka Kurikulum.'), 422, errorCode: 'lesson_hours_missing');
         }
 
         $session = DB::transaction(function () use ($session, $topic, $now) {
@@ -210,16 +210,16 @@ class ClassSessionService
             $session = ClassSession::whereKey($session->id)->lockForUpdate()->firstOrFail();
 
             if ($session->isActive()) {
-                throw new ClassSessionException('Sesi kelas ini sudah dimulai.', 409, ['session_id' => $session->id]);
+                throw new ClassSessionException(__('Sesi kelas ini sudah dimulai.'), 409, ['session_id' => $session->id], 'session_already_started');
             }
             if ($session->status !== ClassSession::STATUS_SCHEDULED) {
-                throw new ClassSessionException('Sesi kelas ini sudah berakhir hari ini.', 409, ['session_id' => $session->id]);
+                throw new ClassSessionException(__('Sesi kelas ini sudah berakhir hari ini.'), 409, ['session_id' => $session->id], 'session_already_ended');
             }
             if ($now->lt($session->startableFrom())) {
-                throw new ClassSessionException('Kelas baru bisa dimulai pukul '.$session->startableFrom()->format('H:i').'.', 422);
+                throw new ClassSessionException(__('Kelas baru bisa dimulai pukul :time.', ['time' => $session->startableFrom()->format('H:i')]), 422, errorCode: 'outside_schedule_window');
             }
             if ($now->gt($session->scheduledEndAt())) {
-                throw new ClassSessionException('Waktu jadwal kelas ini sudah lewat.', 422);
+                throw new ClassSessionException(__('Waktu jadwal kelas ini sudah lewat.'), 422, errorCode: 'outside_schedule_window');
             }
 
             $session->update([
@@ -270,10 +270,10 @@ class ClassSessionService
         $session = $this->findForTeacher($teacher, $sessionId);
 
         if ($session->status === ClassSession::STATUS_SCHEDULED) {
-            throw new ClassSessionException('Sesi kelas belum dimulai.', 409);
+            throw new ClassSessionException(__('Sesi kelas belum dimulai.'), 409, errorCode: 'session_not_started');
         }
         if (! $session->isActive()) {
-            throw new ClassSessionException('Sesi kelas sudah berakhir.', 409);
+            throw new ClassSessionException(__('Sesi kelas sudah berakhir.'), 409, errorCode: 'session_ended');
         }
 
         return $this->close($session, false, $notes, $topic);
@@ -307,7 +307,7 @@ class ClassSessionService
         });
 
         if (! $closed) {
-            throw new ClassSessionException('Sesi kelas sudah berakhir.', 409);
+            throw new ClassSessionException(__('Sesi kelas sudah berakhir.'), 409, errorCode: 'session_ended');
         }
 
         $closed = $this->loadDetail($closed);
@@ -419,7 +419,7 @@ class ClassSessionService
         $session = $this->findForTeacher($teacher, $sessionId);
 
         if (! $session->isActive() || ! $session->qr_secret) {
-            throw new ClassSessionException('QR hanya tersedia saat sesi kelas aktif.', 409);
+            throw new ClassSessionException(__('QR hanya tersedia saat sesi kelas aktif.'), 409, errorCode: 'qr_not_active');
         }
 
         $rotation = max(5, (int) config('class_sessions.qr_rotation_seconds', 30));
@@ -470,20 +470,20 @@ class ClassSessionService
             ? ClassSession::with(['subject', 'classroom'])->where('uuid', $uuid)->first()
             : null;
         if (! $session) {
-            throw new ClassSessionException('QR tidak valid. Pastikan Anda memindai QR sesi kelas dari layar guru.', 422);
+            throw new ClassSessionException(__('QR tidak valid. Pastikan Anda memindai QR sesi kelas dari layar guru.'), 422, errorCode: 'qr_invalid');
         }
 
         if ($session->hasEnded()) {
-            throw new ClassSessionException('Sesi kelas sudah berakhir', 409);
+            throw new ClassSessionException(__('Sesi kelas sudah berakhir.'), 409, errorCode: 'session_ended');
         }
         if (! $session->isActive()) {
-            throw new ClassSessionException('Sesi kelas belum dimulai', 409);
+            throw new ClassSessionException(__('Sesi kelas belum dimulai.'), 409, errorCode: 'session_not_started');
         }
         if (! $this->qrTokenIsValid($session, $token, $now)) {
-            throw new ClassSessionException('QR token sudah kedaluwarsa', 422);
+            throw new ClassSessionException(__('QR token sudah kedaluwarsa'), 422, errorCode: 'qr_expired');
         }
         if ((int) $student->classroom_id !== (int) $session->classroom_id) {
-            throw new ClassSessionException('Anda tidak terdaftar di kelas ini', 403);
+            throw new ClassSessionException(__('Anda tidak terdaftar di kelas ini'), 403, errorCode: 'not_enrolled');
         }
 
         $attendance = DB::transaction(function () use ($session, $student, $user, $now) {
@@ -493,10 +493,10 @@ class ClassSessionService
                 ->first();
 
             if ($attendance && $attendance->isPresent()) {
-                throw new ClassSessionException('Anda sudah tercatat hadir di sesi ini', 409, [
+                throw new ClassSessionException(__('Anda sudah tercatat hadir di sesi ini'), 409, [
                     'status' => $attendance->status,
                     'checked_in_at' => $attendance->checked_in_at?->toIso8601String(),
-                ]);
+                ], 'already_checked_in');
             }
 
             $lateAfter = $session->scheduledStartAt()->addMinutes((int) config('class_sessions.late_after_minutes', 15));
@@ -625,14 +625,14 @@ class ClassSessionService
     private function assertManualEditable(ClassSession $session): void
     {
         if (! $session->isActive()) {
-            throw new ClassSessionException('Absensi manual hanya bisa dilakukan saat sesi kelas aktif. Untuk koreksi setelah sesi berakhir, hubungi Waka Kurikulum/TU.', 409);
+            throw new ClassSessionException(__('Absensi manual hanya bisa dilakukan saat sesi kelas aktif. Untuk koreksi setelah sesi berakhir, hubungi Waka Kurikulum/TU.'), 409, errorCode: 'manual_not_active');
         }
     }
 
     private function applyManual(ClassSession $session, User $teacher, int $studentId, string $status, ?string $notes): SessionAttendance
     {
         if (! in_array($status, SessionAttendance::STATUSES, true)) {
-            throw new ClassSessionException("Status '{$status}' tidak dikenal.", 422);
+            throw new ClassSessionException(__('Status :status tidak dikenal.', ['status' => $status]), 422, errorCode: 'unknown_status');
         }
 
         $attendance = SessionAttendance::where('class_session_id', $session->id)
@@ -643,7 +643,7 @@ class ClassSessionService
         if (! $attendance) {
             $inClass = Student::whereKey($studentId)->where('classroom_id', $session->classroom_id)->exists();
             if (! $inClass) {
-                throw new ClassSessionException('Siswa tidak terdaftar di kelas sesi ini.', 404);
+                throw new ClassSessionException(__('Siswa tidak terdaftar di kelas sesi ini.'), 404, errorCode: 'student_not_in_session');
             }
             $attendance = new SessionAttendance(['class_session_id' => $session->id, 'student_id' => $studentId]);
         }
@@ -687,7 +687,7 @@ class ClassSessionService
     {
         $session = ClassSession::find($sessionId);
         if (! $session) {
-            throw new ClassSessionException('Sesi kelas tidak ditemukan.', 404);
+            throw new ClassSessionException(__('Sesi kelas tidak ditemukan.'), 404, errorCode: 'session_not_found');
         }
 
         return $session;
@@ -703,25 +703,29 @@ class ClassSessionService
         return DB::transaction(function () use ($admin, $attendanceId, $status, $reason, $ip) {
             $attendance = SessionAttendance::whereKey($attendanceId)->lockForUpdate()->first();
             if (! $attendance) {
-                throw new ClassSessionException('Data presensi tidak ditemukan.', 404);
+                throw new ClassSessionException(__('Data presensi tidak ditemukan.'), 404, errorCode: 'attendance_not_found');
             }
 
             $session = $attendance->classSession;
             if (! $session || ! in_array($session->status, ClassSession::HELD_STATUSES, true)) {
-                throw new ClassSessionException('Presensi hanya bisa dikoreksi untuk sesi yang sudah dilaksanakan.', 409);
+                throw new ClassSessionException(__('Presensi hanya bisa dikoreksi untuk sesi yang sudah dilaksanakan.'), 409, errorCode: 'session_not_held');
             }
 
             $from = $attendance->status;
             if ($from === $status) {
-                throw new ClassSessionException("Status presensi sudah '{$status}'.", 422);
+                throw new ClassSessionException(__('Status presensi sudah :status.', ['status' => $this->statusLabel($status)]), 422, errorCode: 'status_unchanged');
             }
             $allowed = self::OVERRIDE_TRANSITIONS[$from] ?? [];
             if (! in_array($status, $allowed, true)) {
                 throw new ClassSessionException(
                     $allowed
-                        ? "Koreksi dari '{$from}' hanya boleh ke: ".implode(', ', $allowed).'.'
-                        : "Presensi berstatus '{$from}' tidak dapat dikoreksi. Kehadiran yang sudah tercatat tidak boleh dihapus.",
-                    422
+                        ? __('Koreksi dari :from hanya boleh ke: :to.', [
+                            'from' => $this->statusLabel($from),
+                            'to' => implode(', ', array_map(fn ($s) => $this->statusLabel($s), $allowed)),
+                        ])
+                        : __('Presensi berstatus :from tidak dapat dikoreksi. Kehadiran yang sudah tercatat tidak boleh dihapus.', ['from' => $this->statusLabel($from)]),
+                    422,
+                    errorCode: 'transition_not_allowed',
                 );
             }
 
@@ -843,7 +847,7 @@ class ClassSessionService
         $session = $this->findSession($sessionId);
 
         if ((int) $session->teacher_id !== (int) $teacher->id && ! in_array($teacher->role, ['admin', 'superadmin'], true)) {
-            throw new ClassSessionException('Anda bukan guru pengampu sesi kelas ini.', 403);
+            throw new ClassSessionException(__('Anda bukan guru pengampu sesi kelas ini.'), 403, errorCode: 'not_your_schedule');
         }
 
         return $session;
@@ -853,7 +857,7 @@ class ClassSessionService
     {
         $student = Student::where('user_id', $user->id)->first();
         if (! $student) {
-            throw new ClassSessionException('Data siswa untuk akun ini tidak ditemukan.', 404);
+            throw new ClassSessionException(__('Data siswa untuk akun ini tidak ditemukan.'), 404, errorCode: 'student_not_found');
         }
 
         return $student;
@@ -1089,5 +1093,11 @@ class ClassSessionService
         } catch (Throwable $e) {
             Log::warning('ClassSession: push notification failed', ['title' => $title, 'error' => $e->getMessage()]);
         }
+    }
+
+    /** "hadir" → "Hadir" / "Present" / "حاضر": a status code in the user's language. */
+    private function statusLabel(string $status): string
+    {
+        return __(ucfirst($status));
     }
 }
