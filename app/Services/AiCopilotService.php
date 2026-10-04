@@ -32,7 +32,7 @@ class AiCopilotService
         }
 
         if (empty($apiKey) || ! in_array($provider, ['openai', 'gemini'], true)) {
-            throw new AiUnavailableException('Pembuatan RPP dengan AI membutuhkan OpenAI atau Gemini beserta API key-nya. Pilih "Templat RPP" untuk kerangka kosong tanpa AI.');
+            throw new AiUnavailableException(__('Pembuatan RPP dengan AI membutuhkan OpenAI atau Gemini beserta API key-nya. Pilih "Templat RPP" untuk kerangka kosong tanpa AI.'));
         }
 
         $school = school_name();
@@ -79,14 +79,14 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
             }
         } catch (Exception $e) {
             // Not $e->getMessage(): for Gemini it can contain the request URL, and the API key is in it.
-            throw new AiUnavailableException('Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.', 0, $e);
+            throw new AiUnavailableException(__('Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.'), 0, $e);
         }
 
         if (! $response->successful()) {
-            throw new AiUnavailableException("Layanan AI menolak permintaan (HTTP {$response->status()}). Periksa API key lalu coba lagi.");
+            throw new AiUnavailableException(__('Layanan AI menolak permintaan (HTTP :status). Periksa API key lalu coba lagi.', ['status' => $response->status()]));
         }
         if (! is_string($text) || trim($text) === '') {
-            throw new AiUnavailableException('Jawaban AI kosong. Coba lagi.');
+            throw new AiUnavailableException(__('Jawaban AI kosong. Coba lagi.'));
         }
 
         return $text;
@@ -112,7 +112,7 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
         $difficulty = $params['difficulty'] ?? 'medium';
 
         if (empty($apiKey) || ! in_array($provider, ['openai', 'gemini'], true)) {
-            throw new AiUnavailableException('Pembuatan soal membutuhkan layanan AI. Pilih OpenAI atau Gemini dan isi API key-nya.');
+            throw new AiUnavailableException(__('Pembuatan soal membutuhkan layanan AI. Pilih OpenAI atau Gemini dan isi API key-nya.'));
         }
 
         try {
@@ -172,12 +172,12 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
                 }
             }
 
-            throw new AiUnavailableException("Layanan AI menolak permintaan (HTTP {$response->status()}). Periksa API key lalu coba lagi.");
+            throw new AiUnavailableException(__('Layanan AI menolak permintaan (HTTP :status). Periksa API key lalu coba lagi.', ['status' => $response->status()]));
         } catch (AiUnavailableException $e) {
             throw $e;
         } catch (Exception $e) {
             // Not $e->getMessage(): for Gemini it can contain the request URL, and the API key is in it.
-            throw new AiUnavailableException('Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.', 0, $e);
+            throw new AiUnavailableException(__('Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.'), 0, $e);
         }
     }
 
@@ -194,7 +194,7 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
         ));
 
         if ($questions === []) {
-            throw new AiUnavailableException('Jawaban AI tidak berisi soal yang bisa dibaca. Coba lagi.');
+            throw new AiUnavailableException(__('Jawaban AI tidak berisi soal yang bisa dibaca. Coba lagi.'));
         }
 
         return $questions;

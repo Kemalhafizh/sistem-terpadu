@@ -188,5 +188,22 @@
     "Perlu Perhatian": "يحتاج إلى متابعة",
     "SP1 (Waspada)": "الإنذار الأول (تنبيه)",
     "SP2 (Kritis)": "الإنذار الثاني (حرج)",
-    "SP3 (Sangat Kritis)": "الإنذار الثالث (حرج جدًا)"
+    "SP3 (Sangat Kritis)": "الإنذار الثالث (حرج جدًا)",
+
+    "Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.": "أنت لا تدرّس هذه المادة في هذا الفصل خلال العام الدراسي الحالي.",
+    "Pembuatan RPP dengan AI membutuhkan OpenAI atau Gemini beserta API key-nya. Pilih \"Templat RPP\" untuk kerangka kosong tanpa AI.": "يتطلب إنشاء خطة الدرس بالذكاء الاصطناعي OpenAI أو Gemini مع مفتاح API الخاص به. اختر \"Templat RPP\" للحصول على قالب فارغ بدون ذكاء اصطناعي.",
+    "Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.": "تعذّر الاتصال بخدمة الذكاء الاصطناعي. تحقق من الاتصال ومفتاح API ثم حاول مرة أخرى.",
+    "Layanan AI menolak permintaan (HTTP :status). Periksa API key lalu coba lagi.": "رفضت خدمة الذكاء الاصطناعي الطلب (HTTP :status). تحقق من مفتاح API ثم حاول مرة أخرى.",
+    "Jawaban AI kosong. Coba lagi.": "أعاد الذكاء الاصطناعي إجابة فارغة. حاول مرة أخرى.",
+    "Pembuatan soal membutuhkan layanan AI. Pilih OpenAI atau Gemini dan isi API key-nya.": "يتطلب إنشاء الأسئلة خدمة ذكاء اصطناعي. اختر OpenAI أو Gemini وأدخل مفتاح API الخاص به.",
+    "Jawaban AI tidak berisi soal yang bisa dibaca. Coba lagi.": "لم تتضمن إجابة الذكاء الاصطناعي أسئلة قابلة للقراءة. حاول مرة أخرى.",
+    "Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.": "لم يُدخل اسم مدير المدرسة في إعدادات المدرسة بعد، لذا لا يمكن توقيع الشهادة حاليًا.",
+    "Dokumen tidak ditemukan dalam arsip resmi :school.": "لم يُعثر على المستند في السجلات الرسمية لـ :school.",
+    "Belum ada jawaban siswa pada ujian ini, jadi belum ada soal yang bisa dikalibrasi.": "لا توجد إجابات للطلاب في هذا الاختبار بعد، لذا لا يمكن معايرة أي سؤال.",
+    ":calibrated soal dikalibrasi dari jawaban siswa; :skipped soal belum memiliki jawaban.": "تمت معايرة :calibrated سؤالًا من إجابات الطلاب؛ و:skipped سؤالًا بلا إجابات بعد.",
+    "Simulasi aturan [:event] selesai. Aturan dievaluasi: :evaluated, cocok: :matched.": "اكتملت محاكاة القاعدة [:event]. القواعد المُقيّمة: :evaluated، المطابقة: :matched.",
+    "Aksinya belum dijalankan karena belum ada pelaksana (tiket BK, WhatsApp, potongan gaji, SP1).": "لم تُنفّذ الإجراءات لأنه لا يوجد لها منفّذ بعد (تذكرة الإرشاد، واتساب، خصم الراتب، خطاب الإنذار).",
+    ":count belum dijalankan": ":count لم تُنفّذ",
+    "Aksi belum memiliki pelaksana": "لا يوجد منفّذ للإجراءات بعد",
+    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "تم حفظ المستند [:type]. لا يوجد محرك OCR مثبت، لذا أدخل بياناته يدويًا من الملف الممسوح ثم تحقق منها."
 }
