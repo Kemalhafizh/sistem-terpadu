@@ -18,6 +18,19 @@ if (! function_exists('school_short_name')) {
     }
 }
 
+if (! function_exists('school_placeholders')) {
+    /**
+     * Replacements for translation strings that mention the school:
+     * __('public.hero_desc', school_placeholders()) fills :school and :school_short.
+     *
+     * @return array{school: string, school_short: string}
+     */
+    function school_placeholders(): array
+    {
+        return ['school' => School::name(), 'school_short' => School::shortName()];
+    }
+}
+
 if (! function_exists('school_foundation_name')) {
     function school_foundation_name(bool $withAbbreviation = true): string
     {

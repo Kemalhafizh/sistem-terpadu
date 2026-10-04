@@ -97,7 +97,7 @@ class PragmaticSyncService
                                 'to_ayat' => $payload['ayah_end'] ?? 30,
                                 'grade' => $payload['grade'] ?? 'A',
                                 'type' => 'ziyadah',
-                                'notes' => 'Mutabaah Yaumiyah Sultan Agung 1',
+                                'notes' => 'Mutabaah Yaumiyah',
                                 'date' => now()->toDateString(),
                             ]);
                         }

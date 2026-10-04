@@ -79,7 +79,8 @@ class SchoolOperationsApiController extends Controller
             ->orderBy('start_datetime')
             ->get();
 
-        $ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//SMA Islam Sultan Agung 1//Sula-One//ID\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Kalender Akademik SMA Islam Sultan Agung 1\r\n";
+        $school = school_short_name();
+        $ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//{$school}//Sula-One//ID\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Kalender Akademik {$school}\r\n";
 
         foreach ($events as $event) {
             $start = $event->start_datetime?->format('Ymd\THis\Z') ?? now()->format('Ymd\THis\Z');

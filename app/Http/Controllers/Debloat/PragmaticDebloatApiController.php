@@ -9,6 +9,7 @@ use App\Services\Debloat\PragmaticAtRiskStudentService;
 use App\Services\Debloat\PragmaticModuleCatalogService;
 use App\Services\Debloat\PragmaticSyncService;
 use App\Services\Debloat\SingleVpsInfrastructureService;
+use DomainException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -54,11 +55,15 @@ class PragmaticDebloatApiController extends Controller
             abort(403, 'Anda tidak berwenang menerbitkan dokumen untuk siswa lain.');
         }
 
-        $doc = $this->certificateService->issueCertificate(
-            $student,
-            $validated['document_type'],
-            $validated['document_number']
-        );
+        try {
+            $doc = $this->certificateService->issueCertificate(
+                $student,
+                $validated['document_type'],
+                $validated['document_number']
+            );
+        } catch (DomainException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+        }
 
         return response()->json([
             'success' => true,

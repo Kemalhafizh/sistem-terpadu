@@ -60,7 +60,7 @@ class ContextualHomeService
         return [
             'type' => 'academic_greeting',
             'title' => $greeting,
-            'subtitle' => 'Tetap istiqomah dalam menuntut ilmu dan berakhlak mulia di SMA Islam Sultan Agung 1.',
+            'subtitle' => 'Tetap istiqomah dalam menuntut ilmu dan berakhlak mulia di '.school_short_name().'.',
             'gradientStart' => '#0D5C3A',
             'gradientEnd' => '#063823',
             'iconEmoji' => 'star',

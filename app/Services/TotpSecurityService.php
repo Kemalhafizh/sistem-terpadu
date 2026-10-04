@@ -25,9 +25,9 @@ class TotpSecurityService
     /**
      * Generate OTPAuth URL compatible with Google Authenticator / Authy / Microsoft Authenticator.
      */
-    public function generateQrCodeUrl(string $email, string $secret, string $issuer = 'SMA Islam Sultan Agung 1'): string
+    public function generateQrCodeUrl(string $email, string $secret, ?string $issuer = null): string
     {
-        $encodedIssuer = rawurlencode($issuer);
+        $encodedIssuer = rawurlencode($issuer ?? school_short_name());
         $encodedEmail = rawurlencode($email);
 
         return "otpauth://totp/{$encodedIssuer}:{$encodedEmail}?secret={$secret}&issuer={$encodedIssuer}&algorithm=SHA1&digits=6&period=30";

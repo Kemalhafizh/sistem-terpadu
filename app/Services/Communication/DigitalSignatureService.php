@@ -82,7 +82,7 @@ class DigitalSignatureService
             'signer_role' => $signature->signer_role,
             'signed_at' => $signature->signed_at->format('d M Y H:i:s T'),
             'signature_hash' => $signature->signature_hash,
-            'institution' => 'SMA Islam Sultan Agung 1 Semarang',
+            'institution' => school_name(),
             'ip_address' => $signature->ip_address,
             'qr_code' => $signature->qr_verification_code,
         ];

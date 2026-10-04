@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Sultan Agung 1</title>
+    <title>@yield('title') - {{ school_short_name() }}</title>
     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('images/logo-kotak.png') }}">
@@ -43,7 +43,7 @@
 
             <div class="mt-20 pt-10 border-t border-gray-100/50" style="margin-top: 5rem; padding-top: 2.5rem; border-top: 1px solid rgba(243, 244, 246, 0.5);">
                 <p class="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em]" style="font-size: 10px; font-weight: 900; color: #d1d5db; text-transform: uppercase; letter-spacing: 0.3em;">
-                    Sultan Agung 1 Semarang Integrated System
+                    {{ school_name() }} Integrated System
                 </p>
             </div>
         </div>

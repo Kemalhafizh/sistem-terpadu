@@ -3,7 +3,7 @@
 return [
     // Admissions & Welcome Page
     'spmb_title' => 'Student Admissions (SPMB)',
-    'spmb_desc' => 'Join the big family of SMA Islam Sultan Agung 1 Semarang. The best choice school to foster noble character and excellent future competencies.',
+    'spmb_desc' => 'Join the big family of :school. The best choice school to foster noble character and excellent future competencies.',
     'cta_register' => 'Register Now',
     'cta_check_status' => 'Check Admission Status',
     'back_to_home' => 'Back to Home',
@@ -42,11 +42,11 @@ return [
 
     // Result Card
     'card_title_approved' => 'Congratulations, You Are ACCEPTED!',
-    'card_desc_approved' => 'Welcome to the big family of SMA Islam Sultan Agung 1 Semarang. Please perform the registration confirmation at the school administration desk.',
+    'card_desc_approved' => 'Welcome to the big family of :school. Please perform the registration confirmation at the school administration desk.',
     'card_title_pending' => 'Registration Under Review',
     'card_desc_pending' => 'Your registration files are currently in the queue to be verified by the SPMB committee. Please check this page periodically.',
     'card_title_rejected' => 'We Apologize, You Have Not Passed',
-    'card_desc_rejected' => 'Thank you for your interest in registering at SMA Islam Sultan Agung 1 Semarang. Stay motivated and do not give up!',
+    'card_desc_rejected' => 'Thank you for your interest in registering at :school. Stay motivated and do not give up!',
 
     // Success Page
     'success_title' => 'Registration Submitted Successfully!',
@@ -64,8 +64,8 @@ return [
     'hero_badge' => 'New Student Admissions Academic Year 2026/2027',
     'hero_title_1' => 'A Bright Future',
     'hero_title_2' => 'Starts From',
-    'hero_title_3' => 'Sultan Agung 1.',
-    'hero_desc_welcome' => 'Official Student Admissions Portal (SPMB) of SMA Islam Sultan Agung 1 Semarang. The best place to cultivate a smart, globally competitive, and noble Islamic generation.',
+    'hero_title_3' => ':school_short.',
+    'hero_desc_welcome' => 'Official Student Admissions Portal (SPMB) of :school. The best place to cultivate a smart, globally competitive, and noble Islamic generation.',
     'btn_start_registration' => 'Start Registration',
     'btn_learn_flow' => 'Learn the Process',
 

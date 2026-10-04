@@ -5,10 +5,10 @@ return [
     'welcome' => 'Selamat Datang Kembali',
     'welcome_back' => 'Selamat Datang',
     'system_info' => 'Informasi Sistem',
-    'welcome_desc_kepala_sekolah' => 'Pantau kesehatan akademik dan kedisiplinan SMA Islam Sultan Agung 1 dalam satu dasbor eksekutif.',
+    'welcome_desc_kepala_sekolah' => 'Pantau kesehatan akademik dan kedisiplinan :school_short dalam satu dasbor eksekutif.',
     'welcome_desc_waka_kurikulum' => 'Kelola dinamika kurikulum, jadwal, dan progres akademik siswa secara mandiri dan fleksibel.',
     'welcome_desc_waka_kesiswaan' => 'Monitor kedisiplinan and pembinaan karakter siswa untuk mewujudkan generasi Khaira Ummah.',
-    'welcome_desc_default' => 'Sistem Terpadu Sultan Agung 1 siap membantu aktivitas pelayanan pendidikan Anda hari ini.',
+    'welcome_desc_default' => 'Sistem Terpadu :school_short siap membantu aktivitas pelayanan pendidikan Anda hari ini.',
 
     // General Titles & Controls
     'dashboard_title' => 'Dashboard Utama',

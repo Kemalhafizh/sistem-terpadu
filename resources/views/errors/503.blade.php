@@ -9,7 +9,7 @@
 @section('code', '503')
 @section('message', 'Server Sedang Istirahat')
 @section('description')
-    Maaf, server Sultan Agung 1 sedang dalam pemeliharaan rutin atau mengalami beban berlebih. Silakan coba beberapa saat lagi.
+    Maaf, server {{ school_short_name() }} sedang dalam pemeliharaan rutin atau mengalami beban berlebih. Silakan coba beberapa saat lagi.
     <br><br>
     <div style="display: flex; justify-content: center;">
         <span style="display: inline-block; padding: 0.5rem 1rem; border: 1px solid #bfdbfe; border-radius: 0.75rem; font-size: 0.75rem; font-weight: 800; background-color: #eff6ff; color: #1e40af;">

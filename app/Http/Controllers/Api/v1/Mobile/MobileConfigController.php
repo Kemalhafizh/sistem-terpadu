@@ -27,7 +27,7 @@ class MobileConfigController extends Controller
 
         if (! $config) {
             $config = MobileAppConfig::create([
-                'app_name' => 'SISTA SMA Islam Sultan Agung 1',
+                'app_name' => 'SISTA '.school_short_name(),
                 'min_android_build' => 100,
                 'latest_android_build' => 105,
                 'min_ios_build' => 100,

@@ -103,7 +103,7 @@ class LibraryBook extends Model
         return [
             'id' => (int) $this->id,
             'title' => (string) $this->title,
-            'author' => (string) ($this->author ?? 'SMA Islam Sultan Agung 1'),
+            'author' => (string) ($this->author ?? school_short_name()),
             'isbn' => (string) ($this->isbn ?? $this->barcode ?? '-'),
             'category' => (string) ($this->category ? $this->category->name : 'Umum'),
             'shelf_location' => (string) ($this->shelf_location ?? 'Koleksi Perpustakaan'),

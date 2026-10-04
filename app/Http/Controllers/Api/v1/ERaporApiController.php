@@ -87,7 +87,7 @@ class ERaporApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Sertifikat rapor digital resmi SMA Islam Sultan Agung 1 terverifikasi.',
+            'message' => 'Sertifikat rapor digital resmi '.school_short_name().' terverifikasi.',
             'data' => [
                 'student_name' => $pdf->student->name ?? 'Siswa',
                 'nisn' => $pdf->student->nisn ?? '-',

@@ -16,7 +16,7 @@ class DigitalMagazinePublisherService
      */
     public function saveMagazine(User $author, array $data, ?int $magazineId = null): DigitalMagazine
     {
-        $title = $data['title'] ?? 'Edisi Majalah Sultan Agung 1';
+        $title = $data['title'] ?? 'Edisi Majalah '.school_short_name();
         $slug = Str::slug($title).'-'.time();
         $payload = [
             'title' => $title,

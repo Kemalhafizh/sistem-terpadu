@@ -147,7 +147,7 @@ class AdminMobileDashboardController extends Controller
             'id' => (string) Str::uuid(),
             'title' => $validated['title'],
             'message' => $validated['message'],
-            'location' => $validated['location'] ?? 'Kampus SMA Islam Sultan Agung 1',
+            'location' => $validated['location'] ?? 'Kampus '.school_short_name(),
             'timestamp' => now()->toIso8601String(),
             'issued_by' => $request->user()->name,
         ];

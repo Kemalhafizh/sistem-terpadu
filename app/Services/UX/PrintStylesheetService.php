@@ -10,7 +10,7 @@ class PrintStylesheetService
             'title' => $title,
             'paper_size' => $paperSize,
             'orientation' => $orientation,
-            'watermark' => 'SMA Islam Sultan Agung 1 Semarang',
+            'watermark' => school_name(),
             'show_header_footer' => true,
             'margin' => '15mm',
         ];

@@ -21,7 +21,7 @@ return [
     'hero_badge' => 'Sistem Terpadu V2.0',
     'hero_title_1' => 'Membangun Generasi',
     'hero_title_2' => 'Khaira Ummah.',
-    'hero_desc' => 'Platform digital manajemen pendidikan modern SMA Islam Sultan Agung 1 Semarang. Integrasi mulus antara sistem akademik, keuangan, hingga pemantauan ibadah harian siswa.',
+    'hero_desc' => 'Platform digital manajemen pendidikan modern :school. Integrasi mulus antara sistem akademik, keuangan, hingga pemantauan ibadah harian siswa.',
     'cta_login' => 'Masuk ke Sistem',
     'cta_spmb' => 'Info Pendaftaran SPMB',
 
@@ -38,5 +38,5 @@ return [
     'footer_header_pages' => 'Halaman Sekolah',
     'footer_header_contact' => 'Hubungi',
     'footer_address' => 'Jl. Mataram No.657, Wonodri, Kec. Semarang Sel., Kota Semarang, Jawa Tengah 50242',
-    'footer_copyright' => 'SMA Islam Sultan Agung 1 Semarang. Seluruh Hak Cipta Dilindungi.',
+    'footer_copyright' => ':school. Seluruh Hak Cipta Dilindungi.',
 ];

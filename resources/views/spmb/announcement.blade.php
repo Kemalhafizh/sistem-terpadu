@@ -30,10 +30,10 @@
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path></svg>
         </a>
         <div class="h-10 w-10 flex items-center justify-center p-1 bg-white rounded-xl shadow-sm border border-slate-200/60 mr-3">
-          <img src="{{ asset('images/logo-kotak.png') }}" alt="Sultan Agung 1" class="h-full object-contain">
+          <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain">
         </div>
         <div>
-          <h1 class="font-black text-lg text-slate-900 leading-none">Sultan Agung 1</h1>
+          <h1 class="font-black text-lg text-slate-900 leading-none">{{ school_short_name() }}</h1>
           <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">Hasil Seleksi Murid Baru</p>
         </div>
       </div>

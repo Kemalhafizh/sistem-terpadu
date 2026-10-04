@@ -72,7 +72,7 @@ class StudentDidService
             'issuanceDate' => now()->toIso8601String(),
             'student_profile' => [
                 'name' => $student->name,
-                'institution' => 'SMA Islam Sultan Agung 1 Semarang (YBWSA)',
+                'institution' => school_name(),
                 'academic_integrity_score' => 98.5,
             ],
             'proof' => [

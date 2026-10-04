@@ -20,7 +20,7 @@ class DataStoryBuilderService
         $payload = [
             'title' => $title,
             'slug' => $slug,
-            'summary' => $data['summary'] ?? 'Visualisasi data mendalam tentang perkembangan SMA Islam Sultan Agung 1.',
+            'summary' => $data['summary'] ?? 'Visualisasi data mendalam tentang perkembangan '.school_short_name().'.',
             'story_configuration' => $data['story_configuration'] ?? [
                 'steps' => [
                     ['title' => 'Pertumbuhan Akademik', 'stat' => '100% Lulus PTN/Kedinasan', 'desc' => 'Peningkatan rata-rata UTBK 3 tahun berturut-turut.'],

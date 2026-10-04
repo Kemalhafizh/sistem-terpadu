@@ -4,6 +4,8 @@ namespace App\Services\Debloat;
 
 use App\Models\DigitalVerification;
 use App\Models\Student;
+use App\Support\School;
+use DomainException;
 
 class DigitalCertificateVerificationService
 {
@@ -14,9 +16,17 @@ class DigitalCertificateVerificationService
         Student $student,
         string $documentType,
         string $documentNumber,
-        string $issuerTitle = 'Kepala SMA Islam Sultan Agung 1 Semarang',
-        string $issuerName = 'Drs. H. Sukarno, M.Pd'
+        ?string $issuerTitle = null,
+        ?string $issuerName = null
     ): DigitalVerification {
+        // The signer is the principal from the school settings. There is no
+        // stand-in: the default used to be a made-up "Drs. H. Sukarno, M.Pd".
+        $issuerName ??= School::principalName();
+        if (blank($issuerName)) {
+            throw new DomainException('Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.');
+        }
+        $issuerTitle ??= 'Kepala '.school_name();
+
         $hashPayload = sprintf(
             '%s|%s|%s|%s|%s|%s',
             $documentNumber,
@@ -35,7 +45,7 @@ class DigitalCertificateVerificationService
             [
                 'document_type' => strtoupper($documentType),
                 'student_nisn' => $student->nisn,
-                'student_name' => $student->user->name ?? 'Siswa Sultan Agung 1',
+                'student_name' => $student->user->name ?? 'Siswa',
                 'issuer_title' => $issuerTitle,
                 'issuer_name' => $issuerName,
                 'sha256_hash' => $sha256Hash,
@@ -43,7 +53,7 @@ class DigitalCertificateVerificationService
                 'issued_date' => now()->toDateString(),
                 'is_valid' => true,
                 'metadata' => [
-                    'institution' => 'SMA Islam Sultan Agung 1 Semarang (YBWSA)',
+                    'institution' => school_name(),
                     'curriculum' => 'Kurikulum Merdeka (Fase E/F)',
                     'signature_type' => 'VISUAL_DIGITAL_STAMP_SHA256',
                 ],
@@ -63,7 +73,7 @@ class DigitalCertificateVerificationService
         if (! $doc) {
             return [
                 'is_valid' => false,
-                'message' => 'Dokumen tidak ditemukan dalam arsip resmi SMA Islam Sultan Agung 1 Semarang.',
+                'message' => 'Dokumen tidak ditemukan dalam arsip resmi '.school_name().'.',
             ];
         }
 

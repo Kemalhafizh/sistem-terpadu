@@ -252,7 +252,7 @@ class CounselingService
             if ($parentPhone) {
                 $msg = " *PEMBERITAHUAN DARURAT: KONSELING BK WAJIB*\n\n"
                      ."Assalamu'alaikum Bapak/Ibu Wali Murid dari *{$studentName}*,\n\n"
-                     ."Menginfokan dari Unit Bimbingan Konseling (BK) SMA Islam Sultan Agung 1 bahwa ananda saat ini telah mengumpulkan akumulasi poin pelanggaran sebesar *{$student->total_points} Poin* (Batas kritis >= 50).\n\n"
+                     .'Menginfokan dari Unit Bimbingan Konseling (BK) '.school_short_name()." bahwa ananda saat ini telah mengumpulkan akumulasi poin pelanggaran sebesar *{$student->total_points} Poin* (Batas kritis >= 50).\n\n"
                      ."Sesuai dengan peraturan tata tertib sekolah, sistem secara otomatis menjadwalkan:\n"
                      ." *Sesi Konseling Wajib Individual*\n"
                      ."Hari/Tanggal: *Bilah Jadwal Antrean BK*\n"

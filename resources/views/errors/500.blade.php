@@ -9,7 +9,7 @@
 @section('code', '500')
 @section('message', 'Aplikasi Sedang Lelah')
 
-@section('description', 'Ada gangguan teknis yang tidak terduga di dalam server. Tim IT Sultan Agung 1 sedang berusaha memperbaikinya. Silakan coba muat ulang halaman beberapa saat lagi.')
+@section('description', 'Ada gangguan teknis yang tidak terduga di dalam server. Tim IT '.school_short_name().' sedang berusaha memperbaikinya. Silakan coba muat ulang halaman beberapa saat lagi.')
 
 @section('buttons')
 <div class="space-y-4 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row justify-center" style="display: flex; gap: 1rem; justify-content: center; align-items: center;">

@@ -58,11 +58,11 @@
               : 'bg-white border-slate-100 shadow-sm'" 
             class="h-11 w-11 flex items-center justify-center p-1.5 rounded-xl border backdrop-blur-sm mr-3 shrink-0 transition-all duration-300 shadow-inner group-hover:scale-105"
           >
-            <img src="{{ asset('images/logo-kotak.png') }}" alt="Sultan Agung 1" class="h-full object-contain filter drop-shadow-[0_2px_4px_rgba(16,185,129,0.15)]">
+            <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain filter drop-shadow-[0_2px_4px_rgba(16,185,129,0.15)]">
           </div>
           <div>
             <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">
-              Sultan Agung 1
+              {{ school_short_name() }}
             </span>
             <p 
               :class="scrolled ? 'text-slate-500' : 'text-slate-650'"
@@ -166,11 +166,11 @@
       </span>
       
       <h1 class="text-4xl sm:text-6xl lg:text-7.5xl font-black text-slate-900 tracking-tight leading-[1.08] mb-6">
-        {{ __('spmb.hero_title_1') }} <br> {{ __('spmb.hero_title_2') }} <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 bg-clip-text text-transparent text-glow">{{ __('spmb.hero_title_3') }}</span>
+        {{ __('spmb.hero_title_1') }} <br> {{ __('spmb.hero_title_2') }} <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 bg-clip-text text-transparent text-glow">{{ __('spmb.hero_title_3', school_placeholders()) }}</span>
       </h1>
       
       <p class="mt-4 text-sm sm:text-base lg:text-lg text-slate-600 font-medium max-w-2xl mx-auto mb-10 opacity-90 leading-relaxed font-inter">
-        {{ __('spmb.hero_desc_welcome') }}
+        {{ __('spmb.hero_desc_welcome', school_placeholders()) }}
       </p>
       
       <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-md mx-auto sm:max-w-none">
@@ -391,9 +391,9 @@
   <footer class="bg-slate-50 text-slate-550 py-16 border-t border-slate-200/50">
     <div class="w-full px-4 sm:px-6 lg:px-8 text-center space-y-6">
       <div class="h-10 w-auto flex items-center justify-center filter grayscale opacity-60 mx-auto">
-        <img src="{{ asset('images/logo-kotak.png') }}" alt="Sultan Agung 1" class="h-full object-contain">
+        <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain">
       </div>
-      <p class="text-xs font-black uppercase tracking-widest text-slate-650">&copy; {{ date('Y') }} {{ __('public.footer_copyright') }}</p>
+      <p class="text-xs font-black uppercase tracking-widest text-slate-650">&copy; {{ date('Y') }} {{ __('public.footer_copyright', school_placeholders()) }}</p>
       <p class="text-[10px] font-inter text-slate-500 max-w-md mx-auto leading-relaxed">
         {{ __('public.footer_address') }}
       </p>

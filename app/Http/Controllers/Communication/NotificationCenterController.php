@@ -88,7 +88,7 @@ class NotificationCenterController extends Controller
         $userId = auth()->id();
         $eventType = $request->input('event_type', 'system.alert');
         $title = $request->input('title', 'Notifikasi Uji Coba SISTA');
-        $body = $request->input('body', 'Ini adalah pesan uji coba terintegrasi dari Pusat Notifikasi Terpadu SMA Islam Sultan Agung 1 Semarang.');
+        $body = $request->input('body', 'Ini adalah pesan uji coba terintegrasi dari Pusat Notifikasi Terpadu '.school_name().'.');
 
         $logs = $dispatchService->dispatch($userId, $eventType, $title, $body, ['test_mode' => true]);
 
