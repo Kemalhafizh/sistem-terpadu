@@ -183,5 +183,10 @@
     "Token berhasil di-refresh": "تم تحديث الرمز",
     "Profil berhasil diambil": "تم تحميل الملف الشخصي",
     "Bahasa berhasil diubah.": "تم تغيير اللغة بنجاح.",
-    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "لا توجد بيانات طالب لهذا الحساب بعد. يرجى التواصل مع إدارة المدرسة."
+    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "لا توجد بيانات طالب لهذا الحساب بعد. يرجى التواصل مع إدارة المدرسة.",
+    "Aman": "آمن",
+    "Perlu Perhatian": "يحتاج إلى متابعة",
+    "SP1 (Waspada)": "الإنذار الأول (تنبيه)",
+    "SP2 (Kritis)": "الإنذار الثاني (حرج)",
+    "SP3 (Sangat Kritis)": "الإنذار الثالث (حرج جدًا)"
 }

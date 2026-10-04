@@ -11,34 +11,23 @@ use Illuminate\Support\Str;
  */
 final class RoleLabel
 {
-    private const LABELS = [
-        'superadmin' => 'Superadmin',
-        'admin' => 'Administrator',
-        'kepala_sekolah' => 'Kepala Sekolah',
-        'kepsek' => 'Kepala Sekolah',
-        'waka_kurikulum' => 'Waka Kurikulum',
-        'waka_kesiswaan' => 'Waka Kesiswaan',
-        'waka_sarpras' => 'Waka Sarpras',
-        'waka_humas' => 'Waka Humas',
-        'staf_tu' => 'Staf Tata Usaha',
-        'bendahara' => 'Bendahara',
-        'bk' => 'Guru BK',
-        'wali_kelas' => 'Wali Kelas',
-        'petugas_uks' => 'Petugas UKS',
-        'operator' => 'Operator',
-        'merchant' => 'Mitra Kantin',
-        'alumni' => 'Alumni',
+    /** Roles with a name of their own; the text is in lang/{id,en,ar}/roles.php. */
+    private const KNOWN = [
+        'superadmin', 'admin', 'kepala_sekolah', 'waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras',
+        'waka_humas', 'staf_tu', 'bendahara', 'bk', 'wali_kelas', 'petugas_uks', 'operator', 'merchant', 'alumni',
     ];
 
     public static function of(?string $role): string
     {
         $role = (string) $role;
 
+        // In the user's language (lang/{id,en,ar}/roles.php), for the web and the app alike.
         return match (true) {
-            in_array($role, StudentDataAccess::STUDENT_ROLES, true) => 'Siswa',
-            in_array($role, StudentDataAccess::PARENT_ROLES, true) => 'Wali Murid',
-            in_array($role, StudentDataAccess::TEACHER_ROLES, true) => 'Guru',
-            isset(self::LABELS[$role]) => self::LABELS[$role],
+            in_array($role, StudentDataAccess::STUDENT_ROLES, true) => __('roles.student'),
+            in_array($role, StudentDataAccess::PARENT_ROLES, true) => __('roles.parent'),
+            in_array($role, StudentDataAccess::TEACHER_ROLES, true) => __('roles.teacher'),
+            $role === 'kepsek' => __('roles.kepala_sekolah'),
+            in_array($role, self::KNOWN, true) => __("roles.{$role}"),
             // A role added later still reads as words, not as a snake_case key.
             default => Str::headline($role),
         };

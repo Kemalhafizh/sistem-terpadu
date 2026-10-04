@@ -183,5 +183,10 @@
     "Token berhasil di-refresh": "Token refreshed",
     "Profil berhasil diambil": "Profile loaded",
     "Bahasa berhasil diubah.": "Language changed successfully.",
-    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "This account has no student record yet. Please contact the school administration office."
+    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "This account has no student record yet. Please contact the school administration office.",
+    "Aman": "Safe",
+    "Perlu Perhatian": "Needs Attention",
+    "SP1 (Waspada)": "Warning Letter 1 (Caution)",
+    "SP2 (Kritis)": "Warning Letter 2 (Critical)",
+    "SP3 (Sangat Kritis)": "Warning Letter 3 (Very Critical)"
 }

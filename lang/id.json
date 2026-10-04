@@ -183,5 +183,10 @@
     "Token berhasil di-refresh": "Token berhasil di-refresh",
     "Profil berhasil diambil": "Profil berhasil diambil",
     "Bahasa berhasil diubah.": "Bahasa berhasil diubah.",
-    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah."
+    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.",
+    "Aman": "Aman",
+    "Perlu Perhatian": "Perlu Perhatian",
+    "SP1 (Waspada)": "SP1 (Waspada)",
+    "SP2 (Kritis)": "SP2 (Kritis)",
+    "SP3 (Sangat Kritis)": "SP3 (Sangat Kritis)"
 }

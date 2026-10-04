@@ -2,7 +2,9 @@
 
 /** @var TestCase|stdClass $this */
 
+use App\Models\Student;
 use App\Models\User;
+use App\Support\Access\RoleLabel;
 use App\Support\Locale;
 use Tests\TestCase;
 
@@ -97,4 +99,42 @@ test('every language file has the same keys', function () {
 
     expect($keys('en'))->toEqualCanonicalizing($keys('id'))
         ->and($keys('ar'))->toEqualCanonicalizing($keys('id'));
+});
+
+test('role labels follow the language and stay singular', function () {
+    $teacher = User::factory()->create(['role' => 'guru', 'preferred_locale' => 'en']);
+    $token = $teacher->createToken('test')->plainTextToken;
+
+    $this->withHeader('Authorization', "Bearer {$token}")
+        ->getJson('/api/v1/me')
+        ->assertJsonPath('data.role_label', 'Teacher');
+
+    app()->setLocale('id');
+    expect(RoleLabel::of('siswa'))->toBe('Siswa')
+        ->and(RoleLabel::of('wali_murid'))->toBe('Wali Murid');
+});
+
+test('role labels in arabic', function () {
+    $teacher = User::factory()->create(['role' => 'teacher', 'preferred_locale' => 'ar']);
+
+    $this->withHeader('Authorization', 'Bearer '.$teacher->createToken('test')->plainTextToken)
+        ->getJson('/api/v1/me')
+        ->assertJsonPath('data.role_label', 'معلم');
+});
+
+test('every roles file has the same keys', function () {
+    $keys = fn (string $lang) => array_keys(require lang_path("{$lang}/roles.php"));
+
+    expect($keys('en'))->toBe($keys('id'))
+        ->and($keys('ar'))->toBe($keys('id'));
+});
+
+test('the discipline status is translated and carries a code that is not', function () {
+    $student = User::factory()->create(['role' => 'student', 'preferred_locale' => 'en', 'must_change_password' => false]);
+    Student::factory()->create(['user_id' => $student->id]);
+
+    $this->actingAs($student->fresh())->getJson('/api/v1/profile/student/me')
+        ->assertOk()
+        ->assertJsonPath('data.disiplin_summary.category', 'Safe')
+        ->assertJsonPath('data.disiplin_summary.category_code', 'aman');
 });
