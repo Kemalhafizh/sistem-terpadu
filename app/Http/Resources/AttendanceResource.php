@@ -21,11 +21,14 @@ class AttendanceResource extends JsonResource
 
     private function getLabel($status)
     {
-        return [
+        $label = [
             'H' => 'Hadir',
             'S' => 'Sakit',
             'I' => 'Izin',
             'A' => 'Alpa',
-        ][$status] ?? $status;
+        ][$status] ?? null;
+
+        // In the caller's language; `status` stays the code the app acts on.
+        return $label === null ? $status : __($label);
     }
 }
