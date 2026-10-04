@@ -159,20 +159,17 @@ class AlumniEnhancedService
             $cityKey = strtolower(trim($record->city));
             $coordinates = self::$cityCoordinates[$cityKey] ?? null;
 
-            if (! $coordinates) {
-                // Default to Semarang coordinates with a small random variation to avoid overlapping pins
-                $latOffset = (rand(-100, 100) / 3000);
-                $lngOffset = (rand(-100, 100) / 3000);
-                $coordinates = [-6.966667 + $latOffset, 110.416664 + $lngOffset];
-            }
+            // A city without known coordinates has no pin (lat/lng null), and the
+            // map lists it as unmapped. It used to be dropped at a random spot
+            // around Semarang, which put alumni where they do not live.
 
             return [
                 'city' => $record->city,
                 'province' => $record->province,
                 'country' => $record->country,
                 'total' => $record->total,
-                'lat' => $coordinates[0],
-                'lng' => $coordinates[1],
+                'lat' => $coordinates[0] ?? null,
+                'lng' => $coordinates[1] ?? null,
             ];
         });
     }

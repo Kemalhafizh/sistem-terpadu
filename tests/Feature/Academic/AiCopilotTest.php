@@ -70,8 +70,9 @@ test('teacher can save generated RPP as a draft in SISTA', function () {
     expect($plan->learning_objectives)->toContain('Siswa mampu menyelesaikan SPLDV.');
 });
 
-test('teacher can generate CBT questions in local fallback mode', function () {
-    $response = $this->actingAs($this->teacher)->post(route('academic.copilot.cbt.generate'), [
+test('CBT generation without an AI provider returns an error, not template questions', function () {
+    // This used to "generate" template questions with a random answer key.
+    $response = $this->actingAs($this->teacher)->from(route('academic.copilot.cbt'))->post(route('academic.copilot.cbt.generate'), [
         'subject_id' => $this->subject->id,
         'material_text' => 'Ini adalah materi pembelajaran sejarah proklamasi kemerdekaan Republik Indonesia yang dibacakan oleh Ir. Soekarno pada tanggal 17 Agustus 1945.',
         'type' => 'multiple_choice',
@@ -80,9 +81,8 @@ test('teacher can generate CBT questions in local fallback mode', function () {
         'provider' => 'local_fallback',
     ]);
 
-    $response->assertStatus(200);
-    $response->assertSee('sejarah');
-    $response->assertSee('proklamasi');
+    $response->assertRedirect(route('academic.copilot.cbt'));
+    $response->assertSessionHas('error');
 });
 
 test('teacher can save generated CBT questions to Question Banks', function () {

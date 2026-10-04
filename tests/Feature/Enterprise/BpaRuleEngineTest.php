@@ -8,7 +8,7 @@ beforeEach(function () {
     $this->ruleEngine = app(BusinessRuleEngineService::class);
 });
 
-test('business rule engine evaluates conditions and executes actions on match', function () {
+test('business rule engine evaluates conditions and reports matched actions as not executed', function () {
     $rule = $this->ruleEngine->createRule([
         'name' => 'Low Attendance BK Ticket Rule',
         'trigger_event' => 'attendance.checked',
@@ -29,7 +29,11 @@ test('business rule engine evaluates conditions and executes actions on match', 
 
     expect($result['rules_evaluated'])->toBe(1);
     expect($result['executions'][0]['matched'])->toBeTrue();
-    expect($result['executions'][0]['executed_actions_count'])->toBe(1);
+    // No action has an executor yet, so none is reported as carried out
+    // (this used to claim 1, with a random ticket number).
+    expect($result['executions'][0]['executed_actions_count'])->toBe(0);
+    expect($result['executions'][0]['not_executed_actions'])->toBe(['issue_counseling_ticket']);
+    expect($result['executions'][0]['status'])->toBe('NOT_EXECUTED');
 });
 
 test('business rule engine skips execution when conditions fail to match', function () {

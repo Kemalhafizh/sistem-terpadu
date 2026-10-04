@@ -213,7 +213,12 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 font-mono">
-                                        {{ count($exec->actions_executed ?? []) }} Tindakan
+                                        @if($exec->status === 'NOT_EXECUTED')
+                                            <span class="text-amber-600 dark:text-amber-400 font-bold">{{ count($exec->actions_executed ?? []) }} belum dijalankan</span>
+                                            <span class="block text-[10px] text-gray-400">Aksi belum memiliki pelaksana</span>
+                                        @else
+                                            0 Tindakan
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 font-mono font-bold text-indigo-600 dark:text-indigo-400">{{ $exec->execution_time_ms }} ms</td>
                                     <td class="px-6 py-4 font-mono text-gray-500">{{ $exec->created_at->format('d M Y H:i:s') }}</td>

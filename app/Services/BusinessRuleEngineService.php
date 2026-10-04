@@ -36,27 +36,26 @@ class BusinessRuleEngineService
         foreach ($rules as $rule) {
             $startTime = microtime(true);
             $isMatched = $this->evaluateConditions($rule->conditions, $context);
-            $executedActions = [];
             $status = 'SKIPPED';
+            $pendingActions = [];
 
             if ($isMatched) {
                 foreach ($rule->actions as $action) {
-                    $actionResult = $this->executeAction($action, $context);
-                    $executedActions[] = [
+                    $pendingActions[] = [
                         'action_type' => $action['action_type'] ?? 'unknown',
-                        'result' => $actionResult,
+                        'result' => $this->executeAction($action, $context),
                     ];
                 }
-                $status = 'SUCCESS';
+                $status = $pendingActions === [] ? 'SUCCESS' : 'NOT_EXECUTED';
             }
 
             $latencyMs = round((microtime(true) - $startTime) * 1000, 2);
 
-            $executionLog = BpaRuleExecution::create([
+            BpaRuleExecution::create([
                 'bpa_business_rule_id' => $rule->id,
                 'trigger_event' => $triggerEvent,
                 'matched' => $isMatched,
-                'actions_executed' => $executedActions,
+                'actions_executed' => $pendingActions,
                 'status' => $status,
                 'execution_time_ms' => $latencyMs,
             ]);
@@ -65,7 +64,10 @@ class BusinessRuleEngineService
                 'rule_id' => $rule->id,
                 'rule_name' => $rule->name,
                 'matched' => $isMatched,
-                'executed_actions_count' => count($executedActions),
+                // Nothing is carried out yet (see executeAction), so this stays 0.
+                'executed_actions_count' => 0,
+                'not_executed_actions' => array_column($pendingActions, 'action_type'),
+                'status' => $status,
                 'execution_time_ms' => $latencyMs,
             ];
         }
@@ -117,37 +119,22 @@ class BusinessRuleEngineService
     }
 
     /**
-     * Execute a specific automated business action.
+     * Carry out an action of a matched rule.
+     *
+     * No action has an executor yet: nothing creates a counseling ticket,
+     * sends WhatsApp, deducts payroll or issues a warning letter. This used to
+     * answer as if each had happened (a random "BK-1234" ticket number,
+     * "SENT_TO_PARENT", "DEDUCTION_APPLIED"). Now it says what it did: nothing.
      */
     private function executeAction(array $action, array $context): array
     {
-        $actionType = $action['action_type'] ?? '';
-        $params = $action['params'] ?? [];
+        $actionType = $action['action_type'] ?? 'unknown';
 
-        Log::info("BPA Action Executing [{$actionType}]:", array_merge($params, $context));
+        Log::info("BPA action [{$actionType}] matched but has no executor yet; nothing was done.", $context);
 
-        return match ($actionType) {
-            'issue_counseling_ticket' => [
-                'ticket_no' => 'BK-'.rand(1000, 9999),
-                'status' => 'ISSUED',
-                'whatsapp_notification' => 'SENT_TO_PARENT',
-            ],
-            'apply_payroll_deduction' => [
-                'deduction_amount' => $params['deduction_amount'] ?? 50000,
-                'payroll_status' => 'DEDUCTION_APPLIED',
-            ],
-            'issue_warning_letter_sp1' => [
-                'sp_number' => 'SP1/SMA-SA1/'.date('Y/m'),
-                'status' => 'GENERATED',
-                'homeroom_notification' => 'NOTIFIED',
-            ],
-            'send_whatsapp_alert' => [
-                'recipient' => $params['recipient'] ?? 'parent',
-                'status' => 'QUEUED_FONNTE',
-            ],
-            default => [
-                'status' => 'EXECUTED',
-            ],
-        };
+        return [
+            'status' => 'NOT_IMPLEMENTED',
+            'message' => "Aksi [{$actionType}] belum memiliki pelaksana. Tidak ada tiket, pesan, potongan, atau surat yang dibuat.",
+        ];
     }
 }

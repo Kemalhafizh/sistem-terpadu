@@ -98,6 +98,12 @@ class BpaRuleEngineController extends Controller
 
         $res = $ruleEngine->evaluateAndExecute($triggerEvent, $context);
 
-        return back()->with('success', "Simulasi Evaluasi Aturan [{$triggerEvent}] Selesai! Aturan Dievaluasi: {$res['rules_evaluated']}.");
+        $matched = collect($res['executions'])->where('matched', true)->count();
+        $message = "Simulasi aturan [{$triggerEvent}] selesai. Aturan dievaluasi: {$res['rules_evaluated']}, cocok: {$matched}.";
+        if ($matched > 0) {
+            $message .= ' Aksinya belum dijalankan karena belum ada pelaksana (tiket BK, WhatsApp, potongan gaji, SP1).';
+        }
+
+        return back()->with('success', $message);
     }
 }

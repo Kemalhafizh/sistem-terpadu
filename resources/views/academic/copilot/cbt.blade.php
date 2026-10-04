@@ -13,7 +13,7 @@
     </x-slot>
 
     <div class="py-8" x-data="{
-        provider: '{{ old('provider', 'local_fallback') }}',
+        provider: '{{ old('provider', 'gemini') }}',
         showApiKey: false,
         showEndpoint: false,
         init() {
@@ -121,7 +121,6 @@
                             <div>
                                 <label for="provider_select" class="text-[10px] font-black uppercase tracking-widest text-gray-400 block mb-2">AI Model Provider</label>
                                 <select id="provider_select" x-model="provider" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl py-3 px-4 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all dark:text-white">
-                                    <option value="local_fallback">Local Fallback Template (Offline)</option>
                                     <option value="openai">OpenAI API (GPT-4o-mini)</option>
                                     <option value="gemini">Gemini API (Gemini 1.5 Flash)</option>
                                     <option value="ollama">Ollama / Custom Endpoint</option>
