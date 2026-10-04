@@ -98,6 +98,15 @@ test('indonesian stays as it was, with an indonesian decimal comma', function ()
         ->and($feed['reward']['title'])->toBe('Poin prestasi +10');
 });
 
+test('the child\'s attendance list labels each status in the parent\'s language and keeps the code', function () {
+    [$parent, $child] = ($this->parentFor)('ar');
+    Sanctum::actingAs($parent);
+
+    $logs = collect($this->getJson("/api/v1/parent/child/{$child->uuid}/attendance")->assertOk()->json('data'))->keyBy('status');
+    expect($logs['H']['status_label'])->toBe('حاضر')
+        ->and($logs['S']['status_label'])->toBe('مريض');
+});
+
 test('another family\'s child is refused in the parent\'s language', function () {
     [, $otherChild] = ($this->parentFor)('id');
     [$parent] = ($this->parentFor)('en');
