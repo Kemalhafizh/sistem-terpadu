@@ -84,6 +84,19 @@ class MobileConfigController extends Controller
             // The attendance geofence the check-in endpoints enforce, so the
             // app's pre-check uses the same point (it had its own constant).
             'campus' => School::campus(),
+            // The school's identity for the app's "Tentang" page, from the same
+            // settings the letters and the website use. Empty fields stay null.
+            'school' => [
+                'name' => School::name(),
+                'short_name' => School::shortName(),
+                'foundation' => School::foundationName(),
+                'npsn' => School::npsn(),
+                'accreditation' => School::accreditation(),
+                'address' => School::address(),
+                'phone' => School::phone(),
+                'email' => School::email(),
+                'website' => School::website(),
+            ],
         ], 200);
     }
 }

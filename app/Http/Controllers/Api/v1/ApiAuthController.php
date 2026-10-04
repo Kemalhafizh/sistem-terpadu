@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicYear;
+use App\Models\Classroom;
 use App\Models\Employee;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\Access\RoleLabel;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -56,9 +60,10 @@ class ApiAuthController extends Controller
             }
         }
 
-        // 4. If not found, try finding by employee NIP
+        // 4. If not found, try finding by employee NIP. employees has no `nip`
+        // column; the NIP is kept in employee_number.
         if (! $user) {
-            $employee = Employee::where('nip', $identifier)->first();
+            $employee = Employee::where('employee_number', $identifier)->first();
             if ($employee && $employee->user) {
                 $user = $employee->user;
             }
@@ -144,14 +149,49 @@ class ApiAuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
+        $role = (string) $user->role;
+        $year = AcademicYear::current();
 
+        // Fields the app already reads stay as they were; the rest sit beside them.
+        // Anything the school has not filled in is null, never a placeholder.
         $studentData = null;
-        if ($user->role === 'student' && $user->student) {
+        if (in_array($role, StudentDataAccess::STUDENT_ROLES, true) && $user->student) {
+            $student = $user->student;
             $studentData = [
-                'uuid' => $user->student->uuid,
-                'nis' => $user->student->nis,
-                'classroom' => $user->student->classroom->name ?? 'N/A',
+                'uuid' => $student->uuid,
+                'nis' => $student->nis,
+                'nisn' => $student->nisn,
+                'classroom' => $student->classroom?->name,
+                'classroom_id' => $student->classroom_id,
             ];
+        }
+
+        $employeeData = null;
+        if ($user->employee) {
+            $employeeData = [
+                'employee_number' => $user->employee->employee_number,
+                'position' => $user->employee->position,
+            ];
+        }
+
+        $children = null;
+        if (in_array($role, StudentDataAccess::PARENT_ROLES, true)) {
+            $children = $user->children()->with(['user:id,name', 'classroom:id,name'])->orderBy('id')->get()
+                ->map(fn (Student $child) => [
+                    'uuid' => $child->uuid,
+                    'name' => $child->user?->name,
+                    'classroom' => $child->classroom?->name,
+                ])->values();
+        }
+
+        $homeroom = null;
+        if (in_array($role, [...StudentDataAccess::TEACHER_ROLES, 'wali_kelas'], true)) {
+            $homeroom = Classroom::where('teacher_id', $user->id)
+                ->when($year, fn ($q) => $q->where('academic_year', $year->year))
+                ->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(fn (Classroom $classroom) => ['id' => $classroom->id, 'name' => $classroom->name])
+                ->values();
         }
 
         return $this->successResponse([
@@ -159,8 +199,17 @@ class ApiAuthController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'phone_number' => $user->phone_number,
-            'role' => $user->role,
+            'role' => $role,
+            'role_label' => RoleLabel::of($role),
             'student_data' => $studentData,
+            'employee_data' => $employeeData,
+            'children' => $children,
+            'homeroom_classrooms' => $homeroom,
+            'academic_year' => $year ? [
+                'id' => $year->id,
+                'year' => $year->year,
+                'semester' => $year->semester,
+            ] : null,
         ], 'Profil berhasil diambil');
     }
 }

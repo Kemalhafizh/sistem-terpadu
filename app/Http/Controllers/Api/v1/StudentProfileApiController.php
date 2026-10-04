@@ -28,8 +28,17 @@ class StudentProfileApiController extends Controller
 
         // Students see themselves, parents their own children, staff anyone.
         StudentDataAccess::authorizeStudentUser($user, $targetId);
+        $this->ensureStudentExists($targetId);
 
         return $targetId;
+    }
+
+    /** A user without a student record has no profile; it used to get one named "Siswa" full of zeros. */
+    protected function ensureStudentExists(int $userId): void
+    {
+        if (! $this->service->resolveStudent($userId)) {
+            abort(404, 'Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.');
+        }
     }
 
     public function show(Request $request, $id = null): JsonResponse
@@ -45,6 +54,7 @@ class StudentProfileApiController extends Controller
 
     public function myProfile(Request $request): JsonResponse
     {
+        $this->ensureStudentExists($request->user()->id);
         $profile = $this->service->getComprehensiveProfile($request->user()->id);
 
         return response()->json([

@@ -21,11 +21,13 @@ use App\Models\WarningLetter;
  * hardcoded numbers ("Ahmad Faiz Abdullah", 88.4, etc.) for every single
  * student in the school — the imports above (Grade, MutabaahLog, TahfidzLog,
  * ...) were already there, just never actually queried. Real aggregation
- * only, honest zero/null defaults when a student has no linked data yet.
+ * only. A figure with nothing behind it (no grades yet, no tahfidz target,
+ * no prayer logged) is null, never 0: the app shows "–" for it. A user
+ * with no student record is not profiled at all (the controller answers 404).
  */
 class StudentProfile360Service
 {
-    private function resolveStudent(int $userId): ?Student
+    public function resolveStudent(int $userId): ?Student
     {
         return Student::with(['classroom', 'healthRecord'])->where('user_id', $userId)->first();
     }
@@ -38,7 +40,7 @@ class StudentProfile360Service
         return [
             'biodata' => [
                 'id' => $user->id ?? $studentId,
-                'name' => $user->name ?? 'Siswa',
+                'name' => $user?->name,
                 'nisn' => $student->nisn ?? null,
                 'class_name' => $student?->classroom?->name ?? null,
                 'avatar_url' => null,
@@ -58,7 +60,7 @@ class StudentProfile360Service
         $student = $this->resolveStudent($studentId);
         if (! $student) {
             return [
-                'average_score' => 0.0, 'rank_in_class' => 0, 'total_class_students' => 0,
+                'average_score' => null, 'rank_in_class' => null, 'total_class_students' => null,
                 'strongest_subject' => null, 'improvement_needed' => null, 'trend' => [],
             ];
         }
@@ -69,14 +71,14 @@ class StudentProfile360Service
             ->with('subject')
             ->get();
 
-        $averageScore = $grades->isNotEmpty() ? round((float) $grades->avg('score'), 1) : 0.0;
+        $averageScore = $grades->isNotEmpty() ? round((float) $grades->avg('score'), 1) : null;
 
-        $classSize = 0;
-        $rank = 0;
+        $classSize = null;
+        $rank = null;
         if ($student->classroom) {
             $classmateIds = $student->classroom->students()->pluck('id');
             $classSize = $classmateIds->count();
-            if ($averageScore > 0) {
+            if ($averageScore !== null) {
                 $classmateAverages = Grade::whereIn('student_id', $classmateIds)
                     ->when($currentYear, fn ($q) => $q->where('academic_year_id', $currentYear->id))
                     ->selectRaw('student_id, AVG(score) as avg_score')
@@ -113,8 +115,8 @@ class StudentProfile360Service
         $student = $this->resolveStudent($studentId);
         if (! $student) {
             return [
-                'tahfidz_juz_completed' => 0, 'target_juz' => 0, 'tahfidz_progress_percent' => 0,
-                'current_surah' => null, 'mutabaah_weekly_streak' => 0, 'sholat_jamaah_percent' => 0.0,
+                'tahfidz_juz_completed' => null, 'target_juz' => null, 'tahfidz_progress_percent' => null,
+                'current_surah' => null, 'mutabaah_weekly_streak' => null, 'sholat_jamaah_percent' => null,
             ];
         }
 
@@ -122,9 +124,10 @@ class StudentProfile360Service
         $target = $currentYear
             ? TahfidzTarget::where('student_id', $student->id)->where('academic_year_id', $currentYear->id)->first()
             : null;
-        $achievedJuz = (int) ($target->achieved_juz ?? 0);
-        $targetJuz = (int) ($target->target_juz ?? 0);
-        $progress = $targetJuz > 0 ? min(100, (int) round(($achievedJuz / $targetJuz) * 100)) : 0;
+        // No target set for this year: "0 dari 0 juz" would be made up.
+        $achievedJuz = $target ? (int) $target->achieved_juz : null;
+        $targetJuz = $target && (int) $target->target_juz > 0 ? (int) $target->target_juz : null;
+        $progress = $targetJuz !== null ? min(100, (int) round(($achievedJuz / $targetJuz) * 100)) : null;
 
         $latestLog = TahfidzLog::where('student_id', $student->id)->latest('date')->first();
 
@@ -151,7 +154,7 @@ class StudentProfile360Service
                 }
             }
         }
-        $jamaahPercent = $totalRecorded > 0 ? round(($jamaahCount / $totalRecorded) * 100, 1) : 0.0;
+        $jamaahPercent = $totalRecorded > 0 ? round(($jamaahCount / $totalRecorded) * 100, 1) : null;
 
         return [
             'tahfidz_juz_completed' => $achievedJuz,
@@ -173,8 +176,8 @@ class StudentProfile360Service
         $student = $this->resolveStudent($studentId);
         if (! $student) {
             return [
-                'total_positive_points' => 0, 'total_violation_points' => 0, 'net_points' => 0,
-                'category' => 'Aman', 'active_sanctions' => 0,
+                'total_positive_points' => null, 'total_violation_points' => null, 'net_points' => null,
+                'category' => null, 'active_sanctions' => null,
             ];
         }
 
@@ -251,7 +254,7 @@ class StudentProfile360Service
         if (! $student) {
             return [
                 'blood_type' => null, 'height_cm' => null, 'weight_kg' => null,
-                'allergies' => [], 'total_uks_visits' => 0, 'last_visit_date' => null,
+                'allergies' => [], 'total_uks_visits' => null, 'last_visit_date' => null,
             ];
         }
 
