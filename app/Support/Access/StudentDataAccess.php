@@ -49,7 +49,7 @@ class StudentDataAccess
     public static function authorizeStudentUser(User $viewer, int $studentUserId): void
     {
         if (! self::canViewStudentUser($viewer, $studentUserId)) {
-            abort(403, 'Akses ditolak. Anda tidak berhak melihat data siswa ini.');
+            abort(403, __('Akses ditolak. Anda tidak berhak melihat data siswa ini.'));
         }
     }
 
@@ -57,7 +57,7 @@ class StudentDataAccess
     public static function authorizeTeacherOwns(User $teacher, ?int $ownerId): void
     {
         if ($teacher->role !== 'superadmin' && $ownerId !== $teacher->id) {
-            abort(403, 'Akses ditolak. Data ini milik kelas guru lain.');
+            abort(403, __('Akses ditolak. Data ini milik kelas guru lain.'));
         }
     }
 
@@ -75,6 +75,6 @@ class StudentDataAccess
         if (in_array($user->role, self::STUDENT_ROLES, true) && $user->student?->classroom_id === $class->classroom_id) {
             return;
         }
-        abort(403, 'Akses ditolak. Anda bukan anggota kelas ini.');
+        abort(403, __('Akses ditolak. Anda bukan anggota kelas ini.'));
     }
 }
