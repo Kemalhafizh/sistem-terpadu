@@ -23,7 +23,7 @@ class DigitalCertificateVerificationService
         // stand-in: the default used to be a made-up "Drs. H. Sukarno, M.Pd".
         $issuerName ??= School::principalName();
         if (blank($issuerName)) {
-            throw new DomainException('Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.');
+            throw new DomainException(__('Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.'));
         }
         $issuerTitle ??= 'Kepala '.school_name();
 
@@ -73,7 +73,7 @@ class DigitalCertificateVerificationService
         if (! $doc) {
             return [
                 'is_valid' => false,
-                'message' => 'Dokumen tidak ditemukan dalam arsip resmi '.school_name().'.',
+                'message' => __('Dokumen tidak ditemukan dalam arsip resmi :school.', ['school' => school_name()]),
             ];
         }
 

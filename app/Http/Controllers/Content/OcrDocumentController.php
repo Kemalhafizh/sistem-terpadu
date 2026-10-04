@@ -37,7 +37,7 @@ class OcrDocumentController extends Controller
         $doc = $ocrService->processDocument($filePath, $request->document_type, $userId);
 
         return redirect()->route('ocr.review', $doc->id)
-            ->with('info', "Dokumen [{$doc->document_type}] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.");
+            ->with('info', __('Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.', ['type' => $doc->document_type]));
     }
 
     /**
