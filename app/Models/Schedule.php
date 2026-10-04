@@ -44,4 +44,22 @@ class Schedule extends Model
     {
         return $this->belongsTo(Room::class, 'room_id');
     }
+
+    /**
+     * Does [teacher] teach [subject] in [classroom] in [academic year]?
+     * A teaching journal (web or app) may only be filed for such a lesson.
+     * Only superadmin passes without a schedule.
+     */
+    public static function teaches(User $teacher, int $classroomId, int $subjectId, int $academicYearId): bool
+    {
+        if ($teacher->role === 'superadmin') {
+            return true;
+        }
+
+        return self::where('teacher_id', $teacher->id)
+            ->where('classroom_id', $classroomId)
+            ->where('subject_id', $subjectId)
+            ->where('academic_year_id', $academicYearId)
+            ->exists();
+    }
 }

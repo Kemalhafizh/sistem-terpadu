@@ -67,12 +67,16 @@ class AiCopilotController extends Controller
             'competencies' => $request->competencies,
         ];
 
-        $rppContent = $this->copilotService->generateLessonPlan(
-            $params,
-            $request->api_key,
-            $request->provider,
-            $request->custom_endpoint
-        );
+        try {
+            $rppContent = $this->copilotService->generateLessonPlan(
+                $params,
+                $request->api_key,
+                $request->provider,
+                $request->custom_endpoint
+            );
+        } catch (AiUnavailableException $e) {
+            return back()->withInput($request->except('api_key'))->with('error', $e->getMessage());
+        }
 
         $subjects = Subject::orderBy('name')->get();
         $classrooms = Classroom::orderBy('name')->get();

@@ -106,6 +106,10 @@ class TeachingJournalController extends Controller
             return back()->with('error', 'Tahun Akademik aktif tidak ditemukan. Harap hubungi administrator.');
         }
 
+        if (! Schedule::teaches($request->user(), (int) $request->classroom_id, (int) $request->subject_id, $activeYear->id)) {
+            abort(403, 'Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.');
+        }
+
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
             $attachmentPath = $request->file('attachment')->store('teaching-journals', 'public');
@@ -168,6 +172,11 @@ class TeachingJournalController extends Controller
             'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'action' => 'required|in:draft,submit',
         ]);
+
+        // Moving a journal to another class or subject needs the same right as filing it there.
+        if (! Schedule::teaches($request->user(), (int) $request->classroom_id, (int) $request->subject_id, $teachingJournal->academic_year_id)) {
+            abort(403, 'Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.');
+        }
 
         if ($request->hasFile('attachment')) {
             if ($teachingJournal->attachment_path) {

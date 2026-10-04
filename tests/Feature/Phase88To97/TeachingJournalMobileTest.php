@@ -2,6 +2,7 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\Schedule;
 use App\Models\Subject;
 use App\Models\TeachingJournal;
 use App\Models\User;
@@ -31,6 +32,12 @@ beforeEach(function () {
         'students_present' => 35,
         'students_absent' => 1,
     ];
+    // The teacher teaches this subject in this class this year.
+    Schedule::create([
+        'academic_year_id' => $this->year->id, 'classroom_id' => $this->journal['classroom_id'],
+        'subject_id' => $this->journal['subject_id'], 'teacher_id' => $this->guru->id,
+        'day' => 'Senin', 'session_start' => 3, 'session_end' => 4,
+    ]);
 });
 
 test('rute jurnal tiruan sudah tidak ada', function () {
@@ -67,3 +74,27 @@ test('daftar jurnal guru tanpa jurnal kosong, bukan contoh', function () {
 
     $this->getJson('/api/v1/teacher/journals')->assertOk()->assertJsonCount(0, 'data');
 });
+
+test('guru hanya bisa mengisi jurnal untuk pelajaran yang ia ajar tahun ini', function (string $case) {
+    $teacher = $this->guru;
+    $payload = $this->journal;
+
+    match ($case) {
+        'kelas lain' => $payload['classroom_id'] = Classroom::factory()->create()->id,
+        'mapel lain' => $payload['subject_id'] = Subject::factory()->create()->id,
+        'guru lain' => $teacher = User::factory()->create(['role' => 'guru']),
+        'tahun ajaran lalu' => (function () {
+            $this->year->update(['is_active' => false]);
+            Cache::forget('academic_year_current');
+            AcademicYear::create(['year' => '2027/2028', 'semester' => 'Ganjil', 'is_active' => true]);
+        })(),
+    };
+
+    Sanctum::actingAs($teacher);
+    $this->postJson('/api/v1/teacher/journals', $payload)
+        ->assertForbidden()
+        ->assertJsonPath('success', false)
+        ->assertJsonPath('message', 'Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.');
+
+    expect(TeachingJournal::count())->toBe(0);
+})->with(['kelas lain', 'mapel lain', 'guru lain', 'tahun ajaran lalu']);

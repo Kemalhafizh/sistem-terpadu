@@ -28,6 +28,14 @@ beforeEach(function () {
     // Associate subject with teacher
     $this->guru->subjects()->attach($this->subject->id);
     $this->guruLain->subjects()->attach($this->subject->id);
+
+    // Budi teaches Matematika in this class this year; Lani does not.
+    // A journal may only be filed for a lesson on the teacher's schedule.
+    Schedule::create([
+        'academic_year_id' => $this->academicYear->id, 'classroom_id' => $this->classroom->id,
+        'subject_id' => $this->subject->id, 'teacher_id' => $this->guru->id,
+        'day' => 'Senin', 'session_start' => 1, 'session_end' => 2,
+    ]);
 });
 
 test('teachers can view index page and only see their own journals, while coordinators see all', function () {
@@ -263,4 +271,23 @@ test('coordinators can export monthly PDF rekap reports of reviewed journals', f
     $month = now()->format('n');
     $year = now()->format('Y');
     $response->assertHeader('content-disposition', "attachment; filename=rekap_jurnal_mengajar_{$month}_{$year}.pdf");
+});
+
+test('guru tidak bisa mengisi atau memindahkan jurnal ke kelas yang tidak ia ajar', function () {
+    $payload = [
+        'classroom_id' => $this->classroom->id, 'subject_id' => $this->subject->id,
+        'teaching_date' => now()->format('Y-m-d'), 'topic' => 'Bukan kelas saya', 'action' => 'draft',
+    ];
+
+    // Lani has no schedule in this class: she could file journals for it before.
+    $this->actingAs($this->guruLain)->post(route('teaching-journals.store'), $payload)->assertForbidden();
+    expect(TeachingJournal::count())->toBe(0);
+
+    // Budi may file it, but not move it to a class he does not teach.
+    $this->actingAs($this->guru)->post(route('teaching-journals.store'), $payload)->assertRedirect();
+    $journal = TeachingJournal::sole();
+    $otherClass = Classroom::factory()->create();
+
+    $this->put(route('teaching-journals.update', $journal->uuid), ['classroom_id' => $otherClass->id] + $payload)->assertForbidden();
+    expect($journal->fresh()->classroom_id)->toBe($this->classroom->id);
 });

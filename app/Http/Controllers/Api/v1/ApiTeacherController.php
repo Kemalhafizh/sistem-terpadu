@@ -240,6 +240,10 @@ class ApiTeacherController extends Controller
             return $this->errorResponse('Tahun akademik aktif tidak ditemukan', 400);
         }
 
+        if (! Schedule::teaches($request->user(), (int) $request->classroom_id, (int) $request->subject_id, $activeYear->id)) {
+            return $this->errorResponse('Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.', 403);
+        }
+
         $path = null;
         if ($request->hasFile('attachment')) {
             $path = $request->file('attachment')->store('uploads/curriculum/journals', 'public');
