@@ -194,11 +194,16 @@ class Fase85DebloatPragmatismTest extends TestCase
                 [
                     'client_uuid' => $clientUuid2,
                     'action_type' => 'MUTABAAH_LOG',
+                    // Every value is sent by the app: there are no defaults any
+                    // more (surah 67 and the first teacher in the database were
+                    // filled in when missing).
                     'payload' => [
+                        'surah_number' => 67,
                         'surah_name' => 'Al-Mulk',
                         'ayah_start' => 1,
                         'ayah_end' => 30,
                         'grade' => 'A',
+                        'teacher_id' => User::factory()->create(['role' => 'guru'])->id,
                     ],
                 ],
             ],
