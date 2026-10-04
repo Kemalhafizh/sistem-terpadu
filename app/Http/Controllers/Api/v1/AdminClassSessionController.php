@@ -62,7 +62,7 @@ class AdminClassSessionController extends Controller
                 'last_page' => $page->lastPage(),
                 'per_page' => $page->perPage(),
                 'total' => $page->total(),
-            ], 'Daftar sesi kelas berhasil diambil');
+            ], __('Daftar sesi kelas berhasil diambil'));
         });
     }
 
@@ -75,7 +75,7 @@ class AdminClassSessionController extends Controller
     {
         return $this->handle(fn () => $this->successResponse(
             SessionAttendanceResource::collection($this->sessions->rosterOf($this->sessions->findSession($sessionId))),
-            'Detail presensi sesi berhasil diambil'
+            __('Detail presensi sesi berhasil diambil')
         ));
     }
 
@@ -102,7 +102,7 @@ class AdminClassSessionController extends Controller
             ]);
             $attendance = $this->sessions->override($request->user(), $attendanceId, $data['status'], $data['reason'], $request->ip());
 
-            return $this->successResponse(new SessionAttendanceResource($attendance), 'Presensi berhasil dikoreksi');
+            return $this->successResponse(new SessionAttendanceResource($attendance), __('Presensi berhasil dikoreksi'));
         });
     }
 
@@ -129,7 +129,7 @@ class AdminClassSessionController extends Controller
             ]);
 
             if (now()->parse($data['start_date'])->diffInDays(now()->parse($data['end_date'])) > 366) {
-                return $this->errorResponse('Rentang laporan maksimal 366 hari.', 422);
+                return $this->errorResponse(__('Rentang laporan maksimal 366 hari.'), 422);
             }
 
             $report = $this->sessions->report(
@@ -140,7 +140,7 @@ class AdminClassSessionController extends Controller
                 $data['group_by'] ?? 'student'
             );
 
-            return $this->successResponse($report, 'Rekap presensi berhasil diambil');
+            return $this->successResponse($report, __('Rekap presensi berhasil diambil'));
         });
     }
 }

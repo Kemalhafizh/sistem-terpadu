@@ -29,7 +29,7 @@ trait RespondsForClassSessions
     {
         return response()->json([
             'success' => false,
-            'message' => $e->validator->errors()->first() ?: 'Validasi data gagal',
+            'message' => $e->validator->errors()->first() ?: __('Validasi data gagal'),
             'data' => null,
             'errors' => $e->errors(),
         ], 422);
@@ -40,6 +40,7 @@ trait RespondsForClassSessions
         return response()->json([
             'success' => false,
             'message' => $e->getMessage(),
+            'error_code' => $e->errorCode,
             'data' => $e->data,
         ], $e->status);
     }

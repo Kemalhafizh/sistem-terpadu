@@ -25,9 +25,9 @@ class StudentSessionAttendanceController extends Controller
     /**
      * Scan QR Sesi Kelas
      *
-     * Pesan error yang mungkin (dipakai apa adanya oleh aplikasi): "QR token sudah kedaluwarsa" (422),
-     * "Anda tidak terdaftar di kelas ini" (403), "Anda sudah tercatat hadir di sesi ini" (409, `data.checked_in_at`),
-     * "Sesi kelas sudah berakhir" (409), "Sesi kelas belum dimulai" (409).
+     * Penolakan membawa `error_code` (pesannya dalam bahasa pengguna): `qr_expired` (422),
+     * `qr_invalid` (422), `not_enrolled` (403), `already_checked_in` (409, `data.checked_in_at`),
+     * `session_ended` (409), `session_not_started` (409). Lihat docs/modules/class_sessions.md §4.
      * Scan setelah 15 menit dari jam mulai dicatat sebagai `telat`.
      *
      * @bodyParam qr_token string required Isi QR mentah. Example: 9b1f0c1e-4c5a-4d0f-9d7e-2d6c1b0a9e11.4f3c2b1a0e9d8c7b6a5f4e3d2c1b0a99
@@ -52,7 +52,7 @@ class StudentSessionAttendanceController extends Controller
         return $this->handle(function () use ($request) {
             $active = $this->sessions->activeSessionForStudent($request->user());
 
-            return $this->successResponse($active, $active ? 'Ada sesi kelas yang sedang berlangsung' : 'Tidak ada sesi kelas aktif');
+            return $this->successResponse($active, $active ? __('Ada sesi kelas yang sedang berlangsung') : __('Tidak ada sesi kelas aktif'));
         });
     }
 }
