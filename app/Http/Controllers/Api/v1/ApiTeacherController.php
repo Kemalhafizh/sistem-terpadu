@@ -241,7 +241,7 @@ class ApiTeacherController extends Controller
         }
 
         if (! Schedule::teaches($request->user(), (int) $request->classroom_id, (int) $request->subject_id, $activeYear->id)) {
-            return $this->errorResponse('Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.', 403);
+            return $this->errorResponse(__('Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.'), 403);
         }
 
         $path = null;

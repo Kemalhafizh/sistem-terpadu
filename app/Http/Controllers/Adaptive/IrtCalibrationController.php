@@ -17,10 +17,12 @@ class IrtCalibrationController extends Controller
         $result = $calibration->batchCalibrateExam((int) $examId);
 
         if ($result['calibrated_count'] === 0) {
-            return redirect()->back()->with('info', 'Belum ada jawaban siswa pada ujian ini, jadi belum ada soal yang bisa dikalibrasi.');
+            return redirect()->back()->with('info', __('Belum ada jawaban siswa pada ujian ini, jadi belum ada soal yang bisa dikalibrasi.'));
         }
 
-        return redirect()->back()->with('success', "{$result['calibrated_count']} soal dikalibrasi dari jawaban siswa; {$result['skipped_count']} soal belum memiliki jawaban.");
+        return redirect()->back()->with('success', __(':calibrated soal dikalibrasi dari jawaban siswa; :skipped soal belum memiliki jawaban.', [
+            'calibrated' => $result['calibrated_count'], 'skipped' => $result['skipped_count'],
+        ]));
     }
 
     public function itemDetail($questionId)

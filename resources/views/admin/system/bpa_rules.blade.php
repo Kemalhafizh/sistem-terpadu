@@ -214,8 +214,8 @@
                                     </td>
                                     <td class="px-6 py-4 font-mono">
                                         @if($exec->status === 'NOT_EXECUTED')
-                                            <span class="text-amber-600 dark:text-amber-400 font-bold">{{ count($exec->actions_executed ?? []) }} belum dijalankan</span>
-                                            <span class="block text-[10px] text-gray-400">Aksi belum memiliki pelaksana</span>
+                                            <span class="text-amber-600 dark:text-amber-400 font-bold">{{ __(':count belum dijalankan', ['count' => count($exec->actions_executed ?? [])]) }}</span>
+                                            <span class="block text-[10px] text-gray-400">{{ __('Aksi belum memiliki pelaksana') }}</span>
                                         @else
                                             0 Tindakan
                                         @endif
