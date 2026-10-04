@@ -65,6 +65,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->appendToGroup('api', [
+            // Messages in the language the user picked (see SetLocale).
+            SetLocale::class,
             IdempotencyMiddleware::class,
             // The mobile app talks only to the API, so without these its
             // requests never reached the APM latency/availability figures.

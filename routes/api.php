@@ -110,6 +110,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::post('logout', [ApiAuthController::class, 'logout']);
         Route::post('refresh-token', [ApiAuthController::class, 'refreshToken']);
         Route::get('me', [ApiAuthController::class, 'me']);
+        Route::put('me/locale', [ApiAuthController::class, 'updateLocale']);
         Route::get('me/capabilities', CapabilitiesController::class);
 
         // Mobile Multi-Device & Biometrics

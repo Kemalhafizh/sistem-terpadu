@@ -37,7 +37,7 @@ class StudentProfileApiController extends Controller
     protected function ensureStudentExists(int $userId): void
     {
         if (! $this->service->resolveStudent($userId)) {
-            abort(404, 'Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.');
+            abort(404, __('Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.'));
         }
     }
 

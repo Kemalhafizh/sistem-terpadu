@@ -177,7 +177,7 @@ class StudentProfile360Service
         if (! $student) {
             return [
                 'total_positive_points' => null, 'total_violation_points' => null, 'net_points' => null,
-                'category' => null, 'active_sanctions' => null,
+                'category' => null, 'category_code' => null, 'active_sanctions' => null,
             ];
         }
 
@@ -186,16 +186,13 @@ class StudentProfile360Service
         $violation = (int) abs($logs->where('points', '<', 0)->sum('points'));
         $net = $student->total_points;
 
-        $status = 'Aman';
-        if ($net >= 100) {
-            $status = 'SP3 (Sangat Kritis)';
-        } elseif ($net >= 75) {
-            $status = 'SP2 (Kritis)';
-        } elseif ($net >= 50) {
-            $status = 'SP1 (Waspada)';
-        } elseif ($net >= 30) {
-            $status = 'Perlu Perhatian';
-        }
+        [$code, $status] = match (true) {
+            $net >= 100 => ['sp3', 'SP3 (Sangat Kritis)'],
+            $net >= 75 => ['sp2', 'SP2 (Kritis)'],
+            $net >= 50 => ['sp1', 'SP1 (Waspada)'],
+            $net >= 30 => ['perhatian', 'Perlu Perhatian'],
+            default => ['aman', 'Aman'],
+        };
 
         $activeSanctions = WarningLetter::where('student_id', $student->id)->whereNull('signed_at')->count();
 
@@ -203,7 +200,9 @@ class StudentProfile360Service
             'total_positive_points' => $positive,
             'total_violation_points' => $violation,
             'net_points' => $net,
-            'category' => $status,
+            // The label in the user's language; the code doesn't change with it.
+            'category' => __($status),
+            'category_code' => $code,
             'active_sanctions' => $activeSanctions,
         ];
     }

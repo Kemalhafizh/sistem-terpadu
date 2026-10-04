@@ -174,5 +174,19 @@
     "Tata Kelola Yayasan": "حوكمة مؤسسة سلطان أجونج",
 
     "Hak Cipta Dilindungi": "جميع الحقوق محفوظة",
-    "Versi Sistem": "إصدار النظام"
+    "Versi Sistem": "إصدار النظام",
+
+    "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.": "بيانات الدخول غير صحيحة. يرجى التحقق من البريد الإلكتروني/رقم الطالب وكلمة المرور.",
+    "Login berhasil": "تم تسجيل الدخول بنجاح",
+    "Logout berhasil": "تم تسجيل الخروج بنجاح",
+    "Token aktif tidak ditemukan": "لم يتم العثور على رمز نشط",
+    "Token berhasil di-refresh": "تم تحديث الرمز",
+    "Profil berhasil diambil": "تم تحميل الملف الشخصي",
+    "Bahasa berhasil diubah.": "تم تغيير اللغة بنجاح.",
+    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "لا توجد بيانات طالب لهذا الحساب بعد. يرجى التواصل مع إدارة المدرسة.",
+    "Aman": "آمن",
+    "Perlu Perhatian": "يحتاج إلى متابعة",
+    "SP1 (Waspada)": "الإنذار الأول (تنبيه)",
+    "SP2 (Kritis)": "الإنذار الثاني (حرج)",
+    "SP3 (Sangat Kritis)": "الإنذار الثالث (حرج جدًا)"
 }

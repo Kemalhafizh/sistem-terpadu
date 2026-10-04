@@ -28,7 +28,8 @@ Every role and every client reads the same rule; don't copy role lists into cont
 ## Mobile API
 - Keep fields the Android app reads; add new ones beside them. Changing a meaning or removing a field needs a matching sista-android PR, linked in both PR descriptions.
 - Coordinate before changing `analytics/*`, `announcements*`, `notifications*`, `mobile/*` and `parent/*`: the app depends on them.
-- Use `ApiResponseTrait` (`success`, `message`, `data`) where the endpoint already does. Error messages are Indonesian and meant for the user; the app shows them as they are.
+- Use `ApiResponseTrait` (`success`, `message`, `data`) where the endpoint already does. Messages are meant for the user and the app shows them as they are, so write them in Indonesian through `__()` and add the English and Arabic text to `lang/{en,ar}.json` (or a `lang/*/<group>.php` when the same Indonesian word means two things). `SetLocale` picks the language for web and API alike: `users.preferred_locale`, then the session, then `Accept-Language`.
+- Values the client acts on (a status, a category) get a stable code beside the translated label, e.g. `category` + `category_code`.
 - Times are ISO-8601 (`toIso8601String()`). Don't send only `diffForHumans()`.
 - Files on the `public` disk: `Storage::disk('public')->url(...)`.
 
