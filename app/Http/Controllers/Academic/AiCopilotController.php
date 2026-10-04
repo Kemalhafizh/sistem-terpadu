@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Academic;
 
+use App\Exceptions\AiUnavailableException;
 use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
@@ -173,12 +174,16 @@ class AiCopilotController extends Controller
             'difficulty' => $request->difficulty,
         ];
 
-        $questions = $this->copilotService->generateExamQuestions(
-            $params,
-            $request->api_key,
-            $request->provider,
-            $request->custom_endpoint
-        );
+        try {
+            $questions = $this->copilotService->generateExamQuestions(
+                $params,
+                $request->api_key,
+                $request->provider,
+                $request->custom_endpoint
+            );
+        } catch (AiUnavailableException $e) {
+            return back()->withInput($request->except('api_key'))->with('error', $e->getMessage());
+        }
 
         $subjects = Subject::orderBy('name')->get();
 

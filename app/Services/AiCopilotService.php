@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\AiUnavailableException;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
@@ -76,7 +77,16 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
     }
 
     /**
-     * Generate Exam Questions (CBT).
+     * Generate exam questions (CBT) with an AI provider.
+     *
+     * There is no offline mode: without a provider there are no questions. The
+     * old "local fallback" filled a template with keywords and picked the
+     * answer key at random, and those questions could be saved to the question
+     * bank and graded as if they were real.
+     *
+     * @return list<array<string, mixed>>
+     *
+     * @throws AiUnavailableException
      */
     public function generateExamQuestions(array $params, ?string $apiKey = null, ?string $provider = 'local_fallback', ?string $customEndpoint = null): array
     {
@@ -85,8 +95,8 @@ Keluarkan output dalam format Markdown yang rapi tanpa menyertakan kode pembungk
         $count = (int) ($params['count'] ?? 5);
         $difficulty = $params['difficulty'] ?? 'medium';
 
-        if (empty($apiKey) || $provider === 'local_fallback') {
-            return $this->generateLocalFallbackCbt($materialText, $type, $count, $difficulty);
+        if (empty($apiKey) || ! in_array($provider, ['openai', 'gemini'], true)) {
+            throw new AiUnavailableException('Pembuatan soal membutuhkan layanan AI. Pilih OpenAI atau Gemini dan isi API key-nya.');
         }
 
         try {
@@ -126,7 +136,7 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
                     // In some cases, response_format json return wrapper object or list
                     $decoded = json_decode($jsonText, true);
 
-                    return $decoded['questions'] ?? $decoded;
+                    return $this->validQuestions($decoded['questions'] ?? $decoded);
                 }
             } elseif ($provider === 'gemini') {
                 $response = Http::timeout(30)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
@@ -142,14 +152,36 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
                     // clean markdown markers if gemini returned it
                     $cleaned = preg_replace('/```json|```/', '', $text);
 
-                    return json_decode(trim($cleaned), true) ?: [];
+                    return $this->validQuestions(json_decode(trim($cleaned), true));
                 }
             }
 
-            return $this->generateLocalFallbackCbt($materialText, $type, $count, $difficulty);
+            throw new AiUnavailableException("Layanan AI menolak permintaan (HTTP {$response->status()}). Periksa API key lalu coba lagi.");
+        } catch (AiUnavailableException $e) {
+            throw $e;
         } catch (Exception $e) {
-            return $this->generateLocalFallbackCbt($materialText, $type, $count, $difficulty);
+            // Not $e->getMessage(): for Gemini it can contain the request URL, and the API key is in it.
+            throw new AiUnavailableException('Gagal menghubungi layanan AI. Periksa koneksi dan API key lalu coba lagi.', 0, $e);
         }
+    }
+
+    /**
+     * Keep only well-formed questions; an answer with none is an error, not an empty success.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function validQuestions(mixed $decoded): array
+    {
+        $questions = array_values(array_filter(
+            is_array($decoded) ? $decoded : [],
+            fn ($q) => is_array($q) && filled($q['question_text'] ?? null) && filled($q['correct_answer'] ?? null),
+        ));
+
+        if ($questions === []) {
+            throw new AiUnavailableException('Jawaban AI tidak berisi soal yang bisa dibaca. Coba lagi.');
+        }
+
+        return $questions;
     }
 
     /**
@@ -220,61 +252,5 @@ Keluarkan output dalam format JSON array murni tanpa pembungkus tag markdown, de
 - Buku Paket Guru & Siswa Kurikulum Merdeka Kemendikbudristek.
 - Slide Presentasi Proyektor SMA Islam Sultan Agung 1.
 - Lembar Kerja Kelompok (LKK) Siswa.";
-    }
-
-    /**
-     * Local fallback template system for CBT questions (Offline).
-     */
-    private function generateLocalFallbackCbt(string $materialText, string $type, int $count, string $difficulty): array
-    {
-        // Extract some terms/keywords from material text for customization
-        $cleaned = preg_replace('/[^\p{L}\p{N}\s]/u', '', $materialText);
-        $words = array_filter(explode(' ', $cleaned), fn ($w) => strlen($w) > 4);
-        $keywords = array_values(array_unique(array_slice($words, 0, 5)));
-
-        if (empty($keywords)) {
-            $keywords = ['Konsep Utama', 'Studi Kasus', 'Teori Dasar', 'Analisis Data'];
-        }
-
-        $questions = [];
-
-        for ($i = 0; $i < $count; $i++) {
-            $keyword = $keywords[$i % count($keywords)];
-            $questionNum = $i + 1;
-
-            if ($type === 'essay') {
-                $questions[] = [
-                    'question_text' => "Berdasarkan materi ajar, uraikan analisis komprehensif Anda mengenai keterkaitan antara {$keyword} dengan fenomena kontekstual di masyarakat!",
-                    'type' => 'essay',
-                    'options' => null,
-                    'correct_answer' => "Kunci analisis: Harus menjelaskan konsep {$keyword} dengan contoh konkrit.",
-                    'explanation' => "Menilai kedalaman pemahaman konseptual siswa mengenai {$keyword}.",
-                    'difficulty' => $difficulty,
-                ];
-            } else {
-                $correctOption = collect(['A', 'B', 'C', 'D', 'E'])->random();
-                $options = [
-                    'A' => 'Proses identifikasi dini dari '.$keyword.' secara struktural.',
-                    'B' => 'Implementasi taktis tanpa adanya batasan ruang lingkup.',
-                    'C' => 'Metodologi evaluasi berkala yang dijalankan secara independen.',
-                    'D' => 'Konsep teoretis murni yang tidak memiliki aplikasi praktis.',
-                    'E' => 'Sinergi multi-sektoral untuk meningkatkan kualitas output.',
-                ];
-
-                // Make the correct option description positive/ideal
-                $options[$correctOption] = 'Jawaban Tepat: Alternatif solusi optimal dalam merumuskan penyelesaian '.$keyword.'.';
-
-                $questions[] = [
-                    'question_text' => "Manakah di bawah ini pernyataan yang paling tepat menggambarkan implikasi dari penerapan {$keyword} menurut teks materi?",
-                    'type' => 'multiple_choice',
-                    'options' => $options,
-                    'correct_answer' => $correctOption,
-                    'explanation' => "Berdasarkan bahan ajar, opsi {$correctOption} mewakili penjelasan logis dari {$keyword}.",
-                    'difficulty' => $difficulty,
-                ];
-            }
-        }
-
-        return $questions;
     }
 }

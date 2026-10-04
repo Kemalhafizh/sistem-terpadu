@@ -45,6 +45,13 @@
                     </div>
                 @endforeach
             </div>
+            @php($unmapped = $locations->whereNull('lat'))
+            @if($unmapped->isNotEmpty())
+                <div class="pt-2 text-xs text-gray-500 dark:text-gray-400">
+                    <span class="font-bold">Belum terpetakan</span> (koordinat kota belum tersedia):
+                    {{ $unmapped->sortByDesc('total')->map(fn ($loc) => $loc['city'].' ('.$loc['total'].')')->implode(', ') }}
+                </div>
+            @endif
         </div>
     </div>
 
