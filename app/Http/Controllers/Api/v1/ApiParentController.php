@@ -41,12 +41,12 @@ class ApiParentController extends Controller
         $user = $request->user();
 
         if (! in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
-            return $this->errorResponse('Unauthorized access', 403);
+            return $this->errorResponse(__('Akses ditolak.'), 403);
         }
 
         $children = $user->children()->with(['classroom', 'user'])->get();
 
-        return $this->successResponse(StudentResource::collection($children), 'Daftar anak berhasil diambil');
+        return $this->successResponse(StudentResource::collection($children), __('Daftar anak berhasil diambil'));
     }
 
     /**
@@ -96,7 +96,7 @@ class ApiParentController extends Controller
                 'unpaid_billings_count' => $unpaidBillings,
                 'total_bk_points' => $totalPoints,
             ],
-        ], 'Rangkuman data anak berhasil dihitung');
+        ], __('Rangkuman data anak berhasil dihitung'));
     }
 
     /**
@@ -118,7 +118,7 @@ class ApiParentController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(GradeResource::collection($grades), 'Data nilai anak berhasil diambil');
+        return $this->successResponse(GradeResource::collection($grades), __('Data nilai anak berhasil diambil'));
     }
 
     /**
@@ -140,7 +140,7 @@ class ApiParentController extends Controller
             ->take(30)
             ->get();
 
-        return $this->successResponse(AttendanceResource::collection($attendances), 'Data absensi anak berhasil diambil');
+        return $this->successResponse(AttendanceResource::collection($attendances), __('Data absensi anak berhasil diambil'));
     }
 
     /**
@@ -162,7 +162,7 @@ class ApiParentController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(BillingResource::collection($billings), 'Data tagihan keuangan anak berhasil diambil');
+        return $this->successResponse(BillingResource::collection($billings), __('Data tagihan keuangan anak berhasil diambil'));
     }
 
     /**
@@ -184,7 +184,7 @@ class ApiParentController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(PointLogResource::collection($points), 'Log poin BK anak berhasil diambil');
+        return $this->successResponse(PointLogResource::collection($points), __('Log poin BK anak berhasil diambil'));
     }
 
     /**
@@ -205,7 +205,7 @@ class ApiParentController extends Controller
             ->take(100)
             ->get();
 
-        return $this->successResponse(ParentMessageResource::collection($messages), 'Riwayat pesan berhasil diambil');
+        return $this->successResponse(ParentMessageResource::collection($messages), __('Riwayat pesan berhasil diambil'));
     }
 
     /**
@@ -238,7 +238,7 @@ class ApiParentController extends Controller
         // 1. Verifikasi guru ada
         $teacher = User::findOrFail($request->recipient_id);
         if (! in_array($teacher->role, ['guru', 'bk'])) {
-            return $this->errorResponse('Tujuan pengiriman bukan akun guru/BK', 400);
+            return $this->errorResponse(__('Tujuan pengiriman bukan akun guru/BK'), 400);
         }
 
         // 2. Verifikasi relasi anak
@@ -273,7 +273,7 @@ class ApiParentController extends Controller
         $message->setRelation('sender', $user);
         event(new ChatMessageSent($message));
 
-        return $this->successResponse(new ParentMessageResource($message), 'Pesan berhasil dikirim', 201);
+        return $this->successResponse(new ParentMessageResource($message), __('Pesan berhasil dikirim'), 201);
     }
 
     /**
@@ -283,11 +283,11 @@ class ApiParentController extends Controller
     {
         $student = Student::where('uuid', $studentUuid)->first();
         if (! $student) {
-            return $this->errorResponse('Siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Siswa tidak ditemukan'), 404);
         }
 
         if ($student->parent_id !== $user->id) {
-            return $this->errorResponse('Otorisasi ditolak. Siswa bukan anak terdaftar Anda.', 403);
+            return $this->errorResponse(__('Otorisasi ditolak. Siswa bukan anak terdaftar Anda.'), 403);
         }
 
         return $student;

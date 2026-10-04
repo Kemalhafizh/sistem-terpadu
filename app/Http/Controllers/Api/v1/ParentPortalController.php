@@ -34,13 +34,13 @@ class ParentPortalController extends Controller
         $childId = match (true) {
             $child === null => null,
             is_int($child), ctype_digit($child) => (int) $child,
-            default => Student::where('uuid', $child)->value('id') ?? abort(404, 'Data siswa tidak ditemukan.'),
+            default => Student::where('uuid', $child)->value('id') ?? abort(404, __('Data siswa tidak ditemukan.')),
         };
 
         // 1. Superadmin may look at any child, but must say which one.
         if ($user->role === 'superadmin') {
             if ($childId === null) {
-                abort(422, 'Parameter child_id wajib diisi.');
+                abort(422, __('Parameter child_id wajib diisi.'));
             }
 
             return $childId;
@@ -56,7 +56,7 @@ class ParentPortalController extends Controller
             }
 
             if (! $child) {
-                abort(403, 'Akses ditolak. Anda tidak berwenang mengakses data siswa ini.');
+                abort(403, __('Akses ditolak. Anda tidak berwenang mengakses data siswa ini.'));
             }
 
             return (int) $child->id;
@@ -65,15 +65,15 @@ class ParentPortalController extends Controller
         // 3. Student / Siswa: only allowed to view their own profile/feed
         if (in_array($user->role, ['student', 'siswa'], true)) {
             // Never fall back to another student's id when the account has no profile.
-            $ownId = (int) ($user->student?->id ?? abort(404, 'Data siswa tidak ditemukan.'));
+            $ownId = (int) ($user->student?->id ?? abort(404, __('Data siswa tidak ditemukan.')));
             if ($childId !== null && $childId !== $ownId) {
-                abort(403, 'Akses ditolak. Siswa dilarang menginspeksi aktivitas siswa lain.');
+                abort(403, __('Akses ditolak. Siswa dilarang menginspeksi aktivitas siswa lain.'));
             }
 
             return $ownId;
         }
 
-        abort(403, 'Akses ditolak. Peran tidak diizinkan mengakses data siswa.');
+        abort(403, __('Akses ditolak. Peran tidak diizinkan mengakses data siswa.'));
     }
 
     /**
