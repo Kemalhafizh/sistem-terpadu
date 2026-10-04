@@ -11,7 +11,6 @@ use App\Models\SpmbDocument;
 use App\Models\SpmbTrack;
 use App\Models\SpmbWave;
 use App\Models\Student;
-use App\Models\TeachingJournal;
 use App\Models\UksMedicine;
 use App\Models\UksVisit;
 use App\Notifications\UksVisitNotification;
@@ -551,84 +550,5 @@ class SchoolOperationsApiController extends Controller
                 'screener' => $latestResult ? ($latestResult->screening?->title ?? 'Tim UKS Sekolah') : null,
             ],
         ]);
-    }
-
-    // ==========================================
-    // FASE 97: JURNAL MENGAJAR GURU & AGENDA KELAS
-    // ==========================================
-
-    public function teacherJournals(Request $request): JsonResponse
-    {
-        $teacherId = $request->user()->id;
-
-        $journals = TeachingJournal::with('classroom', 'subject')
-            ->where('user_id', $teacherId)
-            ->latest('date')
-            ->get();
-
-        if ($journals->isEmpty()) {
-            $journals = [
-                [
-                    'id' => 1,
-                    'date' => '2026-09-04',
-                    'time_slot' => 'Jam ke 3-4 (08:45 - 10:15)',
-                    'class_name' => 'XII MIPA 1',
-                    'subject_name' => 'Matematika Tingkat Lanjut',
-                    'topic' => 'Teorema Limit Fungsi Trigonometri Khusus',
-                    'notes' => 'Siswa sangat aktif saat latihan mandiri interaktif di laptop masing-masing.',
-                    'attendance_present' => 35,
-                    'attendance_absent' => 1,
-                    'absent_reason' => '1 Siswa izin dispensasi lomba sains',
-                    'status' => 'approved',
-                ],
-                [
-                    'id' => 2,
-                    'date' => '2026-09-03',
-                    'time_slot' => 'Jam ke 1-2 (07:00 - 08:30)',
-                    'class_name' => 'XI MIPA 3',
-                    'subject_name' => 'Fisika',
-                    'topic' => 'Hukum Termodinamika I: Usaha & Energi Dalam Gas',
-                    'notes' => 'Praktikum virtual simulasi P-V diagram berjalan lancar.',
-                    'attendance_present' => 36,
-                    'attendance_absent' => 0,
-                    'absent_reason' => null,
-                    'status' => 'approved',
-                ],
-            ];
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $journals,
-        ]);
-    }
-
-    public function storeTeacherJournal(Request $request): JsonResponse
-    {
-        $request->validate([
-            'class_name' => 'required|string',
-            'subject_name' => 'required|string',
-            'topic' => 'required|string',
-            'date' => 'required|date',
-            'notes' => 'nullable|string',
-            'attendance_present' => 'required|integer',
-            'attendance_absent' => 'nullable|integer',
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Jurnal mengajar harian berhasil disimpan & disahkan',
-            'data' => [
-                'id' => rand(100, 999),
-                'date' => $request->date,
-                'class_name' => $request->class_name,
-                'subject_name' => $request->subject_name,
-                'topic' => $request->topic,
-                'notes' => $request->notes,
-                'attendance_present' => $request->attendance_present,
-                'attendance_absent' => $request->attendance_absent ?? 0,
-                'status' => 'approved',
-            ],
-        ], 201);
     }
 }

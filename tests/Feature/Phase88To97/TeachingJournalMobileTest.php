@@ -1,26 +1,69 @@
 <?php
 
+use App\Models\AcademicYear;
+use App\Models\Classroom;
+use App\Models\Subject;
+use App\Models\TeachingJournal;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Laravel\Sanctum\Sanctum;
+
+/*
+ * /api/v1/teaching-journals used to list two hardcoded sample journals when a
+ * teacher had none, and its POST answered "berhasil disimpan & disahkan" with
+ * a random id without saving anything. The Android app never called it; it
+ * files journals through /api/v1/teacher/journals, which does save. The stub
+ * routes are gone.
+ */
 
 beforeEach(function () {
+    Cache::forget('academic_year_current');
+    $this->year = AcademicYear::create(['year' => '2026/2027', 'semester' => 'Ganjil', 'is_active' => true]);
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false]);
-});
-
-test('teacher can view journals list', function () {
-    $response = $this->actingAs($this->guru)->getJson('/api/v1/teaching-journals/my');
-    $response->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
-});
-
-test('teacher can store teaching journal', function () {
-    $response = $this->actingAs($this->guru)->postJson('/api/v1/teaching-journals', [
-        'class_name' => 'XII MIPA 1',
-        'subject_name' => 'Fisika',
+    $this->journal = [
+        'subject_id' => Subject::factory()->create()->id,
+        'classroom_id' => Classroom::factory()->create()->id,
+        'teaching_date' => '2026-09-06',
+        'jam_ke' => 3,
         'topic' => 'Kajian Relativitas Khusus',
-        'date' => '2026-09-06',
-        'attendance_present' => 35,
-        'attendance_absent' => 1,
-    ]);
-    $response->assertStatus(201)
-        ->assertJson(['success' => true]);
+        'learning_activity' => 'Diskusi dilatasi waktu.',
+        'learning_method' => 'Diskusi kelompok',
+        'students_present' => 35,
+        'students_absent' => 1,
+    ];
+});
+
+test('rute jurnal tiruan sudah tidak ada', function () {
+    Sanctum::actingAs($this->guru);
+
+    $this->getJson('/api/v1/teaching-journals/my')->assertNotFound();
+    $this->postJson('/api/v1/teaching-journals', ['topic' => 'Apa saja'])->assertNotFound();
+
+    expect(TeachingJournal::count())->toBe(0);
+});
+
+test('guru menyimpan jurnal lewat teacher/journals dan barisnya benar-benar tercipta', function () {
+    Sanctum::actingAs($this->guru);
+
+    $response = $this->postJson('/api/v1/teacher/journals', $this->journal)
+        ->assertCreated()
+        ->assertJsonPath('success', true);
+
+    $saved = TeachingJournal::sole();
+    expect($saved->user_id)->toBe($this->guru->id)
+        ->and($saved->topic)->toBe('Kajian Relativitas Khusus')
+        ->and($saved->academic_year_id)->toBe($this->year->id)
+        ->and($saved->status)->toBe('draft')
+        ->and($response->json('data.uuid'))->toBe($saved->uuid);
+
+    // The list reads the same row back, no samples.
+    $this->getJson('/api/v1/teacher/journals')->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.topic', 'Kajian Relativitas Khusus');
+});
+
+test('daftar jurnal guru tanpa jurnal kosong, bukan contoh', function () {
+    Sanctum::actingAs($this->guru);
+
+    $this->getJson('/api/v1/teacher/journals')->assertOk()->assertJsonCount(0, 'data');
 });

@@ -43,8 +43,6 @@ class NoFabricatedRandomnessTest extends TestCase
     private const DEBT = [
         // Nomor tiket BK acak dan klaim WhatsApp terkirim.
         'app/Services/BusinessRuleEngineService.php' => ['rand' => 1],
-        // Jurnal "berhasil disimpan & disahkan" dengan id acak.
-        'app/Http/Controllers/Api/v1/SchoolOperationsApiController.php' => ['rand' => 1],
         // Kota alumni tak dikenal ditaruh acak di sekitar Semarang.
         'app/Services/AlumniEnhancedService.php' => ['rand' => 2],
         // "Soal AI" dari templat dengan kunci jawaban diacak.
