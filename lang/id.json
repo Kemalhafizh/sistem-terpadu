@@ -174,5 +174,14 @@
     "Tata Kelola Yayasan": "Tata Kelola Yayasan",
 
     "Hak Cipta Dilindungi": "Hak Cipta Dilindungi",
-    "Versi Sistem": "Versi Sistem"
+    "Versi Sistem": "Versi Sistem",
+
+    "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.": "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.",
+    "Login berhasil": "Login berhasil",
+    "Logout berhasil": "Logout berhasil",
+    "Token aktif tidak ditemukan": "Token aktif tidak ditemukan",
+    "Token berhasil di-refresh": "Token berhasil di-refresh",
+    "Profil berhasil diambil": "Profil berhasil diambil",
+    "Bahasa berhasil diubah.": "Bahasa berhasil diubah.",
+    "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.": "Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah."
 }

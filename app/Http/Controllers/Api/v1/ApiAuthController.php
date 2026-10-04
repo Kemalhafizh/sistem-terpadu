@@ -10,9 +10,11 @@ use App\Models\Student;
 use App\Models\User;
 use App\Support\Access\RoleLabel;
 use App\Support\Access\StudentDataAccess;
+use App\Support\Locale;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 /**
  * @group Authentication v1
@@ -70,7 +72,7 @@ class ApiAuthController extends Controller
         }
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return $this->errorResponse('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.', 401);
+            return $this->errorResponse(__('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.'), 401);
         }
 
         // --- TOKEN ROTATION ---
@@ -87,8 +89,9 @@ class ApiAuthController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
                 'phone_number' => $user->phone_number,
+                'preferred_locale' => $user->preferred_locale,
             ],
-        ], 'Login berhasil');
+        ], __('Login berhasil'));
     }
 
     /**
@@ -104,10 +107,10 @@ class ApiAuthController extends Controller
         if ($currentToken) {
             $currentToken->delete();
 
-            return $this->successResponse(null, 'Logout berhasil');
+            return $this->successResponse(null, __('Logout berhasil'));
         }
 
-        return $this->errorResponse('Token aktif tidak ditemukan', 400);
+        return $this->errorResponse(__('Token aktif tidak ditemukan'), 400);
     }
 
     /**
@@ -133,10 +136,10 @@ class ApiAuthController extends Controller
 
             return $this->successResponse([
                 'token' => $newToken,
-            ], 'Token berhasil di-refresh');
+            ], __('Token berhasil di-refresh'));
         }
 
-        return $this->errorResponse('Token aktif tidak ditemukan', 400);
+        return $this->errorResponse(__('Token aktif tidak ditemukan'), 400);
     }
 
     /**
@@ -201,6 +204,8 @@ class ApiAuthController extends Controller
             'phone_number' => $user->phone_number,
             'role' => $role,
             'role_label' => RoleLabel::of($role),
+            // id/en/ar, saved by the web or the app (defaults to id).
+            'preferred_locale' => Locale::isSupported($user->preferred_locale) ? $user->preferred_locale : config('app.fallback_locale'),
             'student_data' => $studentData,
             'employee_data' => $employeeData,
             'children' => $children,
@@ -210,6 +215,26 @@ class ApiAuthController extends Controller
                 'year' => $year->year,
                 'semester' => $year->semester,
             ] : null,
-        ], 'Profil berhasil diambil');
+        ], __('Profil berhasil diambil'));
+    }
+
+    /**
+     * Set Language
+     *
+     * Saves the language for this account (id, en or ar). The web reads the
+     * same column, so the choice follows the user to every client.
+     *
+     * @authenticated
+     */
+    public function updateLocale(Request $request)
+    {
+        $validated = $request->validate([
+            'locale' => ['required', 'string', Rule::in(Locale::SUPPORTED)],
+        ]);
+
+        $request->user()->update(['preferred_locale' => $validated['locale']]);
+        app()->setLocale($validated['locale']);
+
+        return $this->successResponse(['locale' => $validated['locale']], __('Bahasa berhasil diubah.'));
     }
 }
