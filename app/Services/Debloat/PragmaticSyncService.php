@@ -11,14 +11,25 @@ use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\TahfidzLog;
 use App\Models\User;
+use App\Support\Access\StudentDataAccess;
+use DomainException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class PragmaticSyncService
 {
     /**
      * Process sequential FIFO actions from mobile offline queue.
      * Replaces vector clocks and conflict resolvers with simple, transactional replay.
+     *
+     * An action is PROCESSED only when its record was actually written. Missing
+     * data fails the action with a message instead of being filled in: the
+     * tahfidz log used to default to Al-Mulk 1-30 with grade A and the first
+     * teacher in the database, attendance to academic year/classroom id 1, and
+     * TEACHING_JOURNAL or an unknown type answered "synced" without saving.
+     * A FAILED action can be sent again with the same client_uuid.
      */
     public function processQueue(User $user, array $actions): array
     {
@@ -29,8 +40,8 @@ class PragmaticSyncService
             $actionType = $action['action_type'] ?? 'UNKNOWN';
             $payload = $action['payload'] ?? [];
 
-            // Check if already processed (Idempotency check)
-            $existing = OfflineSyncQueue::where('client_uuid', $clientUuid)->first();
+            // Idempotency: only a processed action is final.
+            $existing = OfflineSyncQueue::where('client_uuid', $clientUuid)->where('status', 'PROCESSED')->first();
             if ($existing) {
                 $results[] = [
                     'client_uuid' => $clientUuid,
@@ -43,96 +54,32 @@ class PragmaticSyncService
             }
 
             try {
-                DB::beginTransaction();
+                DB::transaction(fn () => $this->apply($user, $actionType, (array) $payload));
 
-                $academicYearId = AcademicYear::where('is_active', true)->first()?->id
-                    ?? AcademicYear::first()?->id
-                    ?? 1;
-
-                switch ($actionType) {
-                    case 'ATTENDANCE_CHECKIN':
-                        $student = Student::where('user_id', $user->id)->first();
-                        if ($student) {
-                            $rawStatus = $payload['status'] ?? 'H';
-                            $dbStatus = 'H';
-                            if (in_array(strtoupper($rawStatus), ['PRESENT', 'HADIR', 'H'])) {
-                                $dbStatus = 'H';
-                            } elseif (in_array(strtoupper($rawStatus), ['SICK', 'SAKIT', 'S'])) {
-                                $dbStatus = 'S';
-                            } elseif (in_array(strtoupper($rawStatus), ['PERMIT', 'IZIN', 'I'])) {
-                                $dbStatus = 'I';
-                            } else {
-                                $dbStatus = 'A';
-                            }
-
-                            Attendance::updateOrCreate(
-                                [
-                                    'student_id' => $student->id,
-                                    'date' => $payload['date'] ?? now()->toDateString(),
-                                ],
-                                [
-                                    'academic_year_id' => $academicYearId,
-                                    'classroom_id' => $student->classroom_id ?? 1,
-                                    'status' => $dbStatus,
-                                    'notes' => $payload['notes'] ?? 'Presensi Mobile GPS',
-                                    'recorded_by' => $user->id,
-                                ]
-                            );
-                        }
-                        break;
-
-                    case 'MUTABAAH_LOG':
-                        $student = Student::where('user_id', $user->id)->first();
-                        if ($student) {
-                            $teacherId = $user->role === 'teacher'
-                                ? $user->id
-                                : (User::where('role', 'teacher')->first()?->id ?? $user->id);
-
-                            TahfidzLog::create([
-                                'student_id' => $student->id,
-                                'teacher_id' => $teacherId,
-                                'surah_number' => $payload['surah_number'] ?? 67,
-                                'surah_name' => $payload['surah_name'] ?? 'Al-Mulk',
-                                'from_ayat' => $payload['ayah_start'] ?? 1,
-                                'to_ayat' => $payload['ayah_end'] ?? 30,
-                                'grade' => $payload['grade'] ?? 'A',
-                                'type' => 'ziyadah',
-                                'notes' => 'Mutabaah Yaumiyah',
-                                'date' => now()->toDateString(),
-                            ]);
-                        }
-                        break;
-
-                    case 'TEACHING_JOURNAL':
-                        // Simple record journal
-                        break;
-                }
-
-                $record = OfflineSyncQueue::create([
+                OfflineSyncQueue::updateOrCreate(['client_uuid' => $clientUuid], [
                     'user_id' => $user->id,
                     'action_type' => $actionType,
                     'payload' => $payload,
-                    'client_uuid' => $clientUuid,
                     'status' => 'PROCESSED',
+                    'error_message' => null,
                     'processed_at' => now(),
                 ]);
-
-                DB::commit();
 
                 $results[] = [
                     'client_uuid' => $clientUuid,
                     'action_type' => $actionType,
                     'status' => 'PROCESSED',
-                    'message' => 'Sukses disinkronkan ke database server.',
+                    'message' => __('Sukses disinkronkan ke database server.'),
                 ];
             } catch (\Throwable $e) {
-                DB::rollBack();
+                // A rejection carries a message for the user; anything else is
+                // logged in the queue but not echoed back (it may be SQL).
+                $message = $e instanceof DomainException ? $e->getMessage() : __('Aksi gagal diproses di server.');
 
-                OfflineSyncQueue::create([
+                OfflineSyncQueue::updateOrCreate(['client_uuid' => $clientUuid], [
                     'user_id' => $user->id,
                     'action_type' => $actionType,
                     'payload' => $payload,
-                    'client_uuid' => $clientUuid,
                     'status' => 'FAILED',
                     'error_message' => $e->getMessage(),
                 ]);
@@ -141,7 +88,7 @@ class PragmaticSyncService
                     'client_uuid' => $clientUuid,
                     'action_type' => $actionType,
                     'status' => 'FAILED',
-                    'error' => $e->getMessage(),
+                    'error' => $message,
                 ];
             }
         }
@@ -152,6 +99,75 @@ class PragmaticSyncService
             'results' => $results,
             'synced_at' => now()->toIso8601String(),
         ];
+    }
+
+    /**
+     * Write one action, or throw a DomainException saying why it cannot be written.
+     */
+    private function apply(User $user, string $actionType, array $payload): void
+    {
+        if (! in_array($actionType, ['ATTENDANCE_CHECKIN', 'MUTABAAH_LOG'], true)) {
+            throw new DomainException(__('Jenis aksi :type belum didukung untuk sinkronisasi.', ['type' => $actionType]));
+        }
+
+        $student = Student::where('user_id', $user->id)->first();
+        if (! $student) {
+            throw new DomainException(__('Data siswa untuk akun ini belum tercatat. Hubungi tata usaha sekolah.'));
+        }
+
+        if ($actionType === 'ATTENDANCE_CHECKIN') {
+            $academicYearId = AcademicYear::current()?->id;
+            if (! $academicYearId || ! $student->classroom_id) {
+                throw new DomainException(__('Presensi belum bisa dicatat: tahun ajaran aktif atau kelas siswa belum diatur.'));
+            }
+
+            $dbStatus = match (strtoupper((string) ($payload['status'] ?? 'H'))) {
+                'PRESENT', 'HADIR', 'H' => 'H',
+                'SICK', 'SAKIT', 'S' => 'S',
+                'PERMIT', 'IZIN', 'I' => 'I',
+                default => 'A',
+            };
+
+            Attendance::updateOrCreate(
+                ['student_id' => $student->id, 'date' => $payload['date'] ?? now()->toDateString()],
+                [
+                    'academic_year_id' => $academicYearId,
+                    'classroom_id' => $student->classroom_id,
+                    'status' => $dbStatus,
+                    'notes' => $payload['notes'] ?? null,
+                    'recorded_by' => $user->id,
+                ]
+            );
+
+            return;
+        }
+
+        // MUTABAAH_LOG: a tahfidz setoran. Every value comes from the client;
+        // the teacher is the one who heard it, not whoever comes first.
+        $validator = Validator::make($payload, [
+            'surah_number' => 'required|integer|between:1,114',
+            'surah_name' => 'required|string|max:100',
+            'ayah_start' => 'required|integer|min:1',
+            'ayah_end' => 'required|integer|gte:ayah_start',
+            'teacher_id' => ['required', 'integer', Rule::exists('users', 'id')->whereIn('role', StudentDataAccess::TEACHER_ROLES)],
+            'grade' => 'nullable|string|max:5',
+        ]);
+        if ($validator->fails()) {
+            throw new DomainException(__('Setoran tahfidz belum lengkap: :fields.', ['fields' => implode(', ', $validator->errors()->keys())]));
+        }
+
+        TahfidzLog::create([
+            'student_id' => $student->id,
+            'teacher_id' => (int) $payload['teacher_id'],
+            'surah_number' => (int) $payload['surah_number'],
+            'surah_name' => $payload['surah_name'],
+            'from_ayat' => (int) $payload['ayah_start'],
+            'to_ayat' => (int) $payload['ayah_end'],
+            'grade' => $payload['grade'] ?? null,
+            'type' => 'ziyadah',
+            'notes' => 'Mutabaah Yaumiyah',
+            'date' => now()->toDateString(),
+        ]);
     }
 
     /**
