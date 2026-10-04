@@ -205,5 +205,11 @@
     "Aksinya belum dijalankan karena belum ada pelaksana (tiket BK, WhatsApp, potongan gaji, SP1).": "لم تُنفّذ الإجراءات لأنه لا يوجد لها منفّذ بعد (تذكرة الإرشاد، واتساب، خصم الراتب، خطاب الإنذار).",
     ":count belum dijalankan": ":count لم تُنفّذ",
     "Aksi belum memiliki pelaksana": "لا يوجد منفّذ للإجراءات بعد",
-    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "تم حفظ المستند [:type]. لا يوجد محرك OCR مثبت، لذا أدخل بياناته يدويًا من الملف الممسوح ثم تحقق منها."
+    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "تم حفظ المستند [:type]. لا يوجد محرك OCR مثبت، لذا أدخل بياناته يدويًا من الملف الممسوح ثم تحقق منها.",
+
+    "Sukses disinkronkan ke database server.": "تمت المزامنة مع قاعدة بيانات الخادم.",
+    "Aksi gagal diproses di server.": "تعذّرت معالجة الإجراء على الخادم.",
+    "Jenis aksi :type belum didukung untuk sinkronisasi.": "نوع الإجراء :type غير مدعوم للمزامنة بعد.",
+    "Presensi belum bisa dicatat: tahun ajaran aktif atau kelas siswa belum diatur.": "لا يمكن تسجيل الحضور بعد: لم يُحدَّد العام الدراسي الحالي أو فصل الطالب.",
+    "Setoran tahfidz belum lengkap: :fields.": "تسميع التحفيظ غير مكتمل: :fields."
 }

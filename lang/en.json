@@ -205,5 +205,11 @@
     "Aksinya belum dijalankan karena belum ada pelaksana (tiket BK, WhatsApp, potongan gaji, SP1).": "The actions were not carried out because they have no executor yet (counseling ticket, WhatsApp, payroll deduction, warning letter).",
     ":count belum dijalankan": ":count not carried out",
     "Aksi belum memiliki pelaksana": "Actions have no executor yet",
-    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "Document [:type] saved. No OCR engine is installed, so fill in its data manually from the scan and then verify it."
+    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "Document [:type] saved. No OCR engine is installed, so fill in its data manually from the scan and then verify it.",
+
+    "Sukses disinkronkan ke database server.": "Synced to the server database.",
+    "Aksi gagal diproses di server.": "The action could not be processed on the server.",
+    "Jenis aksi :type belum didukung untuk sinkronisasi.": "Action type :type is not supported for sync yet.",
+    "Presensi belum bisa dicatat: tahun ajaran aktif atau kelas siswa belum diatur.": "Attendance cannot be recorded yet: the active academic year or the student's class has not been set.",
+    "Setoran tahfidz belum lengkap: :fields.": "The tahfidz submission is incomplete: :fields."
 }

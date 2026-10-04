@@ -205,5 +205,11 @@
     "Aksinya belum dijalankan karena belum ada pelaksana (tiket BK, WhatsApp, potongan gaji, SP1).": "Aksinya belum dijalankan karena belum ada pelaksana (tiket BK, WhatsApp, potongan gaji, SP1).",
     ":count belum dijalankan": ":count belum dijalankan",
     "Aksi belum memiliki pelaksana": "Aksi belum memiliki pelaksana",
-    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi."
+    "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.",
+
+    "Sukses disinkronkan ke database server.": "Sukses disinkronkan ke database server.",
+    "Aksi gagal diproses di server.": "Aksi gagal diproses di server.",
+    "Jenis aksi :type belum didukung untuk sinkronisasi.": "Jenis aksi :type belum didukung untuk sinkronisasi.",
+    "Presensi belum bisa dicatat: tahun ajaran aktif atau kelas siswa belum diatur.": "Presensi belum bisa dicatat: tahun ajaran aktif atau kelas siswa belum diatur.",
+    "Setoran tahfidz belum lengkap: :fields.": "Setoran tahfidz belum lengkap: :fields."
 }

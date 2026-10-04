@@ -38,7 +38,11 @@ class DigitalCertificateVerificationService
         );
 
         $sha256Hash = hash('sha256', $hashPayload);
-        $verificationUrl = "https://sista.sultanagung1.sch.id/verify/{$documentNumber}";
+        // The public verification endpoint at this installation's public address
+        // (APP_URL, not the host this request happened to use: the link is
+        // printed on the certificate). It used to be a hard-coded
+        // https://sista.sultanagung1.sch.id/verify/…, a page that does not exist.
+        $verificationUrl = rtrim((string) config('app.url'), '/').'/api/v1/certificates/verify/'.rawurlencode($documentNumber);
 
         return DigitalVerification::updateOrCreate(
             ['document_number' => $documentNumber],
