@@ -46,8 +46,8 @@ class CbtAccessControlService
      */
     public function canViewToken(User $user, Exam $exam): bool
     {
-        // Admin/superadmin always can
-        if (in_array($user->role, ['admin', 'superadmin'])) {
+        // Only superadmin bypasses the rule; admin does not (CLAUDE.md, rule 3).
+        if ($user->role === 'superadmin') {
             return true;
         }
 
@@ -213,7 +213,7 @@ class CbtAccessControlService
         // Verify the operator has permission
         if (! $this->canViewToken($operator, $exam)) {
             throw new AuthorizationException(
-                'Anda tidak memiliki hak untuk mereset status ujian siswa ini.'
+                __('Anda tidak memiliki hak untuk mereset status ujian siswa ini.')
             );
         }
 

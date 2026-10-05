@@ -106,7 +106,9 @@ class CbtAccessControlApiController extends Controller
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
         } catch (\Exception $e) {
-            return $this->errorResponse('Gagal menutup sesi ujian: '.$e->getMessage(), 500);
+            report($e);
+
+            return $this->errorResponse(__('Sesi ujian belum bisa ditutup. Coba lagi.'), 500);
         }
     }
 
@@ -223,7 +225,7 @@ class CbtAccessControlApiController extends Controller
             'is_ongoing' => $exam->isOngoing(),
         ])->values();
 
-        return $this->successResponse($data, 'Daftar ujian yang Anda awasi berhasil diambil');
+        return $this->successResponse($data, __('Daftar ujian yang Anda awasi berhasil diambil'));
     }
 
     /**
@@ -236,10 +238,9 @@ class CbtAccessControlApiController extends Controller
 
         if (! $this->accessControlService->canViewToken($user, $exam)) {
             return $this->errorResponse(
-                'Anda tidak berwenang melihat token ujian ini. '.
-                ($exam->type === 'uts' || $exam->type === 'uas'
-                    ? 'Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.'
-                    : 'Token Ulangan Harian dipegang oleh guru pembuat ujian.'),
+                $exam->type === 'uts' || $exam->type === 'uas'
+                    ? __('Anda tidak berwenang melihat token ujian ini. Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.')
+                    : __('Anda tidak berwenang melihat token ujian ini. Token Ulangan Harian dipegang oleh guru pembuat ujian.'),
                 403
             );
         }
@@ -263,7 +264,7 @@ class CbtAccessControlApiController extends Controller
             'duration_minutes' => 5,
             'mobile_only' => (bool) $exam->mobile_only,
             'is_ongoing' => $exam->isOngoing(),
-        ], 'Token ujian berhasil diambil (berlaku 5 menit)');
+        ], __('Token ujian berhasil diambil (berlaku 5 menit)'));
     }
 
     /**
@@ -275,7 +276,7 @@ class CbtAccessControlApiController extends Controller
         $exam = Exam::findOrFail($id);
 
         if (! $this->accessControlService->canViewToken($user, $exam)) {
-            return $this->errorResponse('Anda tidak berwenang memperbarui token ujian ini', 403);
+            return $this->errorResponse(__('Anda tidak berwenang memperbarui token ujian ini'), 403);
         }
 
         $newToken = $this->accessControlService->regenerateToken($exam);
@@ -289,7 +290,7 @@ class CbtAccessControlApiController extends Controller
             'remaining_seconds' => $exam->getTokenRemainingSeconds(),
             'is_expired' => false,
             'duration_minutes' => 5,
-        ], 'Token ujian berhasil diperbarui (berlaku 5 menit)');
+        ], __('Token ujian berhasil diperbarui (berlaku 5 menit)'));
     }
 
     /**
@@ -313,13 +314,56 @@ class CbtAccessControlApiController extends Controller
                 'student_id' => $student->id,
                 'attempt_status' => $attempt->status,
                 'force_closed' => $attempt->force_closed,
-            ], 'Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.');
+            ], __('Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.'));
         } catch (AuthorizationException $e) {
             return $this->errorResponse($e->getMessage(), 403);
         } catch (ModelNotFoundException $e) {
-            return $this->errorResponse('Data attempt force_closed untuk siswa ini tidak ditemukan', 404);
+            return $this->errorResponse(__('Siswa ini tidak sedang terkunci di ujian ini.'), 404);
         } catch (\Exception $e) {
-            return $this->errorResponse('Gagal mereset status siswa: '.$e->getMessage(), 500);
+            // The exception's text is for the log, not for the teacher's screen.
+            report($e);
+
+            return $this->errorResponse(__('Status ujian siswa belum bisa direset. Coba lagi.'), 500);
         }
+    }
+
+    /**
+     * Students locked out of [id] by the anti-cheat (force_closed attempts), so
+     * the operator picks who to let back in instead of typing a students.id.
+     * `reason_code` is what the app reported; `reason` is its label.
+     */
+    public function lockedStudents(Request $request, $id)
+    {
+        $exam = Exam::findOrFail($id);
+        if (! $this->accessControlService->canViewToken($request->user(), $exam)) {
+            return $this->errorResponse(__('Anda tidak berwenang mengawasi ujian ini.'), 403);
+        }
+
+        $reasons = [
+            'app_minimized' => __('Aplikasi diperkecil'),
+            'app_closed' => __('Aplikasi ditutup'),
+            'split_screen' => __('Layar terbagi'),
+            'back_button_pressed' => __('Tombol kembali ditekan'),
+        ];
+
+        $locked = ExamAttempt::where('exam_id', $exam->id)
+            ->where('status', 'force_closed')
+            ->with(['student.user:id,name', 'student.classroom:id,name'])
+            ->latest('updated_at')
+            ->get()
+            ->unique('student_id')
+            ->values()
+            ->map(fn (ExamAttempt $attempt) => [
+                'student_id' => $attempt->student_id,
+                'name' => $attempt->student?->name,
+                'nis' => $attempt->student?->nis,
+                'classroom' => $attempt->student?->classroom?->name,
+                'reason_code' => $attempt->force_close_reason,
+                'reason' => $reasons[$attempt->force_close_reason] ?? null,
+                'violation_count' => (int) $attempt->violation_count,
+                'locked_at' => $attempt->updated_at?->toIso8601String(),
+            ]);
+
+        return $this->successResponse($locked, __('Daftar siswa terkunci berhasil diambil'));
     }
 }
