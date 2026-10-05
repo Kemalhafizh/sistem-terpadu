@@ -349,5 +349,6 @@
     "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.": "لا يمكن استبدال أسئلة الاختبار لأن طلابًا بدأوا حله بالفعل.",
     "Soal ujian diganti dengan paket dari bank soal.": "تم استبدال أسئلة الاختبار بمجموعة من بنك الأسئلة.",
     "Paket soal dipilih dari bank soal.": "تم اختيار الأسئلة من بنك الأسئلة.",
-    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "يوجد سؤال مشابه في البنك بالفعل (تشابه :percent%، السؤال رقم :id)."
+    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "يوجد سؤال مشابه في البنك بالفعل (تشابه :percent%، السؤال رقم :id).",
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "أدخل رمز الاختبار من المراقب أولاً."
 }

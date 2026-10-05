@@ -349,5 +349,6 @@
     "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.": "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.",
     "Soal ujian diganti dengan paket dari bank soal.": "Soal ujian diganti dengan paket dari bank soal.",
     "Paket soal dipilih dari bank soal.": "Paket soal dipilih dari bank soal.",
-    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id)."
+    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).",
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "Masukkan token ujian dari pengawas terlebih dahulu."
 }

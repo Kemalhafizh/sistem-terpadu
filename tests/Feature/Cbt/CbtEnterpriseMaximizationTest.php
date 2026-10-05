@@ -13,6 +13,9 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
+use Tests\Concerns\EntersCbtExam;
+
+uses(EntersCbtExam::class);
 
 beforeEach(function () {
     $this->subject = Subject::factory()->create(['name' => 'Fisika']);
@@ -86,10 +89,13 @@ test('siswa dapat mengunduh paket soal terenkripsi untuk zero-downtime pre-fetch
 
     expect($response->json('data.format'))->toBe('aes-256-cbc');
     expect($response->json('data.encrypted_data'))->not->toBeEmpty();
+
+    // Pre-fetching is not entering the exam: only validate-token opens an attempt.
+    expect(ExamAttempt::where('exam_id', $this->exam->id)->exists())->toBeFalse();
 });
 
 test('siswa dapat mengambil kunci dekripsi saat jadwal ujian aktif', function () {
-    Sanctum::actingAs($this->studentUser);
+    $this->enterCbtExam($this->studentUser, $this->exam);
 
     $response = $this->getJson("/api/v1/student/cbt/exams/{$this->exam->id}/decryption-key");
 
@@ -131,7 +137,7 @@ test('kunci dekripsi ditolak jika ujian belum memasuki jadwal', function () {
 });
 
 test('siswa dapat melakukan micro-sync jawaban ke backend', function () {
-    Sanctum::actingAs($this->studentUser);
+    $this->enterCbtExam($this->studentUser, $this->exam);
 
     $answers = [
         (string) $this->questions[0]->id => 'A',
@@ -161,7 +167,7 @@ test('siswa dapat melakukan micro-sync jawaban ke backend', function () {
 
 test('siswa dapat mengunggah foto lembar jawaban esai tulis tangan', function () {
     Storage::fake('public');
-    Sanctum::actingAs($this->studentUser);
+    $this->enterCbtExam($this->studentUser, $this->exam);
 
     $fakeImage = UploadedFile::fake()->image('coretan_fisika.jpg', 800, 600);
 

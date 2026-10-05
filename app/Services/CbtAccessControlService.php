@@ -228,6 +228,8 @@ class CbtAccessControlService
             'force_closed' => false,
             'force_close_reason' => null,
             'submitted_at' => null,
+            // Re-entry goes through validate-token again (ExamAttempt::openFor).
+            'token_validated_at' => null,
             // Keep existing answers — student continues from where they left off
         ]);
 

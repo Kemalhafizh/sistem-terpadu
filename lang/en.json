@@ -349,5 +349,6 @@
     "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.": "The exam's questions can't be replaced because students have already started it.",
     "Soal ujian diganti dengan paket dari bank soal.": "The exam's questions were replaced with a set from the question bank.",
     "Paket soal dipilih dari bank soal.": "Questions picked from the question bank.",
-    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "A similar question is already in the bank (:percent% similar, question #:id)."
+    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "A similar question is already in the bank (:percent% similar, question #:id).",
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "Enter the exam token from your proctor first."
 }

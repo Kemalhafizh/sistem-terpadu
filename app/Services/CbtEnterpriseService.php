@@ -10,7 +10,6 @@ use App\Models\ExamAttempt;
 use App\Models\Student;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class CbtEnterpriseService
 {
@@ -26,14 +25,14 @@ class CbtEnterpriseService
      */
     public function generateEncryptedPayload(Exam $exam, Student $student): array
     {
-        $attempt = ExamAttempt::firstOrCreate(
-            ['exam_id' => $exam->id, 'student_id' => $student->id],
-            [
-                'uuid' => (string) Str::uuid(),
-                'status' => 'in_progress',
-                'started_at' => now(),
-            ]
-        );
+        // Pre-fetched before the student enters the exam, so it must not create
+        // the attempt (only validate-token does). Without one, the seeded order
+        // is computed without persisting; it is the same order the attempt
+        // stores later.
+        $attempt = ExamAttempt::where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->latest()
+            ->first();
 
         // Same per-student order as GET student/cbt/exams/{id}/questions and the web take view.
         $payload = [];
@@ -88,6 +87,14 @@ class CbtEnterpriseService
             ];
         }
 
+        // The payload is useless without the key, so the key is what the token gates.
+        if (! ExamAttempt::openFor($exam, $student)) {
+            return [
+                'accessible' => false,
+                'message' => __('Masukkan token ujian dari pengawas terlebih dahulu.'),
+            ];
+        }
+
         $key = $this->deriveExamKey($exam);
 
         return [
@@ -112,14 +119,10 @@ class CbtEnterpriseService
             abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
         }
 
+        // Only an attempt opened through validate-token accepts answers; never create one here.
+        $attempt = ExamAttempt::openFor($exam, $student);
         if (! $attempt) {
-            $attempt = ExamAttempt::create([
-                'exam_id' => $exam->id,
-                'student_id' => $student->id,
-                'uuid' => (string) Str::uuid(),
-                'status' => 'in_progress',
-                'started_at' => now(),
-            ]);
+            abort(403, __('Masukkan token ujian dari pengawas terlebih dahulu.'));
         }
 
         $cacheKey = "cbt_answers_{$exam->id}_{$student->id}";
@@ -158,14 +161,10 @@ class CbtEnterpriseService
             abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
         }
 
+        // Only an attempt opened through validate-token accepts answers; never create one here.
+        $attempt = ExamAttempt::openFor($exam, $student);
         if (! $attempt) {
-            $attempt = ExamAttempt::create([
-                'exam_id' => $exam->id,
-                'student_id' => $student->id,
-                'uuid' => (string) Str::uuid(),
-                'status' => 'in_progress',
-                'started_at' => now(),
-            ]);
+            abort(403, __('Masukkan token ujian dari pengawas terlebih dahulu.'));
         }
 
         $questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();

@@ -10,6 +10,9 @@ use App\Models\Subject;
 use App\Models\User;
 use App\Services\CbtService;
 use Laravel\Sanctum\Sanctum;
+use Tests\Concerns\EntersCbtExam;
+
+uses(EntersCbtExam::class);
 
 /*
  * GET student/cbt/exams/{id}/questions (Android app) must honor the exam's
@@ -89,7 +92,12 @@ beforeEach(function () {
         return $exam;
     };
 
+    // Questions are only served after the student entered the proctor's token
+    // (validate-token), so fetch enters the exam first like the app does.
     $this->fetch = function (User $user, Exam $exam): array {
+        if (! ExamAttempt::openFor($exam, $user->student)) {
+            $this->enterCbtExam($user, $exam);
+        }
         Sanctum::actingAs($user);
 
         return $this->getJson("/api/v1/student/cbt/exams/{$exam->id}/questions")
@@ -121,20 +129,22 @@ test('same student gets the same question and option order on repeated fetches',
 test('same order with and without an attempt row, and the attempt stores it', function () {
     $exam = ($this->makeExam)(true, true);
 
-    // No attempt yet: order is computed from the seed, not persisted.
-    $withoutAttempt = ($this->fetch)($this->userA, $exam);
+    // Pre-fetch before entering the exam: no attempt yet, so the payload's
+    // order is computed from the seed and nothing is persisted.
+    Sanctum::actingAs($this->userA);
+    $payload = $this->getJson("/api/v1/student/cbt/exams/{$exam->id}/encrypted-payload")->assertOk()->json('data');
     expect(ExamAttempt::where('exam_id', $exam->id)->count())->toBe(0);
 
-    // validate-token creates the attempt; the next fetch must not reshuffle.
-    $attempt = ExamAttempt::create([
-        'exam_id' => $exam->id,
-        'student_id' => $this->studentA->id,
-        'started_at' => now(),
-        'status' => 'in_progress',
-    ]);
+    // validate-token creates the attempt; the questions must not reshuffle.
+    $attempt = $this->enterCbtExam($this->userA, $exam);
     $withAttempt = ($this->fetch)($this->userA, $exam);
 
-    expect($withAttempt)->toEqual($withoutAttempt);
+    $key = base64_decode($this->getJson("/api/v1/student/cbt/exams/{$exam->id}/decryption-key")->assertOk()->json('data.key'));
+    $withoutAttempt = json_decode(openssl_decrypt(
+        base64_decode($payload['encrypted_data']), 'aes-256-cbc', $key, OPENSSL_RAW_DATA, base64_decode($payload['iv'])
+    ), true)['questions'];
+
+    expect(mobileCbtQuestionIds($withAttempt))->toEqual(mobileCbtQuestionIds($withoutAttempt));
     expect($attempt->fresh()->question_order)->toEqual(mobileCbtQuestionIds($withAttempt));
 });
 
@@ -230,14 +240,14 @@ test('encrypted vault payload has the same order as the questions endpoint', fun
         expect($vaultQuestion['options'])->toEqual($questions[$i]['options']);
     }
 
-    // And a fetch after the payload created the attempt still agrees.
+    // And a later fetch still agrees.
     expect(($this->fetch)($this->userA, $exam))->toEqual($questions);
 });
 
 test('encrypted vault payload keeps authored option order when shuffle_options is off', function () {
     $exam = ($this->makeExam)(true, false);
 
-    Sanctum::actingAs($this->userA);
+    $this->enterCbtExam($this->userA, $exam);
     $payload = $this->getJson("/api/v1/student/cbt/exams/{$exam->id}/encrypted-payload")->assertOk()->json('data');
     $key = base64_decode($this->getJson("/api/v1/student/cbt/exams/{$exam->id}/decryption-key")->json('data.key'));
     $decrypted = json_decode(openssl_decrypt(
@@ -292,12 +302,6 @@ test('wrong displayed picks score zero with shuffled options', function () {
 
 test('autoGrade after force-close scores shuffled-option answers by original key', function () {
     $exam = ($this->makeExam)(true, true);
-    ExamAttempt::create([
-        'exam_id' => $exam->id,
-        'student_id' => $this->studentA->id,
-        'started_at' => now(),
-        'status' => 'in_progress',
-    ]);
     $questions = ($this->fetch)($this->userA, $exam);
 
     // Half right, half wrong, picked by displayed text.
