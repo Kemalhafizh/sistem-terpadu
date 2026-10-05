@@ -129,7 +129,7 @@ test('a new account can be given its opening balance', function () {
 });
 
 test('petty cash and vendor payments are recorded under the logged-in user, not user 1', function () {
-    $clerk = User::factory()->create();
+    $clerk = User::factory()->create(['role' => 'staf_tu']);
     expect($clerk->id)->not->toBe(1);
     $fund = PettyCashFund::create(['fund_name' => 'Kas TU', 'custodian_id' => $this->user->id, 'imprest_amount' => 2000000]);
 

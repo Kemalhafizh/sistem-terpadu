@@ -13,7 +13,8 @@ class TreasuryManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        // FASE 118: treasury is for TU staff, the principal and admin.
+        $this->user = User::factory()->create(['role' => 'staf_tu']);
         $this->actingAs($this->user);
     }
 
@@ -39,5 +40,16 @@ class TreasuryManagementTest extends TestCase
     {
         $response = $this->get('/treasury/position');
         $response->assertStatus(200);
+    }
+
+    /** FASE 118: treasury used to open for any signed-in account, bank accounts included. */
+    public function test_other_roles_are_refused()
+    {
+        foreach (['siswa', 'orang_tua', 'guru', 'bk'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+            foreach (['treasury.accounts.index', 'treasury.reconciliation.index', 'treasury.petty-cash.index', 'treasury.position.dashboard'] as $route) {
+                $this->actingAs($user)->get(route($route))->assertForbidden();
+            }
+        }
     }
 }

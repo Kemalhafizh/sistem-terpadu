@@ -4,9 +4,12 @@ use App\Http\Controllers\Alumni\AlumniAchievementController;
 use App\Http\Controllers\Alumni\AlumniProfileController;
 use App\Http\Controllers\Alumni\CrowdfundCampaignController;
 use App\Http\Controllers\Alumni\EndowmentController;
+use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+// FASE 118: alumni relations, fundraising and endowment are run by public relations
+// and the office; the `alumni` role is not given access yet.
+Route::middleware(['auth', Roles::only('waka_humas', 'staf_tu', Roles::PRINCIPAL, 'admin')])->group(function () {
     Route::prefix('alumni')->name('alumni.')->group(function () {
         Route::get('/', [AlumniProfileController::class, 'index'])->name('index');
         Route::get('/reunion-planner', [AlumniProfileController::class, 'reunionPlanner'])->name('reunionPlanner');

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Alumni;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class AlumniProfileController extends Controller
 {
@@ -16,12 +15,6 @@ class AlumniProfileController extends Controller
     {
         return view('fase61.alumni-directory.profile');
     }
-
-    public function edit($id) {}
-
-    public function update(Request $request, $id) {}
-
-    public function directory() {}
 
     public function reunionPlanner()
     {

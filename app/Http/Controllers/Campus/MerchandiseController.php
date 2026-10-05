@@ -59,7 +59,7 @@ class MerchandiseController extends Controller
             'order_items' => 'required|array',
         ]);
 
-        $data['student_id'] = auth()->id() ?? 1; // Fallback for testing
+        $data['student_id'] = $request->user()->id;
 
         $this->merchandiseService->createOrder($data);
 

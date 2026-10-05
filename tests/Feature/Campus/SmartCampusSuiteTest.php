@@ -4,6 +4,7 @@ namespace Tests\Feature\Campus;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class SmartCampusSuiteTest extends TestCase
@@ -15,9 +16,8 @@ class SmartCampusSuiteTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create([
-            'email' => 'admin@sultanagung1.sch.id',
-        ]);
+        // FASE 118: campus operations are for TU staff, sarpras, the principal and admin.
+        $this->user = User::factory()->create(['role' => 'staf_tu']);
     }
 
     public function test_visitor_dashboard_is_accessible()
@@ -32,15 +32,30 @@ class SmartCampusSuiteTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_canteen_menu_planner_is_accessible()
+    /**
+     * FASE 118: the canteen is run by outside vendors who rent a stall, not by
+     * school staff, so its planner left the ERP (this test used to expect 200).
+     */
+    public function test_canteen_planner_is_gone()
     {
-        $response = $this->actingAs($this->user)->get(route('canteen.menu_planner'));
-        $response->assertStatus(200);
+        $this->assertFalse(Route::has('canteen.menu_planner'));
+        $this->assertFalse(Route::has('canteen.nutrition_tracker'));
     }
 
     public function test_event_manager_is_accessible()
     {
         $response = $this->actingAs($this->user)->get(route('events.manager'));
         $response->assertStatus(200);
+    }
+
+    /** FASE 118: campus operations used to open for any signed-in account. */
+    public function test_other_roles_are_refused()
+    {
+        foreach (['siswa', 'orang_tua', 'guru'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+            foreach (['visitors.dashboard', 'store.catalog', 'events.manager'] as $route) {
+                $this->actingAs($user)->get(route($route))->assertForbidden();
+            }
+        }
     }
 }

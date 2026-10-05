@@ -394,5 +394,16 @@
     "Ujian siswa berhasil disubmit paksa": "Ujian siswa berhasil disubmit paksa",
     "Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.": "Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.",
     "Waktu ujian Anda sudah habis.": "Waktu ujian Anda sudah habis.",
-    "Masukkan token ujian dari pengawas terlebih dahulu.": "Masukkan token ujian dari pengawas terlebih dahulu."
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "Masukkan token ujian dari pengawas terlebih dahulu.",
+    "Fitur ini belum tersedia. Perubahan belum bisa disimpan.": "Fitur ini belum tersedia. Perubahan belum bisa disimpan.",
+    "Akun ini belum terhubung dengan data pegawai, jadi log sampah belum bisa dicatat atas nama Anda.": "Akun ini belum terhubung dengan data pegawai, jadi log sampah belum bisa dicatat atas nama Anda.",
+    "Log sampah tersimpan.": "Log sampah tersimpan.",
+    "Siswa ini bukan anggota kelas pada denah tersebut.": "Siswa ini bukan anggota kelas pada denah tersebut.",
+    "Pelacak Sampah": "Pelacak Sampah",
+    "Kategori": "Kategori",
+    "Berat (kg)": "Berat (kg)",
+    "Penanganan": "Penanganan",
+    "Catat": "Catat",
+    "Dicatat oleh": "Dicatat oleh",
+    "Belum ada log sampah.": "Belum ada log sampah."
 }

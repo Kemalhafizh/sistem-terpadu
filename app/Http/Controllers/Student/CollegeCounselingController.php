@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Services\Student\CollegeCounselingService;
-use Illuminate\Http\Request;
 
 class CollegeCounselingController extends Controller
 {
@@ -28,11 +27,6 @@ class CollegeCounselingController extends Controller
     public function myApplications()
     {
         return view('college-counseling.tracker');
-    }
-
-    public function storeApplication(Request $request)
-    {
-        return back()->with('success', 'Aplikasi berhasil disimpan');
     }
 
     public function counselorTracker()

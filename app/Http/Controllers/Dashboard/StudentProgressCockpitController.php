@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Services\Dashboard\StudentCockpitService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -19,7 +20,7 @@ class StudentProgressCockpitController extends Controller
 
     public function index(Request $request): View|JsonResponse
     {
-        $students = Student::take(30)->get();
+        $students = Student::visibleTo($request->user())->take(30)->get();
         $selectedStudent = $students->first();
         $snapshot = $selectedStudent ? $this->cockpitService->buildLearningJourney($selectedStudent) : null;
 
@@ -32,6 +33,8 @@ class StudentProgressCockpitController extends Controller
 
     public function showStudent(Student $student): JsonResponse
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $student);
+
         $snapshot = $this->cockpitService->buildLearningJourney($student);
 
         return response()->json([

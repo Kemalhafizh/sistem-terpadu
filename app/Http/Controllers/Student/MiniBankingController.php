@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Services\Student\MiniBankingService;
-use Illuminate\Http\Request;
 
 class MiniBankingController extends Controller
 {
@@ -25,19 +24,9 @@ class MiniBankingController extends Controller
         return view('mini-bank.student-wallet');
     }
 
-    public function processDeposit(Request $request)
-    {
-        return back()->with('success', 'Setoran berhasil diproses');
-    }
-
     public function transferForm()
     {
         return view('mini-bank.student-wallet');
-    }
-
-    public function processTransfer(Request $request)
-    {
-        return back()->with('success', 'Transfer berhasil');
     }
 
     public function tellerDashboard()

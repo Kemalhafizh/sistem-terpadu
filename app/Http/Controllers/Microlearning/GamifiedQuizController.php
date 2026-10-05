@@ -24,7 +24,8 @@ class GamifiedQuizController extends Controller
 
     public function store(Request $request)
     {
-        return redirect()->route('gamified-quizzes.dashboard');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function host($id)

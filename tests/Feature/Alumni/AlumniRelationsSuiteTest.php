@@ -13,7 +13,8 @@ class AlumniRelationsSuiteTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        // FASE 118: alumni relations are run by staff (humas, TU) and leadership.
+        $this->user = User::factory()->create(['role' => 'waka_humas']);
     }
 
     public function test_alumni_index_returns_200()
@@ -38,5 +39,16 @@ class AlumniRelationsSuiteTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(route('endowment.dashboard'));
         $response->assertStatus(200);
+    }
+
+    /** FASE 118: they used to open for any signed-in account. */
+    public function test_other_roles_are_refused()
+    {
+        foreach (['siswa', 'orang_tua', 'guru'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+            foreach (['alumni.index', 'crowdfunding.index', 'hall_of_fame.index', 'endowment.dashboard'] as $route) {
+                $this->actingAs($user)->get(route($route))->assertForbidden();
+            }
+        }
     }
 }

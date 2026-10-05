@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inclusive;
 use App\Http\Controllers\Controller;
 use App\Models\ScreeningResult;
 use App\Services\Inclusive\ScreeningEngineService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 
 class DisabilityScreeningController extends Controller
@@ -18,7 +19,7 @@ class DisabilityScreeningController extends Controller
 
     public function dashboard()
     {
-        $results = ScreeningResult::with('student', 'evaluator')->latest()->take(10)->get();
+        $results = ScreeningResult::with('student', 'evaluator')->whereHas('student', fn ($q) => $q->visibleTo(request()->user()))->latest()->take(10)->get();
 
         return view('fase58.screening.dashboard', compact('results'));
     }
@@ -62,6 +63,8 @@ class DisabilityScreeningController extends Controller
 
     public function showResult(ScreeningResult $result)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $result->student);
+
         $result->load('student', 'evaluator');
 
         return view('fase58.screening.report', compact('result'));

@@ -394,5 +394,16 @@
     "Ujian siswa berhasil disubmit paksa": "The student's exam was force-submitted",
     "Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.": "The exam was already finished or your session is locked.",
     "Waktu ujian Anda sudah habis.": "Your exam time is up.",
-    "Masukkan token ujian dari pengawas terlebih dahulu.": "Enter the exam token from your proctor first."
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "Enter the exam token from your proctor first.",
+    "Fitur ini belum tersedia. Perubahan belum bisa disimpan.": "This feature is not available yet. Your changes could not be saved.",
+    "Akun ini belum terhubung dengan data pegawai, jadi log sampah belum bisa dicatat atas nama Anda.": "This account is not linked to an employee record yet, so the waste log cannot be recorded in your name.",
+    "Log sampah tersimpan.": "Waste log saved.",
+    "Siswa ini bukan anggota kelas pada denah tersebut.": "This student is not a member of the class on that seating plan.",
+    "Pelacak Sampah": "Waste Tracker",
+    "Kategori": "Category",
+    "Berat (kg)": "Weight (kg)",
+    "Penanganan": "Disposal",
+    "Catat": "Record",
+    "Dicatat oleh": "Recorded by",
+    "Belum ada log sampah.": "No waste logs yet."
 }

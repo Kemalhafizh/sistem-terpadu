@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WasteLog extends Model
 {
@@ -24,7 +25,8 @@ class WasteLog extends Model
         'revenue_generated' => 'decimal:2',
     ];
 
-    public function recorder()
+    /** @return BelongsTo<Employee, $this> */
+    public function recorder(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'recorded_by');
     }

@@ -11,22 +11,22 @@
 
 - [x] **FASE 45: Crisis Management & Institutional Resilience (45.1 - 45.4)** `Selesai ✅`
 - [x] **FASE 46: Strategic Planning & RENSTRA Governance (46.1 - 46.4)** `Selesai ✅`
-- [x] **FASE 47: Knowledge Management & Teacher Collaboration Hub (47.1 - 47.4)** `Selesai ✅`
+- [ ] **FASE 47: Knowledge Management & Teacher Collaboration Hub (47.1 - 47.4)** `Sebagian ⚠️ (FASE 118: halaman baca jalan; tulis artikel, lesson study, PLC, dan sumber belajar belum punya backend, menjawab 501)`
 - [x] **FASE 48: Financial Treasury & Bank Reconciliation Automation (48.1 - 48.4)** `Selesai ✅`
-- [x] **FASE 49: Adaptive Learning & IRT Assessment Engine (49.1 - 49.4)** `Selesai ✅`
+- [ ] **FASE 49: Adaptive Learning & IRT Assessment Engine (49.1 - 49.4)** `Sebagian ⚠️ (FASE 118: kalibrasi dan mastery jalan; memulai/menjawab CAT dan generate learning path belum punya backend, menjawab 501)`
 - [x] **FASE 50: YBWSA Foundation Governance & Multi-Unit Consolidation (50.1 - 50.4)** `Selesai ✅`
-- [x] **FASE 51: Intelligent Microlearning & Gamified Assessment Platform (51.1 - 51.4)** `Selesai ✅`
-- [x] **FASE 52: Advanced Human Resource Management & Employee Wellbeing (52.1 - 52.4)** `Selesai ✅`
-- [x] **FASE 53: Smart Campus Operations & Visitor Management (53.1 - 53.4)** `Selesai ✅`
+- [ ] **FASE 51: Intelligent Microlearning & Gamified Assessment Platform (51.1 - 51.4)** `Sebagian ⚠️ (FASE 118: menulis micro lesson, membuat kuis, dan review spaced repetition belum punya backend, menjawab 501)`
+- [ ] **FASE 52: Advanced Human Resource Management & Employee Wellbeing (52.1 - 52.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub tulis lowongan, kompensasi, wellness, dan exit interview dihapus)`
+- [x] **FASE 53: Smart Campus Operations & Visitor Management (53.1 - 53.4)** `Selesai ✅ (FASE 118: kantin dikeluarkan dari ERP)`
 - [x] **FASE 54: Advanced Communication & Multi-Channel Hub (54.1 - 54.4)** `Selesai ✅`
-- [x] **FASE 55: Advanced Data Engineering & Intelligence Platform (55.1 - 55.4)** `Selesai ✅`
-- [x] **FASE 56: Next-Gen Student Services & Career Readiness (56.1 - 56.4)** `Selesai ✅`
-- [x] **FASE 57: Islamic Education Technology & Religious Affairs Platform (57.1 - 57.4)** `Selesai ✅`
+- [ ] **FASE 55: Advanced Data Engineering & Intelligence Platform (55.1 - 55.4)** `Sebagian ⚠️ (FASE 118: membuat jadwal laporan belum punya backend, menjawab 501)`
+- [ ] **FASE 56: Next-Gen Student Services & Career Readiness (56.1 - 56.4)** `Sebagian ⚠️ (FASE 118: daftar magang, jurnal, aplikasi kampus, setor/transfer mini bank belum punya backend; stub dihapus)`
+- [ ] **FASE 57: Islamic Education Technology & Religious Affairs Platform (57.1 - 57.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub tulis tahsin, acara, dakwah, dan portofolio dihapus)`
 - [x] **FASE 58: Inclusive Education & Special Needs Support (58.1 - 58.4)** `Selesai ✅`
-- [x] **FASE 59: Environmental Sustainability & Green School Program (59.1 - 59.4)** `Selesai ✅`
-- [x] **FASE 60: Advanced School Safety & Physical Security (60.1 - 60.4)** `Selesai ✅`
-- [x] **FASE 61: Alumni Relations & Institutional Advancement (61.1 - 61.4)** `Selesai ✅`
-- [x] **FASE 62: Parent-Teacher Collaboration 2.0 & Family Engagement (62.1 - 62.4)** `Selesai ✅`
+- [ ] **FASE 59: Environmental Sustainability & Green School Program (59.1 - 59.4)** `Sebagian ⚠️ (FASE 118: log sampah tersimpan sungguhan; input karbon menjawab 501; CRUD eco project dihapus)`
+- [ ] **FASE 60: Advanced School Safety & Physical Security (60.1 - 60.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub tindakan CCTV, SOS, geofence, dan drill dihapus)`
+- [ ] **FASE 61: Alumni Relations & Institutional Advancement (61.1 - 61.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub profil, prestasi, crowdfunding, dan wakaf dihapus)`
+- [ ] **FASE 62: Parent-Teacher Collaboration 2.0 & Family Engagement (62.1 - 62.4)** `Sebagian ⚠️ (FASE 118: posting/acknowledge feed dan family plan belum punya backend, menjawab 501)`
 - [x] **FASE 63: Mobile-First Experience & Progressive Web App (63.1 - 63.4)** `Selesai ✅`
 - [x] **FASE 64: Advanced Frontend Components & Interactive UI (64.1 - 64.4)** `Selesai ✅`
 - [x] **FASE 65: Advanced Dashboard & Data Visualization (65.1 - 65.4)** `Selesai ✅`
@@ -1389,12 +1389,12 @@ tests/Feature/Student/CollegeCounselingTest.php:
 
 ## Status Tracker FASE 57-62
 
-- [x] **FASE 57: Islamic Education Technology & Religious Affairs Platform (57.1 - 57.4)** `Selesai ✅`
+- [ ] **FASE 57: Islamic Education Technology & Religious Affairs Platform (57.1 - 57.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub tulis tahsin, acara, dakwah, dan portofolio dihapus)`
 - [x] **FASE 58: Inclusive Education & Special Needs Support (58.1 - 58.4)** `Selesai ✅`
-- [x] **FASE 59: Environmental Sustainability & Green School Program (59.1 - 59.4)** `Selesai ✅`
-- [x] **FASE 60: Advanced School Safety & Physical Security (60.1 - 60.4)** `Selesai ✅`
-- [x] **FASE 61: Alumni Relations & Institutional Advancement (61.1 - 61.4)** `Selesai ✅`
-- [x] **FASE 62: Parent-Teacher Collaboration 2.0 & Family Engagement (62.1 - 62.4)** `Selesai ✅`
+- [ ] **FASE 59: Environmental Sustainability & Green School Program (59.1 - 59.4)** `Sebagian ⚠️ (FASE 118: log sampah tersimpan sungguhan; input karbon menjawab 501; CRUD eco project dihapus)`
+- [ ] **FASE 60: Advanced School Safety & Physical Security (60.1 - 60.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub tindakan CCTV, SOS, geofence, dan drill dihapus)`
+- [ ] **FASE 61: Alumni Relations & Institutional Advancement (61.1 - 61.4)** `Sebagian ⚠️ (FASE 118: halaman baca saja; stub profil, prestasi, crowdfunding, dan wakaf dihapus)`
+- [ ] **FASE 62: Parent-Teacher Collaboration 2.0 & Family Engagement (62.1 - 62.4)** `Sebagian ⚠️ (FASE 118: posting/acknowledge feed dan family plan belum punya backend, menjawab 501)`
 
 ---
 
@@ -6465,7 +6465,7 @@ Kontrak API lengkap untuk tim Android: [`docs/modules/class_sessions.md`](docs/m
 
 ---
 
-## FASE 118: PERBAIKAN BROKEN ACCESS CONTROL PADA MODUL FASE 45–62 `[RANCANGAN BARU]`
+## FASE 118: PERBAIKAN BROKEN ACCESS CONTROL PADA MODUL FASE 45–62 `[SELESAI]`
 
 > **Tanggal Rancangan:** 4 Oktober 2026
 > **Pelaksana:** Agent Backend (repo `sistem-terpadu`). Tidak ada perubahan di `sista-android`, karena semua route yang bocor adalah route **web**, bukan `/api/v1`.
@@ -6545,10 +6545,130 @@ Setelah 118.1 selesai, nyalakan *deny-by-default* untuk route web ber-`auth` tan
 
 ### 118.6: Kriteria Selesai
 
-- [ ] Tidak ada route web ber-`auth` tanpa `role:`/`can:` selain whitelist yang ditegakkan test 118.5.1.
-- [ ] Siswa & orang tua mendapat 403 di semua modul internal di tabel 118.0.
-- [ ] Sidebar siswa/ortu tidak lagi menampilkan menu internal (cek manual 1x + test 118.5.3).
-- [ ] Tidak ada lagi controller yang menjawab sukses tanpa menyimpan.
-- [ ] `vendor/bin/pint`, `php artisan test`, dan `vendor/bin/phpstan analyse` hijau.
-- [ ] Bagian ini diperbarui menjadi `[SELESAI]` dan dilengkapi tabel peran final per modul, termasuk alasan bila menyimpang dari usulan 118.1.
-- [ ] Status FASE 45–62 di "Status Tracker" dikoreksi bila ada modul yang ternyata masih stub.
+- [x] Tidak ada route web ber-`auth` tanpa `role:`/`can:` selain whitelist yang ditegakkan test 118.5.1.
+- [x] Siswa & orang tua mendapat 403 di semua modul internal di tabel 118.0.
+- [x] Sidebar siswa/ortu tidak lagi menampilkan menu internal (test 118.5.3 merender `/dashboard` sebagai siswa/ortu; cek manual di browser belum dilakukan).
+- [x] Tidak ada lagi controller modul FASE 45–62 yang menjawab sukses tanpa menyimpan (daftar di 118.7).
+- [x] `vendor/bin/pint`, `php artisan test`, dan `vendor/bin/phpstan analyse` hijau (lokal: 1940 lolos, 1 gagal yang memang khusus produksi, `Fase85DebloatPragmatismTest > single vps`).
+- [x] Bagian ini diperbarui menjadi `[SELESAI]` dan dilengkapi tabel peran final per modul, termasuk alasan bila menyimpang dari usulan 118.1.
+- [x] Status FASE 45–62 di "Status Tracker" dikoreksi bila ada modul yang ternyata masih stub.
+
+### 118.7: Hasil Pelaksanaan
+
+> **Tanggal Selesai:** 5 Oktober 2026. Tidak ada perubahan di `sista-android`: route `mobile/*` yang disentuh di sini adalah halaman **web** `extended_diamond.php`, bukan `/api/v1`.
+
+**Cara kerja akhirnya**
+- Peran ditulis lewat `App\Support\Access\Roles::only(...)`, yang menerima konstanta `StudentDataAccess` (`STUDENT_ROLES`, `PARENT_ROLES`, `TEACHER_ROLES`, `STAFF_ROLES`) plus kelompok `Roles::PRINCIPAL` (`kepala_sekolah`, `kepsek`), `Roles::LEADERSHIP` (kepala sekolah + semua waka), dan `Roles::MEMBERS` (semua warga sekolah: siswa, ortu, guru, staf, pimpinan, admin; tanpa `merchant`/`alumni`). Tidak ada literal `'parent'`/`'siswa'` baru di route.
+- Lihat dan ubah dipisah dengan middleware kedua pada route tulis (`$treasuryChange`, `$inclusiveChange`, `$campusChange`, `$greenChange`, `$dataChange`, …). Keduanya harus lolos.
+- Hanya `superadmin` yang tembus. `admin` lolos hanya bila tercantum (atau bila route mencantumkan pimpinan, sesuai `RoleMiddleware`).
+- **Whitelist satu tempat:** `config/route_access.php`.
+  - `open_to_all` (33 route) memuat akun sendiri, kotak masuk sendiri, pengumuman yang dibatasi `Announcement::canBeSeenBy`, dan form lapor bullying.
+  - `unguarded_debt` (396 route) memuat route lama di luar FASE 45–62 yang sudah tanpa peran sebelum FASE 118, misalnya `financial/*`, `cbt/*`, `curriculum/*`, `tahfidz/*`, `hc/*`. Sesuai keputusan pemilik produk, menunya tetap tampil.
+  - Daftar utang hanya boleh menyusut: test menolak entri yang sudah berperan atau sudah hilang.
+- **`RouteAccess` fail-closed:** route web ber-`auth` tanpa `role:`/`can:` yang tidak terdaftar di `config/route_access.php` tertutup untuk semua kecuali superadmin. Dengan begitu menu yang lupa diberi peran tidak lagi muncul untuk semua orang.
+
+#### Tabel peran final
+
+| Modul / route | Lihat | Ubah |
+|---|---|---|
+| Treasury: rekening, rekonsiliasi, posisi kas, kas kecil, vendor | `staf_tu`, kepala sekolah, `admin` | `staf_tu`, `admin` |
+| Treasury: setujui/tolak kas kecil | `staf_tu`, kepala sekolah, `admin` | sama (**menyimpang**, lihat bawah) |
+| Crisis: command center, declare, insiden, protokol, broadcast | kepala sekolah, `waka_kesiswaan`, `waka_sarpras`, `admin` | sama |
+| Crisis: headcount | `TEACHER_ROLES` + pimpinan + `admin` | sama |
+| Anti-bullying: form lapor (GET/POST) | semua user login (`open_to_all`) | semua user login |
+| Anti-bullying: daftar, detail, statistik | `bk`, `waka_kesiswaan`, kepala sekolah, `admin` | sama |
+| Recruitment, compensation, wellness, turnover | kepala sekolah, `admin` (sama dengan group `hrd.`) | sama (semua halaman baca) |
+| Inclusive education (IEP, screening, diferensiasi, akomodasi) | `bk`, `TEACHER_ROLES`, `waka_kesiswaan`, `waka_kurikulum`, kepala sekolah, `admin`; data dibatasi `Student::visibleTo` | `bk`, `waka_kesiswaan`, `admin` |
+| Data engineering (streams, NLQ, report scheduler, data quality) | `admin`, kepala sekolah (eksekusi NLQ dihitung "lihat") | `admin` |
+| School safety (CCTV, alert, drill, geofence) | `staf_tu`, `waka_sarpras`, kepala sekolah, `admin` | — (baca saja) |
+| Campus ops (tamu, toko, event) | `staf_tu`, `waka_sarpras`, kepala sekolah, `admin` | `staf_tu`, `waka_sarpras`, `admin` |
+| Campus ops: kantin | **dihapus** | — |
+| Knowledge hub | `TEACHER_ROLES`, `bk`, pimpinan, `admin` | sama |
+| Family: homework copilot (ortu), acknowledge feed, family plan | `PARENT_ROLES` + data anak sendiri | `PARENT_ROLES` |
+| Family: teacher view, buat posting feed | `TEACHER_ROLES` + pimpinan + `admin` | sama |
+| Family: timeline feed, term review | `PARENT_ROLES` + `TEACHER_ROLES` + pimpinan + `admin` | — |
+| Family: parent skills | `PARENT_ROLES`, `waka_humas`, kepala sekolah, `admin` | sama |
+| Adaptive: kalibrasi IRT | `TEACHER_ROLES`, `waka_kurikulum`, kepala sekolah, `admin` | sama |
+| Adaptive: ujian CAT | `STUDENT_ROLES`, hanya sesi miliknya | sama |
+| Adaptive: daftar sesi CAT, generate learning path, heatmap/kelas mastery | `TEACHER_ROLES` + pimpinan + `admin`; kelas harus terlihat (`Classroom::isVisibleTo`) | sama |
+| Adaptive: learning path | `STUDENT_ROLES` + `TEACHER_ROLES` + pimpinan + `admin`; per siswa dibatasi | — |
+| Adaptive: mastery per siswa | staf di atas + `STUDENT_ROLES` + `PARENT_ROLES`; dibatasi `Student::visibleTo` | — |
+| Microlearning: micro lesson | `STUDENT_ROLES` + `TEACHER_ROLES` + pimpinan + `admin` | `TEACHER_ROLES` + pimpinan + `admin` |
+| Microlearning: quiz arena | host/hasil: guru + pimpinan + `admin`; join/live: pembelajar | guru + pimpinan + `admin` |
+| Microlearning: spaced repetition, galeri badge | `STUDENT_ROLES` | `STUDENT_ROLES` |
+| Microlearning: transkrip | daftar: `TEACHER_ROLES`, `bk`, `staf_tu`, pimpinan, `admin`; per siswa: + `STUDENT_ROLES`/`PARENT_ROLES`, dibatasi | — (`transcripts/verify/{hash}` tetap publik) |
+| Career: portal magang, college counseling | `STUDENT_ROLES` (counseling + `bk`) | sama |
+| Career: monitoring magang | `TEACHER_ROLES`, `bk`, pimpinan, `admin` | — |
+| Career: showcase | galeri `Roles::MEMBERS`; karya sendiri `STUDENT_ROLES` + `StudentShowcasePolicy` | `STUDENT_ROLES` |
+| Career: mini bank | dompet `STUDENT_ROLES`; teller `staf_tu`, kepala sekolah, `admin` | — |
+| Alumni relations, omnichannel | `waka_humas`, `staf_tu`, kepala sekolah, `admin` | sama |
+| Islamic: tahsin, portofolio spiritual | `TEACHER_ROLES` + pimpinan + `admin` | sama |
+| Islamic: kalender acara, hub dakwah | `Roles::MEMBERS` | — |
+| Green: karbon, sampah, eco project | `staf_tu`, `waka_sarpras`, kepala sekolah, `admin` | `staf_tu`, `waka_sarpras`, `admin` |
+| Green: eco challenge | `Roles::MEMBERS` | — |
+| Diamond `mobile.*` (web) | guru/siswa/ortu masing-masing; lapor izin hanya untuk anak sendiri | sama |
+| Diamond `interactive.*` | jadwal: `waka_kurikulum`, kepala sekolah, `admin`; denah & whiteboard: guru + pimpinan + `admin` (kelas sendiri, host sendiri); kanban: guru + `STAFF_ROLES` + pimpinan + `admin` | sama |
+| Diamond `dashboards.*` | eksekutif: pimpinan + `admin`; guru 360: kepala sekolah, `waka_kurikulum`, `admin`; cockpit siswa: `TEACHER_ROLES`, `bk`, pimpinan, `admin` (dibatasi); skor keuangan: kepala sekolah, `staf_tu`, `admin` | — |
+| Diamond `publishing.*` | majalah & podcast: `Roles::MEMBERS`; video, data stories: `waka_humas`, kepala sekolah, `admin` | podcast: `TEACHER_ROLES` + `waka_humas` + kepala sekolah + `admin`; lainnya humas + kepala sekolah + `admin` |
+| Diamond `workflow.*` | designer, process mining, SLA: kepala sekolah, `admin`; approval: guru + staf + pimpinan + `admin`, rantai milik sendiri kecuali pimpinan/admin | keputusan hanya oleh approver yang ditunjuk |
+| Diamond `accessibility.*` | WCAG & terjemahan: `admin`; voice & tema: `Roles::MEMBERS` | sama |
+
+#### Penyimpangan dari usulan 118.1 dan alasannya
+1. **Kantin dikeluarkan dari ERP.** Pedagang kantin adalah pihak luar yang menyewa tempat, bukan karyawan sekolah. Route `canteen.*`, `NutritionController`, `NutritionService`, dan dua view-nya dihapus. Model dan tabel `MealPlan`/`CanteenMenu` serta POS merchant (`Finance/CanteenController`) tidak disentuh.
+2. **Kepala sekolah boleh menyetujui/menolak kas kecil** (keputusan pemilik produk). Membuat transaksi dan dana tetap hanya `staf_tu`/`admin`.
+3. **Islamic tech dan green school dipilah.** Tahsin dan portofolio spiritual hanya untuk guru dan pimpinan. Kalender acara, dakwah, dan eco challenge terbuka untuk semua warga sekolah.
+4. **Alumni hanya untuk staf** (humas, TU, pimpinan, admin), bukan untuk alumni sendiri.
+5. **Knowledge hub menyertakan `bk`.** BK juga ikut PLC dan berbagi praktik baik.
+6. **Publishing dipilah baca/tulis.** Majalah dan podcast dibaca semua warga sekolah, guru boleh merekam podcast, dan sisanya tetap humas/pimpinan. Test lama memperlihatkan guru membuat podcast dan warga sekolah berlangganan majalah.
+7. **Guru 360 tidak untuk guru biasa.** Halaman itu menilai seluruh guru.
+8. **Route di luar FASE 45–62 masuk daftar utang, bukan langsung diberi peran.** Cakupan PR ini dijaga, dan daftar utang hanya bisa menyusut.
+9. **`users.show` dihapus dari resource.** Method-nya kosong (halaman 200 tanpa isi) dan tidak dirujuk di mana pun.
+
+#### Temuan sapuan 118.3
+- **Disimpan sungguhan:** `waste.store`. Log sampah tervalidasi dan ditandatangani data pegawai pencatat. `updateLog()` kosong dihapus, dan tracker menampilkan log asli.
+- **Dijawab 501 "Fitur ini belum tersedia. Perubahan belum bisa disimpan."** (dulu redirect seolah sukses):
+  - `CatController::startExam` (dulu mengarah ke sesi palsu nomor 1) dan `processResponse`; `LearningPathController::generate`.
+  - `ConditionalReportController::store`.
+  - `ClassFeedController::storePost`, `acknowledgePost`; `FamilyLearningPlanController::storePlan`, `updateProgress`.
+  - `CarbonMetricController::storeDailyData` (dulu "Data tersimpan.").
+  - `KnowledgeArticleController::store`, `toggleLike`, `storeComment`; `LessonStudyController::store`, `submitObservation`, `advancePhase`; `PlcDiscussionController::store`, `reply`; `SharedResourceController::store`, `rate`.
+  - `GamifiedQuizController::store`; `MicroLessonController::store`, `update`, `destroy`, `publish`; `SpacedRepetitionController::submitReview`.
+- **Kode mati dihapus** (stub tanpa route, sebagian berisi flash sukses palsu):
+  - Alumni: `AlumniAchievement`, `AlumniProfile`, `CrowdfundCampaign`, `Endowment` (12 method).
+  - Green: `EcoChallenge::submitEvidence`, `verifyParticipation`; `EcoProject` CRUD dan `show`; `CarbonMetric::calculateMonthly`.
+  - HR: `Compensation`, `Recruitment`, `Turnover`, `Wellness` (12 method).
+  - Islamic: `DawahContent`, `IslamicEvent`, `SpiritualPortfolio`, `TahsinRecord` (13 method).
+  - Safety: `CctvIncident`, `EmergencyAlert`, `GeoFencing`, `SafetyDrill` (7 method).
+  - Student: `CollegeCounseling::storeApplication`, `Internship::apply`/`logJournal`, `MiniBanking::processDeposit`/`processTransfer`.
+- **Fallback `auth()->id() ?? 1` dihapus** dari `CrisisController` (3 tempat), `EmergencyBroadcastController`, `EventTicketingController`, dan `MerchandiseController`. Pencatat sekarang selalu user yang login.
+- **Laporan bullying tidak anonim** sekarang menyimpan `reporter_id`. Sebelumnya pelapor yang memilih menyebut nama tetap hilang.
+- **Belum diperbaiki (di luar cakupan, dicatat):**
+  - `MerchandiseController::checkout` memercayai `total_amount` dari klien dan mengisi `student_id` dengan id user.
+  - `ParentSkillController::searchDirectory` mengabaikan kata kunci.
+  - `DailyAssessmentMobileApiController` masih memakai `academic_year_id ?? 1`, dan ini route mobile yang perlu koordinasi.
+  - Dashboard akun ber-role `student` tanpa data `students` error 500 (`total_xp` on null).
+
+#### Kepemilikan data (118.2)
+- `Student::visibleTo($user)` / `isVisibleTo()` (scope di model):
+  - Peran sekolah-luas (`superadmin`, `admin`, `bk`, `staf_tu`, pimpinan) melihat semua siswa.
+  - Guru melihat siswa di kelas yang diajarnya (jadwal) atau diwalikannya **tahun ajaran ini**.
+  - Siswa hanya melihat dirinya, ortu hanya anaknya, dan peran lain tidak melihat siapa pun.
+- `Classroom::isVisibleTo()` dan `StudentDataAccess::authorizeStudentRecord()` (404 bila bukan miliknya).
+- Dipakai oleh IEP, screening, akomodasi, homework copilot, cockpit siswa, transkrip, mastery, learning path, sesi CAT, denah kelas, dan lapor izin ortu.
+- Keputusan approval hanya oleh approver yang ditunjuk; kanvas whiteboard hanya oleh host.
+
+#### Test
+- `tests/Feature/Architecture/RouteGuardTest.php` (118.5.1):
+  - Semua route web ber-`auth` berperan atau terdaftar.
+  - Daftar hanya berisi route yang masih ada dan masih tanpa aturan.
+  - Ke-297 route dari 17 file modul dimuat ke router tersendiri, dan hanya form lapor bullying yang tanpa peran.
+  - `RouteAccess` menolak route tak terdaftar.
+- `tests/Feature/Security/Fase118AccessControlTest.php` (118.5.2–4 dan 118.2):
+  - 403 untuk `siswa`/`orang_tua`/`student`/`parent` di treasury, crisis, recruitment, dan data engineering.
+  - 200 untuk form lapor bullying, dan 200 untuk peran yang berhak.
+  - Sidebar siswa/ortu tidak memuat menu internal.
+  - Log sampah benar-benar bertambah.
+  - Stub menjawab 501.
+  - IDOR per siswa/kelas/sesi/approval/whiteboard.
+- Test lama yang mengodekan perilaku salah (user tanpa peran membuka modul internal, heatmap kelas yang tidak ada = 200, guru menata denah kelas orang lain) ditulis ulang ke peran yang benar, ditambah kasus 403/404-nya. `SmartCampusSuiteTest` kini memastikan route kantin sudah tidak ada.
+- Sidebar: blok "Enterprise Platinum" dulu bergantung pada `@if` daftar peran literal dan blok `surveys` yang tidak ditutup, sehingga seluruh menu FASE 51–62 hanya muncul bila user boleh membuka survei. Sekarang tiap menu memakai `@canVisit`, dan judul blok tampil bila minimal satu menunya boleh dibuka.

@@ -30,6 +30,9 @@ class AntiBullyingController extends Controller
             'is_anonymous' => 'boolean',
         ]);
 
+        // A named report keeps its reporter; an anonymous one (the default) does not.
+        $validated['reporter_id'] = ($validated['is_anonymous'] ?? true) ? null : $request->user()->id;
+
         $this->service->submitReport($validated);
 
         return redirect()->route('crisis.bullying.report')->with('success', 'Laporan berhasil dikirim secara rahasia.');

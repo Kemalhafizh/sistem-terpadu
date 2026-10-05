@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Alumni;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class AlumniAchievementController extends Controller
 {
@@ -16,12 +15,6 @@ class AlumniAchievementController extends Controller
     {
         return view('fase61.achievements.submission');
     }
-
-    public function store(Request $request) {}
-
-    public function update(Request $request, $id) {}
-
-    public function destroy($id) {}
 
     public function manager()
     {

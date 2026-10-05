@@ -22,9 +22,11 @@ class Fase65AdvancedDashboardTest extends TestCase
 
     public function test_teacher_360_dashboard_returns_200(): void
     {
-        $teacher = User::factory()->create(['role' => 'guru']);
+        // FASE 118: it rates every teacher, so it is for the principal and the curriculum vice principal.
+        $principal = User::factory()->create(['role' => 'kepala_sekolah']);
+        $this->actingAs(User::factory()->create(['role' => 'guru']))->get(route('dashboards.teacher-360.index'))->assertForbidden();
 
-        $res = $this->actingAs($teacher)->get(route('dashboards.teacher-360.index'));
+        $res = $this->actingAs($principal)->get(route('dashboards.teacher-360.index'));
 
         $res->assertStatus(200);
         $res->assertSee('Dasbor Kinerja Guru 360 Derajat');
@@ -38,5 +40,16 @@ class Fase65AdvancedDashboardTest extends TestCase
 
         $res->assertStatus(200);
         $res->assertSee('Papan Skor Kesehatan Keuangan');
+    }
+
+    /** FASE 118: the executive and financial dashboards are not for students or parents. */
+    public function test_students_and_parents_are_refused(): void
+    {
+        foreach (['siswa', 'orang_tua'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+            foreach (['dashboards.executive.index', 'dashboards.teacher-360.index', 'dashboards.financial-scoreboard.index'] as $route) {
+                $this->actingAs($user)->get(route($route))->assertForbidden();
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@ class EmergencyBroadcastController extends Controller
             'target_groups' => 'required|array',
             'channels' => 'required|array',
         ]);
-        $validated['sent_by'] = auth()->id() ?? 1;
+        $validated['sent_by'] = $request->user()->id;
 
         $this->service->sendBroadcast($validated);
 

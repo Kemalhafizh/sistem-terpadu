@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Services\Mobile\ParentQuickActionService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -35,6 +37,9 @@ class MobileParentActionController extends Controller
             'reason' => 'required|string|max:500',
             'attachment_url' => 'nullable|string|url',
         ]);
+
+        // Only for the parent's own child: student_id comes from the request.
+        StudentDataAccess::authorizeStudentRecord($request->user(), Student::find($validated['student_id']));
 
         $res = $this->parentService->reportAbsence(
             (int) $validated['student_id'],

@@ -19,7 +19,8 @@ class MicroLessonController extends Controller
 
     public function store(Request $request)
     {
-        return redirect()->route('micro-lessons.index');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function show($id)
@@ -34,17 +35,20 @@ class MicroLessonController extends Controller
 
     public function update(Request $request, $id)
     {
-        return redirect()->route('micro-lessons.index');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function destroy($id)
     {
-        return redirect()->route('micro-lessons.index');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function publish($id)
     {
-        return redirect()->route('micro-lessons.index');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function analytics()

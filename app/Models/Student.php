@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Http\Middleware\RoleMiddleware;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +21,45 @@ class Student extends Model
     use HasFactory, HasUuid, LogsActivity, SoftDeletes;
 
     protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_date', 'address', 'status', 'total_xp', 'current_streak', 'longest_streak'];
+
+    /** Roles that may see every student's records (school-wide duties). */
+    public const SCHOOL_WIDE_ROLES = ['superadmin', 'admin', 'bk', 'staf_tu', ...RoleMiddleware::LEADERSHIP_ROLES];
+
+    /**
+     * The students [user] may see, per CLAUDE.md rule 3: school-wide roles
+     * see everyone, a teacher the classes they teach (schedule) or lead
+     * (homeroom) this academic year, a student themself, a parent their own
+     * children, anyone else no one.
+     */
+    public function scopeVisibleTo(Builder $query, User $user): Builder
+    {
+        if (in_array($user->role, self::SCHOOL_WIDE_ROLES, true)) {
+            return $query;
+        }
+        if (in_array($user->role, StudentDataAccess::STUDENT_ROLES, true)) {
+            return $query->where('user_id', $user->id);
+        }
+        if (in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
+            return $query->where('parent_id', $user->id);
+        }
+        if (in_array($user->role, StudentDataAccess::TEACHER_ROLES, true)) {
+            $year = AcademicYear::current();
+            if (! $year) {
+                return $query->whereRaw('1 = 0');
+            }
+
+            return $query->where(fn (Builder $q) => $q
+                ->whereIn('classroom_id', Schedule::where('teacher_id', $user->id)->where('academic_year_id', $year->id)->select('classroom_id'))
+                ->orWhereIn('classroom_id', Classroom::where('teacher_id', $user->id)->where('academic_year', $year->year)->select('id')));
+        }
+
+        return $query->whereRaw('1 = 0');
+    }
+
+    public function isVisibleTo(User $user): bool
+    {
+        return static::query()->visibleTo($user)->whereKey($this->getKey())->exists();
+    }
 
     /**
      * Graceful Encrypted Attribute for Student Address (handles legacy plain-text data safely).

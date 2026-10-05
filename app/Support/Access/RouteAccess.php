@@ -16,6 +16,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * middleware — the same rule the request will be judged by. Menus (web
  * sidebar) and the mobile capability list use this instead of keeping their
  * own role lists, so what a user sees is exactly what they can open.
+ *
+ * Fail-closed (FASE 118.4): a signed-in web route with neither `role:` nor
+ * `can:` is closed to everyone but superadmin, unless config/route_access.php
+ * lists it as open to every signed-in user or as unguarded debt.
  */
 class RouteAccess
 {
@@ -45,6 +49,9 @@ class RouteAccess
         if ($user === null) {
             return false;
         }
+        if (self::isUnruled($route) && ! self::isListed($route)) {
+            return $user->role === 'superadmin';
+        }
         foreach (self::roleRules($route) as $roles) {
             if (! RoleMiddleware::allows($user->role, $roles)) {
                 return false;
@@ -57,6 +64,45 @@ class RouteAccess
         }
 
         return true;
+    }
+
+    /** "GET dashboard", "PUT|PATCH users/{user}": how config/route_access.php names a route. */
+    public static function key(Route $route): string
+    {
+        return implode('|', array_values(array_diff($route->methods(), ['HEAD']))).' '.$route->uri();
+    }
+
+    /** A signed-in web route: the kind that must carry `role:` or `can:`. */
+    public static function requiresSignIn(Route $route): bool
+    {
+        $middleware = $route->gatherMiddleware();
+
+        return in_array('web', $middleware, true) && array_filter($middleware, fn ($m) => $m === 'auth'
+            || (is_string($m) && str_starts_with($m, 'auth:') && $m !== 'auth:sanctum')) !== [];
+    }
+
+    /** A signed-in web route without any `role:` or `can:` middleware. */
+    public static function isUnruled(Route $route): bool
+    {
+        if (! self::requiresSignIn($route) || self::roleRules($route) !== []) {
+            return false;
+        }
+        foreach ($route->gatherMiddleware() as $middleware) {
+            if (is_string($middleware) && (str_starts_with($middleware, 'can:') || str_starts_with($middleware, Authorize::class.':'))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /** Listed in config/route_access.php as open to all or as unguarded debt. */
+    public static function isListed(Route $route): bool
+    {
+        $key = self::key($route);
+
+        return in_array($key, config('route_access.open_to_all', []), true)
+            || in_array($key, config('route_access.unguarded_debt', []), true);
     }
 
     /**
