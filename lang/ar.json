@@ -343,5 +343,11 @@
     "Aplikasi ditutup": "تم إغلاق التطبيق",
     "Layar terbagi": "تقسيم الشاشة",
     "Tombol kembali ditekan": "تم الضغط على زر الرجوع",
-    "Daftar siswa terkunci berhasil diambil": "تم تحميل قائمة الطلاب المقفلين"
+    "Daftar siswa terkunci berhasil diambil": "تم تحميل قائمة الطلاب المقفلين",
+    "Soal berhasil ditambahkan ke bank soal": "تمت إضافة السؤال إلى بنك الأسئلة",
+    "Hanya pembuat ujian yang dapat mengganti soal ujian ini.": "يمكن فقط للمعلم الذي أنشأ هذا الاختبار استبدال أسئلته.",
+    "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.": "لا يمكن استبدال أسئلة الاختبار لأن طلابًا بدأوا حله بالفعل.",
+    "Soal ujian diganti dengan paket dari bank soal.": "تم استبدال أسئلة الاختبار بمجموعة من بنك الأسئلة.",
+    "Paket soal dipilih dari bank soal.": "تم اختيار الأسئلة من بنك الأسئلة.",
+    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "يوجد سؤال مشابه في البنك بالفعل (تشابه :percent%، السؤال رقم :id)."
 }

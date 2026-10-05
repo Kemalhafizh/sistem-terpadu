@@ -343,5 +343,11 @@
     "Aplikasi ditutup": "Aplikasi ditutup",
     "Layar terbagi": "Layar terbagi",
     "Tombol kembali ditekan": "Tombol kembali ditekan",
-    "Daftar siswa terkunci berhasil diambil": "Daftar siswa terkunci berhasil diambil"
+    "Daftar siswa terkunci berhasil diambil": "Daftar siswa terkunci berhasil diambil",
+    "Soal berhasil ditambahkan ke bank soal": "Soal berhasil ditambahkan ke bank soal",
+    "Hanya pembuat ujian yang dapat mengganti soal ujian ini.": "Hanya pembuat ujian yang dapat mengganti soal ujian ini.",
+    "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.": "Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.",
+    "Soal ujian diganti dengan paket dari bank soal.": "Soal ujian diganti dengan paket dari bank soal.",
+    "Paket soal dipilih dari bank soal.": "Paket soal dipilih dari bank soal.",
+    "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).": "Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id)."
 }
