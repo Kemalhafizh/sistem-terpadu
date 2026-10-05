@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ExamAttempt extends Model
 {
     use HasFactory, HasUuid;
+
+    /**
+     * An attempt in one of these is over: its answers are final, it cannot be
+     * submitted again and a token does not reopen it. Only a force-closed
+     * attempt can be reopened, by the proctor (CbtAccessControlService::resetForceClose).
+     */
+    public const FINISHED_STATUSES = ['submitted', 'graded', 'blocked_violation', 'timeout', 'force_closed'];
 
     protected $fillable = [
         'uuid',
@@ -64,6 +72,27 @@ class ExamAttempt extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function isFinished(): bool
+    {
+        return in_array($this->status, self::FINISHED_STATUSES, true);
+    }
+
+    /**
+     * When this attempt's time runs out: the exam's duration counted from the
+     * moment the student started, cut off by the exam's own end time.
+     */
+    public function deadline(): ?Carbon
+    {
+        $exam = $this->exam;
+        if (! $exam) {
+            return null;
+        }
+
+        $startTime = $this->started_at ?? $this->created_at ?? now();
+
+        return $startTime->copy()->addMinutes($exam->duration_minutes)->min($exam->end_time);
+    }
+
     /**
      * Compute remaining seconds based on exam duration limit and exam end time.
      */
@@ -73,24 +102,14 @@ class ExamAttempt extends Model
             return 0;
         }
 
-        $exam = $this->exam;
-        if (! $exam) {
-            return 0;
-        }
-
-        $startTime = $this->started_at ?? $this->created_at ?? now();
-        $durationLimit = $startTime->copy()->addMinutes($exam->duration_minutes);
-        $endTimeLimit = $exam->end_time;
-
-        // Take the earliest limit
-        $limit = $durationLimit->min($endTimeLimit);
+        $limit = $this->deadline();
         $now = now();
 
-        if ($now->greaterThanOrEqualTo($limit)) {
+        if (! $limit || $now->greaterThanOrEqualTo($limit)) {
             return 0;
         }
 
-        return $now->diffInSeconds($limit);
+        return (int) floor($now->diffInSeconds($limit));
     }
 
     /**
