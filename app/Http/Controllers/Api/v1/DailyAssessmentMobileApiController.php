@@ -222,17 +222,21 @@ class DailyAssessmentMobileApiController extends Controller
             ->latest()
             ->get()
             ->map(function ($scoreItem) use ($student) {
+                $assessment = $scoreItem->dailyAssessment;
                 $finalScore = $this->remedialService->getFinalScore($student->id, $scoreItem->daily_assessment_id);
+                // daily_assessments.kkm is nullable. Without a KKM nobody can say whether
+                // the score passed, so kkm and is_tuntas stay null instead of assuming 75.
+                $kkm = $assessment?->kkm !== null ? (float) $assessment->kkm : null;
 
                 return [
                     'id' => $scoreItem->id,
-                    'assessment_title' => $scoreItem->dailyAssessment->title ?? 'PH',
-                    'subject_name' => $scoreItem->dailyAssessment->subject->name ?? 'Mapel',
-                    'assessment_date' => $scoreItem->dailyAssessment->assessment_date,
-                    'kkm' => (float) ($scoreItem->dailyAssessment->kkm ?? 75.0),
+                    'assessment_title' => $assessment?->title,
+                    'subject_name' => $assessment?->subject?->name,
+                    'assessment_date' => $assessment?->assessment_date,
+                    'kkm' => $kkm,
                     'original_score' => (float) $scoreItem->score,
                     'final_score' => $finalScore,
-                    'is_tuntas' => $finalScore >= (float) ($scoreItem->dailyAssessment->kkm ?? 75.0),
+                    'is_tuntas' => $kkm !== null ? $finalScore >= $kkm : null,
                 ];
             });
 
@@ -244,8 +248,14 @@ class DailyAssessmentMobileApiController extends Controller
 
     public function studentRemedials(Request $request): JsonResponse
     {
-        $studentId = $request->user()->id;
-        $remedials = $this->remedialService->getStudentRemedials($studentId);
+        // remedial_sessions.student_id references users.id (unlike daily_assessment_scores,
+        // which use students.id), so the signed-in user's id is the right key here.
+        $remedials = $this->remedialService->getStudentRemedials($request->user()->id)
+            ->map(fn (RemedialSession $session) => $session->toArray() + [
+                // The app reads these flat fields; they were only nested under `assessment`.
+                'assessment_title' => $session->assessment?->title,
+                'subject_name' => $session->assessment?->subject?->name,
+            ]);
 
         return response()->json([
             'success' => true,
