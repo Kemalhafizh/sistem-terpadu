@@ -27,15 +27,17 @@ class CbtEnterpriseApiController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::with(['questions', 'subject'])->findOrFail($id);
-        Gate::authorize('take', $exam);
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
 
         $payload = $this->enterpriseService->generateEncryptedPayload($exam, $student);
 
-        return $this->successResponse($payload, 'Paket soal terenkripsi berhasil dimuat');
+        return $this->successResponse($payload, __('Paket soal terenkripsi berhasil dimuat'));
     }
 
     /**
@@ -45,11 +47,13 @@ class CbtEnterpriseApiController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::findOrFail($id);
-        Gate::authorize('take', $exam);
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
 
         $result = $this->enterpriseService->getDecryptionKey($exam, $student);
 
@@ -57,7 +61,7 @@ class CbtEnterpriseApiController extends Controller
             return $this->errorResponse($result['message'], 403);
         }
 
-        return $this->successResponse($result, 'Kunci dekripsi berhasil ditarik');
+        return $this->successResponse($result, __('Kunci dekripsi berhasil ditarik'));
     }
 
     /**
@@ -67,7 +71,7 @@ class CbtEnterpriseApiController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $request->validate([
@@ -75,11 +79,13 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
-        Gate::authorize('take', $exam);
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
 
         $result = $this->enterpriseService->processMicroBatchAnswers($exam, $student, $request->input('answers'));
 
-        return $this->successResponse($result, 'Jawaban berhasil disinkronisasi');
+        return $this->successResponse($result, __('Jawaban berhasil disinkronisasi'));
     }
 
     /**
@@ -89,7 +95,7 @@ class CbtEnterpriseApiController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $request->validate([
@@ -99,7 +105,9 @@ class CbtEnterpriseApiController extends Controller
         ]);
 
         $exam = Exam::findOrFail($id);
-        Gate::authorize('take', $exam);
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
 
         $submission = $this->enterpriseService->handleEssayUpload(
             $exam,
@@ -114,7 +122,7 @@ class CbtEnterpriseApiController extends Controller
             'file_url' => url($submission->file_path),
             'file_size' => $submission->file_size,
             'question_id' => $submission->question_id,
-        ], 'Lembar esai berhasil diunggah');
+        ], __('Lembar esai berhasil diunggah'));
     }
 
     /**
@@ -137,7 +145,7 @@ class CbtEnterpriseApiController extends Controller
             $request->user()->id
         );
 
-        return $this->successResponse($log, 'Peringatan pengawas berhasil disiarkan');
+        return $this->successResponse($log, __('Peringatan pengawas berhasil disiarkan'));
     }
 
     /**
@@ -160,7 +168,7 @@ class CbtEnterpriseApiController extends Controller
             $request->user()->id
         );
 
-        return $this->successResponse($log, 'Ujian siswa berhasil disubmit paksa');
+        return $this->successResponse($log, __('Ujian siswa berhasil disubmit paksa'));
     }
 
     /**
@@ -183,6 +191,6 @@ class CbtEnterpriseApiController extends Controller
             $request->user()->id
         );
 
-        return $this->successResponse($log, 'Tambahan waktu berhasil diberikan');
+        return $this->successResponse($log, __('Tambahan waktu berhasil diberikan'));
     }
 }

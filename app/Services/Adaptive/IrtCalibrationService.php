@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 class IrtCalibrationService
 {
     /** Attempts whose answers are final. */
-    public const FINISHED_STATUSES = ['submitted', 'graded', 'blocked_violation', 'timeout', 'force_closed'];
+    public const FINISHED_STATUSES = ExamAttempt::FINISHED_STATUSES;
 
     /**
      * Correctness of every answered response to a bank question, keyed by student id.

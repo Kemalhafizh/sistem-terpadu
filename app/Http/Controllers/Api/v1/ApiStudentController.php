@@ -39,10 +39,10 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
-        return $this->successResponse(new StudentResource($student), 'Profil siswa berhasil diambil');
+        return $this->successResponse(new StudentResource($student), __('Profil siswa berhasil diambil'));
     }
 
     /**
@@ -53,14 +53,14 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student || ! $student->classroom_id) {
-            return $this->successResponse([], 'Belum terdaftar di kelas manapun');
+            return $this->successResponse([], __('Belum terdaftar di kelas manapun'));
         }
 
         $schedules = Schedule::where('classroom_id', $student->classroom_id)
             ->with(['subject', 'teacher', 'classroom'])
             ->get();
 
-        return $this->successResponse(ScheduleResource::collection($schedules), 'Jadwal pelajaran berhasil diambil');
+        return $this->successResponse(ScheduleResource::collection($schedules), __('Jadwal pelajaran berhasil diambil'));
     }
 
     /**
@@ -71,7 +71,7 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $grades = Grade::where('student_id', $student->id)
@@ -79,7 +79,7 @@ class ApiStudentController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(GradeResource::collection($grades), 'Data nilai berhasil diambil');
+        return $this->successResponse(GradeResource::collection($grades), __('Data nilai berhasil diambil'));
     }
 
     /**
@@ -90,7 +90,7 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $attendances = $student->attendances()
@@ -98,7 +98,7 @@ class ApiStudentController extends Controller
             ->take(30)
             ->get();
 
-        return $this->successResponse(AttendanceResource::collection($attendances), 'Data absensi berhasil diambil');
+        return $this->successResponse(AttendanceResource::collection($attendances), __('Data absensi berhasil diambil'));
     }
 
     /**
@@ -109,7 +109,7 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $billings = $student->billings()
@@ -117,7 +117,7 @@ class ApiStudentController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(BillingResource::collection($billings), 'Data tagihan berhasil diambil');
+        return $this->successResponse(BillingResource::collection($billings), __('Data tagihan berhasil diambil'));
     }
 
     /**
@@ -128,7 +128,7 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $points = $student->pointLogs()
@@ -136,7 +136,7 @@ class ApiStudentController extends Controller
             ->latest()
             ->get();
 
-        return $this->successResponse(PointLogResource::collection($points), 'Data poin BK berhasil diambil');
+        return $this->successResponse(PointLogResource::collection($points), __('Data poin BK berhasil diambil'));
     }
 
     /**
@@ -147,12 +147,12 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $tahfidzLogs = $student->tahfidzLogs()->latest()->get();
 
-        return $this->successResponse(TahfidzLogResource::collection($tahfidzLogs), 'Data Tahfidz Qur\'an berhasil diambil');
+        return $this->successResponse(TahfidzLogResource::collection($tahfidzLogs), __('Data Tahfidz Qur\'an berhasil diambil'));
     }
 
     /**
@@ -163,12 +163,12 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $mutabaahLogs = $student->mutabaahLogs()->with('item')->latest()->take(50)->get();
 
-        return $this->successResponse(MutabaahLogResource::collection($mutabaahLogs), 'Data Mutaba\'ah Yaumiyah berhasil diambil');
+        return $this->successResponse(MutabaahLogResource::collection($mutabaahLogs), __('Data Mutaba\'ah Yaumiyah berhasil diambil'));
     }
 
     /**
@@ -179,37 +179,51 @@ class ApiStudentController extends Controller
         $student = $request->user()->student;
 
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
+        // Drafts are the teacher's work in progress: students see an exam
+        // once it is published, and keep seeing it after it is completed.
         $exams = Exam::where(function ($q) use ($student) {
             $q->where('classroom_id', $student->classroom_id)
                 ->orWhereNull('classroom_id');
         })
-            ->with('subject')
+            ->whereIn('status', ['published', 'completed'])
+            ->with(['subject', 'attempts' => fn ($q) => $q->where('student_id', $student->id)->latest()])
+            ->withCount('questions')
             ->latest()
             ->get();
 
-        $data = $exams->map(function ($e) use ($student) {
-            $attempt = ExamAttempt::where('exam_id', $e->id)->where('student_id', $student->id)->latest()->first();
+        $data = $exams->map(function (Exam $e) {
+            $attempt = $e->attempts->first();
 
             return [
                 'id' => $e->id,
                 'uuid' => $e->uuid,
                 'title' => $e->title,
-                'subject' => $e->subject->name ?? 'Mata Pelajaran',
+                'subject' => $e->subject?->name,
                 'type' => strtoupper($e->type ?? 'CBT'),
-                'duration_minutes' => (int) ($e->duration_minutes ?? 60),
-                'total_questions' => (int) ($e->total_questions ?: $e->questions()->count()),
-                'passing_score' => (float) ($e->passing_score ?? 75.0),
-                'status' => $e->status ?? 'published',
+                'duration_minutes' => (int) $e->duration_minutes,
+                'total_questions' => (int) ($e->total_questions ?: $e->questions_count),
+                'passing_score' => (float) $e->passing_score,
+                'status' => $e->status,
+                'starts_at' => $e->start_time?->toIso8601String(),
+                'ends_at' => $e->end_time?->toIso8601String(),
+                // upcoming / ongoing / ended, for the app to act on.
+                'availability_code' => match (true) {
+                    $e->isOngoing() => 'ongoing',
+                    $e->isPublished() && $e->start_time?->isFuture() => 'upcoming',
+                    default => 'ended',
+                },
                 'is_ongoing' => $e->isOngoing(),
                 'has_attempted' => $attempt !== null,
-                'score' => $attempt ? (float) $attempt->score : null,
+                // in_progress, submitted, graded, blocked_violation, timeout or force_closed.
+                'attempt_status' => $attempt?->status,
+                'score' => $attempt?->score !== null ? (float) $attempt->score : null,
             ];
         });
 
-        return $this->successResponse($data, 'Daftar ujian CBT berhasil diambil');
+        return $this->successResponse($data, __('Daftar ujian CBT berhasil diambil'));
     }
 
     /**
@@ -219,23 +233,25 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::with('questions')->findOrFail($examId);
 
         // 1. Otorisasi kepesertaan siswa (kesesuaian kelas)
-        Gate::authorize('take', $exam);
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
 
         // 2. Pastikan waktu ujian sedang berlangsung (mencegah kebocoran soal sebelum jadwal)
         if (! $exam->isOngoing()) {
-            return $this->errorResponse('Ujian belum dibuka atau waktu ujian telah berakhir.', 403);
+            return $this->errorResponse(__('Ujian belum dibuka atau waktu ujian telah berakhir.'), 403);
         }
 
         // 3. Pastikan attempt siswa tidak dalam status terkunci atau telah selesai
         $attempt = ExamAttempt::where('exam_id', $exam->id)->where('student_id', $student->id)->first();
-        if ($attempt && in_array($attempt->status, ['submitted', 'blocked_violation', 'force_closed'], true)) {
-            return $this->errorResponse('Sesi ujian telah selesai atau akses ditutup oleh pengawas.', 403);
+        if ($attempt?->isFinished()) {
+            return $this->errorResponse(__('Sesi ujian telah selesai atau akses ditutup oleh pengawas.'), 403);
         }
 
         // 4. Soal hanya untuk siswa yang sudah masuk lewat token pengawas (validate-token)
@@ -262,11 +278,14 @@ class ApiStudentController extends Controller
             'exam' => [
                 'id' => $exam->id,
                 'title' => $exam->title,
-                'duration_minutes' => (int) ($exam->duration_minutes ?? 60),
+                'duration_minutes' => (int) $exam->duration_minutes,
                 'total_questions' => count($questions),
+                // Null until the student has started with a token.
+                'ends_at' => $attempt?->deadline()?->toIso8601String(),
+                'remaining_seconds' => $attempt ? $attempt->getRemainingSeconds() : null,
             ],
             'questions' => $questions,
-        ], 'Soal ujian CBT berhasil dimuat');
+        ], __('Soal ujian CBT berhasil dimuat'));
     }
 
     /**
@@ -276,17 +295,20 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::with('questions')->findOrFail($examId);
 
-        Gate::authorize('take', $exam);
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
 
         // Cegah manipulasi nilai / pengulangan submit jika status sudah diserahkan atau diblokir
+        // A finished attempt (graded, blocked for violations, timed out...) is final.
         $existingAttempt = ExamAttempt::where('exam_id', $exam->id)->where('student_id', $student->id)->first();
-        if ($existingAttempt && in_array($existingAttempt->status, ['submitted', 'blocked_violation', 'force_closed'], true)) {
-            return $this->errorResponse('Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.', 403);
+        if ($existingAttempt?->isFinished()) {
+            return $this->errorResponse(__('Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.'), 403);
         }
 
         // Only an attempt opened through validate-token can be submitted; never create one here.
@@ -316,7 +338,7 @@ class ApiStudentController extends Controller
         }
 
         $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100, 1) : 0;
-        $passed = $score >= (float) ($exam->passing_score ?? 75.0);
+        $passed = $score >= (float) $exam->passing_score;
 
         $attempt->update([
             'score' => $score,
@@ -336,8 +358,8 @@ class ApiStudentController extends Controller
             'wrong_answers' => max(0, $totalQuestions - $correctCount),
             'score' => $score,
             'passed' => $passed,
-            'submitted_at' => now()->format('Y-m-d H:i:s'),
-        ], 'Hasil ujian CBT berhasil dinilai secara otomatis');
+            'submitted_at' => now()->toIso8601String(),
+        ], __('Hasil ujian CBT berhasil dinilai secara otomatis'));
     }
 
     /**
@@ -371,7 +393,7 @@ class ApiStudentController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $billing = $student->billings()->findOrFail($billingId);
@@ -395,7 +417,7 @@ class ApiStudentController extends Controller
             'status' => 'pending',
             'expiry_time' => now()->addHours(24)->format('Y-m-d H:i:s'),
             'qr_content' => '00020101021226590014ID.LINKAJA.WWW011893600000000000000002150000000000000005204000053033605802ID5924SMA ISLAM SULTAN AGUNG 16008SEMARANG61055012362140710SPP-'.$billing->id.'6304',
-        ], 'Simulasi transaksi pembayaran berhasil dibuat');
+        ], __('Simulasi transaksi pembayaran berhasil dibuat'));
     }
 
     /**
@@ -406,7 +428,7 @@ class ApiStudentController extends Controller
         $user = $request->user();
         $notifications = $user->notifications()->latest()->take(50)->get();
 
-        return $this->successResponse(NotificationResource::collection($notifications), 'Notifikasi berhasil diambil');
+        return $this->successResponse(NotificationResource::collection($notifications), __('Notifikasi berhasil diambil'));
     }
 
     /**
@@ -418,6 +440,6 @@ class ApiStudentController extends Controller
         $notification = $user->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        return $this->successResponse(null, 'Notifikasi ditandai telah dibaca');
+        return $this->successResponse(null, __('Notifikasi ditandai telah dibaca'));
     }
 }

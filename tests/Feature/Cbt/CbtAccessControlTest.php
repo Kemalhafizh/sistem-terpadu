@@ -311,7 +311,7 @@ test('12. siswa ditolak jika token sudah kedaluwarsa lebih dari 5 menit', functi
     $response->assertStatus(403)
         ->assertJson([
             'success' => false,
-            'message' => 'Token telah kedaluwarsa (masa berlaku 5 menit telah habis). Silakan minta token baru yang di-refresh oleh Pengawas/Operator.',
+            'message' => 'Token sudah kedaluwarsa. Minta token baru ke pengawas ujian.',
         ]);
 });
 
