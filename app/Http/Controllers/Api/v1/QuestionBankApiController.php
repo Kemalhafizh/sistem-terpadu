@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Exam;
+use App\Models\ExamAttempt;
 use App\Services\QuestionBankService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -66,7 +68,7 @@ class QuestionBankApiController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Soal berhasil ditambahkan ke bank soal',
+                'message' => __('Soal berhasil ditambahkan ke bank soal'),
                 'data' => $item,
             ], 201);
         } catch (\InvalidArgumentException $e) {
@@ -86,11 +88,32 @@ class QuestionBankApiController extends Controller
             'difficulty_distribution' => 'nullable|array',
         ]);
 
+        // With an exam_id the service replaces that exam's questions. Any teacher
+        // could do that to any exam, even one already being taken.
+        if ($request->filled('exam_id')) {
+            $exam = Exam::findOrFail($request->integer('exam_id'));
+            $user = $request->user();
+            if ($user->role !== 'superadmin' && $exam->created_by !== $user->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Hanya pembuat ujian yang dapat mengganti soal ujian ini.'),
+                ], 403);
+            }
+            if (ExamAttempt::where('exam_id', $exam->id)->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('Soal ujian tidak bisa diganti karena sudah ada siswa yang mengerjakan.'),
+                ], 422);
+            }
+        }
+
         $result = $this->service->autoGenerateExam($request->all());
 
         return response()->json([
             'success' => true,
-            'message' => 'Ujian berhasil digenerate dari bank soal',
+            'message' => $request->filled('exam_id')
+                ? __('Soal ujian diganti dengan paket dari bank soal.')
+                : __('Paket soal dipilih dari bank soal.'),
             'data' => $result,
         ]);
     }

@@ -11,7 +11,14 @@ class QuestionBankService
 {
     public function getCategories(?int $subjectId = null)
     {
-        $query = QuestionBankCategory::withCount('items')->with('subject');
+        // Per-difficulty counts come from the items themselves; the app used to
+        // show 30/50/20 % of items_count as if it were the bank's makeup.
+        $query = QuestionBankCategory::withCount([
+            'items',
+            'items as easy_count' => fn ($q) => $q->where('difficulty', 'mudah'),
+            'items as medium_count' => fn ($q) => $q->where('difficulty', 'sedang'),
+            'items as hard_count' => fn ($q) => $q->where('difficulty', 'sulit'),
+        ])->with('subject');
         if ($subjectId) {
             $query->where('subject_id', $subjectId);
         }
@@ -50,7 +57,10 @@ class QuestionBankService
     {
         $similarityCheck = $this->getDuplicateCheck($data['question_text'], $data['category_id'] ?? null);
         if ($similarityCheck['is_duplicate']) {
-            throw new \InvalidArgumentException("Pertanyaan serupa terdeteksi ({$similarityCheck['similarity']}% kemiripan dengan soal ID: {$similarityCheck['similar_item_id']})");
+            throw new \InvalidArgumentException(__('Soal serupa sudah ada di bank soal (kemiripan :percent%, soal #:id).', [
+                'percent' => $similarityCheck['similarity'],
+                'id' => $similarityCheck['similar_item_id'],
+            ]));
         }
 
         return QuestionBankItem::create([
