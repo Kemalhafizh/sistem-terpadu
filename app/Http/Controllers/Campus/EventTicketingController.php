@@ -38,7 +38,7 @@ class EventTicketingController extends Controller
             'max_capacity' => 'required|integer',
         ]);
 
-        $data['organizer_id'] = auth()->id() ?? 1;
+        $data['organizer_id'] = $request->user()->id;
 
         $this->eventService->createEvent($data);
 

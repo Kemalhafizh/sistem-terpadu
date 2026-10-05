@@ -19,7 +19,8 @@ class SharedResourceController extends Controller
 
     public function store(Request $request)
     {
-        return redirect()->route('knowledge.resources.index');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function show($id)
@@ -29,6 +30,7 @@ class SharedResourceController extends Controller
 
     public function rate(Request $request, $id)
     {
-        return back();
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 }

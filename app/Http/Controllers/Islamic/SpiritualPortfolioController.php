@@ -11,11 +11,6 @@ class SpiritualPortfolioController extends Controller
         return view('fase57.spiritual.dashboard');
     }
 
-    public function storeDailyRecord()
-    {
-        return redirect()->route('spiritual.dashboard');
-    }
-
     public function showPortfolio($id)
     {
         return view('fase57.spiritual.student-portfolio');

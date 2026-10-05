@@ -325,12 +325,6 @@ parameters:
 			path: app/Http/Controllers/Campus/EventTicketingController.php
 
 		-
-			message: '#^Relation ''menu'' is not found in App\\Models\\MealPlan model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Campus/NutritionController.php
-
-		-
 			message: '#^Relation ''creator'' is not found in App\\Models\\CareerOpportunity model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -583,12 +577,6 @@ parameters:
 			path: app/Http/Controllers/Family/ClassFeedController.php
 
 		-
-			message: '#^Relation ''student'' is not found in App\\Models\\FamilyTask model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Family/HomeworkCopilotController.php
-
-		-
 			message: '#^Relation ''student'' is not found in App\\Models\\ParentSkill model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -778,12 +766,6 @@ parameters:
 			message: '#^Relation ''trainings'' is not found in App\\Models\\Employee model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/HRD/EmployeeController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
-			identifier: larastan.relationExistence
-			count: 10
 			path: app/Http/Controllers/HRD/EmployeeController.php
 
 		-
@@ -1298,12 +1280,6 @@ parameters:
 			path: app/Jobs/SendLibraryDueReminderJob.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Models/Employee.php
-
-		-
 			message: '#^Relation ''template'' is not found in App\\Models\\WhatsappAutomation model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1362,12 +1338,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/Analytics/MobileAnalyticsService.php
-
-		-
-			message: '#^Relation ''menu'' is not found in App\\Models\\MealPlan model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Services/Campus/NutritionService.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\Attendance model\.$#'
@@ -1526,25 +1496,7 @@ parameters:
 			path: app/Services/FinancialAuditorService.php
 
 		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/ImportExportService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Integration/DapodikService.php
-
-		-
 			message: '#^Relation ''tahfidzLogs'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Integration/EmisService.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\Employee model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/Integration/EmisService.php

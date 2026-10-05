@@ -5,9 +5,12 @@ use App\Http\Controllers\Knowledge\LessonStudyController;
 use App\Http\Controllers\Knowledge\PlcDiscussionController;
 use App\Http\Controllers\Knowledge\PlcGroupController;
 use App\Http\Controllers\Knowledge\SharedResourceController;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->prefix('knowledge')->name('knowledge.')->group(function () {
+// FASE 118: the teachers' knowledge hub (articles, lesson study, PLC, shared resources).
+Route::middleware(['auth', Roles::only(StudentDataAccess::TEACHER_ROLES, 'bk', Roles::LEADERSHIP, 'admin')])->prefix('knowledge')->name('knowledge.')->group(function () {
     Route::resource('articles', KnowledgeArticleController::class)->only(['index', 'create', 'store', 'show']);
     Route::post('articles/{id}/like', [KnowledgeArticleController::class, 'toggleLike'])->name('articles.like');
     Route::post('articles/{id}/comment', [KnowledgeArticleController::class, 'storeComment'])->name('articles.comment');

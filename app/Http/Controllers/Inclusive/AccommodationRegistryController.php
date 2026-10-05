@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Inclusive;
 use App\Http\Controllers\Controller;
 use App\Models\AccommodationRegistry;
 use App\Models\Student;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 
 class AccommodationRegistryController extends Controller
 {
     public function index()
     {
-        $registries = AccommodationRegistry::with('student')->get();
+        $registries = AccommodationRegistry::with('student')->whereHas('student', fn ($q) => $q->visibleTo(request()->user()))->get();
 
         return view('fase58.accommodations.registry', compact('registries'));
     }
@@ -35,6 +36,8 @@ class AccommodationRegistryController extends Controller
 
     public function update(Request $request, AccommodationRegistry $accommodation)
     {
+        StudentDataAccess::authorizeStudentRecord($request->user(), $accommodation->student);
+
         $validated = $request->validate([
             'accommodation_category' => 'required|string',
             'specific_need' => 'required|string',
@@ -51,6 +54,8 @@ class AccommodationRegistryController extends Controller
 
     public function destroy(AccommodationRegistry $accommodation)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $accommodation->student);
+
         $accommodation->delete();
 
         return redirect()->back()->with('success', 'Data akomodasi berhasil dihapus.');
@@ -58,6 +63,8 @@ class AccommodationRegistryController extends Controller
 
     public function studentProfile(Student $student)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $student);
+
         $accommodations = AccommodationRegistry::where('student_id', $student->id)->get();
 
         return view('fase58.accommodations.student-profile', compact('student', 'accommodations'));

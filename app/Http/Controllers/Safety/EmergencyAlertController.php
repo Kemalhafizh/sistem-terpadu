@@ -12,17 +12,7 @@ class EmergencyAlertController extends Controller
         return view('fase60.emergency.alert-center');
     }
 
-    public function triggerSos(Request $request)
-    {
-        return redirect()->back();
-    }
-
     public function dispatchTeam(Request $request, $id)
-    {
-        return redirect()->back();
-    }
-
-    public function resolveAlert(Request $request, $id)
     {
         return redirect()->back();
     }

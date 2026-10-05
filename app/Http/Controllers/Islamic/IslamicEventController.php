@@ -16,29 +16,9 @@ class IslamicEventController extends Controller
         return view('fase57.islamic-events.calendar');
     }
 
-    public function create()
-    {
-        return view('fase57.islamic-events.form');
-    }
-
-    public function store()
-    {
-        return redirect()->route('islamic_events.calendar');
-    }
-
     public function show($id)
     {
         return view('fase57.islamic-events.show');
-    }
-
-    public function update($id)
-    {
-        return redirect()->route('islamic_events.calendar');
-    }
-
-    public function destroy($id)
-    {
-        return redirect()->route('islamic_events.calendar');
     }
 
     public function prayerTimes()

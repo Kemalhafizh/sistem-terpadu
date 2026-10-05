@@ -394,5 +394,16 @@
     "Ujian siswa berhasil disubmit paksa": "تم تسليم اختبار الطالب قسرًا",
     "Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.": "تم إنهاء الاختبار مسبقًا أو أن جلستك مقفلة.",
     "Waktu ujian Anda sudah habis.": "انتهى وقت اختبارك.",
-    "Masukkan token ujian dari pengawas terlebih dahulu.": "أدخل رمز الاختبار من المراقب أولاً."
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "أدخل رمز الاختبار من المراقب أولاً.",
+    "Fitur ini belum tersedia. Perubahan belum bisa disimpan.": "هذه الميزة غير متاحة بعد. لم يتم حفظ التغييرات.",
+    "Akun ini belum terhubung dengan data pegawai, jadi log sampah belum bisa dicatat atas nama Anda.": "هذا الحساب غير مرتبط بسجل موظف بعد، لذلك لا يمكن تسجيل سجل النفايات باسمك.",
+    "Log sampah tersimpan.": "تم حفظ سجل النفايات.",
+    "Siswa ini bukan anggota kelas pada denah tersebut.": "هذا الطالب ليس عضوًا في الفصل الخاص بمخطط الجلوس هذا.",
+    "Pelacak Sampah": "متتبع النفايات",
+    "Kategori": "الفئة",
+    "Berat (kg)": "الوزن (كغ)",
+    "Penanganan": "طريقة التخلص",
+    "Catat": "تسجيل",
+    "Dicatat oleh": "سجّله",
+    "Belum ada log sampah.": "لا توجد سجلات نفايات بعد."
 }

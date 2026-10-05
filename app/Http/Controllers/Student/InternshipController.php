@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Services\Student\InternshipService;
-use Illuminate\Http\Request;
 
 class InternshipController extends Controller
 {
@@ -20,19 +19,9 @@ class InternshipController extends Controller
         return view('internships.portal');
     }
 
-    public function apply(Request $request)
-    {
-        return back()->with('success', 'Berhasil mendaftar magang');
-    }
-
     public function myApplications()
     {
         return view('internships.portal');
-    }
-
-    public function logJournal(Request $request)
-    {
-        return back()->with('success', 'Jurnal berhasil disimpan');
     }
 
     public function supervisorMonitoring()

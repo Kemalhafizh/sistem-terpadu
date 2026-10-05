@@ -22,14 +22,14 @@ class ClassFeedController extends Controller
 
     public function storePost(Request $request)
     {
-        // Store logic
-        return redirect()->back();
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function acknowledgePost($id)
     {
-        // Acknowledge logic
-        return redirect()->back();
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function postCreator()

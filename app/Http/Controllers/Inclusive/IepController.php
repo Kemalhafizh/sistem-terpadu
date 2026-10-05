@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Inclusive;
 
 use App\Http\Controllers\Controller;
 use App\Models\IepDocument;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 
 class IepController extends Controller
 {
     public function index()
     {
-        $ieps = IepDocument::with('student', 'caseManager')->get();
+        // A teacher sees the IEPs of the students they teach this year (Student::visibleTo).
+        $ieps = IepDocument::with('student', 'caseManager')->whereHas('student', fn ($q) => $q->visibleTo(request()->user()))->get();
 
         return view('fase58.iep.list', compact('ieps'));
     }
@@ -40,16 +42,22 @@ class IepController extends Controller
 
     public function show(IepDocument $iep)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
+
         return view('fase58.iep.progress', compact('iep'));
     }
 
     public function edit(IepDocument $iep)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
+
         return view('fase58.iep.builder', compact('iep'));
     }
 
     public function update(Request $request, IepDocument $iep)
     {
+        StudentDataAccess::authorizeStudentRecord($request->user(), $iep->student);
+
         $validated = $request->validate([
             'start_date' => 'required|date',
             'review_date' => 'required|date',
@@ -66,6 +74,8 @@ class IepController extends Controller
 
     public function destroy(IepDocument $iep)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
+
         $iep->delete();
 
         return redirect()->route('iep.index')->with('success', 'Dokumen IEP berhasil dihapus.');
@@ -73,6 +83,8 @@ class IepController extends Controller
 
     public function progress(IepDocument $iep)
     {
+        StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
+
         return view('fase58.iep.progress', compact('iep'));
     }
 }

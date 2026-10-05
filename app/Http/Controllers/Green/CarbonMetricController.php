@@ -14,13 +14,8 @@ class CarbonMetricController extends Controller
 
     public function storeDailyData(Request $request)
     {
-        // Implementation
-        return redirect()->back()->with('success', 'Data tersimpan.');
-    }
-
-    public function calculateMonthly()
-    {
-        // Implementation
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function reports()

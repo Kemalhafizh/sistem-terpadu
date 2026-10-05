@@ -4,9 +4,11 @@ use App\Http\Controllers\HR\CompensationController;
 use App\Http\Controllers\HR\RecruitmentController;
 use App\Http\Controllers\HR\TurnoverController;
 use App\Http\Controllers\HR\WellnessController;
+use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+// FASE 118: same audience as the hrd. group in web.php (there is no `hrd` role).
+Route::middleware(['auth', Roles::only(Roles::PRINCIPAL, 'admin')])->group(function () {
     Route::prefix('recruitment')->name('recruitment.')->group(function () {
         Route::get('/kanban', [RecruitmentController::class, 'kanban'])->name('kanban');
         Route::get('/vacancies', [RecruitmentController::class, 'vacancies'])->name('vacancies');

@@ -850,16 +850,22 @@
                 </svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.surveys') }}</span>
             </div>
+        </a>
+        @endcanVisit
+
         {{-- Enterprise Platinum Ecosystem (Fase 51-56) --}}
-        @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin', 'staff', 'bk']))
+        @php($platinumMenus = collect(['micro-lessons.index', 'recruitment.kanban', 'visitors.dashboard', 'omnichannel.dashboard', 'data_engineering.streams', 'internships.portal', 'tahsin.index', 'iep.index', 'carbon.dashboard', 'cctv.index', 'alumni.index', 'homework_copilot.dashboard'])->contains(fn ($route) => \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), $route)))
+        @if($platinumMenus)
         <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
             <p class="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">{{ __('navigation.header_enterprise_platinum') }}</p>
         </div>
         <div class="mt-8 mb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-amber-400 uppercase tracking-widest opacity-80" title="{{ __('navigation.header_enterprise_platinum') }}">•</p>
         </div>
+        @endif
 
         {{-- Microlearning & Quiz Arena --}}
+        @canVisit('micro-lessons.index')
         <a href="{{ route('micro-lessons.index') }}" class="{{ $linkClass }} {{ request()->routeIs('micro-lessons.*') || request()->routeIs('gamified-quizzes.*') || request()->routeIs('spaced-repetition.*') || request()->routeIs('transcripts.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.microlearning') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-amber-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -880,7 +886,7 @@
 
         {{-- Smart Campus & Visitor Ops --}}
         @canVisit('visitors.dashboard')
-        <a href="{{ route('visitors.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('visitors.*') || request()->routeIs('store.*') || request()->routeIs('canteen.*') || request()->routeIs('events.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.smart_campus') }}">
+        <a href="{{ route('visitors.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('visitors.*') || request()->routeIs('store.*') || request()->routeIs('events.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.smart_campus') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-cyan-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.smart_campus') }}</span>
@@ -985,7 +991,6 @@
             </div>
         </a>
         @endcanVisit
-        @endif
 
     </nav>
 </aside>

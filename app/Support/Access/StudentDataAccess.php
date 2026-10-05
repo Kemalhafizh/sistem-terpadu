@@ -53,6 +53,15 @@ class StudentDataAccess
         }
     }
 
+    /**
+     * 404 unless [user] may see [student] (Student::visibleTo). A record of a
+     * student outside the caller's scope is treated as not found.
+     */
+    public static function authorizeStudentRecord(User $user, ?Student $student): void
+    {
+        abort_unless($student !== null && $student->isVisibleTo($user), 404);
+    }
+
     /** A teacher may only change what belongs to their own class. */
     public static function authorizeTeacherOwns(User $teacher, ?int $ownerId): void
     {

@@ -4,9 +4,11 @@ use App\Http\Controllers\Communication\DripCampaignController;
 use App\Http\Controllers\Communication\NpsController;
 use App\Http\Controllers\Communication\OmnichannelController;
 use App\Http\Controllers\Communication\PublicRelationsController;
+use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+// FASE 118: outbound communication, NPS and press relations: public relations and leadership.
+Route::middleware(['auth', Roles::only('waka_humas', 'staf_tu', Roles::PRINCIPAL, 'admin')])->group(function () {
     Route::prefix('omnichannel')->name('omnichannel.')->group(function () {
         Route::get('/dashboard', [OmnichannelController::class, 'dashboard'])->name('dashboard');
         Route::get('/templates', [OmnichannelController::class, 'templates'])->name('templates');

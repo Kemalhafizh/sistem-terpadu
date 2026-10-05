@@ -19,7 +19,8 @@ class KnowledgeArticleController extends Controller
 
     public function store(Request $request)
     {
-        return redirect()->route('knowledge.articles.index');
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function show($id)
@@ -29,11 +30,13 @@ class KnowledgeArticleController extends Controller
 
     public function toggleLike($id)
     {
-        return back();
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 
     public function storeComment(Request $request, $id)
     {
-        return back();
+        // FASE 118.3: no backend yet; this used to pretend the change was saved.
+        abort(501, __('Fitur ini belum tersedia. Perubahan belum bisa disimpan.'));
     }
 }

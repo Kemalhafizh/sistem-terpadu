@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\ExtendedDiamond;
 
+use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\ClassroomLayout;
 use App\Models\KanbanBoard;
@@ -39,8 +40,10 @@ class Fase64InteractiveUiTest extends TestCase
 
     public function test_seating_chart_designer_renders_and_assigns_seat(): void
     {
+        // FASE 118.2: a teacher arranges seats only in a class they lead or teach this year.
+        $year = AcademicYear::factory()->create(['year' => '2026/2027', 'is_active' => true]);
         $teacher = User::factory()->create(['role' => 'guru']);
-        $classroom = Classroom::factory()->create();
+        $classroom = Classroom::factory()->create(['teacher_id' => $teacher->id, 'academic_year' => $year->year]);
         $student = Student::factory()->create(['classroom_id' => $classroom->id]);
 
         $layout = ClassroomLayout::create([
@@ -110,5 +113,22 @@ class Fase64InteractiveUiTest extends TestCase
             'id' => $taskId,
             'column_id' => 'done',
         ]);
+    }
+
+    /** FASE 118.2: seats of another teacher's class, or a pupil from another class, are refused. */
+    public function test_seating_is_limited_to_the_teachers_own_class(): void
+    {
+        $year = AcademicYear::factory()->create(['year' => '2026/2027', 'is_active' => true]);
+        $teacher = User::factory()->create(['role' => 'guru']);
+        $own = Classroom::factory()->create(['teacher_id' => $teacher->id, 'academic_year' => $year->year]);
+        $other = Classroom::factory()->create(['academic_year' => $year->year]);
+        $ownLayout = ClassroomLayout::create(['classroom_id' => $own->id, 'layout_name' => 'Denah A', 'grid_rows' => 5, 'grid_columns' => 6]);
+        $otherLayout = ClassroomLayout::create(['classroom_id' => $other->id, 'layout_name' => 'Denah B', 'grid_rows' => 5, 'grid_columns' => 6]);
+        $outsider = Student::factory()->create(['classroom_id' => $other->id]);
+        $seat = fn ($layout) => ['classroom_layout_id' => $layout->id, 'student_id' => $outsider->id, 'grid_row' => 1, 'grid_column' => 1];
+
+        $this->actingAs($teacher)->postJson(route('interactive.seating.assign'), $seat($otherLayout))->assertNotFound();
+        $this->actingAs($teacher)->postJson(route('interactive.seating.assign'), $seat($ownLayout))->assertStatus(422);
+        $this->assertDatabaseCount('seat_assignments', 0);
     }
 }

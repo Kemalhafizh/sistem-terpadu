@@ -4,9 +4,11 @@ use App\Http\Controllers\Safety\CctvIncidentController;
 use App\Http\Controllers\Safety\EmergencyAlertController;
 use App\Http\Controllers\Safety\GeoFencingController;
 use App\Http\Controllers\Safety\SafetyDrillController;
+use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+// FASE 118: CCTV, alerts, drills and geofencing are for the school's operations staff.
+Route::middleware(['auth', Roles::only('staf_tu', 'waka_sarpras', Roles::PRINCIPAL, 'admin')])->group(function () {
     Route::prefix('surveillance')->name('cctv.')->group(function () {
         Route::get('/', [CctvIncidentController::class, 'index'])->name('index');
     });

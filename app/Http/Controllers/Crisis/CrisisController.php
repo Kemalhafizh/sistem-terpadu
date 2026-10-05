@@ -40,7 +40,7 @@ class CrisisController extends Controller
             'location_detail' => 'nullable|string',
         ]);
 
-        $validated['reported_by'] = auth()->id() ?? 1;
+        $validated['reported_by'] = $request->user()->id;
 
         $this->service->declareIncident($validated);
 
@@ -62,7 +62,7 @@ class CrisisController extends Controller
             'action_type' => 'required|string',
             'description' => 'required|string',
         ]);
-        $validated['responder_id'] = auth()->id() ?? 1;
+        $validated['responder_id'] = $request->user()->id;
         $this->service->logResponse($incident, $validated);
 
         return back()->with('success', 'Response logged.');
@@ -97,7 +97,7 @@ class CrisisController extends Controller
             'emergency_contacts' => 'required|array',
             'assembly_points' => 'required|array',
         ]);
-        $validated['approved_by'] = auth()->id() ?? 1;
+        $validated['approved_by'] = $request->user()->id;
         CrisisProtocol::create($validated);
 
         return redirect()->route('crisis.protocols.index')->with('success', 'Protocol created.');

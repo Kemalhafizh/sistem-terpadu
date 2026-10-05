@@ -17,11 +17,6 @@ class SafetyDrillController extends Controller
         return redirect()->back();
     }
 
-    public function startDrill($id)
-    {
-        return view('fase60.safety-drill.active-drill');
-    }
-
     public function concludeDrill(Request $request, $id)
     {
         return redirect()->back();

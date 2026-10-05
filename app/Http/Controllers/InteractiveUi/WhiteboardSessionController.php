@@ -41,6 +41,8 @@ class WhiteboardSessionController extends Controller
 
     public function saveCanvasState(Request $request, WhiteboardSession $session): JsonResponse
     {
+        abort_unless((int) $session->host_id === $request->user()->id || $request->user()->role === 'superadmin', 403);
+
         $validated = $request->validate([
             'canvas_state_json' => 'required|string',
             'snapshot_image_path' => 'nullable|string',

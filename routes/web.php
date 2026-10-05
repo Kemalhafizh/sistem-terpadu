@@ -1283,7 +1283,7 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware('role:admin,superadmin,kepala_sekolah')->group(function () {
         // User Management
-        Route::resource('users', UserController::class);
+        Route::resource('users', UserController::class)->except('show');
         Route::get('logs', [ActivityLogController::class, 'index'])->name('admin.logs');
 
         // System Settings

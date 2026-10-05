@@ -51,4 +51,15 @@ class Fase66DigitalPublishingTest extends TestCase
             'title' => 'Tadabbur Juz Amma Pagi Hari',
         ]);
     }
+
+    /** FASE 118: students read podcasts but do not publish them. */
+    public function test_students_cannot_publish(): void
+    {
+        $student = User::factory()->create(['role' => 'siswa']);
+
+        $this->actingAs($student)->get(route('publishing.podcasts.index'))->assertOk();
+        $this->actingAs($student)->postJson(route('publishing.podcasts.store'), ['title' => 'x', 'category' => 'islamic_studies'])->assertForbidden();
+        $this->actingAs($student)->postJson(route('publishing.magazines.store'), [])->assertForbidden();
+        $this->actingAs($student)->get(route('publishing.video.index'))->assertForbidden();
+    }
 }

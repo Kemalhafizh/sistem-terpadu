@@ -15,7 +15,7 @@ class AdvancedCommunicationSuiteTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->admin = User::factory()->create();
+        $this->admin = User::factory()->create(['role' => 'admin']);
     }
 
     public function test_omnichannel_dashboard_is_accessible()
@@ -40,5 +40,16 @@ class AdvancedCommunicationSuiteTest extends TestCase
     {
         $response = $this->actingAs($this->admin)->get(route('pr.press_releases'));
         $response->assertStatus(200);
+    }
+
+    /** FASE 118: omnichannel used to open for any signed-in account. */
+    public function test_other_roles_are_refused()
+    {
+        foreach (['siswa', 'orang_tua', 'guru'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+            foreach (['omnichannel.dashboard', 'drip_campaigns.index', 'nps.dashboard', 'pr.press_releases'] as $route) {
+                $this->actingAs($user)->get(route($route))->assertForbidden();
+            }
+        }
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class WellnessController extends Controller
 {
@@ -12,29 +11,9 @@ class WellnessController extends Controller
         return view('wellness.catalog');
     }
 
-    public function programs()
-    {
-        //
-    }
-
-    public function createProgram()
-    {
-        //
-    }
-
-    public function storeProgram(Request $request)
-    {
-        //
-    }
-
     public function myWellness()
     {
         return view('wellness.employee-dashboard');
-    }
-
-    public function logParticipation(Request $request)
-    {
-        //
     }
 
     public function hrAnalytics()

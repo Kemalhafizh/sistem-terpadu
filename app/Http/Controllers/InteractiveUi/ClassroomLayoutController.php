@@ -61,6 +61,11 @@ class ClassroomLayoutController extends Controller
             'behavior_note' => 'nullable|string',
         ]);
 
+        // The class must be one the teacher teaches, and the student a member of it.
+        $layout = ClassroomLayout::findOrFail($validated['classroom_layout_id']);
+        abort_unless($layout->classroom?->isVisibleTo($request->user()), 404);
+        abort_unless(Student::whereKey($validated['student_id'])->where('classroom_id', $layout->classroom_id)->exists(), 422, __('Siswa ini bukan anggota kelas pada denah tersebut.'));
+
         $assignment = $this->layoutService->assignSeat(
             (int) $validated['classroom_layout_id'],
             (int) $validated['student_id'],
@@ -78,6 +83,8 @@ class ClassroomLayoutController extends Controller
 
     public function heatmap(ClassroomLayout $layout): JsonResponse
     {
+        abort_unless($layout->classroom?->isVisibleTo(request()->user()), 404);
+
         $data = $this->layoutService->generateBehaviorHeatmap($layout);
 
         return response()->json([
