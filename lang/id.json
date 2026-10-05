@@ -326,5 +326,22 @@
     "Nilai remedial siswa berhasil disimpan": "Nilai remedial siswa berhasil disimpan",
     "Akses ditolak. Anda tidak berhak melihat data siswa ini.": "Akses ditolak. Anda tidak berhak melihat data siswa ini.",
     "Akses ditolak. Data ini milik kelas guru lain.": "Akses ditolak. Data ini milik kelas guru lain.",
-    "Akses ditolak. Anda bukan anggota kelas ini.": "Akses ditolak. Anda bukan anggota kelas ini."
+    "Akses ditolak. Anda bukan anggota kelas ini.": "Akses ditolak. Anda bukan anggota kelas ini.",
+    "Anda tidak memiliki hak untuk mereset status ujian siswa ini.": "Anda tidak memiliki hak untuk mereset status ujian siswa ini.",
+    "Daftar ujian yang Anda awasi berhasil diambil": "Daftar ujian yang Anda awasi berhasil diambil",
+    "Anda tidak berwenang melihat token ujian ini. Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.": "Anda tidak berwenang melihat token ujian ini. Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.",
+    "Anda tidak berwenang melihat token ujian ini. Token Ulangan Harian dipegang oleh guru pembuat ujian.": "Anda tidak berwenang melihat token ujian ini. Token Ulangan Harian dipegang oleh guru pembuat ujian.",
+    "Token ujian berhasil diambil (berlaku 5 menit)": "Token ujian berhasil diambil (berlaku 5 menit)",
+    "Anda tidak berwenang memperbarui token ujian ini": "Anda tidak berwenang memperbarui token ujian ini",
+    "Token ujian berhasil diperbarui (berlaku 5 menit)": "Token ujian berhasil diperbarui (berlaku 5 menit)",
+    "Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.": "Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.",
+    "Siswa ini tidak sedang terkunci di ujian ini.": "Siswa ini tidak sedang terkunci di ujian ini.",
+    "Status ujian siswa belum bisa direset. Coba lagi.": "Status ujian siswa belum bisa direset. Coba lagi.",
+    "Sesi ujian belum bisa ditutup. Coba lagi.": "Sesi ujian belum bisa ditutup. Coba lagi.",
+    "Anda tidak berwenang mengawasi ujian ini.": "Anda tidak berwenang mengawasi ujian ini.",
+    "Aplikasi diperkecil": "Aplikasi diperkecil",
+    "Aplikasi ditutup": "Aplikasi ditutup",
+    "Layar terbagi": "Layar terbagi",
+    "Tombol kembali ditekan": "Tombol kembali ditekan",
+    "Daftar siswa terkunci berhasil diambil": "Daftar siswa terkunci berhasil diambil"
 }

@@ -205,6 +205,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('cbt/exams/{id}/token', [CbtAccessControlApiController::class, 'getToken']);
             Route::post('cbt/exams/{id}/token/regenerate', [CbtAccessControlApiController::class, 'regenerateToken']);
             Route::post('cbt/exams/{id}/token/reset-student', [CbtAccessControlApiController::class, 'resetStudent']);
+            Route::get('cbt/exams/{id}/locked-students', [CbtAccessControlApiController::class, 'lockedStudents']);
 
             // CBT Manual Authoring with LaTeX & Image Support
             Route::post('cbt/exams', [ApiTeacherController::class, 'storeExamWithQuestions']);

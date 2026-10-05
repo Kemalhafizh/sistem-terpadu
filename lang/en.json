@@ -326,5 +326,22 @@
     "Nilai remedial siswa berhasil disimpan": "Remedial score saved",
     "Akses ditolak. Anda tidak berhak melihat data siswa ini.": "Access denied. You may not view this student's data.",
     "Akses ditolak. Data ini milik kelas guru lain.": "Access denied. This data belongs to another teacher's class.",
-    "Akses ditolak. Anda bukan anggota kelas ini.": "Access denied. You are not a member of this class."
+    "Akses ditolak. Anda bukan anggota kelas ini.": "Access denied. You are not a member of this class.",
+    "Anda tidak memiliki hak untuk mereset status ujian siswa ini.": "You may not reset this student's exam.",
+    "Daftar ujian yang Anda awasi berhasil diambil": "Exams you proctor loaded",
+    "Anda tidak berwenang melihat token ujian ini. Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.": "You may not view this exam's token. Midterm and final exam tokens are held only by the appointed exam operator.",
+    "Anda tidak berwenang melihat token ujian ini. Token Ulangan Harian dipegang oleh guru pembuat ujian.": "You may not view this exam's token. Daily test tokens are held by the teacher who created the exam.",
+    "Token ujian berhasil diambil (berlaku 5 menit)": "Exam token loaded (valid for 5 minutes)",
+    "Anda tidak berwenang memperbarui token ujian ini": "You may not renew this exam's token",
+    "Token ujian berhasil diperbarui (berlaku 5 menit)": "Exam token renewed (valid for 5 minutes)",
+    "Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.": "The student's exam was reset. They can enter the token to get back in.",
+    "Siswa ini tidak sedang terkunci di ujian ini.": "This student is not locked out of this exam.",
+    "Status ujian siswa belum bisa direset. Coba lagi.": "The student's exam couldn't be reset. Try again.",
+    "Sesi ujian belum bisa ditutup. Coba lagi.": "The exam session couldn't be closed. Try again.",
+    "Anda tidak berwenang mengawasi ujian ini.": "You may not proctor this exam.",
+    "Aplikasi diperkecil": "App minimised",
+    "Aplikasi ditutup": "App closed",
+    "Layar terbagi": "Split screen",
+    "Tombol kembali ditekan": "Back button pressed",
+    "Daftar siswa terkunci berhasil diambil": "Locked-out students loaded"
 }

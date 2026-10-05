@@ -326,5 +326,22 @@
     "Nilai remedial siswa berhasil disimpan": "تم حفظ درجة العلاج",
     "Akses ditolak. Anda tidak berhak melihat data siswa ini.": "تم رفض الوصول. لا يحق لك عرض بيانات هذا الطالب.",
     "Akses ditolak. Data ini milik kelas guru lain.": "تم رفض الوصول. هذه البيانات تخص فصل معلم آخر.",
-    "Akses ditolak. Anda bukan anggota kelas ini.": "تم رفض الوصول. أنت لست عضوًا في هذا الفصل."
+    "Akses ditolak. Anda bukan anggota kelas ini.": "تم رفض الوصول. أنت لست عضوًا في هذا الفصل.",
+    "Anda tidak memiliki hak untuk mereset status ujian siswa ini.": "لا يحق لك إعادة تعيين اختبار هذا الطالب.",
+    "Daftar ujian yang Anda awasi berhasil diambil": "تم تحميل الاختبارات التي تراقبها",
+    "Anda tidak berwenang melihat token ujian ini. Token UTS/UAS hanya dipegang oleh Operator Ujian yang ditunjuk.": "لا يحق لك عرض رمز هذا الاختبار. رموز اختبارات منتصف ونهاية الفصل يحملها مشغل الاختبار المعيَّن فقط.",
+    "Anda tidak berwenang melihat token ujian ini. Token Ulangan Harian dipegang oleh guru pembuat ujian.": "لا يحق لك عرض رمز هذا الاختبار. رموز الاختبارات اليومية يحملها المعلم الذي أنشأ الاختبار.",
+    "Token ujian berhasil diambil (berlaku 5 menit)": "تم تحميل رمز الاختبار (صالح لمدة 5 دقائق)",
+    "Anda tidak berwenang memperbarui token ujian ini": "لا يحق لك تجديد رمز هذا الاختبار",
+    "Token ujian berhasil diperbarui (berlaku 5 menit)": "تم تجديد رمز الاختبار (صالح لمدة 5 دقائق)",
+    "Status ujian siswa berhasil direset. Siswa dapat memasukkan token untuk masuk kembali.": "تمت إعادة تعيين اختبار الطالب. يمكنه إدخال الرمز للعودة.",
+    "Siswa ini tidak sedang terkunci di ujian ini.": "هذا الطالب ليس مقفلًا في هذا الاختبار.",
+    "Status ujian siswa belum bisa direset. Coba lagi.": "تعذّرت إعادة تعيين اختبار الطالب. حاول مرة أخرى.",
+    "Sesi ujian belum bisa ditutup. Coba lagi.": "تعذّر إغلاق جلسة الاختبار. حاول مرة أخرى.",
+    "Anda tidak berwenang mengawasi ujian ini.": "لا يحق لك مراقبة هذا الاختبار.",
+    "Aplikasi diperkecil": "تم تصغير التطبيق",
+    "Aplikasi ditutup": "تم إغلاق التطبيق",
+    "Layar terbagi": "تقسيم الشاشة",
+    "Tombol kembali ditekan": "تم الضغط على زر الرجوع",
+    "Daftar siswa terkunci berhasil diambil": "تم تحميل قائمة الطلاب المقفلين"
 }
