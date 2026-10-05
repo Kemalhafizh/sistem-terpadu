@@ -8,6 +8,7 @@ use App\Models\RemedialSession;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
     $this->guru = User::factory()->create(['role' => 'guru', 'must_change_password' => false, 'name' => 'Bu Guru']);
@@ -161,4 +162,63 @@ test('the teacher list reports entered scores against the class size', function 
         ->assertJsonPath('data.assessments.0.classroom.students_count', 2)
         ->assertJsonPath('data.assessments.0.classroom.name', 'XI MIPA 2')
         ->assertJsonPath('data.assessments.0.subject.name', 'Fisika');
+});
+
+test('missing title, subject and KKM come back as null, not PH, Mapel or 75', function () {
+    // A KKM-less assessment whose subject is gone, and a score whose assessment is
+    // gone, as on servers without the foreign keys. The keys cascade, so the rows
+    // point at ids that do not exist; SQLite ignores `foreign_keys = OFF` inside the
+    // test transaction, so the check is deferred to a commit that never comes.
+    $this->assessment->update(['kkm' => null]);
+    DB::statement('PRAGMA defer_foreign_keys = ON');
+    $this->assessment->forceFill(['subject_id' => 999_999])->saveQuietly();
+    DailyAssessmentScore::create(['daily_assessment_id' => 999_999, 'student_id' => $this->ani->id, 'score' => 50]);
+
+    $response = $this->actingAs(User::find($this->ani->user_id))->getJson('/api/v1/assessments/student');
+
+    $response->assertOk()->assertJsonCount(2, 'data');
+    $rows = collect($response->json('data'));
+
+    $noKkm = $rows->firstWhere('original_score', 82.5);
+    expect($noKkm['assessment_title'])->toBe('UH 1 Dinamika')
+        ->and($noKkm['subject_name'])->toBeNull()
+        ->and($noKkm['kkm'])->toBeNull()
+        ->and($noKkm['is_tuntas'])->toBeNull();
+
+    $noAssessment = $rows->firstWhere('original_score', 50);
+    expect($noAssessment['assessment_title'])->toBeNull()
+        ->and($noAssessment['subject_name'])->toBeNull()
+        ->and($noAssessment['assessment_date'])->toBeNull()
+        ->and($noAssessment['kkm'])->toBeNull()
+        ->and($noAssessment['is_tuntas'])->toBeNull();
+});
+
+test('a student sees only their own remedials, with the assessment title and subject', function () {
+    $remedial = fn (Student $student, float $score) => RemedialSession::create([
+        'daily_assessment_id' => $this->assessment->id,
+        // remedial_sessions.student_id references users.id.
+        'student_id' => $student->user_id,
+        'assigned_by' => $this->guru->id,
+        'original_score' => $score,
+        'kkm' => 75,
+        'status' => 'pending',
+    ]);
+    $own = $remedial($this->ani, 60);
+    $remedial($this->budi, 40);
+
+    $response = $this->actingAs(User::find($this->ani->user_id))->getJson('/api/v1/assessments/student/remedials');
+
+    $response->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.uuid', $own->uuid)
+        ->assertJsonPath('data.0.student_id', $this->ani->user_id)
+        ->assertJsonPath('data.0.assessment_title', 'UH 1 Dinamika')
+        ->assertJsonPath('data.0.subject_name', 'Fisika');
+});
+
+test('a parent or teacher cannot open the student remedial list', function () {
+    $parent = User::factory()->create(['role' => 'orang_tua', 'must_change_password' => false]);
+
+    $this->actingAs($parent)->getJson('/api/v1/assessments/student/remedials')->assertForbidden();
+    $this->actingAs($this->guru)->getJson('/api/v1/assessments/student/remedials')->assertForbidden();
 });

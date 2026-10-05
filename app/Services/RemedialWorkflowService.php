@@ -86,6 +86,10 @@ class RemedialWorkflowService
         return (float) $original;
     }
 
+    /**
+     * @param  int  $studentId  users.id of the student: remedial_sessions.student_id
+     *                          references users, not students.
+     */
     public function getStudentRemedials(int $studentId)
     {
         return RemedialSession::with(['assessment.subject', 'assigner'])
