@@ -393,5 +393,6 @@
     "Ujian ini hanya dapat dikerjakan melalui aplikasi SISTA di HP Anda.": "لا يمكن أداء هذا الاختبار إلا عبر تطبيق SISTA على هاتفك.",
     "Ujian siswa berhasil disubmit paksa": "تم تسليم اختبار الطالب قسرًا",
     "Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.": "تم إنهاء الاختبار مسبقًا أو أن جلستك مقفلة.",
-    "Waktu ujian Anda sudah habis.": "انتهى وقت اختبارك."
+    "Waktu ujian Anda sudah habis.": "انتهى وقت اختبارك.",
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "أدخل رمز الاختبار من المراقب أولاً."
 }

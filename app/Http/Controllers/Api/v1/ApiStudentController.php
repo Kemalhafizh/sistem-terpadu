@@ -254,6 +254,12 @@ class ApiStudentController extends Controller
             return $this->errorResponse(__('Sesi ujian telah selesai atau akses ditutup oleh pengawas.'), 403);
         }
 
+        // 4. Soal hanya untuk siswa yang sudah masuk lewat token pengawas (validate-token)
+        $attempt = ExamAttempt::openFor($exam, $student);
+        if (! $attempt) {
+            return $this->errorResponse(__('Masukkan token ujian dari pengawas terlebih dahulu.'), 403);
+        }
+
         // Honors shuffle_questions / shuffle_options with the same per-student
         // seeded order as the web take view and the encrypted vault payload.
         // Option keys stay the original ones (only display order changes), so
@@ -304,6 +310,13 @@ class ApiStudentController extends Controller
         if ($existingAttempt?->isFinished()) {
             return $this->errorResponse(__('Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.'), 403);
         }
+
+        // Only an attempt opened through validate-token can be submitted; never create one here.
+        $attempt = ExamAttempt::openFor($exam, $student);
+        if (! $attempt) {
+            return $this->errorResponse(__('Masukkan token ujian dari pengawas terlebih dahulu.'), 403);
+        }
+
         $answers = $request->input('answers', []); // [question_id => selected_option_index]
         $totalQuestions = $exam->questions->count();
         $correctCount = 0;
@@ -327,18 +340,15 @@ class ApiStudentController extends Controller
         $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100, 1) : 0;
         $passed = $score >= (float) $exam->passing_score;
 
-        ExamAttempt::updateOrCreate(
-            ['exam_id' => $exam->id, 'student_id' => $student->id],
-            [
-                'score' => $score,
-                'correct_count' => $correctCount,
-                'wrong_count' => max(0, $totalQuestions - $correctCount),
-                'unanswered_count' => max(0, $totalQuestions - count($answers)),
-                'answers' => $answers,
-                'status' => 'submitted',
-                'submitted_at' => now(),
-            ]
-        );
+        $attempt->update([
+            'score' => $score,
+            'correct_count' => $correctCount,
+            'wrong_count' => max(0, $totalQuestions - $correctCount),
+            'unanswered_count' => max(0, $totalQuestions - count($answers)),
+            'answers' => $answers,
+            'status' => 'submitted',
+            'submitted_at' => now(),
+        ]);
 
         return $this->successResponse([
             'exam_id' => $exam->id,

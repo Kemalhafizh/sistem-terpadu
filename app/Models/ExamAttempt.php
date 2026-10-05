@@ -94,6 +94,24 @@ class ExamAttempt extends Model
     }
 
     /**
+     * The student's attempt they may work on right now: in progress and, when
+     * the exam is token-gated (has an access_token), entered through
+     * validate-token with the proctor's token. Null means the student has not
+     * entered the exam (or is finished/locked), so the question, key, sync,
+     * essay and submit endpoints must refuse instead of creating an attempt.
+     */
+    public static function openFor(Exam $exam, Student $student): ?self
+    {
+        return static::query()
+            ->where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->where('status', 'in_progress')
+            ->when(filled($exam->access_token), fn ($query) => $query->whereNotNull('token_validated_at'))
+            ->latest()
+            ->first();
+    }
+
+    /**
      * Compute remaining seconds based on exam duration limit and exam end time.
      */
     public function getRemainingSeconds(): int

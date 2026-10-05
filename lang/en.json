@@ -393,5 +393,6 @@
     "Ujian ini hanya dapat dikerjakan melalui aplikasi SISTA di HP Anda.": "This exam can only be taken in the SISTA app on your phone.",
     "Ujian siswa berhasil disubmit paksa": "The student's exam was force-submitted",
     "Ujian sudah pernah diselesaikan atau status sesi Anda terkunci.": "The exam was already finished or your session is locked.",
-    "Waktu ujian Anda sudah habis.": "Your exam time is up."
+    "Waktu ujian Anda sudah habis.": "Your exam time is up.",
+    "Masukkan token ujian dari pengawas terlebih dahulu.": "Enter the exam token from your proctor first."
 }

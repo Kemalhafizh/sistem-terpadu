@@ -14,11 +14,12 @@ use App\Services\Security\SsrfGuardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
+use Tests\Concerns\EntersCbtExam;
 use Tests\TestCase;
 
 class ZeroTrustZeroDayRemediationTest extends TestCase
 {
-    use RefreshDatabase;
+    use EntersCbtExam, RefreshDatabase;
 
     protected User $adminUser;
 
@@ -119,8 +120,8 @@ class ZeroTrustZeroDayRemediationTest extends TestCase
         ]);
         $resEssay->assertStatus(403);
 
-        // Student A (enrolled in Class A) can sync answers
-        Sanctum::actingAs($this->studentUserA);
+        // Student A (enrolled in Class A) can sync answers once they entered the proctor's token
+        $this->enterCbtExam($this->studentUserA, $this->examClassA);
         $resOk = $this->postJson("/api/v1/student/cbt/exams/{$this->examClassA->id}/micro-sync", [
             'answers' => [
                 (string) $this->question1->id => 'A',
@@ -169,7 +170,7 @@ class ZeroTrustZeroDayRemediationTest extends TestCase
      */
     public function test_cbt_essay_upload_validates_question_belongs_to_exam(): void
     {
-        Sanctum::actingAs($this->studentUserA);
+        $this->enterCbtExam($this->studentUserA, $this->examClassA);
 
         $file = UploadedFile::fake()->image('essay.jpg', 600, 800);
         $res = $this->postJson("/api/v1/student/cbt/exams/{$this->examClassA->id}/upload-essay", [
