@@ -6672,3 +6672,138 @@ Setelah 118.1 selesai, nyalakan *deny-by-default* untuk route web ber-`auth` tan
   - IDOR per siswa/kelas/sesi/approval/whiteboard.
 - Test lama yang mengodekan perilaku salah (user tanpa peran membuka modul internal, heatmap kelas yang tidak ada = 200, guru menata denah kelas orang lain) ditulis ulang ke peran yang benar, ditambah kasus 403/404-nya. `SmartCampusSuiteTest` kini memastikan route kantin sudah tidak ada.
 - Sidebar: blok "Enterprise Platinum" dulu bergantung pada `@if` daftar peran literal dan blok `surveys` yang tidak ditutup, sehingga seluruh menu FASE 51–62 hanya muncul bila user boleh membuka survei. Sekarang tiap menu memakai `@canVisit`, dan judul blok tampil bila minimal satu menunya boleh dibuka.
+
+---
+
+## FASE 119: DEBLOAT, KEMBALI KE ERP SEKOLAH YANG JELAS `[RANCANGAN BARU]`
+
+> **Tanggal Rancangan:** 5 Oktober 2026
+> **Pelaksana:** Agent Backend (repo `sistem-terpadu`, backend + web). Pasangannya di Android: **FASE 78** di `sista-android/android_implementation.md`.
+> **Prioritas:** P0. Kerjakan sebelum fitur baru apa pun.
+> **Prinsip:** Aplikasi ini adalah ERP untuk **satu SMA Islam di Indonesia**, bukan platform korporat. Setiap modul harus menjawab "siapa di sekolah yang memakai ini setiap minggu?" Kalau jawabannya tidak ada, modulnya dihapus.
+
+### 119.0: Latar Belakang & Keputusan Pemilik Produk
+
+Audit 5 Oktober 2026 menemukan sekitar 180 dari ±300 controller web (±59%) berada di folder modul tambahan FASE 45–68: teknologi pamer, tools developer, HR/manajemen korporat, marketing, media, dan gimmick. Mayoritas cuma 15–40 baris yang menampilkan view tanpa menyimpan data. Database mencapai 504 tabel. Sidebar web bahkan punya seksi "Enterprise Platinum" dan "Enterprise Diamond". Di sisi lain, fitur dasar ERP sekolah (naik kelas massal, impor presensi sidik jari) **belum ada**.
+
+Keputusan pemilik produk (5 Okt 2026):
+
+| Topik | Keputusan | Akibat |
+|---|---|---|
+| Status produksi | **Belum dipakai, belum ada data asli** | Modul **dihapus permanen** (kode, view, model, migrasi, test), bukan dibekukan |
+| Presensi siswa | Siswa boleh memakai HP; presensi lewat **QR per mapel** (Sesi Kelas, FASE 117) | Hapus presensi GPS/geofence, QR identitas/gerbang dinamis, dan face recognition |
+| Presensi pegawai | Guru & karyawan memakai **mesin sidik jari** | Aplikasi tidak menyediakan check-in pegawai; buat **impor log mesin** (119.6) |
+| Pendidikan inklusi | **Dipertahankan** (sekolah punya siswa ABK) | Modul Inclusive tetap, disederhanakan di bawah BK |
+| Penggajian | **Diurus sekolah** | HRD + Payroll tetap |
+| Adiwiyata / kantin cashless | **Tidak ada** | Hapus Green School dan Canteen |
+| Gamifikasi | **Gimmick, tidak jelas tujuannya** | Hapus seluruhnya (web, API, Android) |
+
+### 119.1: Daftar POTONG (hapus permanen)
+
+**A. File route yang dihapus seluruhnya** (beserta `require` di `routes/web.php`):
+`adaptive.php`, `alumni_relations.php`, `campus_ops.php`, `career_readiness.php`, `data_engineering.php`, `extended_diamond.php`, `family_engagement.php`, `foundation.php`, `green_school.php`, `islamic_tech.php`, `knowledge.php`, `microlearning.php`, `omnichannel.php`, `recruitment.php`, `school_safety.php`, `strategic.php`.
+`crisis.php` **tidak** dihapus utuh: bagian anti-bullying dipindah ke BK (119.2), sisanya dihapus.
+
+**B. Folder controller yang dihapus seluruhnya** (`app/Http/Controllers/<Folder>`), beserta route di `web.php`/`api.php`, view, service, model, dan test miliknya:
+
+| Kelompok | Folder |
+|---|---|
+| Teknologi pamer | `Blockchain`, `Iot`, `Platform` (Digital Twin, AI Recommendation, Dashboard Builder, Developer API), `Infrastructure` |
+| Tools developer yang nyasar ke aplikasi | `Deployment`, `Performance`, `Integration`, `Debloat`, `UX` (Design System, Print Engine, Translation console) |
+| Manajemen korporat | `Grc` (kecuali `AccreditationController`, lihat 119.9), `Strategic`, `Workflow` (Process Mining, Workflow Designer, SLA), `HumanCapital`, `HR` (recruitment, compensation, wellness) |
+| Marketing & media | `Communication` (lihat pengecualian di 119.2), `Publishing`, `Community` |
+| Gimmick & modul tanpa pemakai | `Adaptive`, `Microlearning`, `Green`, `Campus`, `Safety`, `Knowledge`, `Family`, `Alumni` (endowment, crowdfund), `Islamic` (lihat pengecualian Tahsin), `Ai`, `Accessibility` (voice navigation, WCAG console), `InteractiveUi`, `Mobile` & `Dashboard` (versi `extended_diamond`), `DataEngineering`, `Foundation` (konsolidasi yayasan YBWSA bukan urusan aplikasi satu sekolah) |
+
+**C. Controller satuan yang dihapus:**
+- Folder `Admin`: `ApmObservability`, `Observability`, `CacheMonitor`, `QueueMonitor`, `ApiGatewayMonitor`, `EdwOlap`, `DeveloperPortal`, `WebhookHub`, `BpaRuleEngine`, `UatFeedback`, `VendorSla`, `ReportBuilder`, dan UI `DisasterRecovery`. Backup harian **tetap jalan** lewat scheduler `spatie/laravel-backup`; yang dihapus hanya halaman konsolnya.
+- Folder `Analytics`: `AtRiskStudentPrediction`, `PredictivePerformance`, `FinancialForecasting`, `TreasuryForecast`, `AcademicBenchmark`, `ParentEngagement`. Label "probabilitas putus sekolah" pada anak di bawah umur tidak punya dasar data dan berisiko.
+- Folder `Academic`: `AcademicPathway`, `AiCopilot`, `Scorm`, `VirtualClassroom`. `CompetencyMapping` hanya dihapus bila tidak dipakai rapor (periksa dulu).
+- Folder `Student`: `Internship` (SMA tidak punya PKL), `MiniBanking`, `Showcase`, `CollegeCounseling` (match-engine), `CourseEvaluation`, `DigitalID`.
+- Folder `Finance`: `Canteen`, `Wadiah`, `FinancialAudit` (fraud detector).
+- Folder `Financial`: `CostCenter`, `Procurement`.
+- Folder `Growth`: `StudentLifecycle`, `Wellbeing`.
+- Folder `Content`: `OcrDocument`, `MediaAsset`.
+- Root: `GamificationController`, `ChatbotController`, `CareerOpportunityController`, `SmartAlertController`.
+- Presensi: endpoint `mobile/attendance/gps-checkin`, `mobile/attendance/dynamic-qr`, `mobile/attendance/verify-qr`, `iot/face/*`, beserta `GeofenceService` dan logika TOTP-QR yang hanya dipakai di sana.
+- API: endpoint `ai/*`, `gamification/*`, `documents/ocr/*`, `documents/signature/*`, `blockchain/*`, `iot/*`, dan endpoint `Debloat`. Hapus juga entri terkait di `config/mobile_features.php` (`student.ai_tutor`, `student.ai_essay`, `student.gamification`, `attendance.gps`, `attendance.id_qr`, `attendance.face_enroll`, `documents.scan`, `documents.signature`, `admin.executive`).
+
+### 119.2: GABUNG & SEDERHANAKAN
+
+| Area | Jadi apa | Asal |
+|---|---|---|
+| **Keuangan** | Satu menu "Keuangan": tagihan siswa (SPP/uang gedung) + pembayaran VA/Midtrans, beasiswa/potongan, pengeluaran (kas kecil, pembayaran vendor), rekening bank & rekonsiliasi, laporan | `FinanceController`, `StudentFinanceController`, `FinancialReportController`, `Treasury/*`, `Financial/ScholarshipController` |
+| **BK** | Satu menu "Bimbingan Konseling": konseling, poin pelanggaran, **laporan perundungan** (TPPK, Permendikbudristek 46/2023), dan **pendidikan inklusi** (IEP, akomodasi) | `CounselingController`, `PointController`, `Crisis/AntiBullyingController`, `Inclusive/*` |
+| **Komunikasi** | Pengumuman + notifikasi + WA (Fonnte) + chat ortu ↔ wali kelas. **Satu** pusat notifikasi dan **satu** kalender | `Announcement`, `Whatsapp`, `Notification`, `AcademicEvent`; pertahankan dari `Communication/*` hanya yang dipakai chat & notifikasi Android, sisanya hapus |
+| **Dashboard** | **Satu dashboard per peran** (siswa, ortu, guru, BK, TU, pimpinan) | `DashboardController` + isi yang berguna dari `Dashboard/*`, `advanced-dashboards`, `Analytics/*` |
+| **Tahfidz & Tahsin** | Satu menu keislaman: Tahfidz, Mutabaah, Tahsin | `TahfidzController`, `MutabaahController`, `Islamic/TahsinRecordController` (gabung bila bukan duplikat `TahsinSubmissionApi`) |
+| **Kurikulum Merdeka** | P5 tetap, masuk menu Kurikulum/Rapor | `Growth/P5AssessmentController` |
+| **OSIS** | OSIS + MPK satu menu | `OsisController`, `MpkController` |
+| **Pengaturan** | Branding + tampilan jadi satu | `Admin/SchoolBranding`, `Admin/Appearance` |
+
+### 119.3: INTI ERP yang Dipertahankan & Diperkuat
+
+- **Data induk:** tahun ajaran & semester, kelas/rombel, mapel, siswa, pegawai, mutasi, alumni + tracer study ringan.
+- **Akademik:** jadwal, sesi kelas + presensi QR per mapel, jurnal mengajar, penilaian harian, remedial, rapor (Kurikulum Merdeka + P5), CBT + bank soal, e-learning (materi & tugas).
+- **Kesiswaan:** BK (termasuk inklusi & perundungan), UKS, ekstrakurikuler, OSIS/MPK, perpustakaan.
+- **Keislaman:** Tahfidz, Mutabaah, Tahsin. Ini pembeda sekolah, jangan dihapus.
+- **Keuangan:** sesuai 119.2.
+- **Kepegawaian:** data pegawai, presensi (impor sidik jari), penggajian.
+- **Administrasi:** SPMB, surat-menyurat, sarpras/inventaris + peminjaman + perawatan, helpdesk, notulen rapat, ekspor Dapodik, survei.
+- **Komunikasi:** sesuai 119.2, ditambah portal orang tua dan situs publik/CMS.
+- **Sistem:** auth + 2FA, peran & akses, audit log, PDP/privasi, sinkronisasi mobile, feature flag, laporan terjadwal.
+
+### 119.4: Frontend Web
+
+- Hapus seksi sidebar `header_enterprise_platinum` dan `header_enterprise_diamond` beserta semua menu di bawahnya.
+- Hapus folder view yang modulnya dipotong, termasuk `fase57`–`fase62`, `developer`, `digital-publishing`, `interactive-ui`, `gamification`, `gamified-quizzes`, `spaced-repetition`, `micro-lessons`, `mini-bank`, `finance/canteen`, `internships`, `scorm`, `virtual-classroom`, `succession`, `evaluation-360`, `workload`, `turnover`, `drip-campaigns`, `nps`, `omnichannel`, `pr`, `releases`, `e2e`, `environment`, `performance`, `design-system`, `data-engineering`, `data-quality`, `nlq`, `risk`, `sop`, `quality`, `strategic`, `foundation`, `mentorship`, `volunteers`, `partnerships`, `wellbeing`, `wellness`, `lifecycle`, `pathway`, `showcase`, `college-counseling`, `career`, `store`, `visitors`, `facility`, `cost-center`, `procurement`, `workflow-automation`, `advanced-dashboards`. Lakukan pengecekan referensi sebelum menghapus.
+- Sidebar disusun ulang per area 119.3. Satu menu per area, tanpa duplikat.
+- Hapus kunci `navigation.*` dan teks lain yang tidak terpakai dari `lang/{id,en,ar}`.
+
+### 119.5: Bersih-bersih Data & Repo
+
+- Hapus model, factory, seeder, migrasi (*create* dan *alter*), job, event, listener, command, dan policy yang hanya dipakai modul terpotong. Karena belum ada data produksi, **file migrasinya dihapus**, tidak perlu migrasi `drop`. Database lokal cukup `migrate:fresh --seed`.
+- Hapus generator scaffolding di `scripts/` (`create_*.php`, `generate_fase*.{php,py,cjs}`, `fix.php`, `gen.php`) dan folder `scratch/`.
+- Bersihkan entri usang di `phpstan-baseline.neon` (`reportUnmatchedIgnoredErrors` aktif) dan daftar `DEBT` di `NoFabricatedRandomnessTest` yang filenya ikut terhapus.
+- Perbarui `README.md` dan `docs/` agar tidak lagi mengiklankan modul yang sudah dihapus.
+- Ganti `sistem-terpadu/android_implementation.md` (salinan basi, 1.761 baris) dengan satu paragraf yang menunjuk ke `sista-android/android_implementation.md` sebagai satu-satunya sumber.
+- Status Tracker FASE 45–68 diperbarui: modul yang dihapus ditandai `DIHAPUS (FASE 119)`.
+
+### 119.6: Fitur Inti yang Belum Ada
+
+1. **Impor presensi pegawai dari mesin sidik jari** *(dikerjakan di FASE 119)*: unggah file ekspor mesin (CSV/Excel; format kolom dikonfigurasi agar tidak terikat satu merek), pemetaan ID mesin ↔ pegawai, simpan ke `employee_attendances` (idempoten: impor ulang file yang sama tidak menggandakan), rekap bulanan per pegawai (hadir, telat, tidak hadir) yang bisa dipakai Payroll. Test: impor ganda, ID tak dikenal dilaporkan bukan diabaikan diam-diam, dan rekap kosong bernilai `null`, bukan 0.
+2. **Kenaikan kelas, kelulusan massal & riwayat rombel per tahun ajaran** *(dirancang di FASE 120)*: saat ini `students.classroom_id` hanya satu kolom dan `classrooms.academic_year` berupa teks, sehingga riwayat kelas siswa hilang setiap ganti tahun ajaran.
+3. **Buku Induk Siswa** *(dirancang setelah FASE 120)*: dokumen administrasi wajib, belum ada di kode.
+
+### 119.7: Urutan Kerja (PR kecil, satu kelompok per PR)
+
+| PR | Isi | Ketergantungan Android |
+|---|---|---|
+| 1 | Hapus tools developer & teknologi pamer (119.1 B baris 1–2, C bagian `Admin`) | Tidak ada |
+| 2 | Hapus modul korporat, marketing & media | Tidak ada |
+| 3 | Hapus gimmick + endpoint mobile (AI, gamifikasi, presensi GPS/QR gerbang/wajah, OCR, tanda tangan) | **Setelah** PR FASE 78 Android yang menghapus layar pemakainya di-merge |
+| 4 | Gabung & sederhanakan (119.2) + rapikan sidebar (119.4). Tambah endpoint API **lapor perundungan** untuk Android | Android FASE 78 memakai endpoint lapor perundungan |
+| 5 | Bersih-bersih data & repo (119.5) | Tidak ada |
+| 6 | Impor presensi sidik jari (119.6.1) | Tidak ada |
+
+Setiap PR mencantumkan angka sebelum/sesudah: jumlah controller, route, tabel, dan view.
+
+### 119.8: Kriteria Selesai
+
+- [ ] Tidak ada lagi namespace/folder 119.1 B di `app/`. `phpstan` dan `pint` hijau, `php artisan test` hijau (kecuali `Fase85DebloatPragmatismTest > single vps` yang khusus produksi, atau test itu sekalian disesuaikan).
+- [ ] `php artisan migrate:fresh --seed` sukses dari nol.
+- [ ] Test arsitektur baru: daftar prefix route terlarang (`blockchain`, `iot`, `gamification`, `ai/`, `green-school`, `treasury-forecast`, dst.) tidak muncul di `route:list`, agar modul yang sudah dipotong tidak hidup lagi.
+- [ ] Sidebar tidak punya seksi Enterprise. Setiap peran melihat satu dashboard.
+- [ ] Endpoint lapor perundungan untuk mobile tersedia, dengan test akses (semua user login boleh lapor, hanya BK/pimpinan yang boleh lihat).
+- [ ] Impor sidik jari berjalan dengan test 119.6.1.
+- [ ] Bagian ini diperbarui menjadi `[SELESAI]` beserta angka sebelum/sesudah dan daftar modul yang ternyata dipertahankan (beserta alasannya).
+
+### 119.9: Menunggu Keputusan Pemilik Produk (jangan disentuh di FASE 119)
+
+Modul berikut abu-abu. Biarkan apa adanya sampai pemilik produk memutuskan:
+- Tryout UTBK + rekomendasi PTN (`UtbkMobileApi`).
+- Evaluasi guru oleh siswa (`EvaluationMobileApi`).
+- EDS / Rapor Mutu & dashboard kesiapan akreditasi (`EdsController`, `ComplianceController`, `Grc/AccreditationController`). Sudah ada platform resmi pemerintah (Rapor Pendidikan).
+- Forum diskusi kelas (`ForumController`).
+- Kampanye donasi/infaq (`Finance/CharityController`).
+- Perencanaan anggaran/RKAS (`Financial/BudgetPlanningController`).
+- Portofolio siswa, To-do guru, penjadwal pertemuan ortu–guru (`PortfolioController`, `TeacherTodoController`, `Growth/PtcSchedulerController`).
