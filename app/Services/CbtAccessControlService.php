@@ -105,7 +105,7 @@ class CbtAccessControlService
         if (! $this->isPlatformAllowed($exam, $platform)) {
             return [
                 'valid' => false,
-                'message' => 'Ujian ini hanya dapat dikerjakan melalui Aplikasi SISTA di HP Anda.',
+                'message' => __('Ujian ini hanya dapat dikerjakan melalui aplikasi SISTA di HP Anda.'),
             ];
         }
 
@@ -113,15 +113,15 @@ class CbtAccessControlService
         if (strtoupper($token) !== strtoupper($exam->access_token)) {
             return [
                 'valid' => false,
-                'message' => 'Token tidak valid. Silakan periksa kembali kode token dari pengawas ujian.',
+                'message' => __('Token tidak valid. Periksa kembali kode token dari pengawas ujian.'),
             ];
         }
 
-        // 2b. Check token expiration (Maksimal 5 Menit / 300 Detik)
+        // 2b. Check token expiration
         if ($exam->isTokenExpired()) {
             return [
                 'valid' => false,
-                'message' => 'Token telah kedaluwarsa (masa berlaku 5 menit telah habis). Silakan minta token baru yang di-refresh oleh Pengawas/Operator.',
+                'message' => __('Token sudah kedaluwarsa. Minta token baru ke pengawas ujian.'),
             ];
         }
 
@@ -129,32 +129,31 @@ class CbtAccessControlService
         if (! $exam->isOngoing()) {
             return [
                 'valid' => false,
-                'message' => 'Ujian belum dimulai atau sudah berakhir.',
+                'message' => __('Ujian belum dimulai atau sudah berakhir.'),
             ];
         }
 
-        // 4. Check if already submitted/graded
+        // 4. A finished attempt stays finished: a token never reopens it, or
+        // a student blocked for violations (or already graded) could start
+        // over and submit again. Only the proctor can reopen a force-closed one.
         $existingAttempt = ExamAttempt::where('exam_id', $exam->id)
             ->where('student_id', $student->id)
             ->latest()
             ->first();
 
-        if ($existingAttempt && in_array($existingAttempt->status, ['submitted', 'graded'])) {
+        if ($existingAttempt && $existingAttempt->isFinished()) {
             return [
                 'valid' => false,
-                'message' => 'Anda sudah menyelesaikan ujian ini.',
+                'message' => match ($existingAttempt->status) {
+                    'force_closed' => __('Ujian Anda sebelumnya ditutup paksa. Minta pengawas mereset status Anda terlebih dahulu.'),
+                    'blocked_violation' => __('Akses ujian Anda dikunci karena batas pelanggaran sudah tercapai.'),
+                    'timeout' => __('Waktu ujian Anda sudah habis.'),
+                    default => __('Anda sudah menyelesaikan ujian ini.'),
+                },
             ];
         }
 
-        // 5. If force_closed, check if it has been reset
-        if ($existingAttempt && $existingAttempt->status === 'force_closed') {
-            return [
-                'valid' => false,
-                'message' => 'Ujian Anda sebelumnya ditutup paksa. Minta guru/operator untuk mereset status Anda terlebih dahulu.',
-            ];
-        }
-
-        // 6. Create or update attempt with token validation info
+        // 5. Create or update attempt with token validation info
         $attempt = ExamAttempt::updateOrCreate(
             ['exam_id' => $exam->id, 'student_id' => $student->id],
             [
@@ -171,7 +170,7 @@ class CbtAccessControlService
 
         return [
             'valid' => true,
-            'message' => 'Token valid. Selamat mengerjakan ujian!',
+            'message' => __('Token valid. Selamat mengerjakan ujian!'),
             'attempt' => $attempt,
         ];
     }

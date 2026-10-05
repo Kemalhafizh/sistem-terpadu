@@ -83,7 +83,7 @@ class CbtEnterpriseService
         if (! $isAccessible) {
             return [
                 'accessible' => false,
-                'message' => 'Ujian belum dimulai. Kunci dekripsi akan dibagikan saat waktu ujian tiba.',
+                'message' => __('Ujian belum dimulai. Kunci dekripsi akan dibagikan saat waktu ujian tiba.'),
                 'starts_at' => $exam->start_time ? $exam->start_time->toIso8601String() : null,
             ];
         }
@@ -108,8 +108,10 @@ class CbtEnterpriseService
             ->where('student_id', $student->id)
             ->first();
 
-        if ($attempt && in_array($attempt->status, ['submitted', 'completed', 'blocked_violation'])) {
-            abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
+        // Syncing into a finished attempt would also set it back to in_progress,
+        // reopening an exam that was graded, timed out or force-closed.
+        if ($attempt?->isFinished()) {
+            abort(403, __('Akses ditolak: ujian telah selesai atau dikunci oleh pengawas.'));
         }
 
         if (! $attempt) {
@@ -154,8 +156,10 @@ class CbtEnterpriseService
             ->where('student_id', $student->id)
             ->first();
 
-        if ($attempt && in_array($attempt->status, ['submitted', 'completed', 'blocked_violation'])) {
-            abort(403, 'Akses ditolak: Ujian telah selesai atau dikunci oleh pengawas.');
+        // Syncing into a finished attempt would also set it back to in_progress,
+        // reopening an exam that was graded, timed out or force-closed.
+        if ($attempt?->isFinished()) {
+            abort(403, __('Akses ditolak: ujian telah selesai atau dikunci oleh pengawas.'));
         }
 
         if (! $attempt) {
@@ -170,7 +174,7 @@ class CbtEnterpriseService
 
         $questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();
         if (! $questionBelongsToExam) {
-            abort(422, 'Soal tidak terdaftar dalam paket ujian ini.');
+            abort(422, __('Soal tidak terdaftar dalam paket ujian ini.'));
         }
 
         $filename = 'essay_'.$exam->id.'_'.$student->id.'_'.$questionId.'_'.time().'.jpg';

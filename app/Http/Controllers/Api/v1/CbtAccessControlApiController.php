@@ -13,6 +13,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CbtAccessControlApiController extends Controller
 {
@@ -39,10 +40,16 @@ class CbtAccessControlApiController extends Controller
 
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::findOrFail($id);
+
+        // A token shared from another class must not open an attempt here.
+        if (Gate::denies('take', $exam)) {
+            return $this->errorResponse(__('Ujian ini bukan untuk kelas Anda.'), 403);
+        }
+
         $platform = strtolower($request->header('X-SISTA-Platform', $request->input('platform', 'web')));
 
         $result = $this->accessControlService->validateStudentToken(
@@ -70,7 +77,11 @@ class CbtAccessControlApiController extends Controller
             // above) — previously hardcoded to 3 in CbtAntiCheatEngine
             // regardless of this per-exam setting.
             'max_violations' => (int) $exam->max_violations,
-        ], 'Token berhasil divalidasi');
+            // The attempt's own clock: its duration from when the student first
+            // started, cut off by the exam's end. Re-entering never restarts it.
+            'ends_at' => $result['attempt']->deadline()?->toIso8601String(),
+            'remaining_seconds' => $result['attempt']->getRemainingSeconds(),
+        ], __('Token berhasil divalidasi'));
     }
 
     /**
@@ -85,7 +96,7 @@ class CbtAccessControlApiController extends Controller
 
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::findOrFail($id);
@@ -102,9 +113,9 @@ class CbtAccessControlApiController extends Controller
                 'status' => 'force_closed',
                 'answers_saved' => true,
                 'force_close_reason' => $attempt->force_close_reason,
-            ], 'Sesi ujian telah ditutup paksa demi integritas ujian');
+            ], __('Sesi ujian telah ditutup paksa demi integritas ujian'));
         } catch (ModelNotFoundException $e) {
-            return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
+            return $this->errorResponse(__('Sesi ujian aktif tidak ditemukan'), 404);
         } catch (\Exception $e) {
             report($e);
 
@@ -122,7 +133,7 @@ class CbtAccessControlApiController extends Controller
     {
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::findOrFail($id);
@@ -132,7 +143,7 @@ class CbtAccessControlApiController extends Controller
             ->first();
 
         if (! $attempt || in_array($attempt->status, ['submitted', 'graded', 'blocked_violation', 'timeout', 'force_closed'])) {
-            return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
+            return $this->errorResponse(__('Sesi ujian aktif tidak ditemukan'), 404);
         }
 
         $attempt->update(['last_heartbeat_at' => now()]);
@@ -140,7 +151,7 @@ class CbtAccessControlApiController extends Controller
         return $this->successResponse([
             'exam_id' => $exam->id,
             'last_heartbeat_at' => $attempt->last_heartbeat_at->toIso8601String(),
-        ], 'Heartbeat diterima');
+        ], __('Heartbeat diterima'));
     }
 
     /**
@@ -158,7 +169,7 @@ class CbtAccessControlApiController extends Controller
 
         $student = $request->user()->student;
         if (! $student) {
-            return $this->errorResponse('Data siswa tidak ditemukan', 404);
+            return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
         $exam = Exam::findOrFail($id);
@@ -169,7 +180,7 @@ class CbtAccessControlApiController extends Controller
             ->first();
 
         if (! $attempt) {
-            return $this->errorResponse('Sesi ujian aktif tidak ditemukan', 404);
+            return $this->errorResponse(__('Sesi ujian aktif tidak ditemukan'), 404);
         }
 
         $violationType = $request->input('type');
@@ -199,7 +210,7 @@ class CbtAccessControlApiController extends Controller
         return $this->successResponse([
             'violation_count' => $attempt->fresh()->violation_count,
             'is_blocked' => $isBlocked,
-        ], 'Pelanggaran tercatat');
+        ], __('Pelanggaran tercatat'));
     }
 
     /**
