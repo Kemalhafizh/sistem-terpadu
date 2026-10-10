@@ -26,7 +26,7 @@ dataset('removed prefixes', [
     // PR 3: gimmicks and the mobile endpoints behind them (AI, gamification, GPS/QR attendance, OCR, signatures).
     'adaptive', 'micro-lessons', 'gamified-quizzes', 'spaced-repetition', 'transcripts', 'knowledge', 'homework-copilot',
     'academic/competency', 'academic/copilot', 'academic/pathways', 'academic/scorm', 'academic/virtual',
-    'accessibility/wcag-scan', 'accessibility/voice-commands', 'interactive-ui', 'dashboards/', 'mobile/',
+    'accessibility', 'hall-of-fame', 'alumni/reunion-planner', 'interactive-ui', 'dashboards/', 'mobile/',
     'gamification', 'chatbot', 'admin/chatbot', 'smart-alerts', 'career-portal', 'college-counseling', 'internships',
     'showcase', 'evaluations', 'student/idcard', 'growth/wellbeing', 'mini-bank', 'merchant/', 'admin/finance/canteen',
     'admin/finance/wadiah', 'class-feed', 'family-plan', 'parent-skills', 'green-school', 'campus', 'geofencing',

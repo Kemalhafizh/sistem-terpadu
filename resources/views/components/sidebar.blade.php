@@ -872,7 +872,7 @@
 
         {{-- Alumni Relations & Endowment --}}
         @canVisit('alumni.index')
-        <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') || request()->routeIs('hall_of_fame.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.alumni_relations') }}">
+        <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.alumni_relations') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-teal-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.alumni_relations') }}</span>

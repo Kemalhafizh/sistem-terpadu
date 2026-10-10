@@ -1416,13 +1416,11 @@ Route::middleware(['auth'])->group(function () {
 require __DIR__.'/treasury.php';
 
 require __DIR__.'/islamic_tech.php';
-require __DIR__.'/alumni_relations.php';
 require __DIR__.'/auth.php';
 
 require __DIR__.'/crisis.php';
 
 require __DIR__.'/inclusive_education.php';
-require __DIR__.'/accessibility.php';
 
 // --- Mobile Universal Links & Android App Links (.well-known) ---
 Route::get('/.well-known/assetlinks.json', [WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');

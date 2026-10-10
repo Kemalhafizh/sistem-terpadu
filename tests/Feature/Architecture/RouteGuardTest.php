@@ -43,7 +43,7 @@ test('daftar whitelist dan utang hanya berisi route yang masih ada dan masih tan
  */
 function fase45to62RouteKeys(): array
 {
-    $files = ['treasury', 'crisis', 'inclusive_education', 'islamic_tech', 'alumni_relations'];
+    $files = ['treasury', 'crisis', 'inclusive_education', 'islamic_tech'];
     $router = new Router(app('events'), app());
     $original = Route::getFacadeRoot();
     Route::swap($router);
