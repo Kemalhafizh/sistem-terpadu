@@ -1,19 +1,12 @@
 <?php
 
 use App\Models\Billing;
-use App\Models\BlockchainCredential;
-use App\Models\CatSession;
 use App\Models\Employee;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
-use App\Models\IrtItemParameter;
-use App\Models\IrtStudentAbility;
 use App\Models\QuestionBank;
 use App\Models\Student;
 use App\Models\User;
-use App\Services\Adaptive\CatEngineService;
-use App\Services\Adaptive\IrtCalibrationService;
-use App\Services\Blockchain\BlockchainCredentialService;
 use App\Services\ImportExportService;
 use App\Services\PredictiveAnalyticsService;
 use Illuminate\Support\Facades\Hash;
@@ -99,95 +92,6 @@ test('radar siswa tidak mengarang dimensi e-learning, tahfidz, dan ekskul', func
     expect($values['E-Learning'])->toBeNull()
         ->and($values['Tahfidz'])->toBeNull()
         ->and($values['Ekstrakurikuler'])->toBeNull();
-});
-
-test('kalibrasi IRT memakai jawaban ujian yang sudah selesai', function () {
-    $exam = Exam::factory()->create();
-    $easy = bankQuestion($exam, 1, 'A');
-    $hard = bankQuestion($exam, 2, 'B');
-    $unused = bankQuestion($exam, 3, 'A');
-
-    $students = Student::factory()->count(4)->create();
-    // Easy: 3 of 4 right. Hard: 1 of 4 right. Unused: never answered.
-    finishedAttempt($exam, $students[0], [$easy->id => 'A', $hard->id => 'B']);
-    finishedAttempt($exam, $students[1], [$easy->id => 'a', $hard->id => 'A']);
-    finishedAttempt($exam, $students[2], [$easy->id => 'A', $hard->id => 'A'], 'timeout');
-    finishedAttempt($exam, $students[3], [$easy->id => 'B', $hard->id => 'A', $unused->id => '']);
-    // Still in progress: answers are not final and must not count.
-    finishedAttempt($exam, Student::factory()->create(), [$easy->id => 'B', $hard->id => 'B'], 'in_progress');
-
-    $service = app(IrtCalibrationService::class);
-    $easyItem = $service->calibrateItem($easy->id);
-    $hardItem = $service->calibrateItem($hard->id);
-
-    expect($easyItem->total_attempts)->toBe(4)
-        ->and($easyItem->correct_count)->toBe(3)
-        ->and((float) $easyItem->p_value)->toBe(0.75)
-        // b = ln((1-p)/p) with p = (3 + 0.5) / 5 = 0.7
-        ->and((float) $easyItem->difficulty)->toBe(round(log(0.3 / 0.7), 4))
-        ->and((float) $hardItem->difficulty)->toBe(round(log(0.7 / 0.3), 4))
-        ->and((float) $easyItem->discrimination)->toBe(1.0)
-        ->and((float) $easyItem->guessing)->toBe(0.0)
-        ->and($service->calibrateItem($unused->id))->toBeNull()
-        ->and(IrtItemParameter::where('question_id', $unused->id)->exists())->toBeFalse();
-
-    // Same data, same parameters.
-    expect((float) $service->calibrateItem($easy->id)->difficulty)->toBe((float) $easyItem->difficulty);
-
-    expect($service->batchCalibrateExam($exam->id))->toBe(['status' => 'success', 'calibrated_count' => 2, 'skipped_count' => 1])
-        ->and($service->batchCalibrateExam(Exam::factory()->create()->id))->toBe(['status' => 'no_data', 'calibrated_count' => 0, 'skipped_count' => 0]);
-});
-
-test('kemampuan siswa diestimasi dari jawabannya, null bila belum menjawab', function () {
-    $exam = Exam::factory()->create();
-    $q1 = bankQuestion($exam, 1);
-    $q2 = bankQuestion($exam, 2);
-    [$strong, $weak, $absent] = Student::factory()->count(3)->create()->all();
-    finishedAttempt($exam, $strong, [$q1->id => 'A', $q2->id => 'A']);
-    finishedAttempt($exam, $weak, [$q1->id => 'B', $q2->id => 'B']);
-
-    $service = app(IrtCalibrationService::class);
-    $thetaStrong = $service->estimateStudentAbility($strong->id, $exam->subject_id);
-    $thetaWeak = $service->estimateStudentAbility($weak->id, $exam->subject_id);
-
-    expect($thetaStrong)->toBeGreaterThan($thetaWeak)
-        ->and($service->estimateStudentAbility($strong->id, $exam->subject_id))->toBe($thetaStrong)
-        ->and($service->estimateStudentAbility($absent->id, $exam->subject_id))->toBeNull()
-        ->and(IrtStudentAbility::where('student_id', $absent->id)->exists())->toBeFalse()
-        ->and(IrtStudentAbility::where('student_id', $strong->id)->value('items_attempted'))->toBe(2);
-});
-
-test('CAT memilih soal ujian itu sendiri, terdekat ke theta, tanpa mengulang', function () {
-    $exam = Exam::factory()->create();
-    $first = bankQuestion($exam, 1);
-    $close = bankQuestion($exam, 2);
-    $far = bankQuestion($exam, 3);
-    IrtItemParameter::create(['question_id' => $close->id, 'difficulty' => 0.4]);
-    IrtItemParameter::create(['question_id' => $far->id, 'difficulty' => 2.5]);
-
-    $session = CatSession::create([
-        'uuid' => (string) Str::uuid(), 'student_id' => Student::factory()->create()->id, 'exam_id' => $exam->id,
-        'current_theta' => 0, 'started_at' => now(), 'status' => 'in_progress',
-    ]);
-    $cat = app(CatEngineService::class);
-
-    expect($cat->selectNextItem($session))->toBe($close->id);
-    $cat->processResponse($session, $close->id, true);
-    expect($cat->selectNextItem($session->fresh()))->toBe($far->id);
-    $cat->processResponse($session->fresh(), $far->id, false);
-    // Only the uncalibrated item is left.
-    expect($cat->selectNextItem($session->fresh()))->toBe($first->id);
-    $cat->processResponse($session->fresh(), $first->id, true);
-    expect($cat->selectNextItem($session->fresh()))->toBeNull()
-        ->and($session->responses()->pluck('question_id')->all())->toBe([$close->id, $far->id, $first->id]);
-});
-
-test('kredensial yang belum ditambatkan ke chain tidak punya nomor blok', function () {
-    $credential = app(BlockchainCredentialService::class)
-        ->issueCredential(User::factory()->create(['role' => 'student']), 'ijazah', 'CERT/2026/001', ['title' => 'Ijazah']);
-
-    expect($credential->fresh()->block_number)->toBeNull()
-        ->and(BlockchainCredential::count())->toBe(1);
 });
 
 test('impor pegawai tanpa NIP tidak lagi memberi password 6 digit acak', function () {

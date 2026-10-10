@@ -34,10 +34,7 @@ class EmisService
                 'nama' => $student->name ?? '',
                 'gender' => $student->gender === 'P' ? 'Perempuan' : 'Laki-laki',
                 'kelas' => $student->classroom?->name ?? '',
-                'level_gamifikasi' => 'Level '.$student->level,
-                'total_xp' => $student->total_xp ?? 0,
                 'capaian_tahfidz' => $totalJuz.' Juz',
-                'status_keagamaan' => $student->total_xp >= 150 ? 'Sangat Aktif' : 'Aktif',
             ];
         }
 

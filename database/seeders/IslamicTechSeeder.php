@@ -24,28 +24,5 @@ class IslamicTechSeeder extends Seeder
             'makhraj_score' => 80,
             'assessment_date' => now(),
         ]);
-
-        DB::table('islamic_events')->insert([
-            'event_name' => 'Ramadan 1447 H',
-            'event_type' => 'ramadan',
-            'gregorian_start_date' => now(),
-            'hijri_start_date' => '1 Ramadan 1447',
-            'description' => 'Bulan Suci Ramadan',
-        ]);
-
-        DB::table('spiritual_portfolios')->insert([
-            'student_id' => $student->id,
-            'record_date' => now(),
-            'daily_prayers' => json_encode(['fajr' => true, 'dhuhr' => true, 'asr' => true, 'maghrib' => true, 'isha' => true]),
-        ]);
-
-        DB::table('dawah_contents')->insert([
-            'author_id' => $employee->id,
-            'title' => 'Keutamaan Shalat Dhuha',
-            'content_type' => 'article',
-            'content_body' => 'Shalat dhuha memiliki banyak keutamaan...',
-            'status' => 'published',
-            'published_at' => now(),
-        ]);
     }
 }

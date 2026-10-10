@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class MutabaahService
 {
-    protected $gamificationService;
-
-    public function __construct(GamificationService $gamificationService)
-    {
-        $this->gamificationService = $gamificationService;
-    }
-
     /**
      * Submit or update a daily detailed mutabaah log for a student.
      */
@@ -45,9 +38,6 @@ class MutabaahService
                     'catatan_harian' => $data['catatan_harian'] ?? null,
                 ]
             );
-
-            // Trigger Gamification XP award based on daily progress
-            $this->awardDailyXp($student, $log);
 
             // Re-calculate the weekly summary containing this date
             $carbonDate = Carbon::parse($date);
@@ -125,86 +115,6 @@ class MutabaahService
             ]
         );
 
-        // Award Gamification for high performance (weekly grade A)
-        if ($grade === 'A') {
-            $student = Student::find($studentId);
-            if ($student) {
-                // Streak checks and award bonus
-                $this->gamificationService->awardXp($student, 30, 'mutabaah_streak', "Istiqomah Mingguan: Pencapaian Mutaba'ah Rata-rata Grade A.");
-            }
-        }
-
         return $summary;
-    }
-
-    /**
-     * Calculate daily XP reward and trigger awards.
-     */
-    protected function awardDailyXp(Student $student, MutabaahLog $log): void
-    {
-        // 1. Base log completion
-        $this->gamificationService->onMutabaahCompleted($student);
-
-        // 2. Extra amalan XP
-        $extraXp = 0;
-        $xpReasons = [];
-
-        // - Sholat 5 waktu lengkap -> +5 XP
-        $sholats = ['sholat_subuh', 'sholat_dzuhur', 'sholat_ashar', 'sholat_maghrib', 'sholat_isya'];
-        $sholatLengkap = true;
-        $jamaahCount = 0;
-        foreach ($sholats as $sholat) {
-            if ($log->{$sholat} < 1) {
-                $sholatLengkap = false;
-            }
-            if ($log->{$sholat} === 2) {
-                $jamaahCount++;
-            }
-        }
-        if ($sholatLengkap) {
-            $extraXp += 5;
-            $xpReasons[] = 'Shalat 5 waktu lengkap (+5 XP)';
-        }
-
-        // - Sholat berjamaah -> +2 XP per sholat
-        if ($jamaahCount > 0) {
-            $extraXp += ($jamaahCount * 2);
-            $xpReasons[] = "{$jamaahCount} Shalat Berjamaah (+".($jamaahCount * 2).' XP)';
-        }
-
-        // - Sholat dhuha -> +3 XP
-        if ($log->sholat_dhuha >= 1) {
-            $extraXp += 3;
-            $xpReasons[] = 'Shalat Dhuha (+3 XP)';
-        }
-
-        // - Tadarus >= 2 halaman -> +5 XP
-        if ($log->tadarus_pages >= 2) {
-            $extraXp += 5;
-            $xpReasons[] = "Tadarus {$log->tadarus_pages} halaman (+5 XP)";
-        }
-
-        // - Puasa sunnah -> +10 XP
-        if ($log->puasa_sunnah) {
-            $extraXp += 10;
-            $xpReasons[] = 'Puasa Sunnah (+10 XP)';
-        }
-
-        // - Sedekah -> +3 XP (or +5 XP as in plan, let's use +5)
-        if ($log->sedekah) {
-            $extraXp += 5;
-            $xpReasons[] = 'Sedekah harian (+5 XP)';
-        }
-
-        // - Score 100 -> +20 XP
-        if ($log->score === 100) {
-            $extraXp += 20;
-            $xpReasons[] = 'Amalan Harian Sempurna Score 100 (+20 XP)';
-        }
-
-        if ($extraXp > 0) {
-            $description = implode(', ', $xpReasons);
-            $this->gamificationService->awardXp($student, $extraXp, 'mutabaah', "Bonus amalan mutaba'ah: {$description}");
-        }
     }
 }

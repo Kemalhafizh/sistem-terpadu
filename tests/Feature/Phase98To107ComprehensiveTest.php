@@ -18,7 +18,6 @@ test('Fase 99: Contextual home feed, suggestions and dismissal work correctly', 
                 'hero' => ['type', 'title', 'subtitle', 'gradientStart', 'gradientEnd', 'actionLabel', 'actionRoute'],
                 'quickActions',
                 'suggestions',
-                'gamification' => ['xpToday', 'totalXp', 'level', 'streakDays'],
             ],
         ]);
 
@@ -49,33 +48,6 @@ test('Fase 100: Micro-interactions and animation preferences work correctly', fu
     ]);
     $updateResp->assertStatus(200)
         ->assertJson(['success' => true]);
-});
-
-test('Fase 101: Gamification profile, leaderboard, badges and streak calendar work correctly', function () {
-    // 1. Profile
-    $profileResp = $this->actingAs($this->user)->getJson('/api/v1/gamification/profile');
-    $profileResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data' => ['totalXp', 'level', 'levelTitle', 'xpToNextLevel', 'streakDays', 'longestStreak', 'badgesEarned', 'monthlyRank']]);
-
-    // 2. Leaderboard
-    $leaderboardResp = $this->actingAs($this->user)->getJson('/api/v1/gamification/leaderboard');
-    $leaderboardResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
-
-    // 3. Badges
-    $badgesResp = $this->actingAs($this->user)->getJson('/api/v1/gamification/badges');
-    $badgesResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data' => ['earned', 'locked']]);
-
-    // 4. Streak calendar
-    $streakResp = $this->actingAs($this->user)->getJson('/api/v1/gamification/streak-calendar');
-    $streakResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
-
-    // 5. XP History
-    $historyResp = $this->actingAs($this->user)->getJson('/api/v1/gamification/xp-history');
-    $historyResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
 });
 
 test('Fase 102: Smart notification preferences and digest work correctly', function () {

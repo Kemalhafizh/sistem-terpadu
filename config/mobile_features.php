@@ -41,18 +41,12 @@ return [
         'student.elearning' => ['title' => 'Kelas Online', 'group' => 'akademik', 'endpoint' => 'GET elearning/classes/student'],
         'student.analytics' => ['title' => 'Analitik Belajar', 'group' => 'akademik', 'endpoint' => 'GET analytics/student/summary'],
         'student.utbk' => ['title' => 'Tryout UTBK', 'group' => 'akademik', 'endpoint' => 'GET utbk/tryouts'],
-        'student.ai_tutor' => ['title' => 'AI Tutor', 'group' => 'akademik', 'endpoint' => 'POST ai/tutor/session'],
-        'student.ai_essay' => ['title' => 'Cek Esai AI', 'group' => 'akademik', 'endpoint' => 'POST ai/essay/grade'],
         'library' => ['title' => 'Perpustakaan', 'group' => 'akademik', 'endpoint' => 'GET library/books', 'hardware' => ['camera']],
         'calendar' => ['title' => 'Kalender Akademik', 'group' => 'akademik', 'endpoint' => 'GET academic-calendar'],
 
         // ── Presensi ─────────────────────────────────────────────────────
-        'attendance.gps' => ['title' => 'Presensi GPS', 'group' => 'presensi', 'endpoint' => 'POST mobile/attendance/gps-checkin', 'hardware' => ['location']],
         'attendance.class_scan' => ['title' => 'Scan QR Kelas', 'group' => 'presensi', 'endpoint' => 'POST student/class-session/scan-qr', 'hardware' => ['camera']],
         'attendance.history' => ['title' => 'Riwayat Kehadiran', 'group' => 'presensi', 'endpoint' => 'GET student/attendance'],
-        'attendance.id_qr' => ['title' => 'QR Identitas', 'group' => 'presensi', 'endpoint' => 'GET mobile/attendance/dynamic-qr'],
-        'attendance.face_enroll' => ['title' => 'Daftar Wajah', 'group' => 'presensi', 'endpoint' => 'POST iot/face/enroll', 'hardware' => ['camera']],
-        'scanner.identity' => ['title' => 'Pindai QR Identitas', 'group' => 'presensi', 'endpoint' => 'POST mobile/attendance/verify-qr', 'hardware' => ['camera']],
         'scanner.event' => ['title' => 'Pindai Tiket & Tamu', 'group' => 'presensi', 'endpoint' => 'POST mobile/scanner/event-ticket', 'hardware' => ['camera']],
 
         // ── Ibadah ───────────────────────────────────────────────────────
@@ -72,8 +66,6 @@ return [
         'extracurricular' => ['title' => 'Ekstrakurikuler', 'group' => 'kesiswaan', 'endpoint' => 'GET extracurricular/list'],
         'achievements' => ['title' => 'Prestasi', 'group' => 'kesiswaan', 'endpoint' => 'GET achievements/list', 'hardware' => ['camera']],
         'student.evaluations' => ['title' => 'Evaluasi & E-Voting', 'group' => 'kesiswaan', 'endpoint' => 'GET evaluations/teachers'],
-        'student.gamification' => ['title' => 'Poin & Lencana', 'group' => 'kesiswaan', 'endpoint' => 'GET gamification/profile'],
-        'student.credentials' => ['title' => 'Sertifikat Digital', 'group' => 'kesiswaan', 'endpoint' => 'GET blockchain/credentials/my'],
 
         // ── Mengajar (guru) ──────────────────────────────────────────────
         'teacher.sessions' => ['title' => 'Sesi Kelas Hari Ini', 'group' => 'mengajar', 'endpoint' => 'GET teacher/class-sessions/today', 'hardware' => ['camera']],
@@ -99,13 +91,10 @@ return [
         'admin.dashboard' => ['title' => 'Dasbor Sekolah', 'group' => 'manajemen', 'endpoint' => 'GET mobile/admin/dashboard'],
         'admin.approvals' => ['title' => 'Persetujuan', 'group' => 'manajemen', 'endpoint' => 'GET mobile/admin/approvals'],
         'admin.broadcast' => ['title' => 'Siaran Darurat', 'group' => 'manajemen', 'endpoint' => 'POST mobile/admin/emergency-broadcast'],
-        'admin.executive' => ['title' => 'KPI Eksekutif', 'group' => 'manajemen', 'endpoint' => 'GET analytics/executive/kpi'],
         'admin.class_sessions' => ['title' => 'Monitor Sesi Kelas', 'group' => 'manajemen', 'endpoint' => 'GET admin/class-sessions'],
 
         // ── Layanan (semua pengguna) ─────────────────────────────────────
         'announcements' => ['title' => 'Pengumuman', 'group' => 'layanan', 'endpoint' => 'GET announcements'],
         'notifications' => ['title' => 'Notifikasi', 'group' => 'layanan', 'endpoint' => 'GET notifications'],
-        'documents.scan' => ['title' => 'Pindai Dokumen', 'group' => 'layanan', 'endpoint' => 'POST documents/ocr/scan', 'hardware' => ['camera']],
-        'documents.signature' => ['title' => 'Tanda Tangan Digital', 'group' => 'layanan', 'endpoint' => 'POST documents/signature/submit'],
     ],
 ];

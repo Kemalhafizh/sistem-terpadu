@@ -12,7 +12,6 @@ use App\Models\ElearningSubmission;
 use App\Models\Grade;
 use App\Models\Payment;
 use App\Models\ScheduledReport;
-use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\TeachingJournal;
@@ -41,13 +40,11 @@ class DigestService
         $alpaCount = Attendance::where('date', $today->toDateString())->where('status', 'A')->count();
         $newTickets = Ticket::whereDate('created_at', $today)->count();
         $newBillings = Billing::whereDate('created_at', $today)->where('remaining_balance', '>', 0)->count();
-        $activeAlerts = SmartAlert::where('status', 'active')->whereDate('created_at', $today)->count();
 
         return [
             'alpa_count' => $alpaCount,
             'new_tickets' => $newTickets,
             'new_billings' => $newBillings,
-            'active_alerts' => $activeAlerts,
             'date' => $today->translatedFormat('d F Y'),
         ];
     }
@@ -197,10 +194,6 @@ class DigestService
                     <tr>
                         <td style='padding: 12px; border: 1px solid #cbd5e1;'>Tunggakan SPP/Tagihan Keuangan Baru</td>
                         <td style='padding: 12px; border: 1px solid #cbd5e1; text-align: center; font-weight: bold; color: #f59e0b;'>{$data['new_billings']} Tagihan</td>
-                    </tr>
-                    <tr>
-                        <td style='padding: 12px; border: 1px solid #cbd5e1;'>Alarm Smart Alerts Aktif Terdeteksi</td>
-                        <td style='padding: 12px; border: 1px solid #cbd5e1; text-align: center; font-weight: bold; color: #8b5cf6;'>{$data['active_alerts']} Alarm</td>
                     </tr>
                 </table>
                 <p style='margin-top: 20px; font-size: 13px; color: #64748b;'>Harap segera login ke dashboard Administrator untuk melakukan peninjauan anomali di lapangan.</p>
@@ -505,7 +498,7 @@ class DigestService
             if (! empty($phone)) {
                 $smsText = " SISTA INFO DIGEST: *{$report->name}*\n\n";
                 if ($type === 'daily_admin') {
-                    $smsText .= "• Alpa Hari Ini: {$data['alpa_count']} Siswa\n• Tiket Baru: {$data['new_tickets']}\n• SPP Baru: {$data['new_billings']}\n• Smart Alerts: {$data['active_alerts']}\n\nHarap login ke dashboard admin SISTA.";
+                    $smsText .= "• Alpa Hari Ini: {$data['alpa_count']} Siswa\n• Tiket Baru: {$data['new_tickets']}\n• SPP Baru: {$data['new_billings']}\n\nHarap login ke dashboard admin SISTA.";
                 } elseif ($type === 'weekly_kepsek') {
                     $smsText .= "• Rata-rata Kehadiran: {$data['attendance_rate']}%\n• Penerimaan SPP: Rp ".number_format($data['total_payments'], 0, ',', '.')."\n• Target Mutu: {$data['completed_milestones']}/{$data['total_milestones']}\n\nHarap periksa email Anda untuk lampiran laporan PDF lengkap.";
                 } elseif ($type === 'monthly_finance') {

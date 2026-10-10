@@ -208,7 +208,6 @@ class User extends Authenticatable
                 return [
                     ['id' => 'student_schedule_today', 'name' => 'Jadwal Pelajaran Hari Ini', 'visible' => true],
                     ['id' => 'student_pending_assignments', 'name' => 'Tugas Tertunda', 'visible' => true],
-                    ['id' => 'student_gamification', 'name' => 'Gamifikasi Quick View', 'visible' => true],
                     ['id' => 'student_recent_scores', 'name' => 'Nilai Terbaru', 'visible' => true],
                     ['id' => 'student_mutabaah_today', 'name' => 'Mutaba\'ah Hari Ini', 'visible' => true],
                     ['id' => 'student_library_loans', 'name' => 'Buku yang Dipinjam', 'visible' => true],
@@ -236,9 +235,7 @@ class User extends Authenticatable
                     ['id' => 'financial_status_month', 'name' => 'Status Keuangan Bulan Ini', 'visible' => true],
                     ['id' => 'teaching_journal_today', 'name' => 'Jurnal Mengajar Hari Ini', 'visible' => true],
                     ['id' => 'average_grades_semester', 'name' => 'Rata-rata Nilai Semester', 'visible' => true],
-                    ['id' => 'smart_alerts_latest', 'name' => 'Smart Alerts Terbaru', 'visible' => true],
                     ['id' => 'approval_pending', 'name' => 'Persetujuan Tertunda', 'visible' => true],
-                    ['id' => 'top_xp_students', 'name' => 'Top 5 Siswa XP', 'visible' => true],
                     ['id' => 'weekly_mutabaah_recap', 'name' => 'Rekap Mutaba\'ah Minggu Ini', 'visible' => true],
                     ['id' => 'financial_trend', 'name' => 'Tren Keuangan', 'visible' => true],
                     ['id' => 'live_feed', 'name' => 'Aktivitas Terbaru', 'visible' => true],

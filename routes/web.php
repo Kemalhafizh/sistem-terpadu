@@ -1,10 +1,5 @@
 <?php
 
-use App\Http\Controllers\Academic\AcademicPathwayController;
-use App\Http\Controllers\Academic\AiCopilotController;
-use App\Http\Controllers\Academic\CompetencyMappingController;
-use App\Http\Controllers\Academic\ScormController;
-use App\Http\Controllers\Academic\VirtualClassroomController;
 use App\Http\Controllers\AcademicEventController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ActivityLogController;
@@ -34,12 +29,9 @@ use App\Http\Controllers\Auth\ForceChangePasswordController;
 use App\Http\Controllers\Auth\GoogleSsoController;
 use App\Http\Controllers\Auth\MobileSsoBridgeController;
 use App\Http\Controllers\Auth\TwoFactorController;
-use App\Http\Controllers\CareerOpportunityController;
-use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\CmsController;
 use App\Http\Controllers\Communication\CalendarController;
-use App\Http\Controllers\Communication\DocumentSignatureController;
 use App\Http\Controllers\Communication\MessagingController;
 use App\Http\Controllers\Communication\NotificationCenterController;
 use App\Http\Controllers\Communication\ResourceBookingController;
@@ -49,7 +41,6 @@ use App\Http\Controllers\Compliance\DataRetentionController;
 use App\Http\Controllers\Compliance\LegalContractController;
 use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\Content\ExportEngineController;
-use App\Http\Controllers\Content\OcrDocumentController;
 use App\Http\Controllers\CounselingController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DailyAssessmentController;
@@ -60,20 +51,16 @@ use App\Http\Controllers\ElearningSecureController;
 use App\Http\Controllers\EventAttendanceController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExtracurricularController;
-use App\Http\Controllers\Finance\CanteenController;
 use App\Http\Controllers\Finance\CharityController;
-use App\Http\Controllers\Finance\WadiahController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\Financial\BudgetPlanningController;
 use App\Http\Controllers\Financial\ScholarshipController;
 use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumController;
-use App\Http\Controllers\GamificationController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\Grc\AccreditationController;
 use App\Http\Controllers\Growth\P5AssessmentController;
 use App\Http\Controllers\Growth\PtcSchedulerController;
-use App\Http\Controllers\Growth\WellbeingController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
 use App\Http\Controllers\HRD\PayrollController;
@@ -103,11 +90,8 @@ use App\Http\Controllers\ReportCardController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\SmartAlertController;
 use App\Http\Controllers\SpmbController;
 use App\Http\Controllers\Student\CertificateController;
-use App\Http\Controllers\Student\CourseEvaluationController;
-use App\Http\Controllers\Student\DigitalIDController;
 use App\Http\Controllers\Student\StudentPortalController;
 use App\Http\Controllers\StudentAcademicController;
 use App\Http\Controllers\StudentController;
@@ -138,7 +122,6 @@ if (class_exists(ScribeServiceProvider::class)) {
     Route::get('docs.postman', [ApiDocsController::class, 'postman'])->name('scribe.postman');
     Route::get('docs.openapi', [ApiDocsController::class, 'openapi'])->name('scribe.openapi');
 }
-Route::get('/verify-document/{code}', [DocumentSignatureController::class, 'verifyPublic'])->name('documents.verify_public');
 Route::get('/tentang-kami', [PublicSiteController::class, 'about'])->name('public.about');
 Route::get('/kontak', [PublicSiteController::class, 'contact'])->name('public.contact');
 Route::get('/fasilitas', [PublicSiteController::class, 'facilities'])->name('public.facilities');
@@ -200,9 +183,6 @@ Route::middleware('auth')->group(function () {
     Route::get('library/student-card/{student}', [LibraryController::class, 'studentCard'])->name('library.student-card');
     Route::get('library/reading-history', [LibraryController::class, 'studentReadingHistory'])->name('library.reading-history');
     Route::get('library/recommendations', [LibraryController::class, 'recommendations'])->name('library.recommendations');
-
-    // Career & Scholarship Portal (read-only untuk semua)
-    Route::get('career-portal', [CareerOpportunityController::class, 'index'])->name('career-portal.index');
 
     // Alumni Directory & Network Map (read-only untuk semua)
     Route::get('alumni/directory', [AlumniController::class, 'directory'])->name('alumni.directory');
@@ -267,12 +247,6 @@ Route::middleware('auth')->group(function () {
     Route::post('messages/{conversation}/reply', [MessagingController::class, 'reply'])->name('messages.reply');
     Route::get('messages/search-users', [MessagingController::class, 'searchUsers'])->name('messages.search_users');
 
-    // Digital Signature & E-Stamp Document Workflow
-    Route::get('documents/pending-signatures', [DocumentSignatureController::class, 'pendingDocuments'])->name('documents.pending_signatures');
-    Route::get('documents/signatures/{id}/sign', [DocumentSignatureController::class, 'signForm'])->name('documents.sign_form');
-    Route::post('documents/signatures/{id}/sign', [DocumentSignatureController::class, 'signDocument'])->name('documents.sign');
-    Route::post('documents/test-request', [DocumentSignatureController::class, 'testRequest'])->name('documents.test_request');
-    Route::get('documents/signature-history', [DocumentSignatureController::class, 'signatureHistory'])->name('documents.signature_history');
     // Enterprise Calendar & Resource Booking System
     Route::get('calendar-hub', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('calendar-hub/events-json', [CalendarController::class, 'eventsJson'])->name('calendar.events_json');
@@ -312,17 +286,6 @@ Route::middleware('auth')->group(function () {
     Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
     Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report');
 
-    // FASE 34: Student Growth Ecosystem -- Wellbeing, Positive Behavior & Parent Conference
-    // 34.1: Student Mental Health & Wellbeing Screening
-    Route::get('growth/wellbeing', [WellbeingController::class, 'screenings'])->name('growth.wellbeing.screenings');
-    Route::get('growth/wellbeing/create', [WellbeingController::class, 'createScreening'])->name('growth.wellbeing.create');
-    Route::post('growth/wellbeing', [WellbeingController::class, 'storeScreening'])->name('growth.wellbeing.store');
-    Route::get('growth/wellbeing/{id}/fill', [WellbeingController::class, 'fillScreening'])->name('growth.wellbeing.fill');
-    Route::post('growth/wellbeing/{id}/fill', [WellbeingController::class, 'submitScreening'])->name('growth.wellbeing.submit');
-    Route::get('growth/wellbeing/results', [WellbeingController::class, 'results'])->name('growth.wellbeing.results');
-    Route::get('growth/wellbeing/mood-journal', [WellbeingController::class, 'moodJournal'])->name('growth.wellbeing.mood_journal');
-    Route::post('growth/wellbeing/mood-journal', [WellbeingController::class, 'storeMoodJournal'])->name('growth.wellbeing.store_mood_journal');
-
     // 34.2: Positive Behavior & Character Report Card (P5)
     Route::get('growth/character/dimensions', [P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
     Route::get('growth/character/assess', [P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
@@ -337,32 +300,6 @@ Route::middleware('auth')->group(function () {
     Route::get('growth/ptc/sessions/{sessionId}/slots', [PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
     Route::post('growth/ptc/slots/{slotId}/book', [PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
     Route::get('growth/ptc/teacher-schedule', [PtcSchedulerController::class, 'teacherSchedule'])->name('growth.ptc.teacher_schedule');
-
-    // FASE 35: Enterprise Academic Intelligence -- Kurikulum Merdeka & LMS 2.0
-    // 35.1: Competency Mapping (CP/TP/ATP)
-    Route::get('academic/competency/outcomes', [CompetencyMappingController::class, 'outcomes'])->name('academic.competency.outcomes');
-    Route::post('academic/competency/outcomes', [CompetencyMappingController::class, 'storeOutcome'])->name('academic.competency.store_outcome');
-    Route::post('academic/competency/outcomes/{outcomeId}/objectives', [CompetencyMappingController::class, 'storeObjective'])->name('academic.competency.store_objective');
-    Route::get('academic/competency/objectives/{objectiveId}/atp', [CompetencyMappingController::class, 'atpMapping'])->name('academic.competency.atp_mapping');
-    Route::post('academic/competency/objectives/{objectiveId}/atp', [CompetencyMappingController::class, 'storeAtp'])->name('academic.competency.store_atp');
-    Route::get('academic/competency/subjects/{subjectId}/heatmap', [CompetencyMappingController::class, 'classHeatmap'])->name('academic.competency.class_heatmap');
-
-    // 35.2: Multi-Year Academic Planning & Graduation Pathway
-    Route::get('academic/pathways', [AcademicPathwayController::class, 'pathways'])->name('academic.pathways.index');
-    Route::post('academic/pathways/enroll', [AcademicPathwayController::class, 'storeEnrollment'])->name('academic.pathways.store_enrollment');
-    Route::get('academic/pathways/student/{studentId}/progress', [AcademicPathwayController::class, 'progressDashboard'])->name('academic.pathways.progress_dashboard');
-    Route::get('academic/pathways/graduation-readiness', [AcademicPathwayController::class, 'graduationReadiness'])->name('academic.pathways.graduation_readiness');
-
-    // 35.3: SCORM/xAPI Learning Content Interoperability
-    Route::get('academic/scorm/packages', [ScormController::class, 'packages'])->name('academic.scorm.packages');
-    Route::post('academic/scorm/packages', [ScormController::class, 'storePackage'])->name('academic.scorm.store_package');
-    Route::get('academic/scorm/packages/{id}/launch', [ScormController::class, 'launch'])->name('academic.scorm.launch');
-    Route::post('academic/scorm/packages/{id}/track', [ScormController::class, 'recordTracking'])->name('academic.scorm.record_tracking');
-
-    // 35.4: Virtual Classroom & Video Conferencing Hub
-    Route::get('academic/virtual', [VirtualClassroomController::class, 'index'])->name('academic.virtual.index');
-    Route::post('academic/virtual', [VirtualClassroomController::class, 'storeMeeting'])->name('academic.virtual.store_meeting');
-    Route::get('academic/virtual/{id}/join', [VirtualClassroomController::class, 'joinLobby'])->name('academic.virtual.join_lobby');
 
     // FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
     // 36.1: 360-Degree Teacher Evaluation & EDOM
@@ -379,18 +316,9 @@ Route::middleware('auth')->group(function () {
     Route::get('student/portal/request', [StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
     Route::post('student/portal/request', [StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
 
-    // 40.2: Digital Student ID Card (QR & NFC)
-    Route::get('student/idcard/my-card', [DigitalIDController::class, 'showMyCard'])->name('student.idcard.my_card');
-    Route::get('student/idcard/scanner', [DigitalIDController::class, 'scanner'])->name('student.idcard.scanner');
-
     // 40.3: Student Achievement Certificate Generator
     Route::get('certificates/templates', [CertificateController::class, 'index'])->name('certificates.templates');
     Route::get('certificates/verify/{code}', [CertificateController::class, 'verifyPage'])->name('certificates.verify');
-
-    // 40.4: Student Feedback & Course Evaluation System
-    Route::get('evaluations', [CourseEvaluationController::class, 'index'])->name('evaluations.index');
-    Route::get('evaluations/{id}/fill', [CourseEvaluationController::class, 'fillForm'])->name('evaluations.fill');
-    Route::post('evaluations/response', [CourseEvaluationController::class, 'storeResponse'])->name('evaluations.store_response');
 
     // FASE 42: Advanced Facility & Operations Management
     // 42.1: IoT Smart Facility & Energy Monitor Hub
@@ -417,12 +345,6 @@ Route::middleware('auth')->group(function () {
 
     // 43.4: Legal Contract & Vendor Compliance Manager
     Route::get('compliance/contracts/index', [LegalContractController::class, 'index'])->name('compliance.contracts.index');
-
-    // Intelligent Document Processing (IDP) & OCR Engine
-    Route::get('ocr', [OcrDocumentController::class, 'index'])->name('ocr.index');
-    Route::post('ocr/upload', [OcrDocumentController::class, 'upload'])->name('ocr.upload');
-    Route::get('ocr/{id}/review', [OcrDocumentController::class, 'reviewExtraction'])->name('ocr.review');
-    Route::post('ocr/{id}/apply', [OcrDocumentController::class, 'applyToRegistration'])->name('ocr.apply');
 
     // Multi-Format Export Engine & Data Interoperability
     Route::middleware('role:staf_tu,waka_kurikulum,waka_sarpras,kepala_sekolah,admin,superadmin')->group(function () {
@@ -886,13 +808,6 @@ Route::middleware('auth')->group(function () {
         Route::get('alumni/tracer-study/invitation', [TracerStudyController::class, 'invitation'])->name('alumni.tracer-study.invitation');
         Route::get('alumni/tracer-study/export/excel', [TracerStudyController::class, 'exportExcel'])->name('alumni.tracer-study.export.excel');
 
-        // Career Opportunity Management
-        Route::get('career-portal/manage', [CareerOpportunityController::class, 'manage'])->name('career-portal.manage');
-        Route::get('career-portal/create', [CareerOpportunityController::class, 'create'])->name('career-portal.create');
-        Route::post('career-portal', [CareerOpportunityController::class, 'store'])->name('career-portal.store');
-        Route::get('career-portal/{opportunity}/edit', [CareerOpportunityController::class, 'edit'])->name('career-portal.edit');
-        Route::put('career-portal/{opportunity}', [CareerOpportunityController::class, 'update'])->name('career-portal.update');
-        Route::delete('career-portal/{opportunity}', [CareerOpportunityController::class, 'destroy'])->name('career-portal.destroy');
     });
 
     // Announcements (Universal access, placed after resource registration to prevent conflict with /create)
@@ -941,9 +856,6 @@ Route::middleware('auth')->group(function () {
         Route::match(['get', 'post'], 'media', [CmsController::class, 'mediaLibrary'])->name('media.index');
         Route::match(['get', 'post'], 'seo', [CmsController::class, 'seoSettings'])->name('seo.index');
     });
-    // Career Opportunity Detail & Download (wildcards, evaluated after specific paths)
-    Route::get('career-portal/{opportunity}', [CareerOpportunityController::class, 'show'])->name('career-portal.show');
-    Route::get('career-portal/{opportunity}/download', [CareerOpportunityController::class, 'downloadBrosur'])->name('career-portal.download');
 
     // =========================================================
     // HRD & KEPEGAWAIAN â€” Manajemen Staf dan Guru
@@ -1280,27 +1192,6 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ðŸ§  SMART RECOMMENDATION ENGINE (SMART ALERTS & DETEKSI DINI)
-    // =========================================================
-    Route::middleware('role:kepala_sekolah,admin,superadmin,bk,waka_kesiswaan,waka_kurikulum,guru')
-        ->prefix('smart-alerts')
-        ->name('smart-alerts.')
-        ->group(function () {
-            Route::get('/', [SmartAlertController::class, 'index'])->name('index');
-            Route::get('/dashboard', [SmartAlertController::class, 'dashboard'])->name('dashboard');
-            Route::get('/rules', [SmartAlertController::class, 'rulesConfig'])->name('rules');
-            Route::post('/rules', [SmartAlertController::class, 'updateRules'])->name('rules.update');
-            Route::get('/create', [SmartAlertController::class, 'create'])->name('create');
-            Route::post('/manual-create', [SmartAlertController::class, 'manualCreate'])->name('manual-create');
-            Route::post('/{alert}/acknowledge', [SmartAlertController::class, 'acknowledge'])->name('acknowledge');
-            Route::post('/{alert}/resolve', [SmartAlertController::class, 'resolve'])->name('resolve');
-            Route::post('/{alert}/escalate', [SmartAlertController::class, 'escalate'])->name('escalate');
-            Route::get('/history', [SmartAlertController::class, 'history'])->name('history');
-            Route::get('/export', [SmartAlertController::class, 'exportReport'])->name('export');
-            Route::get('/student/{student}', [SmartAlertController::class, 'studentAlerts'])->name('student');
-        });
-
-    // =========================================================
     // ðŸ“‹ DIGITAL APPROVAL WORKFLOW ENGINE
     // =========================================================
     Route::middleware('auth')
@@ -1360,15 +1251,6 @@ Route::middleware('auth')->group(function () {
         Route::post('export', [ImportExportController::class, 'exportData'])->name('export');
         Route::get('history', [ImportExportController::class, 'history'])->name('history');
         Route::post('rollback/{log}', [ImportExportController::class, 'rollback'])->name('rollback');
-    });
-
-    // =========================================================
-    // ðŸ† GAMIFIKASI & ENGAGEMENT SYSTEM SISWA (MODUL 5)
-    // =========================================================
-    Route::prefix('gamification')->name('gamification.')->group(function () {
-        Route::get('leaderboard', [GamificationController::class, 'leaderboard'])->name('leaderboard');
-        Route::get('my-progress', [GamificationController::class, 'myProgress'])->name('my-progress');
-        Route::get('achievements', [GamificationController::class, 'achievements'])->name('achievements');
     });
 
     // =========================================================
@@ -1448,55 +1330,10 @@ Route::middleware('guest')->group(function () {
 Route::match(['get', 'post'], 'preferences/locale/{locale}', [UserPreferenceController::class, 'setLocale'])->name('preferences.locale');
 Route::match(['get', 'post'], 'preferences/theme/{theme}', [UserPreferenceController::class, 'setTheme'])->name('preferences.theme');
 
-// --- AI Chatbot Sekolah (Modul 1) ---
-Route::middleware(['auth'])->prefix('chatbot')->name('chatbot.')->group(function () {
-    Route::post('send', [ChatbotController::class, 'send'])->name('send');
-    Route::post('feedback', [ChatbotController::class, 'feedback'])->name('feedback');
-});
-Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/chatbot')->name('admin.chatbot.')->group(function () {
-    Route::get('/', [ChatbotController::class, 'adminDashboard'])->name('dashboard');
-    Route::get('conversations', [ChatbotController::class, 'conversationHistory'])->name('conversations');
-    Route::get('conversations/{id}', [ChatbotController::class, 'showConversation'])->name('conversations.show');
-    Route::post('conversations/{id}/escalate', [ChatbotController::class, 'escalateToTicket'])->name('conversations.escalate');
-    Route::get('analytics', [ChatbotController::class, 'analytics'])->name('analytics');
-    Route::get('train-suggestions', [ChatbotController::class, 'trainSuggestions'])->name('train-suggestions');
-    Route::post('faqs/import', [ChatbotController::class, 'importFaqs'])->name('faqs.import');
-    Route::get('faqs/export', [ChatbotController::class, 'exportFaqs'])->name('faqs.export');
-
-    Route::get('faqs', [ChatbotController::class, 'manageFaqs'])->name('faqs');
-    Route::post('faqs', [ChatbotController::class, 'storeFaq'])->name('faqs.store');
-    Route::put('faqs/{faq}', [ChatbotController::class, 'updateFaq'])->name('faqs.update');
-    Route::delete('faqs/{faq}', [ChatbotController::class, 'destroyFaq'])->name('faqs.destroy');
-});
-
 // =========================================================
 // FINANCE â€” Tabungan Wadiah & Cashless Kantin (Admin/TU/Merchant)
 // =========================================================
 Route::middleware(['auth'])->group(function () {
-    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/wadiah')->name('admin.finance.wadiah.')->group(function () {
-        Route::get('dashboard', [WadiahController::class, 'dashboard'])->name('dashboard');
-        Route::get('accounts', [WadiahController::class, 'index'])->name('index');
-        Route::get('accounts/{account}', [WadiahController::class, 'showAccount'])->name('show');
-        Route::get('accounts/{account}/deposit', [WadiahController::class, 'depositForm'])->name('deposit');
-        Route::post('deposit', [WadiahController::class, 'storeDeposit'])->name('deposit.store');
-        Route::get('accounts/{account}/withdraw', [WadiahController::class, 'withdrawForm'])->name('withdraw');
-        Route::post('withdraw', [WadiahController::class, 'storeWithdraw'])->name('withdraw.store');
-        Route::post('accounts/{account}/limit', [WadiahController::class, 'setLimit'])->name('limit.store');
-        Route::get('accounts/{account}/export-passbook', [WadiahController::class, 'exportPassbook'])->name('export-passbook');
-    });
-
-    Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/canteen')->name('admin.finance.canteen.')->group(function () {
-        Route::get('merchants', [CanteenController::class, 'merchants'])->name('merchants');
-        Route::post('merchants', [CanteenController::class, 'storeMerchant'])->name('merchants.store');
-        Route::post('merchants/{id}/toggle', [CanteenController::class, 'toggleMerchant'])->name('merchants.toggle');
-    });
-
-    Route::middleware('role:merchant,admin,superadmin')->prefix('merchant/canteen')->name('merchant.canteen.')->group(function () {
-        Route::get('dashboard', [CanteenController::class, 'merchantDashboard'])->name('dashboard');
-        Route::get('pos', [CanteenController::class, 'posTerminal'])->name('pos');
-        Route::post('payment', [CanteenController::class, 'processPayment'])->name('payment');
-        Route::get('settlement', [CanteenController::class, 'settlementReport'])->name('settlement');
-    });
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/charity')->name('admin.finance.charity.')->group(function () {
         Route::get('/', [CharityController::class, 'index'])->name('index');
@@ -1565,16 +1402,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('history', [SyncController::class, 'syncHistory'])->name('history');
     });
 
-    Route::middleware('role:guru,admin,superadmin')->prefix('academic/copilot')->name('academic.copilot.')->group(function () {
-        Route::get('/', [AiCopilotController::class, 'index'])->name('index');
-        Route::get('rpp', [AiCopilotController::class, 'rppForm'])->name('rpp');
-        Route::post('rpp', [AiCopilotController::class, 'generateRpp'])->name('rpp.generate');
-        Route::post('rpp/save', [AiCopilotController::class, 'saveRppToSista'])->name('rpp.save');
-        Route::get('cbt', [AiCopilotController::class, 'cbtForm'])->name('cbt');
-        Route::post('cbt', [AiCopilotController::class, 'generateCbt'])->name('cbt.generate');
-        Route::post('cbt/save', [AiCopilotController::class, 'saveCbtToSista'])->name('cbt.save');
-    });
-
     Route::get('assets/maintenance/scan/{uuid}', [AssetMaintenanceTicketController::class, 'scanQr'])->name('admin.assets.maintenance.scan');
     Route::post('assets/maintenance/ticket', [AssetMaintenanceTicketController::class, 'storeTicket'])->name('admin.assets.maintenance.store');
 
@@ -1586,27 +1413,14 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-require __DIR__.'/knowledge.php';
 require __DIR__.'/treasury.php';
-require __DIR__.'/adaptive.php';
-require __DIR__.'/foundation.php';
-require __DIR__.'/data_engineering.php';
-require __DIR__.'/microlearning.php';
-require __DIR__.'/career_readiness.php';
-require __DIR__.'/school_safety.php';
 
 require __DIR__.'/islamic_tech.php';
-require __DIR__.'/alumni_relations.php';
 require __DIR__.'/auth.php';
 
 require __DIR__.'/crisis.php';
 
-require __DIR__.'/campus_ops.php';
-
-require __DIR__.'/family_engagement.php';
 require __DIR__.'/inclusive_education.php';
-require __DIR__.'/green_school.php';
-require __DIR__.'/extended_diamond.php';
 
 // --- Mobile Universal Links & Android App Links (.well-known) ---
 Route::get('/.well-known/assetlinks.json', [WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');

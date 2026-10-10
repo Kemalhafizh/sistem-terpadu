@@ -6,7 +6,6 @@ use App\Models\CharacterDimension;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
 use App\Services\Growth\PtcSchedulerService;
-use App\Services\Growth\WellbeingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,45 +28,6 @@ class StudentGrowthTest extends TestCase
         $this->student = User::factory()->create(['role' => 'student']);
         $this->parent = User::factory()->create(['role' => 'parent']);
         $this->teacher = User::factory()->create(['role' => 'guru']);
-    }
-
-    /** @test */
-    public function test_34_1_wellbeing_screening_and_mood_journal()
-    {
-        $service = app(WellbeingService::class);
-
-        // 1. Create & Activate Screening
-        $screening = $service->createScreening([
-            'title' => 'Skrining Mental Test',
-            'screening_type' => 'srq20',
-            'academic_year' => '2026/2027',
-        ], $this->admin->id);
-
-        $service->activateScreening($screening);
-        $this->assertEquals('active', $screening->status);
-
-        // 2. Submit Response
-        $responseObj = $service->submitResponse($screening, $this->student->id, [
-            'responses' => ['q1' => 1, 'q2' => 1, 'q3' => 1, 'q4' => 1, 'q5' => 1, 'q6' => 1, 'q7' => 1, 'q8' => 1],
-        ]);
-
-        $this->assertEquals(8, $responseObj->total_score);
-        $this->assertEquals('high', $responseObj->risk_level);
-        $this->assertTrue($responseObj->followup_required);
-
-        // 3. Mood Journal
-        $journal = $service->addMoodJournalEntry($this->student->id, [
-            'mood_level' => 5,
-            'journal_entry' => 'Hari ini menyenangkan!',
-            'sleep_hours' => 8.0,
-        ]);
-
-        $this->assertEquals(5, $journal->mood_level);
-
-        // HTTP View Test
-        $response = $this->actingAs($this->admin)->get(route('growth.wellbeing.screenings'));
-        $response->assertStatus(200);
-        $response->assertSee('Skrining Mental Test');
     }
 
     /** @test */

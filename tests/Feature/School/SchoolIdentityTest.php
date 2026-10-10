@@ -1,11 +1,8 @@
 <?php
 
 use App\Domains\School\Services\SchoolBrandingDomainService;
-use App\Http\Controllers\Api\v1\Mobile\GeofenceController;
 use App\Models\Setting;
 use App\Models\User;
-use App\Services\AttendanceService;
-use App\Services\Mobile\GeofenceAttendanceService;
 use App\Support\School;
 use Symfony\Component\Finder\Finder;
 
@@ -122,46 +119,6 @@ test('migrasi pembersih hanya menghapus nilai titipan, bukan isian admin', funct
 });
 
 // ── One geofence for every check-in path ───────────────────────────────────
-
-test('semua jalur presensi GPS memakai satu titik kampus', function () {
-    $campus = School::campus();
-    // The old HRD staff centre, ~4.8 km north of the school.
-    [$oldLat, $oldLng] = [-6.9535, 110.4355];
-
-    $user = User::factory()->create(['role' => 'student']);
-    $mobile = app(GeofenceAttendanceService::class);
-    $inside = $mobile->validateCampusCheckin($user, $campus['latitude'], $campus['longitude'], 10.0);
-    $outside = $mobile->validateCampusCheckin($user, $oldLat, $oldLng, 10.0);
-    expect($inside['code'] ?? null)->not->toBe('OUTSIDE_GEOFENCE_RADIUS')
-        ->and($outside['code'])->toBe('OUTSIDE_GEOFENCE_RADIUS');
-
-    $attendance = app(AttendanceService::class);
-    expect($attendance->verifySchoolGeofence($campus['latitude'], $campus['longitude'])['is_valid'])->toBeTrue()
-        ->and($attendance->verifySchoolGeofence($oldLat, $oldLng)['is_valid'])->toBeFalse();
-
-    // Moving the campus in Profil Sekolah moves every path.
-    Setting::set('school_latitude', (string) $oldLat);
-    Setting::set('school_longitude', (string) $oldLng);
-    expect($attendance->verifySchoolGeofence($oldLat, $oldLng)['is_valid'])->toBeTrue()
-        ->and($mobile->validateCampusCheckin($user, $oldLat, $oldLng, 10.0)['code'] ?? null)->not->toBe('OUTSIDE_GEOFENCE_RADIUS');
-});
-
-test('tidak ada titik kampus hardcode yang tersisa di kode presensi', function () {
-    $files = [
-        app_path('Services/Mobile/GeofenceAttendanceService.php'),
-        app_path('Http/Controllers/Api/v1/Mobile/GeofenceController.php'),
-        app_path('Services/AttendanceService.php'),
-        app_path('Http/Controllers/HRD/MyHRDController.php'),
-    ];
-    foreach ($files as $file) {
-        // Code only: comments explaining the old values are fine.
-        $source = preg_replace('#/\*.*?\*/|//[^\n]*#s', '', file_get_contents($file));
-        foreach (['-6.9535', '110.4355', '-6.9859', '110.4398', '-6.996160', '110.428510'] as $coordinate) {
-            expect($source)->not->toContain($coordinate);
-        }
-    }
-    expect(defined(GeofenceController::class.'::CAMPUS_LATITUDE'))->toBeFalse();
-});
 
 test('mobile/config mengirim titik kampus dan kontak resmi sekolah', function () {
     $response = $this->getJson('/api/v1/mobile/config?platform=android&build=105')

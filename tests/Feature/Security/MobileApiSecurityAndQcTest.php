@@ -13,7 +13,6 @@ use App\Models\LibraryBook;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Laravel\Sanctum\Sanctum;
 use Tests\Concerns\StartsWorkflows;
 use Tests\TestCase;
@@ -219,24 +218,6 @@ class MobileApiSecurityAndQcTest extends TestCase
     }
 
     /**
-     * VULN-037 Test: OCR scan rejects SVG files to prevent stored XSS.
-     */
-    public function test_ocr_scan_rejects_svg_uploads(): void
-    {
-        Sanctum::actingAs($this->adminUser);
-
-        $svgFile = UploadedFile::fake()->create('malicious.svg', 10, 'image/svg+xml');
-
-        $response = $this->postJson('/api/v1/documents/ocr/scan', [
-            'document_image' => $svgFile,
-            'document_type' => 'ktp',
-        ]);
-
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['document_image']);
-    }
-
-    /**
      * VULN-038 Test: Teacher evaluation prevents duplicate submissions even if anonymous.
      */
     public function test_anonymous_teacher_evaluation_prevents_duplicate_spam(): void
@@ -299,24 +280,5 @@ class MobileApiSecurityAndQcTest extends TestCase
         $response->assertStatus(422);
         $this->assertFalse($response->json('success'));
         $this->assertStringContainsString('Profil siswa tidak ditemukan', $response->json('message'));
-    }
-
-    /**
-     * VULN-040 Test: Submit signature rejects oversized payloads exceeding bound.
-     */
-    public function test_submit_signature_rejects_oversized_payload(): void
-    {
-        Sanctum::actingAs($this->adminUser);
-
-        $hugeData = str_repeat('A', 500001); // 500KB + 1 byte
-
-        $response = $this->postJson('/api/v1/documents/signature/submit', [
-            'document_type' => 'rapor',
-            'document_id' => 123,
-            'signature_data' => $hugeData,
-        ]);
-
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['signature_data']);
     }
 }

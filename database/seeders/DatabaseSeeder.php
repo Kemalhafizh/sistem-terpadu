@@ -32,8 +32,6 @@ class DatabaseSeeder extends Seeder
                 PortfolioBadgeSeeder::class,        // Portfolio badges
                 SettingSeeder::class,               // Settings
                 AccountingSeeder::class,            // Accounts and journals
-                AchievementDefinitionSeeder::class, // Gamification achievements
-                ChatbotFaqSeeder::class,            // AI FAQs
 
                 // Advanced Modular Seeders (New)
                 DailyAssessmentSeeder::class,       // 60+ daily assessments & 1200+ scores
@@ -75,20 +73,15 @@ class DatabaseSeeder extends Seeder
                 TwoFactorSecuritySeeder::class,
                 NotificationCenterSeeder::class,
                 InternalMessagingSeeder::class,
-                DigitalSignatureSeeder::class,
                 EnterpriseCalendarSeeder::class,
-                OcrDocumentSeeder::class,
                 ExportEngineSeeder::class,
                 AccreditationSeeder::class,
                 EnterpriseFinancialSeeder::class,
                 StudentGrowthSeeder::class,
-                AcademicIntelligenceSeeder::class,
                 HumanCapitalSeeder::class,
                 StudentExperienceSeeder::class,
                 FacilityOperationsSeeder::class,
                 ComplianceRegulatorySeeder::class,
-                FamilyEngagementSeeder::class,
-                GreenSchoolSeeder::class,
             ]);
         });
     }

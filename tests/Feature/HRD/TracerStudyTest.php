@@ -1,11 +1,9 @@
 <?php
 
 use App\Models\AlumniData;
-use App\Models\CareerOpportunity;
 use App\Models\Student;
 use App\Models\TracerResponse;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
@@ -93,90 +91,6 @@ test('active student cannot access or submit tracer study form', function () {
     ];
 
     $response = $this->actingAs($this->activeUser)->post(route('alumni.tracer-study.submit'), $submitData);
-    $response->assertStatus(403);
-});
-
-test('humas staff can access management dashboard and perform CRUD career opportunity', function () {
-    // 1. Humas accesses management dashboard
-    $response = $this->actingAs($this->humasUser)->get(route('career-portal.manage'));
-    $response->assertStatus(200);
-
-    // 2. Humas creates new career opportunity with brochure upload
-    $file = UploadedFile::fake()->create('brochure.pdf', 500, 'application/pdf');
-
-    $opportunityData = [
-        'title' => 'Lowongan Web Developer',
-        'company_name' => 'PT Sukses Jaya',
-        'type' => 'job',
-        'description' => 'Membangun aplikasi web berskala enterprise.',
-        'requirements' => 'Menguasai Laravel & Tailwind CSS.',
-        'contact_email' => 'hr@suksesjaya.com',
-        'closing_date' => now()->addDays(30)->toDateString(),
-        'file' => $file,
-    ];
-
-    $response = $this->actingAs($this->humasUser)->post(route('career-portal.store'), $opportunityData);
-    $response->assertRedirect(route('career-portal.manage'));
-
-    $opt = CareerOpportunity::first();
-    expect($opt)->not->toBeNull();
-    expect($opt->title)->toBe('Lowongan Web Developer');
-    expect($opt->file_path)->not->toBeNull();
-
-    // Verify file storage
-    Storage::disk('public')->assertExists($opt->file_path);
-
-    // 3. Humas edits the opportunity
-    $editData = array_merge($opportunityData, [
-        'title' => 'Lowongan Senior Web Developer',
-        'closing_date' => now()->addDays(45)->toDateString(),
-    ]);
-    unset($editData['file']); // Don't upload a new file
-
-    $response = $this->actingAs($this->humasUser)->put(route('career-portal.update', $opt), $editData);
-    $response->assertRedirect(route('career-portal.manage'));
-
-    $opt->refresh();
-    expect($opt->title)->toBe('Lowongan Senior Web Developer');
-
-    // 4. Humas deletes the opportunity
-    $response = $this->actingAs($this->humasUser)->delete(route('career-portal.destroy', $opt));
-    $response->assertRedirect(route('career-portal.manage'));
-
-    $this->assertDatabaseMissing('career_opportunities', ['id' => $opt->id]);
-    Storage::disk('public')->assertMissing($opt->file_path);
-});
-
-test('students can search and read career opportunities but cannot perform CRUD actions', function () {
-    // Create opportunity first
-    $opt = CareerOpportunity::create([
-        'title' => 'Beasiswa Universitas Sultan Agung',
-        'company_name' => 'Unissula',
-        'type' => 'scholarship',
-        'description' => 'Beasiswa penuh untuk alumni SMA Sultan Agung.',
-        'requirements' => 'Nilai rata-rata rapor 85.',
-        'contact_email' => 'scholarship@unissula.ac.id',
-        'closing_date' => now()->addDays(15)->toDateString(),
-        'created_by' => $this->humasUser->id,
-    ]);
-
-    // 1. Student accesses portal (index & show)
-    $response = $this->actingAs($this->alumniUser)->get(route('career-portal.index'));
-    $response->assertStatus(200);
-    $response->assertSee('Beasiswa Universitas Sultan Agung');
-
-    $response = $this->actingAs($this->alumniUser)->get(route('career-portal.show', $opt));
-    $response->assertStatus(200);
-    $response->assertSee('scholarship@unissula.ac.id');
-
-    // 2. Student tries to edit/delete
-    $response = $this->actingAs($this->alumniUser)->get(route('career-portal.manage'));
-    $response->assertStatus(403);
-
-    $response = $this->actingAs($this->alumniUser)->post(route('career-portal.store'), []);
-    $response->assertStatus(403);
-
-    $response = $this->actingAs($this->alumniUser)->delete(route('career-portal.destroy', $opt));
     $response->assertStatus(403);
 });
 

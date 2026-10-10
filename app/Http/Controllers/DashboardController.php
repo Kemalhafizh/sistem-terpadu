@@ -19,7 +19,6 @@ use App\Models\ParentMessage;
 use App\Models\Payment;
 use App\Models\Registration;
 use App\Models\Schedule;
-use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TahfidzLog;
@@ -193,14 +192,8 @@ class DashboardController extends Controller
                 ];
             }
 
-            // --- 5. Smart Alerts Terbaru ---
-            $latestSmartAlerts = SmartAlert::where('status', 'active')->latest()->take(5)->get()->toArray();
-
             // --- 6. Approval Pending ---
             $pendingApprovalsCount = WorkflowRequest::awaitingDecisionBy($user)->count();
-
-            // --- 7. Top 5 Siswa XP ---
-            $topXpStudents = Student::with('user', 'classroom')->orderByDesc('total_xp')->take(5)->get()->toArray();
 
             // --- 8. Rekap Mutaba'ah Minggu Ini ---
             $totalActiveItems = MutabaahItem::where('is_active', true)->count() ?: 5;
@@ -257,9 +250,7 @@ class DashboardController extends Controller
                 'unfilledTeachers' => $unfilledTeachers,
                 'journalDateFormatted' => $journalDateFormatted,
                 'averageGrades' => $averageGrades,
-                'latestSmartAlerts' => $latestSmartAlerts,
                 'pendingApprovalsCount' => $pendingApprovalsCount,
-                'topXpStudents' => $topXpStudents,
                 'mutabaahAverageScore' => $mutabaahAverageScore,
                 'mutabaahGradeAPercent' => $mutabaahGradeAPercent,
             ];
@@ -280,8 +271,6 @@ class DashboardController extends Controller
         });
 
         // Reconstruct collections
-        $stats['latestSmartAlerts'] = collect($stats['latestSmartAlerts'] ?? [])->map(fn ($item) => (object) $item);
-        $stats['topXpStudents'] = collect($stats['topXpStudents'] ?? [])->map(fn ($item) => json_decode(json_encode($item)));
 
         return $stats;
     }
@@ -362,26 +351,6 @@ class DashboardController extends Controller
                 'desc' => 'Diajukan oleh '.$pa->requester->name,
                 'time' => $pa->created_at->diffForHumans(),
             ];
-        }
-
-        $classroom = Classroom::where('teacher_id', $user->id)->first();
-        if ($classroom) {
-            $studentIds = $classroom->students()->pluck('id');
-            $smartAlerts = SmartAlert::where('status', 'active')
-                ->where('alertable_type', Student::class)
-                ->whereIn('alertable_id', $studentIds)
-                ->latest()
-                ->take(5)
-                ->get();
-
-            foreach ($smartAlerts as $sa) {
-                $recentNotifications[] = (object) [
-                    'type' => 'alert',
-                    'title' => 'Smart Alert: '.$sa->title,
-                    'desc' => $sa->description,
-                    'time' => $sa->created_at->diffForHumans(),
-                ];
-            }
         }
 
         if (empty($recentNotifications)) {
@@ -468,11 +437,6 @@ class DashboardController extends Controller
                 ->get();
         }
 
-        // 3. Gamifikasi: XP, level, streak, achievements
-        $level = $studentProfile ? $studentProfile->level : 1;
-        $xpProgress = $studentProfile ? $studentProfile->xp_progress_percent : 0;
-        $recentBadges = $studentProfile ? $studentProfile->badges()->take(3)->get() : collect();
-
         // 4. Nilai Terbaru
         $recentScores = [];
         if ($studentProfile) {
@@ -523,9 +487,6 @@ class DashboardController extends Controller
             'todayDayName' => $todayDayName,
             'isWeekend' => $isWeekend,
             'unsubmittedAssignments' => $unsubmittedAssignments,
-            'studentLevel' => $level,
-            'studentXpProgress' => $xpProgress,
-            'recentBadges' => $recentBadges,
             'recentScores' => $recentScores,
             'mutabaahItems' => $mutabaahItems,
             'mutabaahTodayLogs' => $mutabaahTodayLogs,

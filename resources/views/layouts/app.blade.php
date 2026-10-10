@@ -322,8 +322,6 @@
                 @yield('content')
             </main>
         </div>
-        <!-- Chatbot Floating Widget -->
-        <x-chatbot-widget />
 
     </div>
 

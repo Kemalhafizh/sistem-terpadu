@@ -165,10 +165,10 @@ class SyncConsistencyTest extends TestCase
      */
     public function test_payload_error_422_tetap_dalam_bentuk_envelope_standar()
     {
-        // GPS check-in is a student feature.
+        // Scanning the class-session QR is a student feature (FASE 117).
         $student = User::factory()->create(['role' => 'student']);
         $response = $this->actingAs($student)
-            ->postJson('/api/v1/mobile/attendance/gps-checkin', []);
+            ->postJson('/api/v1/student/class-session/scan-qr', []);
 
         $response->assertStatus(422);
         // Laravel's default validation exception response is { message, errors }

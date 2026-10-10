@@ -11,13 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class TahfidzService
 {
-    protected $gamificationService;
-
-    public function __construct(GamificationService $gamificationService)
-    {
-        $this->gamificationService = $gamificationService;
-    }
-
     /**
      * Get target, logs, and calculated metrics for a student.
      */
@@ -78,7 +71,7 @@ class TahfidzService
     }
 
     /**
-     * Submit a setoran, award XP, and recalculate achievements.
+     * Submit a setoran and recalculate the target achievement.
      */
     public function submitSetoran(Student $student, array $data): TahfidzLog
     {
@@ -102,41 +95,6 @@ class TahfidzService
             ]);
 
             // Calculate Grade XP
-            $xpAmount = 0;
-            $grade = strtoupper($data['grade'] ?? 'A');
-            $type = $data['type'] ?? 'ziyadah';
-
-            if ($type === 'ziyadah') {
-                switch ($grade) {
-                    case 'A': $xpAmount = 15;
-                        break;
-                    case 'B': $xpAmount = 12;
-                        break;
-                    case 'C': $xpAmount = 8;
-                        break;
-                    case 'D': $xpAmount = 4;
-                        break;
-                    default: $xpAmount = 10;
-                        break;
-                }
-            } else { // murajaah
-                switch ($grade) {
-                    case 'A': $xpAmount = 8;
-                        break;
-                    case 'B': $xpAmount = 6;
-                        break;
-                    case 'C': $xpAmount = 4;
-                        break;
-                    case 'D': $xpAmount = 2;
-                        break;
-                    default: $xpAmount = 5;
-                        break;
-                }
-            }
-
-            // Award setoran XP
-            $this->gamificationService->awardXp($student, $xpAmount, 'tahfidz', "Setoran hafalan baru ({$type}) - Grade {$grade}");
-
             // Recalculate target achievements
             if ($academicYear) {
                 $this->updateTargetAchievement($student, $academicYear);
@@ -192,7 +150,6 @@ class TahfidzService
             $percentageElapsed = $elapsedDays / $totalDays;
         }
 
-        $oldStatus = $target->status;
         $newStatus = 'on_track';
 
         // Check completion first
@@ -217,11 +174,6 @@ class TahfidzService
             'achieved_juz' => $achievedJuz,
             'status' => $newStatus,
         ]);
-
-        // Award Target completion XP bonus (+50 XP) if transitioned to completed/exceeded
-        if (in_array($newStatus, ['completed', 'exceeded']) && ! in_array($oldStatus, ['completed', 'exceeded'])) {
-            $this->gamificationService->awardXp($student, 50, 'tahfidz_target', 'Berhasil mencapai target hafalan semester ini!');
-        }
 
         return $target;
     }

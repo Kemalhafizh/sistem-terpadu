@@ -22,7 +22,6 @@ use App\Models\LoginAttempt;
 use App\Models\MpkAudit;
 use App\Models\MpkLpj;
 use App\Models\PortfolioItem;
-use App\Models\SmartAlert;
 use App\Models\StudentAspiration;
 use App\Models\StudentShowcase;
 use App\Models\Syllabus;
@@ -39,7 +38,6 @@ use App\Policies\ExamPolicy;
 use App\Policies\ForumPolicy;
 use App\Policies\MpkPolicy;
 use App\Policies\PortfolioPolicy;
-use App\Policies\SmartAlertPolicy;
 use App\Policies\StudentShowcasePolicy;
 use App\Policies\UksPolicy;
 use App\Policies\WorkflowPolicy;
@@ -132,7 +130,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(StudentAspiration::class, MpkPolicy::class);
 
         // Register Smart Alerts Policy
-        Gate::policy(SmartAlert::class, SmartAlertPolicy::class);
 
         // Register Workflow Engine Policy
         Gate::policy(WorkflowRequest::class, WorkflowPolicy::class);
