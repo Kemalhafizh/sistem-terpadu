@@ -48,20 +48,4 @@ class Fase71BlockchainWeb3Test extends TestCase
         $verifyRes->assertJsonPath('status', 'valid');
         $verifyRes->assertJsonPath('recipient_name', 'Ahmad Dahlan');
     }
-
-    public function test_student_did_and_learning_passport(): void
-    {
-        $student = User::factory()->create(['role' => 'student', 'name' => 'Fatimah Zahra']);
-
-        // Get DID
-        $didRes = $this->actingAs($student, 'sanctum')->getJson('/api/v1/blockchain/did/me');
-        $didRes->assertStatus(200);
-        $this->assertStringStartsWith('did:ybwsa:sulaone:', $didRes->json('did.did_uri'));
-
-        // Get Passport Presentation
-        $passportRes = $this->actingAs($student, 'sanctum')->getJson('/api/v1/blockchain/did/passport');
-        $passportRes->assertStatus(200);
-        $passportRes->assertJsonPath('passport.type.1', 'LifelongLearningPassport');
-        $this->assertNotEmpty($passportRes->json('passport.proof.proofValue'));
-    }
 }

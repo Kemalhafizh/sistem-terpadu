@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Observability\RequestMetricsRecorder;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,8 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PerformanceLogger
 {
-    public function __construct(private RequestMetricsRecorder $recorder) {}
-
     /**
      * Handle an incoming request.
      */
@@ -35,17 +32,6 @@ class PerformanceLogger
         $peakMemory = memory_get_peak_usage(true); // real allocated size
         // Set by CorrelationIdMiddleware, which runs inside this middleware.
         $correlationId = $request->headers->get('X-Correlation-ID');
-
-        // Every request feeds the APM dashboard's real P50/P90/P99 and
-        // availability (it used to show fixed numbers).
-        $this->recorder->record(
-            $request->method(),
-            $request->path(),
-            $response->getStatusCode(),
-            $durationMs,
-            $correlationId,
-            $endTime
-        );
 
         $slowQueryMs = (float) config('apm.slow_query_ms', 500);
         $slowQueries = array_filter($queries, function ($q) use ($slowQueryMs) {

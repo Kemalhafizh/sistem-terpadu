@@ -56,29 +56,3 @@ test('role based rate limiter middleware sets rate limit headers', function () {
     expect($response->headers->has('X-RateLimit-Limit'))->toBeTrue();
     expect($response->headers->has('X-RateLimit-Remaining'))->toBeTrue();
 });
-
-test('admin can view api gateway monitoring dashboard', function () {
-    $response = $this->actingAs($this->admin)->get(route('admin.observability.gateway.index'));
-    $response->assertStatus(200);
-    $response->assertSee('API Gateway');
-});
-
-test('admin can reset circuit and simulate failures via controller', function () {
-    // Simulate failure
-    $responseSimulate = $this->actingAs($this->admin)
-        ->from(route('admin.observability.gateway.index'))
-        ->post(route('admin.observability.gateway.simulate-failure'), [
-            'service' => 'fonnte_whatsapp',
-        ]);
-    $responseSimulate->assertStatus(302);
-    expect($this->cb->getServiceState('fonnte_whatsapp'))->toBe(CircuitBreakerService::STATE_OPEN);
-
-    // Reset circuit
-    $responseReset = $this->actingAs($this->admin)
-        ->from(route('admin.observability.gateway.index'))
-        ->post(route('admin.observability.gateway.reset'), [
-            'service' => 'fonnte_whatsapp',
-        ]);
-    $responseReset->assertStatus(302);
-    expect($this->cb->getServiceState('fonnte_whatsapp'))->toBe(CircuitBreakerService::STATE_CLOSED);
-});

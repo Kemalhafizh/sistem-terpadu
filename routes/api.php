@@ -26,7 +26,6 @@ use App\Http\Controllers\Api\v1\ConfigController;
 use App\Http\Controllers\Api\v1\ContextualHomeController;
 use App\Http\Controllers\Api\v1\CounselingMobileApiController;
 use App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController;
-use App\Http\Controllers\Api\v1\DesignSystemController;
 use App\Http\Controllers\Api\v1\DisciplineMobileApiController;
 use App\Http\Controllers\Api\v1\DocumentMobileApiController;
 use App\Http\Controllers\Api\v1\ElearningMobileApiController;
@@ -55,11 +54,6 @@ use App\Http\Controllers\Api\v1\TahsinSubmissionApiController;
 use App\Http\Controllers\Api\v1\UtbkMobileApiController;
 use App\Http\Controllers\Api\v1\VizController;
 use App\Http\Controllers\Blockchain\BlockchainCredentialController;
-use App\Http\Controllers\Blockchain\StudentDidController;
-use App\Http\Controllers\Debloat\PragmaticDebloatApiController;
-use App\Http\Controllers\Infrastructure\CloudClusterController;
-use App\Http\Controllers\Infrastructure\EdgeCdnController;
-use App\Http\Controllers\Iot\EnergyManagementController;
 use App\Http\Controllers\Iot\FacialRecognitionAttendanceController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
@@ -423,16 +417,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 98: MODERN DESIGN SYSTEM API & THEMING ENGINE
-        // =====================================================================
-        Route::prefix('design')->group(function () {
-            Route::get('tokens', [DesignSystemController::class, 'getTokens']);
-            Route::get('theme', [DesignSystemController::class, 'getUserTheme']);
-            Route::put('theme/preferences', [DesignSystemController::class, 'updatePreferences']);
-            Route::get('presets', [DesignSystemController::class, 'getPresets']);
-        });
-
-        // =====================================================================
         // FASE 99: CONTEXTUAL & PREDICTIVE HOME API
         // =====================================================================
         Route::prefix('home')->group(function () {
@@ -577,8 +561,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('credentials/issue', [BlockchainCredentialController::class, 'issue'])->middleware('role:admin,staf_tu,kepala_sekolah');
             Route::middleware('role:student,siswa,alumni')->group(function () {
                 Route::get('credentials/my', [BlockchainCredentialController::class, 'myCredentials']);
-                Route::get('did/me', [StudentDidController::class, 'getMyDid']);
-                Route::get('did/passport', [StudentDidController::class, 'getPassport']);
             });
         });
 
@@ -590,8 +572,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('face/enroll', [FacialRecognitionAttendanceController::class, 'enroll'])->middleware('role:student,siswa,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,waka_sarpras,waka_humas,staf_tu,petugas_uks,admin');
             // Gate cameras log attendance for whoever they recognise: device/operator accounts only.
             Route::post('face/match', [FacialRecognitionAttendanceController::class, 'matchGate'])->middleware('role:admin,staf_tu,operator');
-            Route::post('energy/sensor', [EnergyManagementController::class, 'updateSensor'])->middleware('role:admin,superadmin,staf_tu,operator');
-            Route::get('energy/dashboard', [EnergyManagementController::class, 'getDashboard'])->middleware('role:admin,staf_tu,operator,waka_sarpras,kepala_sekolah');
         });
 
         // =====================================================================
@@ -611,30 +591,8 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('executive/kpi', [MobileAnalyticsController::class, 'executiveKpi'])->middleware('role:admin,superadmin,kepala_sekolah,staf_tu');
         });
 
-        // =====================================================================
-        // FASE 74: DEDICATED HIGH-AVAILABILITY INFRASTRUCTURE
-        // =====================================================================
-        Route::prefix('infrastructure')->group(function () {
-            Route::get('cluster/health', [CloudClusterController::class, 'getHealth'])->middleware('role:admin,superadmin');
-            Route::post('cluster/metrics', [CloudClusterController::class, 'reportMetric'])->middleware('role:admin,superadmin');
-            Route::post('cdn/resolve', [EdgeCdnController::class, 'resolveAsset']);
-            Route::get('cdn/nodes', [EdgeCdnController::class, 'getNodes'])->middleware('role:admin,superadmin');
-        });
-
-        // =====================================================================
-        // FASE 85: DEBLOAT, PENYEDERHANAAN & PRAGMATISME ARSITEKTUR
-        // =====================================================================
-        Route::prefix('debloat')->group(function () {
-            Route::post('certificates/issue', [PragmaticDebloatApiController::class, 'issueCertificate']);
-            Route::get('students/{studentId}/at-risk', [PragmaticDebloatApiController::class, 'evaluateAtRisk']);
-            Route::post('sync/queue', [PragmaticDebloatApiController::class, 'syncQueue']);
-            Route::get('sync/pull', [PragmaticDebloatApiController::class, 'syncPull']);
-        });
     });
 
     // Public Web3 & Pragmatic Digital Verification Endpoints
     Route::get('blockchain/credentials/verify/{certificateNumber}', [BlockchainCredentialController::class, 'verifyPublic']);
-    Route::get('certificates/verify/{documentNumber}', [PragmaticDebloatApiController::class, 'verifyCertificate']);
-    Route::get('debloat/module-catalog', [PragmaticDebloatApiController::class, 'getModuleCatalog']);
-    Route::get('debloat/vps/health', [PragmaticDebloatApiController::class, 'getVpsHealth']);
 });

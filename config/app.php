@@ -135,17 +135,4 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | UAT Mode Toggle
-    |--------------------------------------------------------------------------
-    |
-    | When enabled, UAT Feedback form widget will be injected into all pages
-    | for logged-in users to collect user experience reviews and bug reports.
-    |
-    | Default is true since we are entering Phase 12 (UAT & Testing).
-    |
-    */
-    'uat_mode' => env('UAT_MODE', true),
-
 ];

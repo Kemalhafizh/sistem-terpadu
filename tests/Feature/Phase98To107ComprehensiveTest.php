@@ -7,33 +7,6 @@ beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'student', 'must_change_password' => false]);
 });
 
-test('Fase 98: Design system tokens, presets and preferences work correctly', function () {
-    // 1. Tokens
-    $tokensResp = $this->actingAs($this->user)->getJson('/api/v1/design/tokens');
-    $tokensResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data' => ['color', 'typography', 'spacing', 'radius']]);
-
-    // 2. Presets
-    $presetsResp = $this->actingAs($this->user)->getJson('/api/v1/design/presets');
-    $presetsResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
-
-    // 3. Current User Theme
-    $themeResp = $this->actingAs($this->user)->getJson('/api/v1/design/theme');
-    $themeResp->assertStatus(200)
-        ->assertJsonStructure(['success', 'data' => ['active_preset', 'is_dark', 'tokens']]);
-
-    // 4. Update Preferences
-    $updateResp = $this->actingAs($this->user)->putJson('/api/v1/design/theme/preferences', [
-        'mode' => 'dark',
-        'active_preset' => 'night_study',
-        'is_oled' => true,
-        'contrast_level' => 'high',
-    ]);
-    $updateResp->assertStatus(200)
-        ->assertJson(['success' => true]);
-});
-
 test('Fase 99: Contextual home feed, suggestions and dismissal work correctly', function () {
     // 1. Contextual Home Payload
     $homeResp = $this->actingAs($this->user)->getJson('/api/v1/home/contextual');

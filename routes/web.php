@@ -8,31 +8,18 @@ use App\Http\Controllers\Academic\VirtualClassroomController;
 use App\Http\Controllers\AcademicEventController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\Admin\ApiGatewayMonitorController;
-use App\Http\Controllers\Admin\ApmObservabilityController;
 use App\Http\Controllers\Admin\AppearanceController;
 use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
-use App\Http\Controllers\Admin\BpaRuleEngineController;
-use App\Http\Controllers\Admin\CacheMonitorController;
-use App\Http\Controllers\Admin\DeveloperPortalController;
-use App\Http\Controllers\Admin\DisasterRecoveryController;
-use App\Http\Controllers\Admin\EdwOlapController;
 use App\Http\Controllers\Admin\FeatureFlagController;
 use App\Http\Controllers\Admin\IntegrationController;
-use App\Http\Controllers\Admin\ObservabilityController;
 use App\Http\Controllers\Admin\PdplPrivacyController;
-use App\Http\Controllers\Admin\QueueMonitorController;
 use App\Http\Controllers\Admin\RbacAuditController;
-use App\Http\Controllers\Admin\ReportBuilderController;
 use App\Http\Controllers\Admin\ScheduledReportController;
 use App\Http\Controllers\Admin\SchoolBrandingController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SecurityDashboardController;
 use App\Http\Controllers\Admin\SecurityTwoFactorController;
 use App\Http\Controllers\Admin\SyncController;
-use App\Http\Controllers\Admin\UatFeedbackController;
-use App\Http\Controllers\Admin\VendorSlaController;
-use App\Http\Controllers\Admin\WebhookHubController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\Analytics\AcademicBenchmarkController;
 use App\Http\Controllers\Analytics\FinancialForecastingController;
@@ -76,9 +63,6 @@ use App\Http\Controllers\CounselingController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DailyAssessmentController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Deployment\E2eTestController;
-use App\Http\Controllers\Deployment\EnvironmentConfigController;
-use App\Http\Controllers\Deployment\ReleaseManagerController;
 use App\Http\Controllers\EdsController;
 use App\Http\Controllers\ElearningController;
 use App\Http\Controllers\ElearningSecureController;
@@ -115,10 +99,6 @@ use App\Http\Controllers\HumanCapital\SuccessionPlanningController;
 use App\Http\Controllers\HumanCapital\WorkloadBalancingController;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\ImportExportController;
-use App\Http\Controllers\Integration\ApiDocumentationController;
-use App\Http\Controllers\Integration\ApiGatewayController;
-use App\Http\Controllers\Integration\EtlController;
-use App\Http\Controllers\Integration\PluginController;
 use App\Http\Controllers\LetterController;
 use App\Http\Controllers\LibraryCirculationController;
 use App\Http\Controllers\LibraryController;
@@ -131,14 +111,6 @@ use App\Http\Controllers\Operations\IotFacilityController;
 use App\Http\Controllers\Operations\UtilityTrackerController;
 use App\Http\Controllers\OsisController;
 use App\Http\Controllers\ParentPortalController;
-use App\Http\Controllers\Performance\AssetPerformanceController;
-use App\Http\Controllers\Performance\LoadTestController;
-use App\Http\Controllers\Performance\QueryPerformanceController;
-use App\Http\Controllers\Performance\ScalingController;
-use App\Http\Controllers\Platform\AiRecommendationController;
-use App\Http\Controllers\Platform\DashboardBuilderController;
-use App\Http\Controllers\Platform\DeveloperApiController;
-use App\Http\Controllers\Platform\DigitalTwinController;
 use App\Http\Controllers\PointCategoryController;
 use App\Http\Controllers\PointController;
 use App\Http\Controllers\PortfolioController;
@@ -169,10 +141,6 @@ use App\Http\Controllers\TracerStudyController;
 use App\Http\Controllers\UksController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPreferenceController;
-use App\Http\Controllers\UX\AccessibilityController;
-use App\Http\Controllers\UX\DesignSystemController;
-use App\Http\Controllers\UX\PrintEngineController;
-use App\Http\Controllers\UX\TranslationController;
 use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
@@ -466,41 +434,6 @@ Route::middleware('auth')->group(function () {
     Route::post('hc/workload', [WorkloadBalancingController::class, 'storeWorkload'])->name('hc.workload.store');
     Route::get('hc/workload/capacity-report', [WorkloadBalancingController::class, 'capacityReport'])->name('hc.workload.capacity_report');
 
-    // FASE 37: Enterprise UX Mastery -- Accessibility, Internationalization & Design System
-    // 37.1: WCAG 2.2 AA+ Accessibility Hardening
-    Route::get('ux/accessibility/dashboard', [AccessibilityController::class, 'dashboard'])->name('ux.accessibility.dashboard');
-    Route::get('ux/accessibility/report', [AccessibilityController::class, 'auditReport'])->name('ux.accessibility.report');
-
-    // 37.2: Advanced i18n & Full Arabic (RTL) Support
-    Route::get('ux/i18n/manager', [TranslationController::class, 'index'])->name('ux.i18n.manager');
-    Route::post('ux/i18n/override', [TranslationController::class, 'override'])->name('ux.i18n.override');
-    Route::get('ux/i18n/report', [TranslationController::class, 'completionReport'])->name('ux.i18n.report');
-
-    // 37.3: Enterprise Design System Component Library
-    Route::get('ux/design-system/showcase', [DesignSystemController::class, 'showcase'])->name('ux.design_system.showcase');
-    Route::get('ux/design-system/documentation', [DesignSystemController::class, 'documentation'])->name('ux.design_system.documentation');
-
-    // 37.4: Print-Optimized Stylesheet Engine
-    Route::get('ux/print/preview', [PrintEngineController::class, 'preview'])->name('ux.print.preview');
-
-    // FASE 38: Enterprise Deployment & Production Hardening Blueprint
-    // 38.1: Production Environment & Secret Management
-    Route::get('deploy/environment', [EnvironmentConfigController::class, 'dashboard'])->name('deploy.environment.dashboard');
-    Route::get('deploy/environment/configure', [EnvironmentConfigController::class, 'configureForm'])->name('deploy.environment.configure_form');
-    Route::post('deploy/environment', [EnvironmentConfigController::class, 'storeConfig'])->name('deploy.environment.store_config');
-
-    // 38.3: Release Versioning, Semantic Changelog & Rollback Strategy
-    Route::get('deploy/releases', [ReleaseManagerController::class, 'index'])->name('deploy.releases.index');
-    Route::post('deploy/releases', [ReleaseManagerController::class, 'storeRelease'])->name('deploy.releases.store');
-    Route::get('deploy/releases/{id}/changelog', [ReleaseManagerController::class, 'changelog'])->name('deploy.releases.changelog');
-    Route::get('deploy/releases/{id}/rollback', [ReleaseManagerController::class, 'rollbackTest'])->name('deploy.releases.rollback');
-
-    // 38.4: Comprehensive E2E Testing Suite Blueprint
-    Route::get('deploy/e2e', [E2eTestController::class, 'dashboard'])->name('deploy.e2e.dashboard');
-    Route::post('deploy/e2e/trigger', [E2eTestController::class, 'triggerRun'])->name('deploy.e2e.trigger');
-    Route::get('deploy/e2e/results/{id}', [E2eTestController::class, 'results'])->name('deploy.e2e.results');
-    Route::get('deploy/e2e/flakey', [E2eTestController::class, 'flakeyTests'])->name('deploy.e2e.flakey');
-
     // FASE 39: Advanced Analytics & Business Intelligence
     // 39.1: Predictive Student Performance Engine
     Route::get('analytics/predictive/dashboard', [PredictivePerformanceController::class, 'dashboard'])->name('analytics.predictive.dashboard');
@@ -582,19 +515,6 @@ Route::middleware('auth')->group(function () {
     // 43.4: Legal Contract & Vendor Compliance Manager
     Route::get('compliance/contracts/index', [LegalContractController::class, 'index'])->name('compliance.contracts.index');
 
-    // FASE 44: Platform Maturity & Future-Proofing
-    // 44.1: Developer API Gateway & Webhook Engine
-    Route::get('developer/api/dashboard', [DeveloperApiController::class, 'dashboard'])->name('developer.api.dashboard');
-
-    // 44.2: Drag-and-Drop Executive Dashboard Builder
-    Route::get('developer/dashboards/index', [DashboardBuilderController::class, 'index'])->name('developer.dashboards.index');
-
-    // 44.3: AI Recommendation & Personalization Engine
-    Route::get('developer/ai/recommendations', [AiRecommendationController::class, 'recommendations'])->name('developer.ai.recommendations');
-
-    // 44.4: Digital Twin School Infrastructure Simulation Engine
-    Route::get('developer/twin/simulation', [DigitalTwinController::class, 'simulation'])->name('developer.twin.simulation');
-
     // Centralized Digital Asset Management (DAM)
     Route::get('media', [MediaAssetController::class, 'index'])->name('media.index');
     Route::post('media/upload', [MediaAssetController::class, 'upload'])->name('media.upload');
@@ -648,50 +568,6 @@ Route::middleware('auth')->group(function () {
     Route::post('sop/{id}/publish', [SopGovernanceController::class, 'publish'])->name('sop.publish');
     Route::post('sop/{id}/acknowledge', [SopGovernanceController::class, 'acknowledge'])->name('sop.acknowledge');
     Route::get('sop-compliance', [SopGovernanceController::class, 'complianceReport'])->name('sop.compliance');
-
-    // 31.1 GraphQL API Federation & Gateway
-    Route::match(['get', 'post'], 'graphql', [ApiGatewayController::class, 'graphqlEndpoint'])->name('api.graphql');
-    Route::get('api-clients', [ApiGatewayController::class, 'clientManagement'])->name('api.clients');
-    Route::post('api-clients', [ApiGatewayController::class, 'registerClient'])->name('api.register_client');
-    Route::get('api-stats', [ApiGatewayController::class, 'apiUsageStats'])->name('api.stats');
-
-    // 31.2 Enterprise ETL Pipeline & Migration Toolkit
-    Route::get('etl', [EtlController::class, 'index'])->name('etl.index');
-    Route::post('etl/jobs', [EtlController::class, 'createJob'])->name('etl.create_job');
-    Route::get('etl/jobs/{id}/mapping', [EtlController::class, 'configureMapping'])->name('etl.configure_mapping');
-    Route::post('etl/jobs/{id}/execute', [EtlController::class, 'execute'])->name('etl.execute');
-    Route::get('etl/jobs/{id}/progress', [EtlController::class, 'progress'])->name('etl.progress');
-    Route::post('etl/jobs/{id}/rollback', [EtlController::class, 'rollback'])->name('etl.rollback');
-
-    // 31.3 Third-Party Plugin Architecture & Marketplace
-    Route::get('plugins', [PluginController::class, 'index'])->name('plugins.index');
-    Route::get('plugins/marketplace', [PluginController::class, 'marketplace'])->name('plugins.marketplace');
-    Route::post('plugins/install', [PluginController::class, 'install'])->name('plugins.install');
-    Route::post('plugins/{id}/toggle', [PluginController::class, 'toggle'])->name('plugins.toggle');
-
-    // 31.4 Public API Documentation Portal (OpenAPI 3.0)
-    Route::get('api-docs', [ApiDocumentationController::class, 'index'])->name('api_docs.index');
-    Route::get('api-docs/openapi.json', [ApiDocumentationController::class, 'openApiJson'])->name('api_docs.openapi_json');
-    Route::get('api-docs/swagger', [ApiDocumentationController::class, 'swaggerUi'])->name('api_docs.swagger_ui');
-    Route::get('api-docs/postman', [ApiDocumentationController::class, 'postmanExport'])->name('api_docs.postman');
-
-    // 32.1 Database Query Optimizer & N+1 Sentinel
-    Route::get('query-performance', [QueryPerformanceController::class, 'dashboard'])->name('query_performance.dashboard');
-    Route::get('query-performance/slow', [QueryPerformanceController::class, 'slowQueries'])->name('query_performance.slow');
-    Route::get('query-performance/suggestions', [QueryPerformanceController::class, 'optimizationSuggestions'])->name('query_performance.suggestions');
-
-    // 32.2 Lazy Loading, Code Splitting & Asset Optimization
-    Route::get('asset-performance', [AssetPerformanceController::class, 'assetReport'])->name('asset_performance.report');
-
-    // 32.3 Automated Stress Test & Load Testing Suite
-    Route::get('load-test', [LoadTestController::class, 'dashboard'])->name('load_test.dashboard');
-    Route::post('load-test/run', [LoadTestController::class, 'runTest'])->name('load_test.run');
-    Route::get('load-test/{id}/results', [LoadTestController::class, 'results'])->name('load_test.results');
-    Route::get('load-test/{id}/compare', [LoadTestController::class, 'compareBaseline'])->name('load_test.compare');
-
-    // 32.4 Horizontal Scaling Architecture Blueprint & Read Replicas
-    Route::get('scaling', [ScalingController::class, 'dashboard'])->name('scaling.dashboard');
-    Route::get('scaling/configuration', [ScalingController::class, 'configuration'])->name('scaling.configuration');
 
     // =========================================================
     // EKSTRAKURIKULER & OSIS â€” Pengembangan Non-Akademik
@@ -1344,12 +1220,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/spmb-admin/{registration}', [SpmbController::class, 'show'])->name('spmb.admin.show');
         Route::post('/spmb-admin/{registration}/status', [SpmbController::class, 'updateStatus'])->name('spmb.admin.status');
 
-        // Queue Monitoring
-        Route::get('admin/queue-monitor', [QueueMonitorController::class, 'index'])->name('admin.queue.index');
-        Route::post('admin/queue-monitor/retry/{id}', [QueueMonitorController::class, 'retryFailedJob'])->name('admin.queue.retry');
-        Route::post('admin/queue-monitor/retry-all', [QueueMonitorController::class, 'retryAllFailedJobs'])->name('admin.queue.retry-all');
-        Route::post('admin/queue-monitor/flush', [QueueMonitorController::class, 'flushFailedJobs'])->name('admin.queue.flush');
-
         // Security Monitoring & Audit Trail (SIEM)
         Route::middleware('role:admin,superadmin')->prefix('admin/security')->name('admin.security.')->group(function () {
             Route::get('/dashboard', [SecurityController::class, 'dashboard'])->name('dashboard');
@@ -1357,20 +1227,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/sessions', [SecurityController::class, 'sessions'])->name('sessions');
             Route::delete('/sessions/{session}', [SecurityController::class, 'terminateSession'])->name('sessions.terminate');
         });
-    });
-
-    // =========================================================
-    // ðŸ“Š CUSTOM REPORT BUILDER (Drag-Drop)
-    // =========================================================
-    Route::middleware('role:admin,superadmin,kepala_sekolah,waka_kurikulum')->prefix('admin/report-builder')->name('admin.report-builder.')->group(function () {
-        Route::get('/', [ReportBuilderController::class, 'index'])->name('index');
-        Route::get('/create', [ReportBuilderController::class, 'create'])->name('create');
-        Route::post('/', [ReportBuilderController::class, 'store'])->name('store');
-        Route::post('/preview', [ReportBuilderController::class, 'preview'])->name('preview');
-        Route::get('/{report}', [ReportBuilderController::class, 'show'])->name('show');
-        Route::get('/{report}/export/pdf', [ReportBuilderController::class, 'exportPdf'])->name('export.pdf');
-        Route::get('/{report}/export/excel', [ReportBuilderController::class, 'exportExcel'])->name('export.excel');
-        Route::delete('/{report}', [ReportBuilderController::class, 'destroy'])->name('destroy');
     });
 
     // =========================================================
@@ -1683,16 +1539,6 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ðŸ§ª UAT FEEDBACK SYSTEM (MODUL 12.2)
-    // =========================================================
-    Route::post('admin/uat/feedback', [UatFeedbackController::class, 'store'])->name('uat.feedback.store');
-    Route::middleware('role:admin,superadmin')->prefix('admin/uat')->name('admin.uat.')->group(function () {
-        Route::get('feedback-dashboard', [UatFeedbackController::class, 'dashboard'])->name('feedback.dashboard');
-        Route::post('feedback/{id}/status', [UatFeedbackController::class, 'updateStatus'])->name('feedback.update-status');
-        Route::get('feedback-report', [UatFeedbackController::class, 'report'])->name('feedback.report');
-    });
-
-    // =========================================================
     // ðŸ“‹ MEMO & NOTULENSI RAPAT DIGITAL (MODUL 15.1)
     // =========================================================
     Route::middleware('role:admin,superadmin,staf_tu,kepala_sekolah,guru')->group(function () {
@@ -1751,22 +1597,6 @@ Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/chatbot')->n
     Route::post('faqs', [ChatbotController::class, 'storeFaq'])->name('faqs.store');
     Route::put('faqs/{faq}', [ChatbotController::class, 'updateFaq'])->name('faqs.update');
     Route::delete('faqs/{faq}', [ChatbotController::class, 'destroyFaq'])->name('faqs.destroy');
-});
-// --- Advanced Logging & Observability (Modul 9) ---
-Route::middleware(['auth', 'role:superadmin'])->prefix('admin/observability')->name('admin.observability.')->group(function () {
-    Route::get('/', [ObservabilityController::class, 'dashboard'])->name('dashboard');
-    Route::get('/metrics', [ObservabilityController::class, 'metrics'])->name('metrics');
-    Route::post('/clear-logs', [ObservabilityController::class, 'clearLogs'])->name('clear-logs');
-    Route::post('/simulate', [ObservabilityController::class, 'simulate'])->name('simulate');
-});
-
-// =========================================================
-// ðŸ› ï¸ DEVELOPER PORTAL (DOCUMENTATION)
-// =========================================================
-Route::middleware(['auth', 'role:admin,superadmin'])->prefix('developer')->name('developer.')->group(function () {
-    Route::get('/', [DeveloperPortalController::class, 'index'])->name('portal');
-    Route::get('/{category}', [DeveloperPortalController::class, 'index'])->name('page');
-    Route::get('/{category}/{page}', [DeveloperPortalController::class, 'index'])->name('subpage');
 });
 
 // =========================================================
@@ -1838,32 +1668,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('branding', [SchoolBrandingController::class, 'update'])->name('branding.update');
     });
 
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/queues')->name('admin.observability.queues.')->group(function () {
-        Route::get('/', [QueueMonitorController::class, 'index'])->name('index');
-        Route::post('retry/{id}', [QueueMonitorController::class, 'retryFailedJob'])->name('retry');
-        Route::delete('delete/{id}', [QueueMonitorController::class, 'deleteFailedJob'])->name('delete');
-        Route::post('flush', [QueueMonitorController::class, 'flushFailedJobs'])->name('flush');
-        Route::post('dispatch', [QueueMonitorController::class, 'dispatchDemoJob'])->name('dispatch');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/cache')->name('admin.observability.cache.')->group(function () {
-        Route::get('/', [CacheMonitorController::class, 'index'])->name('index');
-        Route::post('flush-tag', [CacheMonitorController::class, 'flushTag'])->name('flush-tag');
-        Route::post('flush-all', [CacheMonitorController::class, 'flushAll'])->name('flush-all');
-        Route::post('warmup', [CacheMonitorController::class, 'warmupCache'])->name('warmup');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/gateway')->name('admin.observability.gateway.')->group(function () {
-        Route::get('/', [ApiGatewayMonitorController::class, 'index'])->name('index');
-        Route::post('reset', [ApiGatewayMonitorController::class, 'resetCircuit'])->name('reset');
-        Route::post('simulate-failure', [ApiGatewayMonitorController::class, 'simulateFailure'])->name('simulate-failure');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/observability/apm')->name('admin.observability.apm.')->group(function () {
-        Route::get('/', [ApmObservabilityController::class, 'dashboard'])->name('index');
-        Route::get('trace', [ApmObservabilityController::class, 'trace'])->name('trace');
-    });
-
     Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/security/rbac')->name('admin.security.rbac.')->group(function () {
         Route::get('/', [RbacAuditController::class, 'index'])->name('index');
         Route::post('verify-ledger', [RbacAuditController::class, 'verifyLedgerIntegrity'])->name('verify-ledger');
@@ -1881,48 +1685,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('update/{flag}', [FeatureFlagController::class, 'update'])->name('update');
     });
 
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/disaster-recovery')->name('admin.disaster-recovery.')->group(function () {
-        Route::get('/', [DisasterRecoveryController::class, 'index'])->name('index');
-        Route::post('create', [DisasterRecoveryController::class, 'createSnapshot'])->name('create');
-        Route::post('verify', [DisasterRecoveryController::class, 'verifySnapshot'])->name('verify');
-        Route::post('restore', [DisasterRecoveryController::class, 'restoreSnapshot'])->name('restore');
-        Route::delete('delete', [DisasterRecoveryController::class, 'deleteSnapshot'])->name('delete');
-        Route::post('audit', [DisasterRecoveryController::class, 'runAudit'])->name('audit');
-    });
-
     Route::middleware(['auth'])->prefix('admin/security/2fa')->name('admin.security.2fa.')->group(function () {
         Route::get('/', [SecurityTwoFactorController::class, 'index'])->name('index');
         Route::post('confirm', [SecurityTwoFactorController::class, 'confirm'])->name('confirm');
         Route::post('disable', [SecurityTwoFactorController::class, 'disable'])->name('disable');
         Route::get('elevate', [SecurityTwoFactorController::class, 'showElevateForm'])->name('elevate_form');
         Route::post('elevate', [SecurityTwoFactorController::class, 'elevate'])->name('elevate');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin,kepala_sekolah'])->prefix('admin/analytics/edw')->name('admin.analytics.edw.')->group(function () {
-        Route::get('/', [EdwOlapController::class, 'index'])->name('index');
-        Route::post('refresh', [EdwOlapController::class, 'refreshMarts'])->name('refresh');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/vendor-sla')->name('admin.vendor-sla.')->group(function () {
-        Route::get('/', [VendorSlaController::class, 'index'])->name('index');
-        Route::post('probe', [VendorSlaController::class, 'probeNow'])->name('probe');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/webhooks')->name('admin.webhooks.')->group(function () {
-        Route::get('/', [WebhookHubController::class, 'index'])->name('index');
-        Route::post('store', [WebhookHubController::class, 'store'])->name('store');
-        Route::post('toggle/{subscription}', [WebhookHubController::class, 'toggle'])->name('toggle');
-        Route::delete('delete/{subscription}', [WebhookHubController::class, 'destroy'])->name('delete');
-        Route::post('replay/{deliveryId}', [WebhookHubController::class, 'replay'])->name('replay');
-        Route::post('test-dispatch', [WebhookHubController::class, 'testDispatch'])->name('test-dispatch');
-    });
-
-    Route::middleware(['auth', 'role:admin,superadmin,kepala_sekolah'])->prefix('admin/bpa/rules')->name('admin.bpa.rules.')->group(function () {
-        Route::get('/', [BpaRuleEngineController::class, 'index'])->name('index');
-        Route::post('store', [BpaRuleEngineController::class, 'store'])->name('store');
-        Route::post('toggle/{rule}', [BpaRuleEngineController::class, 'toggle'])->name('toggle');
-        Route::delete('delete/{rule}', [BpaRuleEngineController::class, 'destroy'])->name('delete');
-        Route::post('test-execute', [BpaRuleEngineController::class, 'testExecute'])->name('test-execute');
     });
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/integration/sync')->name('admin.integration.sync.')->group(function () {

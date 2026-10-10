@@ -2,7 +2,6 @@
 
 use App\Exceptions\AiUnavailableException;
 use App\Models\AlumniData;
-use App\Models\BpaRuleExecution;
 use App\Models\Classroom;
 use App\Models\QuestionBank;
 use App\Models\Student;
@@ -10,59 +9,17 @@ use App\Models\Subject;
 use App\Models\User;
 use App\Services\AiCopilotService;
 use App\Services\AlumniEnhancedService;
-use App\Services\BusinessRuleEngineService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 /*
- * The last three entries of the made-up-value DEBT list:
- * - the rule engine claimed a counseling ticket ("BK-" + rand), a WhatsApp to
- *   the parent, a payroll deduction and an SP1 that nothing ever created;
+ * Entries of the made-up-value DEBT list (the rule engine that claimed
+ * tickets and WhatsApps it never created was removed in FASE 119):
  * - alumni in a city without coordinates were pinned at a random spot
  *   around Semarang;
  * - "AI" exam questions without an AI were template text with a random
  *   answer key, which could be saved to the question bank.
  */
-
-// ── Rule engine ─────────────────────────────────────────────────────────────
-
-test('aturan yang cocok tidak lagi mengaku sudah menerbitkan tiket atau mengirim WA', function () {
-    $engine = app(BusinessRuleEngineService::class);
-    $engine->createRule([
-        'name' => 'Kehadiran rendah', 'trigger_event' => 'attendance.checked',
-        'conditions' => [['field' => 'attendance_percentage', 'operator' => '<', 'value' => 80]],
-        'actions' => [['action_type' => 'issue_counseling_ticket'], ['action_type' => 'send_whatsapp_alert']],
-    ]);
-
-    $result = $engine->evaluateAndExecute('attendance.checked', ['attendance_percentage' => 70.0]);
-
-    expect($result['executions'][0])
-        ->matched->toBeTrue()
-        ->status->toBe('NOT_EXECUTED')
-        ->executed_actions_count->toBe(0)
-        ->not_executed_actions->toBe(['issue_counseling_ticket', 'send_whatsapp_alert']);
-
-    $log = BpaRuleExecution::sole();
-    expect($log->status)->toBe('NOT_EXECUTED')
-        ->and(collect($log->actions_executed)->pluck('result.status')->unique()->all())->toBe(['NOT_IMPLEMENTED'])
-        ->and(json_encode($log->actions_executed))->not->toContain('ticket_no')
-        ->not->toContain('SENT_TO_PARENT');
-});
-
-test('simulasi dan log eksekusi di konsol admin berterus terang', function () {
-    app(BusinessRuleEngineService::class)->createRule([
-        'name' => 'Kehadiran rendah', 'trigger_event' => 'attendance.checked',
-        'conditions' => [['field' => 'attendance_percentage', 'operator' => '<', 'value' => 80]],
-        'actions' => [['action_type' => 'issue_counseling_ticket']],
-    ]);
-    $admin = User::factory()->create(['role' => 'admin']);
-
-    $this->actingAs($admin)->from(route('admin.bpa.rules.index'))
-        ->post(route('admin.bpa.rules.test-execute'), ['trigger_event' => 'attendance.checked'])
-        ->assertSessionHas('success', fn ($message) => str_contains($message, 'cocok: 1') && str_contains($message, 'belum dijalankan'));
-
-    $this->get(route('admin.bpa.rules.index'))->assertOk()->assertSee('1 belum dijalankan');
-});
 
 // ── Alumni map ──────────────────────────────────────────────────────────────
 
