@@ -1,15 +1,17 @@
 # 👥 Modul Kepegawaian & Penggajian (HRD) SISTA
 
-Modul HRD mengelola seluruh administrasi staf pendidik (guru) dan kependidikan (TU/Karyawan), pelacakan absensi GPS, serta sistem kalkulasi penggajian bulanan otomatis.
+Modul HRD mengelola seluruh administrasi staf pendidik (guru) dan kependidikan (TU/Karyawan), presensi dari mesin sidik jari, serta sistem kalkulasi penggajian bulanan otomatis.
 
 ---
 
-## 📍 1. Absensi Kehadiran Geofencing GPS (`GpsAttendanceTest`)
+## 📍 1. Presensi dari Mesin Sidik Jari (`FingerprintImportTest`)
 
-Sistem mengamankan presensi karyawan dari kecurangan menggunakan **Protokol Geofencing GPS**:
-*   **Lokasi Presisi:** Absensi hanya dapat diinput melalui peramban HP dengan sensor GPS aktif.
-*   **Geofence Radius:** Karyawan wajib berada dalam radius **100 meter** dari koordinat pusat sekolah yang diatur di sistem panel. Jika berada di luar radius, presensi otomatis ditolak.
-*   **Selfie Verification:** Karyawan wajib mengunggah foto swafoto (*selfie*) saat presensi masuk. Foto disimpan di storage server sebagai bukti kehadiran otentik.
+Guru dan karyawan presensi di **mesin sidik jari** sekolah; aplikasi tidak menyediakan check-in pegawai (FASE 119). Tata Usaha mengimpor log yang diekspor mesin di menu **Administrasi → Impor Sidik Jari** (`hrd/fingerprint-import`):
+*   **Format fleksibel:** CSV, TXT, DAT, atau Excel. Nama kolom (ID mesin, tanggal/jam, atau tanggal dan jam terpisah), pemisah, dan format tanggal diatur di `config/fingerprint.php`, jadi tidak terikat satu merek mesin.
+*   **Pemetaan ID:** setiap pegawai diisi "ID di Mesin Sidik Jari" pada data pegawainya. ID mesin yang belum dipetakan dilaporkan beserta jumlah scan-nya, bukan diabaikan diam-diam.
+*   **Idempoten:** scan pertama sehari menjadi jam masuk, scan terakhir menjadi jam pulang, digabung dengan data yang sudah ada. Mengimpor file yang sama dua kali tidak menggandakan apa pun. Hari yang sudah tercatat izin, sakit, atau cuti tidak ditimpa.
+*   **Terlambat:** scan pertama setelah `FINGERPRINT_LATE_AFTER` (bawaan 07:00) menandai hari itu terlambat.
+*   **Rekap bulanan** (`EmployeeAttendanceRecap`): hadir, terlambat, izin/sakit/cuti, dan tidak hadir per pegawai. Hari kerja dihitung dari hari yang tercakup data presensi, bukan diasumsikan 25; bulan tanpa data bernilai kosong (`null`), bukan 0.
 
 ---
 

@@ -78,19 +78,4 @@ class Fase69SuperAppGatewayTest extends TestCase
         Event::assertDispatched(EmergencyBroadcastEvent::class);
         Event::assertDispatched(CampusAnnouncementEvent::class);
     }
-
-    public function test_geofence_checkin_api(): void
-    {
-        $user = User::factory()->create(['role' => 'student']);
-
-        $response = $this->actingAs($user, 'sanctum')->postJson('/api/v1/mobile/geofence/checkin', [
-            'latitude' => -6.996160,
-            'longitude' => 110.428510,
-            'accuracy' => 5.0,
-            'is_mock' => false,
-        ]);
-
-        $response->assertStatus(200);
-        $response->assertJsonPath('status', 'verified');
-    }
 }

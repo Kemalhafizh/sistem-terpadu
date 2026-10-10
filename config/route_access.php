@@ -219,7 +219,6 @@ return [
         'POST mutabaah/weekly-acknowledge/{summary}',
         'POST mutabaah/weekly-comment/{summary}',
         'POST mutabaah/{student}/verify',
-        'POST my-hrd/attendance',
         'POST my-hrd/leaves',
         'GET my-hrd/payslips/{payroll}/pdf',
         'GET my-hrd/portal',
