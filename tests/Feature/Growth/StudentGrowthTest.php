@@ -6,7 +6,6 @@ use App\Models\CharacterDimension;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
 use App\Services\Growth\PtcSchedulerService;
-use App\Services\Growth\StudentLifecycleService;
 use App\Services\Growth\WellbeingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -132,28 +131,5 @@ class StudentGrowthTest extends TestCase
         $response = $this->actingAs($this->admin)->get(route('growth.ptc.sessions'));
         $response->assertStatus(200);
         $response->assertSee('PTC Mid Semester');
-    }
-
-    /** @test */
-    public function test_34_4_student_lifecycle_orchestration_engine()
-    {
-        $service = app(StudentLifecycleService::class);
-
-        // 1. Record event
-        $ev = $service->recordEvent($this->student->id, 'enrolled', 'Active Student', $this->admin->id, null, null, 'Siswa Baru Enrolled');
-        $this->assertEquals('enrolled', $ev->event_type);
-
-        // 2. Record Milestone
-        $milestone = $service->recordMilestone($this->student->id, 'first_day', 'Hari pertama kelas X');
-        $this->assertEquals('first_day', $milestone->milestone_type);
-
-        // 3. Cohort Retention
-        $retention = $service->calculateCohortRetention();
-        $this->assertGreaterThan(0, $retention['total_students']);
-
-        // HTTP View Test
-        $response = $this->actingAs($this->admin)->get(route('growth.lifecycle.timeline', $this->student->id));
-        $response->assertStatus(200);
-        $response->assertSee('Vertical Lifecycle Timeline');
     }
 }

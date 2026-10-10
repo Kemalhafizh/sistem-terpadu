@@ -21,10 +21,6 @@ use App\Http\Controllers\Admin\SecurityDashboardController;
 use App\Http\Controllers\Admin\SecurityTwoFactorController;
 use App\Http\Controllers\Admin\SyncController;
 use App\Http\Controllers\AlumniController;
-use App\Http\Controllers\Analytics\AcademicBenchmarkController;
-use App\Http\Controllers\Analytics\FinancialForecastingController;
-use App\Http\Controllers\Analytics\ParentEngagementController;
-use App\Http\Controllers\Analytics\PredictivePerformanceController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AnalyticsExportController;
 use App\Http\Controllers\AnnouncementController;
@@ -47,17 +43,12 @@ use App\Http\Controllers\Communication\DocumentSignatureController;
 use App\Http\Controllers\Communication\MessagingController;
 use App\Http\Controllers\Communication\NotificationCenterController;
 use App\Http\Controllers\Communication\ResourceBookingController;
-use App\Http\Controllers\Community\MentorshipController;
-use App\Http\Controllers\Community\MobileAppGatewayController;
-use App\Http\Controllers\Community\PartnershipController;
-use App\Http\Controllers\Community\VolunteerController;
 use App\Http\Controllers\Compliance\AuditConsoleController;
 use App\Http\Controllers\Compliance\DapodikExportController;
 use App\Http\Controllers\Compliance\DataRetentionController;
 use App\Http\Controllers\Compliance\LegalContractController;
 use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\Content\ExportEngineController;
-use App\Http\Controllers\Content\MediaAssetController;
 use App\Http\Controllers\Content\OcrDocumentController;
 use App\Http\Controllers\CounselingController;
 use App\Http\Controllers\CurriculumController;
@@ -71,32 +62,22 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExtracurricularController;
 use App\Http\Controllers\Finance\CanteenController;
 use App\Http\Controllers\Finance\CharityController;
-use App\Http\Controllers\Finance\FinancialAuditController;
 use App\Http\Controllers\Finance\WadiahController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\Financial\BudgetPlanningController;
-use App\Http\Controllers\Financial\CostCenterController;
-use App\Http\Controllers\Financial\ProcurementController;
 use App\Http\Controllers\Financial\ScholarshipController;
 use App\Http\Controllers\FinancialReportController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\GamificationController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\Grc\AccreditationController;
-use App\Http\Controllers\Grc\QualityAssuranceController;
-use App\Http\Controllers\Grc\RiskManagementController;
-use App\Http\Controllers\Grc\SopGovernanceController;
 use App\Http\Controllers\Growth\P5AssessmentController;
 use App\Http\Controllers\Growth\PtcSchedulerController;
-use App\Http\Controllers\Growth\StudentLifecycleController;
 use App\Http\Controllers\Growth\WellbeingController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\MyHRDController;
 use App\Http\Controllers\HRD\PayrollController;
-use App\Http\Controllers\HumanCapital\CpdTrackerController;
 use App\Http\Controllers\HumanCapital\Evaluation360Controller;
-use App\Http\Controllers\HumanCapital\SuccessionPlanningController;
-use App\Http\Controllers\HumanCapital\WorkloadBalancingController;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\LetterController;
@@ -318,18 +299,6 @@ Route::middleware('auth')->group(function () {
     Route::get('financial/budget/{id}/variance', [BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
     Route::get('financial/budget/{id}/forecast', [BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
 
-    // 33.2: Procurement & Purchase Order Workflow
-    Route::get('financial/procurement', [ProcurementController::class, 'dashboard'])->name('financial.procurement.dashboard');
-    Route::get('financial/procurement/request', [ProcurementController::class, 'createRequest'])->name('financial.procurement.create_request');
-    Route::post('financial/procurement/request', [ProcurementController::class, 'storeRequest'])->name('financial.procurement.store_request');
-    Route::post('financial/procurement/{id}/submit', [ProcurementController::class, 'submitApproval'])->name('financial.procurement.submit');
-    Route::post('financial/procurement/{id}/approve', [ProcurementController::class, 'approve'])->name('financial.procurement.approve');
-    Route::post('financial/procurement/{id}/reject', [ProcurementController::class, 'reject'])->name('financial.procurement.reject');
-    Route::get('financial/procurement/{id}/po', [ProcurementController::class, 'createPO'])->name('financial.procurement.create_po');
-    Route::post('financial/procurement/{id}/po', [ProcurementController::class, 'storePO'])->name('financial.procurement.store_po');
-    Route::post('financial/procurement/po/{poId}/grn', [ProcurementController::class, 'recordGRN'])->name('financial.procurement.record_grn');
-    Route::get('financial/procurement/history', [ProcurementController::class, 'history'])->name('financial.procurement.history');
-
     // 33.3: Scholarship & Grant Management Portal
     Route::get('financial/scholarships', [ScholarshipController::class, 'programs'])->name('financial.scholarships.programs');
     Route::get('financial/scholarships/create', [ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program');
@@ -342,14 +311,6 @@ Route::middleware('auth')->group(function () {
     Route::get('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form');
     Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
     Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report');
-
-    // 33.4: Cost Center Accounting & Budget Allocation
-    Route::get('financial/cost-centers', [CostCenterController::class, 'dashboard'])->name('financial.cost-centers.dashboard');
-    Route::get('financial/cost-centers/allocate', [CostCenterController::class, 'allocateForm'])->name('financial.cost-centers.allocate_form');
-    Route::post('financial/cost-centers', [CostCenterController::class, 'storeCostCenter'])->name('financial.cost-centers.store');
-    Route::post('financial/cost-centers/{id}/allocate', [CostCenterController::class, 'storeAllocation'])->name('financial.cost-centers.store_allocation');
-    Route::post('financial/cost-centers/{id}/expense', [CostCenterController::class, 'storeExpense'])->name('financial.cost-centers.store_expense');
-    Route::get('financial/cost-centers/{id}/transactions', [CostCenterController::class, 'transactions'])->name('financial.cost-centers.transactions');
 
     // FASE 34: Student Growth Ecosystem -- Wellbeing, Positive Behavior & Parent Conference
     // 34.1: Student Mental Health & Wellbeing Screening
@@ -376,12 +337,6 @@ Route::middleware('auth')->group(function () {
     Route::get('growth/ptc/sessions/{sessionId}/slots', [PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
     Route::post('growth/ptc/slots/{slotId}/book', [PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
     Route::get('growth/ptc/teacher-schedule', [PtcSchedulerController::class, 'teacherSchedule'])->name('growth.ptc.teacher_schedule');
-
-    // 34.4: Student Lifecycle Orchestration Engine
-    Route::get('growth/lifecycle/student/{studentId}', [StudentLifecycleController::class, 'timeline'])->name('growth.lifecycle.timeline');
-    Route::post('growth/lifecycle/student/{studentId}/event', [StudentLifecycleController::class, 'storeEvent'])->name('growth.lifecycle.store_event');
-    Route::get('growth/lifecycle/retention', [StudentLifecycleController::class, 'retentionDashboard'])->name('growth.lifecycle.retention');
-    Route::get('growth/lifecycle/at-risk', [StudentLifecycleController::class, 'atRiskStudents'])->name('growth.lifecycle.at_risk');
 
     // FASE 35: Enterprise Academic Intelligence -- Kurikulum Merdeka & LMS 2.0
     // 35.1: Competency Mapping (CP/TP/ATP)
@@ -418,41 +373,6 @@ Route::middleware('auth')->group(function () {
     Route::get('hc/evaluation/teacher/{teacherId}/results', [Evaluation360Controller::class, 'results'])->name('hc.evaluation.results');
     Route::get('hc/evaluation/ranking', [Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
 
-    // 36.2: CPD/PKB Credit Tracker
-    Route::get('hc/cpd/dashboard', [CpdTrackerController::class, 'dashboard'])->name('hc.cpd.dashboard');
-    Route::post('hc/cpd/log', [CpdTrackerController::class, 'logActivity'])->name('hc.cpd.log_activity');
-    Route::get('hc/cpd/team-overview', [CpdTrackerController::class, 'teamOverview'])->name('hc.cpd.team_overview');
-    Route::post('hc/cpd/verify/{id}', [CpdTrackerController::class, 'verifyActivity'])->name('hc.cpd.verify');
-
-    // 36.3: School Leadership Succession Planning
-    Route::get('hc/succession/positions', [SuccessionPlanningController::class, 'positions'])->name('hc.succession.positions');
-    Route::post('hc/succession/candidates', [SuccessionPlanningController::class, 'storeCandidate'])->name('hc.succession.store_candidate');
-    Route::get('hc/succession/pipeline-report', [SuccessionPlanningController::class, 'pipelineReport'])->name('hc.succession.pipeline_report');
-
-    // 36.4: Teacher Workload Balancing & Capacity Dashboard
-    Route::get('hc/workload/dashboard', [WorkloadBalancingController::class, 'dashboard'])->name('hc.workload.dashboard');
-    Route::post('hc/workload', [WorkloadBalancingController::class, 'storeWorkload'])->name('hc.workload.store');
-    Route::get('hc/workload/capacity-report', [WorkloadBalancingController::class, 'capacityReport'])->name('hc.workload.capacity_report');
-
-    // FASE 39: Advanced Analytics & Business Intelligence
-    // 39.1: Predictive Student Performance Engine
-    Route::get('analytics/predictive/dashboard', [PredictivePerformanceController::class, 'dashboard'])->name('analytics.predictive.dashboard');
-    Route::get('analytics/predictive/risk/{id}', [PredictivePerformanceController::class, 'showStudentRisk'])->name('analytics.predictive.student_risk');
-    Route::post('analytics/predictive/intervention', [PredictivePerformanceController::class, 'storeIntervention'])->name('analytics.predictive.store_intervention');
-
-    // 39.2: Parent Engagement Analytics Dashboard
-    Route::get('analytics/engagement/dashboard', [ParentEngagementController::class, 'dashboard'])->name('analytics.engagement.dashboard');
-    Route::get('analytics/engagement/{id}', [ParentEngagementController::class, 'show'])->name('analytics.engagement.detail');
-
-    // 39.3: Financial Forecasting & Cash Flow Projection
-    Route::get('analytics/finance/forecast', [FinancialForecastingController::class, 'dashboard'])->name('analytics.finance.dashboard');
-    Route::get('analytics/finance/scenario-builder', [FinancialForecastingController::class, 'createScenario'])->name('analytics.finance.create_scenario');
-    Route::post('analytics/finance/scenario', [FinancialForecastingController::class, 'storeScenario'])->name('analytics.finance.store_scenario');
-
-    // 39.4: Academic Benchmarking & National Comparison Engine
-    Route::get('analytics/benchmarking/dashboard', [AcademicBenchmarkController::class, 'dashboard'])->name('analytics.benchmarking.dashboard');
-    Route::get('analytics/benchmarking/import', [AcademicBenchmarkController::class, 'importForm'])->name('analytics.benchmarking.import');
-
     // FASE 40: Advanced Student Experience Platform
     // 40.1: Student Self-Service Portal
     Route::get('student/portal/dashboard', [StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
@@ -471,23 +391,6 @@ Route::middleware('auth')->group(function () {
     Route::get('evaluations', [CourseEvaluationController::class, 'index'])->name('evaluations.index');
     Route::get('evaluations/{id}/fill', [CourseEvaluationController::class, 'fillForm'])->name('evaluations.fill');
     Route::post('evaluations/response', [CourseEvaluationController::class, 'storeResponse'])->name('evaluations.store_response');
-
-    // FASE 41: Advanced Parent & Community Engagement
-    // 41.1: Parent Mobile App API Gateway
-    Route::post('api/mobile/token', [MobileAppGatewayController::class, 'registerToken'])->name('api.mobile.token');
-
-    // 41.2: School-Community Partnership Management
-    Route::get('partnerships', [PartnershipController::class, 'index'])->name('partnerships.index');
-    Route::get('partnerships/create', [PartnershipController::class, 'create'])->name('partnerships.create');
-    Route::post('partnerships', [PartnershipController::class, 'store'])->name('partnerships.store');
-
-    // 41.3: Volunteer Management & Hour Tracking
-    Route::get('volunteers/opportunities', [VolunteerController::class, 'opportunities'])->name('volunteers.opportunities');
-    Route::get('volunteers/dashboard', [VolunteerController::class, 'dashboard'])->name('volunteers.dashboard');
-
-    // 41.4: Alumni Mentorship Program Platform
-    Route::get('mentorship/directory', [MentorshipController::class, 'directory'])->name('mentorship.directory');
-    Route::get('mentorship/workspace', [MentorshipController::class, 'workspace'])->name('mentorship.workspace');
 
     // FASE 42: Advanced Facility & Operations Management
     // 42.1: IoT Smart Facility & Energy Monitor Hub
@@ -515,14 +418,6 @@ Route::middleware('auth')->group(function () {
     // 43.4: Legal Contract & Vendor Compliance Manager
     Route::get('compliance/contracts/index', [LegalContractController::class, 'index'])->name('compliance.contracts.index');
 
-    // Centralized Digital Asset Management (DAM)
-    Route::get('media', [MediaAssetController::class, 'index'])->name('media.index');
-    Route::post('media/upload', [MediaAssetController::class, 'upload'])->name('media.upload');
-    Route::post('media/folders', [MediaAssetController::class, 'createFolder'])->name('media.create_folder');
-    Route::post('media/{id}/move', [MediaAssetController::class, 'moveToFolder'])->name('media.move');
-    Route::delete('media/{id}', [MediaAssetController::class, 'destroy'])->name('media.destroy');
-    Route::get('media/storage-stats', [MediaAssetController::class, 'storageStats'])->name('media.storage_stats');
-
     // Intelligent Document Processing (IDP) & OCR Engine
     Route::get('ocr', [OcrDocumentController::class, 'index'])->name('ocr.index');
     Route::post('ocr/upload', [OcrDocumentController::class, 'upload'])->name('ocr.upload');
@@ -543,31 +438,6 @@ Route::middleware('auth')->group(function () {
     Route::post('accreditation/evidences', [AccreditationController::class, 'uploadEvidence'])->name('accreditation.upload_evidence');
     Route::post('accreditation/evidences/{id}/verify', [AccreditationController::class, 'verifyEvidence'])->name('accreditation.verify_evidence');
     Route::get('accreditation/report', [AccreditationController::class, 'report'])->name('accreditation.report');
-
-    // Internal Quality Assurance (SPMI) & School Self-Evaluation (EDS) Engine
-    Route::get('quality/cycles', [QualityAssuranceController::class, 'cycles'])->name('quality.cycles');
-    Route::post('quality/cycles', [QualityAssuranceController::class, 'createCycle'])->name('quality.create_cycle');
-    Route::get('quality/cycles/{id}/evaluation', [QualityAssuranceController::class, 'fillEvaluation'])->name('quality.fill_evaluation');
-    Route::post('quality/cycles/{id}/evaluation', [QualityAssuranceController::class, 'submitEvaluation'])->name('quality.submit_evaluation');
-    Route::get('quality/cycles/{id}/results', [QualityAssuranceController::class, 'results'])->name('quality.results');
-    Route::get('quality/cycles/{id}/compare', [QualityAssuranceController::class, 'compareReport'])->name('quality.compare');
-
-    // Risk Assessment Matrix & Incident Response Workflow
-    Route::get('risk/register', [RiskManagementController::class, 'riskRegister'])->name('risk.register');
-    Route::post('risk/register', [RiskManagementController::class, 'createRisk'])->name('risk.create');
-    Route::get('risk/matrix', [RiskManagementController::class, 'riskMatrix'])->name('risk.matrix');
-    Route::get('risk/incidents', [RiskManagementController::class, 'incidents'])->name('risk.incidents');
-    Route::post('risk/incidents', [RiskManagementController::class, 'createIncident'])->name('risk.create_incident');
-    Route::post('risk/incidents/{id}/resolve', [RiskManagementController::class, 'resolveIncident'])->name('risk.resolve_incident');
-
-    // Policy & SOP Document Governance System
-    Route::get('sop', [SopGovernanceController::class, 'index'])->name('sop.index');
-    Route::get('sop/create', [SopGovernanceController::class, 'create'])->name('sop.create');
-    Route::post('sop', [SopGovernanceController::class, 'store'])->name('sop.store');
-    Route::get('sop/{id}', [SopGovernanceController::class, 'show'])->name('sop.show');
-    Route::post('sop/{id}/publish', [SopGovernanceController::class, 'publish'])->name('sop.publish');
-    Route::post('sop/{id}/acknowledge', [SopGovernanceController::class, 'acknowledge'])->name('sop.acknowledge');
-    Route::get('sop-compliance', [SopGovernanceController::class, 'complianceReport'])->name('sop.compliance');
 
     // =========================================================
     // EKSTRAKURIKULER & OSIS â€” Pengembangan Non-Akademik
@@ -1647,13 +1517,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('donations/{id}/certificate', [CharityController::class, 'downloadCertificate'])->name('certificate');
     });
 
-    Route::middleware('role:staf_tu,admin,superadmin')->prefix('finance/audit')->name('finance.audit.')->group(function () {
-        Route::get('/', [FinancialAuditController::class, 'index'])->name('index');
-        Route::post('run', [FinancialAuditController::class, 'runAudit'])->name('run');
-        Route::get('journal/{id}', [FinancialAuditController::class, 'showUnbalancedJournalDetails'])->name('show');
-        Route::get('export', [FinancialAuditController::class, 'exportAuditReport'])->name('export');
-    });
-
     Route::middleware(['auth', 'role:admin,superadmin'])->prefix('admin/security')->name('admin.security.')->group(function () {
         Route::get('/', [SecurityDashboardController::class, 'dashboard'])->name('index');
         Route::get('logs', [SecurityDashboardController::class, 'threatLogs'])->name('logs');
@@ -1723,13 +1586,10 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-require __DIR__.'/strategic.php';
 require __DIR__.'/knowledge.php';
 require __DIR__.'/treasury.php';
 require __DIR__.'/adaptive.php';
 require __DIR__.'/foundation.php';
-require __DIR__.'/recruitment.php';
-require __DIR__.'/omnichannel.php';
 require __DIR__.'/data_engineering.php';
 require __DIR__.'/microlearning.php';
 require __DIR__.'/career_readiness.php';

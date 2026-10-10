@@ -16,6 +16,13 @@ dataset('removed prefixes', [
     'admin/analytics/edw', 'admin/vendor-sla', 'admin/webhooks', 'admin/bpa',
     'api/v1/infrastructure', 'api/v1/debloat', 'api/v1/design', 'api/v1/iot/energy', 'api/v1/blockchain/did',
     'api/v1/certificates/verify',
+    // PR 2: corporate management, marketing and media.
+    'strategic/', 'quality', 'risk', 'sop', 'workflow/', 'hc/cpd', 'hc/succession', 'hc/workload',
+    'recruitment', 'compensation', 'wellness', 'turnover', 'omnichannel', 'drip-campaigns', 'nps', 'pr/',
+    'publishing/', 'mentorship', 'partnerships', 'volunteers', 'media', 'finance/audit',
+    'financial/cost-centers', 'financial/procurement', 'growth/lifecycle',
+    'analytics/predictive', 'analytics/engagement', 'analytics/finance', 'analytics/benchmarking',
+    'api/v1/analytics/at-risk', 'api/v1/analytics/treasury', 'api/v1/analytics/student/{id}/risk', 'api/mobile/token',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {

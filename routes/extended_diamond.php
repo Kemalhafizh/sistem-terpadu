@@ -15,14 +15,6 @@ use App\Http\Controllers\InteractiveUi\WhiteboardSessionController;
 use App\Http\Controllers\Mobile\MobileParentActionController;
 use App\Http\Controllers\Mobile\MobileStudentHubController;
 use App\Http\Controllers\Mobile\MobileTeacherDashboardController;
-use App\Http\Controllers\Publishing\DataStoryController;
-use App\Http\Controllers\Publishing\DigitalMagazineController;
-use App\Http\Controllers\Publishing\PodcastController;
-use App\Http\Controllers\Publishing\VideoStudioController;
-use App\Http\Controllers\Workflow\ApprovalChainController;
-use App\Http\Controllers\Workflow\ProcessMiningController;
-use App\Http\Controllers\Workflow\SlaDashboardController;
-use App\Http\Controllers\Workflow\WorkflowDesignerController;
 use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +25,7 @@ $diamondStaff = Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess:
 $diamondTeachers = Roles::only(StudentDataAccess::TEACHER_ROLES, Roles::LEADERSHIP, 'admin');
 $diamondPrincipal = Roles::only(Roles::PRINCIPAL, 'admin');
 
-Route::middleware(['auth', 'verified'])->group(function () use ($diamondStaff, $diamondTeachers, $diamondPrincipal) {
+Route::middleware(['auth', 'verified'])->group(function () use ($diamondStaff, $diamondTeachers) {
 
     // === FASE 63: Mobile-First Experience ===
     Route::prefix('mobile')->name('mobile.')->group(function () {
@@ -77,36 +69,6 @@ Route::middleware(['auth', 'verified'])->group(function () use ($diamondStaff, $
         Route::get('student-progress-cockpit/{student}', [StudentProgressCockpitController::class, 'showStudent'])->name('student-cockpit.show')->middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'bk', Roles::LEADERSHIP, 'admin'));
 
         Route::get('financial-health-scoreboard', [FinancialHealthScoreboardController::class, 'index'])->name('financial-scoreboard.index')->middleware(Roles::only(Roles::PRINCIPAL, 'staf_tu', 'admin'));
-    });
-
-    // === FASE 66: Content Delivery & Digital Publishing ===
-    // FASE 118: everyone in the school reads the magazine and the podcasts;
-    // teachers record podcasts; humas and leadership publish the rest.
-    Route::prefix('publishing')->name('publishing.')->group(function () {
-        Route::get('magazines', [DigitalMagazineController::class, 'index'])->name('magazines.index')->middleware(Roles::only(Roles::MEMBERS));
-        Route::post('magazines', [DigitalMagazineController::class, 'store'])->name('magazines.store')->middleware(Roles::only('waka_humas', Roles::PRINCIPAL, 'admin'));
-        Route::post('magazines/subscribe', [DigitalMagazineController::class, 'subscribe'])->name('magazines.subscribe')->middleware(Roles::only(Roles::MEMBERS));
-
-        Route::get('video-studio', [VideoStudioController::class, 'index'])->name('video.index')->middleware(Roles::only('waka_humas', Roles::PRINCIPAL, 'admin'));
-        Route::post('video-studio/upload', [VideoStudioController::class, 'upload'])->name('video.upload')->middleware(Roles::only('waka_humas', Roles::PRINCIPAL, 'admin'));
-
-        Route::get('podcasts', [PodcastController::class, 'index'])->name('podcasts.index')->middleware(Roles::only(Roles::MEMBERS));
-        Route::post('podcasts', [PodcastController::class, 'store'])->name('podcasts.store')->middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_humas', Roles::PRINCIPAL, 'admin'));
-
-        Route::get('data-stories', [DataStoryController::class, 'index'])->name('stories.index')->middleware(Roles::only('waka_humas', Roles::PRINCIPAL, 'admin'));
-        Route::post('data-stories', [DataStoryController::class, 'store'])->name('stories.store')->middleware(Roles::only('waka_humas', Roles::PRINCIPAL, 'admin'));
-    });
-
-    // === FASE 67: Advanced Workflow Automation & Process Mining ===
-    Route::prefix('workflow')->name('workflow.')->group(function () use ($diamondStaff, $diamondPrincipal) {
-        Route::get('designer', [WorkflowDesignerController::class, 'index'])->name('designer.index')->middleware($diamondPrincipal);
-        Route::post('designer', [WorkflowDesignerController::class, 'store'])->name('designer.store')->middleware($diamondPrincipal);
-
-        Route::get('approvals', [ApprovalChainController::class, 'index'])->name('approvals.index')->middleware($diamondStaff);
-        Route::post('approvals/{approvalRequest}/decision', [ApprovalChainController::class, 'submitDecision'])->name('approvals.decision')->middleware($diamondStaff);
-
-        Route::get('process-mining', [ProcessMiningController::class, 'index'])->name('mining.index')->middleware($diamondPrincipal);
-        Route::get('sla-dashboard', [SlaDashboardController::class, 'index'])->name('sla.index')->middleware($diamondPrincipal);
     });
 
     // === FASE 68: Accessibility, Localization & Universal Design ===

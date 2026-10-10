@@ -6,7 +6,6 @@ use App\Models\CharacterDimension;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
 use App\Services\Growth\PtcSchedulerService;
-use App\Services\Growth\StudentLifecycleService;
 use App\Services\Growth\WellbeingService;
 use Illuminate\Database\Seeder;
 
@@ -84,9 +83,5 @@ class StudentGrowthSeeder extends Seeder
             $ptcService->bookSlot($slot, $parent->id, $student->id, 'Diskusi Perkembangan Belajar & Hasil Tahfidz');
         }
 
-        // 5. Student Lifecycle
-        $lifecycleService = app(StudentLifecycleService::class);
-        $lifecycleService->recordEvent($student->id, 'enrolled', 'Active Student', $superadmin->id, null, null, 'Siswa terdaftar resmi di SMA ISA 1 Semarang');
-        $lifecycleService->recordMilestone($student->id, 'first_day', 'Hari pertama masuk sekolah T.A. 2026/2027');
     }
 }

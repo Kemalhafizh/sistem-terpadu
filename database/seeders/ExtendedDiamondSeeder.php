@@ -2,28 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\ApprovalChain;
 use App\Models\Classroom;
 use App\Models\ClassroomLayout;
-use App\Models\DataStory;
-use App\Models\DigitalMagazine;
 use App\Models\ExecutiveKpi;
 use App\Models\KanbanBoard;
 use App\Models\KanbanTask;
 use App\Models\LocalizationString;
-use App\Models\Podcast;
-use App\Models\PodcastEpisode;
 use App\Models\ScheduleBuilderDraft;
 use App\Models\Student;
 use App\Models\StudentProgressSnapshot;
 use App\Models\Teacher360Metric;
 use App\Models\ThemePreference;
 use App\Models\User;
-use App\Models\VideoStudio;
 use App\Models\VoiceNavigationCommand;
 use App\Models\WcagScanReport;
 use App\Models\WhiteboardSession;
-use App\Models\WorkflowBlueprint;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -143,99 +136,7 @@ class ExtendedDiamondSeeder extends Seeder
         // FinancialScoreboardService computes them from real transactions
         // whenever the scoreboard is opened.
 
-        // 3. FASE 66 Seeding
-        DigitalMagazine::firstOrCreate(
-            ['slug' => 'gema-sultan-agung-edisi-45'],
-            [
-                'title' => 'Gema Sultan Agung - Edisi Spesial Dies Natalis & Prestasi Siswa',
-                'issue_number' => 45,
-                'content_blocks' => [['type' => 'header', 'text' => 'Meraih Prestasi Gemilang Bersama YBWSA']],
-                'status' => 'published',
-                'published_at' => now(),
-                'author_id' => $admin->id,
-            ]
-        );
-
-        VideoStudio::firstOrCreate(
-            ['title' => 'Video Pembelajaran: Konsep Gelombang Fisika Interaktif'],
-            [
-                'description' => 'Materi fisika SMA kelas XI dengan visualisasi simulasi gelombang.',
-                'original_file_path' => '/storage/videos/fisika-gelombang.mp4',
-                'hls_playlist_paths' => ['720p' => '/storage/videos/hls/720p.m3u8'],
-                'thumbnail_path' => '/images/thumb-fisika.jpg',
-                'duration_seconds' => 750,
-                'transcoding_status' => 'completed',
-                'view_count' => 142,
-                'uploader_id' => $guru->id,
-            ]
-        );
-
-        $podcast = Podcast::firstOrCreate(
-            ['slug' => 'lentera-qurani-sma-islam-sultan-agung-1'],
-            [
-                'title' => 'Lentera Qur\'ani - Kajian Hati Remaja Muslim',
-                'description' => 'Podcast bimbingan akhlak, tips menghafal Al-Qur\'an, dan wawasan Islam kontemporer.',
-                'category' => 'islamic_studies',
-                'host_id' => $guru->id,
-            ]
-        );
-
-        PodcastEpisode::firstOrCreate(
-            ['title' => 'Episode 1: Menjaga Istiqomah Hafalan di Era Digital'],
-            [
-                'podcast_id' => $podcast->id,
-                'audio_file_path' => '/storage/audio/podcast-ep1.mp3',
-                'duration_seconds' => 1140,
-                'show_notes' => 'Tips membagi waktu antara pelajaran akademik dan muroja\'ah tahfidz.',
-                'listen_count' => 320,
-                'published_at' => now(),
-            ]
-        );
-
-        DataStory::firstOrCreate(
-            ['slug' => 'jejak-transformasi-digital-sista-2026'],
-            [
-                'title' => 'Jejak Transformasi Digital SISTA 2026',
-                'summary' => 'Perjalanan inovasi digital SMA Islam Sultan Agung 1 Semarang menuju Sekolah Unggulan Berkelanjutan.',
-                'story_configuration' => [
-                    'steps' => [
-                        ['title' => '99.8% Digitalisasi Administrasi', 'stat' => 'Paperless Campus', 'desc' => 'Efisiensi cetak dokumen dan kecepatan persetujuan.'],
-                        ['title' => 'Prestasi Internasional', 'stat' => '14 Medali Emas', 'desc' => 'Olimpiade sains dan robotika tingkat Asia Tenggara.'],
-                    ],
-                ],
-                'created_by' => $admin->id,
-                'is_published' => true,
-            ]
-        );
-
-        // 4. FASE 67 Seeding
-        $workflow = WorkflowBlueprint::firstOrCreate(
-            ['name' => 'Alur Persetujuan Anggaran RKAS Tahunan'],
-            [
-                'process_type' => 'rkas_approval',
-                'bpmn_schema' => [
-                    'nodes' => [
-                        ['id' => 'start', 'type' => 'start', 'label' => 'Mulai Pengajuan'],
-                        ['id' => 'review_waka', 'type' => 'user_task', 'label' => 'Persetujuan Waka Kurikulum'],
-                        ['id' => 'review_kepsek', 'type' => 'user_task', 'label' => 'Persetujuan Kepala Sekolah'],
-                        ['id' => 'end', 'type' => 'end', 'label' => 'Selesai & Disetujui'],
-                    ],
-                ],
-                'is_active' => true,
-                'created_by' => $admin->id,
-            ]
-        );
-
-        ApprovalChain::firstOrCreate(
-            ['workflow_blueprint_id' => $workflow->id],
-            [
-                'current_node_key' => 'review_waka',
-                'status' => 'in_progress',
-                'requester_id' => $guru->id,
-            ]
-        );
-
-        // 5. FASE 68 Seeding
+        // 3. FASE 68 Seeding
         WcagScanReport::firstOrCreate(
             ['scanned_url' => 'https://sistem.sultanagung1.sch.id'],
             [

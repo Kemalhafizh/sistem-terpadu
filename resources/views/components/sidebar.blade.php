@@ -854,7 +854,7 @@
         @endcanVisit
 
         {{-- Enterprise Platinum Ecosystem (Fase 51-56) --}}
-        @php($platinumMenus = collect(['micro-lessons.index', 'recruitment.kanban', 'visitors.dashboard', 'omnichannel.dashboard', 'data_engineering.streams', 'internships.portal', 'tahsin.index', 'iep.index', 'carbon.dashboard', 'cctv.index', 'alumni.index', 'homework_copilot.dashboard'])->contains(fn ($route) => \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), $route)))
+        @php($platinumMenus = collect(['micro-lessons.index', 'visitors.dashboard', 'data_engineering.streams', 'internships.portal', 'tahsin.index', 'iep.index', 'carbon.dashboard', 'cctv.index', 'alumni.index', 'homework_copilot.dashboard'])->contains(fn ($route) => \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), $route)))
         @if($platinumMenus)
         <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
             <p class="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">{{ __('navigation.header_enterprise_platinum') }}</p>
@@ -874,32 +874,12 @@
         </a>
         @endcanVisit
 
-        {{-- Advanced HR & Wellbeing --}}
-        @canVisit('recruitment.kanban')
-        <a href="{{ route('recruitment.kanban') }}" class="{{ $linkClass }} {{ request()->routeIs('recruitment.*') || request()->routeIs('compensation.*') || request()->routeIs('wellness.*') || request()->routeIs('turnover.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.recruitment') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0 text-emerald-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.recruitment') }}</span>
-            </div>
-        </a>
-        @endcanVisit
-
         {{-- Smart Campus & Visitor Ops --}}
         @canVisit('visitors.dashboard')
         <a href="{{ route('visitors.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('visitors.*') || request()->routeIs('store.*') || request()->routeIs('events.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.smart_campus') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0 text-cyan-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.smart_campus') }}</span>
-            </div>
-        </a>
-        @endcanVisit
-
-        {{-- Omnichannel Hub & PR --}}
-        @canVisit('omnichannel.dashboard')
-        <a href="{{ route('omnichannel.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('omnichannel.*') || request()->routeIs('drip_campaigns.*') || request()->routeIs('nps.*') || request()->routeIs('pr.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.omnichannel') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0 text-indigo-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.omnichannel') }}</span>
             </div>
         </a>
         @endcanVisit
