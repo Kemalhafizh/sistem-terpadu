@@ -28,26 +28,10 @@ return new class extends Migration
                 $table->index('certificate_number');
             });
         }
-
-        if (! Schema::hasTable('student_dids')) {
-            Schema::create('student_dids', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId('student_id')->unique()->constrained('users')->cascadeOnDelete();
-                $table->string('did_uri', 255)->unique(); // did:ybwsa:sulaone:...
-                $table->text('public_key');
-                $table->json('did_document_json');
-                $table->integer('verifiable_credentials_count')->default(0);
-                $table->string('status', 32)->default('active'); // active, revoked
-                $table->timestamps();
-
-                $table->index('did_uri');
-            });
-        }
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('student_dids');
         Schema::dropIfExists('blockchain_credentials');
     }
 };

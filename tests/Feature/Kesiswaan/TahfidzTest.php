@@ -7,7 +7,6 @@ use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\TahfidzTarget;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
@@ -268,7 +267,7 @@ test('setoran memperbarui capaian target tanpa poin XP', function () {
     ]);
 
     expect($target->fresh()->status)->toBe('completed')
-        ->and(Schema::hasTable('student_xp_logs') ? DB::table('student_xp_logs')->count() : 0)->toBe(0);
+        ->and(Schema::hasTable('student_xp_logs'))->toBeFalse();
 });
 
 // ── PDF EXPORT ─────────────────────────────────────────────────────────

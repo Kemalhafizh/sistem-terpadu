@@ -148,7 +148,6 @@ class AcademicSeeder extends Seeder
                     'birth_date' => now()->subYears(rand(15, 18))->subDays(rand(0, 365))->format('Y-m-d'),
                     'address' => 'Jl. '.['Siliwangi', 'Diponegoro', 'Imam Bonjol', 'Pandanaran', 'Gajah Mada', 'Pemuda'][rand(0, 5)].' No. '.rand(1, 200).', Semarang',
                     'status' => 'active',
-                    'total_xp' => rand(100, 5000), // Seeding random XP for gamification
                 ]);
             }
         }
