@@ -5,14 +5,11 @@ use App\Models\AlumniData;
 use App\Models\Exam;
 use App\Models\FoundationUnit;
 use App\Models\OsisTransaction;
-use App\Models\PlcGroup;
 use App\Models\QuestionBank;
-use App\Models\StaffRotation;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Syllabus;
 use App\Models\TracerResponse;
-use App\Models\UnitAccreditationRecord;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -31,12 +28,6 @@ function unitNamed(string $name): FoundationUnit
 {
     return FoundationUnit::create(['unit_code' => strtoupper(substr($name, 0, 3)).random_int(10, 99), 'unit_name' => $name, 'level' => 'sma']);
 }
-
-test('dashboard wadiah menautkan halaman merchant yang benar', function () {
-    $this->actingAs($this->admin)->get(route('admin.finance.wadiah.dashboard'))
-        ->assertOk()
-        ->assertSee(route('admin.finance.canteen.merchants'), false);
-});
 
 test('halaman kurikulum tanpa tahun ajaran aktif mengarahkan dengan pesan, bukan 500', function () {
     foreach (['curriculum.syllabi.index', 'curriculum.lesson-plans.index', 'curriculum.report'] as $route) {
@@ -152,45 +143,6 @@ test('detail soal bank soal bisa dibuka', function () {
 
     $this->actingAs($this->admin)->get(route('cbt.question-banks.index'))->assertSee(route('cbt.question-banks.show', $question), false);
     $this->get(route('cbt.question-banks.show', $question))->assertOk()->assertSee('Hasil dari 2 + 2 adalah?')->assertSee('Kunci');
-});
-
-test('modul yayasan hanya untuk pimpinan, dan akreditasi serta rotasi berfungsi', function () {
-    $this->actingAs(User::factory()->create(['role' => 'guru']))->get(route('foundation.accreditation.index'))->assertForbidden();
-
-    $head = User::factory()->create(['role' => 'kepala_sekolah']);
-    [$sma, $smp] = [unitNamed('SMA Sultan Agung 1'), unitNamed('SMP Sultan Agung 4')];
-
-    $this->actingAs($head)->get(route('foundation.accreditation.create'))->assertOk()->assertSee('SMA Sultan Agung 1');
-    $this->post(route('foundation.accreditation.store'), ['foundation_unit_id' => $sma->id])->assertSessionHasErrors(['accreditation_body', 'valid_from']);
-    $this->post(route('foundation.accreditation.store'), [
-        'foundation_unit_id' => $sma->id, 'accreditation_body' => 'BAN-PDM', 'accreditation_grade' => 'A', 'accreditation_score' => 95,
-        'valid_from' => '2024-01-01', 'valid_until' => '2029-01-01', 'status' => 'active',
-    ])->assertRedirect(route('foundation.accreditation.show', UnitAccreditationRecord::sole()->id));
-    $this->get(route('foundation.accreditation.index'))->assertOk()->assertSee('BAN-PDM');
-
-    $teacher = User::factory()->create(['role' => 'guru', 'name' => 'Pak Budi']);
-    $this->post(route('foundation.rotation.store'), [
-        'user_id' => $teacher->id, 'from_unit_id' => $sma->id, 'to_unit_id' => $sma->id, 'rotation_type' => 'mutasi_tetap', 'effective_date' => '2026-10-01', 'reason' => 'x',
-    ])->assertSessionHasErrors('to_unit_id');
-    $this->post(route('foundation.rotation.store'), [
-        'user_id' => $teacher->id, 'from_unit_id' => $sma->id, 'to_unit_id' => $smp->id, 'rotation_type' => 'mutasi_tetap', 'effective_date' => '2026-10-01', 'reason' => 'Pemerataan guru',
-    ])->assertRedirect();
-
-    // store() used to redirect to foundation.rotation.index, which didn't exist
-    // (the routes were named foundation.rotation.rotation.*).
-    $this->get(route('foundation.rotation.show', StaffRotation::sole()->id))->assertOk()->assertSee('Pak Budi')->assertSee('SMP Sultan Agung 4');
-});
-
-test('komunitas praktisi bisa dibuat dan dibuka', function () {
-    $teacher = User::factory()->create(['role' => 'guru']);
-
-    $this->actingAs($teacher)->get(route('knowledge.plc.create'))->assertOk();
-    $this->post(route('knowledge.plc.store'), ['name' => 'MGMP Matematika', 'type' => 'rumpun_mapel'])->assertRedirect();
-
-    $group = PlcGroup::sole();
-    expect($group->coordinator_id)->toBe($teacher->id)->and($group->members()->count())->toBe(1);
-    $this->get(route('knowledge.plc.index'))->assertOk()->assertSee('MGMP Matematika');
-    $this->get(route('knowledge.plc.show', $group->id))->assertOk()->assertSee('Koordinator');
 });
 
 test('link pratinjau berita di CMS memakai route yang ada', function () {

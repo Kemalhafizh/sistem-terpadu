@@ -2,16 +2,12 @@
 
 use App\Models\AcademicYear;
 use App\Models\BullyingReport;
-use App\Models\CatSession;
 use App\Models\Classroom;
 use App\Models\Employee;
-use App\Models\Exam;
 use App\Models\IepDocument;
 use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\WasteLog;
-use App\Models\WhiteboardSession;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -43,8 +39,6 @@ dataset('internal pages', [
     'petty cash store' => ['post', 'treasury.petty-cash.store', []],
     'bullying list' => ['get', 'crisis.bullying.index', []],
     'bullying statistics' => ['get', 'crisis.bullying.statistics', []],
-    'data streams' => ['get', 'data_engineering.streams', []],
-    'report scheduler store' => ['post', 'report_scheduler.store', []],
 ]);
 
 test('siswa dan orang tua ditolak di modul internal', function (string $role, string $method, string $route, array $params) {
@@ -69,8 +63,6 @@ test('peran yang berhak membuka modulnya', function (string $role, string $route
     ['kepala_sekolah', 'treasury.accounts.index'],
     ['bk', 'crisis.bullying.index'],
     ['waka_kesiswaan', 'crisis.bullying.statistics'],
-    ['admin', 'data_engineering.streams'],
-    ['kepala_sekolah', 'data_engineering.streams'],
 ]);
 
 test('admin tidak otomatis tembus: guru dan BK ditolak di treasury', function () {
@@ -110,82 +102,26 @@ test('sidebar siswa dan orang tua tidak memuat menu internal', function (string 
     }
     $html = $this->actingAs($user)->get('/dashboard')->assertOk()->getContent();
 
-    expect($html)->not->toContain(route('data_engineering.streams'))
-        ->not->toContain(url('/treasury/'))
-        ->not->toContain(route('visitors.dashboard'))
-        ->not->toContain(route('iep.index'));
+    expect($html)->not->toContain(url('/treasury/'))
+        ->not->toContain(route('iep.index'))
+        ->not->toContain(route('crisis.bullying.index'));
 })->with(['siswa', 'orang_tua', 'student', 'parent']);
 
 test('sidebar siswa memuat modul belajarnya sendiri', function () {
     $student = Student::factory()->create();
 
     expect($this->actingAs($student->user)->get('/dashboard')->assertOk()->getContent())
-        ->toContain(route('micro-lessons.index'))
-        ->toContain(route('internships.portal'));
+        ->toContain(route('elearning.index'))
+        ->toContain(route('cbt.exams.index'));
 });
 
 test('sidebar pimpinan tetap memuat menu yang boleh dibukanya', function () {
     $html = $this->actingAs(User::factory()->create(['role' => 'kepala_sekolah']))->get('/dashboard')->assertOk()->getContent();
 
-    expect($html)->toContain(route('data_engineering.streams'));
+    expect($html)->toContain(route('iep.index'));
 });
 
-// 118.5.4: the waste log is really saved.
-test('log sampah benar-benar tersimpan dan tampil di tracker', function () {
-    $clerk = User::factory()->create(['role' => 'staf_tu']);
-    $employee = employeeFor($clerk);
-
-    $this->actingAs($clerk)->get(route('waste.tracker'))->assertOk()->assertSee('Belum ada log sampah.');
-
-    $this->actingAs($clerk)->post(route('waste.store'), [
-        'log_date' => now()->toDateString(), 'waste_category' => 'Plastik', 'weight_kg' => '12.5', 'disposal_method' => 'bank_sampah',
-    ])->assertRedirect(route('waste.tracker'))->assertSessionHas('success', 'Log sampah tersimpan.');
-
-    $log = WasteLog::sole();
-    expect($log->waste_category)->toBe('Plastik')
-        ->and((float) $log->weight_kg)->toBe(12.5)
-        ->and($log->recorded_by)->toBe($employee->id);
-
-    $this->actingAs($clerk)->get(route('waste.tracker'))->assertSee('Plastik')->assertSee($clerk->name);
-});
-
-test('log sampah tanpa data pegawai atau dengan data salah tidak tersimpan', function () {
-    $clerk = User::factory()->create(['role' => 'staf_tu']);
-    $valid = ['log_date' => now()->toDateString(), 'waste_category' => 'Kertas', 'weight_kg' => '3', 'disposal_method' => 'recycled'];
-
-    $this->actingAs($clerk)->post(route('waste.store'), $valid)->assertSessionHasErrors('log_date');
-    employeeFor($clerk);
-    $this->actingAs($clerk)->post(route('waste.store'), ['weight_kg' => '0'] + $valid)->assertSessionHasErrors('weight_kg');
-    $this->actingAs($clerk)->post(route('waste.store'), ['disposal_method' => 'dibakar'] + $valid)->assertSessionHasErrors('disposal_method');
-    $this->actingAs($clerk)->post(route('waste.store'), ['log_date' => now()->addDay()->toDateString()] + $valid)->assertSessionHasErrors('log_date');
-
-    expect(WasteLog::count())->toBe(0);
-});
-
-test('siswa dan kepala sekolah tidak mencatat log sampah', function () {
-    $this->actingAs(User::factory()->create(['role' => 'siswa']))->get(route('waste.tracker'))->assertForbidden();
-
-    $principal = User::factory()->create(['role' => 'kepala_sekolah']);
-    employeeFor($principal);
-    $this->actingAs($principal)->get(route('waste.tracker'))->assertOk()->assertDontSee(route('waste.store'));
-    $this->actingAs($principal)->post(route('waste.store'), ['log_date' => now()->toDateString(), 'waste_category' => 'x', 'weight_kg' => 1, 'disposal_method' => 'landfill'])
-        ->assertForbidden();
-
-    expect(WasteLog::count())->toBe(0);
-});
-
-// 118.3: forms without a backend say so instead of pretending.
-test('aksi yang belum punya backend menjawab 501, bukan sukses palsu', function () {
-    $clerk = User::factory()->create(['role' => 'staf_tu']);
-
-    $this->actingAs($clerk)->post(route('carbon.store'), ['kwh' => 120])
-        ->assertStatus(501)
-        ->assertSee('Fitur ini belum tersedia. Perubahan belum bisa disimpan.')
-        ->assertSessionMissing('success');
-
-    $this->actingAs(User::factory()->create(['role' => 'admin']))->post(route('report_scheduler.store'))->assertStatus(501);
-});
-
+// 118.3: dead stubs without a route stay removed.
 test('route stub yang dihapus tidak ada lagi', function () {
     expect(Route::has('canteen.menu_planner'))->toBeFalse()
         ->and(Route::has('users.show'))->toBeFalse();
@@ -217,30 +153,6 @@ test('Student::visibleTo membatasi data per pemanggil', function () {
         ->and($other->isVisibleTo($parent))->toBeFalse();
 });
 
-test('orang tua hanya melihat mastery anaknya sendiri', function () {
-    $parent = User::factory()->create(['role' => 'orang_tua']);
-    $child = Student::factory()->create(['parent_id' => $parent->id]);
-    $stranger = Student::factory()->create();
-
-    $this->actingAs($parent)->get(route('adaptive.mastery.student', $child->id))->assertOk();
-    $this->actingAs($parent)->get(route('adaptive.mastery.student', $stranger->id))->assertNotFound();
-    $this->actingAs($parent)->get(route('adaptive.mastery.student', 999999))->assertNotFound();
-});
-
-test('siswa hanya membuka sesi CAT miliknya', function () {
-    $student = Student::factory()->create();
-    $session = fn (Student $owner) => CatSession::create([
-        'uuid' => (string) Str::uuid(), 'student_id' => $owner->id, 'exam_id' => Exam::factory()->create()->id,
-        'current_theta' => 0, 'started_at' => now(), 'status' => 'in_progress',
-    ]);
-    $own = $session($student);
-    $foreign = $session(Student::factory()->create());
-
-    $this->actingAs($student->user)->get(route('adaptive.cat.take', $own->id))->assertOk();
-    $this->actingAs($student->user)->get(route('adaptive.cat.take', $foreign->id))->assertNotFound();
-    $this->actingAs($student->user)->get(route('adaptive.cat.result', $foreign->id))->assertNotFound();
-});
-
 test('guru hanya membuka IEP siswa di kelas yang diajarnya', function () {
     $year = AcademicYear::factory()->create(['year' => '2026/2027', 'is_active' => true]);
     $teacher = User::factory()->create(['role' => 'guru']);
@@ -256,24 +168,4 @@ test('guru hanya membuka IEP siswa di kelas yang diajarnya', function () {
     $this->actingAs($teacher)->get(route('iep.show', $own))->assertOk();
     $this->actingAs($teacher)->get(route('iep.show', $foreign))->assertNotFound();
     $this->actingAs($caseManager->user)->get(route('iep.show', $foreign))->assertOk();
-});
-
-test('orang tua hanya melaporkan izin untuk anaknya sendiri', function () {
-    $parent = User::factory()->create(['role' => 'orang_tua']);
-    $stranger = Student::factory()->create();
-
-    $this->actingAs($parent)->postJson(route('mobile.parent.report-absence'), [
-        'student_id' => $stranger->id, 'status' => 'sakit', 'reason' => 'Demam',
-    ])->assertNotFound();
-});
-
-test('hanya host yang menyimpan kanvas whiteboard', function () {
-    $host = User::factory()->create(['role' => 'guru']);
-    $session = WhiteboardSession::create(['session_id' => (string) Str::uuid(), 'title' => 'Fiqih', 'host_id' => $host->id]);
-
-    $this->actingAs(User::factory()->create(['role' => 'guru']))
-        ->postJson(route('interactive.whiteboard.save', $session), ['canvas_state_json' => '{}'])
-        ->assertForbidden();
-
-    expect($session->fresh()->canvas_state_json)->toBeNull();
 });

@@ -7,6 +7,8 @@ use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\TahfidzTarget;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -202,7 +204,7 @@ test('anyone can view tahfidz leaderboard', function () {
 
 // ── XP & TARGET COMPLETION logic ───────────────────────────────────────
 
-test('submitting setoran awards grade-based XP and target updates', function () {
+test('setoran memperbarui capaian target tanpa poin XP', function () {
     // 1. Create Target
     TahfidzTarget::factory()->create([
         'student_id' => $this->student->id,
@@ -213,10 +215,7 @@ test('submitting setoran awards grade-based XP and target updates', function () 
         'achieved_pages' => 0,
     ]);
 
-    // Track starting XP
-    $startingXp = $this->student->fresh()->total_xp;
-
-    // 2. Submit Ziyadah Grade A Setoran (should earn +15 XP)
+    // 2. Submit a Ziyadah setoran (FASE 119: no XP is awarded any more)
     $response = $this->actingAs($this->guru)->post(route('tahfidz.store'), [
         'student_id' => $this->student->id,
         'surah_number' => 78,
@@ -230,18 +229,12 @@ test('submitting setoran awards grade-based XP and target updates', function () 
         'pages_count' => 1,
     ]);
 
-    // Assert XP increased by 15
-    $currentXp = $this->student->fresh()->total_xp;
-    expect($currentXp - $startingXp)->toBe(15);
-
     // Assert target achieved_pages updated to 1 (50% progress, which is 'behind' at 92.7% semester elapsed)
     $target = TahfidzTarget::where('student_id', $this->student->id)->first();
     expect($target->achieved_pages)->toBe(1);
     expect($target->status)->toBe('behind');
 
-    // 3. Submit another setoran to meet/exceed target (1 more page, target is 2 pages)
-    // Meeting the target should trigger completion +50 XP bonus.
-    // So: +15 XP (Grade A Ziyadah) + 50 XP (Target Completion) = +65 XP.
+    // 3. Submit another setoran to meet the target (1 more page, target is 2 pages)
     $this->actingAs($this->guru)->post(route('tahfidz.store'), [
         'student_id' => $this->student->id,
         'surah_number' => 78,
@@ -255,17 +248,12 @@ test('submitting setoran awards grade-based XP and target updates', function () 
         'pages_count' => 1,
     ]);
 
-    $newXp = $this->student->fresh()->total_xp;
-    // Difference from currentXp should be 15 + 50 = 65
-    expect($newXp - $currentXp)->toBe(65);
-
     // Verify status is completed
     $target = $target->fresh();
     expect($target->achieved_pages)->toBe(2);
     expect($target->status)->toBe('completed');
 
-    // 4. Submit one more setoran. It should NOT award target completion XP again.
-    // So only +15 XP for Grade A Ziyadah.
+    // 4. One more setoran past the target keeps it completed, and no XP log appears.
     $this->actingAs($this->guru)->post(route('tahfidz.store'), [
         'student_id' => $this->student->id,
         'surah_number' => 78,
@@ -279,8 +267,8 @@ test('submitting setoran awards grade-based XP and target updates', function () 
         'pages_count' => 1,
     ]);
 
-    $finalXp = $this->student->fresh()->total_xp;
-    expect($finalXp - $newXp)->toBe(15); // only grade XP, no target bonus again
+    expect($target->fresh()->status)->toBe('completed')
+        ->and(Schema::hasTable('student_xp_logs') ? DB::table('student_xp_logs')->count() : 0)->toBe(0);
 });
 
 // ── PDF EXPORT ─────────────────────────────────────────────────────────

@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\Ai\AiLessonPlanController;
-use App\Http\Controllers\Ai\AiTutorController;
-use App\Http\Controllers\Ai\NlpEssayGraderController;
 use App\Http\Controllers\Analytics\MobileAnalyticsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HealthCheckController;
@@ -31,15 +28,12 @@ use App\Http\Controllers\Api\v1\ERaporApiController;
 use App\Http\Controllers\Api\v1\EvaluationMobileApiController;
 use App\Http\Controllers\Api\v1\ExternalIntegrationApiController;
 use App\Http\Controllers\Api\v1\ExtracurricularMobileApiController;
-use App\Http\Controllers\Api\v1\GamificationController;
 use App\Http\Controllers\Api\v1\LibraryMobileApiController;
 use App\Http\Controllers\Api\v1\Mobile\GeofenceController;
-use App\Http\Controllers\Api\v1\Mobile\MobileAttendanceController;
 use App\Http\Controllers\Api\v1\Mobile\MobileAuthController;
 use App\Http\Controllers\Api\v1\Mobile\MobileConfigController;
 use App\Http\Controllers\Api\v1\Mobile\MobileSyncController;
 use App\Http\Controllers\Api\v1\Mobile\ScannerMobileApiController;
-use App\Http\Controllers\Api\v1\MobileV2ApiController;
 use App\Http\Controllers\Api\v1\ParentPortalController;
 use App\Http\Controllers\Api\v1\QuestionBankApiController;
 use App\Http\Controllers\Api\v1\SchoolOperationsApiController;
@@ -51,8 +45,6 @@ use App\Http\Controllers\Api\v1\SyncController;
 use App\Http\Controllers\Api\v1\TahsinSubmissionApiController;
 use App\Http\Controllers\Api\v1\UtbkMobileApiController;
 use App\Http\Controllers\Api\v1\VizController;
-use App\Http\Controllers\Blockchain\BlockchainCredentialController;
-use App\Http\Controllers\Iot\FacialRecognitionAttendanceController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -110,11 +102,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::post('mobile/devices', [MobileAuthController::class, 'registerDevice']);
         Route::get('mobile/devices', [MobileAuthController::class, 'getActiveDevices']);
         Route::delete('mobile/devices/{deviceId}', [MobileAuthController::class, 'revokeDevice']);
-
-        // Mobile GPS Attendance & Dynamic QR
-        Route::post('mobile/attendance/gps-checkin', [MobileAttendanceController::class, 'gpsCheckin'])->middleware('role:student,siswa');
-        Route::get('mobile/attendance/dynamic-qr', [MobileAttendanceController::class, 'generateDynamicQr']);
-        Route::post('mobile/attendance/verify-qr', [MobileAttendanceController::class, 'verifyDynamicQr'])->middleware('role:admin,staf_tu,guru,teacher,kepala_sekolah');
 
         // Mobile multi-mode scanner (event ticket / visitor pass) — real EventTicketingService/VisitorService, gate & front-desk staff only.
         Route::post('mobile/scanner/event-ticket', [ScannerMobileApiController::class, 'scanEventTicket'])->middleware('role:admin,superadmin,staf_tu,guru,teacher,kepala_sekolah');
@@ -409,9 +396,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::prefix('documents')->middleware('auth:sanctum')->group(function () {
             Route::get('/reports', [DocumentMobileApiController::class, 'reportList'])->middleware('role:student,siswa');
             Route::get('/certificates', [DocumentMobileApiController::class, 'certificateList'])->middleware('role:student,siswa');
-            Route::post('/ocr/scan', [DocumentMobileApiController::class, 'ocrScan']);
-            Route::get('/ocr/{taskId}', [DocumentMobileApiController::class, 'ocrResult']);
-            Route::post('/signature/submit', [DocumentMobileApiController::class, 'submitSignature']);
         });
 
         // =====================================================================
@@ -430,19 +414,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::prefix('config/animations')->group(function () {
             Route::get('/', [ConfigController::class, 'getAnimations']);
             Route::put('preferences', [ConfigController::class, 'updatePreferences']);
-        });
-
-        // =====================================================================
-        // FASE 101: GAMIFICATION & ENGAGEMENT ENGINE
-        // =====================================================================
-        Route::prefix('gamification')->middleware('role:student,siswa')->group(function () {
-            Route::get('profile', [GamificationController::class, 'getProfile']);
-            Route::get('leaderboard', [GamificationController::class, 'getLeaderboard']);
-            Route::get('badges', [GamificationController::class, 'getBadges']);
-            Route::get('xp-history', [GamificationController::class, 'getXpHistory']);
-            Route::get('history', [GamificationController::class, 'getXpHistory']);
-            Route::get('streak-calendar', [GamificationController::class, 'getStreakCalendar']);
-            Route::get('streak', [GamificationController::class, 'getStreakCalendar']);
         });
 
         // =====================================================================
@@ -493,8 +464,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('actions', [ParentPortalController::class, 'quickActions']);
         });
 
-        Route::get('ai/tutor/suggestions', [MobileV2ApiController::class, 'getAiTutorSuggestions'])->middleware('role:student,siswa');
-
         // === UNIVERSAL GENERAL ===
         Route::get('announcements', [ApiGeneralController::class, 'announcements']);
         Route::get('announcements/{id}', [ApiGeneralController::class, 'announcementDetail'])->whereNumber('id');
@@ -535,44 +504,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 70: GENERATIVE AI & AUTONOMOUS LEARNING ENGINE
-        // =====================================================================
-        Route::prefix('ai')->group(function () {
-            Route::middleware('role:student,siswa')->group(function () {
-                Route::post('tutor/session', [AiTutorController::class, 'startSession']);
-                Route::post('tutor/session/{id}/message', [AiTutorController::class, 'sendMessage']);
-                Route::get('tutor/session/{id}', [AiTutorController::class, 'getHistory']);
-                Route::post('essay/grade', [NlpEssayGraderController::class, 'submitEssay']);
-                Route::get('essay/{id}', [NlpEssayGraderController::class, 'getSubmission']);
-            });
-            Route::middleware('role:guru,teacher')->group(function () {
-                Route::post('lesson-plan/generate', [AiLessonPlanController::class, 'generate']);
-                Route::get('lesson-plans', [AiLessonPlanController::class, 'getPlans']);
-            });
-        });
-
-        // =====================================================================
-        // FASE 71: IMMUTABLE BLOCKCHAIN CREDENTIALING (WEB3)
-        // =====================================================================
-        Route::prefix('blockchain')->group(function () {
-            // Credentials are issued by the school to a student, never by the student.
-            Route::post('credentials/issue', [BlockchainCredentialController::class, 'issue'])->middleware('role:admin,staf_tu,kepala_sekolah');
-            Route::middleware('role:student,siswa,alumni')->group(function () {
-                Route::get('credentials/my', [BlockchainCredentialController::class, 'myCredentials']);
-            });
-        });
-
-        // =====================================================================
-        // FASE 72: SMART CAMPUS IOT 2.0 & FACIAL RECOGNITION
-        // =====================================================================
-        Route::prefix('iot')->group(function () {
-            // Everyone who walks through the gate: students and school staff.
-            Route::post('face/enroll', [FacialRecognitionAttendanceController::class, 'enroll'])->middleware('role:student,siswa,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,waka_sarpras,waka_humas,staf_tu,petugas_uks,admin');
-            // Gate cameras log attendance for whoever they recognise: device/operator accounts only.
-            Route::post('face/match', [FacialRecognitionAttendanceController::class, 'matchGate'])->middleware('role:admin,staf_tu,operator');
-        });
-
-        // =====================================================================
         // FASE 73: BIG DATA PREDICTIVE ANALYTICS
         // =====================================================================
         Route::prefix('analytics')->group(function () {
@@ -587,6 +518,4 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
     });
 
-    // Public Web3 & Pragmatic Digital Verification Endpoints
-    Route::get('blockchain/credentials/verify/{certificateNumber}', [BlockchainCredentialController::class, 'verifyPublic']);
 });

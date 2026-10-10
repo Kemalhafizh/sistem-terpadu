@@ -17,7 +17,6 @@ test('user can fetch contextual home payload', function () {
                 'hero' => ['type', 'title', 'subtitle', 'gradientStart', 'gradientEnd', 'iconEmoji', 'actionLabel', 'actionRoute'],
                 'quickActions',
                 'suggestions',
-                'gamification' => ['xpToday', 'totalXp', 'level', 'streakDays'],
             ],
         ]);
 });
@@ -29,20 +28,6 @@ test('user can fetch and dismiss smart suggestions', function () {
 
     $dismiss = $this->actingAs($this->user)->postJson('/api/v1/home/suggestions/sugg_1/dismiss');
     $dismiss->assertStatus(200);
-});
-
-test('user can fetch gamification profile, leaderboard, and badges', function () {
-    $profile = $this->actingAs($this->user)->getJson('/api/v1/gamification/profile');
-    $profile->assertStatus(200)
-        ->assertJsonStructure(['success', 'data' => ['totalXp', 'level', 'levelTitle', 'xpToNextLevel', 'streakDays', 'longestStreak', 'badgesEarned', 'monthlyRank']]);
-
-    $leaderboard = $this->actingAs($this->user)->getJson('/api/v1/gamification/leaderboard');
-    $leaderboard->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
-
-    $badges = $this->actingAs($this->user)->getJson('/api/v1/gamification/badges');
-    $badges->assertStatus(200)
-        ->assertJsonStructure(['success', 'data' => ['earned', 'locked']]);
 });
 
 test('user can get and update notification preferences', function () {
@@ -73,11 +58,5 @@ test('parent can view child activity feed, weekly digest, and comparisons', func
 
     $comparison = $this->actingAs($this->user)->getJson('/api/v1/parent/comparison');
     $comparison->assertStatus(200)
-        ->assertJsonStructure(['success', 'data']);
-});
-
-test('user can get ai tutor suggestions', function () {
-    $aiSuggestions = $this->actingAs($this->user)->getJson('/api/v1/ai/tutor/suggestions');
-    $aiSuggestions->assertStatus(200)
         ->assertJsonStructure(['success', 'data']);
 });

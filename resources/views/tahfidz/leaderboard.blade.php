@@ -103,8 +103,6 @@
                                     <th class="pb-3 text-center">Setoran Semester Ini</th>
                                     <th class="pb-3 text-center">Total Halaman Ziyadah</th>
                                     <th class="pb-3 text-center">Capaian Target</th>
-                                    <th class="pb-3 text-center">Tingkat</th>
-                                    <th class="pb-3 text-right">XP Total</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50 text-xs font-bold text-gray-700">
@@ -140,10 +138,6 @@
                                                 <span class="text-gray-300">-</span>
                                             @endif
                                         </td>
-                                        <td class="py-4 text-center">
-                                            <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-700">Lvl {{ $st->level }}</span>
-                                        </td>
-                                        <td class="py-4 text-right text-gray-800 font-black">{{ $st->total_xp }} XP</td>
                                     </tr>
                                 @endforeach
                             </tbody>

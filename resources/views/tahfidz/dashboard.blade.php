@@ -90,10 +90,6 @@
                             </div>
 
                             <div class="mt-8 border-t border-white/10 pt-4 flex items-center justify-between">
-                                <div>
-                                    <p class="text-[9px] font-bold text-primary-300 uppercase tracking-widest">Tingkat / Level</p>
-                                    <p class="text-lg font-black">Level {{ $student->level }}</p>
-                                </div>
                                 <a href="{{ route('tahfidz.export-pdf', $student->id) }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
                                      PDF RAPOR
                                 </a>
@@ -130,14 +126,6 @@
                                             Status Semester dievaluasi otomatis berdasarkan durasi waktu terlewati.
                                         </p>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-6 p-4 rounded-2xl bg-amber-50 border border-amber-100 flex items-center space-x-3">
-                                <span class="text-2xl"></span>
-                                <div class="text-xs">
-                                    <p class="font-black text-amber-900">Total Poin Keaktifan</p>
-                                    <p class="text-amber-700 font-bold">{{ $student->total_xp }} XP (Streak: {{ $student->current_streak }} Hari)</p>
                                 </div>
                             </div>
                         </div>
@@ -310,7 +298,6 @@
                                     <tr class="border-b border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-wider">
                                         <th class="pb-3">Siswa</th>
                                         <th class="pb-3">NIS</th>
-                                        <th class="pb-3 text-center">Level XP</th>
                                         <th class="pb-3 text-center">Target</th>
                                         <th class="pb-3 text-center">Capaian Ziyadah</th>
                                         <th class="pb-3 text-center">Progres Target</th>
@@ -337,9 +324,6 @@
                                                 <p class="text-[9px] text-gray-400 uppercase">Gender: {{ $st->gender }}</p>
                                             </td>
                                             <td class="py-4 text-gray-500">{{ $st->nis }}</td>
-                                            <td class="py-4 text-center">
-                                                <span class="px-2 py-1 rounded bg-amber-50 text-amber-700">Lvl {{ $st->level }}</span>
-                                            </td>
                                             <td class="py-4 text-center">
                                                 @if($tgt)
                                                     {{ $tgt->target_juz }} Juz ({{ $tgt->target_pages }} Hal)
@@ -401,7 +385,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="py-8 text-center text-gray-400 font-bold">Tidak ada siswa terdaftar di kelas ini.</td>
+                                            <td colspan="7" class="py-8 text-center text-gray-400 font-bold">Tidak ada siswa terdaftar di kelas ini.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

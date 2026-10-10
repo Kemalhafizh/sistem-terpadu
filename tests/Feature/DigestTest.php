@@ -13,7 +13,6 @@ use App\Models\Grade;
 use App\Models\Payment;
 use App\Models\PaymentCategory;
 use App\Models\ScheduledReport;
-use App\Models\SmartAlert;
 use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\Subject;
@@ -27,7 +26,6 @@ beforeEach(function () {
     Attendance::truncate();
     Ticket::truncate();
     Billing::truncate();
-    SmartAlert::truncate();
     Payment::truncate();
     PaymentCategory::truncate();
     ComplianceMilestone::truncate();
@@ -160,24 +158,12 @@ test('daily admin digest compiles correct metrics from SISTA core modules', func
     $billing->status = 'unpaid';
     $billing->save();
 
-    // 4. 1 active SmartAlert today
-    $alert = new SmartAlert;
-    $alert->type = 'finance';
-    $alert->alertable_type = Student::class;
-    $alert->alertable_id = $student->id;
-    $alert->severity = 'critical';
-    $alert->status = 'active';
-    $alert->title = 'Tunggakan SPP Berjalan';
-    $alert->description = 'Segera bayar.';
-    $alert->save();
-
     $service = app(DigestService::class);
     $data = $service->generateDailyAdminDigest();
 
     $this->assertEquals(2, $data['alpa_count']);
     $this->assertEquals(1, $data['new_tickets']);
     $this->assertEquals(1, $data['new_billings']);
-    $this->assertEquals(1, $data['active_alerts']);
 });
 
 test('weekly parent digest fetches correct assignments and grades for student', function () {

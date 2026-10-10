@@ -55,7 +55,6 @@ class PwaService
             ],
             'network_first_routes' => [
                 '/api/v1/home/contextual',
-                '/api/v1/gamification/profile',
                 '/api/v1/notifications',
             ],
             'stale_while_revalidate_routes' => [

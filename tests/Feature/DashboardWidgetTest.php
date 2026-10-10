@@ -41,7 +41,9 @@ test('student can access dashboard and view student stats', function () {
     $response->assertStatus(200);
     $response->assertViewHas('studentSchedulesToday');
     $response->assertViewHas('mutabaahItems');
-    $response->assertViewHas('studentLevel');
+    // FASE 119: XP and levels were removed with gamification.
+    $response->assertViewMissing('studentLevel');
+    $response->assertViewMissing('recentBadges');
 });
 
 test('parent can access dashboard and view parent stats', function () {

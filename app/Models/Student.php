@@ -20,7 +20,7 @@ class Student extends Model
 {
     use HasFactory, HasUuid, LogsActivity, SoftDeletes;
 
-    protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_date', 'address', 'status', 'total_xp', 'current_streak', 'longest_streak'];
+    protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_date', 'address', 'status'];
 
     /** Roles that may see every student's records (school-wide duties). */
     public const SCHOOL_WIDE_ROLES = ['superadmin', 'admin', 'bk', 'staf_tu', ...RoleMiddleware::LEADERSHIP_ROLES];
@@ -216,41 +216,5 @@ class Student extends Model
             ->withPivot('awarded_by', 'earned_at', 'notes')
             ->withTimestamps()
             ->orderBy('student_badges.earned_at', 'desc');
-    }
-
-    /**
-     * Relationship to StudentAchievements.
-     */
-    public function achievements()
-    {
-        return $this->hasMany(StudentAchievement::class);
-    }
-
-    /**
-     * Relationship to StudentXpLogs.
-     */
-    public function xpLogs()
-    {
-        return $this->hasMany(StudentXpLog::class);
-    }
-
-    /**
-     * Accessor to calculate Student Level based on total XP.
-     */
-    public function getLevelAttribute(): int
-    {
-        return 1 + (int) floor($this->total_xp / 100);
-    }
-
-    /**
-     * Accessor to calculate XP progress percentage towards next level.
-     */
-    public function getXpProgressPercentAttribute(): float
-    {
-        $currentLevelXp = (int) floor($this->total_xp / 100) * 100;
-        $nextLevelXp = $currentLevelXp + 100;
-        $earnedXpInLevel = $this->total_xp - $currentLevelXp;
-
-        return round(($earnedXpInLevel / 100) * 100, 1);
     }
 }

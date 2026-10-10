@@ -2,13 +2,9 @@
 
 namespace Tests\Feature\Api;
 
-use App\Jobs\ProcessOcrDocument;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\Concerns\StartsWorkflows;
 use Tests\TestCase;
@@ -88,55 +84,5 @@ class AdminDocumentMobileApiTest extends TestCase
         ]);
 
         $responseReject->assertStatus(400); // Because it's no longer pending
-    }
-
-    public function test_ocr_upload_multipart_image_processing_queued()
-    {
-        Storage::fake('public');
-        Queue::fake();
-
-        Sanctum::actingAs($this->adminUser);
-
-        $file = UploadedFile::fake()->image('ktp.jpg');
-
-        $response = $this->postJson('/api/v1/documents/ocr/scan', [
-            'document_image' => $file,
-            'document_type' => 'ktp',
-        ]);
-
-        $response->assertStatus(202)
-            ->assertJsonStructure([
-                'success',
-                'message',
-                'data' => ['task_id', 'status'],
-            ]);
-
-        // Assert job pushed
-        Queue::assertPushed(ProcessOcrDocument::class);
-
-        // Assert file stored
-        $this->assertDatabaseHas('ocr_results', [
-            'document_type' => 'ktp',
-            'status' => 'pending',
-        ]);
-    }
-
-    public function test_digital_signature_storage_and_retrieval()
-    {
-        Sanctum::actingAs($this->adminUser);
-
-        $response = $this->postJson('/api/v1/documents/signature/submit', [
-            'document_type' => 'report',
-            'document_id' => 999,
-            'signature_data' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
-        ]);
-
-        $response->assertStatus(200);
-
-        $this->assertDatabaseHas('digital_signatures', [
-            'user_id' => $this->adminUser->id,
-            'document_type' => 'report',
-            'document_id' => 999,
-        ]);
     }
 }

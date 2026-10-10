@@ -143,14 +143,3 @@ it('memperbarui satu snapshot per hari, bukan menambah baris setiap kali dibuka'
     expect(FinancialHealthMetric::count())->toBe(1)
         ->and((float) $second->cash_reserve)->toBe(10000000.0);
 });
-
-it('halaman scoreboard tidak lagi menampilkan vonis tetap', function () {
-    $response = $this->actingAs($this->admin)->get(route('dashboards.financial-scoreboard.index'));
-
-    $response->assertOk()
-        ->assertSee('Belum ada data')
-        ->assertDontSee('Kondisi Likuiditas Kuat')
-        ->assertDontSee('Surplus Operasional Terkendali')
-        ->assertDontSee('Target &gt; 90% Tercapai', false)
-        ->assertDontSee('1.250.000.000');
-});

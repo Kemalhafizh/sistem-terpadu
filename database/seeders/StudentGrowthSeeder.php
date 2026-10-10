@@ -6,7 +6,6 @@ use App\Models\CharacterDimension;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
 use App\Services\Growth\PtcSchedulerService;
-use App\Services\Growth\WellbeingService;
 use Illuminate\Database\Seeder;
 
 class StudentGrowthSeeder extends Seeder
@@ -37,26 +36,7 @@ class StudentGrowthSeeder extends Seeder
             CharacterDimension::updateOrCreate(['name' => $d['name']], $d);
         }
 
-        // 2. Wellbeing Screening & Mood Journal
-        $wellbeingService = app(WellbeingService::class);
-        $sc = $wellbeingService->createScreening([
-            'title' => 'Skrining Kesehatan Emosional Semester Ganjil 2026/2027',
-            'screening_type' => 'srq20',
-            'academic_year' => '2026/2027',
-        ], $superadmin->id);
-        $wellbeingService->activateScreening($sc);
-
-        $wellbeingService->submitResponse($sc, $student->id, [
-            'responses' => ['q0' => 1, 'q1' => 0, 'q2' => 0, 'q3' => 1, 'q4' => 0, 'q5' => 0, 'q6' => 0, 'q7' => 0],
-        ]);
-
-        $wellbeingService->addMoodJournalEntry($student->id, [
-            'mood_level' => 4,
-            'journal_entry' => 'Hari ini mengikuti kegiatan sholat Dhuha berjamaah dan merasa tenang.',
-            'sleep_hours' => 8.0,
-        ]);
-
-        // 3. P5 Assessments & Merit
+        // 2. P5 Assessments & Merit
         $p5Service = app(P5AssessmentService::class);
         $dim1 = CharacterDimension::first();
         if ($dim1) {
@@ -67,7 +47,7 @@ class StudentGrowthSeeder extends Seeder
             $p5Service->awardMeritPoints($student->id, $superadmin->id, 50, 'Partisipasi Utama Panitia PHBI Maulid Nabi', $dim1->id);
         }
 
-        // 4. PTC Sessions & Slots
+        // 3. PTC Sessions & Slots
         $ptcService = app(PtcSchedulerService::class);
         $ptcSession = $ptcService->createSession([
             'title' => 'Parent-Teacher Conference Mid Semester Ganjil 2026',

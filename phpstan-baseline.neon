@@ -289,24 +289,6 @@ parameters:
 			path: app/Http/Controllers/AttendanceController.php
 
 		-
-			message: '#^Relation ''tickets'' is not found in App\\Models\\TicketedEvent model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Campus/EventTicketingController.php
-
-		-
-			message: '#^Relation ''creator'' is not found in App\\Models\\CareerOpportunity model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/CareerOpportunityController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\ChatbotConversation model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/ChatbotController.php
-
-		-
 			message: '#^Relation ''indicators'' is not found in App\\Models\\EdsStandard model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -511,30 +493,6 @@ parameters:
 			path: app/Http/Controllers/ExtracurricularController.php
 
 		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\ClassFeedPost model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Family/ClassFeedController.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\ParentSkill model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Family/ParentSkillController.php
-
-		-
-			message: '#^Relation ''owner'' is not found in App\\Models\\CanteenMerchant model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Finance/CanteenController.php
-
-		-
-			message: '#^Relation ''wadiahTransaction'' is not found in App\\Models\\CanteenTransaction model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Finance/CanteenController.php
-
-		-
 			message: '#^Relation ''campaign'' is not found in App\\Models\\CharityDonation model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -551,24 +509,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Finance/CharityController.php
-
-		-
-			message: '#^Relation ''account'' is not found in App\\Models\\WadiahTransaction model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Finance/WadiahController.php
-
-		-
-			message: '#^Relation ''processedBy'' is not found in App\\Models\\WadiahTransaction model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Finance/WadiahController.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\WadiahAccount model\.$#'
-			identifier: larastan.relationExistence
-			count: 7
-			path: app/Http/Controllers/Finance/WadiahController.php
 
 		-
 			message: '#^Relation ''billing'' is not found in App\\Models\\Payment model\.$#'
@@ -902,30 +842,6 @@ parameters:
 			path: app/Http/Controllers/ScheduleController.php
 
 		-
-			message: '#^Relation ''acknowledgedBy'' is not found in App\\Models\\SmartAlert model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/SmartAlertController.php
-
-		-
-			message: '#^Relation ''alertable'' is not found in App\\Models\\SmartAlert model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/SmartAlertController.php
-
-		-
-			message: '#^Relation ''escalatedTo'' is not found in App\\Models\\SmartAlert model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/SmartAlertController.php
-
-		-
-			message: '#^Relation ''resolvedBy'' is not found in App\\Models\\SmartAlert model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/SmartAlertController.php
-
-		-
 			message: '#^Relation ''academicYear'' is not found in App\\Models\\Registration model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -966,24 +882,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Http/Controllers/SpmbController.php
-
-		-
-			message: '#^Relation ''endorsements'' is not found in App\\Models\\StudentShowcase model\.$#'
-			identifier: larastan.relationExistence
-			count: 5
-			path: app/Http/Controllers/Student/ShowcaseController.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\StudentShowcase model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/Student/ShowcaseController.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\User model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Student/ShowcaseController.php
 
 		-
 			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
@@ -1226,12 +1124,6 @@ parameters:
 			path: app/Services/AchievementService.php
 
 		-
-			message: '#^Relation ''items'' is not found in App\\Models\\LearningPath model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Adaptive/LearningPathService.php
-
-		-
 			message: '#^Relation ''alumni'' is not found in App\\Models\\TracerResponse model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1272,12 +1164,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/Analytics/MobileAnalyticsService.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\Attendance model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/ChatbotService.php
 
 		-
 			message: '#^Relation ''latestMessage'' is not found in App\\Models\\Conversation model\.$#'
@@ -1448,24 +1334,6 @@ parameters:
 			path: app/Services/QuestionBankService.php
 
 		-
-			message: '#^Relation ''asset'' is not found in App\\Models\\AssetLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/SmartAlertService.php
-
-		-
-			message: '#^Relation ''borrower'' is not found in App\\Models\\AssetLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/SmartAlertService.php
-
-		-
-			message: '#^Relation ''pointLogs'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/SmartAlertService.php
-
-		-
 			message: '#^Relation ''period'' is not found in App\\Models\\SpmbWave model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1476,12 +1344,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Services/SpmbService.php
-
-		-
-			message: '#^Relation ''catalog'' is not found in App\\Models\\CollegeApplication model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Student/CollegeCounselingService.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\StudentShowcase model\.$#'

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Models\UserGamification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -34,14 +33,12 @@ class ContextualHomeService
         $hero = $this->resolveHeroCard($user, $timeOfDay);
         $quickActions = $this->getPrioritizedActions($user, $timeOfDay);
         $suggestions = $this->getSmartSuggestions($user);
-        $gamification = $this->getGamificationSummary($user);
 
         return [
             'context' => $context,
             'hero' => $hero,
             'quickActions' => $quickActions,
             'suggestions' => $suggestions,
-            'gamification' => $gamification,
         ];
     }
 
@@ -98,8 +95,6 @@ class ContextualHomeService
         return [
             ['id' => 'cbt', 'label' => 'Ujian CBT', 'iconUrl' => 'quiz', 'route' => 'cbt_list', 'priority' => 1],
             ['id' => 'schedule', 'label' => 'Jadwal', 'iconUrl' => 'schedule', 'route' => 'schedule', 'priority' => 2],
-            ['id' => 'gamification', 'label' => 'Level & XP', 'iconUrl' => 'military_tech', 'route' => 'gamification_dashboard', 'priority' => 3],
-            ['id' => 'tutor', 'label' => 'Sultan AI', 'iconUrl' => 'smart_toy', 'route' => 'ai_tutor', 'priority' => 4],
         ];
     }
 
@@ -147,28 +142,5 @@ class ContextualHomeService
             $dismissed[] = $suggestionId;
             Cache::put("user_{$userId}_dismissed_suggestions", $dismissed, 86400);
         }
-    }
-
-    /**
-     * Get summary of gamification for home widget.
-     */
-    protected function getGamificationSummary(User $user): array
-    {
-        $gamification = UserGamification::where('user_id', $user->id)->first();
-        if ($gamification) {
-            return [
-                'xpToday' => 85,
-                'totalXp' => $gamification->total_xp,
-                'level' => $gamification->level,
-                'streakDays' => $gamification->current_streak_days,
-            ];
-        }
-
-        return [
-            'xpToday' => 85,
-            'totalXp' => 1420,
-            'level' => 7,
-            'streakDays' => 14,
-        ];
     }
 }

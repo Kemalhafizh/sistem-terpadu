@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\ProcessOcrDocument;
 use App\Models\Achievement;
-use App\Models\DigitalSignature;
-use App\Models\OcrResult;
 use App\Models\ReportCardPdf;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -86,87 +83,5 @@ class DocumentMobileApiController extends Controller
         });
 
         return $this->successResponse($data, 'Daftar sertifikat berhasil diambil');
-    }
-
-    /**
-     * Upload foto untuk di-scan via OCR (queued job).
-     *
-     * The actual text extraction (ProcessOcrDocument job) is a simulated
-     * placeholder, not a real OCR engine (Tesseract / Google Cloud Vision) —
-     * see that job's own docblock. This endpoint and the polling one below are
-     * real, working infrastructure around it; only the recognition itself is
-     * a stand-in pending a real OCR provider integration.
-     */
-    public function ocrScan(Request $request)
-    {
-        $request->validate([
-            'document_image' => 'required|file|mimes:jpeg,jpg,png,pdf|max:5120', // max 5MB (exclude SVG to prevent XSS)
-            'document_type' => 'nullable|string|max:50',
-        ]);
-
-        $file = $request->file('document_image');
-        $path = $file->store('documents/ocr', 'public');
-
-        $ocrResult = OcrResult::create([
-            'user_id' => $request->user()->id,
-            'file_path' => $path,
-            'document_type' => $request->document_type ?? 'unknown',
-            'status' => 'pending',
-        ]);
-
-        // Dispatch background job for OCR
-        ProcessOcrDocument::dispatch($ocrResult->id);
-
-        return $this->successResponse([
-            'task_id' => $ocrResult->id,
-            'status' => $ocrResult->status,
-        ], 'Dokumen berhasil diunggah dan sedang diproses OCR.', 202);
-    }
-
-    /**
-     * Poll the status/result of a previously submitted OCR scan. The job runs
-     * async (queued), so the client can't get extracted_text synchronously
-     * from ocrScan() — it must poll this until status is "completed"/"failed".
-     */
-    public function ocrResult(Request $request, int $taskId)
-    {
-        $ocrResult = OcrResult::where('id', $taskId)
-            ->where('user_id', $request->user()->id)
-            ->first();
-
-        if (! $ocrResult) {
-            return $this->errorResponse('Hasil OCR tidak ditemukan.', 404);
-        }
-
-        return $this->successResponse([
-            'task_id' => $ocrResult->id,
-            'status' => $ocrResult->status,
-            'extracted_text' => $ocrResult->extracted_text,
-        ], 'Status OCR berhasil diambil');
-    }
-
-    /**
-     * Submit tanda tangan digital (base64)
-     */
-    public function submitSignature(Request $request)
-    {
-        $request->validate([
-            'document_type' => 'required|string|max:50',
-            'document_id' => 'required|integer',
-            'signature_data' => 'required|string|max:500000', // max 500KB base64
-        ]);
-
-        $signature = DigitalSignature::create([
-            'user_id' => $request->user()->id,
-            'document_type' => $request->document_type,
-            'document_id' => $request->document_id,
-            'signature_data' => $request->signature_data,
-            'ip_address' => $request->ip(),
-        ]);
-
-        return $this->successResponse([
-            'signature_id' => $signature->id,
-            'signed_at' => $signature->created_at->format('Y-m-d H:i:s'),
-        ], 'Tanda tangan digital berhasil disimpan.');
     }
 }

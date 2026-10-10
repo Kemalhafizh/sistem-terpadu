@@ -244,9 +244,6 @@
             <td class="info-colon">:</td>
             <td class="info-value">Kelas {{ $student->classroom?->name ?? 'Belum Diatur' }}</td>
 
-            <td class="info-label" style="padding-left: 30px;">Poin Keaktifan</td>
-            <td class="info-colon">:</td>
-            <td class="info-value">{{ $student->total_xp }} XP (Level {{ $student->level }})</td>
         </tr>
     </table>
 

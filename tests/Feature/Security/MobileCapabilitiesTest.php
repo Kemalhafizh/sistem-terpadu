@@ -101,7 +101,7 @@ test('each role sees its own features and nobody else\'s', function () {
     $prefixed = fn (array $keys, string $prefix) => array_values(array_filter($keys, fn ($k) => str_starts_with($k, $prefix)));
 
     $student = capabilityKeys(capabilityUser('student'));
-    expect($student)->toContain('student.schedule', 'student.grades', 'attendance.gps', 'attendance.class_scan')
+    expect($student)->toContain('student.schedule', 'student.grades', 'attendance.class_scan')
         ->and($prefixed($student, 'teacher.'))->toBe([])
         ->and($prefixed($student, 'parent.'))->toBe([])
         ->and($prefixed($student, 'admin.'))->toBe([]);
@@ -120,12 +120,12 @@ test('each role sees its own features and nobody else\'s', function () {
     // Admin: school operator plus the leadership dashboards — none of the
     // personal student, parent or teacher features.
     $admin = capabilityKeys(capabilityUser('admin'));
-    expect($admin)->toContain('admin.dashboard', 'admin.executive', 'admin.class_sessions')
+    expect($admin)->toContain('admin.dashboard', 'admin.class_sessions')
         ->and($prefixed($admin, 'student.'))->toBe([])
         ->and($prefixed($admin, 'parent.'))->toBe([])
         ->and($prefixed($admin, 'teacher.'))->toBe([]);
 
-    expect(capabilityKeys(capabilityUser('kepala_sekolah')))->toContain('admin.dashboard', 'admin.executive');
+    expect(capabilityKeys(capabilityUser('kepala_sekolah')))->toContain('admin.dashboard');
 });
 
 test('only superadmin has every feature', function () {

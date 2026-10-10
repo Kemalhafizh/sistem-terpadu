@@ -39,7 +39,6 @@ class MobileConfigController extends Controller
                 'app_store_url' => 'https://apps.apple.com/app/sista-sultan-agung-1/id6400000000',
                 'active_features' => [
                     'academic_grades' => true,
-                    'attendance_gps' => true,
                     'spp_payment_gateway' => true,
                     'tahfidz_quran' => true,
                     'cbt_exam_mode' => true,

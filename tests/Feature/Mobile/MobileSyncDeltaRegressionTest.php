@@ -6,7 +6,6 @@ use App\Models\Announcement;
 use App\Models\Student;
 use App\Models\TahfidzLog;
 use App\Models\User;
-use App\Services\Mobile\MobileStudentHubService;
 
 /*
  * Regression: GET /api/v1/mobile/sync/pull used to
@@ -89,36 +88,3 @@ test('orang tua menerima delta setiap anak lewat kolom parent_id', function (str
         ->assertJsonPath('delta.children_data.0.student_name', 'Aisyah')
         ->assertJsonPath('delta.children_data.0.delta.tahfidz.0.surah_name', 'Al-Mulk');
 })->with(['parent', 'orang_tua']);
-
-test('hub siswa menampilkan setoran tahfidz terakhir', function () {
-    TahfidzLog::create([
-        'student_id' => $this->student->id,
-        'teacher_id' => $this->teacher->id,
-        'surah_number' => 78,
-        'surah_name' => 'An-Naba',
-        'from_ayat' => 1,
-        'to_ayat' => 20,
-        'type' => 'ziyadah',
-        'grade' => 'B+',
-        'date' => now()->addDay()->toDateString(),
-    ]);
-
-    $hub = app(MobileStudentHubService::class)->getStudentWidgets($this->student->user);
-
-    expect($hub['latest_tahfidz'])->toBe([
-        'surah' => 'An-Naba',
-        'ayah' => 'Ayat 1 - 20',
-        'score' => 'B+',
-    ]);
-});
-
-test('halaman hub siswa menampilkan nilai huruf, bukan skor /100', function () {
-    $this->student->user->forceFill(['email_verified_at' => now()])->save();
-
-    $this->actingAs($this->student->user)->get(route('mobile.student.hub'))
-        ->assertOk()
-        ->assertSee('Al-Mulk')
-        ->assertSee('Ayat 1 - 10')
-        ->assertSee('Nilai: A')
-        ->assertDontSee('/100');
-});

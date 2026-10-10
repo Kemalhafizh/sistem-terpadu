@@ -5,7 +5,6 @@ namespace Tests\Feature\Mobile;
 use App\Models\User;
 use App\Models\UserDeviceToken;
 use App\Services\Mobile\PushNotificationService;
-use App\Support\School;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -156,67 +155,6 @@ class MobileGatewaySuiteTest extends TestCase
         $this->assertTrue($result['success']);
         $this->assertEquals(1, $result['dispatched_count']);
         $this->assertEquals('spp_billing', $result['results'][0]['payload']['message']['android']['notification']['channel_id']);
-    }
-
-    public function test_gps_geofence_attendance_checkin(): void
-    {
-        $user = User::factory()->create(['role' => 'student']);
-
-        // 1. Outside Radius Checkin
-        $outsideRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => -6.900000, // far away
-            'longitude' => 110.400000,
-            'accuracy_meters' => 15.0,
-            'is_mock_location' => false,
-        ]);
-        $outsideRes->assertStatus(422)
-            ->assertJson(['code' => 'OUTSIDE_GEOFENCE_RADIUS']);
-
-        // 2. Mock Location Rejected
-        $mockRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => School::campus()['latitude'],
-            'longitude' => School::campus()['longitude'],
-            'accuracy_meters' => 10.0,
-            'is_mock_location' => true,
-        ]);
-        $mockRes->assertStatus(422)
-            ->assertJson(['code' => 'MOCK_LOCATION_DETECTED']);
-
-        // 3. Valid Checkin within Campus Coordinates
-        $validRes = $this->actingAs($user)->postJson('/api/v1/mobile/attendance/gps-checkin', [
-            'latitude' => School::campus()['latitude'],
-            'longitude' => School::campus()['longitude'],
-            'accuracy_meters' => 12.0,
-            'is_mock_location' => false,
-        ]);
-        $validRes->assertStatus(200)
-            ->assertJson(['success' => true]);
-    }
-
-    public function test_dynamic_rotating_totp_qr_flow(): void
-    {
-        $user = User::factory()->create(['role' => 'student']);
-
-        $qrGenRes = $this->actingAs($user)->getJson('/api/v1/mobile/attendance/dynamic-qr');
-        $qrGenRes->assertStatus(200)
-            ->assertJsonStructure(['success', 'qr_token', 'expires_in_seconds', 'timestamp']);
-
-        $token = $qrGenRes->json('qr_token');
-
-        // The student shows the QR; a teacher's phone scans it. A student
-        // cannot act as the scanner.
-        $this->actingAs($user)->postJson('/api/v1/mobile/attendance/verify-qr', ['qr_token' => $token])->assertForbidden();
-
-        $scanner = User::factory()->create(['role' => 'guru']);
-        $verifyRes = $this->actingAs($scanner)->postJson('/api/v1/mobile/attendance/verify-qr', [
-            'qr_token' => $token,
-        ]);
-
-        $verifyRes->assertStatus(200)
-            ->assertJson([
-                'valid' => true,
-                'user_id' => $user->id,
-            ]);
     }
 
     public function test_mobile_delta_sync_pull(): void

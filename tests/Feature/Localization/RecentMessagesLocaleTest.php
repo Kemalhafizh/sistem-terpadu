@@ -35,14 +35,3 @@ test('penolakan jurnal di aplikasi mengikuti bahasa akun guru', function (string
     'en' => ['en', 'You do not teach this subject in this class in the active academic year.'],
     'ar' => ['ar', 'أنت لا تدرّس هذه المادة في هذا الفصل خلال العام الدراسي الحالي.'],
 ]);
-
-test('galat AI di halaman guru mengikuti bahasa akun', function () {
-    $this->actingAs(User::factory()->create(['role' => 'guru', 'preferred_locale' => 'en']))
-        ->from(route('academic.copilot.cbt'))
-        ->post(route('academic.copilot.cbt.generate'), [
-            'subject_id' => Subject::factory()->create()->id,
-            'material_text' => str_repeat('Materi pembelajaran sejarah proklamasi. ', 3),
-            'type' => 'multiple_choice', 'count' => 2, 'difficulty' => 'medium', 'provider' => 'gemini',
-        ])
-        ->assertSessionHas('error', 'Generating questions requires an AI service. Choose OpenAI or Gemini and enter its API key.');
-});

@@ -23,6 +23,19 @@ dataset('removed prefixes', [
     'financial/cost-centers', 'financial/procurement', 'growth/lifecycle',
     'analytics/predictive', 'analytics/engagement', 'analytics/finance', 'analytics/benchmarking',
     'api/v1/analytics/at-risk', 'api/v1/analytics/treasury', 'api/v1/analytics/student/{id}/risk', 'api/mobile/token',
+    // PR 3: gimmicks and the mobile endpoints behind them (AI, gamification, GPS/QR attendance, OCR, signatures).
+    'adaptive', 'micro-lessons', 'gamified-quizzes', 'spaced-repetition', 'transcripts', 'knowledge', 'homework-copilot',
+    'academic/competency', 'academic/copilot', 'academic/pathways', 'academic/scorm', 'academic/virtual',
+    'accessibility/wcag-scan', 'accessibility/voice-commands', 'interactive-ui', 'dashboards/', 'mobile/',
+    'gamification', 'chatbot', 'admin/chatbot', 'smart-alerts', 'career-portal', 'college-counseling', 'internships',
+    'showcase', 'evaluations', 'student/idcard', 'growth/wellbeing', 'mini-bank', 'merchant/', 'admin/finance/canteen',
+    'admin/finance/wadiah', 'class-feed', 'family-plan', 'parent-skills', 'green-school', 'campus', 'geofencing',
+    'surveillance', 'safety-drills', 'emergency-alerts', 'crisis/command-center', 'crisis/declare', 'crisis/incident',
+    'crisis/protocols', 'crisis/broadcast', 'islamic-events', 'dawah', 'spiritual', 'crowdfunding', 'endowment',
+    'foundation', 'data-engineering', 'data-quality', 'nlq', 'report-scheduler', 'ocr', 'documents/pending-signatures',
+    'documents/signature', 'documents/test-request', 'verify-document',
+    'api/v1/ai', 'api/v1/gamification', 'api/v1/blockchain', 'api/v1/iot', 'api/v1/mobile/attendance',
+    'api/v1/documents/ocr', 'api/v1/documents/signature',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {

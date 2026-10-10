@@ -33,14 +33,10 @@
                     
                     <div>
                         <h3 class="text-xs font-black uppercase tracking-[0.3em] mb-4 opacity-60">Statistik Hafalan</h3>
-                        <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="grid grid-cols-1 gap-4 mb-6">
                             <div>
                                 <p class="text-[9px] font-bold text-primary-300 uppercase tracking-widest mb-1">Total Setoran</p>
                                 <p class="text-2xl font-black">{{ $logs->count() }} <span class="text-xs opacity-50">Kali</span></p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] font-bold text-primary-300 uppercase tracking-widest mb-1">Poin XP</p>
-                                <p class="text-2xl font-black">{{ $student->total_xp }} <span class="text-xs opacity-50">XP</span></p>
                             </div>
                         </div>
 

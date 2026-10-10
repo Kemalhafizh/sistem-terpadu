@@ -11,56 +11,6 @@
       <!-- Banner Section -->
       @include('dashboard.partials.welcome-banner')
 
-      {{-- Smart Alerts Floating Dashboard Widget (Available to Admin/Staff roles) --}}
-      @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('kepala_sekolah') || auth()->user()->hasRole('bk') || auth()->user()->hasRole('waka_kesiswaan') || auth()->user()->hasRole('waka_kurikulum') || auth()->user()->hasRole('guru'))
-        @php
-          $dashAlertQuery = \App\Models\SmartAlert::where('status', 'active');
-          if (auth()->user()->role === 'guru') {
-            $classroom = \App\Models\Classroom::where('teacher_id', auth()->id())->first();
-            if ($classroom) {
-              $studentIds = $classroom->students()->pluck('id');
-              $dashAlertQuery->where(function ($q) use ($studentIds) {
-                $q->where('alertable_type', \App\Models\Student::class)
-                  ->whereIn('alertable_id', $studentIds);
-              });
-            } else {
-              $dashAlertQuery->where('id', 0);
-            }
-          }
-          $dashActiveCount = $dashAlertQuery->count();
-          $dashCriticalCount = (clone $dashAlertQuery)->where('severity', 'critical')->count();
-        @endphp
-
-        @if($dashActiveCount > 0)
-          <div class="bg-gradient-to-r from-indigo-950/90 to-slate-900/90 backdrop-blur-md border border-indigo-500/20 text-white rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-indigo-500/5 transition-all duration-300">
-            <div class="flex items-center space-x-4">
-              <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-2xl relative shadow-lg shadow-indigo-500/10 shrink-0">
-                
-                @if($dashCriticalCount > 0)
-                  <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
-                  </span>
-                @endif
-              </div>
-              <div class="space-y-1">
-                <h4 class="text-lg font-black tracking-tight text-indigo-300">{{ __('dashboard.smart_alerts_detected') }}</h4>
-                <p class="text-xs text-gray-300 font-medium leading-relaxed max-w-xl">
-                  {!! __('dashboard.smart_alerts_desc', ['count' => '<strong class="text-white">'.$dashActiveCount.'</strong>', 'critical' => '<strong class="text-white">'.$dashCriticalCount.'</strong>']) !!}
-                </p>
-              </div>
-            </div>
-            @canVisit('smart-alerts.index')
-            <a href="{{ route('smart-alerts.index') }}" 
-              class="w-full md:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 active:scale-95 shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 shrink-0">
-              <span>{{ __('dashboard.open_predictive_dashboard') }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </a>
-            @endcanVisit
-          </div>
-        @endif
-      @endif
-
       <!-- Papan Pengumuman (Mading Digital) -->
       @if(isset($announcements) && $announcements->count() > 0)
         <div class="space-y-4">
@@ -370,31 +320,6 @@
               </div>
             </div>
 
-            <!-- Widget: Smart Alerts Terbaru -->
-            <div x-show="isWidgetVisible('smart_alerts_latest')" :style="'order: ' + getWidgetOrder('smart_alerts_latest')" class="w-full transition-all duration-300" style="display: none;">
-              <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
-                <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
-                  <span class="w-2.5 h-6 bg-rose-500 rounded-full mr-3"></span>
-                  {{ __('dashboard.widget_smart_alerts_latest') }}
-                </h4>
-                <div class="space-y-4">
-                  @forelse($latestSmartAlerts as $sa)
-                    <div class="p-4 bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/30 rounded-2xl flex items-center justify-between">
-                      <div>
-                        <p class="text-sm font-bold text-rose-900 dark:text-rose-300">{{ $sa->title }}</p>
-                        <p class="text-xs text-rose-700 dark:text-rose-400 mt-1">{{ $sa->description }}</p>
-                      </div>
-                      <span class="px-2.5 py-1 bg-rose-200 dark:bg-rose-950 text-rose-800 dark:text-rose-300 text-[10px] font-black uppercase tracking-wider rounded-lg">
-                        {{ $sa->severity }}
-                      </span>
-                    </div>
-                  @empty
-                    <p class="text-sm text-gray-400 dark:text-gray-500 italic py-6 text-center">Tidak ada alert aktif saat ini.</p>
-                  @endforelse
-                </div>
-              </div>
-            </div>
-
             <!-- Widget: Approval Pending -->
             <div x-show="isWidgetVisible('approval_pending')" :style="'order: ' + getWidgetOrder('approval_pending')" class="w-full transition-all duration-300" style="display: none;">
               <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm flex items-center justify-between">
@@ -411,32 +336,6 @@
                   <span class="w-10 h-10 rounded-full {{ $pendingApprovalsCount > 0 ? 'bg-amber-500 text-white animate-pulse' : 'bg-gray-100 dark:bg-gray-700 text-gray-500' }} flex items-center justify-center font-black text-sm">
                     {{ $pendingApprovalsCount }}
                   </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Widget: Top 5 Siswa XP -->
-            <div x-show="isWidgetVisible('top_xp_students')" :style="'order: ' + getWidgetOrder('top_xp_students')" class="w-full transition-all duration-300" style="display: none;">
-              <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
-                <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
-                  <span class="w-2.5 h-6 bg-amber-500 rounded-full mr-3"></span>
-                   {{ __('dashboard.widget_top_xp_students') }}
-                </h4>
-                <div class="space-y-4">
-                  @foreach($topXpStudents as $idx => $ts)
-                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100/50 dark:border-gray-700/50">
-                      <div class="flex items-center space-x-3">
-                        <span class="w-7 h-7 flex items-center justify-center rounded-full text-xs font-black bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900">
-                          #{{ $idx + 1 }}
-                        </span>
-                        <div>
-                          <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $ts->user->name ?? 'Siswa' }}</p>
-                          <p class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">{{ $ts->classroom->name ?? 'Kelas' }}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-amber-500">{{ $ts->total_xp }} XP</span>
-                    </div>
-                  @endforeach
                 </div>
               </div>
             </div>
@@ -865,54 +764,6 @@
                     <p class="text-xs text-gray-400 dark:text-gray-500 italic text-center py-4">Hore! Tidak ada tugas pending yang harus diserahkan.</p>
                   @endforelse
                 </div>
-              </div>
-            </div>
-
-            <!-- Widget: student_gamification -->
-            <div x-show="isWidgetVisible('student_gamification')" :style="'order: ' + getWidgetOrder('student_gamification')" class="w-full transition-all duration-300" style="display: none;">
-              <div class="bg-gradient-to-br from-indigo-900 to-indigo-950 text-white rounded-4xl p-6 shadow-lg relative overflow-hidden border border-indigo-800">
-                <div class="absolute -right-10 -bottom-10 opacity-10">
-                  
-                </div>
-                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div>
-                    <span class="px-3 py-1 bg-indigo-800 text-indigo-300 rounded-xl text-xs font-black uppercase tracking-wider">LEVEL {{ $studentLevel }}</span>
-                    <h4 class="text-2xl font-black mt-2 text-white">{{ $student_profile->user->name ?? 'Siswa' }}</h4>
-                    <p class="text-xs text-indigo-300 font-bold mt-1">Sistem Gamifikasi Generasi Khaira Ummah</p>
-                  </div>
-                  <div class="flex items-center space-x-8">
-                    <div class="text-center">
-                      <span class="text-3xl font-black text-indigo-200">{{ $student_profile->total_xp }}</span>
-                      <p class="text-[9px] text-indigo-400 font-bold uppercase tracking-wider">Total XP</p>
-                    </div>
-                    <div class="text-center">
-                      <span class="text-3xl font-black text-amber-400"> {{ $student_profile->current_streak }}</span>
-                      <p class="text-[9px] text-indigo-400 font-bold uppercase tracking-wider">Streak Hari</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="mt-6">
-                  <div class="flex justify-between text-xs text-indigo-300 font-bold mb-2">
-                    <span>Progres Level</span>
-                    <span>{{ $studentXpProgress }}%</span>
-                  </div>
-                  <div class="w-full bg-indigo-950 h-3 rounded-full overflow-hidden border border-indigo-800">
-                    <div class="bg-gradient-to-r from-indigo-400 to-indigo-300 h-full rounded-full" style="width: {{ $studentXpProgress }}%"></div>
-                  </div>
-                </div>
-                @if($recentBadges->count() > 0)
-                  <div class="mt-6 pt-4 border-t border-indigo-800/60">
-                    <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-wider mb-3">Badge Terbaru:</p>
-                    <div class="flex space-x-3">
-                      @foreach($recentBadges as $badge)
-                        <div class="flex items-center space-x-1.5 bg-indigo-950/60 border border-indigo-800 px-3 py-1.5 rounded-xl text-xs font-black text-indigo-200">
-                          <span>{{ $badge->icon ?? '' }}</span>
-                          <span>{{ $badge->name }}</span>
-                        </div>
-                      @endforeach
-                    </div>
-                  </div>
-                @endif
               </div>
             </div>
 

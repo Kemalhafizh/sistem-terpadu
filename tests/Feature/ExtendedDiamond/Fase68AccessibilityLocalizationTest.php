@@ -10,13 +10,9 @@ class Fase68AccessibilityLocalizationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_wcag_scan_and_translation_manager(): void
+    public function test_translation_manager(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
-
-        $wcagRes = $this->actingAs($admin)->get(route('accessibility.wcag.index'));
-        $wcagRes->assertStatus(200);
-        $wcagRes->assertSee('Dasbor Kepatuhan Aksesibilitas');
 
         $transRes = $this->actingAs($admin)->get(route('accessibility.translations.index'));
         $transRes->assertStatus(200);
