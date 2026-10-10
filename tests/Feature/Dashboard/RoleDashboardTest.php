@@ -87,3 +87,16 @@ test('guru tanpa persetujuan tertunda tidak melihat klaim "semua modul aman"', f
     expect($html)->not->toContain('Semua modul terpantau aman')
         ->toContain('Tidak ada persetujuan yang menunggu Anda.');
 });
+
+test('kesehatan keuangan tampil untuk yang boleh melihat posisi kas, kosong bila belum ada transaksi', function () {
+    $response = $this->actingAs(User::factory()->create(['role' => 'kepala_sekolah']))->get('/dashboard')->assertOk();
+
+    $health = $response->viewData('financialHealth');
+    expect($health->cash_reserve)->toBeNull()
+        ->and($health->monthly_burn_rate)->toBeNull()
+        ->and($response->getContent())->toContain('Kesehatan Keuangan');
+
+    // waka_sarpras has a leadership dashboard but may not open the treasury.
+    $this->actingAs(User::factory()->create(['role' => 'waka_sarpras']))->get('/dashboard')->assertOk()
+        ->assertViewMissing('financialHealth');
+});

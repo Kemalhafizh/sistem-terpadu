@@ -26,6 +26,8 @@ use App\Models\TeacherTodo;
 use App\Models\TeachingJournal;
 use App\Models\User;
 use App\Models\WorkflowRequest;
+use App\Services\Dashboard\FinancialScoreboardService;
+use App\Support\Access\RouteAccess;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,6 +86,12 @@ class DashboardController extends Controller
             'parent' => $this->getParentData($user),
             default => [],
         };
+
+        // Cash position, monthly spending and runway from recorded transactions, for
+        // whoever may open the treasury position (119.2: the useful part of Dashboard/*).
+        if ($user->dashboardRole() === 'leadership' && RouteAccess::allowsRoute($user, 'treasury.position.dashboard')) {
+            $data['financialHealth'] = app(FinancialScoreboardService::class)->computeFinancialHealth();
+        }
 
         if ($user->role === 'waka_kurikulum') {
             $data['recent_subjects'] = Subject::latest()->take(5)->get();

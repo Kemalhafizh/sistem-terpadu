@@ -411,5 +411,12 @@
     "Laporan berhasil dikirim secara rahasia.": "Your report was sent confidentially.",
     "Tidak ada persetujuan yang menunggu Anda.": "No approvals are waiting for you.",
     "Belum ada tagihan": "No bills yet",
-    "Belum ada data guru.": "No teacher data yet."
+    "Belum ada data guru.": "No teacher data yet.",
+    "Kesehatan Keuangan": "Financial Health",
+    "Posisi kas": "Cash position",
+    "Saldo rekening": "Account balance",
+    "Pengeluaran per bulan": "Monthly spending",
+    "Saldo cukup untuk": "Balance lasts",
+    ":count bulan": ":count months",
+    "Proyeksi pendapatan": "Projected revenue"
 }

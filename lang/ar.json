@@ -411,5 +411,12 @@
     "Laporan berhasil dikirim secara rahasia.": "تم إرسال بلاغك بسرية.",
     "Tidak ada persetujuan yang menunggu Anda.": "لا توجد موافقات بانتظارك.",
     "Belum ada tagihan": "لا توجد فواتير بعد",
-    "Belum ada data guru.": "لا توجد بيانات للمعلمين بعد."
+    "Belum ada data guru.": "لا توجد بيانات للمعلمين بعد.",
+    "Kesehatan Keuangan": "الصحة المالية",
+    "Posisi kas": "وضع النقدية",
+    "Saldo rekening": "رصيد الحسابات",
+    "Pengeluaran per bulan": "الإنفاق الشهري",
+    "Saldo cukup untuk": "يكفي الرصيد لمدة",
+    ":count bulan": ":count أشهر",
+    "Proyeksi pendapatan": "الإيرادات المتوقعة"
 }

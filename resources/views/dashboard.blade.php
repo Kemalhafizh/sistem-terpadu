@@ -272,6 +272,40 @@
               </div>
             </div>
 
+            @isset($financialHealth)
+            <!-- Kesehatan keuangan: only from recorded transactions; "–" where there is no source -->
+            @php
+                $rupiah = fn ($value) => $value === null ? '–' : 'Rp '.number_format((float) $value, 0, ',', '.');
+                $runway = $financialHealth->details['runway_months'] ?? null;
+            @endphp
+            <div class="w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
+              <div class="flex justify-between items-center mb-4">
+                <h4 class="text-lg font-black text-gray-900 dark:text-white">{{ __('Kesehatan Keuangan') }}</h4>
+                @canVisit('treasury.position.dashboard')
+                <a href="{{ route('treasury.position.dashboard') }}" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">{{ __('Posisi kas') }}</a>
+                @endcanVisit
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl">
+                  <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">{{ __('Saldo rekening') }}</span>
+                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1">{{ $rupiah($financialHealth->cash_reserve) }}</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl">
+                  <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">{{ __('Pengeluaran per bulan') }}</span>
+                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1">{{ $rupiah($financialHealth->monthly_burn_rate) }}</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl">
+                  <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">{{ __('Saldo cukup untuk') }}</span>
+                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1">{{ $runway === null ? '–' : __(':count bulan', ['count' => $runway]) }}</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl">
+                  <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">{{ __('Proyeksi pendapatan') }}</span>
+                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1">{{ $rupiah($financialHealth->projected_revenue) }}</p>
+                </div>
+              </div>
+            </div>
+            @endisset
+
             <!-- Widget: Jurnal Mengajar Hari Ini -->
             <div x-show="isWidgetVisible('teaching_journal_today')" :style="'order: ' + getWidgetOrder('teaching_journal_today')" class="w-full transition-all duration-300" style="display: none;">
               <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
