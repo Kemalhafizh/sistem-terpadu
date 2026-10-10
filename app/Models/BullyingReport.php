@@ -2,12 +2,27 @@
 
 namespace App\Models;
 
+use App\Support\Access\Roles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BullyingReport extends Model
 {
     use HasFactory;
+
+    /**
+     * Who may read the reports (web and API). They carry victims' identities,
+     * so this is counselling, student affairs and leadership; anyone signed in
+     * may file one.
+     */
+    public const READER_ROLES = ['bk', 'waka_kesiswaan', ...Roles::PRINCIPAL, 'admin'];
+
+    /** Stable codes the app sends and receives; labels live in lang/{id,en,ar}/bullying.php. */
+    public const TYPES = ['verbal', 'fisik', 'cyber', 'sosial_eksklusi', 'pemerasan', 'pelecehan', 'intimidasi', 'lainnya'];
+
+    public const SEVERITIES = ['ringan', 'sedang', 'berat', 'sangat_berat'];
+
+    public const STATUSES = ['reported', 'under_review', 'investigating', 'action_taken', 'closed', 'dismissed'];
 
     protected $fillable = [
         'ticket_number', 'description', 'type', 'severity', 'location', 'incident_date',

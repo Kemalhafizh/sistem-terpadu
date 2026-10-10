@@ -61,6 +61,7 @@ return [
         // ── Kesiswaan ────────────────────────────────────────────────────
         'discipline' => ['title' => 'Kedisiplinan', 'group' => 'kesiswaan', 'endpoint' => 'GET discipline/summary'],
         'counseling.student' => ['title' => 'Konseling BK', 'group' => 'kesiswaan', 'endpoint' => 'GET counseling/appointments/my'],
+        'counseling.bullying_report' => ['title' => 'Lapor Perundungan', 'group' => 'layanan', 'endpoint' => 'POST counseling/bullying-reports'],
         'health.history' => ['title' => 'Riwayat Kesehatan', 'group' => 'kesiswaan', 'endpoint' => 'GET uks/visits/my'],
         'student.profile360' => ['title' => 'Profil 360°', 'group' => 'kesiswaan', 'endpoint' => 'GET profile/student/me'],
         'extracurricular' => ['title' => 'Ekstrakurikuler', 'group' => 'kesiswaan', 'endpoint' => 'GET extracurricular/list'],
@@ -79,6 +80,7 @@ return [
         'class_analytics' => ['title' => 'Analitik Kelas', 'group' => 'akademik', 'endpoint' => 'GET analytics/teacher/class-performance'],
         'teacher.messages' => ['title' => 'Pesan Orang Tua', 'group' => 'mengajar', 'endpoint' => 'GET teacher/messages'],
         'counseling.staff' => ['title' => 'Layanan BK', 'group' => 'mengajar', 'endpoint' => 'GET counseling/dashboard'],
+        'counseling.bullying_reports' => ['title' => 'Laporan Perundungan', 'group' => 'mengajar', 'endpoint' => 'GET counseling/bullying-reports'],
         'uks.record' => ['title' => 'Catat Kunjungan UKS', 'group' => 'mengajar', 'endpoint' => 'POST uks/visits'],
 
         // ── Anak saya (orang tua) ────────────────────────────────────────

@@ -102,8 +102,9 @@ return new class extends Migration
             $table->id();
             $table->uuid('ticket_number')->unique();
             $table->text('description');
-            $table->enum('type', ['verbal', 'fisik', 'cyber', 'sosial_eksklusi', 'pemerasan', 'pelecehan', 'intimidasi', 'lainnya']);
-            $table->enum('severity', ['ringan', 'sedang', 'berat', 'sangat_berat']);
+            // A reporter may not know the type and does not judge severity; counselling fills them in.
+            $table->enum('type', ['verbal', 'fisik', 'cyber', 'sosial_eksklusi', 'pemerasan', 'pelecehan', 'intimidasi', 'lainnya'])->nullable();
+            $table->enum('severity', ['ringan', 'sedang', 'berat', 'sangat_berat'])->nullable();
             $table->string('location')->nullable();
             $table->date('incident_date')->nullable();
             $table->boolean('is_anonymous')->default(true);

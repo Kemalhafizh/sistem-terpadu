@@ -405,5 +405,8 @@
     "Penanganan": "طريقة التخلص",
     "Catat": "تسجيل",
     "Dicatat oleh": "سجّله",
-    "Belum ada log sampah.": "لا توجد سجلات نفايات بعد."
+    "Belum ada log sampah.": "لا توجد سجلات نفايات بعد.",
+    "Laporan perundungan terkirim. Guru BK akan menindaklanjutinya.": "تم إرسال بلاغ التنمر. سيتابعه المرشد الطلابي.",
+    "Laporan tidak ditemukan.": "لم يتم العثور على البلاغ.",
+    "Laporan berhasil dikirim secara rahasia.": "تم إرسال بلاغك بسرية."
 }
