@@ -181,7 +181,7 @@
           <!-- ADMIN & KEPALA SEKOLAH WIDGETS       -->
           <!-- ========================================== -->
 
-          @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('kepala_sekolah') || auth()->user()->hasRole('waka_kurikulum') || auth()->user()->hasRole('waka_kesiswaan'))
+          @if(auth()->user()->dashboardRole() === 'leadership')
 
             <!-- Widget: General Stats -->
             <div x-show="isWidgetVisible('general_stats')" :style="'order: ' + getWidgetOrder('general_stats')" class="w-full transition-all duration-300" style="display: none;">
@@ -225,7 +225,7 @@
             <div x-show="isWidgetVisible('attendance_today')" :style="'order: ' + getWidgetOrder('attendance_today')" class="w-full transition-all duration-300" style="display: none;">
               <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center space-x-4">
-                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl {{ $todayAttendanceRate >= 85 ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600' : 'bg-red-50 dark:bg-red-950/30 text-red-600' }}">
+                  <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl {{ $todayAttendanceRate === null ? 'bg-gray-50 dark:bg-gray-900/50 text-gray-400' : ($todayAttendanceRate >= 85 ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600' : 'bg-red-50 dark:bg-red-950/30 text-red-600') }}">
                     
                   </div>
                   <div>
@@ -235,11 +235,11 @@
                 </div>
                 <div class="flex items-center space-x-6">
                   <div class="text-right">
-                    <span class="text-3xl font-black {{ $todayAttendanceRate >= 85 ? 'text-emerald-500' : 'text-red-500' }}">{{ $todayAttendanceRate }}%</span>
+                    <span class="text-3xl font-black {{ $todayAttendanceRate === null ? 'text-gray-400' : ($todayAttendanceRate >= 85 ? 'text-emerald-500' : 'text-red-500') }}">{{ $todayAttendanceRate === null ? '–' : $todayAttendanceRate.'%' }}</span>
                     <p class="text-[10px] text-gray-400 dark:text-gray-500 font-black uppercase tracking-wider">Kehadiran Siswa</p>
                   </div>
                   <div class="w-24 bg-gray-100 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                    <div class="h-full rounded-full {{ $todayAttendanceRate >= 85 ? 'bg-emerald-500' : 'bg-red-500' }}" style="width: {{ $todayAttendanceRate }}%"></div>
+                    <div class="h-full rounded-full {{ $todayAttendanceRate >= 85 ? 'bg-emerald-500' : 'bg-red-500' }}" style="width: {{ $todayAttendanceRate ?? 0 }}%"></div>
                   </div>
                 </div>
               </div>
@@ -250,23 +250,23 @@
               <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div class="md:col-span-1 flex flex-col justify-center">
                   <h4 class="text-xs text-gray-400 dark:text-gray-500 font-black uppercase tracking-widest">{{ __('dashboard.widget_financial_status_month') }}</h4>
-                  <p class="text-xl font-black text-indigo-600 dark:text-indigo-400 mt-1">{{ $currentMonthName }}</p>
+                  <p class="text-xl font-black text-indigo-600 dark:text-indigo-400 mt-1">{{ $currentMonthName ?? __('Belum ada tagihan') }}</p>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100/50 dark:border-gray-700/50">
                   <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">Total Tagihan</span>
-                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1">Rp {{ number_format($totalBillings, 0, ',', '.') }}</p>
+                  <p class="text-lg font-black text-gray-900 dark:text-white mt-1">{{ $totalBillings === null ? '–' : 'Rp '.number_format($totalBillings, 0, ',', '.') }}</p>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100/50 dark:border-gray-700/50">
                   <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">Sudah Dibayar</span>
-                  <p class="text-lg font-black text-emerald-600 mt-1">Rp {{ number_format($totalPaid, 0, ',', '.') }}</p>
+                  <p class="text-lg font-black text-emerald-600 mt-1">{{ $totalPaid === null ? '–' : 'Rp '.number_format($totalPaid, 0, ',', '.') }}</p>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100/50 dark:border-gray-700/50 flex items-center justify-between">
                   <div>
                     <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase">Collection Rate</span>
-                    <p class="text-lg font-black text-indigo-600 dark:text-indigo-400 mt-1">{{ $collectionRate }}%</p>
+                    <p class="text-lg font-black text-indigo-600 dark:text-indigo-400 mt-1">{{ $collectionRate === null ? '–' : $collectionRate.'%' }}</p>
                   </div>
                   <div class="w-12 h-12 rounded-full border-4 border-indigo-100 dark:border-indigo-950 flex items-center justify-center text-xs font-black text-indigo-600 dark:text-indigo-400">
-                    {{ round($collectionRate) }}%
+                    {{ $collectionRate === null ? '–' : round($collectionRate).'%' }}
                   </div>
                 </div>
               </div>
@@ -285,9 +285,11 @@
                   </span>
                 </div>
                 <div class="w-full bg-gray-100 dark:bg-gray-700 h-3 rounded-full overflow-hidden mb-6">
-                  <div class="bg-indigo-600 h-full rounded-full" style="width: {{ $journalFilledRate }}%"></div>
+                  <div class="bg-indigo-600 h-full rounded-full" style="width: {{ $journalFilledRate ?? 0 }}%"></div>
                 </div>
-                @if(count($unfilledTeachers) > 0)
+                @if($totalTeachers === 0)
+                  <p class="text-xs text-gray-400 font-bold">{{ __('Belum ada data guru.') }}</p>
+                @elseif(count($unfilledTeachers) > 0)
                   <div>
                     <p class="text-[10px] text-gray-400 dark:text-gray-500 font-black uppercase tracking-wider mb-3">Guru Belum Mengisi Jurnal:</p>
                     <div class="flex flex-wrap gap-2">
@@ -354,11 +356,11 @@
                 </div>
                 <div class="flex items-center space-x-8">
                   <div class="text-center">
-                    <span class="text-2xl font-black text-emerald-600">{{ $mutabaahAverageScore }}%</span>
+                    <span class="text-2xl font-black text-emerald-600">{{ $mutabaahAverageScore === null ? '–' : $mutabaahAverageScore.'%' }}</span>
                     <p class="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider">Skor Amalan</p>
                   </div>
                   <div class="text-center">
-                    <span class="text-2xl font-black text-indigo-600 dark:text-indigo-400">{{ $mutabaahGradeAPercent }}%</span>
+                    <span class="text-2xl font-black text-indigo-600 dark:text-indigo-400">{{ $mutabaahGradeAPercent === null ? '–' : $mutabaahGradeAPercent.'%' }}</span>
                     <p class="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider">Grade A</p>
                   </div>
                 </div>
@@ -484,7 +486,7 @@
           <!-- GURU (TEACHER) WIDGETS           -->
           <!-- ========================================== -->
 
-          @if(auth()->user()->hasRole('guru'))
+          @if(auth()->user()->dashboardRole() === 'teacher')
 
             <!-- Widget: teacher_schedule_today -->
             <div x-show="isWidgetVisible('teacher_schedule_today')" :style="'order: ' + getWidgetOrder('teacher_schedule_today')" class="w-full transition-all duration-300" style="display: none;">
@@ -715,7 +717,7 @@
           <!-- SISWA (STUDENT) WIDGETS           -->
           <!-- ========================================== -->
 
-          @if(auth()->user()->hasRole('student'))
+          @if(auth()->user()->dashboardRole() === 'student')
 
             <!-- Widget: student_schedule_today -->
             <div x-show="isWidgetVisible('student_schedule_today')" :style="'order: ' + getWidgetOrder('student_schedule_today')" class="w-full transition-all duration-300" style="display: none;">
@@ -919,7 +921,7 @@
           <!-- ORANG TUA (PARENT) WIDGETS         -->
           <!-- ========================================== -->
 
-          @if(auth()->user()->hasRole('parent'))
+          @if(auth()->user()->dashboardRole() === 'parent')
 
             <!-- Widget: parent_child_attendance -->
             <div x-show="isWidgetVisible('parent_child_attendance')" :style="'order: ' + getWidgetOrder('parent_child_attendance')" class="w-full transition-all duration-300" style="display: none;">
@@ -984,7 +986,7 @@
                     <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100/50 dark:border-gray-700/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div>
                         <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $ch['profile']->user->name }}</p>
-                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Skor Amalan Minggu Ini: <strong class="text-emerald-600">{{ $ch['childMutabaahScore'] }}%</strong> • Grade: <strong>{{ $ch['childMutabaahGrade'] }}</strong></p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Skor Amalan Minggu Ini: <strong class="text-emerald-600">{{ $ch['childMutabaahScore'] === null ? '–' : $ch['childMutabaahScore'].'%' }}</strong> • Grade: <strong>{{ $ch['childMutabaahGrade'] ?? '–' }}</strong></p>
                       </div>
                       @if($ch['latestUnverifiedDate'])
                         <form action="{{ route('mutabaah.verify', $ch['profile']->id) }}" method="POST" class="shrink-0">
