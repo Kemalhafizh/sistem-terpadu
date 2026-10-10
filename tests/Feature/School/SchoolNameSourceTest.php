@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\DigitalVerification;
-use App\Models\Setting;
-use App\Models\Student;
 use App\Models\User;
 use App\Services\TotpSecurityService;
 use Laravel\Sanctum\Sanctum;
@@ -53,26 +50,4 @@ test('API dan halaman memakai nama sekolah dari pengaturan', function () {
     }
     $this->actingAs(User::factory()->create(['role' => 'kepala_sekolah']))->get(route('dashboard'))
         ->assertOk()->assertSee('SMA Contoh Nusantara')->assertDontSee(':school', false);
-});
-
-test('sertifikat ditandatangani kepala sekolah dari pengaturan, bukan nama karangan', function () {
-    $studentUser = User::factory()->create(['role' => 'student']);
-    $student = Student::factory()->create(['user_id' => $studentUser->id, 'nisn' => '0012345678']);
-    Sanctum::actingAs($studentUser);
-    $issue = fn () => $this->postJson('/api/v1/debloat/certificates/issue', [
-        'student_id' => $student->id, 'document_type' => 'IJAZAH', 'document_number' => 'IJZ-1',
-    ]);
-
-    // No principal in the settings yet: refuse instead of signing as someone made up.
-    $issue()->assertStatus(422)->assertJsonPath('success', false)
-        ->assertJsonPath('message', fn ($m) => str_contains($m, 'Nama kepala sekolah belum diisi'));
-    expect(DigitalVerification::count())->toBe(0);
-
-    Setting::set('principal_name', 'Kepala Contoh, S.Pd.');
-    $issue()->assertCreated();
-
-    expect(DigitalVerification::sole())
-        ->issuer_name->toBe('Kepala Contoh, S.Pd.')
-        ->issuer_title->toBe('Kepala SMA Contoh Nusantara Kota Baru')
-        ->metadata->institution->toBe('SMA Contoh Nusantara Kota Baru');
 });

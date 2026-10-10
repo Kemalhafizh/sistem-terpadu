@@ -49,26 +49,4 @@ class Fase72SmartCampusIot2Test extends TestCase
         $matchRes->assertJsonPath('success', true);
         $matchRes->assertJsonPath('user.name', 'Muhammad Iqbal');
     }
-
-    public function test_energy_management_system_occupancy_automation(): void
-    {
-        $admin = User::factory()->create(['role' => 'admin']);
-
-        // Room becomes vacant -> triggers auto shutdown
-        $sensorRes = $this->actingAs($admin, 'sanctum')->postJson('/api/v1/iot/energy/sensor', [
-            'room_name' => 'Lab Komputer 3',
-            'device_id' => 'EMS-SENSOR-LK3-09',
-            'occupancy_count' => 0,
-            'temperature' => 24.5,
-        ]);
-
-        $sensorRes->assertStatus(200);
-        $sensorRes->assertJsonPath('data.is_occupied', false);
-        $sensorRes->assertJsonPath('data.ac_status', 'off');
-
-        // Check Dashboard
-        $dashRes = $this->actingAs($admin, 'sanctum')->getJson('/api/v1/iot/energy/dashboard');
-        $dashRes->assertStatus(200);
-        $this->assertGreaterThan(0.0, $dashRes->json('summary.total_kwh_saved'));
-    }
 }

@@ -2,7 +2,6 @@
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
-use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
@@ -36,23 +35,6 @@ test('penolakan jurnal di aplikasi mengikuti bahasa akun guru', function (string
     'en' => ['en', 'You do not teach this subject in this class in the active academic year.'],
     'ar' => ['ar', 'أنت لا تدرّس هذه المادة في هذا الفصل خلال العام الدراسي الحالي.'],
 ]);
-
-test('sertifikat tanpa kepala sekolah dan dokumen yang tidak ada dijawab dalam bahasa pengguna', function () {
-    config(['school.name' => 'SMA Contoh Nusantara']);
-    $studentUser = User::factory()->create(['role' => 'student', 'preferred_locale' => 'en']);
-    $student = Student::factory()->create(['user_id' => $studentUser->id]);
-    Sanctum::actingAs($studentUser);
-
-    $this->postJson('/api/v1/debloat/certificates/issue', ['student_id' => $student->id, 'document_type' => 'IJAZAH', 'document_number' => 'IJZ-9'])
-        ->assertStatus(422)
-        ->assertJsonPath('message', "The principal's name has not been filled in under School Settings, so the certificate cannot be signed yet.");
-
-    // Public verification, no account: the Accept-Language header decides.
-    $this->app['auth']->forgetGuards();
-    $this->getJson('/api/v1/certificates/verify/TIDAK-ADA', ['Accept-Language' => 'ar'])
-        ->assertNotFound()
-        ->assertJsonPath('data.message', 'لم يُعثر على المستند في السجلات الرسمية لـ SMA Contoh Nusantara.');
-});
 
 test('galat AI di halaman guru mengikuti bahasa akun', function () {
     $this->actingAs(User::factory()->create(['role' => 'guru', 'preferred_locale' => 'en']))

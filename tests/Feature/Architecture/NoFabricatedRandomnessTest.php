@@ -34,9 +34,6 @@ class NoFabricatedRandomnessTest extends TestCase
         'app/Models/User.php' => [
             'random_int' => 'Kode 2FA dari CSPRNG.',
         ],
-        'app/Http/Controllers/Admin/WebhookHubController.php' => [
-            'rand' => 'Payload uji kirim webhook yang ditandai test_mode, bukan data.',
-        ],
     ];
 
     /** @var array<string, array<string, int>> file => call => how many remain */

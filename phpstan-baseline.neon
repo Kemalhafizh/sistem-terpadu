@@ -49,18 +49,6 @@ parameters:
 			path: app/Http/Controllers/Admin/AssetMaintenanceTicketController.php
 
 		-
-			message: '#^Relation ''executions'' is not found in App\\Models\\BpaBusinessRule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Admin/BpaRuleEngineController.php
-
-		-
-			message: '#^Relation ''rule'' is not found in App\\Models\\BpaRuleExecution model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Admin/BpaRuleEngineController.php
-
-		-
 			message: '#^Relation ''config'' is not found in App\\Models\\IntegrationLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -71,12 +59,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Admin/RbacAuditController.php
-
-		-
-			message: '#^Relation ''creator'' is not found in App\\Models\\CustomReport model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Admin/ReportBuilderController.php
 
 		-
 			message: '#^Relation ''user'' is not found in App\\Models\\ActiveSession model\.$#'
@@ -101,18 +83,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Http/Controllers/Admin/SyncController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\UatFeedback model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Admin/UatFeedbackController.php
-
-		-
-			message: '#^Relation ''subscription'' is not found in App\\Models\\WebhookDelivery model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Admin/WebhookHubController.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\AlumniData model\.$#'
@@ -1352,12 +1322,6 @@ parameters:
 			path: app/Services/Communication/MessagingService.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Debloat/PragmaticSyncService.php
-
-		-
 			message: '#^Relation ''category'' is not found in App\\Models\\StudentPointLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -1410,18 +1374,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/EdsService.php
-
-		-
-			message: '#^Relation ''employee'' is not found in App\\Models\\AnalyticalEmployeePerformance model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/EdwOlapEngineService.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\AnalyticalStudentKpi model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/EdwOlapEngineService.php
 
 		-
 			message: '#^Relation ''assignments'' is not found in App\\Models\\ElearningClass model\.$#'
@@ -1668,12 +1620,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/UtbkService.php
-
-		-
-			message: '#^Relation ''subscription'' is not found in App\\Models\\WebhookDelivery model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/WebhookManagerService.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\MutabaahWeeklySummary model\.$#'

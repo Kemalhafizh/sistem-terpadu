@@ -324,11 +324,7 @@
         </div>
         <!-- Chatbot Floating Widget -->
         <x-chatbot-widget />
-        
-        <!-- UAT Feedback Floating Widget -->
-        @if(config('app.uat_mode'))
-            @include('admin.uat.feedback-form')
-        @endif
+
     </div>
 
     <!-- KaTeX LaTeX Math & Chemical Equation Renderer for Saintek -->

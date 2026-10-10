@@ -15,7 +15,6 @@ use App\Models\TracerResponse;
 use App\Models\UnitAccreditationRecord;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -117,14 +116,6 @@ test('template Scribe lokal tidak memuat CDN, jadi scribe:generate tetap bebas C
     expect($theme)->not->toMatch('#<script[^>]+src="https?://#')
         ->toContain('<x-vendor.script lib="lodash" />')
         ->toContain('@verbatim');
-});
-
-test('tombol antrean gagal di queue monitor memanggil method yang ada', function () {
-    DB::table('failed_jobs')->insert(['uuid' => (string) Str::uuid(), 'connection' => 'database', 'queue' => 'default', 'payload' => '{}', 'exception' => 'x', 'failed_at' => now()]);
-
-    $this->actingAs($this->admin)->from(route('admin.queue.index'))->post(route('admin.queue.flush'))->assertRedirect(route('admin.queue.index'));
-    expect(DB::table('failed_jobs')->count())->toBe(0);
-    $this->post(route('admin.queue.retry-all'))->assertRedirect();
 });
 
 test('transaksi kas OSIS bisa diedit', function () {
