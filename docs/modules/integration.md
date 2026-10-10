@@ -61,7 +61,7 @@ Mengelola pendaftaran endpoint webhook outgoing untuk transfer data real-time.
 | **Rombel Kelas** | `student.classroom.name`| Nama rombongan belajar aktif |
 | **Nama Ibu Kandung**| *Fallback* | Default: `"Ibu Kandung Siswa"` |
 
-### B. Format EMIS Kemenag (Keagamaan & Gamifikasi)
+### B. Format EMIS Kemenag (Keagamaan)
 
 | Kolom EMIS | Atribut SISTA | Deskripsi / Fallback |
 | :--- | :--- | :--- |
@@ -69,10 +69,7 @@ Mengelola pendaftaran endpoint webhook outgoing untuk transfer data real-time.
 | **Nama Lengkap** | `student.user.name` | Identitas siswa |
 | **Jenis Kelamin** | `student.gender` | Ditampilkan Laki-laki / Perempuan |
 | **Rombel Kelas** | `student.classroom.name`| Rombel aktif |
-| **Level Gamifikasi**| `student.level` | Diambil dari level gamifikasi aktif SISTA |
-| **Total XP** | `student.total_xp` | Akumulasi XP keaktifan siswa |
 | **Capaian Tahfidz** | `student.tahfidzLogs` | Akumulasi total Juz yang disetorkan |
-| **Status Keagamaan**| `student.status` | Kategori keaktifan ibadah harian siswa |
 
 ---
 

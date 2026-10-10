@@ -19,7 +19,7 @@ Modul Scheduled Reporting & Email Digest merupakan mesin pelaporan otomatis (*au
 
 ### B. Mesin Digest & Pelaporan (`DigestService`)
 *   **Kompilasi Metrik**:
-    *   **Daily Admin**: Mengompilasi jumlah siswa alpa hari ini, tiket bantuan helpdesk baru, tagihan SPP baru, dan alarm *Smart Alert* aktif.
+    *   **Daily Admin**: Mengompilasi jumlah siswa alpa hari ini, tiket bantuan helpdesk baru dan tagihan SPP baru.
     *   **Weekly Kepsek**: Menghitung rata-rata tingkat kehadiran kelas mingguan, total pembayaran SPP masuk, jurnal mengajar terhambat, dan target pencapaian standar mutu sekolah.
     *   **Monthly Finance**: Menghitung total uang masuk bulanan, total sisa tunggakan, serta klasemen 5 siswa penunggak SPP terbesar.
     *   **Weekly Parent**: Menyusun laporan performa anak meliputi data alpa/terlambat, akumulasi poin BK baru, nilai akademik terbaru, dan pekerjaan rumah (PR) e-learning yang masih tertunda.

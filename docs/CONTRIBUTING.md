@@ -23,7 +23,7 @@ Kami menggunakan pola git-flow yang dimodifikasi untuk pengembangan modular:
 *   **`main` / `master`:** Cabang produksi yang stabil. Hanya boleh di-merge dari cabang `release/*` atau perbaikan darurat `hotfix/*`.
 *   **`develop`:** Cabang utama pengembangan harian. Seluruh fitur baru digabungkan ke sini.
 *   **`feature/[nama-modul]`:** Cabang pengerjaan fitur baru. Dibuat dari `develop` dan digabungkan kembali ke `develop` melalui Pull Request (PR).
-    *   *Contoh:* `feature/smart-alerts`, `feature/cbt-secure-mode`.
+    *   *Contoh:* `feature/import-sidik-jari`, `feature/cbt-secure-mode`.
 *   **`hotfix/[nama-bug]`:** Cabang perbaikan bug mendesak di lingkungan produksi. Dibuat langsung dari `main` dan setelah selesai digabungkan kembali ke `main` dan `develop`.
 
 ---
