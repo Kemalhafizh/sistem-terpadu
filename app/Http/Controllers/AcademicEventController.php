@@ -36,26 +36,12 @@ class AcademicEventController extends Controller
         ]);
 
         $user = Auth::user();
-        $query = AcademicEvent::active()
+        $query = AcademicEvent::visibleTo($user)
             ->inDateRange($request->start, $request->end);
 
-        // Filter per kelas dan per peran pengguna non-admin
-        if (! $user->isAdmin()) {
-            $query->forRole($user->role);
-            if ($user->role === 'student' && $user->student) {
-                $query->forClassroom($user->student->classroom_id);
-            } elseif ($user->role === 'parent') {
-                // Ambil kelas anak pertamanya
-                $child = $user->children()->first();
-                if ($child) {
-                    $query->forClassroom($child->classroom_id);
-                }
-            }
-        } else {
-            // Admin/Guru bisa memfilter per kelas di dropdown dashboard
-            if ($request->filled('classroom_id')) {
-                $query->forClassroom($request->classroom_id);
-            }
+        // Administrators may narrow the calendar to one classroom from the dropdown.
+        if ($user->isAdmin() && $request->filled('classroom_id')) {
+            $query->forClassroom($request->classroom_id);
         }
 
         if ($request->filled('type')) {

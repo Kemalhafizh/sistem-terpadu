@@ -594,7 +594,7 @@
                   {{ __('dashboard.widget_teacher_recent_notifications') }}
                 </h4>
                 <div class="space-y-4">
-                  @foreach($recentNotifications as $notif)
+                  @forelse($recentNotifications as $notif)
                     <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100/50 dark:border-gray-700/50 flex items-center justify-between">
                       <div>
                         <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $notif->title }}</p>
@@ -602,7 +602,9 @@
                       </div>
                       <span class="text-[10px] text-gray-400 font-bold ml-2">{{ $notif->time }}</span>
                     </div>
-                  @endforeach
+                  @empty
+                    <p class="text-sm text-gray-400 dark:text-gray-500">{{ __('Tidak ada persetujuan yang menunggu Anda.') }}</p>
+                  @endforelse
                 </div>
               </div>
             </div>

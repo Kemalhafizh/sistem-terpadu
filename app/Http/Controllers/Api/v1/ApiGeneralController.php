@@ -100,8 +100,7 @@ class ApiGeneralController extends Controller
     {
         $user = $request->user();
 
-        $events = AcademicEvent::active()
-            ->forRole($user->role)
+        $events = AcademicEvent::visibleTo($user)
             ->latest()
             ->take(50)
             ->get();

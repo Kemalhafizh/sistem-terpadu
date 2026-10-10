@@ -353,15 +353,6 @@ class DashboardController extends Controller
             ];
         }
 
-        if (empty($recentNotifications)) {
-            $recentNotifications[] = (object) [
-                'type' => 'info',
-                'title' => 'Dasbor Siap',
-                'desc' => 'Semua modul terpantau aman dan kondusif hari ini.',
-                'time' => 'Baru saja',
-            ];
-        }
-
         return [
             'isTahfidz' => $user->subjects()->whereIn('name', ['Tahfidz', 'PAI', 'Al-Quran Hadits'])->exists() || $user->role === 'guru',
             'isBK' => $user->subjects()->whereIn('name', ['BK', 'Bimbingan Konseling'])->exists(),
@@ -507,8 +498,8 @@ class DashboardController extends Controller
         $endOfWeek = now()->endOfWeek()->format('Y-m-d');
         $totalActiveItems = MutabaahItem::where('is_active', true)->count() ?: 5;
 
-        // Upcoming school events
-        $upcomingSchoolEvents = AcademicEvent::where('start_date', '>=', now())
+        // Upcoming school events this parent's family is meant to see.
+        $upcomingSchoolEvents = AcademicEvent::visibleTo($user)->where('start_date', '>=', now())
             ->orderBy('start_date')
             ->take(3)
             ->get();

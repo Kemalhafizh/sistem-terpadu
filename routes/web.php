@@ -31,7 +31,6 @@ use App\Http\Controllers\Auth\MobileSsoBridgeController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\CmsController;
-use App\Http\Controllers\Communication\CalendarController;
 use App\Http\Controllers\Communication\MessagingController;
 use App\Http\Controllers\Communication\NotificationCenterController;
 use App\Http\Controllers\Communication\ResourceBookingController;
@@ -247,14 +246,9 @@ Route::middleware('auth')->group(function () {
     Route::post('messages/{conversation}/reply', [MessagingController::class, 'reply'])->name('messages.reply');
     Route::get('messages/search-users', [MessagingController::class, 'searchUsers'])->name('messages.search_users');
 
-    // Enterprise Calendar & Resource Booking System
-    Route::get('calendar-hub', [CalendarController::class, 'index'])->name('calendar.index');
-    Route::get('calendar-hub/events-json', [CalendarController::class, 'eventsJson'])->name('calendar.events_json');
-    Route::post('calendar-hub/events', [CalendarController::class, 'store'])->name('calendar.store');
-    Route::put('calendar-hub/events/{id}', [CalendarController::class, 'update'])->name('calendar.update');
-    Route::delete('calendar-hub/events/{id}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
-    Route::post('calendar-hub/events/{id}/rsvp', [CalendarController::class, 'rsvp'])->name('calendar.rsvp');
-
+    // Resource booking (rooms and equipment). FASE 119 removed the second
+    // "enterprise" calendar that used to live here: the school has one
+    // calendar, `calendar` (AcademicEvent), which the app reads too.
     Route::get('resource-bookings', [ResourceBookingController::class, 'index'])->name('resource_bookings.index');
     Route::post('resource-bookings', [ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
     Route::post('resource-bookings/{id}/approve', [ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');

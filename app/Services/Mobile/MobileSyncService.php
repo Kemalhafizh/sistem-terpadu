@@ -60,8 +60,7 @@ class MobileSyncService
         $recordsCount += $announcements->count();
 
         // 2. Academic Calendar Events Delta
-        $calendar = AcademicEvent::active()
-            ->forRole($user->role)
+        $calendar = AcademicEvent::visibleTo($user)
             ->where('updated_at', '>=', $since)
             ->orderBy('start_date', 'asc')
             ->take(50)

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Access\StudentDataAccess;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,14 +58,6 @@ class AcademicEvent extends Model
         $query->where('is_active', true);
     }
 
-    public function scopeForRole(Builder $query, string $role): void
-    {
-        $query->where(function ($q) use ($role) {
-            $q->whereNull('target_role')
-                ->orWhere('target_role', $role);
-        });
-    }
-
     public function scopeForClassroom(Builder $query, ?int $classroomId): void
     {
         if ($classroomId) {
@@ -85,6 +78,37 @@ class AcademicEvent extends Model
                         ->where('end_date', '>=', $end);
                 });
         });
+    }
+
+    /**
+     * Active events a user should see, for the web calendar and the app alike:
+     * aimed at everyone or at the user's role (under any of its spellings),
+     * and for students and parents only those for everyone or for their own
+     * (children's) classrooms. Administrators see the whole calendar.
+     */
+    public function scopeVisibleTo(Builder $query, User $user): void
+    {
+        $query->where('is_active', true);
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        $roles = match (true) {
+            in_array($user->role, StudentDataAccess::STUDENT_ROLES, true) => StudentDataAccess::STUDENT_ROLES,
+            in_array($user->role, StudentDataAccess::PARENT_ROLES, true) => StudentDataAccess::PARENT_ROLES,
+            in_array($user->role, StudentDataAccess::TEACHER_ROLES, true) => StudentDataAccess::TEACHER_ROLES,
+            default => [$user->role],
+        };
+        $query->where(fn (Builder $q) => $q->whereNull('target_role')->orWhereIn('target_role', $roles));
+
+        $classroomIds = match (true) {
+            in_array($user->role, StudentDataAccess::STUDENT_ROLES, true) => [$user->student?->classroom_id],
+            in_array($user->role, StudentDataAccess::PARENT_ROLES, true) => $user->children()->pluck('classroom_id')->all(),
+            default => null,
+        };
+        if ($classroomIds !== null) {
+            $query->where(fn (Builder $q) => $q->whereNull('target_classroom_id')->orWhereIn('target_classroom_id', array_filter($classroomIds)));
+        }
     }
 
     public function scopeUpcoming(Builder $query): void

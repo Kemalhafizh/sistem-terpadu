@@ -73,7 +73,6 @@ class DatabaseSeeder extends Seeder
                 TwoFactorSecuritySeeder::class,
                 NotificationCenterSeeder::class,
                 InternalMessagingSeeder::class,
-                EnterpriseCalendarSeeder::class,
                 ExportEngineSeeder::class,
                 AccreditationSeeder::class,
                 EnterpriseFinancialSeeder::class,
