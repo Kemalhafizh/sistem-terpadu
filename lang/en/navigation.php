@@ -3,20 +3,12 @@
 return [
     // General & Top Nav
     'dashboard' => 'Dashboard',
-    'academic' => 'Academic',
     'classrooms' => 'Classrooms',
     'subjects' => 'Subjects & Courses',
     'students' => 'Students Directory',
-    'schedules' => 'Class Schedules',
-    'e_report' => 'Digital Report Card',
-    'finance' => 'Tuition & Finance',
-    'billings' => 'Tuition Invoices',
-    'reports' => 'General Ledger Reports',
     'counseling' => 'Student Counseling (BK)',
     'e_learning' => 'E-Learning & Tasks',
     'cbt' => 'Online CBT Exams',
-    'settings' => 'Settings',
-    'dev_portal' => 'Developer Portal',
     'logout' => 'Log Out',
     'profile' => 'User Profile',
     'language' => 'Language',
@@ -25,7 +17,6 @@ return [
     'mark_all_read' => 'Mark All as Read',
     'view_all' => 'View All',
     'no_notifications' => 'No new notifications.',
-    'gamification' => 'Gamification Center',
 
     // Sidebar Headers
     'header_master_data' => 'Master Data',
@@ -34,15 +25,10 @@ return [
     'header_academic' => 'Academic Module',
     'header_student' => 'Student Affairs',
     'header_sarpras' => 'Facilities & Assets',
-    'header_humas' => 'Public Relations',
     'header_administration' => 'Administration',
     'header_staff' => 'Staff Affairs',
     'header_teacher' => 'Teacher Academic Portal',
     'header_learning_resources' => 'Learning Resources',
-    'header_enterprise' => 'Enterprise Infrastructure',
-    'header_enterprise_gold' => 'Enterprise Gold',
-    'header_enterprise_platinum' => 'Enterprise Platinum',
-    'header_enterprise_diamond' => 'Enterprise Diamond',
 
     // Sidebar Links - Foundation & Master
     'users' => 'Users & Access Control',
@@ -65,7 +51,6 @@ return [
     'helpdesk' => 'Internal Helpdesk',
     'asset_loans' => 'Asset Borrowing',
     'announcements' => 'Announcement Hub',
-    'assets' => 'Facilities & Assets',
     'inventaris_assets' => 'Asset Inventory',
     'assets_maintenance' => 'Asset Maintenance',
     'assets_depreciation' => 'Asset Depreciation',
@@ -75,9 +60,6 @@ return [
     'point_categories' => 'Point Category Master',
     'uks' => 'Digital Health Clinic',
     'ekskul' => 'Extracurriculars',
-    'osis' => 'Student Council Finance',
-    'mpk' => 'Student Representative Board',
-    'news_announcements' => 'News & Announcements',
     'finance_administration' => 'Financial Administration',
     'finance_analysis' => 'Financial Analytics (Principal)',
     'school_analytics' => 'School Analytics',
@@ -96,39 +78,7 @@ return [
     'event_attendance' => 'Event Attendance',
     'todo_agenda' => 'Agenda & Todos',
 
-    // Enterprise Infrastructure
-    'webhooks' => 'Real-Time Webhook Hub',
-    'bpa_rules' => 'No-Code BPA Rule Engine',
-    'vendor_sla' => 'Vendor SLA Scorecard',
-    'disaster_recovery' => 'Disaster Recovery & Snapshots',
-    'two_factor' => 'TOTP 2FA & Session Security',
-    'edw_olap' => 'Enterprise Data Warehouse (EDW)',
-    'apm_observability' => 'APM Telemetry & Health',
-    'feature_flags' => 'Feature Flag Engine',
-
-    // Enterprise Gold Modules (Fase 45-50)
-    'crisis_management' => 'Crisis & Incident Management',
-    'strategic_planning' => 'Strategic Planning & RENSTRA',
-    'knowledge_hub' => 'Teacher Knowledge Hub (PLC)',
-    'treasury' => 'Treasury & Bank Reconciliation',
-    'adaptive_learning' => 'Adaptive Learning & IRT CAT',
-    'foundation_governance' => 'YBWSA Foundation Governance',
-
-    // Enterprise Platinum Modules (Fase 51-56)
-    'microlearning' => 'Microlearning & Quiz Arena',
-    'recruitment' => 'HR & Employee Wellbeing',
-    'smart_campus' => 'Smart Campus & Visitors',
-    'omnichannel' => 'Omnichannel & PR Hub',
-    'data_intelligence' => 'Data Intelligence & NLQ',
-    'career_readiness' => 'Career Readiness & Mini Bank',
-
-    // Enterprise Diamond Modules (Fase 57-62)
-    'islamic_tech' => 'Islamic Tech & Tahsin',
     'inclusive_education' => 'Inclusive Education & IEP',
-    'green_school' => 'Green School Program',
-    'school_safety' => 'School Safety & CCTV',
-    'alumni_relations' => 'Alumni & Endowment',
-    'family_engagement' => 'Family Collaboration 2.0',
 
     // FASE 119: one menu per area.
     'tahsin' => 'Tahsin',

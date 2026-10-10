@@ -31,8 +31,7 @@ function hrefCount(string $html, string $routeName): int
 
 test('tidak ada lagi seksi Enterprise di sidebar', function (string $role) {
     expect(sidebarFor($this, $role))
-        ->not->toContain(__('navigation.header_enterprise_platinum'))
-        ->not->toContain(__('navigation.header_enterprise_diamond'));
+        ->not->toContain('Enterprise');
 })->with(['admin', 'kepala_sekolah', 'bk', 'guru']);
 
 test('setiap menu muncul sekali', function (string $role, array $routes) {
@@ -89,7 +88,7 @@ test('OSIS dan MPK satu menu', function () {
     $html = sidebarFor($this, 'waka_kesiswaan');
 
     expect($html)->toContain(e(__('navigation.osis_mpk')))
-        ->not->toContain(e(__('navigation.mpk')))
+        ->not->toContain('Lembaga MPK')->not->toContain('Keuangan OSIS')
         ->and(hrefCount($html, 'osis.dashboard'))->toBe(1);
 });
 
