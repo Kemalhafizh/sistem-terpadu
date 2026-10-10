@@ -269,18 +269,22 @@ Route::middleware('auth')->group(function () {
     Route::get('financial/budget/{id}/variance', [BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
     Route::get('financial/budget/{id}/forecast', [BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
 
-    // 33.3: Scholarship & Grant Management Portal
-    Route::get('financial/scholarships', [ScholarshipController::class, 'programs'])->name('financial.scholarships.programs');
-    Route::get('financial/scholarships/create', [ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program');
-    Route::post('financial/scholarships', [ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program');
-    Route::post('financial/scholarships/{id}/open', [ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open');
-    Route::get('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form');
-    Route::post('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application');
-    Route::get('financial/scholarships/{programId}/review', [ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review');
-    Route::post('financial/scholarships/applications/{appId}/review', [ScholarshipController::class, 'review'])->name('financial.scholarships.review_action');
-    Route::get('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form');
-    Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
-    Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report');
+    // 33.3: Scholarships. FASE 119: part of the Keuangan menu, and no longer open to
+    // every account: staff enter applications (the form takes the student), the
+    // principal may approve, and only TU and admin create programmes or pay out.
+    $scholarshipReaders = Roles::only('staf_tu', Roles::PRINCIPAL, 'admin');
+    $scholarshipWriters = Roles::only('staf_tu', 'admin');
+    Route::get('financial/scholarships', [ScholarshipController::class, 'programs'])->name('financial.scholarships.programs')->middleware($scholarshipReaders);
+    Route::get('financial/scholarships/create', [ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships', [ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships/{id}/open', [ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open')->middleware($scholarshipWriters);
+    Route::get('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application')->middleware($scholarshipWriters);
+    Route::get('financial/scholarships/{programId}/review', [ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review')->middleware($scholarshipReaders);
+    Route::post('financial/scholarships/applications/{appId}/review', [ScholarshipController::class, 'review'])->name('financial.scholarships.review_action')->middleware($scholarshipReaders);
+    Route::get('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action')->middleware($scholarshipWriters);
+    Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report')->middleware($scholarshipReaders);
 
     // 34.2: Positive Behavior & Character Report Card (P5)
     Route::get('growth/character/dimensions', [P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
