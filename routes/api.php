@@ -3,9 +3,7 @@
 use App\Http\Controllers\Ai\AiLessonPlanController;
 use App\Http\Controllers\Ai\AiTutorController;
 use App\Http\Controllers\Ai\NlpEssayGraderController;
-use App\Http\Controllers\Analytics\AtRiskStudentPredictionController;
 use App\Http\Controllers\Analytics\MobileAnalyticsController;
-use App\Http\Controllers\Analytics\TreasuryForecastController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HealthCheckController;
 use App\Http\Controllers\Api\MidtransWebhookController;
@@ -578,10 +576,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         // FASE 73: BIG DATA PREDICTIVE ANALYTICS
         // =====================================================================
         Route::prefix('analytics')->group(function () {
-            Route::get('student/{id}/risk', [AtRiskStudentPredictionController::class, 'analyzeStudent'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah,bk,guru');
-            Route::get('at-risk/dashboard', [AtRiskStudentPredictionController::class, 'getAtRiskDashboard'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah,bk');
-            Route::post('treasury/forecast', [TreasuryForecastController::class, 'generate'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah');
-            Route::get('treasury/forecasts', [TreasuryForecastController::class, 'getForecasts'])->middleware('role:admin,superadmin,staf_tu,kepala_sekolah');
 
             // Mobile app analytics screens (student/teacher/parent/executive dashboards) — real aggregates only.
             Route::get('student/summary', [MobileAnalyticsController::class, 'studentSummary'])->middleware('role:student,siswa');

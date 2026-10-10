@@ -88,12 +88,10 @@ test('alumni hanya bisa mengubah jawaban tracer study miliknya', function () {
     expect($bobResponse->fresh()->relevance_score)->toBe(4);
 });
 
-test('forum, siswa berisiko, cek ketersediaan booking dan SOP tidak lagi error', function () {
+test('forum dan cek ketersediaan booking tidak lagi error', function () {
     // forum/create calls auth()->user()->isParent(), which didn't exist.
     $this->actingAs($this->admin)->get(route('forum.create'))->assertOk();
-    $this->get(route('growth.lifecycle.at_risk'))->assertOk();
     $this->getJson(route('resource_bookings.check'))->assertStatus(422)->assertJsonValidationErrors(['resource_id', 'start', 'end']);
-    $this->get(route('sop.create'))->assertRedirect(route('sop.index'));
 
     expect(User::factory()->make(['role' => 'orang_tua'])->isParent())->toBeTrue()
         ->and(User::factory()->make(['role' => 'guru'])->isParent())->toBeFalse();

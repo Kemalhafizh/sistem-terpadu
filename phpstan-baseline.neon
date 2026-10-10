@@ -307,36 +307,6 @@ parameters:
 			path: app/Http/Controllers/ChatbotController.php
 
 		-
-			message: '#^Relation ''steps'' is not found in App\\Models\\DripCampaign model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Communication/DripCampaignController.php
-
-		-
-			message: '#^Relation ''responses'' is not found in App\\Models\\NpsCampaign model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Communication/NpsController.php
-
-		-
-			message: '#^Relation ''template'' is not found in App\\Models\\OmnichannelLog model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Communication/OmnichannelController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\OmnichannelLog model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Communication/OmnichannelController.php
-
-		-
-			message: '#^Relation ''author'' is not found in App\\Models\\PressRelease model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Communication/PublicRelationsController.php
-
-		-
 			message: '#^Relation ''indicators'' is not found in App\\Models\\EdsStandard model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -581,12 +551,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Finance/CharityController.php
-
-		-
-			message: '#^Relation ''lines'' is not found in App\\Models\\JournalEntry model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Finance/FinancialAuditController.php
 
 		-
 			message: '#^Relation ''account'' is not found in App\\Models\\WadiahTransaction model\.$#'
@@ -1440,12 +1404,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/ExtracurricularService.php
-
-		-
-			message: '#^Relation ''lines'' is not found in App\\Models\\JournalEntry model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Services/FinancialAuditorService.php
 
 		-
 			message: '#^Relation ''tahfidzLogs'' is not found in App\\Models\\Student model\.$#'

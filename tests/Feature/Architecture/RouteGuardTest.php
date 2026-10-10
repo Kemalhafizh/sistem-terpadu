@@ -35,12 +35,16 @@ test('daftar whitelist dan utang hanya berisi route yang masih ada dan masih tan
         ->and(array_intersect(config('route_access.open_to_all'), config('route_access.unguarded_debt')))->toBe([]);
 });
 
-/** "METHODS uri" of every route the 17 FASE 45-62 route files register, loaded into a router of their own. */
+/**
+ * "METHODS uri" of every route the FASE 45-62 route files register, loaded
+ * into a router of their own. FASE 119 deletes some of these files outright
+ * (recruitment, omnichannel, ...); they leave this list with them.
+ */
 function fase45to62RouteKeys(): array
 {
-    $files = ['treasury', 'crisis', 'recruitment', 'inclusive_education', 'family_engagement', 'campus_ops', 'data_engineering',
+    $files = ['treasury', 'crisis', 'inclusive_education', 'family_engagement', 'campus_ops', 'data_engineering',
         'school_safety', 'extended_diamond', 'knowledge', 'adaptive', 'microlearning', 'career_readiness',
-        'alumni_relations', 'omnichannel', 'islamic_tech', 'green_school'];
+        'alumni_relations', 'islamic_tech', 'green_school'];
     $router = new Router(app('events'), app());
     $original = Route::getFacadeRoot();
     Route::swap($router);

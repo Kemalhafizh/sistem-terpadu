@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\AcademicYear;
-use App\Models\ApprovalChain;
-use App\Models\ApprovalRequest;
 use App\Models\BullyingReport;
 use App\Models\CatSession;
 use App\Models\Classroom;
@@ -14,7 +12,6 @@ use App\Models\Student;
 use App\Models\User;
 use App\Models\WasteLog;
 use App\Models\WhiteboardSession;
-use App\Models\WorkflowBlueprint;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -46,8 +43,6 @@ dataset('internal pages', [
     'petty cash store' => ['post', 'treasury.petty-cash.store', []],
     'bullying list' => ['get', 'crisis.bullying.index', []],
     'bullying statistics' => ['get', 'crisis.bullying.statistics', []],
-    'recruitment kanban' => ['get', 'recruitment.kanban', []],
-    'recruitment vacancies' => ['get', 'recruitment.vacancies', []],
     'data streams' => ['get', 'data_engineering.streams', []],
     'report scheduler store' => ['post', 'report_scheduler.store', []],
 ]);
@@ -74,7 +69,6 @@ test('peran yang berhak membuka modulnya', function (string $role, string $route
     ['kepala_sekolah', 'treasury.accounts.index'],
     ['bk', 'crisis.bullying.index'],
     ['waka_kesiswaan', 'crisis.bullying.statistics'],
-    ['kepala_sekolah', 'recruitment.kanban'],
     ['admin', 'data_engineering.streams'],
     ['kepala_sekolah', 'data_engineering.streams'],
 ]);
@@ -116,8 +110,7 @@ test('sidebar siswa dan orang tua tidak memuat menu internal', function (string 
     }
     $html = $this->actingAs($user)->get('/dashboard')->assertOk()->getContent();
 
-    expect($html)->not->toContain(route('recruitment.kanban'))
-        ->not->toContain(route('data_engineering.streams'))
+    expect($html)->not->toContain(route('data_engineering.streams'))
         ->not->toContain(url('/treasury/'))
         ->not->toContain(route('visitors.dashboard'))
         ->not->toContain(route('iep.index'));
@@ -134,8 +127,7 @@ test('sidebar siswa memuat modul belajarnya sendiri', function () {
 test('sidebar pimpinan tetap memuat menu yang boleh dibukanya', function () {
     $html = $this->actingAs(User::factory()->create(['role' => 'kepala_sekolah']))->get('/dashboard')->assertOk()->getContent();
 
-    expect($html)->toContain(route('recruitment.kanban'))
-        ->toContain(route('data_engineering.streams'));
+    expect($html)->toContain(route('data_engineering.streams'));
 });
 
 // 118.5.4: the waste log is really saved.
@@ -273,20 +265,6 @@ test('orang tua hanya melaporkan izin untuk anaknya sendiri', function () {
     $this->actingAs($parent)->postJson(route('mobile.parent.report-absence'), [
         'student_id' => $stranger->id, 'status' => 'sakit', 'reason' => 'Demam',
     ])->assertNotFound();
-});
-
-test('hanya approver yang ditunjuk yang memutus persetujuan', function () {
-    $requester = User::factory()->create(['role' => 'guru']);
-    $approver = User::factory()->create(['role' => 'kepala_sekolah']);
-    $blueprint = WorkflowBlueprint::create(['name' => 'Cuti', 'process_type' => 'leave_request', 'bpmn_schema' => [], 'created_by' => $approver->id]);
-    $chain = ApprovalChain::create(['workflow_blueprint_id' => $blueprint->id, 'requester_id' => $requester->id]);
-    $step = ApprovalRequest::create(['approval_chain_id' => $chain->id, 'approver_id' => $approver->id, 'node_key' => 'kepsek']);
-
-    foreach ([$requester, User::factory()->create(['role' => 'waka_kurikulum']), User::factory()->create(['role' => 'admin'])] as $other) {
-        $this->actingAs($other)->postJson(route('workflow.approvals.decision', $step), ['decision' => 'approved'])->assertForbidden();
-    }
-
-    expect($step->fresh()->decision)->toBe('pending');
 });
 
 test('hanya host yang menyimpan kanvas whiteboard', function () {
