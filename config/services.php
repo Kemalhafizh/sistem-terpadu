@@ -65,6 +65,10 @@ return [
         'client_key' => env('MIDTRANS_CLIENT_KEY'),
         'server_key' => env('MIDTRANS_SERVER_KEY'),
         'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+        // The pretend gateway (a page whose button marks a bill paid) exists for local
+        // demos only: off unless asked for, and never in production. Without it and
+        // without a working Midtrans key, checkout says online payment is unavailable.
+        'simulator' => (bool) env('MIDTRANS_SIMULATOR', false) && env('APP_ENV') !== 'production',
         'is_sanitized' => true,
         'is_3ds' => true,
     ],

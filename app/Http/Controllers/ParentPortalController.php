@@ -388,7 +388,14 @@ class ParentPortalController extends Controller
                 }
             }
 
-            if (! $billing->snap_token) {
+            // No working Midtrans: the local simulator if it is switched on, otherwise
+            // say so instead of handing out a page that marks the bill paid.
+            if (! $billing->snap_token || str_starts_with($billing->snap_token, 'TKN-DEMO-')) {
+                if (! config('services.midtrans.simulator')) {
+                    $billing->update(['snap_token' => null, 'payment_url' => null]);
+
+                    return redirect()->route('parent-portal.billings', $student->id)->with('error', __('Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.'));
+                }
                 $billing->update([
                     'snap_token' => 'TKN-DEMO-'.strtoupper(Str::random(10)),
                     'payment_url' => route('parent-portal.billings.mock-gateway', $billing->id),
@@ -404,6 +411,7 @@ class ParentPortalController extends Controller
      */
     public function mockGateway(Billing $billing)
     {
+        abort_unless(config('services.midtrans.simulator'), 404);
         $student = Student::findOrFail($billing->student_id);
         $this->validateChild($student);
 
@@ -415,6 +423,8 @@ class ParentPortalController extends Controller
      */
     public function callback(Request $request, Billing $billing)
     {
+        // A pretend payment: only with the local simulator switched on.
+        abort_unless(config('services.midtrans.simulator'), 404);
         $student = Student::findOrFail($billing->student_id);
         $this->validateChild($student);
 

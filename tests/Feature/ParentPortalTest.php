@@ -165,6 +165,9 @@ test('chat messages between parent and teacher can be fetched, auto-read, and se
 });
 
 test('parent can checkout billing and successfully confirm via callback simulation', function () {
+    // Exercises the local payment simulator (off by default, never in production).
+    config(['services.midtrans.simulator' => true]);
+
     $parent = User::factory()->create(['role' => 'parent']);
     $classroom = Classroom::factory()->create();
     $student = Student::factory()->create([
@@ -206,6 +209,9 @@ test('parent can checkout billing and successfully confirm via callback simulati
 });
 
 test('cross-parent cannot checkout or callback another child billing', function () {
+    // Exercises the local payment simulator (off by default, never in production).
+    config(['services.midtrans.simulator' => true]);
+
     $parentA = User::factory()->create(['role' => 'parent']);
     $parentB = User::factory()->create(['role' => 'parent']);
     $classroom = Classroom::factory()->create();

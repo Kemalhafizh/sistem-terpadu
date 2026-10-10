@@ -36,6 +36,9 @@ test('the Midtrans webhook records the payment without attributing it to user 1'
 });
 
 test('the parent portal checkout callback does not attribute the payment to user 1', function () {
+    // Exercises the local payment simulator (off by default, never in production).
+    config(['services.midtrans.simulator' => true]);
+
     $parent = User::factory()->create(['role' => 'parent']);
     $student = Student::factory()->create(['parent_id' => $parent->id, 'classroom_id' => Classroom::factory()->create()->id]);
     $billing = Billing::factory()->create(['student_id' => $student->id, 'amount' => 300000, 'remaining_balance' => 300000]);
@@ -46,6 +49,9 @@ test('the parent portal checkout callback does not attribute the payment to user
 });
 
 test('the student checkout callback does not attribute the payment to user 1', function () {
+    // Exercises the local payment simulator (off by default, never in production).
+    config(['services.midtrans.simulator' => true]);
+
     $studentUser = User::factory()->create(['role' => 'student']);
     $student = Student::factory()->create(['user_id' => $studentUser->id]);
     $billing = Billing::factory()->create(['student_id' => $student->id, 'amount' => 300000, 'remaining_balance' => 300000]);
