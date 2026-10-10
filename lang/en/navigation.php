@@ -129,4 +129,21 @@ return [
     'school_safety' => 'School Safety & CCTV',
     'alumni_relations' => 'Alumni & Endowment',
     'family_engagement' => 'Family Collaboration 2.0',
+
+    // FASE 119: one menu per area.
+    'tahsin' => 'Tahsin',
+    'header_counseling' => 'Guidance & Counselling',
+    'bullying_reports' => 'Bullying Reports',
+    'report_bullying' => 'Report Bullying',
+    'header_finance' => 'Finance',
+    'treasury_accounts' => 'Bank Accounts',
+    'petty_cash' => 'Petty Cash',
+    'reconciliation' => 'Bank Reconciliation',
+    'vendor_payments' => 'Vendor Payments',
+    'scholarships' => 'Scholarships',
+    'my_billings' => 'My Bills',
+    'osis_mpk' => 'Student Council',
+    'school_settings' => 'School Identity & Appearance',
+    'school_identity' => 'School Identity',
+    'school_appearance' => 'Appearance',
 ];

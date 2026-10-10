@@ -104,7 +104,9 @@ test('sidebar siswa dan orang tua tidak memuat menu internal', function (string 
 
     expect($html)->not->toContain(url('/treasury/'))
         ->not->toContain(route('iep.index'))
-        ->not->toContain(route('crisis.bullying.index'));
+        ->not->toContain('href="'.route('crisis.bullying.index').'"')
+        // Reporting is open to everyone, and the menu says so (FASE 119).
+        ->toContain('href="'.route('crisis.bullying.report').'"');
 })->with(['siswa', 'orang_tua', 'student', 'parent']);
 
 test('sidebar siswa memuat modul belajarnya sendiri', function () {

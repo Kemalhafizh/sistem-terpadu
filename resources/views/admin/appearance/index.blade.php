@@ -27,6 +27,8 @@
         </nav>
     </x-slot>
 
+    <x-school-settings-tabs />
+
     <!-- Google Fonts Preload dynamically in preview panel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

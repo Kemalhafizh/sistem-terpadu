@@ -129,4 +129,21 @@ return [
     'school_safety' => 'الأمن والسلامة وكاميرات المراقبة',
     'alumni_relations' => 'رابطة الخريجين والأوقاف المدرسية',
     'family_engagement' => 'التواصل والتكامل الأسري المتقدم',
+
+    // FASE 119: one menu per area.
+    'tahsin' => 'التحسين',
+    'header_counseling' => 'الإرشاد الطلابي',
+    'bullying_reports' => 'بلاغات التنمر',
+    'report_bullying' => 'الإبلاغ عن التنمر',
+    'header_finance' => 'المالية',
+    'treasury_accounts' => 'الحسابات البنكية',
+    'petty_cash' => 'النثرية',
+    'reconciliation' => 'التسوية البنكية',
+    'vendor_payments' => 'مدفوعات الموردين',
+    'scholarships' => 'المنح الدراسية',
+    'my_billings' => 'فواتيري',
+    'osis_mpk' => 'مجلس الطلاب',
+    'school_settings' => 'هوية المدرسة ومظهرها',
+    'school_identity' => 'هوية المدرسة',
+    'school_appearance' => 'المظهر',
 ];

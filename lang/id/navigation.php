@@ -129,4 +129,21 @@ return [
     'school_safety' => 'Keamanan Fisik & CCTV',
     'alumni_relations' => 'Alumni & Dana Abadi',
     'family_engagement' => 'Kolaborasi Ortu 2.0',
+
+    // FASE 119: one menu per area.
+    'tahsin' => 'Tahsin',
+    'header_counseling' => 'Bimbingan Konseling',
+    'bullying_reports' => 'Laporan Perundungan',
+    'report_bullying' => 'Lapor Perundungan',
+    'header_finance' => 'Keuangan',
+    'treasury_accounts' => 'Rekening Bank',
+    'petty_cash' => 'Kas Kecil',
+    'reconciliation' => 'Rekonsiliasi Bank',
+    'vendor_payments' => 'Pembayaran Vendor',
+    'scholarships' => 'Beasiswa',
+    'my_billings' => 'Tagihan Saya',
+    'osis_mpk' => 'OSIS & MPK',
+    'school_settings' => 'Identitas & Tampilan Sekolah',
+    'school_identity' => 'Identitas Sekolah',
+    'school_appearance' => 'Tampilan',
 ];

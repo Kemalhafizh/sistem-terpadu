@@ -109,6 +109,8 @@ use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
 use App\Models\TeachingJournal;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Support\Facades\Route;
 use Knuckles\Scribe\ScribeServiceProvider;
 
@@ -455,7 +457,8 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // STUDENT SELF-SERVICE
     // =========================================================
-    Route::middleware('role:student')->group(function () {
+    // Both spellings of the student role (FASE 119: `siswa` accounts were locked out of their own bills).
+    Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
         Route::get('my-billings', [StudentFinanceController::class, 'index'])->name('finance.student.index');
         Route::get('my-academic', [StudentAcademicController::class, 'index'])->name('student.academic');
         Route::get('my-wadiah', [StudentFinanceController::class, 'wadiahWallet'])->name('student.wadiah.wallet');

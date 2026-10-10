@@ -145,6 +145,9 @@
         </a>
         @endcanVisit
 
+        {{-- Anyone signed in may report bullying (FASE 118.1). --}}
+        <x-sidebar-link route="crisis.bullying.report" :label="__('navigation.report_bullying')" icon="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+
         @if(!in_array(auth()->user()->role, ['student', 'parent']))
         @canVisit('assets.loans.index')
         <a href="{{ route('assets.loans.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.loans.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.asset_loans') }}">
@@ -159,26 +162,8 @@
         @endcanVisit
         @endif
 
-        @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
-        @canVisit('announcements.index')
-        <a href="{{ route('announcements.index') }}" class="{{ $linkClass }} {{ request()->routeIs('announcements.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.announcements') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.announcements') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.announcements') }}</div>
-        </a>
-        @endcanVisit
-        @canVisit('assets.index')
-        <a href="{{ route('assets.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.assets') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.assets') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.assets') }}</div>
-        </a>
-        @endcanVisit
-        @endif
+        {{-- One announcements menu (FASE 119); the route admits humas, leadership and admin. --}}
+        <x-sidebar-link route="announcements.index" :label="__('navigation.announcements')" icon="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" active="announcements.*" />
         
         {{-- Master Data: Hanya Admin & Kepsek --}}
         @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
@@ -230,6 +215,8 @@
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.mutabaah') }}</div>
         </a>
         @endcanVisit
+
+        <x-sidebar-link route="tahsin.index" :label="__('navigation.tahsin')" icon="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" active="tahsin.*" />
 
         @canVisit('event-attendance.index')
         <a href="{{ route('event-attendance.index') }}" class="{{ $linkClass }} {{ request()->routeIs('event-attendance.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.event_attendance') }}">
@@ -313,18 +300,8 @@
         </a>
         @endcanVisit
 
-        @canVisit('admin.appearance.index')
-        <a href="{{ route('admin.appearance.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.appearance.*') ? $activeClass : $inactiveClass }}" title="Kustomisasi Tampilan">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-3.012 3.012m11-3.012a3 3 0 013.012 3.012M9.53 16.122a3 3 0 11-6.024 0M17.518 16.122a3 3 0 106.024 0M12 3v9"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21H5a2 2 0 01-2-2V9a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2z"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Kustomisasi Tampilan</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Kustomisasi Tampilan</div>
-        </a>
-        @endcanVisit
+        {{-- School identity (letterhead, NPSN, principal) and appearance are one menu with two tabs (FASE 119). --}}
+        <x-sidebar-link route="admin.school.branding.index" :label="__('navigation.school_settings')" icon="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" :active="['admin.school.branding.*', 'admin.appearance.*']" />
         @endif
         @endif
         
@@ -442,96 +419,44 @@
         @endcanVisit
         @endif
 
-        {{-- Modul Kesiswaan: Admin, Waka Kesiswaan, BK, Guru, Staf TU --}}
-        @if(in_array(auth()->user()->role, ['waka_kesiswaan', 'bk', 'admin', 'superadmin', 'guru', 'staf_tu']))
-        <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
-            <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_student') }}</p>
-        </div>
-        <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
-            <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_student') }}">•</p>
-        </div>
-        
-        @if(auth()->user()->hasRole('waka_kesiswaan') || auth()->user()->hasRole('bk') || auth()->user()->isAdmin())
-        @canVisit('points.index')
-        <a href="{{ route('points.index') }}" class="{{ $linkClass }} {{ request()->routeIs('points.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.points') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.points') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.points') }}</div>
-        </a>
-        @endcanVisit
-        @canVisit('point-categories.index')
-        <a href="{{ route('point-categories.index') }}" class="{{ $linkClass }} {{ request()->routeIs('point-categories.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.point_categories') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.point_categories') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.point_categories') }}</div>
-        </a>
-        @endcanVisit
-        @endif
-
-        {{-- UKS Digital --}}
-        @canVisit('uks.dashboard')
-        <a href="{{ route('uks.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('uks.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.uks') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.uks') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.uks') }}</div>
-        </a>
-        @endcanVisit
-
-        {{-- Kelola Ekskul --}}
-        @if(in_array(auth()->user()->role, ['guru', 'bk', 'waka_kesiswaan', 'admin', 'superadmin']))
-        @canVisit('ekskul.manage')
-        <a href="{{ route('ekskul.manage') }}" class="{{ $linkClass }} {{ request()->routeIs('ekskul.manage') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.ekskul') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.ekskul') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ekskul') }}</div>
-        </a>
-        @endcanVisit
-        @endif
-
-        {{-- Keuangan OSIS --}}
-        @if(in_array(auth()->user()->role, ['waka_kesiswaan', 'admin', 'superadmin']))
-        @canVisit('osis.dashboard')
-        <a href="{{ route('osis.dashboard') }}" class="{{ $linkClass }} {{ request()->routeIs('osis.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.osis') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16v1m-10-6h3m12 0h3"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.osis') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.osis') }}</div>
-        </a>
-        @endcanVisit
-        @endif
-        @endif
-
-        {{-- Lembaga MPK --}}
-        @if(in_array(auth()->user()->role, ['waka_kesiswaan', 'admin', 'superadmin', 'kepala_sekolah', 'guru', 'student']))
+        {{-- Kesiswaan. FASE 119: counselling, discipline points, bullying reports and
+             inclusive education are one "Bimbingan Konseling" menu; OSIS and MPK are one entry. --}}
         @php
-            $mpkRoute = in_array(auth()->user()->role, ['waka_kesiswaan', 'admin', 'superadmin', 'kepala_sekolah', 'guru']) 
-                ? route('mpk.index') 
-                : route('mpk.aspirations.index');
+            $sidebarUser = auth()->user();
+            $visible = fn (string $routeName) => \App\Support\Access\RouteAccess::allowsRoute($sidebarUser, $routeName);
+            $osisMpkHref = $visible('osis.dashboard') ? route('osis.dashboard')
+                : (in_array($sidebarUser->role, ['waka_kesiswaan', 'admin', 'superadmin', 'kepala_sekolah', 'guru'], true) ? route('mpk.index')
+                : (in_array($sidebarUser->role, \App\Support\Access\StudentDataAccess::STUDENT_ROLES, true) ? route('mpk.aspirations.index') : null));
+            $pointsMenu = $sidebarUser->hasRole('waka_kesiswaan') || $sidebarUser->hasRole('bk') || $sidebarUser->isAdmin();
+            $counselingMenu = ($pointsMenu && $visible('points.index')) || collect(['counseling.dashboard', 'crisis.bullying.index', 'iep.index'])->contains($visible);
+            $studentAffairsMenu = $osisMpkHref || collect(['uks.dashboard', 'ekskul.manage'])->contains($visible);
         @endphp
-        <a href="{{ $mpkRoute }}" class="{{ $linkClass }} {{ request()->routeIs('mpk.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.mpk') }}">
+
+        @if($counselingMenu)
+        <x-sidebar-header :label="__('navigation.header_counseling')" />
+        <x-sidebar-link route="counseling.dashboard" :label="__('navigation.counseling')" icon="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" active="counseling.*" />
+        @if($pointsMenu)
+        <x-sidebar-link route="points.index" :label="__('navigation.points')" icon="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" active="points.*" />
+        <x-sidebar-link route="point-categories.index" :label="__('navigation.point_categories')" icon="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" active="point-categories.*" />
+        @endif
+        <x-sidebar-link route="crisis.bullying.index" :label="__('navigation.bullying_reports')" icon="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" active="crisis.bullying.index" />
+        <x-sidebar-link route="iep.index" :label="__('navigation.inclusive_education')" icon="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" active="iep.*" />
+        @endif
+
+        @if($studentAffairsMenu)
+        <x-sidebar-header :label="__('navigation.header_student')" />
+        <x-sidebar-link route="uks.dashboard" :label="__('navigation.uks')" icon="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" active="uks.*" />
+        <x-sidebar-link route="ekskul.manage" :label="__('navigation.ekskul')" icon="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" active="ekskul.manage" />
+        @if($osisMpkHref)
+        {{-- MPK routes carry no role yet (unguarded debt), so this entry is gated by the role check above. --}}
+        <a href="{{ $osisMpkHref }}" class="{{ $linkClass }} {{ request()->routeIs('osis.*', 'mpk.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.osis_mpk') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.mpk') }}</span>
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.osis_mpk') }}</span>
             </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.mpk') }}</div>
+            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.osis_mpk') }}</div>
         </a>
+        @endif
         @endif
 
         {{-- Modul Sarpras: Admin, Waka Sarpras, Kepala Sekolah --}}
@@ -578,23 +503,24 @@
         @endcanVisit
         @endif
 
-        {{-- Modul Humas: Admin, Waka Humas --}}
-        @if(auth()->user()->hasRole('waka_humas') || auth()->user()->isAdmin())
-        <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
-            <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_humas') }}</p>
-        </div>
-        <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
-            <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_humas') }}">•</p>
-        </div>
-        @canVisit('announcements.index')
-        <a href="{{ route('announcements.index') }}" class="{{ $linkClass }} {{ request()->routeIs('announcements.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.news_announcements') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.news_announcements') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.news_announcements') }}</div>
-        </a>
-        @endcanVisit
+        {{-- Keuangan (FASE 119): student bills, bank accounts and reconciliation, petty cash,
+             vendor payments, scholarships and reports in one menu. --}}
+        @php
+            $financeStaff = collect(['finance.billings.index', 'treasury.accounts.index', 'finance.reports.executive'])->contains($visible);
+        @endphp
+        @if($financeStaff || $visible('finance.student.index'))
+        <x-sidebar-header :label="__('navigation.header_finance')" />
+        <x-sidebar-link route="finance.student.index" :label="__('navigation.my_billings')" icon="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" active="finance.student.*" />
+        <x-sidebar-link route="finance.billings.index" :label="__('navigation.finance_administration')" icon="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" active="finance.billings.*" />
+        <x-sidebar-link route="treasury.accounts.index" :label="__('navigation.treasury_accounts')" icon="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" active="treasury.accounts.*" />
+        <x-sidebar-link route="treasury.reconciliation.index" :label="__('navigation.reconciliation')" icon="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" active="treasury.reconciliation.*" />
+        <x-sidebar-link route="treasury.petty-cash.index" :label="__('navigation.petty_cash')" icon="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" active="treasury.petty-cash.*" />
+        <x-sidebar-link route="treasury.vendor.index" :label="__('navigation.vendor_payments')" icon="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" active="treasury.vendor.*" />
+        {{-- The scholarship pages carry no role yet (unguarded debt): listed for finance staff only. --}}
+        @if($financeStaff)
+        <x-sidebar-link route="financial.scholarships.programs" :label="__('navigation.scholarships')" icon="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" active="financial.scholarships.*" />
+        @endif
+        <x-sidebar-link route="finance.reports.executive" :label="__('navigation.finance_analysis')" icon="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" active="finance.reports.*" />
         @endif
 
         {{-- Modul Administrasi: Admin, Staf TU --}}
@@ -605,27 +531,6 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_administration') }}">•</p>
         </div>
-        @canVisit('finance.billings.index')
-        <a href="{{ route('finance.billings.index') }}" class="{{ $linkClass }} {{ request()->routeIs('finance.billings.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.finance_administration') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.finance_administration') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.finance_administration') }}</div>
-        </a>
-        @endcanVisit
-        @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
-        @canVisit('finance.reports.executive')
-        <a href="{{ route('finance.reports.executive') }}" class="{{ $linkClass }} {{ request()->routeIs('finance.reports.executive') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.finance_analysis') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.finance_analysis') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.finance_analysis') }}</div>
-        </a>
-        @endcanVisit
-        @endif
-
         @if(in_array(auth()->user()->role, ['kepala_sekolah', 'admin', 'superadmin']))
         @canVisit('analytics.index')
         <a href="{{ route('analytics.index') }}" class="{{ $linkClass }} {{ request()->routeIs('analytics.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.school_analytics') }}">
@@ -827,55 +732,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                 </svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.surveys') }}</span>
-            </div>
-        </a>
-        @endcanVisit
-
-        {{-- Enterprise Platinum Ecosystem (Fase 51-56) --}}
-        @php($platinumMenus = collect(['tahsin.index', 'iep.index', 'alumni.index'])->contains(fn ($route) => \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), $route)))
-        @if($platinumMenus)
-        <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
-            <p class="text-[10px] font-black text-amber-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">{{ __('navigation.header_enterprise_platinum') }}</p>
-        </div>
-        <div class="mt-8 mb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
-            <p class="text-[10px] font-bold text-amber-400 uppercase tracking-widest opacity-80" title="{{ __('navigation.header_enterprise_platinum') }}">•</p>
-        </div>
-        @endif
-
-        {{-- Enterprise Diamond Ecosystem (Fase 57-62) --}}
-        <div class="mt-8 mb-2 px-3" x-show="!sidebarCollapsed">
-            <p class="text-[10px] font-black text-cyan-400 uppercase tracking-[0.2em] opacity-80 whitespace-nowrap">{{ __('navigation.header_enterprise_diamond') }}</p>
-        </div>
-        <div class="mt-8 mb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
-            <p class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest opacity-80" title="{{ __('navigation.header_enterprise_diamond') }}">•</p>
-        </div>
-
-        {{-- Islamic EdTech & Tahsin --}}
-        @canVisit('tahsin.index')
-        <a href="{{ route('tahsin.index') }}" class="{{ $linkClass }} {{ request()->routeIs('tahsin.*') || request()->routeIs('islamic_events.*') || request()->routeIs('spiritual.*') || request()->routeIs('dawah.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.islamic_tech') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0 text-emerald-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332-.477-4.5 1.253"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.islamic_tech') }}</span>
-            </div>
-        </a>
-        @endcanVisit
-
-        {{-- Inclusive Education & IEP --}}
-        @canVisit('iep.index')
-        <a href="{{ route('iep.index') }}" class="{{ $linkClass }} {{ request()->routeIs('iep.*') || request()->routeIs('screening.*') || request()->routeIs('differentiation.*') || request()->routeIs('accommodations.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.inclusive_education') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0 text-sky-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.inclusive_education') }}</span>
-            </div>
-        </a>
-        @endcanVisit
-
-        {{-- Alumni Relations & Endowment --}}
-        @canVisit('alumni.index')
-        <a href="{{ route('alumni.index') }}" class="{{ $linkClass }} {{ request()->routeIs('alumni.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.alumni_relations') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0 text-teal-400" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.alumni_relations') }}</span>
             </div>
         </a>
         @endcanVisit
