@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Access\Roles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BullyingReport extends Model
 {
@@ -36,7 +37,8 @@ class BullyingReport extends Model
         'is_escalated' => 'boolean',
     ];
 
-    public function reporter()
+    /** @return BelongsTo<User, $this> */
+    public function reporter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reporter_id');
     }

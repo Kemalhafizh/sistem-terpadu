@@ -32,4 +32,4 @@ test('no menu link is refused to the role it is shown to', function (string $rol
     }
 
     expect($refused)->toBe([]);
-})->with(['superadmin', 'admin', 'kepala_sekolah', 'waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras', 'waka_humas', 'guru', 'bk', 'staf_tu', 'parent', 'student']);
+})->with(['superadmin', 'admin', 'kepala_sekolah', 'waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras', 'waka_humas', 'guru', 'bk', 'staf_tu', 'parent', 'student', 'siswa', 'orang_tua', 'petugas_uks']);

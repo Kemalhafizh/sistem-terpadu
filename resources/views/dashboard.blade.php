@@ -580,11 +580,11 @@
                     <p class="text-xs text-gray-400 dark:text-gray-500 font-bold mt-0.5">{{ $journalTodayFilled ? 'Sudah Diisi Hari Ini' : 'Belum Diisi Hari Ini' }}</p>
                   </div>
                 </div>
-                @canVisit('teaching-journals.create')
+                @can('create', \App\Models\TeachingJournal::class)
                 <a href="{{ route('teaching-journals.create') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-wider">
                   {{ $journalTodayFilled ? 'Input Baru' : 'Isi Jurnal' }}
                 </a>
-                @endcanVisit
+                @endcan
               </div>
             </div>
 
