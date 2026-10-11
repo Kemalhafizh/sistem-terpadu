@@ -6874,7 +6874,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 - **To-do guru:** catatan pribadi, bukan alur kerja sekolah. Agenda sekolah ada di kalender (`AcademicEvent`).
 - **Portofolio siswa** (termasuk tautan publik `portfolio/{uuid}` dan lencana): prestasi tercatat di `Achievement` dan prestasi ekstrakurikuler. Halaman publik tanpa verifikasi berisiko membuka data anak.
 - **EDS / Rapor Mutu, dashboard akreditasi, konsol compliance** (retensi data, kontrak legal, forensik, log ekspor Dapodik): sudah ada platform resmi pemerintah (Rapor Pendidikan), dan skor kesiapannya tidak punya sumber data. Ekspor Dapodik dan EMIS tetap di modul integrasi.
-- **Tryout UTBK + rekomendasi PTN:** diputuskan dipotong, belum dikerjakan. Data PTN-nya karangan seeder dan aplikasi Android masih membaca endpoint-nya, jadi urutannya PR sista-android dulu, baru server.
+- **Tryout UTBK + rekomendasi PTN:** daftar program dan passing grade PTN-nya hanya isian seeder, bukan data resmi SNPMB, jadi "rekomendasi" ke siswa tidak berdasar. Persiapan UTBK tetap bisa lewat CBT sekolah (jenis ujian `try_out`) dan acara kalender `tryout`. Layar Android dicabut lebih dulu, baru endpoint `api/v1/utbk/*`, `UtbkService`, model `Tryout*`/`PtnProgram`, tabelnya, dan kunci kapabilitas `student.utbk`.
 
 **Yang ikut beres dari daftar "belum diputuskan" 119.10:**
 - **Payroll** memakai `EmployeeAttendanceRecap`.

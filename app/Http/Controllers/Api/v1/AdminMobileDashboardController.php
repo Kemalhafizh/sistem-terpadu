@@ -94,7 +94,7 @@ class AdminMobileDashboardController extends Controller
         // CBT server usage: attempts genuinely in progress right now (real
         // concurrent load) plus a same-day total (real daily usage volume).
         // Both come from ExamAttempt — the actual CBT exam system Android's
-        // CbtExamRoomScreen talks to (separate from the UTBK Tryout system).
+        // CbtExamRoomScreen talks to.
         $activeCbtSessions = ExamAttempt::where('status', 'in_progress')->count();
         $cbtSessionsToday = ExamAttempt::whereDate('created_at', now()->toDateString())->count();
 
