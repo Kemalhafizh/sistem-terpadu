@@ -563,6 +563,69 @@ class ClassSessionService
         ];
     }
 
+    /**
+     * One student's lessons on [date] and their attendance in each, for the
+     * student themself (studentFor) or a parent who has already been checked
+     * to own the child. Lists the sessions of the student's class that day,
+     * plus any other session the student has a record in (a class change).
+     * Cancelled sessions are left out. A lesson nobody has recorded yet has
+     * `status_code: null`; `awaiting_scan` marks the automatic "alpha" a
+     * running lesson starts with, which the student can still turn into
+     * "hadir" by scanning.
+     *
+     * @return array{date: string, sessions: list<array<string, mixed>>, summary: array<string, int>}
+     */
+    public function dayAttendanceFor(Student $student, string $date): array
+    {
+        $records = SessionAttendance::where('student_id', $student->id)
+            ->whereHas('classSession', fn ($q) => $q->forDate($date))
+            ->get()
+            ->keyBy('class_session_id');
+
+        $sessions = ClassSession::forDate($date)
+            ->where('status', '!=', ClassSession::STATUS_CANCELLED)
+            ->where(fn ($q) => $q->where('classroom_id', $student->classroom_id)->orWhereIn('id', $records->keys()))
+            ->with(['subject', 'teacher'])
+            ->orderBy('scheduled_start')
+            ->get();
+
+        $rows = $sessions->map(function (ClassSession $session) use ($records) {
+            /** @var SessionAttendance|null $record */
+            $record = $records->get($session->id);
+
+            return [
+                'session_id' => $session->id,
+                'subject_name' => $session->subject?->name,
+                'teacher_name' => $session->teacher?->name,
+                'jam_ke' => $session->jam_ke,
+                'scheduled_start' => substr((string) $session->scheduled_start, 0, 5),
+                'scheduled_end' => substr((string) $session->scheduled_end, 0, 5),
+                'session_status' => $session->status,
+                'status_code' => $record?->status,
+                'status' => $record ? $this->statusLabel($record->status) : null,
+                'check_in_method' => $record?->check_in_method,
+                'checked_in_at' => $record?->checked_in_at?->toIso8601String(),
+                'awaiting_scan' => $record !== null
+                    && $session->status === ClassSession::STATUS_ACTIVE
+                    && $record->check_in_method === SessionAttendance::METHOD_AUTO_ALPHA,
+            ];
+        })->values();
+
+        $recorded = $rows->filter(fn (array $row) => $row['status_code'] !== null && ! $row['awaiting_scan']);
+        $summary = ['sessions' => $rows->count(), 'recorded' => $recorded->count()];
+        foreach (SessionAttendance::STATUSES as $status) {
+            $summary[$status] = $recorded->where('status_code', $status)->count();
+        }
+
+        return ['date' => $date, 'sessions' => $rows->all(), 'summary' => $summary];
+    }
+
+    /** [dayAttendanceFor] for the signed-in student. */
+    public function dayAttendanceForUser(User $user, string $date): array
+    {
+        return $this->dayAttendanceFor($this->studentFor($user), $date);
+    }
+
     // ─────────────────────────────────────────────────────────────────────
     // Teacher manual attendance (rule 7)
     // ─────────────────────────────────────────────────────────────────────

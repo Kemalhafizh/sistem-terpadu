@@ -493,5 +493,8 @@
     "Cuti Tahunan": "Annual Leave",
     "Cuti Melahirkan": "Maternity Leave",
     "Umroh/Haji": "Umrah/Hajj",
-    "Dinas Luar": "Official Duty"
+    "Dinas Luar": "Official Duty",
+    "Presensi per mapel berhasil diambil": "Per-lesson attendance retrieved",
+    "Presensi per mapel anak berhasil diambil": "Your child's per-lesson attendance retrieved",
+    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future."
 }

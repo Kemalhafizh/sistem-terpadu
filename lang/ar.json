@@ -493,5 +493,8 @@
     "Cuti Tahunan": "إجازة سنوية",
     "Cuti Melahirkan": "إجازة أمومة",
     "Umroh/Haji": "العمرة/الحج",
-    "Dinas Luar": "مهمة رسمية"
+    "Dinas Luar": "مهمة رسمية",
+    "Presensi per mapel berhasil diambil": "تم جلب الحضور لكل حصة",
+    "Presensi per mapel anak berhasil diambil": "تم جلب حضور ابنك لكل حصة",
+    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل."
 }
