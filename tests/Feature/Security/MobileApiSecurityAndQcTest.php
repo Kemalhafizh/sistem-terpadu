@@ -10,6 +10,7 @@ use App\Models\Classroom;
 use App\Models\Evaluation360Cycle;
 use App\Models\Evaluation360Instrument;
 use App\Models\LibraryBook;
+use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -239,6 +240,9 @@ class MobileApiSecurityAndQcTest extends TestCase
             'scale_type' => 'likert5',
             'is_anonymous' => true,
         ]);
+
+        // Budi teaches the student's class this year: only such teachers can be rated.
+        Schedule::factory()->create(['academic_year_id' => $this->academicYear->id, 'classroom_id' => $this->classroom->id, 'teacher_id' => $this->teacherUser->id]);
 
         Sanctum::actingAs($this->studentUserA);
 

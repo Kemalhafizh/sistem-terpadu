@@ -21,7 +21,7 @@ class EvaluationMobileApiController extends Controller
      */
     public function teacherList(Request $request)
     {
-        $teachers = $this->evaluationService->getTeachersToEvaluate();
+        $teachers = $this->evaluationService->getTeachersToEvaluate($request->user());
 
         return response()->json($teachers); // return array directly for Retrofit
     }

@@ -95,6 +95,7 @@ return [
     'ptc' => 'Konsultasi Orang Tua–Guru',
     'charity_admin' => 'Kelola Infaq & Donasi',
     'charity' => 'Infaq & Donasi',
+    'teacher_evaluation' => 'Evaluasi Kinerja Guru',
     'my_billings' => 'Tagihan Saya',
     'osis_mpk' => 'OSIS & MPK',
     'school_settings' => 'Identitas & Tampilan Sekolah',

@@ -550,5 +550,12 @@
     "Slot konsultasi dipesan.": "تم حجز موعد اللقاء.",
     "Tabungan Wadiah": "مدخرات الوديعة",
     "Tabungan anak yang dipakai": "مدخرات الطفل المستخدمة",
-    "Terisi": "محجوز"
+    "Terisi": "محجوز",
+    "Penilaian Anda dihitung sebagai: atasan (pimpinan), rekan sejawat (guru), atau penilaian diri bila Anda menilai diri sendiri. Siswa menilai lewat aplikasi.": "يُحتسب تقييمك كمشرف (القيادة) أو زميل (معلم) أو تقييم ذاتي إذا قيّمت نفسك. يقيّم الطلاب عبر التطبيق.",
+    "Siklus evaluasi \":title\" dibuka.": "تم فتح دورة التقييم \":title\".",
+    "Anda sudah menilai guru ini pada siklus ini.": "لقد قيّمت هذا المعلم بالفعل في هذه الدورة.",
+    "Penilaian terkirim.": "تم إرسال التقييم.",
+    "Komentar Penilai": "تعليقات المقيّمين",
+    "Belum ada komentar dari penilai.": "لا توجد تعليقات من المقيّمين بعد.",
+    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "يمكنك تقييم المعلمين الذين يدرّسون فصلك هذا العام فقط."
 }

@@ -95,6 +95,7 @@ return [
     'ptc' => 'Parent–Teacher Conferences',
     'charity_admin' => 'Manage Donations',
     'charity' => 'Donations',
+    'teacher_evaluation' => 'Teacher Evaluation',
     'my_billings' => 'My Bills',
     'osis_mpk' => 'Student Council',
     'school_settings' => 'School Identity & Appearance',

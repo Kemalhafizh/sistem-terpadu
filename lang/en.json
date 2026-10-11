@@ -550,5 +550,12 @@
     "Slot konsultasi dipesan.": "Conference slot booked.",
     "Tabungan Wadiah": "Wadiah Savings",
     "Tabungan anak yang dipakai": "Child's savings to use",
-    "Terisi": "Taken"
+    "Terisi": "Taken",
+    "Penilaian Anda dihitung sebagai: atasan (pimpinan), rekan sejawat (guru), atau penilaian diri bila Anda menilai diri sendiri. Siswa menilai lewat aplikasi.": "Your rating counts as supervisor (leadership), peer (teacher), or self-assessment when you rate yourself. Students rate in the app.",
+    "Siklus evaluasi \":title\" dibuka.": "Evaluation cycle \":title\" opened.",
+    "Anda sudah menilai guru ini pada siklus ini.": "You have already rated this teacher in this cycle.",
+    "Penilaian terkirim.": "Rating submitted.",
+    "Komentar Penilai": "Raters' Comments",
+    "Belum ada komentar dari penilai.": "No comments from raters yet.",
+    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "You can only rate teachers who teach your class this year."
 }

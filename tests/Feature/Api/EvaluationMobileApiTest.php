@@ -8,6 +8,7 @@ use App\Models\Evaluation360Cycle;
 use App\Models\Evaluation360Instrument;
 use App\Models\OsisCandidate;
 use App\Models\OsisElection;
+use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,6 +55,9 @@ class EvaluationMobileApiTest extends TestCase
             'user_id' => $this->studentUser->id,
             'classroom_id' => $classroom->id,
         ]);
+
+        // Budi teaches the student's class this year: only such teachers can be rated.
+        Schedule::factory()->create(['academic_year_id' => $this->academicYear->id, 'classroom_id' => $classroom->id, 'teacher_id' => $this->teacherUser->id]);
 
         // Setup Evaluation Cycle
         $this->activeCycle = Evaluation360Cycle::create([

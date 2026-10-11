@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\AcademicYear;
 use App\Models\Evaluation360Cycle;
 use App\Models\Evaluation360Instrument;
 use App\Models\Evaluation360Response;
@@ -10,26 +11,46 @@ use App\Models\FacilityEvaluation;
 use App\Models\OsisCandidate;
 use App\Models\OsisElection;
 use App\Models\OsisVote;
+use App\Models\Schedule;
+use App\Models\Student;
 use App\Models\User;
+use App\Services\HumanCapital\Evaluation360Service;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EvaluationService
 {
     /**
-     * Get list of teachers to be evaluated.
+     * The teachers who teach the student's class this academic year, with the
+     * subjects they teach it (from the schedule). It used to be every teacher
+     * in the school, each labelled "Guru Mata Pelajaran". No class or no
+     * active year: nobody to evaluate.
+     *
+     * @return Collection<int, array{id: int, name: string, subject: string}>
      */
-    public function getTeachersToEvaluate()
+    public function getTeachersToEvaluate(User $student): Collection
     {
-        // For simplicity, we just return all users with role 'guru' or 'teacher'
-        // In a real scenario, we might only return teachers who teach the student.
-        return User::whereIn('role', ['guru', 'teacher'])->get()->map(function ($teacher) {
-            return [
-                'id' => $teacher->id,
-                'name' => $teacher->name,
-                'subject' => 'Guru Mata Pelajaran', // can be dynamic based on subjects
-            ];
-        });
+        $classroomId = Student::where('user_id', $student->id)->value('classroom_id');
+        $year = AcademicYear::current();
+        if (! $classroomId || ! $year) {
+            return collect();
+        }
+
+        return Schedule::with(['teacher', 'subject'])
+            ->where('classroom_id', $classroomId)
+            ->where('academic_year_id', $year->id)
+            ->whereNotNull('teacher_id')
+            ->get()
+            ->groupBy('teacher_id')
+            ->filter(fn (Collection $rows) => $rows->first()->teacher !== null)
+            ->map(fn (Collection $rows) => [
+                'id' => $rows->first()->teacher->id,
+                'name' => $rows->first()->teacher->name,
+                'subject' => $rows->map(fn (Schedule $row) => $row->subject?->name)->filter()->unique()->sort()->implode(', '),
+            ])
+            ->sortBy('name')
+            ->values();
     }
 
     /**
@@ -49,6 +70,11 @@ class EvaluationService
 
             if (! $instrument) {
                 throw new Exception('Instrumen evaluasi untuk siswa tidak ditemukan.');
+            }
+
+            $evaluator = $evaluatorId ? User::find($evaluatorId) : null;
+            if (! $evaluator || ! $this->getTeachersToEvaluate($evaluator)->contains('id', (int) $evaluateeId)) {
+                throw new Exception(__('Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.'));
             }
 
             $respondentHash = $evaluatorId ? hash('sha256', $evaluatorId.'_'.$instrument->id.'_'.$evaluateeId.'_'.(config('app.key') ?: 'sista_eval_key')) : null;
@@ -72,14 +98,15 @@ class EvaluationService
                 }
             }
 
+            // The rating is required (validated); it used to default to 5 stars.
             $scorePayload = [
-                'rating' => $data['rating'] ?? 5,
+                'rating' => (int) $data['rating'],
             ];
             if ($respondentHash) {
                 $scorePayload['respondent_hash'] = $respondentHash;
             }
 
-            return Evaluation360Response::create([
+            $response = Evaluation360Response::create([
                 'instrument_id' => $instrument->id,
                 'evaluatee_id' => $evaluateeId,
                 'evaluator_id' => $instrument->is_anonymous ? null : $evaluatorId,
@@ -87,6 +114,11 @@ class EvaluationService
                 'comments' => $data['comments'] ?? null,
                 'submitted_at' => now(),
             ]);
+
+            // Student ratings count in the teacher's 360 summary (they never reached it).
+            app(Evaluation360Service::class)->generateSummary($cycle->id, (int) $evaluateeId);
+
+            return $response;
         });
     }
 
@@ -113,7 +145,7 @@ class EvaluationService
         return FacilityEvaluation::create([
             'facility_asset_id' => $facilityId,
             'user_id' => $userId,
-            'rating' => $data['rating'] ?? 5,
+            'rating' => (int) $data['rating'],
             'comments' => $data['comments'] ?? null,
         ]);
     }

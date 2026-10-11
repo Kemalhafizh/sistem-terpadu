@@ -110,6 +110,7 @@ use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
 use App\Models\BudgetPlan;
+use App\Models\Evaluation360Cycle;
 use App\Models\PtcSession;
 use App\Models\TeachingJournal;
 use App\Support\Access\Roles;
@@ -320,12 +321,19 @@ Route::middleware('auth')->group(function () {
 
     // FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
     // 36.1: 360-Degree Teacher Evaluation & EDOM
-    Route::get('hc/evaluation/cycles', [Evaluation360Controller::class, 'cycles'])->name('hc.evaluation.cycles');
-    Route::post('hc/evaluation/cycles', [Evaluation360Controller::class, 'storeCycle'])->name('hc.evaluation.store_cycle');
-    Route::get('hc/evaluation/cycles/{cycleId}/fill', [Evaluation360Controller::class, 'fillForm'])->name('hc.evaluation.fill_form');
-    Route::post('hc/evaluation/cycles/{cycleId}/fill', [Evaluation360Controller::class, 'submitEvaluation'])->name('hc.evaluation.submit');
-    Route::get('hc/evaluation/teacher/{teacherId}/results', [Evaluation360Controller::class, 'results'])->name('hc.evaluation.results');
-    Route::get('hc/evaluation/ranking', [Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
+    // Teacher 360° evaluation (119.9). These routes carried no role: anyone could open a
+    // cycle, rate as "supervisor", and read any teacher's results and the ranking.
+    Route::middleware(Roles::only(Evaluation360Cycle::EVALUATOR_ROLES))->group(function () {
+        Route::get('hc/evaluation/cycles', [Evaluation360Controller::class, 'cycles'])->name('hc.evaluation.cycles');
+        Route::get('hc/evaluation/cycles/{cycleId}/fill', [Evaluation360Controller::class, 'fillForm'])->name('hc.evaluation.fill_form');
+        Route::post('hc/evaluation/cycles/{cycleId}/fill', [Evaluation360Controller::class, 'submitEvaluation'])->name('hc.evaluation.submit');
+        // A teacher's own results; leadership any teacher's (checked in the controller).
+        Route::get('hc/evaluation/teacher/{teacherId}/results', [Evaluation360Controller::class, 'results'])->name('hc.evaluation.results');
+    });
+    Route::middleware(Roles::only(Evaluation360Cycle::MANAGER_ROLES))->group(function () {
+        Route::post('hc/evaluation/cycles', [Evaluation360Controller::class, 'storeCycle'])->name('hc.evaluation.store_cycle');
+        Route::get('hc/evaluation/ranking', [Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
+    });
 
     // FASE 40: Advanced Student Experience Platform
     // 40.1: Student Self-Service Portal

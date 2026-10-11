@@ -50,55 +50,50 @@ class Evaluation360Service
         ]);
     }
 
+    /** How much each perspective counts toward the overall score. */
+    public const WEIGHTS = ['supervisor' => 0.3, 'peer' => 0.2, 'student' => 0.3, 'parent' => 0.1, 'self' => 0.1];
+
+    /**
+     * Average each perspective from the responses actually given. A
+     * perspective nobody filled in stays null (it used to read 4.2, 4.1, 4.5,
+     * 4.3 or 4.0), and the overall score weighs only the perspectives that
+     * exist. Only numeric answers count: a student response also carries a
+     * respondent hash, which used to be summed in and halve the rating.
+     */
     public function generateSummary(int $cycleId, int $evaluateeId): Evaluation360Summary
     {
-        $cycle = Evaluation360Cycle::findOrFail($cycleId);
         $responses = Evaluation360Response::with('instrument')->whereHas('instrument', function ($q) use ($cycleId) {
             $q->where('cycle_id', $cycleId);
         })->where('evaluatee_id', $evaluateeId)->get();
 
-        $supervisorScores = [];
-        $peerScores = [];
-        $studentScores = [];
-        $parentScores = [];
-        $selfScores = [];
-
+        $byType = array_fill_keys(array_keys(self::WEIGHTS), []);
         foreach ($responses as $resp) {
+            $numbers = array_values(array_filter(is_array($resp->scores) ? $resp->scores : [], 'is_numeric'));
             $type = $resp->instrument->evaluator_type;
-            $avg = is_array($resp->scores) ? array_sum($resp->scores) / count($resp->scores) : 4.0;
-
-            if ($type === 'supervisor') {
-                $supervisorScores[] = $avg;
-            } elseif ($type === 'peer') {
-                $peerScores[] = $avg;
-            } elseif ($type === 'student') {
-                $studentScores[] = $avg;
-            } elseif ($type === 'parent') {
-                $parentScores[] = $avg;
-            } elseif ($type === 'self') {
-                $selfScores[] = $avg;
+            if ($numbers !== [] && array_key_exists($type, $byType)) {
+                $byType[$type][] = array_sum($numbers) / count($numbers);
             }
         }
 
-        $supAvg = count($supervisorScores) ? array_sum($supervisorScores) / count($supervisorScores) : 4.2;
-        $peerAvg = count($peerScores) ? array_sum($peerScores) / count($peerScores) : 4.1;
-        $stuAvg = count($studentScores) ? array_sum($studentScores) / count($studentScores) : 4.5;
-        $parAvg = count($parentScores) ? array_sum($parentScores) / count($parentScores) : 4.3;
-        $selfScore = count($selfScores) ? array_sum($selfScores) / count($selfScores) : 4.0;
-
-        $overall = round(($supAvg * 0.3) + ($peerAvg * 0.2) + ($stuAvg * 0.3) + ($parAvg * 0.1) + ($selfScore * 0.1), 2);
+        $averages = array_map(fn (array $scores) => $scores === [] ? null : round(array_sum($scores) / count($scores), 2), $byType);
+        $known = array_filter($averages, fn (?float $avg) => $avg !== null);
+        $weight = array_sum(array_intersect_key(self::WEIGHTS, $known));
+        $overall = $weight > 0
+            ? round(array_sum(array_map(fn (string $type) => $known[$type] * self::WEIGHTS[$type], array_keys($known))) / $weight, 2)
+            : null;
 
         return Evaluation360Summary::updateOrCreate(
             ['cycle_id' => $cycleId, 'evaluatee_id' => $evaluateeId],
             [
-                'supervisor_avg' => $supAvg,
-                'peer_avg' => $peerAvg,
-                'student_avg' => $stuAvg,
-                'parent_avg' => $parAvg,
-                'self_score' => $selfScore,
+                'supervisor_avg' => $averages['supervisor'],
+                'peer_avg' => $averages['peer'],
+                'student_avg' => $averages['student'],
+                'parent_avg' => $averages['parent'],
+                'self_score' => $averages['self'],
                 'overall_score' => $overall,
-                'strengths' => ['Penguasaan materi sangat baik', 'Keahlian komunikasi interaktif'],
-                'improvements' => ['Pengembangan penggunaan LMS SCORM'],
+                // Written by people, not generated: the same two sentences used to be stored for every teacher.
+                'strengths' => null,
+                'improvements' => null,
                 'generated_at' => now(),
             ]
         );

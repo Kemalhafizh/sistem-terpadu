@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
 class Schedule extends Model
@@ -31,12 +32,14 @@ class Schedule extends Model
         return $this->belongsTo(Classroom::class);
     }
 
-    public function subject()
+    /** @return BelongsTo<Subject, $this> */
+    public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
 
-    public function teacher()
+    /** @return BelongsTo<User, $this> */
+    public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }

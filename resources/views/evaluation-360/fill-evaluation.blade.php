@@ -12,27 +12,23 @@
         </div>
         @endif
 
+        @foreach(['success' => 'bg-emerald-50 text-emerald-800 border-emerald-200', 'error' => 'bg-rose-50 text-rose-800 border-rose-200'] as $flash => $classes)
+            @if(session($flash))
+            <div class="p-4 border rounded-2xl text-sm font-semibold {{ $classes }}">{{ session($flash) }}</div>
+            @endif
+        @endforeach
         <form action="{{ route('hc.evaluation.submit', $cycle->id) }}" method="POST" class="space-y-6">
             @csrf
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pilih Guru yang Dinilai (Evaluatee)</label>
                 <select name="evaluatee_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-semibold">
                     @foreach($teachers as $t)
-                    <option value="{{ $t->id }}">{{ $t->name }} (Guru Mata Pelajaran)</option>
+                    <option value="{{ $t->id }}">{{ $t->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Perspektif Evaluator</label>
-                <select name="evaluator_type" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-semibold">
-                    <option value="supervisor">Kepala Sekolah / Supervisor</option>
-                    <option value="peer">Rekan Sejawat Guru (Peer)</option>
-                    <option value="student" selected>Siswa (EDOM)</option>
-                    <option value="parent">Orang Tua / Wali Murid</option>
-                    <option value="self">Self-Assessment Mandiri</option>
-                </select>
-            </div>
+            <p class="text-xs text-gray-500">{{ __('Penilaian Anda dihitung sebagai: atasan (pimpinan), rekan sejawat (guru), atau penilaian diri bila Anda menilai diri sendiri. Siswa menilai lewat aplikasi.') }}</p>
 
             <div class="space-y-4 pt-2">
                 <p class="text-xs font-bold text-gray-400 uppercase">Indikator Komposisi Penilaian Kinerja (Skala Likert 1 - 5):</p>

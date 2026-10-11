@@ -11,9 +11,11 @@
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Sistem Evaluasi Kinerja Guru Holistik (Supervisor, Peer, EDOM Siswa, Orang Tua, Self) SMA ISA 1 Semarang</p>
         </div>
         <div class="flex gap-2">
-            <a href="{{ route('hc.evaluation.ranking') }}" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs shadow-md">
+@if(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'hc.evaluation.ranking'))
+                        <a href="{{ route('hc.evaluation.ranking') }}" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs shadow-md">
                 Peringkat Kinerja Guru (Rank)
             </a>
+            @endif
         </div>
     </div>
 
@@ -24,6 +26,7 @@
     @endif
 
     <!-- Form Create Cycle -->
+    @if(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'hc.evaluation.store_cycle'))
     <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Aktifkan Siklus Evaluasi 360° Baru</h3>
         <form action="{{ route('hc.evaluation.store_cycle') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -41,6 +44,7 @@
             </div>
         </form>
     </div>
+    @endif
 
     <!-- Cycles Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

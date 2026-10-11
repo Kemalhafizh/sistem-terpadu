@@ -95,6 +95,7 @@ return [
     'ptc' => 'لقاءات أولياء الأمور والمعلمين',
     'charity_admin' => 'إدارة التبرعات',
     'charity' => 'التبرعات',
+    'teacher_evaluation' => 'تقييم أداء المعلمين',
     'my_billings' => 'فواتيري',
     'osis_mpk' => 'مجلس الطلاب',
     'school_settings' => 'هوية المدرسة ومظهرها',
