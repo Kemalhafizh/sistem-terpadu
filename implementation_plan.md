@@ -45,16 +45,25 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
 | 11 Okt 2026 | Widget jadwal sholat Android **dipertahankan** |
 
-### Pertanyaan terbuka (jangan ditebak; tanyakan pemilik produk)
-| # | Pertanyaan | Mempengaruhi |
+### Cara mengambil keputusan (12 Okt 2026)
+Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemilik produk hanya menjawab pertanyaan yang memang butuh dia: fakta sekolah, akses ke orang atau dokumen, dan restu.
+- Keputusan PM ditulis sebagai **bawaan PM**. Sifatnya aman, bisa dibalik, dan sebisa mungkin berupa pengaturan yang bisa diubah sekolah tanpa developer.
+- Agent **tidak** mengambil keputusan produk sendiri. Bila ragu, tanyakan, dan pertanyaannya diteruskan PM ke pemilik produk dalam bentuk singkat.
+
+### Keputusan bawaan PM (12 Okt 2026, bisa diubah sekolah)
+| # | Topik | Bawaan |
 |---|---|---|
-| T1 | Template impor e-Rapor yang dipakai sekolah (versi aplikasi dan contoh file dari operator e-Rapor) | FASE 121 D5 ekspor nilai |
-| T2 | Apakah SISTA perlu rapor **pelengkap** khas sekolah (keislaman/tahfidz) di luar e-Rapor? | Nasib `ERaporPdfService` |
-| T3 | Login orang tua: satu akun per keluarga atau per orang tua? Password atau OTP WA? | K5, FASE 123 |
-| T4 | Pembayaran: Midtrans (biaya per transaksi, siapa yang menanggung) atau VA bank mitra sekolah? Jenis biaya apa saja? | G1 |
-| T5 | Nomor WA sekolah untuk gateway (Fonnte) dan siapa yang menanggung biayanya | Notifikasi, OTP |
-| T6 | Siapa pemilik dan perawat SISTA setelah live (PIC sekolah/yayasan, server atas nama siapa, biaya) | FASE 123 |
-| T7 | Restu Kepala Sekolah / yayasan dan PIC di sekolah | Pilot |
+| T2 | Rapor pelengkap di luar e-Rapor | **Tidak ada rapor kedua.** `ERaporPdfService` dialihkan menjadi pratinjau nilai untuk wali kelas. Perkembangan Tahfidz/Tahsin/Mutabaah tampil sebagai ringkasan di aplikasi, bukan sebagai rapor |
+| T3 | Login orang tua | **Satu akun per orang tua/wali** (ayah, ibu, atau wali bisa masing-masing punya akun), semua tertaut ke anak yang sama. Username = nomor HP. Password awal lewat lembar akun anak. OTP WA menyusul bila T5 aktif |
+| T4 | Pembayaran | Tetap **Midtrans VA** yang sudah ada. Siapa yang menanggung biaya transaksi diatur di pengaturan (bawaan: ditampilkan ke orang tua sebelum bayar). Pembayaran tunai di TU tetap tercatat manual. Bisa diganti VA bank mitra kemudian tanpa mengubah alur G1 |
+| T5 | WhatsApp | Aplikasi **berjalan penuh tanpa WA**: notifikasi lewat push Android dan web. WA (Fonnte) adalah tambahan yang aktif bila sekolah mengisi nomor dan kuncinya di pengaturan |
+
+### Pertanyaan untuk pemilik produk (hanya ini)
+| # | Pertanyaan | Kapan dibutuhkan |
+|---|---|---|
+| T1 | Contoh **file template impor e-Rapor** dari operator e-Rapor sekolah | Sebelum FASE 121 D5 |
+| T6 | Siapa yang **merawat** SISTA setelah live (PIC IT sekolah/yayasan, server atas nama siapa, biaya) | Sebelum FASE 123 |
+| T7 | **Restu** Kepala Sekolah/yayasan dan siapa **PIC** di sekolah | Sebelum pilot |
 
 ### Aturan main untuk semua agent
 1. **CLAUDE.md** berlaku penuh: tidak ada angka karangan, aksi harus tersimpan, satu aturan akses, setiap PR punya test.
