@@ -427,5 +427,8 @@
     "Pulang": "Pulang",
     "Belum ada data presensi hari ini. Presensi pegawai dicatat mesin sidik jari dan masuk setelah Tata Usaha mengimpor log mesin.": "Belum ada data presensi hari ini. Presensi pegawai dicatat mesin sidik jari dan masuk setelah Tata Usaha mengimpor log mesin.",
     "Jam masuk": "Jam masuk",
-    "Jam pulang": "Jam pulang"
+    "Jam pulang": "Jam pulang",
+    "Presensi per mapel berhasil diambil": "Presensi per mapel berhasil diambil",
+    "Presensi per mapel anak berhasil diambil": "Presensi per mapel anak berhasil diambil",
+    "Tanggal presensi tidak boleh di masa depan.": "Tanggal presensi tidak boleh di masa depan."
 }

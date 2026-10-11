@@ -25,6 +25,24 @@ trait RespondsForClassSessions
         return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
+    /**
+     * The `date` query of the per-lesson attendance endpoints: Y-m-d, today
+     * by default, never in the future (nothing has been recorded there).
+     *
+     * @throws ValidationException
+     */
+    protected function attendanceDate(Request $request): string
+    {
+        $today = now()->toDateString();
+        $data = Validator::make($request->query(), [
+            'date' => ['nullable', 'date_format:Y-m-d', 'before_or_equal:'.$today],
+        ], [
+            'date.before_or_equal' => __('Tanggal presensi tidak boleh di masa depan.'),
+        ])->validate();
+
+        return $data['date'] ?? $today;
+    }
+
     protected function validationFailed(ValidationException $e): JsonResponse
     {
         return response()->json([

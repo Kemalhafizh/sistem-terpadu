@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Events\ChatMessageSent;
+use App\Http\Controllers\Api\v1\Concerns\RespondsForClassSessions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AttendanceResource;
 use App\Http\Resources\BillingResource;
@@ -15,6 +16,7 @@ use App\Models\Grade;
 use App\Models\ParentMessage;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\Academic\ClassSessionService;
 use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
@@ -27,7 +29,7 @@ use Illuminate\Http\Request;
  */
 class ApiParentController extends Controller
 {
-    use ApiResponseTrait;
+    use ApiResponseTrait, RespondsForClassSessions;
 
     /**
      * Get Children List
@@ -141,6 +143,30 @@ class ApiParentController extends Controller
             ->get();
 
         return $this->successResponse(AttendanceResource::collection($attendances), __('Data absensi anak berhasil diambil'));
+    }
+
+    /**
+     * Get Child Per-Lesson Attendance
+     *
+     * Pelajaran anak pada `date` (bawaan hari ini) dan status presensi QR per mapel
+     * (FASE 117), dengan bentuk yang sama seperti `student/class-session/attendance`.
+     * Hanya untuk anak sendiri.
+     *
+     * @queryParam date string Tanggal (Y-m-d), tidak boleh di masa depan. Example: 2026-10-05
+     *
+     * @authenticated
+     */
+    public function childSessionAttendance(Request $request, ClassSessionService $sessions, $studentUuid)
+    {
+        $student = $this->verifyChildRelation($request->user(), $studentUuid);
+        if ($student instanceof JsonResponse) {
+            return $student;
+        }
+
+        return $this->handle(fn () => $this->successResponse(
+            $sessions->dayAttendanceFor($student, $this->attendanceDate($request)),
+            __('Presensi per mapel anak berhasil diambil')
+        ));
     }
 
     /**

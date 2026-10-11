@@ -427,5 +427,8 @@
     "Pulang": "الانصراف",
     "Belum ada data presensi hari ini. Presensi pegawai dicatat mesin sidik jari dan masuk setelah Tata Usaha mengimpor log mesin.": "لا يوجد حضور لليوم بعد. يُسجَّل حضور الموظفين بجهاز البصمة ويظهر بعد أن يستورد مكتب الإدارة سجل الجهاز.",
     "Jam masuk": "وقت الحضور",
-    "Jam pulang": "وقت الانصراف"
+    "Jam pulang": "وقت الانصراف",
+    "Presensi per mapel berhasil diambil": "تم جلب الحضور لكل حصة",
+    "Presensi per mapel anak berhasil diambil": "تم جلب حضور ابنك لكل حصة",
+    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل."
 }

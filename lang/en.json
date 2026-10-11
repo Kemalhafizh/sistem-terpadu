@@ -427,5 +427,8 @@
     "Pulang": "Out",
     "Belum ada data presensi hari ini. Presensi pegawai dicatat mesin sidik jari dan masuk setelah Tata Usaha mengimpor log mesin.": "No attendance for today yet. Staff attendance is recorded by the fingerprint machine and appears once the school office imports its log.",
     "Jam masuk": "Arrival",
-    "Jam pulang": "Departure"
+    "Jam pulang": "Departure",
+    "Presensi per mapel berhasil diambil": "Per-lesson attendance retrieved",
+    "Presensi per mapel anak berhasil diambil": "Your child's per-lesson attendance retrieved",
+    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future."
 }
