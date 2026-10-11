@@ -38,9 +38,23 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 11 Okt 2026 | **Full Kurikulum Merdeka.** Tidak ada jurusan IPA/IPS. **Survei peminatan** di kelas X hanya memetakan minat. Waka Kurikulum merancang susunan mapel pilihan tiap rombel XI dan **memplot siswa secara manual** berdasarkan statistiknya. Sistem tidak mengalokasikan otomatis |
 | 11 Okt 2026 | **Peran dua lapis:** 4 jenis akun statis (Siswa, Orang Tua, Guru, Karyawan) + **jabatan dinamis yang katalognya diatur Admin** di aplikasi. Jabatan bawaan: Kepala Sekolah, 4 Waka (Kurikulum, Kesiswaan, Sarpras, Humas), Kepala Perpustakaan, Kepala TU. Wali kelas, pembina, guru mapel, dan pengurus OSIS dibaca dari data modul, bukan jabatan |
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
+| 12 Okt 2026 | **e-Rapor resmi Kemendikdasmen tetap dipakai.** SISTA tidak membuat rapor resmi kedua dan tidak boleh ada input nilai dua kali. SISTA mengekspor nilai ke template impor e-Rapor, lalu PDF rapor resmi diunggah balik dan diterbitkan ke orang tua |
+| 12 Okt 2026 | **Dapodik sumber resmi identitas.** Impor awal dari file ekspor Dapodik, sehingga siswa yang sudah bersekolah tidak diketik ulang. Siswa baru dari konversi SPMB. Perubahan data lewat **pengajuan perubahan** yang diverifikasi TU, lalu masuk daftar "perlu diperbarui di Dapodik" |
+| 12 Okt 2026 | **Tidak ada Google Workspace for Education.** Login memakai akun SISTA. Akun dibuat massal, password awal dibagikan wali kelas, wajib diganti saat login pertama |
 | 11 Okt 2026 | **Anti-macet disetujui penuh:** ketujuh aturan di `ALUR_KERJA.md` 1b, dan tabel pelonggaran beban Kepala Sekolah menjadi **pengaturan bawaan**. Sekolah tetap bisa mengubah langkah dan batasnya di pengaturan |
 | 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
 | 11 Okt 2026 | Widget jadwal sholat Android **dipertahankan** |
+
+### Pertanyaan terbuka (jangan ditebak; tanyakan pemilik produk)
+| # | Pertanyaan | Mempengaruhi |
+|---|---|---|
+| T1 | Template impor e-Rapor yang dipakai sekolah (versi aplikasi dan contoh file dari operator e-Rapor) | FASE 121 D5 ekspor nilai |
+| T2 | Apakah SISTA perlu rapor **pelengkap** khas sekolah (keislaman/tahfidz) di luar e-Rapor? | Nasib `ERaporPdfService` |
+| T3 | Login orang tua: satu akun per keluarga atau per orang tua? Password atau OTP WA? | K5, FASE 123 |
+| T4 | Pembayaran: Midtrans (biaya per transaksi, siapa yang menanggung) atau VA bank mitra sekolah? Jenis biaya apa saja? | G1 |
+| T5 | Nomor WA sekolah untuk gateway (Fonnte) dan siapa yang menanggung biayanya | Notifikasi, OTP |
+| T6 | Siapa pemilik dan perawat SISTA setelah live (PIC sekolah/yayasan, server atas nama siapa, biaya) | FASE 123 |
+| T7 | Restu Kepala Sekolah / yayasan dan PIC di sekolah | Pilot |
 
 ### Aturan main untuk semua agent
 1. **CLAUDE.md** berlaku penuh: tidak ada angka karangan, aksi harus tersimpan, satu aturan akses, setiap PR punya test.
@@ -736,13 +750,18 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 1. **C3 Izin/sakit siswa dari orang tua** (Android) → wali kelas menyetujui (bisa massal) → presensi sesi hari itu otomatis `izin`/`sakit`.
    - Sakit 1 hari tercatat otomatis bila sekolah mengaktifkannya; wali tetap diberi tahu dan bisa membatalkan.
    - Izin yang lewat tenggat dieskalasi ke Waka Kesiswaan.
-2. **D5 Pengesahan & penerbitan rapor:**
-   - nilai dikunci, dengan pengingat dari kegiatan kunci "batas input nilai";
-   - wali kelas mengajukan;
-   - kepala sekolah mengesahkan **massal per angkatan**;
-   - rapor terbit ke orang tua dan siswa di Android.
+2. **D5 Rapor lewat e-Rapor resmi** (tidak ada rapor kedua):
+   - dasbor kelengkapan nilai untuk wali kelas, dengan pengingat dari kegiatan kunci "batas input nilai";
+   - **ekspor nilai akhir, deskripsi capaian, kehadiran, dan catatan wali ke template impor e-Rapor** per rombel/mapel. Formatnya mengikuti template asli dari operator (T1), jangan ditebak;
+   - unggah balik PDF rapor resmi massal per rombel, dicocokkan per siswa lewat NISN;
+   - Waka Kurikulum menerbitkan massal ke orang tua dan siswa;
+   - `ERaporPdfService` dialihkan menjadi pratinjau nilai atau dihapus, menunggu T2.
 3. **J1 Surat keluar** memakai definisi `letter_approval` (yang sudah ada di seeder tetapi belum dipakai), dengan pembagian jenis surat Kepala TU vs Kepala Sekolah.
 4. **J2 Surat masuk & disposisi** (baru), dengan delegasi disposisi saat kepala sekolah berhalangan.
+5. **K4 Pengajuan perubahan data diri** di web dan Android:
+   - data identitas memerlukan bukti dan verifikasi TU;
+   - data kontak langsung tersimpan;
+   - perubahan yang disetujui masuk daftar "Perlu diperbarui di Dapodik" (K1).
 
 ## FASE 122: BUKU INDUK SISWA `[GARIS BESAR]`
 
@@ -754,6 +773,9 @@ Menyerap FASE 116 yang tidak pernah dikerjakan (lihat arsip).
 - **Server:** VPS, domain + HTTPS, `deploy.sh` (down → pull → migrate → up), queue worker, cron scheduler, Reverb bila dipakai. Workflow deploy di CI saat ini hanya *skip* karena belum ada server.
 - **Backup** harian ke Google Drive sekolah (`spatie/laravel-backup`, terenkripsi) + uji pemulihan.
 - **Observasi:** log error kritis ke grup Telegram tim IT. Telescope hanya untuk admin.
-- **Data awal:** impor siswa, pegawai, dan rombel dari Dapodik/Excel. Pembuatan akun massal untuk siswa dan orang tua, beserta cara distribusi password awal yang wajib diganti.
+- **Data awal (K1, K5):**
+  1. Impor file ekspor Dapodik (peserta didik, PTK, rombel). Baris yang gagal dicocokkan dilaporkan.
+  2. Akun massal dibuat. Lembar akun dibagikan per rombel lewat wali kelas, dan password wajib diganti saat login pertama. Wali kelas bisa me-reset password siswanya.
+  3. **Kampanye "cek data dirimu"**: siswa dan orang tua memeriksa profilnya sendiri dan mengajukan koreksi (K4), supaya TU tidak memeriksa ribuan data satu per satu.
 - **Kebijakan privasi** (UU PDP, pengguna anak di bawah umur) dan persetujuan orang tua.
 - **Pilot semester Genap** (Jan–Jun 2027): 1–2 rombel, TU, BK, dan wali kelasnya. Keluhan pilot menjadi backlog. **Go-live penuh Juli 2027** bersamaan dengan TA 2027/2028.

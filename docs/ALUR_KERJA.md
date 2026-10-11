@@ -50,7 +50,7 @@
 | A5 Kelulusan | Kepsek mengesahkan | Tetap, **massal satu angkatan** |
 | A6 Mutasi | Kepsek menyetujui | Tetap |
 | B1 SPMB | Kepsek mengesahkan | **Sekali per gelombang** (massal) |
-| D5 Rapor | Kepsek mengesahkan | **Massal per angkatan** |
+| D5 Rapor | Kepsek mengesahkan di SISTA | **Disahkan di e-Rapor resmi.** SISTA hanya menerbitkan PDF-nya (Waka Kurikulum, massal) |
 | G2 Beasiswa | Kepsek | Massal per periode |
 | G3 Kas kecil | Kepsek | **Kepala TU di bawah batas nominal**, kepsek di atasnya |
 | G5 RKAS | Kepsek | Tetap (sekali setahun + revisi) |
@@ -229,7 +229,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   4. Seleksi.
   5. Pengumuman.
   6. Daftar ulang dan pembayaran uang pangkal.
-  7. **Konversi jadi siswa** (`SpmbController::bulkConvert`).
+  7. **Konversi jadi siswa** (`SpmbController::bulkConvert`). Data diri pendaftar langsung menjadi profil siswa, dan akun siswa dan orang tua dibuat (K5). Kelengkapan profil dilanjutkan TU atau lewat pengajuan perubahan (K4).
   8. Siswa masuk ke rombel X (A2).
 - **Status pendaftar:** `pending → reviewing → accepted/…` (`registrations.status`).
 - **Kanal:** Web publik (pendaftar), Android (`SpmbRegistration`/`SpmbTracking`), Web panitia.
@@ -312,17 +312,18 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   3. Nilai masuk ke rapor P5.
 - **Kini:** tabel karakter/P5 ada. Alur ujung ke ujung sampai rapor perlu diverifikasi.
 
-#### D5. Rapor Semester · 🟡 → FASE 121
-- **Pemilik:** Wali Kelas. **Mengesahkan:** Kepala Sekolah.
+#### D5. Rapor Semester (e-Rapor resmi Kemendikdasmen) · 🟡 → FASE 121
+- **Keputusan (11 Okt 2026):** sekolah tetap memakai **aplikasi e-Rapor resmi**. SISTA **tidak** membuat rapor resmi kedua, dan **tidak ada input nilai dua kali**.
+- **Pemilik:** Waka Kurikulum (penerbitan). Wali kelas memeriksa kelengkapan. Operator e-Rapor mengimpor. Pengesahan dan tanda tangan kepala sekolah terjadi di e-Rapor atau di dokumen fisik, bukan di SISTA.
 - **Langkah:**
-  1. Guru mapel mengunci nilai akhir dan deskripsi capaian.
-  2. Wali kelas melengkapi kehadiran (otomatis dari C2/C3), catatan, ekskul, dan P5.
-  3. Wali kelas mengajukan pengesahan.
-  4. Kepala sekolah mengesahkan (lewat mesin persetujuan, bisa per rombel sekaligus).
-  5. Rapor **terbit**: orang tua dan siswa bisa membuka PDF di Android.
-  6. Rapor diarsipkan ke Buku Induk (K2).
-- **Status:** `draf → nilai_dikunci → diajukan → disahkan → terbit`. Revisi setelah terbit harus lewat pembukaan kunci oleh waka kurikulum dan tercatat.
-- **Kini:** nilai, sinkron, catatan wali, dan cetak PDF sudah ada. Status pengesahan dan penerbitan belum ada.
+  1. Guru mengisi nilai harian, ujian, dan tugas di SISTA (D1–D3), lalu menyusun nilai akhir dan deskripsi capaian di SISTA.
+  2. Wali kelas melihat **dasbor kelengkapan**: mapel mana yang belum lengkap, dengan pengingat dari kegiatan kunci "batas input nilai". Kehadiran (dari C2/C3), catatan wali, ekskul, dan P5 juga disiapkan.
+  3. SISTA **mengekspor ke template impor e-Rapor**, per rombel dan per mapel, mengikuti format template yang diunduh dari aplikasi e-Rapor sekolah.
+  4. Operator e-Rapor mengimpor. Rapor resmi dicetak dan disahkan dari e-Rapor.
+  5. PDF rapor resmi **diunggah balik ke SISTA secara massal per rombel**. Setiap file dicocokkan ke siswa lewat NISN, dan file yang tidak cocok dilaporkan.
+  6. Waka kurikulum **menerbitkan** rapor ke orang tua dan siswa di Android, massal per angkatan.
+- **Status:** `nilai_disusun → nilai_lengkap → diekspor → rapor_resmi_diunggah → terbit`.
+- **Kini:** ada `ERaporPdfService` yang membuat PDF rapor sendiri. Ini **harus dialihkan** menjadi pratinjau nilai untuk wali kelas, atau dihapus, supaya tidak ada dua rapor berbeda di tangan orang tua.
 
 ### E. Kesiswaan, BK & Layanan Siswa
 
@@ -492,8 +493,33 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### K. Data & Pelaporan
 
-#### K1. Ekspor Dapodik / EMIS · ✅
-- Kolom yang kosong dilaporkan sebagai "data belum lengkap", tidak diisi karangan.
+#### K1. Dapodik / EMIS: Impor Awal, Ekspor, dan Selisih · 🟡 → FASE 121/123
+- **Prinsip:** **Dapodik tetap sumber resmi identitas** (siswa, PTK, rombel). e-Rapor juga menarik data dari Dapodik, jadi NISN, NIS, dan nama rombel di SISTA harus sama dengan Dapodik.
+- **Impor awal (sekali saat go-live):** file ekspor Excel dari aplikasi Dapodik (peserta didik, PTK, rombel) diimpor ke SISTA. Siswa yang sudah bersekolah **tidak diketik ulang**. Baris yang gagal dicocokkan dilaporkan, tidak diabaikan diam-diam.
+- **Selama berjalan:** Dapodik tidak punya API tulis. Setiap perubahan identitas yang disetujui di SISTA (K4) masuk ke daftar **"Perlu diperbarui di Dapodik"** untuk operator. Operator menandai selesai setelah menyalinnya.
+- **Ekspor:** kolom yang kosong dilaporkan sebagai "data belum lengkap", tidak diisi karangan (✅ sudah ada).
+
+#### K4. Pengajuan Perubahan Data Diri · ❌ → FASE 121
+- **Pemilik:** Staf TU (verifikasi). **Pengaju:** siswa, orang tua, guru, karyawan.
+- **Langkah:**
+  1. Pengguna membuka profilnya dan mengajukan perubahan: kolom, nilai baru, dan **bukti** (foto KK, akta, atau ijazah) untuk data identitas.
+  2. TU memverifikasi, menyetujui atau menolak dengan alasan. Bisa massal, dengan tenggat dan eskalasi (1b).
+  3. Bila disetujui, perubahan diterapkan, tercatat di audit log, dan masuk daftar "Perlu diperbarui di Dapodik" bila kolomnya ada di Dapodik.
+- **Anti-macet:** data kontak (nomor HP, email) langsung tersimpan tanpa persetujuan, karena tidak mengubah identitas resmi. Hanya data identitas (nama, tanggal lahir, NIK, NISN, nama orang tua, alamat KK) yang butuh verifikasi.
+- **Status:** `diajukan → disetujui / ditolak` (dibatalkan oleh pengaju sebelum diputuskan).
+- **Kegunaan saat go-live:** setelah impor dari Dapodik, siswa dan orang tua diminta **memeriksa data dirinya sendiri** dan mengajukan koreksi. TU tidak perlu memeriksa ribuan data satu per satu.
+
+#### K5. Akun Pengguna Massal & Reset Password · ❌ → FASE 123
+- **Konteks:** sekolah **tidak punya Google Workspace for Education**, jadi login memakai akun SISTA sendiri.
+- **Langkah:**
+  1. Akun dibuat massal dari data impor (K1) dan dari konversi SPMB (B1).
+  2. Siswa login dengan NIS atau NISN.
+  3. Password awal dibagikan lewat wali kelas (lembar akun per rombel). Pengguna **wajib mengganti** password saat login pertama.
+- **Reset password (anti-macet):**
+  - Wali kelas bisa me-reset password siswa di kelasnya.
+  - TU bisa me-reset semua akun.
+  - Bila WA gateway aktif, pengguna bisa reset sendiri lewat OTP WA ke nomor yang terdaftar.
+- **Orang tua:** cara login (akun per keluarga atau per orang tua, password atau OTP WA) **menunggu keputusan pemilik produk**.
 
 #### K2. Buku Induk Siswa · ❌ → FASE 122
 - **Isi:** identitas, riwayat rombel per TA (FASE 120), mutasi, nilai rapor per semester, prestasi, kelulusan. Dicetak per siswa sesuai format dinas.
@@ -533,7 +559,8 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 |---|---|---|---|
 | 1 | L1–L2 Jenis akun & jabatan, lalu A0–A6 kalender akademik, rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
 | 2 | C3 Izin/sakit siswa dari orang tua | Dipakai setiap hari, dan rekap presensi rapor salah tanpanya | 121 |
-| 3 | D5 Pengesahan & penerbitan rapor | Rapor Genap Juni 2027 harus resmi | 121 |
+| 3 | D5 Ekspor nilai ke e-Rapor & penerbitan PDF rapor resmi | Tanpa ini guru input nilai dua kali | 121 |
+| 3b | K1 impor awal Dapodik, K4 pengajuan perubahan data, K5 akun massal | Data ribuan siswa yang sudah bersekolah tidak boleh diketik ulang | 121/123 |
 | 4 | J1 Persetujuan surat keluar + J2 surat masuk & disposisi | Alur inti TU dan kepala sekolah | 121 |
 | 5 | Satu kotak masuk "Menunggu Persetujuan Saya" untuk semua alur berjenjang | Kepala sekolah tidak perlu membuka 8 menu | 121 |
 | 6 | K2 Buku Induk | Butuh riwayat dari FASE 120 | 122 |
