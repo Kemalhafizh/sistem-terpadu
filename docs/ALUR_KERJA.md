@@ -42,8 +42,8 @@ AGU–NOV ── KBM: sesi kelas + presensi QR, jurnal, penilaian harian, remedi
 DES  ── PAS Ganjil → nilai rapor → pengesahan → rapor Ganjil terbit ke ortu
 JAN  ── Semester Genap aktif (rombel TIDAK berubah)
 FEB–MAR ── SPMB dibuka (gelombang), seleksi
-APR  ── Survei peminatan paket mapel pilihan untuk siswa kelas X
-MEI  ── Alokasi paket → rancangan rombel XI tahun depan; ujian akhir kelas XII
+APR  ── Survei peminatan kelas X (pemetaan minat mapel pilihan)
+MEI  ── Statistik survei → Waka rancang rombel XI + plot siswa + jadwal XI; ujian akhir kelas XII
 JUN  ── PAT → rapor Genap → RAPAT KENAIKAN KELAS → pengesahan → kelulusan XII → alumni
         SPMB: pengumuman, daftar ulang, konversi jadi siswa
 JUL  ── Kenaikan dieksekusi → rombel TA baru → siklus berulang
@@ -76,24 +76,25 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Pemilik:** Waka Kurikulum. **Mengetahui:** Kepala Sekolah.
 - **Langkah:**
   1. Rombel X diisi dari hasil SPMB.
-  2. Rombel XI diisi dari hasil alokasi paket mapel pilihan (A3).
-  3. Rombel XII dilanjutkan dari XI.
+  2. Rombel XI **dirancang dan diplot manual** oleh waka dari statistik survei peminatan (A3).
+  3. Rombel XII dilanjutkan dari XI dengan susunan mapel yang sama.
   4. Wali kelas ditetapkan per rombel.
 - **Keluaran:** riwayat `class_enrollments` (siswa × rombel × TA). Kolom `students.classroom_id` menjadi "rombel aktif" yang disinkronkan.
 
-#### A3. Survei Peminatan & Paket Mapel Pilihan (X → XI) · ❌ → FASE 120
+#### A3. Survei Peminatan, Rancangan Rombel XI & Plotting · ❌ → FASE 120
 - **Pemilik:** Waka Kurikulum (dibantu guru kurikulum dan BK). **Mengetahui:** Kepala Sekolah.
 - **Pemicu:** semester Genap kelas X (± April).
+- **Prinsip:** survei **hanya memetakan minat**. Sistem tidak mengalokasikan siswa sendiri dan tidak memakai kuota; Waka Kurikulum yang memutuskan berdasarkan statistik.
 - **Langkah:**
-  1. Waka kurikulum menyusun **paket mapel pilihan** untuk XI–XII: nama paket, daftar mapel pilihan, dan kuota (jumlah rombel × kapasitas).
-  2. Survei dibuka untuk semua siswa kelas X. Siswa memilih paket **berperingkat** (pilihan 1, 2, 3) di Android, dan orang tua bisa melihat pilihan anaknya.
-  3. Survei ditutup.
-  4. Sistem mengusulkan alokasi: pilihan 1 lebih dulu sampai kuota penuh, lalu pilihan 2, dan seterusnya. Pertimbangan BK dan nilai bisa dicatat.
-  5. Waka kurikulum menyesuaikan dan menetapkan.
-  6. Hasil diumumkan ke siswa dan orang tua.
-  7. Hasilnya menjadi masukan rombel XI (A2).
-- **Status survei:** `draf → dibuka → ditutup → dialokasikan → ditetapkan → diumumkan`.
-- **Kanal:** Web (waka), Android (siswa memilih, orang tua melihat).
+  1. Waka membuka survei: mapel pilihan yang ditawarkan, dan berapa mapel yang harus dipilih siswa.
+  2. Siswa kelas X memilih mapel yang diminati di Android. Orang tua bisa melihat pilihan anaknya.
+  3. Survei ditutup, lalu **statistik** keluar: peminat per mapel, kombinasi yang paling sering dipilih bersama, sebaran per rombel X, dan siswa yang belum mengisi.
+  4. Waka **merancang rombel XI**: jumlah rombel (misalnya 11), nama, dan susunan mapel pilihan tiap rombel.
+  5. Waka **memplot siswa** ke rombel XI. Sistem hanya menampilkan kecocokan pilihan siswa dengan tiap rombel sebagai saran.
+  6. Jadwal XI disusun dari susunan mapel tiap rombel (C1).
+  7. Rombel tahun depan diumumkan ke siswa dan orang tua.
+- **Status survei:** `draf → dibuka → ditutup → selesai`.
+- **Kanal:** Web (waka: statistik, rancang rombel, plotting), Android (siswa mengisi, orang tua melihat).
 
 #### A4. Kenaikan Kelas · ❌ → FASE 120
 - **Pemilik:** Waka Kurikulum, **dengan sepengetahuan Kepala Sekolah** (keputusan pemilik produk, 11 Okt 2026).
@@ -103,7 +104,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   2. Wali kelas meninjau draf kelasnya dan memberi catatan.
   3. Hasil dibawa ke rapat dewan guru (notulen di J8).
   4. Waka kurikulum menetapkan. Kepala sekolah menerima notifikasi "mengetahui" dan **dapat menahan** keputusan sebelum dieksekusi.
-  5. Eksekusi atomik pada pembukaan TA baru (A1). Eksekusi bisa dibatalkan sebelum TA baru diaktifkan.
+  5. Eksekusi atomik pada pembukaan TA baru (A1). Siswa X yang naik masuk ke rombel hasil plotting A3. Eksekusi bisa dibatalkan sebelum TA baru diaktifkan.
 - **Status batch:** `draf → ditinjau_wali → ditetapkan → dieksekusi` (atau `dibatalkan`).
 - **Keluaran:** enrollment TA lama ditutup dengan status `naik`/`tinggal`, dan enrollment TA baru dibuat.
 
@@ -414,7 +415,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 | # | Alur | Kenapa mendesak | Fase |
 |---|---|---|---|
-| 1 | A1–A6 Rombel, peminatan, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
+| 1 | A1–A6 Rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
 | 2 | C3 Izin/sakit siswa dari orang tua | Dipakai setiap hari, dan rekap presensi rapor salah tanpanya | 121 |
 | 3 | D5 Pengesahan & penerbitan rapor | Rapor Genap Juni 2027 harus resmi | 121 |
 | 4 | J1 Persetujuan surat keluar + J2 surat masuk & disposisi | Alur inti TU dan kepala sekolah | 121 |

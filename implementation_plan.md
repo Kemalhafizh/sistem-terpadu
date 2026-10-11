@@ -35,7 +35,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 5 Okt 2026 | Belum ada data asli, jadi modul yang dipotong dihapus permanen |
 | 5 Okt 2026 | Presensi siswa **hanya QR per mapel**. Pegawai memakai **mesin sidik jari** (diimpor) |
 | 5 Okt 2026 | Inklusi dipertahankan. Penggajian diurus sekolah. Tidak ada Adiwiyata/kantin. Gamifikasi dihapus |
-| 11 Okt 2026 | **Full Kurikulum Merdeka.** Tidak ada jurusan IPA/IPS. Kelas XI–XII memakai **paket mapel pilihan** yang dipilih siswa lewat **survei peminatan** di kelas X, dirancang Waka Kurikulum |
+| 11 Okt 2026 | **Full Kurikulum Merdeka.** Tidak ada jurusan IPA/IPS. **Survei peminatan** di kelas X hanya memetakan minat. Waka Kurikulum merancang susunan mapel pilihan tiap rombel XI dan **memplot siswa secara manual** berdasarkan statistiknya. Sistem tidak mengalokasikan otomatis |
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
 | 11 Okt 2026 | Widget jadwal sholat Android **dipertahankan** |
 
@@ -53,7 +53,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 118 | Tutup akses bocor | ✅ Selesai | — |
 | 119 | Debloat ke ERP sekolah | ✅ Selesai (sisa di 119.12) | — |
 | 119.12 | Sisa bersih-bersih | ⏳ Berikutnya | 1–2 hari |
-| **120** | **Rombel, tahun ajaran, paket mapel pilihan, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
+| **120** | **Rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
 | 121 | Alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, persetujuan surat keluar, surat masuk & disposisi, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
 | 122 | Buku Induk Siswa | 📝 Garis besar | Jan 2027 |
 | 123 | Go-live: server, deploy, backup, impor data, akun massal, **pilot semester Genap** (menyerap FASE 116) | 📝 Garis besar | Pilot Jan 2027, penuh **Juli 2027** (TA 2027/2028) |
@@ -509,7 +509,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 
 ---
 
-## FASE 120: ROMBEL, TAHUN AJARAN, PAKET MAPEL PILIHAN, KENAIKAN & KELULUSAN `[RANCANGAN BARU]`
+## FASE 120: ROMBEL, TAHUN AJARAN, MAPEL PILIHAN, KENAIKAN & KELULUSAN `[RANCANGAN BARU]`
 
 > **Tanggal rancangan:** 11 Oktober 2026
 > **Pelaksana:** Agent Backend (backend + web). Pasangan Android: **FASE 80**.
@@ -526,8 +526,12 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 
 ### 120.1: Keputusan Pemilik Produk (11 Okt 2026)
 
-- **Full Kurikulum Merdeka.** Kelas X umum. Kelas XI–XII dibentuk per **paket mapel pilihan** (rombel = paket), bukan kelas berpindah per mapel.
-- **Survei peminatan** diadakan untuk siswa kelas X, dirancang oleh Waka Kurikulum atau guru kurikulum. Hasilnya menentukan paket dan rombel XI.
+- **Full Kurikulum Merdeka.** Kelas X umum. Jumlah rombel XI mengikuti kebutuhan sekolah (saat ini 11 rombel X, X-1 s.d. X-11, menjadi 11 rombel XI). Setiap rombel XI–XII punya **susunan mapel pilihan sendiri** yang dirancang Waka Kurikulum. Siswa tidak berpindah kelas per mapel.
+- **Survei peminatan hanya untuk memetakan minat**, bukan pendaftaran yang mengikat. Siswa kelas X memilih mapel pilihan yang diminati. Hasilnya berupa **statistik** yang dipakai Waka Kurikulum untuk tiga hal:
+  1. merancang susunan mapel tiap rombel XI;
+  2. memplot siswa ke rombel yang paling cocok;
+  3. menyusun jadwal.
+- **Alurnya dinamis dan dikendalikan pengguna.** Sistem **tidak** mengalokasikan siswa secara otomatis, tidak memakai kuota, dan tidak punya kriteria prioritas. Semua keputusan plotting ada di tangan Waka Kurikulum. Sistem hanya menyajikan statistik, menandai kecocokan, dan mencatat keputusan.
 - **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah. Kepala sekolah menerima notifikasi dan dapat **menahan** keputusan sebelum dieksekusi.
 - **Kelulusan disahkan Kepala Sekolah** (SK kelulusan), sesuai praktik umum.
 
@@ -537,14 +541,14 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 |---|---|---|
 | `school_years` *(baru)* | `name` ("2027/2028"), `start_date`, `end_date`, `status` (`draf/aktif/ditutup`) | Satu baris per tahun ajaran. Hanya satu yang `aktif` |
 | `academic_years` *(ubah)* | + `school_year_id` | Tetap baris per semester. Diisi dari kolom `year` yang ada |
-| `classrooms` *(ubah)* | + `school_year_id`, + `subject_package_id` (nullable, untuk XI–XII); kolom `major` dan teks `academic_year` dihapus setelah semua pemakai pindah | Nama rombel boleh sama tiap tahun; identitasnya `id` + `school_year_id` |
+| `classrooms` *(ubah)* | + `school_year_id`; kolom `major` dan teks `academic_year` dihapus setelah semua pemakai pindah | Nama rombel boleh sama tiap tahun; identitasnya `id` + `school_year_id` |
 | `class_enrollments` *(baru)* | `student_id`, `classroom_id`, `school_year_id`, `status` (`aktif/naik/tinggal/lulus/mutasi_keluar/keluar/pindah_rombel`), `started_on`, `ended_on`, `ended_reason`, `decided_by`, `promotion_decision_id` | Paling banyak **satu** `aktif` per siswa (ditegakkan service + test). Pindah rombel di tengah tahun menutup baris lama dan membuka baris baru |
 | `subjects` *(ubah)* | `category` → `umum / pilihan / muatan_lokal / ciri_khas` | Petakan data lama. `Kejuruan` dihapus |
-| `subject_packages` *(baru)* | `school_year_id` (tahun berlakunya XI), `name`, `description`, `planned_classes` (jumlah rombel), `capacity_per_class` | Contoh: "Paket Kesehatan: Biologi, Kimia, Matematika Tingkat Lanjut, Sosiologi". Isi diisi sekolah, tidak ada contoh di seeder produksi |
-| `subject_package_subjects` *(baru)* | `subject_package_id`, `subject_id` | Hanya mapel berkategori `pilihan` |
-| `elective_surveys` *(baru)* | `school_year_id` (target), `opens_at`, `closes_at`, `max_choices` (default 3), `status` (`draf/dibuka/ditutup/dialokasikan/ditetapkan/diumumkan`) | Satu survei per angkatan |
-| `elective_choices` *(baru)* | `elective_survey_id`, `student_id`, `subject_package_id`, `rank` | Unik (survei, siswa, rank) dan (survei, siswa, paket). Bisa diubah selama status `dibuka` |
-| `elective_allocations` *(baru)* | `elective_survey_id`, `student_id`, `subject_package_id`, `source` (`otomatis/manual`), `note`, `decided_by` | Yang `manual` wajib punya `note` |
+| `classroom_subjects` *(baru)* | `classroom_id`, `subject_id` | Susunan mapel **pilihan** per rombel XI/XII, dirancang Waka Kurikulum. Satu sumber untuk jadwal (C1), penilaian, dan rapor rombel itu. Rombel X tidak memerlukannya |
+| `elective_surveys` *(baru)* | `school_year_id` (TA target), `title`, `opens_at`, `closes_at`, `min_choices`, `max_choices`, `ranked` (bool, peringkat opsional), `status` (`draf/dibuka/ditutup/selesai`) | Satu survei per angkatan. Waka boleh membuka ulang sebelum `selesai` |
+| `elective_survey_subjects` *(baru)* | `elective_survey_id`, `subject_id` | Mapel pilihan yang ditawarkan di survei itu |
+| `elective_choices` *(baru)* | `elective_survey_id`, `student_id`, `subject_id`, `rank` (nullable) | Unik (survei, siswa, mapel). Bisa diubah selama `dibuka` |
+| `class_placements` *(baru)* | `school_year_id` (TA target), `student_id`, `classroom_id`, `placed_by`, `note`, timestamps | Hasil **plotting manual** Waka Kurikulum. Satu penempatan per siswa per TA target. Setiap perubahan tercatat di audit log. Dipakai saat eksekusi kenaikan (C) |
 | `promotion_batches` *(baru)* | `from_school_year_id`, `to_school_year_id`, `status` (`draf/ditinjau_wali/ditetapkan/dieksekusi/dibatalkan`), `meeting_note_id` (notulen rapat dewan guru), `held_by`/`held_at` (penahanan kepala sekolah) | Satu batch per pergantian tahun |
 | `promotion_decisions` *(baru)* | `promotion_batch_id`, `student_id`, `from_classroom_id`, `decision` (`naik/tinggal/lulus`), `to_classroom_id`, `basis` (json ringkasan dasar), `homeroom_note`, `decided_by` | Satu per siswa per batch |
 
@@ -557,14 +561,22 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 - Aktivasi TA baru adalah satu aksi yang menutup TA lama, menjalankan eksekusi kenaikan (C), dan mengaktifkan semester Ganjil. Aksi ini idempoten dan punya konfirmasi ringkasan ("312 naik, 4 tinggal, 298 lulus, 340 siswa baru").
 - Pergantian semester Genap **tidak** mengubah rombel.
 
-**B. Survei peminatan & alokasi paket (ALUR A3)**
-1. Waka kurikulum membuat paket untuk TA berikutnya beserta kuota (`planned_classes × capacity_per_class`).
-2. Survei dibuka untuk semua siswa kelas X yang aktif. Siswa memilih maksimal `max_choices` paket berperingkat (Android FASE 80, web sebagai cadangan). Orang tua bisa melihat.
-3. Survei ditutup. Siswa yang belum memilih ditandai, tidak dialokasikan diam-diam.
-4. **Usulan alokasi otomatis:** pilihan ke-1 dulu sampai kuota, lalu ke-2, dan seterusnya. **Kriteria bila peminat melebihi kuota** adalah keputusan sekolah dan disimpan di pengaturan, misalnya rata-rata nilai rapor kelas X pada mapel terkait paket. Bila belum diisi, sistem **tidak** memilih sendiri; peminat berlebih ditandai "perlu keputusan manual".
-5. Waka kurikulum menyesuaikan (alokasi manual wajib memberi catatan) dan menetapkan. Kepala sekolah diberi tahu.
-6. Diumumkan ke siswa dan orang tua.
-7. Hasil alokasi menjadi bahan **draf rombel XI** untuk TA berikutnya. Waka membagi siswa satu paket ke rombel paket itu.
+**B. Survei peminatan, perancangan rombel XI, dan plotting (ALUR A3)**
+1. **Buka survei.** Waka kurikulum memilih mapel pilihan yang ditawarkan, jumlah mapel yang harus dipilih siswa (`min_choices`–`max_choices`), dan apakah memakai peringkat.
+2. **Siswa mengisi.** Siswa kelas X mengisi di Android (web sebagai cadangan), dan orang tua bisa melihat pilihan anaknya. Pilihan bisa diubah sampai survei ditutup.
+3. **Statistik (inti fitur ini).** Isinya apa adanya dari pilihan siswa, dan bisa diekspor ke Excel:
+   - jumlah peminat per mapel;
+   - **kombinasi mapel yang paling sering dipilih bersama**;
+   - sebaran pilihan per rombel X;
+   - daftar siswa yang belum mengisi.
+4. **Rancang rombel XI** untuk TA berikutnya. Waka kurikulum menentukan berapa rombel (misalnya XI-1 s.d. XI-11), nama, wali kelas (bisa menyusul), dan **susunan mapel pilihan tiap rombel** (`classroom_subjects`). Statistik tampil di samping sebagai acuan.
+5. **Plot siswa** ke rombel XI (`class_placements`).
+   - Untuk tiap siswa, sistem menampilkan pilihannya dan **tingkat kecocokan** dengan setiap rombel, misalnya "4 dari 4 mapel cocok", serta mengurutkan rombel yang paling cocok **sebagai saran**.
+   - Sistem **tidak menempatkan sendiri.** Plotting bisa massal: pilih banyak siswa lalu masukkan ke satu rombel.
+   - Selalu terlihat: jumlah siswa per rombel, siswa yang belum diplot, dan siswa yang ditempatkan di rombel yang tidak cocok dengan pilihannya. Yang terakhir ini boleh, tetapi diberi catatan.
+6. **Jadwal XI** disusun di modul jadwal (C1) dari susunan mapel tiap rombel.
+7. **Umumkan.** Waka menandai survei `selesai` dan mengumumkan rombel XI ke siswa dan orang tua. Kepala sekolah diberi tahu. Plotting masih boleh direvisi sampai TA baru aktif, dan setiap perubahan tercatat.
+8. **Eksekusi.** Saat kenaikan dijalankan (C), siswa X yang naik masuk ke rombel hasil plotting.
 
 **C. Kenaikan kelas (ALUR A4)**
 1. Setelah rapor Genap disahkan, waka kurikulum membuat batch. Sistem menyusun draf per siswa beserta `basis`: jumlah mapel di bawah KKTP, persentase kehadiran, dan catatan BK bila ada. **Ambang kenaikan diisi sekolah di pengaturan.** Bila kosong, draf hanya menampilkan data tanpa label "naik/tinggal" otomatis.
@@ -572,8 +584,8 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 3. Rapat dewan guru dicatat di notulen dan ditautkan ke batch.
 4. Waka kurikulum **menetapkan** lewat `WorkflowService` dengan definisi baru `promotion_decision`. Kepala sekolah mendapat notifikasi "mengetahui" dan dapat **menahan** sebelum eksekusi. Penahanan mengembalikan batch ke `ditinjau_wali` dengan catatan.
 5. Tujuan siswa ditentukan sebelum eksekusi:
-   - X → XI: rombel paket hasil alokasi (B).
-   - XI → XII: rombel XII dengan paket yang sama.
+   - X → XI: rombel hasil plotting (B). Siswa X yang naik tetapi belum diplot **menghalangi eksekusi**, dan daftarnya ditampilkan.
+   - XI → XII: rombel XII lanjutan, dengan susunan mapel disalin dari rombel XI-nya.
    - Siswa yang tinggal kelas masuk ke rombel tingkat yang sama di TA baru (dipilih waka).
 6. **Eksekusi** saat aktivasi TA baru, dalam satu transaksi: enrollment lama ditutup (`naik/tinggal/lulus`), enrollment baru dibuat, dan `students.classroom_id` disinkronkan. Batch bisa **dibatalkan** selama TA baru belum diaktifkan.
 
@@ -587,10 +599,10 @@ Siswa kelas XII dengan keputusan `lulus` memerlukan **pengesahan kepala sekolah*
 
 | Endpoint | Peran | Isi |
 |---|---|---|
-| `GET student/elective-survey` | siswa kelas X | Survei aktif, daftar paket (nama, mapel, kuota), pilihan saya, status |
-| `PUT student/elective-survey/choices` | siswa kelas X | Simpan pilihan berperingkat. Ditolak bila survei bukan `dibuka` (`error_code`) |
-| `GET student/elective-survey/result` | siswa | Paket yang ditetapkan, hanya setelah `diumumkan` |
-| `GET parent/child/{uuid}/elective-survey` | orang tua | Pilihan dan hasil anak sendiri |
+| `GET student/elective-survey` | siswa kelas X | Survei aktif, mapel pilihan yang ditawarkan, `min_choices`/`max_choices`, apakah berperingkat, pilihan saya, status, tenggat |
+| `PUT student/elective-survey/choices` | siswa kelas X | Simpan pilihan mapel (dan peringkat bila `ranked`). Ditolak bila survei bukan `dibuka` atau jumlah pilihan di luar batas (`error_code`) |
+| `GET student/next-classroom` | siswa | Rombel tahun depan dan susunan mapelnya. Hanya terisi setelah diumumkan, sebelum itu `null` |
+| `GET parent/child/{uuid}/elective-survey` | orang tua | Pilihan dan rombel tahun depan anak sendiri |
 | `GET student/enrollment-history` | siswa / orang tua (`parent/child/{uuid}/…`) | Riwayat rombel per TA (opsional untuk profil) |
 
 Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` tiga bahasa, `status_code` stabil di samping label, dan waktu ISO-8601. Kunci kapabilitas baru di `config/mobile_features.php`: `student.elective_survey`, `parent.elective_survey`.
@@ -600,8 +612,8 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 | PR | Isi |
 |---|---|
 | 1 | `school_years`, FK di `academic_years`/`classrooms`, `class_enrollments`, `EnrollmentService` + backfill dari data seed, test arsitektur penulisan `classroom_id` |
-| 2 | Kurikulum Merdeka: kategori mapel, `subject_packages`, hapus `major` IPA/IPS dari model, seeder, dan view |
-| 3 | Survei peminatan & alokasi (web waka) + API Android 120.4 |
+| 2 | Kurikulum Merdeka: kategori mapel, `classroom_subjects` (susunan mapel per rombel, dipakai jadwal), hapus `major` IPA/IPS dari model, seeder, dan view |
+| 3 | Survei peminatan + statistik + perancangan rombel XI + plotting manual (web waka) + API Android 120.4 |
 | 4 | Batch kenaikan kelas: draf, tinjau wali, tetapkan (`promotion_decision`), tahan kepala sekolah, eksekusi/batal |
 | 5 | Kelulusan terikat batch + pengesahan kepala sekolah, mutasi lewat persetujuan |
 | 6 | Aktivasi TA baru (satu aksi, ringkasan, idempoten). Migrasikan pembacaan historis ke `class_enrollments`. Hapus `classrooms.academic_year` (teks) dan `major` |
@@ -611,14 +623,16 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 - Satu siswa tidak pernah punya dua enrollment `aktif`, termasuk saat dua proses berjalan bersamaan.
 - Eksekusi kenaikan dijalankan dua kali tidak menggandakan data (idempoten). Pembatalan sebelum aktivasi mengembalikan keadaan semula.
 - Tinggal kelas, lulus, mutasi keluar di tengah semester, dan pindah rombel: riwayat TA lalu tetap benar dan rapor lama tetap menunjuk rombel lamanya.
-- Peran: wali kelas tidak bisa mengubah kelas lain. Siswa tidak bisa memilih paket di luar status `dibuka` atau mengubah pilihan siswa lain. Orang tua hanya melihat anaknya. Waka menetapkan. Kepala sekolah bisa menahan. Penyusun draf tidak menyetujui sendiri bila alurnya mensyaratkan.
-- Alokasi: kuota tidak terlampaui. Tanpa kriteria di pengaturan, peminat berlebih ditandai manual, bukan diputuskan sistem. Alokasi manual tanpa catatan ditolak.
+- Peran: wali kelas tidak bisa mengubah kelas lain. Siswa tidak bisa mengisi survei di luar status `dibuka` atau mengubah pilihan siswa lain. Orang tua hanya melihat anaknya. Waka menetapkan. Kepala sekolah bisa menahan. Penyusun draf tidak menyetujui sendiri bila alurnya mensyaratkan.
+- **Statistik:** jumlah per mapel dan per kombinasi sama persis dengan isi `elective_choices`. Siswa yang belum mengisi dihitung terpisah, tidak dianggap memilih apa pun.
+- **Plotting:** sistem tidak pernah membuat `class_placements` tanpa aksi Waka Kurikulum. Satu siswa hanya punya satu penempatan per TA target. Kecocokan dihitung benar, termasuk untuk siswa yang belum mengisi (`null`, bukan 0%).
+- **Eksekusi kenaikan** ditolak bila ada siswa X yang naik tetapi belum diplot.
 - Ambang kenaikan kosong: tidak ada label otomatis (`null`, bukan "tinggal").
 
 ### 120.7: Kriteria Selesai
 
 - [ ] Semua PR 120.5 di-merge. `pint`, `phpstan`, `php artisan test`, dan `migrate:fresh --seed` hijau.
-- [ ] Simulasi penuh di seeder demo: TA 2026/2027 → survei peminatan → kenaikan → TA 2027/2028 aktif. Rombel, riwayat, dan alumni benar.
+- [ ] Simulasi penuh di seeder demo: TA 2026/2027 → survei peminatan → statistik → rancang & plot rombel XI → kenaikan → TA 2027/2028 aktif. Rombel, riwayat, dan alumni benar.
 - [ ] Tidak ada lagi IPA/IPS atau `Kejuruan` di kode, seeder, dan view.
 - [ ] `docs/ALUR_KERJA.md` A1–A6 menjadi ✅. Bagian ini diperbarui menjadi `[SELESAI]` beserta penyimpangan dari usulan 120.2 dan alasannya.
 
