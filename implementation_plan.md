@@ -40,6 +40,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
 | 12 Okt 2026 | **e-Rapor resmi Kemendikdasmen tetap dipakai.** SISTA tidak membuat rapor resmi kedua dan tidak boleh ada input nilai dua kali. SISTA mengekspor nilai ke template impor e-Rapor, lalu PDF rapor resmi diunggah balik dan diterbitkan ke orang tua |
 | 12 Okt 2026 | **Dapodik sumber resmi identitas.** Impor awal dari file ekspor Dapodik, sehingga siswa yang sudah bersekolah tidak diketik ulang. Siswa baru dari konversi SPMB. Perubahan data lewat **pengajuan perubahan** yang diverifikasi TU, lalu masuk daftar "perlu diperbarui di Dapodik" |
+| 12 Okt 2026 | **SISTA dijual ke sekolah sebagai jasa pembuatan, lalu dikelola IT sekolah.** Pemilik produk tidak merawatnya setelah serah terima. Akibatnya: semua akun pihak ketiga, server, domain, dan kunci atas nama sekolah; dokumentasi operasional untuk IT sekolah; dan serah terima resmi (BAST) masuk FASE 123 |
 | 12 Okt 2026 | **Tidak ada Google Workspace for Education.** Login memakai akun SISTA. Akun dibuat massal, password awal dibagikan wali kelas, wajib diganti saat login pertama |
 | 11 Okt 2026 | **Anti-macet disetujui penuh:** ketujuh aturan di `ALUR_KERJA.md` 1b, dan tabel pelonggaran beban Kepala Sekolah menjadi **pengaturan bawaan**. Sekolah tetap bisa mengubah langkah dan batasnya di pengaturan |
 | 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
@@ -62,7 +63,9 @@ Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemil
 | # | Pertanyaan | Kapan dibutuhkan |
 |---|---|---|
 | T1 | Contoh **file template impor e-Rapor** dari operator e-Rapor sekolah | Sebelum FASE 121 D5 |
-| T6 | Siapa yang **merawat** SISTA setelah live (PIC IT sekolah/yayasan, server atas nama siapa, biaya) | Sebelum FASE 123 |
+| T6 | ~~Siapa yang merawat SISTA setelah live~~ → **IT sekolah**, setelah serah terima (12 Okt 2026) | — |
+| T8 | Kemampuan IT sekolah: hanya **operasional** (server, backup, akun, pengaturan) atau juga bisa **memperbaiki kode** (Laravel/Kotlin)? | Kedalaman dokumen serah terima FASE 123 |
+| T9 | Bentuk penjualan: **jual putus** (kode sumber + hak penuh ke sekolah) atau **dengan masa garansi/kontrak perawatan**? | Isi BAST dan pasal garansi |
 | T7 | **Restu** Kepala Sekolah/yayasan dan siapa **PIC** di sekolah | Sebelum pilot |
 
 ### Aturan main untuk semua agent
@@ -88,7 +91,7 @@ Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemil
 | **120** | **Jenis akun & jabatan, kalender akademik, rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
 | 121 | **Anti-macet** (tenggat, eskalasi, persetujuan massal, langkah & batas yang diatur sekolah, dasbor alur tertahan) + alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, surat keluar & masuk, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
 | 122 | Buku Induk Siswa | 📝 Garis besar | Jan 2027 |
-| 123 | Go-live: server, deploy, backup, impor data, akun massal, **pilot semester Genap** (menyerap FASE 116) | 📝 Garis besar | Pilot Jan 2027, penuh **Juli 2027** (TA 2027/2028) |
+| 123 | Go-live & **serah terima ke IT sekolah**: server atas nama sekolah, deploy, backup, impor data, akun massal, pilot, dokumentasi operasional, pelatihan, BAST (menyerap FASE 116) | 📝 Garis besar | Pilot Jan 2027, penuh **Juli 2027** (TA 2027/2028) |
 
 Pasangan Android: FASE 79 (siap rilis) berjalan paralel dengan 119.12/120, lalu FASE 80 (sisi Android FASE 120). Lihat `sista-android/android_implementation.md`.
 
@@ -784,15 +787,51 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 
 Identitas, riwayat rombel per TA (FASE 120), mutasi, nilai rapor per semester, prestasi, dan kelulusan. Dicetak per siswa sesuai format dinas. Hanya untuk TU, waka, dan kepala sekolah.
 
-## FASE 123: GO-LIVE & PILOT `[GARIS BESAR]`
+## FASE 123: GO-LIVE, PILOT & SERAH TERIMA KE IT SEKOLAH `[GARIS BESAR]`
 
-Menyerap FASE 116 yang tidak pernah dikerjakan (lihat arsip).
-- **Server:** VPS, domain + HTTPS, `deploy.sh` (down → pull → migrate → up), queue worker, cron scheduler, Reverb bila dipakai. Workflow deploy di CI saat ini hanya *skip* karena belum ada server.
-- **Backup** harian ke Google Drive sekolah (`spatie/laravel-backup`, terenkripsi) + uji pemulihan.
-- **Observasi:** log error kritis ke grup Telegram tim IT. Telescope hanya untuk admin.
-- **Data awal (K1, K5):**
-  1. Impor file ekspor Dapodik (peserta didik, PTK, rombel). Baris yang gagal dicocokkan dilaporkan.
-  2. Akun massal dibuat. Lembar akun dibagikan per rombel lewat wali kelas, dan password wajib diganti saat login pertama. Wali kelas bisa me-reset password siswanya.
-  3. **Kampanye "cek data dirimu"**: siswa dan orang tua memeriksa profilnya sendiri dan mengajukan koreksi (K4), supaya TU tidak memeriksa ribuan data satu per satu.
-- **Kebijakan privasi** (UU PDP, pengguna anak di bawah umur) dan persetujuan orang tua.
-- **Pilot semester Genap** (Jan–Jun 2027): 1–2 rombel, TU, BK, dan wali kelasnya. Keluhan pilot menjadi backlog. **Go-live penuh Juli 2027** bersamaan dengan TA 2027/2028.
+> **Konteks (12 Okt 2026):** SISTA dijual ke sekolah sebagai jasa pembuatan, lalu **dikelola IT sekolah**. Pemilik produk tidak merawatnya setelah serah terima. Ukuran selesai fase ini bukan sekadar "live", tetapi **IT sekolah bisa menjalankan, memulihkan, dan mengatur SISTA tanpa pembuatnya**. Menyerap FASE 116 (arsip).
+
+**A. Kepemilikan: semuanya atas nama sekolah sejak awal (bukan dipindah belakangan)**
+- **Server dan infrastruktur:** VPS, domain `*.sch.id`, dan sertifikat HTTPS.
+- **Akun layanan:** repositori kode (organisasi GitHub sekolah, atau salinan penuh saat serah terima), Firebase dan FCM, Google Play Console, Midtrans, Fonnte/WA, serta Google Drive backup.
+- **Kunci dan rahasia:** keystore rilis Android beserta password dan cadangannya (**kehilangan keystore = aplikasi tidak bisa diperbarui di Play Store**), `APP_KEY`, kredensial database, dan kunci API. Semuanya diserahkan lewat pengelola rahasia, tidak lewat chat.
+- **Data milik sekolah sebagai pengendali data (UU PDP).** Selama pengembangan dan pilot, pembuat berperan sebagai pemroses data, dengan perjanjian tertulis.
+
+**B. Infrastruktur sederhana yang bisa dirawat IT sekolah**
+- Satu VPS dengan Docker Compose (sudah ada `docker-compose.prod.yml`). Isinya `deploy.sh` (down → pull → migrate → up), queue worker, dan cron scheduler. Workflow deploy di CI saat ini hanya *skip* karena belum ada server.
+- Backup harian ke Google Drive sekolah (`spatie/laravel-backup`, terenkripsi). **Uji pemulihan dilakukan bersama IT sekolah** sebelum BAST.
+- Log error kritis dikirim ke grup Telegram/WA tim IT sekolah. Telescope hanya untuk admin.
+
+**C. Data awal (K1, K5)**
+1. Impor file ekspor Dapodik (peserta didik, PTK, rombel). Baris yang gagal dicocokkan dilaporkan.
+2. Akun massal dibuat. Lembar akun dibagikan per rombel lewat wali kelas, dan password wajib diganti saat login pertama. Wali kelas bisa me-reset password siswanya.
+3. **Kampanye "cek data dirimu"**: siswa dan orang tua memeriksa profilnya sendiri dan mengajukan koreksi (K4).
+
+**D. Dokumentasi serah terima, dalam Bahasa Indonesia, untuk pembaca non-pembuat**
+1. **Runbook operasional:**
+   - menjalankan, menghentikan, dan memperbarui;
+   - backup dan **pemulihan langkah demi langkah**;
+   - memperpanjang domain dan sertifikat;
+   - memantau error;
+   - apa yang dilakukan bila server mati.
+2. **Panduan Admin:**
+   - membuka tahun ajaran dan kalender akademik;
+   - mengatur jabatan dan hak akses (L1–L2);
+   - impor data;
+   - reset password;
+   - langkah dan batas persetujuan (anti-macet);
+   - template ekspor e-Rapor dan Dapodik.
+3. **Panduan per peran** (satu halaman per peran): guru, wali kelas, TU/bendahara, waka, kepala sekolah, siswa, dan orang tua.
+4. **Dokumen teknis** untuk pengembang berikutnya. Kedalamannya mengikuti T8: arsitektur, cara menjalankan lokal, cara rilis Android, dan `docs/ALUR_KERJA.md` sebagai peta fitur.
+
+**E. Pilot, pelatihan, dan BAST**
+- **Pilot semester Genap (Jan–Jun 2027):** 1–2 rombel, TU, BK, dan wali kelasnya. Keluhan pilot menjadi backlog.
+- **Pelatihan:** Admin/IT sekolah (operasional penuh), TU, wali kelas, guru, dan pimpinan. Untuk siswa dan orang tua, cukup video pendek atau lembar panduan.
+- **BAST** (Berita Acara Serah Terima) berisi daftar periksa:
+  - semua akun dan kunci sudah atas nama sekolah;
+  - uji pemulihan backup berhasil;
+  - dokumentasi diserahkan;
+  - IT sekolah sudah mencoba sendiri: deploy pembaruan, pulihkan backup, buat jabatan baru, buka TA baru.
+
+  Masa garansi dan dukungan mengikuti T9.
+- **Go-live penuh Juli 2027** bersamaan dengan TA 2027/2028.
