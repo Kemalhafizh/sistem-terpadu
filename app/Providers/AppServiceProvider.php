@@ -9,19 +9,12 @@ use App\Models\CmsGallery;
 use App\Models\CmsPage;
 use App\Models\CmsPost;
 use App\Models\CmsTestimonial;
-use App\Models\ComplianceDocument;
-use App\Models\ComplianceMilestone;
 use App\Models\CounselingSession;
-use App\Models\EdsAssessment;
-use App\Models\EdsPeriod;
 use App\Models\Exam;
-use App\Models\ForumReply;
-use App\Models\ForumThread;
 use App\Models\LessonPlan;
 use App\Models\LoginAttempt;
 use App\Models\MpkAudit;
 use App\Models\MpkLpj;
-use App\Models\PortfolioItem;
 use App\Models\StudentAspiration;
 use App\Models\Syllabus;
 use App\Models\UksVisit;
@@ -29,14 +22,10 @@ use App\Models\User;
 use App\Models\WorkflowRequest;
 use App\Policies\AssetLoanPolicy;
 use App\Policies\CmsPolicy;
-use App\Policies\CompliancePolicy;
 use App\Policies\CounselingSessionPolicy;
 use App\Policies\CurriculumPolicy;
-use App\Policies\EdsPolicy;
 use App\Policies\ExamPolicy;
-use App\Policies\ForumPolicy;
 use App\Policies\MpkPolicy;
-use App\Policies\PortfolioPolicy;
 use App\Policies\UksPolicy;
 use App\Policies\WorkflowPolicy;
 use App\Services\AppearanceService;
@@ -91,10 +80,6 @@ class AppServiceProvider extends ServiceProvider
         // Register Counseling Policy
         Gate::policy(CounselingSession::class, CounselingSessionPolicy::class);
 
-        // Register Forum Policy
-        Gate::policy(ForumThread::class, ForumPolicy::class);
-        Gate::policy(ForumReply::class, ForumPolicy::class);
-
         // Register CMS Policy
         Gate::policy(CmsPage::class, CmsPolicy::class);
         Gate::policy(CmsPost::class, CmsPolicy::class);
@@ -111,14 +96,6 @@ class AppServiceProvider extends ServiceProvider
         // Register CBT Exam Policy
         Gate::policy(Exam::class, ExamPolicy::class);
 
-        // Register EDS Policy
-        Gate::policy(EdsPeriod::class, EdsPolicy::class);
-        Gate::policy(EdsAssessment::class, EdsPolicy::class);
-
-        // Register Compliance Policy
-        Gate::policy(ComplianceDocument::class, CompliancePolicy::class);
-        Gate::policy(ComplianceMilestone::class, CompliancePolicy::class);
-
         // Register MPK Policy
         Gate::policy(MpkAudit::class, MpkPolicy::class);
         Gate::policy(MpkLpj::class, MpkPolicy::class);
@@ -128,9 +105,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Register Workflow Engine Policy
         Gate::policy(WorkflowRequest::class, WorkflowPolicy::class);
-
-        // Register e-Portfolio Policy
-        Gate::policy(PortfolioItem::class, PortfolioPolicy::class);
 
         // Tahfidz Module Access Gate
         Gate::define('access-tahfidz', function ($user) {

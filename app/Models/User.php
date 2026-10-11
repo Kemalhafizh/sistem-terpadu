@@ -211,7 +211,6 @@ class User extends Authenticatable
                     ['id' => 'teacher_journal_today', 'name' => 'Jurnal Hari Ini', 'visible' => true],
                     ['id' => 'teacher_ungraded_assignments', 'name' => 'Tugas Belum Dinilai', 'visible' => true],
                     ['id' => 'teacher_tahfidz_progress', 'name' => 'Progress Tahfidz Kelas', 'visible' => true],
-                    ['id' => 'teacher_todo_widget', 'name' => 'Todo List Saya', 'visible' => true],
                     ['id' => 'teacher_recent_notifications', 'name' => 'Notifikasi Terbaru', 'visible' => true],
                 ];
 
@@ -222,7 +221,6 @@ class User extends Authenticatable
                     ['id' => 'student_recent_scores', 'name' => 'Nilai Terbaru', 'visible' => true],
                     ['id' => 'student_mutabaah_today', 'name' => 'Mutaba\'ah Hari Ini', 'visible' => true],
                     ['id' => 'student_library_loans', 'name' => 'Buku yang Dipinjam', 'visible' => true],
-                    ['id' => 'student_recent_forum', 'name' => 'Thread Forum Terbaru', 'visible' => true],
                 ];
 
             case 'parent':

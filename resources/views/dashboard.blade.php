@@ -663,87 +663,6 @@
               </div>
             @endif
 
-            <!-- Widget: teacher_todo_widget -->
-            <div x-show="isWidgetVisible('teacher_todo_widget')" :style="'order: ' + getWidgetOrder('teacher_todo_widget')" class="w-full transition-all duration-300" style="display: none;">
-              <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
-                <div class="flex items-center justify-between mb-5">
-                  <h4 class="text-lg font-black text-gray-800 dark:text-white flex items-center">
-                    <span class="w-2.5 h-6 bg-violet-600 rounded-full mr-3"></span>
-                     Todo List Saya
-                  </h4>
-                  <div class="flex items-center gap-2">
-                    @if(($todoOverdueCount ?? 0) > 0)
-                      <span class="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-lg text-[9px] font-black uppercase tracking-wider animate-pulse">
-                         {{ $todoOverdueCount }} Terlambat
-                      </span>
-                    @endif
-                    @if(($todoDueTodayCount ?? 0) > 0)
-                      <span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 rounded-lg text-[9px] font-black uppercase tracking-wider">
-                         {{ $todoDueTodayCount }} Hari Ini
-                      </span>
-                    @endif
-                    @canVisit('todos.index')
-                    <a href="{{ route('todos.index') }}" class="px-2.5 py-1 bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-violet-100 transition-all">
-                      Lihat Semua ({{ $todoPendingCount ?? 0 }})
-                    </a>
-                    @endcanVisit
-                  </div>
-                </div>
-
-                {{-- Quick Add Form --}}
-                <form action="{{ route('todos.store') }}" method="POST" class="mb-5">
-                  @csrf
-                  <div class="flex gap-2">
-                    <input type="text" name="title" required placeholder="Tambah todo baru..." class="flex-1 text-xs font-bold rounded-xl border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-violet-500 focus:ring-violet-500">
-                    <input type="hidden" name="priority" value="medium">
-                    <input type="hidden" name="category" value="mengajar">
-                    <button type="submit" class="px-4 py-2 bg-violet-600 text-white rounded-xl text-xs font-black hover:bg-violet-700 transition-all shadow-sm">
-                      + Tambah
-                    </button>
-                  </div>
-                </form>
-
-                {{-- Todo Items --}}
-                <div class="space-y-2">
-                  @forelse(($todoPending ?? collect()) as $todo)
-                    @php
-                      $prioColors = [
-                        'high' => 'border-l-red-400',
-                        'medium' => 'border-l-amber-400',
-                        'low' => 'border-l-emerald-400',
-                      ];
-                    @endphp
-                    <div class="flex items-center gap-3 border-l-4 {{ $prioColors[$todo->priority] ?? 'border-l-gray-300' }} rounded-xl px-4 py-3 bg-gray-50 dark:bg-gray-900/50 group hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all">
-                      <form method="POST" action="{{ route('todos.toggle', $todo) }}" class="flex-shrink-0">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="w-5 h-5 rounded-md border-2 border-gray-300 dark:border-gray-500 hover:border-violet-400 hover:bg-violet-50 transition-all flex items-center justify-center" title="Tandai selesai">
-                        </button>
-                      </form>
-                      <div class="flex-1 min-w-0">
-                        <p class="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">{{ $todo->title }}</p>
-                        <div class="flex items-center gap-2 mt-1">
-                          <span class="text-[9px] font-black uppercase tracking-wider text-gray-400">{{ $todo->category_icon }} {{ $todo->category_label }}</span>
-                          @if($todo->due_date)
-                            <span class="text-[9px] font-black uppercase tracking-wider {{ $todo->isOverdue() ? 'text-red-500' : ($todo->isDueToday() ? 'text-amber-500' : 'text-gray-400') }}">
-                               {{ $todo->isOverdue() ? 'TERLAMBAT' : ($todo->isDueToday() ? 'HARI INI' : $todo->due_date->translatedFormat('d M')) }}
-                            </span>
-                          @endif
-                        </div>
-                      </div>
-                      <span class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase {{ $todo->priority === 'high' ? 'bg-red-100 text-red-600' : ($todo->priority === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600') }}">
-                        {{ $todo->priority }}
-                      </span>
-                    </div>
-                  @empty
-                    <div class="text-center py-6">
-                      <p class="text-xs text-gray-400 dark:text-gray-500 font-bold"> Semua tugas selesai! Tidak ada todo pending.</p>
-                    </div>
-                  @endforelse
-                </div>
-              </div>
-            </div>
-
           @endif
 
 
@@ -918,31 +837,6 @@
                     </div>
                   @empty
                     <p class="text-xs text-gray-400 dark:text-gray-500 italic text-center py-4">Tidak ada peminjaman buku perpustakaan aktif.</p>
-                  @endforelse
-                </div>
-              </div>
-            </div>
-
-            <!-- Widget: student_recent_forum -->
-            <div x-show="isWidgetVisible('student_recent_forum')" :style="'order: ' + getWidgetOrder('student_recent_forum')" class="w-full transition-all duration-300" style="display: none;">
-              <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-4xl p-6 shadow-sm">
-                <h4 class="text-lg font-black text-gray-900 dark:text-white mb-6 flex items-center">
-                  <span class="w-2.5 h-6 bg-indigo-500 rounded-full mr-3"></span>
-                   {{ __('dashboard.widget_student_recent_forum') }}
-                </h4>
-                <div class="space-y-4">
-                  @forelse($studentForumThreads ?? [] as $thread)
-                    <div class="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100/50 dark:border-gray-700/50 flex items-center justify-between">
-                      <div>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $thread->title }}</p>
-                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Ditulis oleh: {{ $thread->author?->name }} • {{ $thread->created_at->diffForHumans() }}</p>
-                      </div>
-                      <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-black rounded-lg">
-                        {{ $thread->reply_count }} Balasan
-                      </span>
-                    </div>
-                  @empty
-                    <p class="text-xs text-gray-400 dark:text-gray-500 italic text-center py-4">Belum ada diskusi kelas aktif di forum.</p>
                   @endforelse
                 </div>
               </div>

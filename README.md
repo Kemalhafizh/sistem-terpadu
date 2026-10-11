@@ -45,10 +45,6 @@ Sistem Terpadu SISTA terbagi ke dalam modul-modul kokoh yang saling terintegrasi
 
 Fase terbaru ini melengkapi platform SISTA menjadi solusi 360-derajat paling komprehensif di Indonesia:
 
-### 💬 1. Forum Diskusi & Ruang Kelas Virtual (Modul 1 - ✅ DONE)
-* **Kolaborasi Kelas**: Guru dan siswa dapat membuka topik diskusi akademik terarah per kelas atau per mata pelajaran.
-* **Fitur Premium**: Mendukung *pinned threads*, penguncian topik, markup "Jawaban Terbaik" oleh guru, unggahan lampiran materi, dan sistem MorphReactions (Like, Helpful, Insightful).
-
 ### 📋 2. Survei & Kuesioner Digital (Modul 2 - ✅ DONE)
 * **Dynamic Survey Builder**: Pembuatan kuesioner secara dinamis didukung berbagai tipe pertanyaan (Likert Scale, Checkbox, Radio, Textarea, Date) menggunakan AlpineJS.
 * **Target & Distribusi**: Distribusi tertarget kepada peran spesifik (Siswa, Orang Tua, Guru) atau kelas tertentu, mendukung respons anonim, serta visualisasi data analitik real-time.
@@ -59,10 +55,6 @@ Fase terbaru ini melengkapi platform SISTA menjadi solusi 360-derajat paling kom
 
 ### 🎭 4. Pengelolaan Ekstrakurikuler & OSIS (Modul 4 - ✅ DONE)
 * **Katalog & Keanggotaan**: Katalog pendaftaran ekskul bagi siswa, presensi presisi kegiatan ekskul, galeri dokumentasi foto, dan buku kas transaksi keuangan OSIS (Pemasukan/Pengeluaran).
-
-### 🛡️ 5. Raport Mutu Sekolah (Evaluasi Diri Sekolah / EDS) (Modul 5 - ✅ DONE)
-* **Evaluasi 8 SNP**: Evaluasi mandiri berkala berdasar 8 Standar Nasional Pendidikan (SNP) untuk persiapan akreditasi sekolah.
-* **Visualisasi Radar**: ApexCharts Spider Chart rata-rata skor per standar, penyaringan otomatis *Gap Analysis* untuk indikator berskor rendah (< 3.00), serta cetak laporan PDF A4 dinas pendidikan.
 
 ### 👨‍👩‍👧‍👦 6. Dashboard Orang Tua Premium (Parent Portal) (Modul 6 - ✅ DONE)
 * **Multi-Child Switcher**: Tab navigasi interaktif bagi orang tua yang memiliki lebih dari satu anak terdaftar.
@@ -75,10 +67,6 @@ Fase terbaru ini melengkapi platform SISTA menjadi solusi 360-derajat paling kom
 ### 🎫 8. Sistem Tiket Helpdesk Internal (Modul 8 - ✅ DONE)
 * **Tiket Lifecycle**: Jalur pengaduan masalah sarpras dan IT internal bagi guru dan staf.
 * **SLA & Komentar**: Penghitungan otomatis batas penanganan (SLA) berdasarkan prioritas (Low, Medium, High, Critical), penugasan staf TU, dan pelacakan timeline komentar internal.
-
-### 📑 9. Audit & Compliance Dashboard (Persiapan Akreditasi) (Modul 9 - ✅ DONE)
-* **10 Key Metrics Aggregator**: Dashboard pengambil kebijakan yang secara otomatis mengkalkulasi 10 metrik kesiapan akreditasi (rasio guru, rasio buku, kepatuhan RPP, dll) menjadi skor persentase kesiapan.
-* **Milestones Timeline**: Daftar tugas persiapan visitasi interaktif, repositori arsip berkas bukti fisik per SNP, serta unduhan laporan PDF formal kesiapan akreditasi.
 
 ### 🌐 10. Landing Page CMS & Profil Publik (Modul 10 - ✅ DONE)
 * **CMS Ringan**: Halaman depan sekolah dinamis yang dapat dikelola oleh Humas tanpa keahlian pemrograman (Visi-misi, pendaftaran SPMB, slider berita/prestasi, galeri foto, dan testimoni).
@@ -209,12 +197,12 @@ Password default untuk semua akun demo adalah **`password`**:
 | :--- | :--- | :--- |
 | **Superadmin** | `superadmin@sekolah.com` | Akses Global, Backup, Kelola User, Konfigurasi |
 | **Admin** | `admin@sekolah.com` | Penuh, Audit Trail, Pengumuman |
-| **Kepala Sekolah** | `kepala.sekolah@sultanagung1.sch.id` | Dashboard Kepatuhan, Laporan Analitik, Eksport Excel |
-| **Waka Kurikulum** | `waka.kurikulum@sultanagung1.sch.id` | Kurikulum, Bank Silabus, Evaluasi EDS, Kalender |
+| **Kepala Sekolah** | `kepala.sekolah@sultanagung1.sch.id` | Dashboard Pimpinan, Laporan Analitik, Eksport Excel |
+| **Waka Kurikulum** | `waka.kurikulum@sultanagung1.sch.id` | Kurikulum, Bank Silabus, Kalender |
 | **Waka Kesiswaan** | `waka.kesiswaan@sultanagung1.sch.id` | Ekstrakurikuler, Pendaftaran OSIS, Approval Kegiatan |
 | **Guru BK (Konselor)** | `guru.bk@sultanagung1.sch.id` | Konseling BK Terenkripsi, Deteksi Akumulasi Pelanggaran |
 | **Petugas UKS (Guru)** | `guru@sekolah.com` | Log Kunjungan Medis UKS, Pengurangan Stok Obat |
-| **Siswa (Student)** | `demo.siswa1@student.sa1.sch.id` | Portal PWA, Forum Kelas, Pengajuan Konseling BK, Mutaba'ah |
+| **Siswa (Student)** | `demo.siswa1@student.sa1.sch.id` | Portal PWA, Pengajuan Konseling BK, Mutaba'ah |
 | **Orang Tua (Parent)** | `parent@sekolah.com` | Parent Portal Premium, Mutaba'ah, Chat Wali Kelas |
 
 ---
@@ -229,12 +217,9 @@ php artisan test
 ```
 
 ### Menjalankan Uji Spesifik Modul Baru:
-* **Uji Compliance & Akreditasi**: `php artisan test tests/Feature/ComplianceTest.php`
-* **Uji Evaluasi Mutu EDS**: `php artisan test tests/Feature/EdsTest.php`
 * **Uji Portal Orang Tua**: `php artisan test tests/Feature/ParentPortalTest.php`
 * **Uji Kurikulum & Silabus**: `php artisan test tests/Feature/Academic/CurriculumTest.php`
 * **Uji Helpdesk Internal**: `php artisan test tests/Feature/TicketTest.php`
-* **Uji Forum Diskusi**: `php artisan test tests/Feature/Security/ForumTest.php`
 * **Uji Kuesioner & Survei**: `php artisan test tests/Feature/Security/SurveyTest.php`
 
 ---

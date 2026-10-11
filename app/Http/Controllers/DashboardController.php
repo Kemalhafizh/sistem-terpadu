@@ -10,7 +10,6 @@ use App\Models\Billing;
 use App\Models\Classroom;
 use App\Models\ElearningAssignment;
 use App\Models\ElearningSubmission;
-use App\Models\ForumThread;
 use App\Models\Grade;
 use App\Models\LibraryLoan;
 use App\Models\MutabaahItem;
@@ -22,7 +21,6 @@ use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TahfidzLog;
-use App\Models\TeacherTodo;
 use App\Models\TeachingJournal;
 use App\Models\User;
 use App\Models\WorkflowRequest;
@@ -362,17 +360,6 @@ class DashboardController extends Controller
             'tahfidzLogsCount' => $tahfidzLogsCount,
             'tahfidzTrend' => $tahfidzTrend,
             'recentNotifications' => collect($recentNotifications)->take(5),
-
-            // Todo widget data
-            'todoPending' => TeacherTodo::where('user_id', $user->id)->pending()
-                ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END")
-                ->orderByRaw('due_date IS NULL ASC')
-                ->orderBy('due_date')
-                ->limit(5)
-                ->get(),
-            'todoOverdueCount' => TeacherTodo::where('user_id', $user->id)->overdue()->count(),
-            'todoDueTodayCount' => TeacherTodo::where('user_id', $user->id)->dueToday()->count(),
-            'todoPendingCount' => TeacherTodo::where('user_id', $user->id)->pending()->count(),
         ];
     }
 
@@ -450,15 +437,6 @@ class DashboardController extends Controller
                 ->get();
         }
 
-        // 7. Thread Forum Terbaru
-        $studentForumThreads = [];
-        if ($studentProfile) {
-            $studentForumThreads = ForumThread::where(function ($q) use ($studentProfile) {
-                $q->whereNull('classroom_id')
-                    ->orWhere('classroom_id', $studentProfile->classroom_id);
-            })->with('author')->latest()->take(3)->get();
-        }
-
         return [
             'student_profile' => $studentProfile,
             'total_points' => $studentProfile ? $studentProfile->total_points : 0,
@@ -475,7 +453,6 @@ class DashboardController extends Controller
             'mutabaahItems' => $mutabaahItems,
             'mutabaahTodayLogs' => $mutabaahTodayLogs,
             'borrowedBooks' => $borrowedBooks,
-            'studentForumThreads' => $studentForumThreads,
         ];
     }
 

@@ -265,24 +265,6 @@ parameters:
 			path: app/Http/Controllers/AttendanceController.php
 
 		-
-			message: '#^Relation ''indicators'' is not found in App\\Models\\EdsStandard model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ComplianceController.php
-
-		-
-			message: '#^Relation ''standard'' is not found in App\\Models\\ComplianceDocument model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ComplianceController.php
-
-		-
-			message: '#^Relation ''uploader'' is not found in App\\Models\\ComplianceDocument model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ComplianceController.php
-
-		-
 			message: '#^Relation ''category'' is not found in App\\Models\\StudentPointLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -343,12 +325,6 @@ parameters:
 			path: app/Http/Controllers/CurriculumController.php
 
 		-
-			message: '#^Relation ''author'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/DashboardController.php
-
-		-
 			message: '#^Relation ''billing'' is not found in App\\Models\\Payment model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -377,18 +353,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''academicYear'' is not found in App\\Models\\EdsPeriod model\.$#'
-			identifier: larastan.relationExistence
-			count: 6
-			path: app/Http/Controllers/EdsController.php
-
-		-
-			message: '#^Relation ''indicators'' is not found in App\\Models\\EdsStandard model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/EdsController.php
 
 		-
 			message: '#^Relation ''assignments'' is not found in App\\Models\\ElearningClass model\.$#'
@@ -503,60 +467,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Http/Controllers/FinancialReportController.php
-
-		-
-			message: '#^Relation ''author'' is not found in App\\Models\\ForumReply model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''author'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''children'' is not found in App\\Models\\ForumReply model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''elearningClass'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''reactions'' is not found in App\\Models\\ForumReply model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''reactions'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''replies'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ForumController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\ForumThread model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/ForumController.php
 
 		-
 			message: '#^Relation ''attendances'' is not found in App\\Models\\Employee model\.$#'
@@ -732,18 +642,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 2
 			path: app/Http/Controllers/PointController.php
-
-		-
-			message: '#^Relation ''badges'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/PortfolioController.php
-
-		-
-			message: '#^Relation ''portfolioItems'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/PortfolioController.php
 
 		-
 			message: '#^Relation ''creator'' is not found in App\\Models\\QuestionBank model\.$#'
@@ -1134,24 +1032,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/ERaporPdfService.php
-
-		-
-			message: '#^Relation ''assessor'' is not found in App\\Models\\EdsAssessment model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/EdsService.php
-
-		-
-			message: '#^Relation ''indicators'' is not found in App\\Models\\EdsStandard model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/EdsService.php
-
-		-
-			message: '#^Relation ''standard'' is not found in App\\Models\\EdsIndicator model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/EdsService.php
 
 		-
 			message: '#^Relation ''assignments'' is not found in App\\Models\\ElearningClass model\.$#'

@@ -1,10 +1,8 @@
 <?php
 
 use App\Events\ChatMessageSent;
-use App\Events\ForumReplyPosted;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
-use App\Models\ForumThread;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
@@ -115,31 +113,5 @@ test('sending chat message dispatches ChatMessageSent event broadcast', function
     Event::assertDispatched(ChatMessageSent::class, function ($event) use ($student) {
         return $event->message->message === 'Halo Wali Kelas, apa kabar?' &&
                (int) $event->message->student_id === (int) $student->id;
-    });
-});
-
-test('posting forum reply dispatches ForumReplyPosted event broadcast', function () {
-    Event::fake([ForumReplyPosted::class]);
-
-    $teacher = User::factory()->create(['role' => 'guru']);
-
-    // Create a forum thread (model events will run and generate UUID)
-    $thread = ForumThread::create([
-        'title' => 'Diskusi Belajar Laravel',
-        'body' => 'Bagaimana cara setup Laravel Reverb?',
-        'user_id' => $teacher->id,
-        'scope' => 'school',
-    ]);
-
-    $this->actingAs($teacher)
-        ->postJson(route('forum.replies.store', $thread->uuid), [
-            'body' => 'Cara setup Reverb sangatlah mudah, cukup jalankan php artisan reverb:install.',
-        ])
-        ->assertStatus(200)
-        ->assertJsonPath('success', true);
-
-    Event::assertDispatched(ForumReplyPosted::class, function ($event) use ($thread) {
-        return $event->reply->body === 'Cara setup Reverb sangatlah mudah, cukup jalankan php artisan reverb:install.' &&
-               (int) $event->reply->thread_id === (int) $thread->id;
     });
 });

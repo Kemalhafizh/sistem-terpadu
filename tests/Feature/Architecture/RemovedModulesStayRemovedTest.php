@@ -40,6 +40,8 @@ dataset('removed prefixes', [
     'calendar-hub',
     // PR 6: GPS and selfie check-in (staff use the fingerprint machine, students the per-lesson QR).
     'api/v1/mobile/geofence', 'my-hrd/attendance',
+    // 119.9: forum, teacher to-do, student portfolio, EDS/accreditation/compliance (the Kemenag/Dapodik export stays under integrations).
+    'forum', 'todos', 'portfolio', 'eds', 'compliance', 'accreditation',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {

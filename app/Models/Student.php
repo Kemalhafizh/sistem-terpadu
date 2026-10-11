@@ -216,23 +216,4 @@ class Student extends Model
     {
         return $this->libraryLoans()->active()->count();
     }
-
-    /**
-     * Get portfolio items belonging to the student.
-     */
-    public function portfolioItems()
-    {
-        return $this->hasMany(PortfolioItem::class)->orderBy('date', 'desc');
-    }
-
-    /**
-     * Get award badges earned by the student.
-     */
-    public function badges()
-    {
-        return $this->belongsToMany(PortfolioBadge::class, 'student_badges', 'student_id', 'badge_id')
-            ->withPivot('awarded_by', 'earned_at', 'notes')
-            ->withTimestamps()
-            ->orderBy('student_badges.earned_at', 'desc');
-    }
 }

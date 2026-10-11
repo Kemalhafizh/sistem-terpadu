@@ -11,12 +11,12 @@ Password untuk semua akun pengujian di bawah ini adalah **`password`**:
 | Peran (Role) | Alamat Email Demo | Tujuan Utama Tinjauan |
 | :--- | :--- | :--- |
 | **Superadmin** | `superadmin@sekolah.com` | Konfigurasi sistem global, backup, log audit, and kelola akun. |
-| **Kepala Sekolah** | `kepala.sekolah@sultanagung1.sch.id` | Dashboard analitik eksekutif, rekapitulasi mutu EDS, approval workflow. |
+| **Kepala Sekolah** | `kepala.sekolah@sultanagung1.sch.id` | Dashboard analitik eksekutif, approval workflow, RKAS. |
 | **Waka Kurikulum** | `waka.kurikulum@sultanagung1.sch.id` | Manajemen kurikulum, approval bank silabus, kalender akademik. |
 | **Waka Kesiswaan** | `waka.kesiswaan@sultanagung1.sch.id` | Manajemen ekstrakurikuler, pembinaan OSIS & MPK, approval proposal kegiatan. |
 | **Guru BK (Konselor)** | `guru.bk@sultanagung1.sch.id` | Konseling BK terenkripsi, poin pelanggaran, laporan perundungan, dan pendidikan inklusi. |
 | **Guru / Petugas UKS** | `guru@sekolah.com` | Absensi harian kelas, rekam medis harian UKS, kurangi stok obat. |
-| **Siswa (Student)** | `demo.siswa1@student.sa1.sch.id` | Pengerjaan ujian online (CBT), jurnal mutaba'ah ibadah, forum kelas. |
+| **Siswa (Student)** | `demo.siswa1@student.sa1.sch.id` | Pengerjaan ujian online (CBT), jurnal mutaba'ah ibadah, evaluasi guru. |
 | **Orang Tua (Parent)** | `parent@sekolah.com` | Parent Portal (pantau rapor, kehadiran, keuangan SPP, & mutaba'ah anak). |
 
 ---
@@ -31,8 +31,6 @@ Tujuan: Menguji analisis data eksekutif dan persetujuan pengajuan dokumen secara
 3. **Approval Alur Kerja (Workflow Engine)**:
    - Masuk ke menu **Approval Workflow** > **Pending Approvals**.
    - Di sini Anda dapat menyetujui, menolak, atau meminta revisi pengajuan dari guru (seperti pengajuan cuti atau draf silabus mata pelajaran).
-4. **Raport Mutu EDS**:
-   - Masuk ke menu **Raport Mutu EDS** untuk melihat capaian 8 Standar Nasional Pendidikan (SNP) dalam diagram laba-laba (*spider chart*) beserta analisis kesenjangan (*Gap Analysis*).
 
 ---
 
@@ -73,8 +71,6 @@ Tujuan: Menguji sistem e-learning terproteksi dan jurnal harian.
    - Mulai salah satu ujian aktif. Coba keluar dari layar fullscreen atau pindah tab browser; sistem akan mencatat deteksi kecurangan tersebut dan melarang pengerjaan jika batas pelanggaran terlampaui.
 3. **Jurnal Mutaba'ah Harian**:
    - Masuk ke menu **Mutaba'ah Ibadah**. Isi setoran ibadah harian Anda (seperti shalat fardhu, tilawah Quran, dan bakti orang tua) untuk dinilai oleh guru/ortu.
-4. **Forum Kelas**:
-   - Buka menu **Forum Kelas** untuk berdiskusi dengan teman sekelas dan menanyakan pertanyaan kepada guru.
 
 ---
 
