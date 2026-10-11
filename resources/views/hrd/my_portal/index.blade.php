@@ -3,7 +3,7 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
                 <h2 class="font-black text-3xl text-gray-900 tracking-tight">Portal Kepegawaian</h2>
-                <p class="text-sm text-gray-500 font-medium mt-1">Presensi berbasis GPS, pengajuan izin cuti, dan histori slip gaji bulanan Anda.</p>
+                <p class="text-sm text-gray-500 font-medium mt-1">{{ __('Presensi dari mesin sidik jari, pengajuan izin/cuti, dan slip gaji bulanan Anda.') }}</p>
             </div>
             <div class="mt-4 md:mt-0 bg-primary-50 border border-primary-100 rounded-2xl px-6 py-3 flex items-center">
                 <div class="w-2.5 h-2.5 bg-primary-500 rounded-full mr-2.5 animate-pulse"></div>
@@ -73,12 +73,9 @@
                                     <div>
                                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5">Jenis Ketidakhadiran</label>
                                         <select name="type" required class="w-full rounded-xl border-gray-200 bg-gray-50 p-3 focus:ring-primary-500 font-medium text-sm">
-                                            <option value="sakit">Sakit</option>
-                                            <option value="izin">Izin Keperluan Pribadi</option>
-                                            <option value="cuti_tahunan">Cuti Tahunan</option>
-                                            <option value="cuti_melahirkan">Cuti Melahirkan</option>
-                                            <option value="umroh_haji">Umroh / Haji</option>
-                                            <option value="dinas_luar">Dinas Luar</option>
+                                            @foreach(\App\Models\LeaveRequest::TYPES as $value => $label)
+                                                <option value="{{ $value }}" @selected(old('type') === $value)>{{ __($label) }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div>
@@ -144,12 +141,22 @@
                                 @forelse($recentLeaves ?? [] as $leave)
                                     <div class="p-4 hover:bg-gray-50 transition-colors">
                                         <div class="flex justify-between items-center mb-1">
-                                            <p class="font-bold text-gray-900 text-sm">{{ strtoupper(str_replace('_', ' ', $leave->type)) }}</p>
+                                            <p class="font-bold text-gray-900 text-sm">{{ $leave->type_label }}</p>
                                             <span class="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider
                                                 @if($leave->status == 'approved') bg-emerald-100 text-emerald-700
-                                                @elseif($leave->status == 'pending') bg-amber-100 text-amber-700
-                                                @else bg-red-100 text-red-700 @endif">
-                                                {{ $leave->status }}
+                                                @elseif($leave->status == 'rejected') bg-red-100 text-red-700
+                                                @else bg-amber-100 text-amber-700 @endif">
+                                                @if($leave->status === 'approved')
+                                                    {{ __('Disetujui') }}
+                                                @elseif($leave->status === 'rejected')
+                                                    {{ __('Ditolak') }}
+                                                @elseif($leave->workflow?->status === 'revision')
+                                                    {{ __('Perlu revisi') }}
+                                                @elseif($role = $leave->workflow?->currentApproval?->role)
+                                                    {{ __('Menunggu :role', ['role' => __('roles.'.$role)]) }}
+                                                @else
+                                                    {{ __('Menunggu persetujuan') }}
+                                                @endif
                                             </span>
                                         </div>
                                         <p class="text-[11px] text-gray-400 font-semibold">{{ $leave->start_date?->format('d M') }} - {{ $leave->end_date?->format('d M Y') }}</p>

@@ -182,10 +182,14 @@
                                     <td class="p-4 font-mono text-xs text-red-500">-{{ $pay->deductions_formatted }}</td>
                                     <td class="p-4 font-bold text-gray-900 font-mono text-xs">{{ $pay->net_salary_formatted }}</td>
                                     <td class="p-4 text-xs font-semibold text-gray-500">
-                                        {{ $pay->present_days }} / {{ $pay->working_days }} hari
-                                        <span class="block text-[10px] text-red-400 font-bold">
-                                            (Terlambat: {{ $pay->late_days }}, Alfa: {{ $pay->absent_days }})
-                                        </span>
+                                        @if($pay->hasAttendanceData())
+                                            {{ __(':present / :days hari', ['present' => $pay->present_days, 'days' => $pay->working_days]) }}
+                                            <span class="block text-[10px] text-red-400 font-bold">
+                                                ({{ __('Terlambat') }}: {{ $pay->late_days }}, {{ __('Tidak hadir') }}: {{ $pay->absent_days }})
+                                            </span>
+                                        @else
+                                            <span class="text-gray-400">{{ __('Belum ada data presensi') }}</span>
+                                        @endif
                                     </td>
                                     <td class="p-4">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider

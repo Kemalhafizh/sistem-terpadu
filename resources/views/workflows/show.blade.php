@@ -96,7 +96,7 @@
               </div>
               <div>
                 <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Tipe / Alasan Cuti</span>
-                <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requestable->leave_type ?? 'Cuti Umum' }}</span>
+                <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requestable?->type_label ?? '–' }}</span>
               </div>
               <div>
                 <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Durasi Tanggal</span>
@@ -111,6 +111,11 @@
                   "{{ $request->requestable->reason ?? '-' }}"
                 </p>
               </div>
+              @if($request->requestable?->attachment)
+                <div class="sm:col-span-2">
+                  <a href="{{ Storage::disk('public')->url($request->requestable->attachment) }}" target="_blank" rel="noopener" class="text-xs font-bold text-indigo-600 hover:underline">{{ __('Lihat lampiran (surat dokter, undangan, dll.)') }}</a>
+                </div>
+              @endif
             </div>
           @elseif(class_basename($request->requestable_type) === 'Letter')
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">

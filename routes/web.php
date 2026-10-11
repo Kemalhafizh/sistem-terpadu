@@ -891,6 +891,9 @@ Route::middleware('auth')->group(function () {
         Route::post('payrolls/generate', [PayrollController::class, 'store'])->name('payrolls.generate');
         Route::post('payrolls/approve-bulk', [PayrollController::class, 'approveBulk'])->name('payrolls.approve-bulk');
         Route::post('payrolls/pay-bulk', [PayrollController::class, 'payBulk'])->name('payrolls.pay-bulk');
+        Route::post('payrolls/rules', [PayrollController::class, 'updateRules'])->name('payrolls.rules');
+        Route::post('payrolls/{payroll}/approve', [PayrollController::class, 'approve'])->name('payrolls.approve');
+        Route::post('payrolls/{payroll}/pay', [PayrollController::class, 'pay'])->name('payrolls.pay');
         Route::resource('payrolls', PayrollController::class)->except(['store', 'edit']);
     });
 
