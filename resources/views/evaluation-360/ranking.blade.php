@@ -27,7 +27,7 @@
                     <td class="py-3 px-4 font-black text-sky-600">#{{ $idx + 1 }}</td>
                     <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">{{ $rk->evaluatee->name }}</td>
                     <td class="py-3 px-4 font-black text-emerald-600">{{ $rk->overall_score }} / 5.0</td>
-                    <td class="py-3 px-4 font-semibold text-indigo-600">{{ $rk->student_avg }}</td>
+                    <td class="py-3 px-4 font-semibold text-indigo-600">{{ $rk->student_avg ?? '–' }}</td>
                     <td class="py-3 px-4 text-right">
                         <a href="{{ route('hc.evaluation.results', $rk->evaluatee_id) }}" class="text-xs font-bold text-sky-600 hover:underline">Lihat Rincian &rarr;</a>
                     </td>

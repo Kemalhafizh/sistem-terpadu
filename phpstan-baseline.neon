@@ -133,18 +133,6 @@ parameters:
 			path: app/Http/Controllers/Api/v1/ApiStudentController.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiStudentController.php
-
-		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiStudentController.php
-
-		-
 			message: '#^Relation ''classroom'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -175,19 +163,7 @@ parameters:
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
 			message: '#^Relation ''subject'' is not found in App\\Models\\TeachingJournal model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
@@ -400,18 +376,6 @@ parameters:
 			message: '#^Relation ''student'' is not found in App\\Models\\Grade model\.$#'
 			identifier: larastan.relationExistence
 			count: 3
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/DashboardController.php
-
-		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Http/Controllers/DashboardController.php
 
 		-
@@ -764,18 +728,6 @@ parameters:
 			path: app/Http/Controllers/ParentPortalController.php
 
 		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ParentPortalController.php
-
-		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/ParentPortalController.php
-
-		-
 			message: '#^Relation ''pointLogs'' is not found in App\\Models\\Student model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -821,18 +773,6 @@ parameters:
 			message: '#^Relation ''room'' is not found in App\\Models\\Schedule model\.$#'
 			identifier: larastan.relationExistence
 			count: 6
-			path: app/Http/Controllers/ScheduleController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 7
-			path: app/Http/Controllers/ScheduleController.php
-
-		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 5
 			path: app/Http/Controllers/ScheduleController.php
 
 		-
@@ -947,12 +887,6 @@ parameters:
 			message: '#^Relation ''classroom'' is not found in App\\Models\\TeachingJournal model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/TeachingJournalController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Schedule model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Http/Controllers/TeachingJournalController.php
 
 		-
