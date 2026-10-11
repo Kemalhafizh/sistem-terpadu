@@ -387,7 +387,13 @@ class ApiStudentController extends Controller
     }
 
     /**
-     * Generate Payment VA Simulator for Billing
+     * Pay a Billing (not available in the app)
+     *
+     * Used to answer with a virtual account number made up from a bank prefix
+     * and the student's NIS: nothing was created at any bank or gateway, and a
+     * transfer to that number could reach someone else's account. Until the
+     * app is connected to the school's payment gateway, this says so instead
+     * (CLAUDE.md rule 2). The bill must still be the caller's own.
      */
     public function payBilling(Request $request, $billingId)
     {
@@ -396,28 +402,14 @@ class ApiStudentController extends Controller
             return $this->errorResponse(__('Data siswa tidak ditemukan'), 404);
         }
 
-        $billing = $student->billings()->findOrFail($billingId);
-        $bank = $request->input('bank', 'BCA');
+        $student->billings()->findOrFail($billingId);
 
-        $vaPrefix = match (strtoupper($bank)) {
-            'MANDIRI' => '88908',
-            'BNI' => '98888',
-            'BRI' => '12888',
-            default => '77888',
-        };
-        $vaNumber = $vaPrefix.str_pad((string) ($student->nis ?? '001'), 11, '0', STR_PAD_LEFT);
-
-        return $this->successResponse([
-            'billing_id' => $billing->id,
-            'category' => $billing->category->name ?? 'SPP',
-            'amount' => (float) $billing->amount,
-            'amount_formatted' => 'Rp '.number_format($billing->amount, 0, ',', '.'),
-            'bank' => strtoupper($bank),
-            'va_number' => $vaNumber,
-            'status' => 'pending',
-            'expiry_time' => now()->addHours(24)->format('Y-m-d H:i:s'),
-            'qr_content' => '00020101021226590014ID.LINKAJA.WWW011893600000000000000002150000000000000005204000053033605802ID5924SMA ISLAM SULTAN AGUNG 16008SEMARANG61055012362140710SPP-'.$billing->id.'6304',
-        ], __('Simulasi transaksi pembayaran berhasil dibuat'));
+        return response()->json([
+            'success' => false,
+            'message' => __('Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.'),
+            'error_code' => 'payment_unavailable',
+            'data' => null,
+        ], 501);
     }
 
     /**
