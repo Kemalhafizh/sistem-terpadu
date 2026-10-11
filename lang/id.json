@@ -505,5 +505,6 @@
     "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.": "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.",
     "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.": "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.",
     ":name gagal dikonversi. Lihat log sistem.": ":name gagal dikonversi. Lihat log sistem.",
-    ":count calon siswa dijadikan siswa aktif.": ":count calon siswa dijadikan siswa aktif."
+    ":count calon siswa dijadikan siswa aktif.": ":count calon siswa dijadikan siswa aktif.",
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah."
 }

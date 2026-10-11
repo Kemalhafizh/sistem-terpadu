@@ -505,5 +505,6 @@
     "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.": "No admission fee bill was created because the \"Uang Pangkal\" category and its amount have not been set up in Finance.",
     "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.": "NISN for :name is empty. Fill in the applicant's NISN before enrolling them.",
     ":name gagal dikonversi. Lihat log sistem.": ":name could not be converted. See the system log.",
-    ":count calon siswa dijadikan siswa aktif.": ":count applicants enrolled as active students."
+    ":count calon siswa dijadikan siswa aktif.": ":count applicants enrolled as active students.",
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "Paying in the app is not available yet. Please pay the school treasurer or administration office directly."
 }

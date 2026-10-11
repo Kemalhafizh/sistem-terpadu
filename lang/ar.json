@@ -505,5 +505,6 @@
     "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.": "لم تُنشأ فاتورة رسوم القبول لأن فئة \"Uang Pangkal\" ومبلغها لم يُحدَّدا في قسم المالية.",
     "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.": "رقم NISN لـ :name فارغ. أكمل رقم NISN للمتقدم قبل تسجيله طالبًا.",
     ":name gagal dikonversi. Lihat log sistem.": "تعذر تحويل :name. راجع سجل النظام.",
-    ":count calon siswa dijadikan siswa aktif.": "تم تسجيل :count من المتقدمين كطلاب نشطين."
+    ":count calon siswa dijadikan siswa aktif.": "تم تسجيل :count من المتقدمين كطلاب نشطين.",
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "الدفع عبر التطبيق غير متاح بعد. يُرجى الدفع مباشرة لأمين الصندوق أو الإدارة المدرسية."
 }
