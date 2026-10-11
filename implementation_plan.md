@@ -593,7 +593,8 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 | `academic_events` *(ubah)* | + `academic_calendar_id` (nullable untuk acara biasa), + `milestone` (kode kegiatan kunci, nullable) | Daftar kode tetap di satu enum/konstanta: `ta_mulai`, `ta_selesai`, `semester_mulai`, `semester_selesai`, `pts`, `penilaian_akhir_semester`, `penilaian_akhir_tahun`, `batas_input_nilai`, `pembagian_rapor`, `survei_peminatan`, `rapat_kenaikan`, `kelulusan`, `mpls`, `spmb`. Untuk kode per semester, satu per semester per kalender. Label tampilan tiga bahasa; kode tidak diterjemahkan |
 | `classrooms` *(ubah)* | + `school_year_id`; kolom `major` dan teks `academic_year` dihapus setelah semua pemakai pindah | Nama rombel boleh sama tiap tahun; identitasnya `id` + `school_year_id` |
 | `class_enrollments` *(baru)* | `student_id`, `classroom_id`, `school_year_id`, `status` (`aktif/naik/tinggal/lulus/mutasi_keluar/keluar/pindah_rombel`), `started_on`, `ended_on`, `ended_reason`, `decided_by`, `promotion_decision_id` | Paling banyak **satu** `aktif` per siswa (ditegakkan service + test). Pindah rombel di tengah tahun menutup baris lama dan membuka baris baru |
-| `subjects` *(ubah)* | `category` → `umum / pilihan / muatan_lokal / ciri_khas` | Petakan data lama. `Kejuruan` dihapus |
+| `subjects` *(ubah)* | `category` → `umum / pilihan / muatan_lokal / ciri_khas`; + `display_group` (nullable, misalnya "Ilmu Pengetahuan Alam") untuk mapel yang di rapor kelas X ditulis sebagai sub-mapel | Petakan data lama. `Kejuruan` dihapus. Kelompok cetak rapor: A = umum + muatan lokal, B = pilihan, C = ciri khas (format rapor sekolah di `ALUR_KERJA.md` D5) |
+| `grade_subject_templates` *(baru)* | `school_year_id`, `grade_level` (X/XI/XII), `subject_id` | **Struktur mapel umum, muatan lokal, dan ciri khas per tingkat per TA.** Contohnya Ciri Khusus kelas X berbeda dengan XI–XII. Rombel mendapat mapel tingkatnya + `classroom_subjects` (pilihan) |
 | `classroom_subjects` *(baru)* | `classroom_id`, `subject_id` | Susunan mapel **pilihan** per rombel XI/XII, dirancang Waka Kurikulum. Satu sumber untuk jadwal (C1), penilaian, dan rapor rombel itu. Rombel X tidak memerlukannya |
 | `elective_surveys` *(baru)* | `school_year_id` (TA target), `title`, `opens_at`, `closes_at`, `min_choices`, `max_choices`, `ranked` (bool, peringkat opsional), `status` (`draf/dibuka/ditutup/selesai`) | Satu survei per angkatan. Waka boleh membuka ulang sebelum `selesai` |
 | `elective_survey_subjects` *(baru)* | `elective_survey_id`, `subject_id` | Mapel pilihan yang ditawarkan di survei itu |
@@ -762,6 +763,11 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 2. **D5 Rapor lewat e-Rapor resmi** (tidak ada rapor kedua):
    - dasbor kelengkapan nilai untuk wali kelas, dengan pengingat dari kegiatan kunci "batas input nilai";
    - **ekspor nilai akhir, deskripsi capaian, kehadiran, dan catatan wali ke template impor e-Rapor** per rombel/mapel. Formatnya mengikuti template asli dari operator (T1), jangan ditebak;
+   - **Tujuan Pembelajaran (TP) per mapel, tingkat, dan semester.** Penilaian harian ditandai dengan TP-nya. Tabel `daily_assessments` saat ini belum punya kaitan TP, dan `report_card_entries.capaian_kompetensi` hanya teks bebas;
+   - **draf kalimat capaian kompetensi otomatis** dari nilai per TP (TP terkuat dan terlemah, pola kalimat diatur sekolah), lalu ditinjau guru. Ini mengakhiri kalimat rusak seperti "sangat baik dalam FALSE" yang ada di rapor contoh. TP kosong menghasilkan kalimat kosong untuk diisi guru, bukan karangan;
+   - **ketidakhadiran rapor dihitung dalam hari** dengan aturan di `ALUR_KERJA.md` D5;
+   - **keterangan kenaikan kelas** (semester genap) dari keputusan A4;
+   - **nama Kepala Sekolah dan wali kelas menurut tanggal rapor** (pemegang jabatan saat itu);
    - unggah balik PDF rapor resmi massal per rombel, dicocokkan per siswa lewat NISN;
    - Waka Kurikulum menerbitkan massal ke orang tua dan siswa;
    - `ERaporPdfService` dialihkan menjadi pratinjau nilai atau dihapus, menunggu T2.

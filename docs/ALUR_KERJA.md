@@ -323,6 +323,23 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   5. PDF rapor resmi **diunggah balik ke SISTA secara massal per rombel**. Setiap file dicocokkan ke siswa lewat NISN, dan file yang tidak cocok dilaporkan.
   6. Waka kurikulum **menerbitkan** rapor ke orang tua dan siswa di Android, massal per angkatan.
 - **Status:** `nilai_disusun → nilai_lengkap → diekspor → rapor_resmi_diunggah → terbit`.
+- **Format rapor sekolah** (dari contoh rapor asli semester 1–5, TA 2023/2024–2025/2026, diberikan pemilik produk):
+  - **Kepala rapor:** nama, NIS/NISN, nama sekolah, alamat, kelas (rombel), **fase** (E untuk X, F untuk XI–XII), **semester ke-n** (1–6, berlanjut lintas tingkat), dan tahun pelajaran.
+  - **I. Nilai akademik**, berisi nilai bulat dan *capaian kompetensi*, dikelompokkan:
+    - **Kelompok A (Umum)**, termasuk muatan lokal Bahasa Jawa. Di kelas X, IPA dan IPS ditulis sebagai judul kelompok dengan sub-mapel bernilai sendiri (a. Fisika, b. Kimia, …).
+    - **Kelompok B (Mata Pelajaran Pilihan)**, hanya XI–XII. Contoh rombel XI-3: Matematika Lanjut, Prakarya & Kewirausahaan, Bahasa Inggris Lanjut, Fisika, Informatika. **Susunan yang sama berlanjut ke XII-3**, sesuai desain FASE 120.
+    - **Kelompok C (Ciri Khusus).** Isinya berbeda per tingkat: di X Fiqih, Aqidah Akhlak, Bahasa Arab, Al-Qur'an Hadits, SKI; di XI–XII Bahasa Arab dan Pembiasaan Sikap Baik.
+  - **II. Ekstrakurikuler:** nama dan keterangan.
+  - **III. Ketidakhadiran:** Sakit, Izin, dan Tanpa Keterangan, **dihitung dalam hari**.
+  - **IV. Catatan Wali Kelas.**
+  - **Semester genap:** "Keterangan Kenaikan Kelas" (misalnya "NAIK ke kelas XI"), dari keputusan A4.
+  - **Tanda tangan:** orang tua/wali, wali kelas, dan Kepala Sekolah ("Mengetahui"), dengan tempat dan tanggal.
+- **Kalimat capaian kompetensi** berpola "Menunjukkan penguasaan yang sangat baik dalam *[TP terkuat]* dan perlu bimbingan dalam *[TP terlemah]*". Pada contoh rapor ada kalimat yang berbunyi **"sangat baik dalam FALSE"**, tanda proses sekarang memakai rumus Excel yang gagal. SISTA menyusun **draf kalimat ini otomatis dari nilai per Tujuan Pembelajaran (TP)**, lalu guru meninjau dan bisa mengubah. Bila data TP kosong, kalimat dibiarkan kosong untuk diisi guru, tidak pernah menulis "FALSE" atau kalimat karangan.
+- **Aturan hitung ketidakhadiran rapor** (bawaan PM, diatur sekolah):
+  - Satu hari dihitung **Sakit/Izin** bila ada izin yang disetujui (C3) untuk hari itu.
+  - Satu hari dihitung **Tanpa Keterangan** bila siswa tidak tercatat hadir atau telat di **semua** sesi hari itu dan tidak ada izin.
+  - Tidak hadir di sebagian jam pelajaran tidak dihitung sebagai hari di rapor, tetapi terlihat oleh wali kelas dan BK.
+- **Nama pejabat menurut tanggal.** Pada contoh, Kepala Sekolah di rapor semester 1 dan semester 2 berbeda orang. Nama Kepala Sekolah dan wali kelas yang dicetak atau diekspor diambil dari pemegang jabatan **pada tanggal rapor** (FASE 120 L2), bukan pejabat sekarang.
 - **Kini:** ada `ERaporPdfService` yang membuat PDF rapor sendiri. Ini **harus dialihkan** menjadi pratinjau nilai untuk wali kelas, atau dihapus, supaya tidak ada dua rapor berbeda di tangan orang tua.
 
 ### E. Kesiswaan, BK & Layanan Siswa
