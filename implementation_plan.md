@@ -40,6 +40,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
 | 12 Okt 2026 | **e-Rapor resmi Kemendikdasmen tetap dipakai.** SISTA tidak membuat rapor resmi kedua dan tidak boleh ada input nilai dua kali. SISTA mengekspor nilai ke template impor e-Rapor, lalu PDF rapor resmi diunggah balik dan diterbitkan ke orang tua |
 | 12 Okt 2026 | **Dapodik sumber resmi identitas.** Impor awal dari file ekspor Dapodik, sehingga siswa yang sudah bersekolah tidak diketik ulang. Siswa baru dari konversi SPMB. Perubahan data lewat **pengajuan perubahan** yang diverifikasi TU, lalu masuk daftar "perlu diperbarui di Dapodik" |
+| 12 Okt 2026 | **SISTA saat ini adalah blueprint untuk dipresentasikan ke sekolah** oleh pemilik produk (alumnus). Kepala Sekolah **belum** tahu. Prioritas terdekat adalah **demo yang meyakinkan**, bukan pilot. Pilot dan go-live bergantung pada persetujuan sekolah |
 | 12 Okt 2026 | **SISTA dijual ke sekolah sebagai jasa pembuatan, lalu dikelola IT sekolah.** Pemilik produk tidak merawatnya setelah serah terima. Akibatnya: semua akun pihak ketiga, server, domain, dan kunci atas nama sekolah; dokumentasi operasional untuk IT sekolah; dan serah terima resmi (BAST) masuk FASE 123 |
 | 12 Okt 2026 | **Tidak ada Google Workspace for Education.** Login memakai akun SISTA. Akun dibuat massal, password awal dibagikan wali kelas, wajib diganti saat login pertama |
 | 11 Okt 2026 | **Anti-macet disetujui penuh:** ketujuh aturan di `ALUR_KERJA.md` 1b, dan tabel pelonggaran beban Kepala Sekolah menjadi **pengaturan bawaan**. Sekolah tetap bisa mengubah langkah dan batasnya di pengaturan |
@@ -66,7 +67,7 @@ Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemil
 | T6 | ~~Siapa yang merawat SISTA setelah live~~ → **IT sekolah**, setelah serah terima (12 Okt 2026) | — |
 | T8 | Kemampuan IT sekolah: hanya **operasional** (server, backup, akun, pengaturan) atau juga bisa **memperbaiki kode** (Laravel/Kotlin)? | Kedalaman dokumen serah terima FASE 123 |
 | T9 | Bentuk penjualan: **jual putus** (kode sumber + hak penuh ke sekolah) atau **dengan masa garansi/kontrak perawatan**? | Isi BAST dan pasal garansi |
-| T7 | **Restu** Kepala Sekolah/yayasan dan siapa **PIC** di sekolah | Sebelum pilot |
+| T7 | ~~Restu Kepala Sekolah~~ → **belum**; SISTA akan dipresentasikan dulu (Milestone Demo). PIC sekolah ditentukan setelah presentasi | Setelah demo |
 
 ### Aturan main untuk semua agent
 1. **CLAUDE.md** berlaku penuh: tidak ada angka karangan, aksi harus tersimpan, satu aturan akses, setiap PR punya test.
@@ -88,6 +89,7 @@ Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemil
 | 118 | Tutup akses bocor | ✅ Selesai | — |
 | 119 | Debloat ke ERP sekolah | ✅ Selesai (sisa di 119.12) | — |
 | 119.12 | Sisa bersih-bersih | ⏳ Berikutnya | 1–2 hari |
+| **DEMO** | **Milestone Demo:** server staging, data contoh fiktif bertanda DEMO, akun per peran, APK demo, skrip demo, materi presentasi | ⏳ **Berikutnya** setelah 119.12 | Sebelum presentasi ke sekolah |
 | **120** | **Jenis akun & jabatan, kalender akademik, rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
 | 121 | **Anti-macet** (tenggat, eskalasi, persetujuan massal, langkah & batas yang diatur sekolah, dasbor alur tertahan) + alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, surat keluar & masuk, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
 | 122 | Buku Induk Siswa | 📝 Garis besar | Jan 2027 |
@@ -95,7 +97,9 @@ Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemil
 
 Pasangan Android: FASE 79 (siap rilis) berjalan paralel dengan 119.12/120, lalu FASE 80 (sisi Android FASE 120). Lihat `sista-android/android_implementation.md`.
 
-**Mengapa go-live penuh di Juli 2027:** pergantian tahun ajaran adalah titik potong paling bersih. Rombel, wali kelas, dan tagihan semuanya dibuat baru, sehingga tidak ada data setengah tahun yang harus dipindahkan dari cara lama. Pilot semester Genap (Jan–Jun 2027) dengan 1–2 rombel, TU, dan BK menguji alur sebelum itu, termasuk satu putaran **rapor Genap dan kenaikan kelas** yang nyata.
+**Urutan kerja saat ini:** 119.12 → **Milestone Demo** → FASE 120 dan seterusnya. Agent Android mengerjakan FASE 79 secara paralel, karena 79.3 dibutuhkan untuk APK demo. Masukan sekolah dari presentasi bisa mengubah prioritas FASE 120–121, jadi demo diusahakan secepatnya.
+
+**Mengapa go-live penuh di Juli 2027** (bila sekolah setuju): pergantian tahun ajaran adalah titik potong paling bersih. Rombel, wali kelas, dan tagihan semuanya dibuat baru, sehingga tidak ada data setengah tahun yang harus dipindahkan dari cara lama. Pilot semester Genap (Jan–Jun 2027) dengan 1–2 rombel, TU, dan BK menguji alur sebelum itu, termasuk satu putaran **rapor Genap dan kenaikan kelas** yang nyata.
 
 ---
 
@@ -544,6 +548,39 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 
 ---
 
+## MILESTONE DEMO: SIAP DIPRESENTASIKAN KE SEKOLAH `[RANCANGAN BARU]`
+
+> **Tanggal rancangan:** 12 Oktober 2026
+> **Konteks:** pemilik produk akan menawarkan SISTA ke SMA Islam Sultan Agung 1 Semarang. Sekolah belum tahu tentang proyek ini. Tujuan milestone ini: pihak sekolah (Waka Kurikulum, Kepala TU, Kepala Sekolah) bisa **mencoba sendiri** SISTA di web dan HP, dengan data yang terasa nyata tetapi **fiktif**.
+> **Pelaksana:** Agent Backend (D1–D4), Agent Android (D5), PM (D6–D7).
+
+- **D1. Server staging khusus demo.** Satu VPS kecil dengan Docker Compose dan `deploy.sh` (bagian dari FASE 123 B, dikerjakan lebih awal). Server demo boleh atas nama pemilik produk karena bukan produksi; produksi tetap atas nama sekolah.
+- **D2. Data contoh fiktif bertanda jelas.**
+  - Gunakan seeder demo yang sudah ada (`DatabaseSeeder` menyebut 3.000+ data contoh). Bersihkan seeder yang masih merujuk modul yang dihapus di FASE 119.
+  - Semua nama orang fiktif. **Dilarang memakai data siswa atau guru asli.**
+  - Seeder demo **menolak berjalan bila `APP_ENV=production`**.
+  - Web dan aplikasi menampilkan pita **"DEMO, data fiktif"** bila `APP_DEMO=true`.
+  - Data karangan hanya boleh hidup di seeder demo, tidak pernah sebagai nilai bawaan di kode (CLAUDE.md aturan 1 tetap berlaku).
+- **D3. Akun demo per peran:** siswa, orang tua, guru + wali kelas, Waka Kurikulum, Kepala TU, Kepala Sekolah, Admin. Daftar akun tampil di halaman login staging saat `APP_DEMO=true`.
+- **D4. Reset otomatis harian.** Data demo dikembalikan ke keadaan awal setiap malam, supaya demo selalu bersih walau sudah dicoba-coba.
+- **D5. APK demo** yang menunjuk ke staging (butuh Android 79.3), dibagikan lewat tautan unduh.
+- **D6. Skrip demo 15 menit** (disiapkan PM): "satu hari di SMA Sula 1".
+  1. Guru membuka sesi kelas dan QR berganti.
+  2. Siswa memindai QR.
+  3. Orang tua menerima ringkasan kehadiran per mapel.
+  4. Wali kelas melihat kelasnya.
+  5. TU membuat tagihan massal.
+  6. Kepala Sekolah menyetujui dari HP.
+  7. Peta alur kerja ditutup dengan roadmap: rombel, kenaikan kelas, dan rapor yang diekspor ke e-Rapor **tanpa input dua kali dan tanpa "FALSE"**.
+- **D7. Materi presentasi** (disiapkan PM bersama pemilik produk):
+  - masalah sekarang, solusi, dan demo langsung;
+  - peta alur kerja;
+  - keamanan data anak (UU PDP), serah terima ke IT sekolah, dan model penjualan (T9).
+
+**Selesai bila:** pemilik produk bisa menjalankan skrip demo D6 dari awal sampai akhir di staging dan HP tanpa error, dan semua layar yang ditunjukkan memakai data fiktif.
+
+---
+
 ## FASE 120: JENIS AKUN & JABATAN, ROMBEL, TAHUN AJARAN, MAPEL PILIHAN, KENAIKAN & KELULUSAN `[RANCANGAN BARU]`
 
 > **Tanggal rancangan:** 11 Oktober 2026
@@ -825,7 +862,7 @@ Identitas, riwayat rombel per TA (FASE 120), mutasi, nilai rapor per semester, p
 4. **Dokumen teknis** untuk pengembang berikutnya. Kedalamannya mengikuti T8: arsitektur, cara menjalankan lokal, cara rilis Android, dan `docs/ALUR_KERJA.md` sebagai peta fitur.
 
 **E. Pilot, pelatihan, dan BAST**
-- **Pilot semester Genap (Jan–Jun 2027):** 1–2 rombel, TU, BK, dan wali kelasnya. Keluhan pilot menjadi backlog.
+- **Pilot semester Genap (Jan–Jun 2027), bila sekolah menyetujui setelah demo:** 1–2 rombel, TU, BK, dan wali kelasnya. Keluhan pilot menjadi backlog.
 - **Pelatihan:** Admin/IT sekolah (operasional penuh), TU, wali kelas, guru, dan pimpinan. Untuk siswa dan orang tua, cukup video pendek atau lembar panduan.
 - **BAST** (Berita Acara Serah Terima) berisi daftar periksa:
   - semua akun dan kunci sudah atas nama sekolah;
