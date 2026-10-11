@@ -82,7 +82,9 @@ class StudentGrowthTest extends TestCase
 
         // 2. Book Slot
         $slot = $session->slots()->first();
-        $bookedSlot = $service->bookSlot($slot, $this->parent->id, $this->student->id, 'Konsultasi Rapor');
+        // bookSlot() reports whether this booking won the slot (two parents may try at once).
+        $this->assertTrue($service->bookSlot($slot, $this->parent->id, $this->student->id, 'Konsultasi Rapor'));
+        $bookedSlot = $slot->fresh();
 
         $this->assertEquals('booked', $bookedSlot->status);
         $this->assertEquals($this->parent->id, $bookedSlot->parent_id);

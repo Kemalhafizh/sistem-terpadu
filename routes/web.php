@@ -110,6 +110,7 @@ use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
 use App\Models\BudgetPlan;
+use App\Models\PtcSession;
 use App\Models\TeachingJournal;
 use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
@@ -302,11 +303,20 @@ Route::middleware('auth')->group(function () {
     Route::post('growth/character/merit', [P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
 
     // 34.3: Parent-Teacher Conference (PTC) Scheduler
-    Route::get('growth/ptc/sessions', [PtcSchedulerController::class, 'sessions'])->name('growth.ptc.sessions');
-    Route::post('growth/ptc/sessions', [PtcSchedulerController::class, 'storeSession'])->name('growth.ptc.store_session');
-    Route::get('growth/ptc/sessions/{sessionId}/slots', [PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
-    Route::post('growth/ptc/slots/{slotId}/book', [PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
-    Route::get('growth/ptc/teacher-schedule', [PtcSchedulerController::class, 'teacherSchedule'])->name('growth.ptc.teacher_schedule');
+    // Parent–teacher conferences (119.9): staff open sessions, parents book for their own
+    // children, teachers see their bookings. These routes carried no role at all.
+    Route::middleware(Roles::only(PtcSession::ORGANIZER_ROLES, PtcSession::HOST_ROLES, StudentDataAccess::PARENT_ROLES))->group(function () {
+        Route::get('growth/ptc/sessions', [PtcSchedulerController::class, 'sessions'])->name('growth.ptc.sessions');
+        Route::get('growth/ptc/sessions/{sessionId}/slots', [PtcSchedulerController::class, 'availableSlots'])->name('growth.ptc.available_slots');
+    });
+    Route::post('growth/ptc/sessions', [PtcSchedulerController::class, 'storeSession'])
+        ->middleware(Roles::only(PtcSession::ORGANIZER_ROLES))->name('growth.ptc.store_session');
+    Route::middleware(Roles::only(StudentDataAccess::PARENT_ROLES))->group(function () {
+        Route::post('growth/ptc/slots/{slotId}/book', [PtcSchedulerController::class, 'bookSlot'])->name('growth.ptc.book_slot');
+        Route::post('growth/ptc/slots/{slotId}/cancel', [PtcSchedulerController::class, 'cancelBooking'])->name('growth.ptc.cancel_slot');
+    });
+    Route::get('growth/ptc/teacher-schedule', [PtcSchedulerController::class, 'teacherSchedule'])
+        ->middleware(Roles::only(PtcSession::HOST_ROLES))->name('growth.ptc.teacher_schedule');
 
     // FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
     // 36.1: 360-Degree Teacher Evaluation & EDOM
@@ -1362,7 +1372,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('donations/{id}/cancel', [CharityController::class, 'cancel'])->name('cancel');
     });
 
-    Route::middleware('role:student,parent,admin,superadmin')->prefix('portal/charity')->name('portal.charity.')->group(function () {
+    // Any school member may give by transfer or cash; only students and their parents
+    // can pay from wadiah savings (CharityService). Used to be `student,parent` only,
+    // which locked out `siswa`/`orang_tua` accounts and staff.
+    Route::middleware(Roles::only(Roles::MEMBERS))->prefix('portal/charity')->name('portal.charity.')->group(function () {
         Route::get('/', [CharityController::class, 'portal'])->name('portal');
         Route::get('donate/{campaignId}', [CharityController::class, 'donateForm'])->name('donate');
         Route::post('donate', [CharityController::class, 'processDonate'])->name('donate.store');

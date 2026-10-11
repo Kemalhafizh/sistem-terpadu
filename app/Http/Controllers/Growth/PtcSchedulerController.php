@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Growth;
 use App\Http\Controllers\Controller;
 use App\Models\PtcSession;
 use App\Models\PtcSlot;
-use App\Models\User;
+use App\Models\Student;
 use App\Services\Growth\PtcSchedulerService;
 use Illuminate\Http\Request;
 
+/**
+ * Parent–teacher conferences: staff open a session (slots are generated for
+ * every teacher), parents book a slot for one of their own children, and
+ * teachers see their bookings. The routes carry those roles (PtcSession).
+ */
 class PtcSchedulerController extends Controller
 {
     public function sessions()
@@ -23,17 +28,17 @@ class PtcSchedulerController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'academic_year' => 'required|string|max:9',
-            'date' => 'required|date',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
             'slot_duration_minutes' => 'nullable|integer|min:5|max:60',
-            'location' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
         ]);
 
         $session = $service->createSession($validated, auth()->id());
 
         return redirect()->route('growth.ptc.sessions')
-            ->with('success', "Sesi Parent-Teacher Conference [{$session->title}] berhasil dibuat & slot tergenerasi!");
+            ->with('success', __('Sesi konsultasi orang tua ":title" dibuat dengan :count slot.', ['title' => $session->title, 'count' => $session->slots()->count()]));
     }
 
     public function availableSlots(int $sessionId)
@@ -41,11 +46,13 @@ class PtcSchedulerController extends Controller
         $session = PtcSession::findOrFail($sessionId);
         $slots = PtcSlot::with(['teacher', 'parent', 'student'])
             ->where('ptc_session_id', $sessionId)
+            ->orderBy('start_time')
             ->get();
 
-        $students = User::where('role', 'student')->get();
+        // A parent picks among their own children only (this used to list every student account).
+        $children = Student::ofFamily(auth()->user())->with('user')->get();
 
-        return view('ptc.available-slots', compact('session', 'slots', 'students'));
+        return view('ptc.available-slots', compact('session', 'slots', 'children'));
     }
 
     public function bookSlot(int $slotId, Request $request, PtcSchedulerService $service)
@@ -53,21 +60,34 @@ class PtcSchedulerController extends Controller
         $slot = PtcSlot::findOrFail($slotId);
 
         $validated = $request->validate([
-            'student_id' => 'required|exists:users,id',
+            'student_id' => 'required|integer',
             'topic' => 'nullable|string|max:255',
         ]);
 
-        $parentId = auth()->id();
-        $service->bookSlot($slot, $parentId, $validated['student_id'], $validated['topic'] ?? null);
+        $child = Student::ofFamily(auth()->user())->where('user_id', $validated['student_id'])->first();
+        abort_unless($child, 403, __('Anda hanya dapat memesan untuk anak Anda sendiri.'));
 
-        return back()->with('success', 'Slot konsultasi PTC berhasil dibooking!');
+        if (! $service->bookSlot($slot, auth()->id(), $child->user_id, $validated['topic'] ?? null)) {
+            return back()->with('error', __('Slot ini baru saja dipesan orang tua lain. Silakan pilih slot lain.'));
+        }
+
+        return back()->with('success', __('Slot konsultasi dipesan.'));
+    }
+
+    public function cancelBooking(int $slotId, PtcSchedulerService $service)
+    {
+        $slot = PtcSlot::findOrFail($slotId);
+        abort_unless((int) $slot->parent_id === auth()->id() && $slot->status === 'booked', 403);
+
+        $service->cancelBooking($slot);
+
+        return back()->with('success', __('Pesanan slot dibatalkan.'));
     }
 
     public function teacherSchedule()
     {
-        $teacherId = auth()->id();
         $slots = PtcSlot::with(['session', 'parent', 'student'])
-            ->where('teacher_id', $teacherId)
+            ->where('teacher_id', auth()->id())
             ->where('status', 'booked')
             ->get();
 
