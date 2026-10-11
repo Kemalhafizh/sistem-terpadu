@@ -3,6 +3,7 @@ name: 🚀 SISTA Automated Deployment
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 concurrency:
   group: deployment-${{ github.ref }}
@@ -17,7 +18,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # Until the school has a production server, the SSH secrets are empty and
+      # the deploy is skipped with a note instead of failing every merge.
+      - name: Check Production Server Configuration
+        id: server
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          if [ -n "$SERVER_HOST" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Deploy dilewati::Secret SERVER_HOST belum diisi, jadi belum ada server produksi untuk dideploy."
+            echo "Deploy dilewati: secret \`SERVER_HOST\` belum diisi (belum ada server produksi)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Deploy Code via Secure SSH
+        if: steps.server.outputs.configured == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -34,7 +51,7 @@ jobs:
             cd /var/www/sistem-terpadu
             
             # Active maintenance mode
-            php artisan down --secret="sista-deploy-key" || true
+            php artisan down --refresh=15 || true
             
             # Pull latest commits
             git pull origin main
