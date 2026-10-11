@@ -7,14 +7,16 @@
         <div>
             <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
                 <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                RAPBS Multi-Year Budget Planning & Variance
+                {{ __('RKAS / RAPBS Sekolah') }}
             </h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Perencanaan Rencana Anggaran Pendapatan & Belanja Sekolah ({{ school_name() }})</p>
         </div>
         <div class="flex gap-2">
+            @if(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'financial.budget.create'))
             <a href="{{ route('financial.budget.create') }}" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md flex items-center gap-2">
-                + Buat RAPBS Baru
+                + {{ __('Buat RKAS Baru') }}
             </a>
+            @endif
         </div>
     </div>
 
@@ -28,24 +30,24 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
             <span class="text-xs font-bold text-gray-400 uppercase">Total Pendapatan Direncanakan</span>
-            <p class="text-xl font-black text-emerald-600 mt-1">Rp {{ number_format($activePlan->total_revenue_planned ?? 0, 0, ',', '.') }}</p>
+            <p class="text-xl font-black text-emerald-600 mt-1">{{ $activePlan ? 'Rp '.number_format($activePlan->total_revenue_planned, 0, ',', '.') : '–' }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
             <span class="text-xs font-bold text-gray-400 uppercase">Total Belanja Direncanakan</span>
-            <p class="text-xl font-black text-red-500 mt-1">Rp {{ number_format($activePlan->total_expense_planned ?? 0, 0, ',', '.') }}</p>
+            <p class="text-xl font-black text-red-500 mt-1">{{ $activePlan ? 'Rp '.number_format($activePlan->total_expense_planned, 0, ',', '.') : '–' }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
-            <span class="text-xs font-bold text-gray-400 uppercase">Proyeksi Surplus / Defisit</span>
-            @php $net = ($activePlan->total_revenue_planned ?? 0) - ($activePlan->total_expense_planned ?? 0); @endphp
-            <p class="text-xl font-black {{ $net >= 0 ? 'text-teal-600' : 'text-rose-600' }} mt-1">
-                Rp {{ number_format($net, 0, ',', '.') }}
+            <span class="text-xs font-bold text-gray-400 uppercase">{{ __('Surplus / Defisit Rencana') }}</span>
+            @php $net = $activePlan ? $activePlan->total_revenue_planned - $activePlan->total_expense_planned : null; @endphp
+            <p class="text-xl font-black {{ ($net ?? 0) >= 0 ? 'text-teal-600' : 'text-rose-600' }} mt-1">
+                {{ $net === null ? '–' : 'Rp '.number_format($net, 0, ',', '.') }}
             </p>
         </div>
         <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
             <span class="text-xs font-bold text-gray-400 uppercase">Status RAPBS Aktif</span>
             <p class="text-sm font-bold mt-2">
                 <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-black uppercase">
-                    {{ $activePlan->status ?? 'Draft' }}
+                    {{ $activePlan ? __('budget.status.'.$activePlan->status) : '–' }}
                 </span>
             </p>
         </div>
@@ -77,13 +79,12 @@
                         <td class="py-3 px-4">
                             <span class="px-2.5 py-1 text-xs font-bold rounded-lg uppercase
                                 {{ $plan->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($plan->status === 'submitted' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
-                                {{ $plan->status }}
+                                {{ __('budget.status.'.$plan->status) }}
                             </span>
                         </td>
                         <td class="py-3 px-4 text-right space-x-2">
                             <a href="{{ route('financial.budget.show', $plan->id) }}" class="text-xs font-bold text-emerald-600 hover:underline">Rincian</a>
                             <a href="{{ route('financial.budget.variance', $plan->id) }}" class="text-xs font-bold text-teal-600 hover:underline">Variansi</a>
-                            <a href="{{ route('financial.budget.forecast', $plan->id) }}" class="text-xs font-bold text-indigo-600 hover:underline">Proyeksi</a>
                         </td>
                     </tr>
                     @empty

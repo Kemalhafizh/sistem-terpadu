@@ -109,6 +109,7 @@ use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
+use App\Models\BudgetPlan;
 use App\Models\TeachingJournal;
 use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
@@ -258,17 +259,22 @@ Route::middleware('auth')->group(function () {
     Route::post('resource-bookings/{id}/reject', [ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
     Route::get('resource-bookings/check', [ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
 
-    // FASE 33: Enterprise Financial Governance & Budgetary Control Suite
-    // 33.1: RAPBS Multi-Year Budget Planning & Variance
-    Route::get('financial/budget', [BudgetPlanningController::class, 'dashboard'])->name('financial.budget.dashboard');
-    Route::get('financial/budget/create', [BudgetPlanningController::class, 'create'])->name('financial.budget.create');
-    Route::post('financial/budget', [BudgetPlanningController::class, 'store'])->name('financial.budget.store');
-    Route::get('financial/budget/{id}', [BudgetPlanningController::class, 'show'])->name('financial.budget.show');
-    Route::post('financial/budget/{id}/line-items', [BudgetPlanningController::class, 'storeLineItem'])->name('financial.budget.store_line_item');
-    Route::post('financial/budget/{id}/submit', [BudgetPlanningController::class, 'submitApproval'])->name('financial.budget.submit');
-    Route::post('financial/budget/{id}/approve', [BudgetPlanningController::class, 'approve'])->name('financial.budget.approve');
-    Route::get('financial/budget/{id}/variance', [BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
-    Route::get('financial/budget/{id}/forecast', [BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
+    // RKAS / RAPBS (FASE 33, 119.9): TU drafts, the principal approves. These
+    // routes carried no role, so any account could approve the budget.
+    Route::middleware(Roles::only(BudgetPlan::READER_ROLES))->group(function () {
+        Route::get('financial/budget', [BudgetPlanningController::class, 'dashboard'])->name('financial.budget.dashboard');
+        Route::get('financial/budget/{id}', [BudgetPlanningController::class, 'show'])->whereNumber('id')->name('financial.budget.show');
+        Route::get('financial/budget/{id}/variance', [BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
+    });
+    Route::middleware(Roles::only(BudgetPlan::PREPARER_ROLES))->group(function () {
+        Route::get('financial/budget/create', [BudgetPlanningController::class, 'create'])->name('financial.budget.create');
+        Route::post('financial/budget', [BudgetPlanningController::class, 'store'])->name('financial.budget.store');
+        Route::post('financial/budget/{id}/line-items', [BudgetPlanningController::class, 'storeLineItem'])->name('financial.budget.store_line_item');
+        Route::put('financial/budget/{id}/line-items/{item}/realization', [BudgetPlanningController::class, 'recordRealization'])->name('financial.budget.realization');
+        Route::post('financial/budget/{id}/submit', [BudgetPlanningController::class, 'submitApproval'])->name('financial.budget.submit');
+    });
+    Route::post('financial/budget/{id}/approve', [BudgetPlanningController::class, 'approve'])
+        ->middleware(Roles::only(BudgetPlan::APPROVER_ROLES))->name('financial.budget.approve');
 
     // 33.3: Scholarships. FASE 119: part of the Keuangan menu, and no longer open to
     // every account: staff enter applications (the form takes the student), the

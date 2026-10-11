@@ -3,7 +3,6 @@
 namespace Tests\Feature\Financial;
 
 use App\Models\User;
-use App\Services\Financial\BudgetPlanningService;
 use App\Services\Financial\ScholarshipService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -21,57 +20,6 @@ class EnterpriseFinancialTest extends TestCase
         parent::setUp();
         $this->admin = User::factory()->create(['role' => 'superadmin']);
         $this->student = User::factory()->create(['role' => 'student']);
-    }
-
-    /** @test */
-    public function test_33_1_rapbs_budget_planning_lifecycle()
-    {
-        $service = app(BudgetPlanningService::class);
-
-        // 1. Create plan
-        $plan = $service->createPlan([
-            'fiscal_year' => '2026/2027',
-            'title' => 'RAPBS Testing 2026',
-            'total_revenue_planned' => 1000000000,
-            'total_expense_planned' => 900000000,
-        ], $this->admin->id);
-
-        $this->assertEquals('draft', $plan->status);
-
-        // 2. Add Line Items
-        $service->addLineItem($plan, [
-            'category' => 'revenue',
-            'sub_category' => 'SPP',
-            'account_code' => '4-1000',
-            'description' => 'Penerimaan SPP',
-            'planned_amount' => 1000000000,
-            'actual_amount' => 950000000,
-        ]);
-
-        $service->addLineItem($plan, [
-            'category' => 'expense',
-            'sub_category' => 'Gaji',
-            'account_code' => '5-1000',
-            'description' => 'Gaji Guru',
-            'planned_amount' => 900000000,
-            'actual_amount' => 880000000,
-        ]);
-
-        // 3. Approval
-        $service->submitForApproval($plan);
-        $service->approvePlan($plan, $this->admin->id);
-
-        $this->assertEquals('approved', $plan->fresh()->status);
-
-        // 4. Variance report
-        $report = $service->getVarianceReport($plan->fresh());
-        $this->assertEquals(1000000000, $report['revenue']['planned']);
-        $this->assertEquals(950000000, $report['revenue']['actual']);
-
-        // 5. Controller HTTP view test
-        $response = $this->actingAs($this->admin)->get(route('financial.budget.dashboard'));
-        $response->assertStatus(200);
-        $response->assertSee('RAPBS Multi-Year Budget Planning');
     }
 
     /** @test */

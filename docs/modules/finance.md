@@ -31,3 +31,12 @@ Setiap kali pembayaran diverifikasi lunas (baik secara tunai di kasir sekolah ma
 *   **Kredit:** Akun Pendapatan SPP (`401-Pendapatan-SPP`).
 
 Laporan neraca saldo dan buku besar pembukuan sekolah dapat diunduh secara landscape oleh staf keuangan untuk keperluan kepatuhan audit.
+---
+
+## 📊 3. RKAS / RAPBS (`BudgetPlanningController`)
+
+Menu **Keuangan → RKAS / Anggaran**.
+*   **Alur:** TU atau bendahara menyusun RKAS dan pos anggarannya (kategori, kode akun, nominal rencana), lalu mengajukannya. Kepala Sekolah menyetujui. Penyusun tidak bisa menyetujui RKAS buatannya sendiri, dan pos tidak bisa diubah setelah diajukan.
+*   **Tahun anggaran:** `2026/2027` berarti tahun ajaran (1 Juli – 30 Juni), `2026` berarti tahun kalender.
+*   **Realisasi:** pos yang kode akunnya ada di bagan akun dihitung otomatis dari buku besar dalam tahun anggaran itu (pendapatan = kredit − debit, belanja = debit − kredit). Pos lain dicatat manual oleh TU. Selama belum ada data, realisasi dan persentasenya tampil "–", bukan 0%.
+*   Tidak ada proyeksi tahun depan: setiap proyeksi butuh asumsi pertumbuhan, dan sebelumnya angka 5% dipakai tanpa dasar.

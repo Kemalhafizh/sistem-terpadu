@@ -17,7 +17,7 @@
             <div class="flex justify-between items-center border-b pb-3 border-gray-100 dark:border-gray-700">
                 <h3 class="text-sm font-black uppercase text-emerald-600">Realisasi Pendapatan (Revenue)</h3>
                 <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-black">
-                    {{ $report['revenue']['realization_rate'] }}% Terealisasi
+                    {{ $report['revenue']['rate'] === null ? '–' : $report['revenue']['rate'].'%' }} {{ __('Terealisasi') }}
                 </span>
             </div>
             <div class="space-y-2 text-sm">
@@ -27,11 +27,11 @@
                 </div>
                 <div class="flex justify-between">
                     <span class="text-gray-500">Aktual Diterima:</span>
-                    <span class="font-bold text-emerald-600">Rp {{ number_format($report['revenue']['actual'], 0, ',', '.') }}</span>
+                    <span class="font-bold text-emerald-600">{{ $report['revenue']['actual'] === null ? '–' : 'Rp '.number_format($report['revenue']['actual'], 0, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between border-t pt-2 border-gray-100">
                     <span class="text-gray-500">Selisih Variansi:</span>
-                    <span class="font-black text-teal-600">Rp {{ number_format($report['revenue']['variance'], 0, ',', '.') }}</span>
+                    <span class="font-black text-teal-600">{{ $report['revenue']['variance'] === null ? '–' : 'Rp '.number_format($report['revenue']['variance'], 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="flex justify-between items-center border-b pb-3 border-gray-100 dark:border-gray-700">
                 <h3 class="text-sm font-black uppercase text-rose-600">Penyerapan Anggaran (Expense)</h3>
                 <span class="px-3 py-1 bg-rose-100 text-rose-800 rounded-full text-xs font-black">
-                    {{ $report['expense']['absorption_rate'] }}% Terserap
+                    {{ $report['expense']['rate'] === null ? '–' : $report['expense']['rate'].'%' }} {{ __('Terserap') }}
                 </span>
             </div>
             <div class="space-y-2 text-sm">
@@ -51,11 +51,11 @@
                 </div>
                 <div class="flex justify-between">
                     <span class="text-gray-500">Aktual Belanja:</span>
-                    <span class="font-bold text-rose-500">Rp {{ number_format($report['expense']['actual'], 0, ',', '.') }}</span>
+                    <span class="font-bold text-rose-500">{{ $report['expense']['actual'] === null ? '–' : 'Rp '.number_format($report['expense']['actual'], 0, ',', '.') }}</span>
                 </div>
                 <div class="flex justify-between border-t pt-2 border-gray-100">
                     <span class="text-gray-500">Sisa Anggaran Belanja:</span>
-                    <span class="font-black text-emerald-600">Rp {{ number_format($report['expense']['variance'], 0, ',', '.') }}</span>
+                    <span class="font-black text-emerald-600">{{ $report['expense']['variance'] === null ? '–' : 'Rp '.number_format($report['expense']['variance'], 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>

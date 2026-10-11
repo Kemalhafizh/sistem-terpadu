@@ -91,6 +91,7 @@ return [
     'reconciliation' => 'التسوية البنكية',
     'vendor_payments' => 'مدفوعات الموردين',
     'scholarships' => 'المنح الدراسية',
+    'budget' => 'ميزانية المدرسة (RKAS)',
     'my_billings' => 'فواتيري',
     'osis_mpk' => 'مجلس الطلاب',
     'school_settings' => 'هوية المدرسة ومظهرها',
