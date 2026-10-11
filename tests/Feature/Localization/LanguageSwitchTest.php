@@ -79,15 +79,13 @@ class LanguageSwitchTest extends TestCase
         $testKeys = [
             'dashboard',
             'calendar',
-            'gamification',
             'library',
             'cbt',
-            'islamic_tech',
+            'tahsin',
             'inclusive_education',
-            'green_school',
-            'school_safety',
-            'alumni_relations',
-            'family_engagement',
+            'header_counseling',
+            'header_finance',
+            'osis_mpk',
         ];
 
         foreach ($locales as $locale) {

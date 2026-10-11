@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Crisis\AntiBullyingController;
+use App\Models\BullyingReport;
 use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +14,7 @@ Route::middleware(['auth'])->prefix('crisis')->name('crisis.')->group(function (
     Route::post('/bullying/report', [AntiBullyingController::class, 'storeReport'])->name('bullying.store');
 
     // Reading the reports is for counselling and student affairs.
-    Route::middleware(Roles::only('bk', 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))->group(function () {
+    Route::middleware(Roles::only(BullyingReport::READER_ROLES))->group(function () {
         Route::get('/bullying', [AntiBullyingController::class, 'index'])->name('bullying.index');
         Route::get('/bullying/statistics', [AntiBullyingController::class, 'statistics'])->name('bullying.statistics');
         Route::get('/bullying/{id}', [AntiBullyingController::class, 'show'])->name('bullying.show');

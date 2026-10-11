@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\v1\ApiGeneralController;
 use App\Http\Controllers\Api\v1\ApiParentController;
 use App\Http\Controllers\Api\v1\ApiStudentController;
 use App\Http\Controllers\Api\v1\ApiTeacherController;
+use App\Http\Controllers\Api\v1\BullyingReportApiController;
 use App\Http\Controllers\Api\v1\CapabilitiesController;
 use App\Http\Controllers\Api\v1\CbtAccessControlApiController;
 use App\Http\Controllers\Api\v1\CbtEnterpriseApiController;
@@ -47,6 +48,8 @@ use App\Http\Controllers\Api\v1\UtbkMobileApiController;
 use App\Http\Controllers\Api\v1\VizController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
+use App\Models\BullyingReport;
+use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -284,6 +287,13 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 Route::post('sessions', [CounselingMobileApiController::class, 'storeSession']);
                 Route::get('at-risk', [CounselingMobileApiController::class, 'atRiskStudents']);
                 Route::post('sessions/{id}/follow-up', [CounselingMobileApiController::class, 'addFollowUp']);
+            });
+
+            // FASE 119: anyone signed in may report bullying; reading the reports follows the web rule.
+            Route::post('bullying-reports', [BullyingReportApiController::class, 'store']);
+            Route::middleware(Roles::only(BullyingReport::READER_ROLES))->group(function () {
+                Route::get('bullying-reports', [BullyingReportApiController::class, 'index']);
+                Route::get('bullying-reports/{id}', [BullyingReportApiController::class, 'show'])->whereNumber('id');
             });
         });
 

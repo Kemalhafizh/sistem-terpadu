@@ -31,7 +31,6 @@ use App\Http\Controllers\Auth\MobileSsoBridgeController;
 use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\CmsController;
-use App\Http\Controllers\Communication\CalendarController;
 use App\Http\Controllers\Communication\MessagingController;
 use App\Http\Controllers\Communication\NotificationCenterController;
 use App\Http\Controllers\Communication\ResourceBookingController;
@@ -110,6 +109,8 @@ use App\Http\Controllers\WellKnownController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\WorkflowController;
 use App\Models\TeachingJournal;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Support\Facades\Route;
 use Knuckles\Scribe\ScribeServiceProvider;
 
@@ -247,14 +248,9 @@ Route::middleware('auth')->group(function () {
     Route::post('messages/{conversation}/reply', [MessagingController::class, 'reply'])->name('messages.reply');
     Route::get('messages/search-users', [MessagingController::class, 'searchUsers'])->name('messages.search_users');
 
-    // Enterprise Calendar & Resource Booking System
-    Route::get('calendar-hub', [CalendarController::class, 'index'])->name('calendar.index');
-    Route::get('calendar-hub/events-json', [CalendarController::class, 'eventsJson'])->name('calendar.events_json');
-    Route::post('calendar-hub/events', [CalendarController::class, 'store'])->name('calendar.store');
-    Route::put('calendar-hub/events/{id}', [CalendarController::class, 'update'])->name('calendar.update');
-    Route::delete('calendar-hub/events/{id}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
-    Route::post('calendar-hub/events/{id}/rsvp', [CalendarController::class, 'rsvp'])->name('calendar.rsvp');
-
+    // Resource booking (rooms and equipment). FASE 119 removed the second
+    // "enterprise" calendar that used to live here: the school has one
+    // calendar, `calendar` (AcademicEvent), which the app reads too.
     Route::get('resource-bookings', [ResourceBookingController::class, 'index'])->name('resource_bookings.index');
     Route::post('resource-bookings', [ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
     Route::post('resource-bookings/{id}/approve', [ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');
@@ -273,18 +269,22 @@ Route::middleware('auth')->group(function () {
     Route::get('financial/budget/{id}/variance', [BudgetPlanningController::class, 'varianceReport'])->name('financial.budget.variance');
     Route::get('financial/budget/{id}/forecast', [BudgetPlanningController::class, 'forecastReport'])->name('financial.budget.forecast');
 
-    // 33.3: Scholarship & Grant Management Portal
-    Route::get('financial/scholarships', [ScholarshipController::class, 'programs'])->name('financial.scholarships.programs');
-    Route::get('financial/scholarships/create', [ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program');
-    Route::post('financial/scholarships', [ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program');
-    Route::post('financial/scholarships/{id}/open', [ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open');
-    Route::get('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form');
-    Route::post('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application');
-    Route::get('financial/scholarships/{programId}/review', [ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review');
-    Route::post('financial/scholarships/applications/{appId}/review', [ScholarshipController::class, 'review'])->name('financial.scholarships.review_action');
-    Route::get('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form');
-    Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action');
-    Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report');
+    // 33.3: Scholarships. FASE 119: part of the Keuangan menu, and no longer open to
+    // every account: staff enter applications (the form takes the student), the
+    // principal may approve, and only TU and admin create programmes or pay out.
+    $scholarshipReaders = Roles::only('staf_tu', Roles::PRINCIPAL, 'admin');
+    $scholarshipWriters = Roles::only('staf_tu', 'admin');
+    Route::get('financial/scholarships', [ScholarshipController::class, 'programs'])->name('financial.scholarships.programs')->middleware($scholarshipReaders);
+    Route::get('financial/scholarships/create', [ScholarshipController::class, 'createProgram'])->name('financial.scholarships.create_program')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships', [ScholarshipController::class, 'storeProgram'])->name('financial.scholarships.store_program')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships/{id}/open', [ScholarshipController::class, 'openApplications'])->name('financial.scholarships.open')->middleware($scholarshipWriters);
+    Route::get('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'applyForm'])->name('financial.scholarships.apply_form')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships/{programId}/apply', [ScholarshipController::class, 'submitApplication'])->name('financial.scholarships.submit_application')->middleware($scholarshipWriters);
+    Route::get('financial/scholarships/{programId}/review', [ScholarshipController::class, 'reviewApplications'])->name('financial.scholarships.review')->middleware($scholarshipReaders);
+    Route::post('financial/scholarships/applications/{appId}/review', [ScholarshipController::class, 'review'])->name('financial.scholarships.review_action')->middleware($scholarshipReaders);
+    Route::get('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disbursementForm'])->name('financial.scholarships.disburse_form')->middleware($scholarshipWriters);
+    Route::post('financial/scholarships/applications/{appId}/disburse', [ScholarshipController::class, 'disburse'])->name('financial.scholarships.disburse_action')->middleware($scholarshipWriters);
+    Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report')->middleware($scholarshipReaders);
 
     // 34.2: Positive Behavior & Character Report Card (P5)
     Route::get('growth/character/dimensions', [P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
@@ -461,7 +461,8 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // STUDENT SELF-SERVICE
     // =========================================================
-    Route::middleware('role:student')->group(function () {
+    // Both spellings of the student role (FASE 119: `siswa` accounts were locked out of their own bills).
+    Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
         Route::get('my-billings', [StudentFinanceController::class, 'index'])->name('finance.student.index');
         Route::get('my-academic', [StudentAcademicController::class, 'index'])->name('student.academic');
         Route::get('my-wadiah', [StudentFinanceController::class, 'wadiahWallet'])->name('student.wadiah.wallet');

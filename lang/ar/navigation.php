@@ -3,20 +3,12 @@
 return [
     // General & Top Nav
     'dashboard' => 'لوحة التحكم',
-    'academic' => 'الشؤون الأكاديمية',
     'classrooms' => 'قائمة الفصول الدراسية',
     'subjects' => 'المواد والمناهج الدراسية',
     'students' => 'سجل بيانات الطلاب',
-    'schedules' => 'الجداول الدراسية',
-    'e_report' => 'التقرير والشهادة الرقمية',
-    'finance' => 'الإدارة المالية والرسوم',
-    'billings' => 'فواتير الرسوم الدراسية',
-    'reports' => 'تقارير دفتر الأستاذ العام',
     'counseling' => 'الإرشاد والتوجيه الطلابي',
     'e_learning' => 'التعليم الإلكتروني والمهام',
     'cbt' => 'الاختبارات الإلكترونية CBT',
-    'settings' => 'إعدادات النظام',
-    'dev_portal' => 'بوابة المطورين',
     'logout' => 'تسجيل الخروج',
     'profile' => 'الملف الشخصي',
     'language' => 'اللغة',
@@ -25,7 +17,6 @@ return [
     'mark_all_read' => 'تعليم الكل كمعلوم',
     'view_all' => 'عرض الكل',
     'no_notifications' => 'لا توجد إشعارات جديدة.',
-    'gamification' => 'مركز التحفيز والإنجازات',
 
     // Sidebar Headers
     'header_master_data' => 'البيانات الأساسية',
@@ -34,15 +25,10 @@ return [
     'header_academic' => 'الوحدة الأكاديمية',
     'header_student' => 'شؤون الطلاب',
     'header_sarpras' => 'المرافق والتجهيزات',
-    'header_humas' => 'العلاقات العامة والإعلام',
     'header_administration' => 'الشؤون الإدارية',
     'header_staff' => 'إدارة الموارد البشرية',
     'header_teacher' => 'بوابة المعلم الأكاديمية',
     'header_learning_resources' => 'مصادر التعلم',
-    'header_enterprise' => 'بنية النظام المؤسسي',
-    'header_enterprise_gold' => 'المستوى الذهبي للمؤسسة',
-    'header_enterprise_platinum' => 'المستوى البلاتيني للمؤسسة',
-    'header_enterprise_diamond' => 'المستوى الماسي للمؤسسة',
 
     // Sidebar Links - Foundation & Master
     'users' => 'إدارة المستخدمين والصلاحيات',
@@ -65,7 +51,6 @@ return [
     'helpdesk' => 'الدعم الفني الداخلي',
     'asset_loans' => 'إعارة واستعارة الأصول',
     'announcements' => 'مركز الإعلانات المدرسية',
-    'assets' => 'المرافق والأصول المدرسية',
     'inventaris_assets' => 'جرد وحصر الممتلكات',
     'assets_maintenance' => 'صيانة الأصول والمرافق',
     'assets_depreciation' => 'إهلاك الأصول المحاسبي',
@@ -75,9 +60,6 @@ return [
     'point_categories' => 'تصنيفات نقاط السلوك',
     'uks' => 'العيادة المدرسية الرقمية',
     'ekskul' => 'الأنشطة اللاصفية',
-    'osis' => 'مالية مجلس الطلاب (OSIS)',
-    'mpk' => 'مجلس الشورى الطلابي (MPK)',
-    'news_announcements' => 'الأخبار والبيانات الرسمية',
     'finance_administration' => 'الإدارة والتحصيل المالي',
     'finance_analysis' => 'التحليلات المالية للمدير',
     'school_analytics' => 'تحليلات الأداء المدرسي',
@@ -96,37 +78,22 @@ return [
     'event_attendance' => 'حضور الفعاليات والمناسبات',
     'todo_agenda' => 'الأجندة وقائمة المهام',
 
-    // Enterprise Infrastructure
-    'webhooks' => 'مركز الربط الفوري Webhook',
-    'bpa_rules' => 'محرك أتمتة العمليات BPA',
-    'vendor_sla' => 'مؤشر أداء مزودي الخدمات SLA',
-    'disaster_recovery' => 'النسخ الاحتياطي والتعافي من الكوارث',
-    'two_factor' => 'المصادقة الثنائية TOTP 2FA',
-    'edw_olap' => 'مستودع البيانات المؤسسي (EDW)',
-    'apm_observability' => 'مراقبة أداء وصحة النظام APM',
-    'feature_flags' => 'محرك إدارة الميزات والخصائص',
-
-    // Enterprise Gold Modules (Fase 45-50)
-    'crisis_management' => 'إدارة الأزمات والحوادث الطارئة',
-    'strategic_planning' => 'التخطيط الاستراتيجي والخطة الخمسية',
-    'knowledge_hub' => 'منصة المعرفة والتعاون المهني',
-    'treasury' => 'الخزينة والتسوية المصرفية الآلية',
-    'adaptive_learning' => 'التعلم التكيفي والاختبار المحوسب CAT',
-    'foundation_governance' => 'حوكمة مؤسسة سلطان أجونج (YBWSA)',
-
-    // Enterprise Platinum Modules (Fase 51-56)
-    'microlearning' => 'التعلم المصغر والاختبارات التفاعلية',
-    'recruitment' => 'شؤون الموظفين والرفاه الوظيفي',
-    'smart_campus' => 'العمليات الذكية وإدارة الزوار',
-    'omnichannel' => 'مركز التواصل الموحد والإعلام',
-    'data_intelligence' => 'ذكاء البيانات والاستعلام الذكي NLQ',
-    'career_readiness' => 'التوجيه المهني والمصرف المدرسي',
-
-    // Enterprise Diamond Modules (Fase 57-62)
-    'islamic_tech' => 'التكنولوجيا الإسلامية والتحسين',
     'inclusive_education' => 'التعليم الشامل والبرامج الفردية IEP',
-    'green_school' => 'برنامج المدرسة البيئية الخضراء',
-    'school_safety' => 'الأمن والسلامة وكاميرات المراقبة',
-    'alumni_relations' => 'رابطة الخريجين والأوقاف المدرسية',
-    'family_engagement' => 'التواصل والتكامل الأسري المتقدم',
+
+    // FASE 119: one menu per area.
+    'tahsin' => 'التحسين',
+    'header_counseling' => 'الإرشاد الطلابي',
+    'bullying_reports' => 'بلاغات التنمر',
+    'report_bullying' => 'الإبلاغ عن التنمر',
+    'header_finance' => 'المالية',
+    'treasury_accounts' => 'الحسابات البنكية',
+    'petty_cash' => 'النثرية',
+    'reconciliation' => 'التسوية البنكية',
+    'vendor_payments' => 'مدفوعات الموردين',
+    'scholarships' => 'المنح الدراسية',
+    'my_billings' => 'فواتيري',
+    'osis_mpk' => 'مجلس الطلاب',
+    'school_settings' => 'هوية المدرسة ومظهرها',
+    'school_identity' => 'هوية المدرسة',
+    'school_appearance' => 'المظهر',
 ];

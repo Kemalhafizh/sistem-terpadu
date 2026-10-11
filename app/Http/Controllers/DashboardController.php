@@ -26,6 +26,8 @@ use App\Models\TeacherTodo;
 use App\Models\TeachingJournal;
 use App\Models\User;
 use App\Models\WorkflowRequest;
+use App\Services\Dashboard\FinancialScoreboardService;
+use App\Support\Access\RouteAccess;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -76,35 +78,26 @@ class DashboardController extends Controller
 
     private function getRoleSpecificData(User $user)
     {
-        $data = [];
-        switch ($user->role) {
-            case 'admin':
-            case 'superadmin':
-            case 'kepala_sekolah':
-                $data = $this->getAdminStats($user);
-                break;
+        // One dashboard per role, read from every spelling of it (User::dashboardRole()).
+        $data = match ($user->dashboardRole()) {
+            'leadership' => $this->getAdminStats($user),
+            'teacher' => $this->getTeacherData($user),
+            'student' => $this->getStudentData($user),
+            'parent' => $this->getParentData($user),
+            default => [],
+        };
 
-            case 'waka_kurikulum':
-                $data = $this->getAdminStats($user);
-                $data['recent_subjects'] = Subject::latest()->take(5)->get();
-                break;
+        // Cash position, monthly spending and runway from recorded transactions, for
+        // whoever may open the treasury position (119.2: the useful part of Dashboard/*).
+        if ($user->dashboardRole() === 'leadership' && RouteAccess::allowsRoute($user, 'treasury.position.dashboard')) {
+            $data['financialHealth'] = app(FinancialScoreboardService::class)->computeFinancialHealth();
+        }
 
-            case 'waka_kesiswaan':
-                $data = $this->getAdminStats($user);
-                $data['recent_students'] = Student::with(['user', 'classroom'])->latest()->take(5)->get();
-                break;
-
-            case 'guru':
-                $data = $this->getTeacherData($user);
-                break;
-
-            case 'student':
-                $data = $this->getStudentData($user);
-                break;
-
-            case 'parent':
-                $data = $this->getParentData($user);
-                break;
+        if ($user->role === 'waka_kurikulum') {
+            $data['recent_subjects'] = Subject::latest()->take(5)->get();
+        }
+        if ($user->role === 'waka_kesiswaan') {
+            $data['recent_students'] = Student::with(['user', 'classroom'])->latest()->take(5)->get();
         }
 
         return $data;
@@ -138,7 +131,8 @@ class DashboardController extends Controller
             $latestAttendanceDate = Attendance::latest('date')->value('date') ?? today()->format('Y-m-d');
             $totalStudentsWithAttendance = Attendance::where('date', $latestAttendanceDate)->distinct('student_id')->count('student_id');
             $presentStudentsCount = Attendance::where('date', $latestAttendanceDate)->where('status', 'H')->count();
-            $todayAttendanceRate = $totalStudentsWithAttendance > 0 ? round(($presentStudentsCount / $totalStudentsWithAttendance) * 100, 1) : 0;
+            // No attendance taken yet is "no data" (null), not a 0% attendance rate.
+            $todayAttendanceRate = $totalStudentsWithAttendance > 0 ? round(($presentStudentsCount / $totalStudentsWithAttendance) * 100, 1) : null;
             $todayAttendanceDateFormatted = Carbon::parse($latestAttendanceDate)->translatedFormat('d F Y');
 
             // --- 2. Status Keuangan Bulan Ini ---
@@ -146,20 +140,21 @@ class DashboardController extends Controller
                 1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
                 7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
             ];
-            $currentMonthName = $indonesianMonths[now()->month] ?? 'Juni';
+            // The current month, else the latest month that has bills; with no bills at all there is no month to show.
+            $currentMonthName = $indonesianMonths[now()->month];
             if (! Billing::where('month', $currentMonthName)->exists()) {
-                $currentMonthName = Billing::latest('id')->value('month') ?? 'Juni';
+                $currentMonthName = Billing::latest('id')->value('month');
             }
-            $totalBillings = Billing::where('month', $currentMonthName)->sum('amount');
-            $totalRemaining = Billing::where('month', $currentMonthName)->sum('remaining_balance');
-            $totalPaid = $totalBillings - $totalRemaining;
-            $collectionRate = $totalBillings > 0 ? round(($totalPaid / $totalBillings) * 100, 1) : 0;
+            $totalBillings = $currentMonthName ? (float) Billing::where('month', $currentMonthName)->sum('amount') : null;
+            $totalRemaining = $currentMonthName ? (float) Billing::where('month', $currentMonthName)->sum('remaining_balance') : null;
+            $totalPaid = $currentMonthName ? $totalBillings - $totalRemaining : null;
+            $collectionRate = $totalBillings > 0 ? round(($totalPaid / $totalBillings) * 100, 1) : null;
 
             // --- 3. Jurnal Mengajar Hari Ini ---
             $latestJournalDate = TeachingJournal::latest('teaching_date')->value('teaching_date') ?? today()->format('Y-m-d');
             $totalTeachers = User::where('role', 'guru')->count();
             $journalFilledCount = TeachingJournal::whereDate('teaching_date', $latestJournalDate)->distinct('user_id')->count('user_id');
-            $journalFilledRate = $totalTeachers > 0 ? round(($journalFilledCount / $totalTeachers) * 100, 1) : 0;
+            $journalFilledRate = $totalTeachers > 0 ? round(($journalFilledCount / $totalTeachers) * 100, 1) : null;
 
             $filledTeacherIds = TeachingJournal::whereDate('teaching_date', $latestJournalDate)->pluck('user_id');
             $unfilledTeachers = User::where('role', 'guru')->whereNotIn('id', $filledTeacherIds)->take(5)->get(['id', 'name'])->toArray();
@@ -196,7 +191,7 @@ class DashboardController extends Controller
             $pendingApprovalsCount = WorkflowRequest::awaitingDecisionBy($user)->count();
 
             // --- 8. Rekap Mutaba'ah Minggu Ini ---
-            $totalActiveItems = MutabaahItem::where('is_active', true)->count() ?: 5;
+            $totalActiveItems = MutabaahItem::where('is_active', true)->count();
             $studentsCount = Student::count();
             $startOfWeek = now()->startOfWeek()->format('Y-m-d');
             $endOfWeek = now()->endOfWeek()->format('Y-m-d');
@@ -204,7 +199,8 @@ class DashboardController extends Controller
                 ->where('is_completed', true)
                 ->count();
             $totalPossibleLogs = $totalActiveItems * $studentsCount * 7;
-            $mutabaahAverageScore = $totalPossibleLogs > 0 ? round(($logsCount / $totalPossibleLogs) * 100, 1) : 75.4;
+            // With no active items or no students there is no score (null), not a made-up one.
+            $mutabaahAverageScore = $totalPossibleLogs > 0 ? round(($logsCount / $totalPossibleLogs) * 100, 1) : null;
 
             $gradeACount = 0;
             $students = Student::all();
@@ -219,10 +215,7 @@ class DashboardController extends Controller
                     $gradeACount++;
                 }
             }
-            $mutabaahGradeAPercent = $studentsCount > 0 ? round(($gradeACount / $studentsCount) * 100, 1) : 32.5;
-            if ($mutabaahGradeAPercent == 0 && $logsCount > 0) {
-                $mutabaahGradeAPercent = 45.0;
-            }
+            $mutabaahGradeAPercent = $totalPossibleLogs > 0 ? round(($gradeACount / $studentsCount) * 100, 1) : null;
 
             $stats = [
                 'spmb_stats' => $spmb_stats->toArray(),
@@ -350,15 +343,6 @@ class DashboardController extends Controller
                 'title' => 'Persetujuan: '.$pa->definition->name,
                 'desc' => 'Diajukan oleh '.$pa->requester->name,
                 'time' => $pa->created_at->diffForHumans(),
-            ];
-        }
-
-        if (empty($recentNotifications)) {
-            $recentNotifications[] = (object) [
-                'type' => 'info',
-                'title' => 'Dasbor Siap',
-                'desc' => 'Semua modul terpantau aman dan kondusif hari ini.',
-                'time' => 'Baru saja',
             ];
         }
 
@@ -505,10 +489,10 @@ class DashboardController extends Controller
 
         $startOfWeek = now()->startOfWeek()->format('Y-m-d');
         $endOfWeek = now()->endOfWeek()->format('Y-m-d');
-        $totalActiveItems = MutabaahItem::where('is_active', true)->count() ?: 5;
+        $totalActiveItems = MutabaahItem::where('is_active', true)->count();
 
-        // Upcoming school events
-        $upcomingSchoolEvents = AcademicEvent::where('start_date', '>=', now())
+        // Upcoming school events this parent's family is meant to see.
+        $upcomingSchoolEvents = AcademicEvent::visibleTo($user)->where('start_date', '>=', now())
             ->orderBy('start_date')
             ->take(3)
             ->get();
@@ -547,9 +531,11 @@ class DashboardController extends Controller
                 ->where('is_completed', true)
                 ->count();
             $childPossibleLogs = $totalActiveItems * 7;
-            $childMutabaahScore = $childPossibleLogs > 0 ? round(($childMutabaahLogsCount / $childPossibleLogs) * 100) : 0;
+            // No active mutaba'ah items means no score and no grade, not a D.
+            $childMutabaahScore = $childPossibleLogs > 0 ? round(($childMutabaahLogsCount / $childPossibleLogs) * 100) : null;
 
             $childMutabaahGrade = match (true) {
+                $childMutabaahScore === null => null,
                 $childMutabaahScore >= 85 => 'A (Istimewa)',
                 $childMutabaahScore >= 70 => 'B (Baik)',
                 $childMutabaahScore >= 55 => 'C (Cukup)',

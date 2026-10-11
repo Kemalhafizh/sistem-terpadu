@@ -36,6 +36,8 @@ dataset('removed prefixes', [
     'documents/signature', 'documents/test-request', 'verify-document',
     'api/v1/ai', 'api/v1/gamification', 'api/v1/blockchain', 'api/v1/iot', 'api/v1/mobile/attendance',
     'api/v1/documents/ocr', 'api/v1/documents/signature',
+    // PR 4: the second calendar (one calendar per school, AcademicEvent).
+    'calendar-hub',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {

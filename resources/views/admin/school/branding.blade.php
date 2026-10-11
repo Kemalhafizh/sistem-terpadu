@@ -17,6 +17,8 @@
 
     <div class="py-6">
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
+            <x-school-settings-tabs />
+
 
             @if(!empty($profile['missing_official_fields']))
                 <div class="p-5 rounded-3xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 text-amber-800 dark:text-amber-200 space-y-1">

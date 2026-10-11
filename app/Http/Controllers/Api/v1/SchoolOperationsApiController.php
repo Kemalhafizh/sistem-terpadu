@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcademicEvent;
 use App\Models\AcademicYear;
-use App\Models\CalendarEvent;
 use App\Models\HealthScreeningResult;
 use App\Models\Registration;
 use App\Models\SpmbDocument;
@@ -27,45 +27,36 @@ class SchoolOperationsApiController extends Controller
     // ==========================================
 
     /**
-     * Maps CalendarEvent's real columns (event_type/start_datetime/
-     * end_datetime) to the exact shape the Android app's
-     * AcademicCalendarEventItem expects (category/start_time/end_time) —
-     * the two never matched, so even before the fake-fallback was removed,
-     * real rows would have deserialized with null/wrong fields on Android.
+     * The shape the Android app's AcademicCalendarEventItem reads
+     * (category/start_time/end_time/location/is_holiday). FASE 119: the app
+     * now reads the same calendar as the web (AcademicEvent) instead of the
+     * removed second "enterprise" calendar. Events have no location column,
+     * so `location` is null rather than made up.
      */
-    private function calendarEventToArray(CalendarEvent $event): array
+    private function calendarEventToArray(AcademicEvent $event): array
     {
         return [
             'id' => $event->id,
             'title' => $event->title,
             'description' => $event->description,
             'category' => $event->event_type,
-            'start_time' => $event->start_datetime?->toDateTimeString(),
-            'end_time' => $event->end_datetime?->toDateTimeString(),
-            'location' => $event->location,
+            'start_time' => $event->start_date?->toDateTimeString(),
+            'end_time' => $event->end_date?->toDateTimeString(),
+            'location' => null,
             'is_holiday' => $event->event_type === 'holiday',
         ];
     }
 
     public function calendarEvents(Request $request): JsonResponse
     {
-        $year = $request->query('year');
-        $month = $request->query('month');
-        $category = $request->query('category');
+        $request->validate(['month' => 'nullable|integer|between:1,12', 'year' => 'nullable|integer|min:2000']);
 
-        $query = CalendarEvent::query();
-
-        if ($month) {
-            $query->whereMonth('start_datetime', $month);
-        }
-        if ($year) {
-            $query->whereYear('start_datetime', $year);
-        }
-        if ($category) {
-            $query->where('event_type', $category);
-        }
-
-        $events = $query->orderBy('start_datetime', 'asc')->get();
+        $events = AcademicEvent::visibleTo($request->user())
+            ->when($request->query('month'), fn ($query, $month) => $query->whereMonth('start_date', $month))
+            ->when($request->query('year'), fn ($query, $year) => $query->whereYear('start_date', $year))
+            ->when($request->query('category'), fn ($query, $category) => $query->where('event_type', $category))
+            ->orderBy('start_date')
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -75,16 +66,18 @@ class SchoolOperationsApiController extends Controller
 
     public function exportIcal(Request $request)
     {
-        $events = CalendarEvent::whereYear('start_datetime', $request->query('year', now()->year))
-            ->orderBy('start_datetime')
+        $events = AcademicEvent::visibleTo($request->user())
+            ->whereYear('start_date', $request->query('year', now()->year))
+            ->orderBy('start_date')
             ->get();
 
         $school = school_short_name();
         $ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//{$school}//Sula-One//ID\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Kalender Akademik {$school}\r\n";
 
         foreach ($events as $event) {
-            $start = $event->start_datetime?->format('Ymd\THis\Z') ?? now()->format('Ymd\THis\Z');
-            $end = $event->end_datetime?->format('Ymd\THis\Z') ?? now()->addHours(2)->format('Ymd\THis\Z');
+            $start = $event->start_date->copy()->utc()->format('Ymd\THis\Z');
+            // An event without an end is a point in time, not a made-up two-hour block.
+            $end = ($event->end_date ?? $event->start_date)->copy()->utc()->format('Ymd\THis\Z');
             $title = $event->title;
             $desc = $event->description ?? '';
             $uid = $event->id.'@sultanagung1.sch.id';

@@ -35,7 +35,7 @@ class AntiBullyingController extends Controller
 
         $this->service->submitReport($validated);
 
-        return redirect()->route('crisis.bullying.report')->with('success', 'Laporan berhasil dikirim secara rahasia.');
+        return redirect()->route('crisis.bullying.report')->with('success', __('Laporan berhasil dikirim secara rahasia.'));
     }
 
     public function index()

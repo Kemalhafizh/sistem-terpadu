@@ -49,6 +49,9 @@ test('student can checkout and get snap token', function () {
 });
 
 test('checkout fallback works when server key is empty', function () {
+    // Exercises the local payment simulator (off by default, never in production).
+    config(['services.midtrans.simulator' => true]);
+
     $billing = Billing::factory()->create([
         'student_id' => $this->student->id,
         'payment_category_id' => $this->category->id,

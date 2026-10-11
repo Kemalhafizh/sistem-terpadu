@@ -405,5 +405,19 @@
     "Penanganan": "Disposal",
     "Catat": "Record",
     "Dicatat oleh": "Recorded by",
-    "Belum ada log sampah.": "No waste logs yet."
+    "Belum ada log sampah.": "No waste logs yet.",
+    "Laporan perundungan terkirim. Guru BK akan menindaklanjutinya.": "Bullying report sent. The counsellor will follow it up.",
+    "Laporan tidak ditemukan.": "Report not found.",
+    "Laporan berhasil dikirim secara rahasia.": "Your report was sent confidentially.",
+    "Tidak ada persetujuan yang menunggu Anda.": "No approvals are waiting for you.",
+    "Belum ada tagihan": "No bills yet",
+    "Belum ada data guru.": "No teacher data yet.",
+    "Kesehatan Keuangan": "Financial Health",
+    "Posisi kas": "Cash position",
+    "Saldo rekening": "Account balance",
+    "Pengeluaran per bulan": "Monthly spending",
+    "Saldo cukup untuk": "Balance lasts",
+    ":count bulan": ":count months",
+    "Proyeksi pendapatan": "Projected revenue",
+    "Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.": "Online payment is not available yet. Please pay at the school office."
 }

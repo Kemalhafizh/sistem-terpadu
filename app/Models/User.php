@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
 use Database\Factories\UserFactory;
@@ -188,12 +190,30 @@ class User extends Authenticatable
     }
 
     /**
+     * Which dashboard this account gets (FASE 119: one dashboard per role).
+     * Every spelling of a role lands on the same one, so a `siswa` account
+     * sees the student dashboard and `orang_tua` the parent one. Staff with
+     * no dashboard of their own (UKS, library) get the general one, not the
+     * school-wide figures.
+     */
+    public function dashboardRole(): string
+    {
+        return match (true) {
+            in_array($this->role, StudentDataAccess::STUDENT_ROLES, true) => 'student',
+            in_array($this->role, StudentDataAccess::PARENT_ROLES, true) => 'parent',
+            in_array($this->role, [...StudentDataAccess::TEACHER_ROLES, 'bk', 'wali_kelas'], true) => 'teacher',
+            in_array($this->role, ['admin', 'superadmin', 'staf_tu', ...Roles::LEADERSHIP], true) => 'leadership',
+            default => 'general',
+        };
+    }
+
+    /**
      * Get default dashboard layout configurations.
      */
     public function getDefaultDashboardLayout(): array
     {
-        switch ($this->role) {
-            case 'guru':
+        switch ($this->dashboardRole()) {
+            case 'teacher':
                 return [
                     ['id' => 'teacher_schedule_today', 'name' => 'Jadwal Hari Ini', 'visible' => true],
                     ['id' => 'teacher_pending_attendance', 'name' => 'Absensi Belum Diinput', 'visible' => true],
@@ -224,9 +244,6 @@ class User extends Authenticatable
                     ['id' => 'parent_homeroom_messages', 'name' => 'Pesan dari Wali Kelas', 'visible' => true],
                 ];
 
-            case 'admin':
-            case 'superadmin':
-            case 'kepala_sekolah':
             default:
                 return [
                     ['id' => 'general_stats', 'name' => 'Statistik Utama', 'visible' => true],

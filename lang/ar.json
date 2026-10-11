@@ -405,5 +405,19 @@
     "Penanganan": "طريقة التخلص",
     "Catat": "تسجيل",
     "Dicatat oleh": "سجّله",
-    "Belum ada log sampah.": "لا توجد سجلات نفايات بعد."
+    "Belum ada log sampah.": "لا توجد سجلات نفايات بعد.",
+    "Laporan perundungan terkirim. Guru BK akan menindaklanjutinya.": "تم إرسال بلاغ التنمر. سيتابعه المرشد الطلابي.",
+    "Laporan tidak ditemukan.": "لم يتم العثور على البلاغ.",
+    "Laporan berhasil dikirim secara rahasia.": "تم إرسال بلاغك بسرية.",
+    "Tidak ada persetujuan yang menunggu Anda.": "لا توجد موافقات بانتظارك.",
+    "Belum ada tagihan": "لا توجد فواتير بعد",
+    "Belum ada data guru.": "لا توجد بيانات للمعلمين بعد.",
+    "Kesehatan Keuangan": "الصحة المالية",
+    "Posisi kas": "وضع النقدية",
+    "Saldo rekening": "رصيد الحسابات",
+    "Pengeluaran per bulan": "الإنفاق الشهري",
+    "Saldo cukup untuk": "يكفي الرصيد لمدة",
+    ":count bulan": ":count أشهر",
+    "Proyeksi pendapatan": "الإيرادات المتوقعة",
+    "Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.": "الدفع الإلكتروني غير متاح بعد. يرجى الدفع مباشرة في مكتب الإدارة."
 }

@@ -100,8 +100,14 @@ class StudentFinanceController extends Controller
                 }
             }
 
-            // Fallback Token jika Server Key kosong atau API Midtrans gagal/offline
-            if (! $billing->snap_token) {
+            // No working Midtrans: the local simulator if it is switched on, otherwise
+            // say so instead of handing out a page that marks the bill paid.
+            if (! $billing->snap_token || str_starts_with($billing->snap_token, 'TKN-DEMO-')) {
+                if (! config('services.midtrans.simulator')) {
+                    $billing->update(['snap_token' => null, 'payment_url' => null]);
+
+                    return redirect()->route('finance.student.index')->with('error', __('Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.'));
+                }
                 $billing->update([
                     'snap_token' => 'TKN-DEMO-'.strtoupper(Str::random(10)),
                     'payment_url' => route('finance.mock-gateway', $billing->id),
@@ -117,6 +123,8 @@ class StudentFinanceController extends Controller
      */
     public function mockGateway(Billing $billing)
     {
+        abort_unless(config('services.midtrans.simulator'), 404);
+
         // Ownership check
         $student = Student::where('user_id', auth()->id())->first();
         if (! $student && (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')) {
@@ -134,6 +142,9 @@ class StudentFinanceController extends Controller
      */
     public function callback(Request $request, Billing $billing)
     {
+        // A pretend payment: only with the local simulator switched on.
+        abort_unless(config('services.midtrans.simulator'), 404);
+
         // Ownership check
         $student = Student::where('user_id', auth()->id())->first();
         if (! $student && (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')) {
