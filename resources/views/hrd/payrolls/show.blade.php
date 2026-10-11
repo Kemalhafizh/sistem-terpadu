@@ -7,7 +7,7 @@
                 </a>
                 <div>
                     <h2 class="font-black text-3xl text-gray-900 tracking-tight">Detail Payroll Karyawan</h2>
-                    <p class="text-sm text-gray-500 font-medium mt-1">Review rincian kehadiran, foto selfie geofencing, dan sunting tunjangan/potongan gaji.</p>
+                    <p class="text-sm text-gray-500 font-medium mt-1">{{ __('Tinjau rincian kehadiran dan sesuaikan tunjangan atau potongan lain.') }}</p>
                 </div>
             </div>
             <div class="mt-4 md:mt-0 flex space-x-3">
@@ -73,28 +73,28 @@
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <!-- Working Days -->
                         <div class="bg-white border border-gray-100 rounded-[1.5rem] p-4 text-center shadow-sm">
-                            <span class="block text-2xl font-black text-gray-900 font-mono">{{ $payroll->working_days }}</span>
+                            <span class="block text-2xl font-black text-gray-900 font-mono">{{ $payroll->working_days ?? '–' }}</span>
                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1 block">Hari Kerja</span>
                         </div>
                         <!-- Present Days -->
                         <div class="bg-white border border-gray-100 rounded-[1.5rem] p-4 text-center shadow-sm">
-                            <span class="block text-2xl font-black text-emerald-600 font-mono">{{ $payroll->present_days }}</span>
+                            <span class="block text-2xl font-black text-emerald-600 font-mono">{{ $payroll->present_days ?? '–' }}</span>
                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1 block">Hadir</span>
                         </div>
                         <!-- Late Days -->
                         <div class="bg-white border border-gray-100 rounded-[1.5rem] p-4 text-center shadow-sm">
-                            <span class="block text-2xl font-black text-amber-500 font-mono">{{ $payroll->late_days }}</span>
+                            <span class="block text-2xl font-black text-amber-500 font-mono">{{ $payroll->late_days ?? '–' }}</span>
                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1 block">Terlambat</span>
                         </div>
                         <!-- Leave Days -->
                         <div class="bg-white border border-gray-100 rounded-[1.5rem] p-4 text-center shadow-sm">
-                            <span class="block text-2xl font-black text-blue-500 font-mono">{{ $payroll->leave_days }}</span>
+                            <span class="block text-2xl font-black text-blue-500 font-mono">{{ $payroll->leave_days ?? '–' }}</span>
                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1 block">Izin/Cuti</span>
                         </div>
                         <!-- Absent Days -->
                         <div class="bg-white border border-gray-100 rounded-[1.5rem] p-4 text-center shadow-sm col-span-2 md:col-span-1">
-                            <span class="block text-2xl font-black text-red-500 font-mono">{{ $payroll->absent_days }}</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1 block">Alfa/Mangkir</span>
+                            <span class="block text-2xl font-black text-red-500 font-mono">{{ $payroll->absent_days ?? '–' }}</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1 block">{{ __('Tidak Hadir') }}</span>
                         </div>
                     </div>
 
@@ -129,14 +129,14 @@
 
                                 <!-- Deductions Input -->
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Deductions / Potongan Tambahan (Rp)</label>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">{{ __('Potongan Lain (Rp)') }}</label>
                                     <div class="relative">
                                         <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-sm font-bold text-gray-400">Rp</span>
-                                        <input type="number" name="deductions" value="{{ old('deductions', (int)$payroll->deductions) }}" 
+                                        <input type="number" name="other_deductions" value="{{ old('other_deductions', (int)$payroll->other_deductions) }}" 
                                             class="w-full pl-11 pr-4 py-3 rounded-xl border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary-500 text-sm font-semibold text-gray-900 font-mono disabled:opacity-60" 
                                             placeholder="0" min="0" {{ $payroll->status === 'paid' ? 'disabled' : '' }}>
                                     </div>
-                                    <span class="text-[10px] text-gray-400 font-medium mt-1.5 block">Potongan denda, kasbon, BPJS, dll. (Sudah termasuk denda otomatis).</span>
+                                    <span class="text-[10px] text-gray-400 font-medium mt-1.5 block">{{ __('Kasbon, BPJS, dll. Potongan kehadiran dihitung terpisah dan tetap dipertahankan saat hitung ulang.') }}</span>
                                 </div>
 
                                 <!-- Notes Area -->
@@ -166,19 +166,18 @@
                     <!-- Attendance Logs Review -->
                     <div class="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-sm">
                         <div class="p-6 border-b border-gray-50">
-                            <h3 class="text-lg font-black text-gray-900">Log Presensi & Selfie Geofencing</h3>
-                            <p class="text-sm text-gray-500 font-medium mt-1">Daftar presensi harian untuk periode ini lengkap dengan akurasi GPS dan foto kamera selfie.</p>
+                            <h3 class="text-lg font-black text-gray-900">{{ __('Log Presensi') }}</h3>
+                            <p class="text-sm text-gray-500 font-medium mt-1">{{ __('Presensi harian pegawai pada periode ini, dari mesin sidik jari atau dicatat TU.') }}</p>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
                                     <tr class="bg-gray-50/50 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-100">
-                                        <th class="p-4 pl-6">Tanggal</th>
-                                        <th class="p-4">Status</th>
-                                        <th class="p-4">Check In</th>
-                                        <th class="p-4">Check Out</th>
-                                        <th class="p-4">Jarak (Geofence)</th>
-                                        <th class="p-4 pr-6">Foto Selfie Check-In</th>
+                                        <th class="p-4 pl-6">{{ __('Tanggal') }}</th>
+                                        <th class="p-4">{{ __('Status') }}</th>
+                                        <th class="p-4">{{ __('Jam masuk') }}</th>
+                                        <th class="p-4">{{ __('Jam pulang') }}</th>
+                                        <th class="p-4 pr-6">{{ __('Sumber') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
@@ -197,40 +196,14 @@
                                                     {{ $att->status }}
                                                 </span>
                                             </td>
-                                            <td class="p-4 font-mono text-xs">{{ $att->check_in_time ?? '-' }}</td>
-                                            <td class="p-4 font-mono text-xs">{{ $att->check_out_time ?? '-' }}</td>
-                                            <td class="p-4">
-                                                @if($att->distance_meters !== null)
-                                                    <span class="text-xs font-semibold text-gray-700 block">
-                                                        {{ number_format($att->distance_meters, 1) }} meter
-                                                    </span>
-                                                    <span class="text-[9px] text-gray-400 font-bold uppercase block">
-                                                        {{ $att->location_lat }}, {{ $att->location_long }}
-                                                    </span>
-                                                @else
-                                                    <span class="text-xs text-gray-400">-</span>
-                                                @endif
-                                            </td>
-                                            <td class="p-4 pr-6">
-                                                @if($att->photo_path)
-                                                    <div class="flex items-center space-x-2">
-                                                        <a href="{{ asset('storage/' . $att->photo_path) }}" target="_blank" class="block relative group w-12 h-12 overflow-hidden rounded-xl bg-gray-100 border border-gray-200 shadow-sm transition-transform hover:scale-105 active:scale-95">
-                                                            <img src="{{ asset('storage/' . $att->photo_path) }}" class="w-full h-full object-cover" alt="Selfie">
-                                                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                                            </div>
-                                                        </a>
-                                                        <span class="text-[10px] text-gray-400 font-semibold">Lihat Selfie</span>
-                                                    </div>
-                                                @else
-                                                    <span class="text-xs text-gray-400 italic">Tidak ada foto</span>
-                                                @endif
-                                            </td>
+                                            <td class="p-4 font-mono text-xs">{{ $att->check_in_time ?? '–' }}</td>
+                                            <td class="p-4 font-mono text-xs">{{ $att->check_out_time ?? '–' }}</td>
+                                            <td class="p-4 pr-6 text-xs">{{ $att->source === 'fingerprint' ? __('Mesin sidik jari') : __('Dicatat manual') }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="p-8 text-center text-xs text-gray-400 font-semibold">
-                                                Tidak ada log presensi untuk pegawai ini pada periode ini.
+                                            <td colspan="5" class="p-8 text-center text-xs text-gray-400 font-semibold">
+                                                {{ __('Belum ada data presensi untuk pegawai ini pada periode ini.') }}
                                             </td>
                                         </tr>
                                     @endforelse
@@ -272,11 +245,18 @@
                                     <span class="text-xs font-semibold text-gray-400">Total Tunjangan (+)</span>
                                     <span class="text-sm font-bold text-emerald-400 font-mono">+{{ $payroll->allowances_formatted }}</span>
                                 </div>
-                                <!-- Potongan Otomatis -->
+                                <!-- Potongan kehadiran (dihitung) dan potongan lain (diisi TU) -->
                                 <div class="flex justify-between py-3">
-                                    <span class="text-xs font-semibold text-gray-400">Potongan Gaji (-)</span>
-                                    <span class="text-sm font-bold text-red-400 font-mono">-{{ $payroll->deductions_formatted }}</span>
+                                    <span class="text-xs font-semibold text-gray-400">{{ __('Potongan Kehadiran (-)') }}</span>
+                                    <span class="text-sm font-bold text-red-400 font-mono">-{{ $payroll->attendance_deductions_formatted }}</span>
                                 </div>
+                                <div class="flex justify-between py-3">
+                                    <span class="text-xs font-semibold text-gray-400">{{ __('Potongan Lain (-)') }}</span>
+                                    <span class="text-sm font-bold text-red-400 font-mono">-{{ $payroll->other_deductions_formatted }}</span>
+                                </div>
+                                @unless($payroll->hasAttendanceData())
+                                    <p class="py-3 text-[11px] text-amber-300 font-semibold">{{ __('Belum ada data presensi saat slip dihitung, jadi tidak ada potongan kehadiran.') }}</p>
+                                @endunless
                             </div>
 
                             <!-- Net Salary -->
@@ -296,10 +276,8 @@
                             <!-- Quick Action Buttons -->
                             <div class="space-y-3 pt-4">
                                 @if($payroll->status === 'draft')
-                                    <form action="{{ route('hrd.payrolls.approve-bulk') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menerbitkan slip gaji ini?')">
+                                    <form action="{{ route('hrd.payrolls.approve', $payroll) }}" method="POST" onsubmit="return confirm('{{ __('Terbitkan slip gaji ini ke pegawai?') }}')">
                                         @csrf
-                                        <input type="hidden" name="month" value="{{ $payroll->month }}">
-                                        <input type="hidden" name="year" value="{{ $payroll->year }}">
                                         <button type="submit" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs font-black tracking-widest uppercase transition-colors shadow-md flex items-center justify-center">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                                             TERBITKAN SLIP GAJI
@@ -308,10 +286,8 @@
                                 @endif
 
                                 @if($payroll->status === 'approved')
-                                    <form action="{{ route('hrd.payrolls.pay-bulk') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menandai slip gaji ini sebagai TELAH DIBAYAR?')">
+                                    <form action="{{ route('hrd.payrolls.pay', $payroll) }}" method="POST" onsubmit="return confirm('{{ __('Tandai slip gaji ini sudah dibayar?') }}')">
                                         @csrf
-                                        <input type="hidden" name="month" value="{{ $payroll->month }}">
-                                        <input type="hidden" name="year" value="{{ $payroll->year }}">
                                         <button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-black tracking-widest uppercase transition-colors shadow-md flex items-center justify-center">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                                             PROSES PEMBAYARAN GAJI
@@ -325,21 +301,6 @@
                                         CETAK SLIP (PDF)
                                     </a>
                                 @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Informational Radius Box -->
-                    <div class="bg-blue-50 border border-blue-200 rounded-[2rem] p-6 shadow-sm">
-                        <div class="flex items-start space-x-3">
-                            <div class="text-blue-600 mt-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-blue-900">Pemberitahuan Geofencing</h4>
-                                <p class="text-xs text-blue-700 mt-1 leading-relaxed">
-                                    Presensi GPS diverifikasi secara otomatis menggunakan formula Haversine untuk membandingkan koordinat lokasi pegawai dengan titik jangkauan radius sekolah yang diizinkan (maksimal 100m).
-                                </p>
                             </div>
                         </div>
                     </div>

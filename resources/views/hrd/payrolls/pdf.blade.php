@@ -218,17 +218,23 @@
                 <th>Hadir</th>
                 <th>Terlambat</th>
                 <th>Izin / Sakit / Cuti</th>
-                <th>Mangkir (Alfa)</th>
+                <th>Tidak Hadir</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>{{ $payroll->working_days }} hari</td>
-                <td class="text-green" style="font-weight: bold;">{{ $payroll->present_days }} hari</td>
-                <td class="{{ $payroll->late_days > 0 ? 'text-red' : '' }}">{{ $payroll->late_days }} hari</td>
-                <td>{{ $payroll->leave_days }} hari</td>
-                <td class="{{ $payroll->absent_days > 0 ? 'text-red' : '' }}" style="font-weight: bold;">{{ $payroll->absent_days }} hari</td>
-            </tr>
+            @if($payroll->hasAttendanceData())
+                <tr>
+                    <td>{{ $payroll->working_days }} hari</td>
+                    <td class="text-green" style="font-weight: bold;">{{ $payroll->present_days }} hari</td>
+                    <td class="{{ $payroll->late_days > 0 ? 'text-red' : '' }}">{{ $payroll->late_days }} hari</td>
+                    <td>{{ $payroll->leave_days }} hari</td>
+                    <td class="{{ $payroll->absent_days > 0 ? 'text-red' : '' }}" style="font-weight: bold;">{{ $payroll->absent_days }} hari</td>
+                </tr>
+            @else
+                <tr>
+                    <td colspan="5">{{ __('Belum ada data presensi untuk periode ini.') }}</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 
@@ -244,8 +250,12 @@
             <td class="salary-amount text-green">+ {{ $payroll->allowances_formatted }}</td>
         </tr>
         <tr class="salary-row-even">
-            <td class="salary-label">3. Total Akumulasi Potongan Kehadiran (Terlambat & Alfa)</td>
-            <td class="salary-amount text-red">- {{ $payroll->deductions_formatted }}</td>
+            <td class="salary-label">3. Potongan Kehadiran (Terlambat & Tidak Hadir)</td>
+            <td class="salary-amount text-red">- {{ $payroll->attendance_deductions_formatted }}</td>
+        </tr>
+        <tr>
+            <td class="salary-label">4. Potongan Lain</td>
+            <td class="salary-amount text-red">- {{ $payroll->other_deductions_formatted }}</td>
         </tr>
         <tr class="salary-total-row">
             <td class="salary-label salary-total-label">Gaji Bersih Diterima (Net Salary)</td>

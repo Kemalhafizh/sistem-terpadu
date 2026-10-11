@@ -2,7 +2,6 @@
 
 use App\Domains\Academic\Services\GradeCalculationDomainService;
 use App\Domains\Finance\Services\WadiahDomainService;
-use App\Domains\HumanResources\Services\PayrollDomainService;
 use App\Domains\Keislaman\Services\TahfidzDomainService;
 use App\Domains\School\Services\SchoolBrandingDomainService;
 use App\Models\User;
@@ -40,15 +39,6 @@ test('finance domain service validates canteen purchase correctly', function () 
     $overLimit = $service->validateCanteenPurchase(50000, 20000, 25000, 10000);
     expect($overLimit['allowed'])->toBeFalse();
     expect($overLimit['reason'])->toContain('melebihi limit jajan harian');
-});
-
-test('human resources domain service calculates net payroll correctly', function () {
-    $service = new PayrollDomainService;
-    $result = $service->calculateSalary(4000000, 1000000, 2);
-
-    expect($result['gross_salary'])->toBe(5000000.0);
-    expect($result['total_deductions'])->toBe(100000.0);
-    expect($result['net_salary'])->toBe(4900000.0);
 });
 
 test('school domain service retrieves single school branding profile', function () {

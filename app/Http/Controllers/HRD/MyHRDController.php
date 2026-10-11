@@ -7,9 +7,13 @@ use App\Models\Employee;
 use App\Models\EmployeeAttendance;
 use App\Models\LeaveRequest;
 use App\Models\Payroll;
+use App\Models\WorkflowDefinition;
+use App\Services\WorkflowService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class MyHRDController extends Controller
 {
@@ -38,7 +42,8 @@ class MyHRDController extends Controller
             ->take(5)
             ->get();
 
-        $recentLeaves = LeaveRequest::where('employee_id', $employee->id)
+        $recentLeaves = LeaveRequest::with('workflow')
+            ->where('employee_id', $employee->id)
             ->latest()
             ->take(5)
             ->get();
@@ -90,33 +95,51 @@ class MyHRDController extends Controller
     }
 
     /**
-     * Submit a leave request.
+     * Submit a leave request. It goes straight into the leave approval
+     * workflow (WorkflowDefinitionSeeder: Waka Kurikulum, then Kepala
+     * Sekolah), whose last approval marks it approved, so payroll stops
+     * counting those days as absences. It used to be saved as "pending" with
+     * no way for anyone to approve it.
      */
-    public function storeLeaveRequest(Request $request)
+    public function storeLeaveRequest(Request $request, WorkflowService $workflow)
     {
-        $employee = auth()->user()->employee;
+        $user = auth()->user();
+        $employee = $user->employee;
 
         if (! $employee) {
-            return back()->with('error', 'Akun Anda belum terdaftar sebagai pegawai.');
+            return back()->with('error', __('Akun Anda belum terdaftar sebagai pegawai.'));
         }
 
         $validated = $request->validate([
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'type' => 'required|in:sakit,izin,cuti_tahunan,cuti_melahirkan,umroh_haji,dinas_luar',
+            'type' => 'required|in:'.implode(',', array_keys(LeaveRequest::TYPES)),
             'reason' => 'required|string|max:1000',
             'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // Without an active approval flow nobody could decide the request: say so instead of storing it.
+        if (! WorkflowDefinition::where('code', LeaveRequest::WORKFLOW)->where('is_active', true)->exists()) {
+            return back()->withInput()->with('error', __('Alur persetujuan cuti belum diatur. Hubungi Tata Usaha.'));
+        }
 
         if ($request->hasFile('attachment')) {
             $validated['attachment'] = $request->file('attachment')->store('hrd/leaves', 'public');
         }
 
-        $validated['employee_id'] = $employee->id;
-        $validated['status'] = 'pending';
+        try {
+            DB::transaction(function () use ($workflow, $user, $employee, $validated) {
+                $leave = LeaveRequest::create([...$validated, 'employee_id' => $employee->id, 'status' => 'pending']);
+                $workflow->initiate(LeaveRequest::WORKFLOW, $user, $leave, $validated['reason']);
+            });
+        } catch (\Throwable $e) {
+            if (isset($validated['attachment'])) {
+                Storage::disk('public')->delete($validated['attachment']);
+            }
 
-        LeaveRequest::create($validated);
+            throw $e;
+        }
 
-        return back()->with('success', 'Pengajuan cuti/izin berhasil dikirim dan menunggu persetujuan.');
+        return back()->with('success', __('Pengajuan izin/cuti dikirim dan menunggu persetujuan.'));
     }
 }

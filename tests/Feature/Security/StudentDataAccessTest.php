@@ -125,9 +125,12 @@ test('a student cannot read another child\'s report card or make its PDF', funct
 
 test('generating a report card without a template says so instead of inventing one', function () {
     Sanctum::actingAs($this->studentUser);
+    $existing = AcademicYear::pluck('id');
+
     $this->postJson('/api/v1/rapor/generate-pdf')->assertStatus(422);
 
-    expect(AcademicYear::where('year', '2025/2026')->exists())->toBeFalse();
+    // No academic year made up on the way (the factory's random years can include 2025/2026 itself).
+    expect(AcademicYear::whereNotIn('id', $existing)->exists())->toBeFalse();
 });
 
 test('students cannot use the question bank', function () {

@@ -118,7 +118,7 @@
                 @if(class_basename($req->requestable_type) === 'LeaveRequest')
                   <div>
                     <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Jenis Cuti</span>
-                    <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $req->requestable->leave_type ?? 'Cuti Umum' }}</span>
+                    <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $req->requestable?->type_label ?? '–' }}</span>
                   </div>
                   <div>
                     <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Rentang Waktu</span>

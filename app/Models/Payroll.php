@@ -16,6 +16,8 @@ class Payroll extends Model
         'base_salary',
         'allowances',
         'deductions',
+        'attendance_deductions',
+        'other_deductions',
         'net_salary',
         'working_days',
         'present_days',
@@ -31,6 +33,8 @@ class Payroll extends Model
         'base_salary' => 'decimal:2',
         'allowances' => 'decimal:2',
         'deductions' => 'decimal:2',
+        'attendance_deductions' => 'decimal:2',
+        'other_deductions' => 'decimal:2',
         'net_salary' => 'decimal:2',
         'payment_date' => 'date',
     ];
@@ -87,6 +91,22 @@ class Payroll extends Model
     public function getDeductionsFormattedAttribute()
     {
         return $this->formatRupiah($this->deductions);
+    }
+
+    public function getAttendanceDeductionsFormattedAttribute()
+    {
+        return $this->formatRupiah($this->attendance_deductions);
+    }
+
+    public function getOtherDeductionsFormattedAttribute()
+    {
+        return $this->formatRupiah($this->other_deductions);
+    }
+
+    /** Whether attendance data existed for the month when the slip was generated. */
+    public function hasAttendanceData(): bool
+    {
+        return $this->working_days !== null;
     }
 
     public function getNetSalaryFormattedAttribute()

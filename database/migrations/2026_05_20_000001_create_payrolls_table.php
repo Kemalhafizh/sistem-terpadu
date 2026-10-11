@@ -37,36 +37,10 @@ return new class extends Migration
             $table->unique(['employee_id', 'month', 'year']);
         });
 
-        // Insert new settings for the Payroll Engine
-        $settings = [
-            // No campus coordinates here any more: this used to insert
-            // -6.9535 / 110.4355 with a 100 m radius, ~4.8 km from the school.
-            // The geofence now comes from App\Support\School::campus().
-            [
-                'key' => 'payroll_late_deduction',
-                'value' => '25000',
-                'group' => 'system',
-                'type' => 'text',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'key' => 'payroll_absent_deduction',
-                'value' => '100000',
-                'group' => 'system',
-                'type' => 'text',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ];
-
-        foreach ($settings as $setting) {
-            // Check if key already exists to prevent duplicate key errors
-            $exists = DB::table('settings')->where('key', $setting['key'])->exists();
-            if (! $exists) {
-                DB::table('settings')->insert($setting);
-            }
-        }
+        // No deduction rates are inserted here any more: this used to set
+        // Rp 25.000 per late day and Rp 100.000 per absent day, figures the
+        // school never chose. TU sets them on the payroll page; until then
+        // nothing is deducted for attendance.
     }
 
     /**

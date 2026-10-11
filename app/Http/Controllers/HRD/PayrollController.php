@@ -11,12 +11,7 @@ use Illuminate\Support\Carbon;
 
 class PayrollController extends Controller
 {
-    protected $payrollService;
-
-    public function __construct(PayrollService $payrollService)
-    {
-        $this->payrollService = $payrollService;
-    }
+    public function __construct(protected PayrollService $payrollService) {}
 
     /**
      * Display a listing of payrolls with filters.
@@ -51,15 +46,37 @@ class PayrollController extends Controller
     }
 
     /**
-     * Show form to generate monthly payroll.
+     * Show form to generate monthly payroll, with the rules it applies.
      */
     public function create()
     {
-        return view('hrd.payrolls.create');
+        return view('hrd.payrolls.create', [
+            'rates' => $this->payrollService->rates(),
+            'lateAfter' => substr((string) config('fingerprint.late_after'), 0, 5),
+            'workDays' => collect(config('hrd.work_days'))->map(fn (int $day) => Carbon::now()->isoWeekday($day)->isoFormat('dddd'))->implode(', '),
+        ]);
     }
 
     /**
-     * Generate payroll for all active employees.
+     * Save the school's deduction per late day and per absent day.
+     */
+    public function updateRules(Request $request)
+    {
+        $validated = $request->validate([
+            'late_deduction' => 'nullable|numeric|min:0',
+            'absent_deduction' => 'nullable|numeric|min:0',
+        ]);
+
+        $this->payrollService->saveRates(
+            isset($validated['late_deduction']) ? (float) $validated['late_deduction'] : null,
+            isset($validated['absent_deduction']) ? (float) $validated['absent_deduction'] : null,
+        );
+
+        return redirect()->route('hrd.payrolls.create')->with('success', __('Aturan potongan gaji disimpan.'));
+    }
+
+    /**
+     * Generate the month's draft slips for all employees.
      */
     public function store(Request $request)
     {
@@ -70,17 +87,23 @@ class PayrollController extends Controller
 
         $month = $request->month;
         $year = $request->year;
+        $result = $this->payrollService->generateMonthlyPayroll($month, $year);
+        $back = redirect()->route('hrd.payrolls.index', ['month' => $month, 'year' => $year]);
 
-        // Perform calculation
-        $generated = $this->payrollService->generateMonthlyPayroll($month, $year);
-
-        if ($generated === 0) {
-            return redirect()->route('hrd.payrolls.index', ['month' => $month, 'year' => $year])
-                ->with('error', 'Tidak ada pegawai aktif untuk dibuatkan payroll.');
+        if ($result['generated'] === 0) {
+            return $back->with('error', $result['locked'] > 0
+                ? __('Semua slip gaji periode ini sudah diterbitkan atau dibayar, jadi tidak dihitung ulang.')
+                : __('Belum ada data pegawai untuk dibuatkan slip gaji.'));
         }
 
-        return redirect()->route('hrd.payrolls.index', ['month' => $month, 'year' => $year])
-            ->with('success', "Berhasil men-generate payroll untuk {$generated} pegawai.");
+        $message = __('Slip gaji dihitung untuk :count pegawai.', ['count' => $result['generated']]);
+        if ($result['locked'] > 0) {
+            $message .= ' '.__(':count slip yang sudah diterbitkan atau dibayar tidak diubah.', ['count' => $result['locked']]);
+        }
+
+        $back->with('success', $message);
+
+        return $result['has_attendance'] ? $back : $back->with('warning', __('Belum ada data presensi untuk periode ini, jadi tidak ada potongan kehadiran. Impor log mesin sidik jari lalu hitung ulang.'));
     }
 
     public function show(Payroll $payroll)
@@ -99,38 +122,52 @@ class PayrollController extends Controller
     }
 
     /**
-     * Update dynamic allowances/deductions of an individual payroll.
+     * Update the allowances and other deductions TU types in.
      */
     public function update(Request $request, Payroll $payroll)
     {
         if ($payroll->status === 'paid') {
-            return back()->with('error', 'Payroll yang sudah dibayarkan tidak dapat disunting kembali.');
+            return back()->with('error', __('Slip gaji yang sudah dibayar tidak dapat diubah.'));
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'allowances' => 'required|numeric|min:0',
-            'deductions' => 'required|numeric|min:0',
+            'other_deductions' => 'required|numeric|min:0',
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        $allowances = (float) $request->allowances;
-        $deductions = (float) $request->deductions;
-        $baseSalary = (float) $payroll->base_salary;
-
-        $netSalary = $baseSalary + $allowances - $deductions;
-        if ($netSalary < 0) {
-            $netSalary = 0;
-        }
-
-        $payroll->update([
-            'allowances' => $allowances,
-            'deductions' => $deductions,
-            'net_salary' => $netSalary,
-            'notes' => $request->notes,
-        ]);
+        $this->payrollService->applyAdjustments($payroll, (float) $validated['allowances'], (float) $validated['other_deductions'], $validated['notes'] ?? null);
 
         return redirect()->route('hrd.payrolls.show', $payroll->id)
-            ->with('success', 'Rincian gaji pegawai berhasil diperbarui.');
+            ->with('success', __('Rincian gaji pegawai diperbarui.'));
+    }
+
+    /**
+     * Issue one slip to its employee.
+     */
+    public function approve(Payroll $payroll)
+    {
+        if ($payroll->status !== 'draft') {
+            return back()->with('error', __('Hanya slip berstatus draf yang dapat diterbitkan.'));
+        }
+
+        $payroll->update(['status' => 'approved']);
+
+        return redirect()->route('hrd.payrolls.show', $payroll->id)->with('success', __('Slip gaji diterbitkan.'));
+    }
+
+    /**
+     * Mark one issued slip as paid.
+     */
+    public function pay(Payroll $payroll)
+    {
+        if ($payroll->status !== 'approved') {
+            return back()->with('error', __('Hanya slip yang sudah diterbitkan yang dapat ditandai dibayar.'));
+        }
+
+        $payroll->update(['status' => 'paid', 'payment_date' => Carbon::now()->format('Y-m-d')]);
+
+        return redirect()->route('hrd.payrolls.show', $payroll->id)->with('success', __('Slip gaji ditandai sudah dibayar.'));
     }
 
     /**
@@ -152,7 +189,7 @@ class PayrollController extends Controller
             ->update(['status' => 'approved']);
 
         return redirect()->route('hrd.payrolls.index', ['month' => $month, 'year' => $year])
-            ->with('success', "Berhasil menerbitkan (approve) {$approved} slip gaji bulanan.");
+            ->with('success', __(':count slip gaji diterbitkan.', ['count' => $approved]));
     }
 
     /**
@@ -177,7 +214,7 @@ class PayrollController extends Controller
             ]);
 
         return redirect()->route('hrd.payrolls.index', ['month' => $month, 'year' => $year])
-            ->with('success', "Berhasil memproses pembayaran untuk {$paid} pegawai.");
+            ->with('success', __(':count slip gaji ditandai sudah dibayar.', ['count' => $paid]));
     }
 
     /**
@@ -186,7 +223,7 @@ class PayrollController extends Controller
     public function destroy(Payroll $payroll)
     {
         if ($payroll->status === 'paid') {
-            return back()->with('error', 'Payroll yang sudah dibayarkan tidak dapat dihapus.');
+            return back()->with('error', __('Slip gaji yang sudah dibayar tidak dapat dihapus.'));
         }
 
         $month = $payroll->month;
@@ -195,6 +232,6 @@ class PayrollController extends Controller
         $payroll->delete();
 
         return redirect()->route('hrd.payrolls.index', ['month' => $month, 'year' => $year])
-            ->with('success', 'Data payroll pegawai berhasil dihapus.');
+            ->with('success', __('Slip gaji pegawai dihapus.'));
     }
 }

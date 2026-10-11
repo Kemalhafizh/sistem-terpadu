@@ -96,7 +96,7 @@
 
               <h3 class="text-lg font-black text-gray-900 dark:text-gray-100">
                 @if(class_basename($req->requestable_type) === 'LeaveRequest')
-                  Permohonan Cuti: {{ $req->requestable->leave_type ?? 'Cuti Tahunan' }}
+                  Permohonan Cuti: {{ $req->requestable?->type_label ?? '–' }}
                 @elseif(class_basename($req->requestable_type) === 'Letter')
                   Surat Keluar: {{ $req->requestable->subject ?? 'Dokumen Resmi' }}
                 @else
