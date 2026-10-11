@@ -6810,7 +6810,7 @@ Modul berikut abu-abu. Biarkan apa adanya sampai pemilik produk memutuskan:
 
 ### 119.10: Hasil `[SELESAI]`
 
-Dikerjakan dalam enam PR sesuai 119.7: #41 (tools developer & teknologi pamer), #42 (korporat, marketing & media), #43 (gimmick & endpoint mobile), lalu PR 4 (gabung & sederhanakan, sidebar, lapor perundungan), PR 5 (bersih-bersih data & repo), dan PR 6 (impor sidik jari).
+Dikerjakan dalam enam PR sesuai 119.7: #41 (tools developer & teknologi pamer), #42 (korporat, marketing & media), #43 (gimmick & endpoint mobile), #44 (gabung & sederhanakan, sidebar, lapor perundungan), #45 (bersih-bersih data & repo), dan #46 (impor sidik jari).
 
 | | Sebelum FASE 119 | Sesudah |
 |---|---:|---:|
