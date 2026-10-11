@@ -43,7 +43,6 @@ use App\Http\Controllers\Api\v1\StudentProfileApiController;
 use App\Http\Controllers\Api\v1\StudentSessionAttendanceController;
 use App\Http\Controllers\Api\v1\SyncController;
 use App\Http\Controllers\Api\v1\TahsinSubmissionApiController;
-use App\Http\Controllers\Api\v1\UtbkMobileApiController;
 use App\Http\Controllers\Api\v1\VizController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
@@ -376,15 +375,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('facilities/submit', [EvaluationMobileApiController::class, 'submitFacilityEval']);
             Route::get('osis-election', [EvaluationMobileApiController::class, 'electionInfo']);
             Route::post('osis-election/vote', [EvaluationMobileApiController::class, 'castVote']);
-        });
-
-        // FASE 112: UTBK TRYOUT & REKOMENDASI PTN MOBILE API
-        Route::prefix('utbk')->middleware(['auth:sanctum', 'role:student,siswa'])->group(function () {
-            Route::get('tryouts', [UtbkMobileApiController::class, 'index']);
-            Route::get('tryouts/{id}/questions', [UtbkMobileApiController::class, 'questions']);
-            Route::post('tryouts/{id}/submit', [UtbkMobileApiController::class, 'submit']);
-            Route::get('recommendations', [UtbkMobileApiController::class, 'ptnRecommendations']);
-            Route::get('alumni-directory', [UtbkMobileApiController::class, 'alumniDirectory']);
         });
 
         // FASE 113: KEDISIPLINAN LENGKAP MOBILE API

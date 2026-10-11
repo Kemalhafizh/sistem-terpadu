@@ -42,6 +42,8 @@ dataset('removed prefixes', [
     'api/v1/mobile/geofence', 'my-hrd/attendance',
     // 119.9: forum, teacher to-do, student portfolio, EDS/accreditation/compliance (the Kemenag/Dapodik export stays under integrations).
     'forum', 'todos', 'portfolio', 'eds', 'compliance', 'accreditation',
+    // 119.9: UTBK tryout and PTN recommendations (sista-android dropped the screen first).
+    'api/v1/utbk',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {

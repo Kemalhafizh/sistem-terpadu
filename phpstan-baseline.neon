@@ -1226,18 +1226,6 @@ parameters:
 			path: app/Services/UksService.php
 
 		-
-			message: '#^Relation ''student'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/UtbkService.php
-
-		-
-			message: '#^Relation ''tracerResponse'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/UtbkService.php
-
-		-
 			message: '#^Relation ''student'' is not found in App\\Models\\MutabaahWeeklySummary model\.$#'
 			identifier: larastan.relationExistence
 			count: 1

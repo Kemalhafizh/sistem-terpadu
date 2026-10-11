@@ -40,7 +40,6 @@ return [
         'student.cbt' => ['title' => 'Ujian CBT', 'group' => 'akademik', 'endpoint' => 'GET student/cbt/exams'],
         'student.elearning' => ['title' => 'Kelas Online', 'group' => 'akademik', 'endpoint' => 'GET elearning/classes/student'],
         'student.analytics' => ['title' => 'Analitik Belajar', 'group' => 'akademik', 'endpoint' => 'GET analytics/student/summary'],
-        'student.utbk' => ['title' => 'Tryout UTBK', 'group' => 'akademik', 'endpoint' => 'GET utbk/tryouts'],
         'library' => ['title' => 'Perpustakaan', 'group' => 'akademik', 'endpoint' => 'GET library/books', 'hardware' => ['camera']],
         'calendar' => ['title' => 'Kalender Akademik', 'group' => 'akademik', 'endpoint' => 'GET academic-calendar'],
 
