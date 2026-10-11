@@ -19,11 +19,10 @@
 
     <div class="max-w-4xl mx-auto py-4" 
          x-data="{ 
-             paymentMethod: 'wadiah_wallet', 
-             isAnonymous: false, 
-             amount: '', 
-             walletBalance: {{ $walletBalance }},
-             isStudent: {{ auth()->user()->role === 'student' ? 'true' : 'false' }}
+             paymentMethod: '{{ $wallets->isEmpty() ? 'transfer' : 'wadiah_wallet' }}',
+             isAnonymous: false,
+             amount: '',
+             isStudent: {{ in_array(auth()->user()->role, \App\Support\Access\StudentDataAccess::STUDENT_ROLES, true) ? 'true' : 'false' }}
          }">
 
         @if(session('error'))
@@ -135,7 +134,9 @@
                             </label>
                             <select name="payment_method" id="payment_method" x-model="paymentMethod" required
                                     class="block w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-900/50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent dark:text-white font-bold text-sm transition-all">
-                                <option value="wadiah_wallet">Wadiah E-Wallet</option>
+                                @if($wallets->isNotEmpty())
+                                <option value="wadiah_wallet">{{ __('Tabungan Wadiah') }}</option>
+                                @endif
                                 <option value="transfer">Transfer Bank YBWSA</option>
                                 <option value="cash">Tunai ke Koperasi</option>
                             </select>
@@ -147,13 +148,25 @@
                         <!-- Wadiah Wallet Box details & Student Limit Alert -->
                         <div class="p-5 rounded-2xl bg-teal-50/50 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900/50 space-y-2 transition-all"
                              x-show="paymentMethod === 'wadiah_wallet'">
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold text-teal-800 dark:text-teal-300">Saldo Wadiah Anda</span>
-                                <span class="text-xs font-black text-teal-600 dark:text-teal-400">
-                                    Rp {{ number_format($walletBalance, 0, ',', '.') }}
-                                </span>
-                            </div>
-                            
+                            @if($wallets->count() > 1)
+                                <label class="block text-xs font-bold text-teal-800 dark:text-teal-300">{{ __('Tabungan anak yang dipakai') }}</label>
+                                <select name="student_id" class="block w-full px-3 py-2 border border-teal-200 rounded-xl text-sm font-bold">
+                                    @foreach($wallets as $wallet)
+                                        <option value="{{ $wallet['student']->id }}">{{ $wallet['student']->user?->name }} — {{ $wallet['balance'] === null ? __('Belum punya tabungan') : 'Rp '.number_format($wallet['balance'], 0, ',', '.') }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                @foreach($wallets as $wallet)
+                                <input type="hidden" name="student_id" value="{{ $wallet['student']->id }}">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-teal-800 dark:text-teal-300">{{ __('Saldo Tabungan Wadiah') }}</span>
+                                    <span class="text-xs font-black text-teal-600 dark:text-teal-400">
+                                        {{ $wallet['balance'] === null ? __('Belum punya tabungan') : 'Rp '.number_format($wallet['balance'], 0, ',', '.') }}
+                                    </span>
+                                </div>
+                                @endforeach
+                            @endif
+
                             <!-- Alert: Amount > 10,000 for Students -->
                             <div x-show="isStudent && amount > 10000" 
                                  x-transition.opacity

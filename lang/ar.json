@@ -536,5 +536,19 @@
     "Total pendapatan dan belanja dihitung dari pos anggaran yang Anda tambahkan setelah ini.": "يُحسب إجمالي الإيرادات والنفقات من البنود التي تضيفها بعد ذلك.",
     "Tulis 2026/2027 untuk tahun ajaran (Juli–Juni) atau 2026 untuk tahun kalender (Januari–Desember). Realisasi dari buku besar dihitung dalam rentang itu.": "اكتب 2026/2027 للعام الدراسي (يوليو–يونيو) أو 2026 للسنة الميلادية (يناير–ديسمبر). يُحسب التحقق من دفتر الأستاذ ضمن هذا النطاق.",
     "dari buku besar": "من دفتر الأستاذ",
-    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "الدفع عبر التطبيق غير متاح بعد. يُرجى الدفع مباشرة لأمين الصندوق أو الإدارة المدرسية."
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "الدفع عبر التطبيق غير متاح بعد. يُرجى الدفع مباشرة لأمين الصندوق أو الإدارة المدرسية.",
+    "Anda hanya dapat memesan untuk anak Anda sendiri.": "يمكنك الحجز لطفلك فقط.",
+    "Batalkan": "إلغاء",
+    "Belum punya tabungan": "لا يوجد حساب ادخار بعد",
+    "Pembayaran dari tabungan wadiah hanya untuk siswa sendiri atau orang tuanya. Pilih anak yang tabungannya dipakai.": "الدفع من مدخرات الوديعة متاح للطالب أو وليّ أمره فقط. اختر الطفل الذي تُستخدم مدخراته.",
+    "Pesan": "احجز",
+    "Pesanan Anda: :name": "حجزك: :name",
+    "Pesanan slot dibatalkan.": "تم إلغاء الحجز.",
+    "Saldo Tabungan Wadiah": "رصيد مدخرات الوديعة",
+    "Sesi konsultasi orang tua \":title\" dibuat dengan :count slot.": "تم إنشاء لقاء أولياء الأمور \":title\" بعدد :count موعدًا.",
+    "Slot ini baru saja dipesan orang tua lain. Silakan pilih slot lain.": "حجز وليّ أمر آخر هذا الموعد للتو. اختر موعدًا آخر.",
+    "Slot konsultasi dipesan.": "تم حجز موعد اللقاء.",
+    "Tabungan Wadiah": "مدخرات الوديعة",
+    "Tabungan anak yang dipakai": "مدخرات الطفل المستخدمة",
+    "Terisi": "محجوز"
 }

@@ -39,7 +39,8 @@
             </nav>
         </div>
 
-        <!-- Premium Salad Wadiah E-Wallet Card -->
+        <!-- Wadiah savings of the caller's own family (none for staff) -->
+        @foreach($wallets as $wallet)
         <div class="bg-linear-to-r from-teal-600 via-emerald-600 to-cyan-700 p-8 rounded-[2.5rem] text-white shadow-xl shadow-teal-700/10 relative overflow-hidden max-w-md">
             <div class="absolute -right-10 -bottom-10 opacity-25 text-white">
                 <svg class="w-48 h-48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,18 +59,19 @@
                 </div>
                 
                 <div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-teal-100/90 block">Salad Wadiah (E-Wallet)</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-teal-100/90 block">{{ __('Saldo Tabungan Wadiah') }}</span>
                     <h3 class="text-3xl font-black mt-1 leading-none tracking-tight">
-                        Salad Wadiah: Rp {{ number_format($walletBalance, 0, ',', '.') }}
+                        {{ $wallet['balance'] === null ? __('Belum punya tabungan') : 'Rp '.number_format($wallet['balance'], 0, ',', '.') }}
                     </h3>
                 </div>
 
                 <div class="flex justify-between items-center text-[10px] text-teal-100/80 font-bold uppercase tracking-wider">
-                    <span>{{ auth()->user()->name }}</span>
+                    <span>{{ $wallet['student']->user?->name }}</span>
                     <span>SISTA Cashless</span>
                 </div>
             </div>
         </div>
+        @endforeach
 
         <!-- Section Heading -->
         <div>

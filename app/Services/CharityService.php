@@ -7,6 +7,7 @@ use App\Models\CharityDonation;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\WadiahAccount;
+use App\Support\Access\StudentDataAccess;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -79,27 +80,22 @@ class CharityService
                 'evidence_path' => $data['evidence_path'] ?? null,
             ]);
 
-            // If paying via Wadiah Wallet
+            // If paying via Wadiah Wallet: only the student's own savings, or a
+            // parent's own child's. Anyone else used to debit Student::first(),
+            // a stranger's savings, and a parent always their first child's.
             if ($paymentMethod === 'wadiah_wallet') {
-                $student = null;
-
-                if ($user->role === 'student') {
-                    $student = Student::where('user_id', $user->id)->first();
-
-                    // Siswa limit donasi mandiri Rp 10.000
-                    if ($amount > 10000) {
-                        throw new Exception('Batas donasi mandiri siswa via E-Wallet maksimal adalah Rp 10.000 per transaksi.');
-                    }
-                } elseif ($user->role === 'parent') {
-                    // For parents, pull from their first child's account
-                    $student = Student::where('parent_id', $user->id)->first();
-                } else {
-                    // Admins/teachers for demo, find any student or fallback
-                    $student = Student::first();
-                }
+                $family = Student::ofFamily($user);
+                $student = isset($data['student_id'])
+                    ? $family->whereKey($data['student_id'])->first()
+                    : ($family->count() === 1 ? $family->first() : null);
 
                 if (! $student) {
-                    throw new Exception('Rekening e-wallet siswa tidak ditemukan.');
+                    throw new Exception(__('Pembayaran dari tabungan wadiah hanya untuk siswa sendiri atau orang tuanya. Pilih anak yang tabungannya dipakai.'));
+                }
+
+                // Siswa limit donasi mandiri Rp 10.000
+                if (in_array($user->role, StudentDataAccess::STUDENT_ROLES, true) && $amount > 10000) {
+                    throw new Exception('Batas donasi mandiri siswa via E-Wallet maksimal adalah Rp 10.000 per transaksi.');
                 }
 
                 $account = WadiahAccount::where('student_id', $student->id)->first();

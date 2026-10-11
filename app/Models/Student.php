@@ -26,6 +26,24 @@ class Student extends Model
     public const SCHOOL_WIDE_ROLES = ['superadmin', 'admin', 'bk', 'staf_tu', ...RoleMiddleware::LEADERSHIP_ROLES];
 
     /**
+     * The caller's own family: a student themself, a parent their children,
+     * anyone else no one (staff included). For money that belongs to the
+     * family, such as the wadiah savings, unlike scopeVisibleTo which lets
+     * school staff see every student.
+     */
+    public function scopeOfFamily(Builder $query, User $user): Builder
+    {
+        if (in_array($user->role, StudentDataAccess::STUDENT_ROLES, true)) {
+            return $query->where('user_id', $user->id);
+        }
+        if (in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
+            return $query->where('parent_id', $user->id);
+        }
+
+        return $query->whereRaw('1 = 0');
+    }
+
+    /**
      * The students [user] may see, per CLAUDE.md rule 3: school-wide roles
      * see everyone, a teacher the classes they teach (schedule) or lead
      * (homeroom) this academic year, a student themself, a parent their own

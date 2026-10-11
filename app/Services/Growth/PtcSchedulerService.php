@@ -18,7 +18,7 @@ class PtcSchedulerService
             'start_time' => $data['start_time'],
             'end_time' => $data['end_time'],
             'slot_duration_minutes' => $data['slot_duration_minutes'] ?? 15,
-            'location' => $data['location'] ?? 'Ruang Kelas / Zoom',
+            'location' => $data['location'] ?? null,
             'organizer_id' => $organizerId,
             'status' => 'scheduled',
             'max_slots_per_teacher' => $data['max_slots_per_teacher'] ?? 10,
@@ -31,7 +31,7 @@ class PtcSchedulerService
 
     public function generateSlotsForTeachers(PtcSession $session): void
     {
-        $teachers = User::whereIn('role', ['guru', 'waka_kurikulum', 'waka_kesiswaan', 'bk'])->get();
+        $teachers = User::whereIn('role', PtcSession::HOST_ROLES)->get();
         $duration = $session->slot_duration_minutes;
 
         $startTime = strtotime($session->start_time);
@@ -52,20 +52,19 @@ class PtcSchedulerService
         }
     }
 
-    public function bookSlot(PtcSlot $slot, int $parentId, int $studentId, ?string $topic = null): PtcSlot
+    /**
+     * Book an available slot. Returns false when someone else took it first:
+     * the update only matches while the slot is still available, so two
+     * parents booking at once cannot both get it.
+     */
+    public function bookSlot(PtcSlot $slot, int $parentId, int $studentUserId, ?string $topic = null): bool
     {
-        if ($slot->status !== 'available') {
-            throw new \Exception('Slot konsultasi sudah dibooking atau tidak tersedia.');
-        }
-
-        $slot->update([
+        return PtcSlot::whereKey($slot->id)->where('status', 'available')->update([
             'parent_id' => $parentId,
-            'student_id' => $studentId,
+            'student_id' => $studentUserId,
             'topic' => $topic,
             'status' => 'booked',
-        ]);
-
-        return $slot;
+        ]) === 1;
     }
 
     public function cancelBooking(PtcSlot $slot): PtcSlot

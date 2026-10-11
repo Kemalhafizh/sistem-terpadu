@@ -536,5 +536,19 @@
     "Total pendapatan dan belanja dihitung dari pos anggaran yang Anda tambahkan setelah ini.": "Total revenue and expense are calculated from the lines you add next.",
     "Tulis 2026/2027 untuk tahun ajaran (Juli–Juni) atau 2026 untuk tahun kalender (Januari–Desember). Realisasi dari buku besar dihitung dalam rentang itu.": "Write 2026/2027 for a school year (July–June) or 2026 for a calendar year (January–December). Ledger realisation is counted within that range.",
     "dari buku besar": "from the ledger",
-    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "Paying in the app is not available yet. Please pay the school treasurer or administration office directly."
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "Paying in the app is not available yet. Please pay the school treasurer or administration office directly.",
+    "Anda hanya dapat memesan untuk anak Anda sendiri.": "You can only book for your own child.",
+    "Batalkan": "Cancel",
+    "Belum punya tabungan": "No savings account yet",
+    "Pembayaran dari tabungan wadiah hanya untuk siswa sendiri atau orang tuanya. Pilih anak yang tabungannya dipakai.": "Paying from wadiah savings is only for the student or their parent. Choose the child whose savings to use.",
+    "Pesan": "Book",
+    "Pesanan Anda: :name": "Your booking: :name",
+    "Pesanan slot dibatalkan.": "Booking cancelled.",
+    "Saldo Tabungan Wadiah": "Wadiah Savings Balance",
+    "Sesi konsultasi orang tua \":title\" dibuat dengan :count slot.": "Parent conference \":title\" created with :count slots.",
+    "Slot ini baru saja dipesan orang tua lain. Silakan pilih slot lain.": "Another parent just booked this slot. Please choose another one.",
+    "Slot konsultasi dipesan.": "Conference slot booked.",
+    "Tabungan Wadiah": "Wadiah Savings",
+    "Tabungan anak yang dipakai": "Child's savings to use",
+    "Terisi": "Taken"
 }

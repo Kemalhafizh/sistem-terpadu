@@ -40,3 +40,18 @@ Menu **Keuangan → RKAS / Anggaran**.
 *   **Tahun anggaran:** `2026/2027` berarti tahun ajaran (1 Juli – 30 Juni), `2026` berarti tahun kalender.
 *   **Realisasi:** pos yang kode akunnya ada di bagan akun dihitung otomatis dari buku besar dalam tahun anggaran itu (pendapatan = kredit − debit, belanja = debit − kredit). Pos lain dicatat manual oleh TU. Selama belum ada data, realisasi dan persentasenya tampil "–", bukan 0%.
 *   Tidak ada proyeksi tahun depan: setiap proyeksi butuh asumsi pertumbuhan, dan sebelumnya angka 5% dipakai tanpa dasar.
+
+---
+
+## 🤲 4. Infaq & Donasi (`CharityController`)
+
+*   **Kampanye** dibuat dan donasinya diverifikasi oleh TU (menu Keuangan → Kelola Infaq & Donasi).
+*   **Berdonasi:** semua warga sekolah lewat transfer (bukti diunggah) atau tunai; statusnya menunggu verifikasi TU.
+*   **Dari tabungan wadiah:** hanya siswa untuk tabungannya sendiri, atau orang tua untuk tabungan anaknya. Orang tua dengan lebih dari satu anak memilih tabungan anak yang dipakai. Dulu donatur lain (guru, admin) memotong tabungan siswa pertama di database, dan orang tua selalu memotong anak pertamanya.
+*   Siswa tanpa rekening tabungan tampil "Belum punya tabungan", bukan Rp 0.
+
+## 🤝 5. Konsultasi Orang Tua–Guru (`PtcSchedulerController`)
+
+*   Waka kesiswaan, kepala sekolah, TU, atau admin membuka sesi; slot dibuat otomatis untuk setiap guru, BK, dan wali kelas.
+*   Orang tua memesan slot untuk anaknya sendiri dan bisa membatalkannya. Dua orang tua yang memesan bersamaan tidak bisa mendapat slot yang sama. Orang tua lain hanya melihat "Terisi".
+*   Guru melihat jadwal konsultasinya di "Jadwal Saya".

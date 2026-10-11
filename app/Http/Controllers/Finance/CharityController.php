@@ -11,6 +11,7 @@ use App\Services\CharityService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class CharityController extends Controller
 {
@@ -142,26 +143,9 @@ class CharityController extends Controller
     public function portal()
     {
         $campaigns = CharityCampaign::active()->latest()->get();
+        $wallets = $this->familyWallets();
 
-        // Get personal wallet balance if student/parent
-        $walletBalance = 0.00;
-        $student = null;
-        $user = auth()->user();
-
-        if ($user->role === 'student') {
-            $student = Student::where('user_id', $user->id)->first();
-        } elseif ($user->role === 'parent') {
-            $student = Student::where('parent_id', $user->id)->first();
-        }
-
-        if ($student) {
-            $account = WadiahAccount::where('student_id', $student->id)->first();
-            if ($account) {
-                $walletBalance = $account->balance;
-            }
-        }
-
-        return view('finance.charity.portal', compact('campaigns', 'walletBalance'));
+        return view('finance.charity.portal', compact('campaigns', 'wallets'));
     }
 
     /**
@@ -170,25 +154,27 @@ class CharityController extends Controller
     public function donateForm($campaignId)
     {
         $campaign = CharityCampaign::active()->findOrFail($campaignId);
+        $wallets = $this->familyWallets();
 
-        $walletBalance = 0.00;
-        $student = null;
-        $user = auth()->user();
+        return view('finance.charity.donate', compact('campaign', 'wallets'));
+    }
 
-        if ($user->role === 'student') {
-            $student = Student::where('user_id', $user->id)->first();
-        } elseif ($user->role === 'parent') {
-            $student = Student::where('parent_id', $user->id)->first();
-        }
+    /**
+     * The wadiah savings the caller may pay from: their own as a student, each
+     * child's as a parent, none otherwise. A student without an account has
+     * balance null ("belum punya tabungan"), not Rp 0.
+     *
+     * @return Collection<int, array{student: Student, balance: ?float}>
+     */
+    private function familyWallets(): Collection
+    {
+        $students = Student::ofFamily(auth()->user())->with('user')->get();
+        $accounts = WadiahAccount::whereIn('student_id', $students->pluck('id'))->get()->keyBy('student_id');
 
-        if ($student) {
-            $account = WadiahAccount::where('student_id', $student->id)->first();
-            if ($account) {
-                $walletBalance = $account->balance;
-            }
-        }
-
-        return view('finance.charity.donate', compact('campaign', 'walletBalance'));
+        return $students->map(fn (Student $student) => [
+            'student' => $student,
+            'balance' => isset($accounts[$student->id]) ? (float) $accounts[$student->id]->balance : null,
+        ])->values();
     }
 
     /**
@@ -203,6 +189,7 @@ class CharityController extends Controller
             'evidence' => 'nullable|image|max:2048',
             'donor_name' => 'nullable|string|max:100',
             'is_anonymous' => 'nullable|boolean',
+            'student_id' => 'nullable|integer',
         ]);
 
         $data = $request->all();

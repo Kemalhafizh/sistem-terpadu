@@ -10,11 +10,11 @@
         <a href="{{ route('growth.ptc.sessions') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs">Kembali</a>
     </div>
 
-    @if(session('success'))
-    <div class="p-4 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-2xl text-sm font-semibold">
-        {{ session('success') }}
-    </div>
-    @endif
+    @foreach(['success' => 'bg-emerald-50 text-emerald-800 border-emerald-200', 'error' => 'bg-rose-50 text-rose-800 border-rose-200'] as $flash => $classes)
+        @if(session($flash))
+        <div class="p-4 border rounded-2xl text-sm font-semibold {{ $classes }}">{{ session($flash) }}</div>
+        @endif
+    @endforeach
 
     <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
         <h3 class="text-base font-black text-gray-900 dark:text-white mb-4">Daftar Slot Waktu Konsultasi Guru</h3>
@@ -36,22 +36,31 @@
                     <td class="py-3 px-4">
                         <span class="px-2.5 py-1 text-xs font-bold rounded-lg uppercase
                             {{ $sl->status === 'available' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
-                            {{ $sl->status }}
+                            {{ __('ptc.status.'.$sl->status) }}
                         </span>
                     </td>
                     <td class="py-3 px-4 text-right">
-                        @if($sl->status === 'available')
+                        @if($sl->status === 'available' && $children->isNotEmpty())
                         <form action="{{ route('growth.ptc.book_slot', $sl->id) }}" method="POST" class="flex gap-2 justify-end items-center">
                             @csrf
                             <select name="student_id" required class="bg-gray-50 dark:bg-gray-900 border border-gray-300 rounded-lg px-2 py-1 text-xs font-semibold">
-                                @foreach($students as $st)
-                                <option value="{{ $st->id }}">{{ $st->name }}</option>
+                                @foreach($children as $child)
+                                <option value="{{ $child->user_id }}">{{ $child->user?->name }}</option>
                                 @endforeach
                             </select>
-                            <button type="submit" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold">Booking Slot &rarr;</button>
+                            <button type="submit" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold">{{ __('Pesan') }} &rarr;</button>
                         </form>
-                        @else
-                        <span class="text-xs font-bold text-gray-400">Terisi oleh {{ $sl->parent->name ?? 'Wali' }}</span>
+                        @elseif($sl->status === 'booked' && (int) $sl->parent_id === auth()->id())
+                        <form action="{{ route('growth.ptc.cancel_slot', $sl->id) }}" method="POST" class="inline">
+                            @csrf
+                            <span class="text-xs font-bold text-indigo-600 mr-2">{{ __('Pesanan Anda: :name', ['name' => $sl->student?->name]) }}</span>
+                            <button type="submit" class="text-xs font-bold text-rose-600 hover:underline">{{ __('Batalkan') }}</button>
+                        </form>
+                        @elseif($sl->status === 'booked' && $children->isEmpty())
+                        {{-- Staff see who booked; other parents don't. --}}
+                        <span class="text-xs font-bold text-gray-500">{{ $sl->parent?->name }} — {{ $sl->student?->name }}</span>
+                        @elseif($sl->status === 'booked')
+                        <span class="text-xs font-bold text-gray-400">{{ __('Terisi') }}</span>
                         @endif
                     </td>
                 </tr>
