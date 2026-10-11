@@ -34,17 +34,11 @@ use App\Http\Controllers\CmsController;
 use App\Http\Controllers\Communication\MessagingController;
 use App\Http\Controllers\Communication\NotificationCenterController;
 use App\Http\Controllers\Communication\ResourceBookingController;
-use App\Http\Controllers\Compliance\AuditConsoleController;
-use App\Http\Controllers\Compliance\DapodikExportController;
-use App\Http\Controllers\Compliance\DataRetentionController;
-use App\Http\Controllers\Compliance\LegalContractController;
-use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\Content\ExportEngineController;
 use App\Http\Controllers\CounselingController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DailyAssessmentController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EdsController;
 use App\Http\Controllers\ElearningController;
 use App\Http\Controllers\ElearningSecureController;
 use App\Http\Controllers\EventAttendanceController;
@@ -55,9 +49,7 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\Financial\BudgetPlanningController;
 use App\Http\Controllers\Financial\ScholarshipController;
 use App\Http\Controllers\FinancialReportController;
-use App\Http\Controllers\ForumController;
 use App\Http\Controllers\GradeController;
-use App\Http\Controllers\Grc\AccreditationController;
 use App\Http\Controllers\Growth\P5AssessmentController;
 use App\Http\Controllers\Growth\PtcSchedulerController;
 use App\Http\Controllers\HRD\EmployeeController;
@@ -81,7 +73,6 @@ use App\Http\Controllers\OsisController;
 use App\Http\Controllers\ParentPortalController;
 use App\Http\Controllers\PointCategoryController;
 use App\Http\Controllers\PointController;
-use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicSiteController;
 use App\Http\Controllers\PwaController;
@@ -99,7 +90,6 @@ use App\Http\Controllers\StudentFinanceController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TahfidzController;
-use App\Http\Controllers\TeacherTodoController;
 use App\Http\Controllers\TeachingJournalController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TracerStudyController;
@@ -159,11 +149,6 @@ Route::prefix('spmb')->middleware('throttle:spmb')->group(function () {
     Route::get('/announcement', [SpmbController::class, 'publicAnnouncement'])->name('spmb.announcement');
     Route::get('/print-card/{registration}', [SpmbController::class, 'printCard'])->name('spmb.print-card');
 });
-
-// ============================================================
-// PUBLIC E-PORTFOLIO SHOWCASE
-// ============================================================
-Route::get('portfolio/{uuid}', [PortfolioController::class, 'publicPortfolio'])->name('portfolios.public');
 
 // ============================================================
 // AUTHENTICATED ROUTES
@@ -358,19 +343,6 @@ Route::middleware('auth')->group(function () {
     // 42.4: Asset Maintenance & Preventive Service Scheduler
     Route::get('facility/maintenance/schedule', [App\Http\Controllers\Operations\AssetMaintenanceController::class, 'schedule'])->name('facility.maintenance.schedule');
 
-    // FASE 43: Advanced Compliance & Regulatory Technology
-    // 43.1: Dapodik/EMIS Auto-Export & Validation Engine
-    Route::get('compliance/dapodik/index', [DapodikExportController::class, 'index'])->name('compliance.dapodik.index');
-
-    // 43.2: Automated Data Retention & PDP Purge Engine
-    Route::get('compliance/retention/index', [DataRetentionController::class, 'index'])->name('compliance.retention.index');
-
-    // 43.3: Digital Forensics & Compliance Audit Console
-    Route::get('compliance/audit/console', [AuditConsoleController::class, 'console'])->name('compliance.audit.console');
-
-    // 43.4: Legal Contract & Vendor Compliance Manager
-    Route::get('compliance/contracts/index', [LegalContractController::class, 'index'])->name('compliance.contracts.index');
-
     // Multi-Format Export Engine & Data Interoperability
     Route::middleware('role:staf_tu,waka_kurikulum,waka_sarpras,kepala_sekolah,admin,superadmin')->group(function () {
         Route::get('exports', [ExportEngineController::class, 'selectFormat'])->name('exports.index');
@@ -378,13 +350,6 @@ Route::middleware('auth')->group(function () {
         Route::get('exports/{id}/download', [ExportEngineController::class, 'downloadExport'])->whereNumber('id')->name('exports.download');
         Route::get('exports/history', [ExportEngineController::class, 'exportHistory'])->name('exports.history');
     });
-
-    // BAN-SM Accreditation Readiness Dashboard & Evidence Collector
-    Route::get('accreditation', [AccreditationController::class, 'dashboard'])->name('accreditation.dashboard');
-    Route::get('accreditation/standards/{id}', [AccreditationController::class, 'standardDetail'])->name('accreditation.standard_detail');
-    Route::post('accreditation/evidences', [AccreditationController::class, 'uploadEvidence'])->name('accreditation.upload_evidence');
-    Route::post('accreditation/evidences/{id}/verify', [AccreditationController::class, 'verifyEvidence'])->name('accreditation.verify_evidence');
-    Route::get('accreditation/report', [AccreditationController::class, 'report'])->name('accreditation.report');
 
     // =========================================================
     // EKSTRAKURIKULER & OSIS â€” Pengembangan Non-Akademik
@@ -564,19 +529,6 @@ Route::middleware('auth')->group(function () {
         Route::get('daily-assessments/{daily_assessment}/input-scores', [DailyAssessmentController::class, 'inputScores'])->name('daily-assessments.input-scores');
         Route::post('daily-assessments/{daily_assessment}/store-scores', [DailyAssessmentController::class, 'storeScores'])->name('daily-assessments.store-scores');
         Route::get('daily-assessments/{daily_assessment}/export-pdf', [DailyAssessmentController::class, 'exportPdf'])->name('daily-assessments.pdf');
-
-        // Agenda & Todo List: every staff member keeps their own list. One rule
-        // here (it used to disagree with a second list inside the controller).
-        Route::withoutMiddleware('role:guru,bk,admin,superadmin')
-            ->middleware('role:guru,bk,waka_kurikulum,waka_kesiswaan,waka_humas,waka_sarpras,staf_tu,admin')
-            ->group(function () {
-                Route::get('todos', [TeacherTodoController::class, 'index'])->name('todos.index');
-                Route::post('todos', [TeacherTodoController::class, 'store'])->name('todos.store');
-                Route::patch('todos/{todo}/toggle', [TeacherTodoController::class, 'toggle'])->name('todos.toggle');
-                Route::put('todos/{todo}', [TeacherTodoController::class, 'update'])->name('todos.update');
-                Route::delete('todos/{todo}', [TeacherTodoController::class, 'destroy'])->name('todos.destroy');
-            });
-        Route::get('todos/today', [TeacherTodoController::class, 'todayTasks'])->name('todos.today');
     });
 
     // =========================================================
@@ -1046,22 +998,6 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // FORUM DISKUSI & RUANG KELAS VIRTUAL
-    // =========================================================
-    Route::prefix('forum')->name('forum.')->group(function () {
-        Route::get('/', [ForumController::class, 'index'])->name('index');
-        Route::get('create', [ForumController::class, 'create'])->name('create');
-        Route::post('threads', [ForumController::class, 'storeThread'])->name('threads.store');
-        Route::get('thread/{thread}', [ForumController::class, 'show'])->name('show');
-        Route::post('thread/{thread}/replies', [ForumController::class, 'storeReply'])->name('replies.store');
-        Route::post('thread/{thread}/pin', [ForumController::class, 'togglePin'])->name('threads.pin');
-        Route::post('thread/{thread}/lock', [ForumController::class, 'toggleLock'])->name('threads.lock');
-        Route::post('reply/{reply}/best-answer', [ForumController::class, 'markBestAnswer'])->name('replies.best');
-        Route::post('react', [ForumController::class, 'react'])->name('react');
-        Route::delete('thread/{thread}', [ForumController::class, 'destroy'])->name('threads.destroy');
-    });
-
-    // =========================================================
     // E-LEARNING PORTAL & PWA
     // =========================================================
     Route::get('elearning/install', [ElearningController::class, 'install'])->name('elearning.install');
@@ -1165,43 +1101,6 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ðŸ“Š RAPORT MUTU SEKOLAH (EVALUASI DIRI SEKOLAH / EDS)
-    // =========================================================
-    Route::middleware('role:kepala_sekolah,waka_kurikulum,admin,superadmin')
-        ->prefix('eds')
-        ->name('eds.')
-        ->group(function () {
-            Route::get('/', [EdsController::class, 'index'])->name('index');
-            Route::post('/', [EdsController::class, 'store'])->name('store');
-            Route::get('/comparison', [EdsController::class, 'comparison'])->name('comparison');
-
-            Route::get('/{period}', [EdsController::class, 'show'])->name('show');
-            Route::post('/{period}/complete', [EdsController::class, 'complete'])->name('complete');
-            Route::get('/{period}/standard/{standard}', [EdsController::class, 'assess'])->name('assess');
-            Route::post('/{period}/assess', [EdsController::class, 'storeAssessment'])->name('assess.store');
-            Route::get('/{period}/gap-analysis', [EdsController::class, 'gapAnalysis'])->name('gap-analysis');
-            Route::get('/{period}/export-pdf', [EdsController::class, 'exportPdf'])->name('export-pdf');
-        });
-
-    // =========================================================
-    // ðŸ“‘ AUDIT & COMPLIANCE DASHBOARD (MODUL 9)
-    // =========================================================
-    Route::middleware('role:kepala_sekolah,admin,superadmin')
-        ->prefix('compliance')
-        ->name('compliance.')
-        ->group(function () {
-            Route::get('/', [ComplianceController::class, 'index'])->name('index');
-            Route::get('/checklist', [ComplianceController::class, 'checklist'])->name('checklist');
-            Route::get('/documents', [ComplianceController::class, 'documentRepository'])->name('documents');
-            Route::post('/documents', [ComplianceController::class, 'uploadDocument'])->name('documents.upload');
-            Route::delete('/documents/{document}', [ComplianceController::class, 'deleteDocument'])->name('documents.destroy');
-            Route::get('/timeline', [ComplianceController::class, 'timeline'])->name('timeline');
-            Route::post('/milestones', [ComplianceController::class, 'storeMilestone'])->name('milestones.store');
-            Route::post('/milestones/{milestone}/toggle', [ComplianceController::class, 'toggleMilestone'])->name('milestones.toggle');
-            Route::get('/export', [ComplianceController::class, 'exportReport'])->name('export');
-        });
-
-    // =========================================================
     // ðŸ“ UJIAN ONLINE / CBT (COMPUTER-BASED TEST)
     // =========================================================
     Route::prefix('cbt')->name('cbt.')->group(function () {
@@ -1252,28 +1151,6 @@ Route::middleware('auth')->group(function () {
             Route::post('/{workflowRequest}/resubmit', [WorkflowController::class, 'resubmit'])->name('resubmit');
             Route::post('/{workflowRequest}/delegate', [WorkflowController::class, 'delegate'])->name('delegate');
         });
-
-    // =========================================================
-    // ðŸŽ“ E-PORTFOLIO SISWA (MODUL 8)
-    // =========================================================
-    Route::prefix('portfolios')->name('portfolios.')->group(function () {
-        // Rute Siswa (Akses Pengelolaan Portofolio Mandiri)
-        Route::middleware('role:student')->group(function () {
-            Route::get('/mine', [PortfolioController::class, 'mine'])->name('mine');
-            Route::post('/', [PortfolioController::class, 'store'])->name('store');
-            Route::put('/{portfolioItem}', [PortfolioController::class, 'update'])->name('update');
-            Route::delete('/{portfolioItem}', [PortfolioController::class, 'destroy'])->name('destroy');
-            Route::post('/{portfolioItem}/toggle-visibility', [PortfolioController::class, 'toggleVisibility'])->name('toggle-visibility');
-        });
-
-        // Rute Staf Guru & BK (Akses Ulasan & Pemberian Lencana)
-        Route::middleware('role:guru,bk,admin,superadmin,kepala_sekolah')->group(function () {
-            Route::get('/', [PortfolioController::class, 'index'])->name('index');
-            Route::get('/student/{student}/review', [PortfolioController::class, 'review'])->name('review');
-            Route::post('/item/{portfolioItem}/verify', [PortfolioController::class, 'verify'])->name('verify');
-            Route::post('/student/{student}/badge', [PortfolioController::class, 'awardBadge'])->name('award-badge');
-        });
-    });
 
     // =========================================================
     // ðŸ“¥ DATA IMPORT/EXPORT HUB UNIVERSAL (MODUL 7)

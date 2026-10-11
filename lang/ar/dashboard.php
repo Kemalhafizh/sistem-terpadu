@@ -129,7 +129,6 @@ return [
     'widget_student_recent_scores' => 'الدرجات الأخيرة',
     'widget_student_mutabaah_today' => 'المتابعة اليوم',
     'widget_student_library_loans' => 'الكتب المستعارة',
-    'widget_student_recent_forum' => 'المواضيع الجديدة في المنتدى',
 
     'widget_parent_child_attendance' => 'حضور الأبناء اليوم',
     'widget_parent_child_scores' => 'آخر درجات الابن',

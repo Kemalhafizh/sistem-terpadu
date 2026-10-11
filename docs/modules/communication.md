@@ -1,4 +1,4 @@
-# 💬 Modul WhatsApp Gateway, Chat Real-Time & Forum SISTA
+# 💬 Modul WhatsApp Gateway & Chat Real-Time SISTA
 
 Modul Komunikasi SISTA dirancang untuk menjembatani komunikasi interaktif, instan, dan real-time antara seluruh ekosistem sekolah: pihak sekolah (admin/guru), orang tua/wali siswa, dan siswa itu sendiri.
 
@@ -13,11 +13,6 @@ Modul Komunikasi SISTA dirancang untuk menjembatani komunikasi interaktif, insta
 ### B. Parent-Teacher Real-Time Chat Hub
 *   **`ParentMessage`**: Menyimpan log obrolan pesan teks dan lampiran file/gambar antara wali murid (`User` dengan peran `wali`) dengan guru/wali kelas (`User` dengan peran `guru`).
 *   **`MessageSent` (Broadcast Event)**: Dipicu ketika ada pesan baru untuk disalurkan secara instan ke browser penerima via **Laravel Reverb**.
-
-### C. Forum Diskusi Akademik
-*   **`ForumThread`**: Thread diskusi yang dibuat oleh siswa atau guru dengan kategori tertentu (misal: 'Sains', 'Agama', 'Umum').
-*   **`ForumReply`**: Balasan/komentar bertingkat dalam suatu thread diskusi.
-*   **`ForumReaction`**: Reaksi emoji unik (Helpful, Like, Dislike) dari pengguna lain terhadap thread/reply forum.
 
 ---
 
@@ -59,8 +54,6 @@ Sistem notifikasi multi-channel dan alur pesan divalidasi oleh Pest PHP:
 *   **`sistem mencatat log kegagalan jika gateway offline`**
     *   Mensimulasikan respons error API dari gateway Fonnte dan memverifikasi log WA tersimpan dengan status `failed` beserta payload error-nya.
 
-### B. Real-Time Chat & Forum Tests (`RealTimeEventTest.php` & `ForumTest.php`)
+### B. Real-Time Chat Tests (`RealTimeEventTest.php`)
 *   **`pesan obrolan wali-guru terkirim dan membroadcast event`**
     *   Menguji bahwa pengiriman pesan privat memicu event `MessageSent` ke channel WebSocket yang tepat.
-*   **`pengguna dapat memberikan reaksi pada thread forum`**
-    *   Memverifikasi penambahan `ForumReaction` terhitung secara akurat pada API endpoint forum diskusi.

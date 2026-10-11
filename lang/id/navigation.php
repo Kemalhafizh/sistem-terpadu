@@ -46,7 +46,6 @@ return [
     'journal' => 'Jurnal Harian Guru',
     'meeting_notes' => 'Notulensi Rapat',
     'curriculum' => 'Kurikulum & Silabus',
-    'eds' => 'Raport Mutu (EDS)',
     'hrd_portal' => 'Portal HRD Saya',
     'helpdesk' => 'Helpdesk Internal',
     'asset_loans' => 'Peminjaman Aset',
@@ -71,12 +70,10 @@ return [
     'grade_recap' => 'Rekap Nilai',
     'ledger_report' => 'Ledger & E-Rapor',
     'library' => 'Smart Library',
-    'forum' => 'Forum Diskusi',
     'surveys' => 'Survei Digital',
     'daily_assessments' => 'Penilaian Harian',
     'remedial_list' => 'Daftar Remedial',
     'event_attendance' => 'Presensi Kegiatan',
-    'todo_agenda' => 'Agenda & Todo',
 
     'inclusive_education' => 'Pendidikan Inklusif & IEP',
 

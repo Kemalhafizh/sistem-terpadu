@@ -6799,6 +6799,8 @@ Setiap PR mencantumkan angka sebelum/sesudah: jumlah controller, route, tabel, d
 
 ### 119.9: Menunggu Keputusan Pemilik Produk (jangan disentuh di FASE 119)
 
+> Sudah diputuskan sesudah FASE 119, lihat 119.11.
+
 Modul berikut abu-abu. Biarkan apa adanya sampai pemilik produk memutuskan:
 - Tryout UTBK + rekomendasi PTN (`UtbkMobileApi`).
 - Evaluasi guru oleh siswa (`EvaluationMobileApi`).
@@ -6852,3 +6854,36 @@ Dikerjakan dalam enam PR sesuai 119.7: #41 (tools developer & teknologi pamer), 
 - **EMIS:** `EmisService` masih mengirim `'Sudah Sertifikasi'` tetap untuk profil sekolah, dan dokumentasi menyebut fallback `"Ibu Kandung Siswa"` untuk Dapodik. Bila kode masih mengirimnya, itu teks karangan (CLAUDE.md aturan 1).
 - **Payroll** masih menghitung hari kerja sendiri (Senin–Jumat). `EmployeeAttendanceRecap::forEmployee()` siap dipakai bila payroll ingin memakai hari yang tercakup log mesin.
 - **Tahsin:** `TahsinRecordController` (penilaian guru) dan `TahsinSubmissionApi` (setoran audio siswa) bukan duplikat. Penggabungan alurnya perlu keputusan produk.
+
+### 119.11: Keputusan Modul 119.9 dan Tindak Lanjut
+
+Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). Ukurannya satu: apakah modul ini dipakai sehari-hari oleh TU, guru, siswa, atau orang tua SMA Islam Sultan Agung 1 Semarang dan punya pemilik yang jelas. Kalau dipertahankan, alurnya harus tersimpan, aksesnya ikut aturan peran, dan tidak ada angka karangan.
+
+**Dipertahankan dan diperbaiki (satu PR per kelompok):**
+- **RKAS / RAPBS:** TU atau bendahara menyusun, kepala sekolah menyetujui, penyusun tidak bisa menyetujui RKAS buatannya sendiri. Realisasi dibaca dari buku besar. Pos tanpa akun dicatat manual, dan "belum ada data" tampil "–", bukan 0%. Halaman proyeksi yang mengarang pertumbuhan 5% dihapus.
+- **Infaq / donasi:** potongan tabungan hanya dari anak di keluarga donatur sendiri. Sebelumnya `Student::first()` bisa terdebit untuk donatur yang tidak punya anak.
+- **Penjadwal pertemuan ortu–guru:** orang tua hanya memesan untuk anaknya sendiri, dan satu slot tidak bisa dipesan dua kali. Pemesanan bisa dibatalkan.
+- **Evaluasi guru oleh siswa dan 360°:**
+  - Siswa hanya menilai guru yang mengajar di kelasnya menurut jadwal tahun ajaran aktif.
+  - Perspektif penilai ditentukan dari akun, bukan dipilih di form.
+  - Ringkasan tidak lagi mengisi perspektif kosong dengan 4.2/4.1/4.5.
+  - Hasil hanya terbuka untuk pimpinan dan guru yang dinilai.
+
+**Dipotong:**
+- **Forum diskusi kelas:** komunikasi kelas sudah lewat chat ortu ↔ wali kelas, pengumuman, dan e-learning. Forum terbuka untuk anak di bawah umur menuntut moderasi harian yang tidak punya pemilik.
+- **To-do guru:** catatan pribadi, bukan alur kerja sekolah. Agenda sekolah ada di kalender (`AcademicEvent`).
+- **Portofolio siswa** (termasuk tautan publik `portfolio/{uuid}` dan lencana): prestasi tercatat di `Achievement` dan prestasi ekstrakurikuler. Halaman publik tanpa verifikasi berisiko membuka data anak.
+- **EDS / Rapor Mutu, dashboard akreditasi, konsol compliance** (retensi data, kontrak legal, forensik, log ekspor Dapodik): sudah ada platform resmi pemerintah (Rapor Pendidikan), dan skor kesiapannya tidak punya sumber data. Ekspor Dapodik dan EMIS tetap di modul integrasi.
+- **Tryout UTBK + rekomendasi PTN:** diputuskan dipotong, belum dikerjakan. Data PTN-nya karangan seeder dan aplikasi Android masih membaca endpoint-nya, jadi urutannya PR sista-android dulu, baru server.
+
+**Yang ikut beres dari daftar "belum diputuskan" 119.10:**
+- **Payroll** memakai `EmployeeAttendanceRecap`.
+  - Hari kerja diambil dari `HRD_WORK_DAYS` yang tercakup log mesin, dan cuti yang disetujui masuk ke rekap.
+  - Tarif potongan disimpan di pengaturan. Bila belum diisi, nilainya `null`, bukan Rp 25.000/Rp 100.000 karangan.
+  - Persetujuan dan pembayaran berlaku per slip.
+- **Cuti pegawai** lewat alur persetujuan `leave_approval` (waka kurikulum → kepala sekolah). Sebelumnya cuti tidak pernah bisa disetujui.
+- **Dapodik/EMIS:**
+  - Tidak ada lagi `"Ibu Kandung Siswa"` atau `'Sudah Sertifikasi'` karangan. Kolom yang kosong dilaporkan sebagai data belum lengkap.
+  - Ditambahkan tempat lahir, nama ibu kandung, dan NUPTK.
+  - Konversi SPMB membawa jenis kelamin, tanggal lahir, dan alamat pendaftar. Konversi tidak lagi mengarang NISN atau tagihan Uang Pangkal Rp 5.000.000.
+

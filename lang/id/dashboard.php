@@ -129,7 +129,6 @@ return [
     'widget_student_recent_scores' => 'Nilai Terbaru',
     'widget_student_mutabaah_today' => 'Mutaba\'ah Hari Ini',
     'widget_student_library_loans' => 'Buku yang Dipinjam',
-    'widget_student_recent_forum' => 'Thread Forum Terbaru',
 
     'widget_parent_child_attendance' => 'Kehadiran Anak Hari Ini',
     'widget_parent_child_scores' => 'Nilai Terbaru Anak',

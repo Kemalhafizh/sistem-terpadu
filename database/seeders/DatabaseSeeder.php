@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
 
                 // System Configurations
                 WorkflowDefinitionSeeder::class,    // Workflow definitions
-                PortfolioBadgeSeeder::class,        // Portfolio badges
                 SettingSeeder::class,               // Settings
                 AccountingSeeder::class,            // Accounts and journals
 
@@ -37,7 +36,6 @@ class DatabaseSeeder extends Seeder
                 DailyAssessmentSeeder::class,       // 60+ daily assessments & 1200+ scores
                 TahfidzDetailSeeder::class,         // ~300 ziyadah & muraja'ah setoran logs
                 MutabaahDetailSeeder::class,        // ~4500 daily mutaba'ah logs for 30 days
-                ForumSeeder::class,                 // 20 threads, ~100 replies, and morph reactions
                 ElearningSeeder::class,             // 5 classes, 20 materials, 10 assignments, 60 submissions
                 CbtSeeder::class,                   // 3 CBT exams, 90 questions, 120 attempts with violation logs
                 CounselingSeeder::class,            // 10 counseling sessions with encrypted reasons/notes
@@ -47,7 +45,6 @@ class DatabaseSeeder extends Seeder
                 LibraryLoanSeeder::class,           // 35 library book loans (active, returned, overdue)
                 EventAttendanceSeeder::class,       // 10 events + presensi (upacara, sholat dhuha, PHBI)
                 MeetingNoteSeeder::class,           // 3 meetings with attendees and action items (Modul 15.1)
-                TeacherTodoSeeder::class,           // ~40+ teacher todo items with various statuses (Modul 15.3)
 
                 // Mega Seeder v2 - Baru
                 PpdbSeeder::class,
@@ -74,13 +71,11 @@ class DatabaseSeeder extends Seeder
                 NotificationCenterSeeder::class,
                 InternalMessagingSeeder::class,
                 ExportEngineSeeder::class,
-                AccreditationSeeder::class,
                 EnterpriseFinancialSeeder::class,
                 StudentGrowthSeeder::class,
                 HumanCapitalSeeder::class,
                 StudentExperienceSeeder::class,
                 FacilityOperationsSeeder::class,
-                ComplianceRegulatorySeeder::class,
             ]);
         });
     }

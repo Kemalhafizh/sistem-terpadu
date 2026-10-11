@@ -5,7 +5,6 @@ use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Billing;
 use App\Models\Classroom;
-use App\Models\ComplianceMilestone;
 use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningSubmission;
@@ -28,7 +27,6 @@ beforeEach(function () {
     Billing::truncate();
     Payment::truncate();
     PaymentCategory::truncate();
-    ComplianceMilestone::truncate();
     Grade::truncate();
     StudentPointLog::truncate();
     ElearningSubmission::truncate();
@@ -164,6 +162,18 @@ test('daily admin digest compiles correct metrics from SISTA core modules', func
     $this->assertEquals(2, $data['alpa_count']);
     $this->assertEquals(1, $data['new_tickets']);
     $this->assertEquals(1, $data['new_billings']);
+});
+
+test('weekly kepsek digest reports unknown attendance instead of 100%', function () {
+    $service = app(DigestService::class);
+    $data = $service->generateWeeklyKepsekDigest();
+
+    // No attendance this week was reported as a perfect 100% before.
+    expect($data['attendance_rate'])->toBeNull()
+        ->and($data)->not->toHaveKey('completed_milestones');
+
+    $html = $service->renderDigestHtml('weekly_kepsek', $data);
+    expect($html)->toContain('belum ada data')->not->toContain('100%');
 });
 
 test('weekly parent digest fetches correct assignments and grades for student', function () {

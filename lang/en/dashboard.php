@@ -129,7 +129,6 @@ return [
     'widget_student_recent_scores' => 'Recent Scores',
     'widget_student_mutabaah_today' => 'Today\'s Mutaba\'ah',
     'widget_student_library_loans' => 'Borrowed Books',
-    'widget_student_recent_forum' => 'New Forum Threads',
 
     'widget_parent_child_attendance' => 'Child\'s Attendance Today',
     'widget_parent_child_scores' => 'Child\'s Recent Grades',

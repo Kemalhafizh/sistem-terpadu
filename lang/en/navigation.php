@@ -46,7 +46,6 @@ return [
     'journal' => 'Daily Teaching Journal',
     'meeting_notes' => 'Meeting Minutes',
     'curriculum' => 'Curriculum & Syllabus',
-    'eds' => 'School Quality Report (EDS)',
     'hrd_portal' => 'My HR Portal',
     'helpdesk' => 'Internal Helpdesk',
     'asset_loans' => 'Asset Borrowing',
@@ -71,12 +70,10 @@ return [
     'grade_recap' => 'Grade Recap',
     'ledger_report' => 'Grade Ledger & E-Report',
     'library' => 'Smart Digital Library',
-    'forum' => 'Discussion Forum',
     'surveys' => 'Digital Surveys',
     'daily_assessments' => 'Daily Assessments',
     'remedial_list' => 'Remedial Registry',
     'event_attendance' => 'Event Attendance',
-    'todo_agenda' => 'Agenda & Todos',
 
     'inclusive_education' => 'Inclusive Education & IEP',
 

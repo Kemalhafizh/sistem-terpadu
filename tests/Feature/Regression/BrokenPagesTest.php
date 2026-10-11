@@ -79,10 +79,8 @@ test('alumni hanya bisa mengubah jawaban tracer study miliknya', function () {
     expect($bobResponse->fresh()->relevance_score)->toBe(4);
 });
 
-test('forum dan cek ketersediaan booking tidak lagi error', function () {
-    // forum/create calls auth()->user()->isParent(), which didn't exist.
-    $this->actingAs($this->admin)->get(route('forum.create'))->assertOk();
-    $this->getJson(route('resource_bookings.check'))->assertStatus(422)->assertJsonValidationErrors(['resource_id', 'start', 'end']);
+test('cek ketersediaan booking tidak lagi error, isParent mengenali semua ejaan', function () {
+    $this->actingAs($this->admin)->getJson(route('resource_bookings.check'))->assertStatus(422)->assertJsonValidationErrors(['resource_id', 'start', 'end']);
 
     expect(User::factory()->make(['role' => 'orang_tua'])->isParent())->toBeTrue()
         ->and(User::factory()->make(['role' => 'guru'])->isParent())->toBeFalse();

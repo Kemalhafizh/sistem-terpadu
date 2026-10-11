@@ -109,19 +109,6 @@
         @endcanVisit
         @endif
 
-        @if(in_array(auth()->user()->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']))
-        @canVisit('eds.index')
-        <a href="{{ route('eds.index') }}" class="{{ $linkClass }} {{ request()->routeIs('eds.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.eds') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.eds') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.eds') }}</div>
-        </a>
-        @endcanVisit
-        @endif
         
         @canVisit('my-hrd.portal')
         <a href="{{ route('my-hrd.portal') }}" class="{{ $linkClass }} {{ request()->routeIs('my-hrd.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.hrd_portal') }}">
@@ -655,15 +642,6 @@
             <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.ledger_report') }}</div>
         </a>
         @endcanVisit
-        @canVisit('todos.index')
-        <a href="{{ route('todos.index') }}" class="{{ $linkClass }} {{ request()->routeIs('todos.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.todo_agenda') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.todo_agenda') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.todo_agenda') }}</div>
-        </a>
-        @endcanVisit
         @endif
 
         {{-- Ekstrakurikuler --}}
@@ -716,18 +694,6 @@
         </a>
         @endcanVisit
 
-        {{-- Forum Diskusi --}}
-        @canVisit('forum.index')
-        <a href="{{ route('forum.index') }}" class="{{ $linkClass }} {{ request()->routeIs('forum.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.forum') }}">
-            <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'mr-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
-                </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.forum') }}</span>
-            </div>
-            <div x-show="sidebarCollapsed" class="absolute left-14 top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.forum') }}</div>
-        </a>
-        @endcanVisit
 
         {{-- Survei Digital --}}
         @canVisit('surveys.index')

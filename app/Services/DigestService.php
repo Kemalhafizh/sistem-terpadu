@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Mail\ScheduledDigestMail;
 use App\Models\Attendance;
 use App\Models\Billing;
-use App\Models\ComplianceMilestone;
 use App\Models\ElearningAssignment;
 use App\Models\ElearningClass;
 use App\Models\ElearningSubmission;
@@ -60,7 +59,8 @@ class DigestService
         // Attendance stats
         $totalPresences = Attendance::whereBetween('date', [$startOfWeek, $endOfWeek])->count();
         $presentCount = Attendance::whereBetween('date', [$startOfWeek, $endOfWeek])->where('status', 'H')->count();
-        $attendanceRate = $totalPresences > 0 ? round(($presentCount / $totalPresences) * 100, 1) : 100.0;
+        // No attendance recorded this week: unknown, not 100%.
+        $attendanceRate = $totalPresences > 0 ? round(($presentCount / $totalPresences) * 100, 1) : null;
 
         // Finance stats
         $totalPayments = Payment::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('amount_paid');
@@ -70,16 +70,10 @@ class DigestService
             ->whereNull('verified_at')
             ->count();
 
-        // Compliance status
-        $completedMilestones = ComplianceMilestone::where('is_completed', true)->count();
-        $totalMilestones = ComplianceMilestone::count();
-
         return [
             'attendance_rate' => $attendanceRate,
             'total_payments' => (float) $totalPayments,
             'missing_journals' => $missingJournals,
-            'completed_milestones' => $completedMilestones,
-            'total_milestones' => $totalMilestones,
             'start_date' => $startOfWeek->translatedFormat('d M'),
             'end_date' => $endOfWeek->translatedFormat('d M Y'),
         ];
@@ -205,10 +199,9 @@ class DigestService
                 <div style='background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-top: 20px;'>
                     <h3 style='margin-top: 0; color: #312e81; font-size: 16px;'> Ringkasan Eksekutif</h3>
                     <ul style='padding-left: 20px; margin-bottom: 0; line-height: 1.8;'>
-                        <li>Rata-rata Kehadiran Siswa Kelas: <strong>{$data['attendance_rate']}%</strong></li>
-                        <li>Total Penerimaan Iuran SPP Baru: <strong>Rp ".number_format($data['total_payments'], 0, ',', '.')."</strong></li>
+                        <li>Rata-rata Kehadiran Siswa Kelas: <strong>".($data['attendance_rate'] === null ? 'belum ada data' : $data['attendance_rate'].'%').'</strong></li>
+                        <li>Total Penerimaan Iuran SPP Baru: <strong>Rp '.number_format($data['total_payments'], 0, ',', '.')."</strong></li>
                         <li>Jurnal Mengajar Kelas Terhambat (Belum Verifikasi): <strong>{$data['missing_journals']} Jurnal</strong></li>
-                        <li>Target Kepatuhan Standar Mutu Tercapai: <strong>{$data['completed_milestones']} / {$data['total_milestones']} Target</strong></li>
                     </ul>
                 </div>
             ";
@@ -500,7 +493,7 @@ class DigestService
                 if ($type === 'daily_admin') {
                     $smsText .= "• Alpa Hari Ini: {$data['alpa_count']} Siswa\n• Tiket Baru: {$data['new_tickets']}\n• SPP Baru: {$data['new_billings']}\n\nHarap login ke dashboard admin SISTA.";
                 } elseif ($type === 'weekly_kepsek') {
-                    $smsText .= "• Rata-rata Kehadiran: {$data['attendance_rate']}%\n• Penerimaan SPP: Rp ".number_format($data['total_payments'], 0, ',', '.')."\n• Target Mutu: {$data['completed_milestones']}/{$data['total_milestones']}\n\nHarap periksa email Anda untuk lampiran laporan PDF lengkap.";
+                    $smsText .= '• Rata-rata Kehadiran: '.($data['attendance_rate'] === null ? 'belum ada data' : $data['attendance_rate'].'%')."\n• Penerimaan SPP: Rp ".number_format($data['total_payments'], 0, ',', '.')."\n\nHarap periksa email Anda untuk lampiran laporan PDF lengkap.";
                 } elseif ($type === 'monthly_finance') {
                     $smsText .= '• Diterima: Rp '.number_format($data['total_received'], 0, ',', '.')."\n• Sisa Tunggakan: Rp ".number_format($data['total_outstanding'], 0, ',', '.')."\n\nLaporan keuangan PDF lengkap telah dikirimkan ke email Anda.";
                 } elseif ($type === 'weekly_parent') {
