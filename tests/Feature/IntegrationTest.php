@@ -116,6 +116,9 @@ test('admin can download students dapodik excel export successfully and write au
     $student->nisn = '0098765432'; // Valid 10 digit NISN
     $student->gender = 'L';
     $student->birth_date = '2010-02-15';
+    // Dapodik needs these; without them the export is logged "partial" (it used to fill in made-up values).
+    $student->birth_place = 'Semarang';
+    $student->mother_name = 'Aminah';
     $student->save();
 
     $response = $this->actingAs($admin)->post(route('admin.integrations.dapodik.export'), [

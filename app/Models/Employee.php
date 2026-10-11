@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
@@ -14,6 +15,7 @@ class Employee extends Model
     protected $fillable = [
         'user_id',
         'employee_number',
+        'nuptk',
         'fingerprint_id',
         'position',
         'employment_status',
@@ -85,7 +87,8 @@ class Employee extends Model
         return $this->hasMany(EmployeeTraining::class);
     }
 
-    public function documents()
+    /** @return HasMany<EmployeeDocument, $this> */
+    public function documents(): HasMany
     {
         return $this->hasMany(EmployeeDocument::class);
     }

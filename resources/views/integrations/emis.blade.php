@@ -85,11 +85,11 @@
                                         <th class="pb-3">Rombel</th>
                                         <th class="pb-3">Capaian Tahfidz</th>
                                     @elseif($type === 'teachers')
-                                        <th class="pb-3">NIP/NUPTK</th>
+                                        <th class="pb-3">NUPTK</th>
                                         <th class="pb-3">Nama Lengkap</th>
                                         <th class="pb-3">Jabatan</th>
                                         <th class="pb-3">Status Pegawai</th>
-                                        <th class="pb-3">Sertifikasi Kemenag</th>
+                                        <th class="pb-3">Sertifikasi Guru</th>
                                     @elseif($type === 'classrooms')
                                         <th class="pb-3">Nama Rombel</th>
                                         <th class="pb-3">Tingkat</th>
@@ -106,16 +106,20 @@
                                             <td class="py-4 font-semibold text-gray-200">{{ $row['nama'] }}</td>
                                             <td class="py-4 text-xs text-gray-400">{{ $row['gender'] }}</td>
                                             <td class="py-4 text-xs">{{ $row['kelas'] }}</td>
-                                            <td class="py-4 font-bold text-cyan-400">{{ $row['capaian_tahfidz'] }}</td>
+                                            <td class="py-4 font-bold text-cyan-400">{{ $row['capaian_tahfidz'] ?: '–' }}</td>
                                         @elseif($type === 'teachers')
-                                            <td class="py-4 font-mono text-xs text-gray-300">{{ $row['nip'] }}</td>
+                                            <td class="py-4 font-mono text-xs text-gray-300">{{ $row['nuptk'] ?: '–' }}</td>
                                             <td class="py-4 font-semibold text-gray-200">{{ $row['nama'] }}</td>
                                             <td class="py-4 text-xs">{{ $row['jabatan'] }}</td>
                                             <td class="py-4 text-xs text-gray-400">{{ $row['status_kepegawaian'] }}</td>
                                             <td class="py-4">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-950/60 border border-emerald-800/40 text-emerald-400">
-                                                    {{ $row['sertifikasi'] }}
-                                                </span>
+                                                @if($row['sertifikasi'])
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-950/60 border border-emerald-800/40 text-emerald-400">
+                                                        {{ $row['sertifikasi'] }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-xs text-gray-500">{{ __('Belum tercatat') }}</span>
+                                                @endif
                                             </td>
                                         @elseif($type === 'classrooms')
                                             <td class="py-4 font-bold text-cyan-400">{{ $row['nama_kelas'] }}</td>

@@ -496,5 +496,14 @@
     "Dinas Luar": "Dinas Luar",
     "Presensi per mapel berhasil diambil": "Presensi per mapel berhasil diambil",
     "Presensi per mapel anak berhasil diambil": "Presensi per mapel anak berhasil diambil",
-    "Tanggal presensi tidak boleh di masa depan.": "Tanggal presensi tidak boleh di masa depan."
+    "Tanggal presensi tidak boleh di masa depan.": "Tanggal presensi tidak boleh di masa depan.",
+    "Tempat Lahir": "Tempat Lahir",
+    "Nama Ibu Kandung": "Nama Ibu Kandung",
+    "Wajib untuk Dapodik.": "Wajib untuk Dapodik.",
+    "16 digit, untuk ekspor Dapodik. Kosongkan bila pegawai belum punya NUPTK.": "16 digit, untuk ekspor Dapodik. Kosongkan bila pegawai belum punya NUPTK.",
+    "Belum tercatat": "Belum tercatat",
+    "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.": "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.",
+    "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.": "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.",
+    ":name gagal dikonversi. Lihat log sistem.": ":name gagal dikonversi. Lihat log sistem.",
+    ":count calon siswa dijadikan siswa aktif.": ":count calon siswa dijadikan siswa aktif."
 }

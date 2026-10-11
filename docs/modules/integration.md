@@ -54,12 +54,14 @@ Mengelola pendaftaran endpoint webhook outgoing untuk transfer data real-time.
 | **NISN** | `student.nisn` | Wajib tepat 10 digit angka |
 | **NIS** | `student.nis` | Nomor Induk Sekolah |
 | **Nama Lengkap** | `student.user.name` | Wajib diisi |
-| **Jenis Kelamin** | `student.gender` | Di-cast menjadi `L` atau `P` |
-| **Tempat Lahir** | *Fallback* | Default: `"Semarang"` |
+| **Jenis Kelamin** | `student.gender` | `L` atau `P` |
+| **Tempat Lahir** | `student.birth_place` | Diisi di form siswa, impor Excel, atau dari SPMB. Kosong bila belum diisi (ditandai) |
 | **Tanggal Lahir** | `student.birth_date` | Format standar: `YYYY-MM-DD` |
 | **Alamat** | `student.address` | Alamat tempat tinggal siswa |
 | **Rombel Kelas** | `student.classroom.name`| Nama rombongan belajar aktif |
-| **Nama Ibu Kandung**| *Fallback* | Default: `"Ibu Kandung Siswa"` |
+| **Nama Ibu Kandung**| `student.mother_name` | Diisi di form siswa atau impor Excel. Kosong bila belum diisi (ditandai) |
+
+Data PTK: **NUPTK** (`employee.nuptk`, 16 digit, diisi di data pegawai) dan **NIY** (`employee.employee_number`) dalam kolom terpisah. Sebelumnya NIY yayasan diekspor sebagai NUPTK.
 
 ### B. Format EMIS Kemenag (Keagamaan)
 
@@ -69,7 +71,9 @@ Mengelola pendaftaran endpoint webhook outgoing untuk transfer data real-time.
 | **Nama Lengkap** | `student.user.name` | Identitas siswa |
 | **Jenis Kelamin** | `student.gender` | Ditampilkan Laki-laki / Perempuan |
 | **Rombel Kelas** | `student.classroom.name`| Rombel aktif |
-| **Capaian Tahfidz** | `student.tahfidzLogs` | Akumulasi total Juz yang disetorkan |
+| **Capaian Tahfidz** | `student.tahfidzLogs` | Jumlah juz berbeda yang pernah disetor (ziyadah). Kosong bila belum ada setoran, bukan "0 Juz" |
+
+Data guru EMIS: **NUPTK** dan **Status Sertifikasi**. Sertifikasi bernilai "Sudah" hanya bila HRD menyimpan dokumen bertipe *sertifikasi* untuk pegawai itu, dan kosong bila belum tercatat.
 
 ---
 
@@ -79,7 +83,8 @@ Untuk mencegah penolakan impor data pada sistem Dapodik pusat, `DapodikService` 
 
 1.  **NISN Format Check**: Sistem memverifikasi bahwa NISN tidak boleh kosong dan harus berupa deretan angka yang tepat berjumlah 10 digit. Jika melanggar, baris data akan ditandai dengan ikon peringatan (⚠️) disertai deskripsi kesalahan.
 2.  **Rombel Assignment Check**: Memastikan siswa telah resmi dimasukkan ke dalam suatu rombongan belajar kelas aktif.
-3.  **Required Identity Check**: Nama siswa dan Tanggal Lahir dinilai wajib diisi sebelum kompilasi Excel dibentuk.
+3.  **Required Identity Check**: Nama, jenis kelamin, tempat lahir, tanggal lahir, dan nama ibu kandung wajib diisi. Tidak ada nilai pengganti: data yang kosong diekspor kosong dan ditandai di sini, bukan diisi teks karangan.
+4.  **PTK**: NUPTK yang belum diisi ditandai.
 
 Daftar ketidaklengkapan data akan dimunculkan secara interaktif pada panel kanan antarmuka admin, mempermudah Staf TU dalam melakukan koreksi master data secara cepat.
 

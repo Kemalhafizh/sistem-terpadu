@@ -496,5 +496,14 @@
     "Dinas Luar": "مهمة رسمية",
     "Presensi per mapel berhasil diambil": "تم جلب الحضور لكل حصة",
     "Presensi per mapel anak berhasil diambil": "تم جلب حضور ابنك لكل حصة",
-    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل."
+    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل.",
+    "Tempat Lahir": "مكان الميلاد",
+    "Nama Ibu Kandung": "اسم الأم",
+    "Wajib untuk Dapodik.": "مطلوب لـ Dapodik.",
+    "16 digit, untuk ekspor Dapodik. Kosongkan bila pegawai belum punya NUPTK.": "16 رقمًا، لتصدير Dapodik. اتركه فارغًا إذا لم يكن لدى الموظف رقم NUPTK بعد.",
+    "Belum tercatat": "غير مسجل",
+    "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.": "لم تُنشأ فاتورة رسوم القبول لأن فئة \"Uang Pangkal\" ومبلغها لم يُحدَّدا في قسم المالية.",
+    "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.": "رقم NISN لـ :name فارغ. أكمل رقم NISN للمتقدم قبل تسجيله طالبًا.",
+    ":name gagal dikonversi. Lihat log sistem.": "تعذر تحويل :name. راجع سجل النظام.",
+    ":count calon siswa dijadikan siswa aktif.": "تم تسجيل :count من المتقدمين كطلاب نشطين."
 }
