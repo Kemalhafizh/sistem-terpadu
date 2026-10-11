@@ -19,8 +19,6 @@ class EnterpriseFinancialSeeder extends Seeder
         $plan = $budgetService->createPlan([
             'fiscal_year' => '2026/2027',
             'title' => 'RAPBS SMA Islam Sultan Agung 1 Semarang TA 2026/2027',
-            'total_revenue_planned' => 2500000000,
-            'total_expense_planned' => 2400000000,
         ], $superadmin->id);
 
         $budgetService->addLineItem($plan, [
@@ -29,7 +27,6 @@ class EnterpriseFinancialSeeder extends Seeder
             'account_code' => '4-1100',
             'description' => 'Penerimaan SPP Bulanan Siswa Kelas X, XI, XII',
             'planned_amount' => 1800000000,
-            'actual_amount' => 1750000000,
             'quarter' => 'annual',
         ]);
 
@@ -39,12 +36,15 @@ class EnterpriseFinancialSeeder extends Seeder
             'account_code' => '5-1100',
             'description' => 'Gaji Pokok, Tunjangan, & Honor Mengajar Guru',
             'planned_amount' => 1200000000,
-            'actual_amount' => 1180000000,
             'quarter' => 'annual',
         ]);
 
+        // Submitted for the principal to approve; the drafter cannot approve it.
+        // Realisation comes from the ledger, not from made-up figures.
         $budgetService->submitForApproval($plan);
-        $budgetService->approvePlan($plan, $superadmin->id);
+        if ($principal = User::where('role', 'kepala_sekolah')->first()) {
+            $budgetService->approvePlan($plan, $principal->id);
+        }
 
         // 2. Scholarship Program
         $scholarshipService = app(ScholarshipService::class);

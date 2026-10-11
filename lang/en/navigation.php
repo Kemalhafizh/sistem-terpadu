@@ -91,6 +91,7 @@ return [
     'reconciliation' => 'Bank Reconciliation',
     'vendor_payments' => 'Vendor Payments',
     'scholarships' => 'Scholarships',
+    'budget' => 'School Budget (RKAS)',
     'my_billings' => 'My Bills',
     'osis_mpk' => 'Student Council',
     'school_settings' => 'School Identity & Appearance',

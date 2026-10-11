@@ -91,6 +91,7 @@ return [
     'reconciliation' => 'Rekonsiliasi Bank',
     'vendor_payments' => 'Pembayaran Vendor',
     'scholarships' => 'Beasiswa',
+    'budget' => 'RKAS / Anggaran',
     'my_billings' => 'Tagihan Saya',
     'osis_mpk' => 'OSIS & MPK',
     'school_settings' => 'Identitas & Tampilan Sekolah',

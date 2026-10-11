@@ -5,31 +5,33 @@
     <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-xl font-black text-gray-900 dark:text-white">{{ $plan->title }} ({{ $plan->fiscal_year }})</h1>
-            <p class="text-xs text-gray-500 mt-1">Status: <span class="uppercase font-bold text-emerald-600">{{ $plan->status }}</span> | Dibuat Oleh: {{ $plan->creator->name }}</p>
+            <p class="text-xs text-gray-500 mt-1">{{ __('Status') }}: <span class="uppercase font-bold text-emerald-600">{{ __('budget.status.'.$plan->status) }}</span> | {{ __('Disusun oleh') }}: {{ $plan->creator->name }}@if($plan->approver) | {{ __('Disetujui oleh') }}: {{ $plan->approver->name }}@endif</p>
         </div>
         <div class="flex gap-2">
-            @if($plan->status === 'draft')
+            @php($canPrepare = \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'financial.budget.submit'))
+            @if($plan->isEditable() && $canPrepare)
             <form action="{{ route('financial.budget.submit', $plan->id) }}" method="POST">
                 @csrf
-                <button type="submit" class="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-md">Ajukan Approval</button>
+                <button type="submit" class="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-md">{{ __('Ajukan ke Kepala Sekolah') }}</button>
             </form>
-            @elseif($plan->status === 'submitted')
+            @elseif($plan->status === 'submitted' && (int) $plan->created_by !== auth()->id() && \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'financial.budget.approve'))
             <form action="{{ route('financial.budget.approve', $plan->id) }}" method="POST">
                 @csrf
-                <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md">Setujui RAPBS</button>
+                <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md">{{ __('Setujui RKAS') }}</button>
             </form>
             @endif
             <a href="{{ route('financial.budget.dashboard') }}" class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs">Kembali</a>
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="p-4 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-2xl text-sm font-semibold">
-        {{ session('success') }}
-    </div>
-    @endif
+    @foreach(['success' => 'bg-emerald-50 text-emerald-800 border-emerald-200', 'error' => 'bg-rose-50 text-rose-800 border-rose-200'] as $flash => $classes)
+        @if(session($flash))
+        <div class="p-4 border rounded-2xl text-sm font-semibold {{ $classes }}">{{ session($flash) }}</div>
+        @endif
+    @endforeach
 
     <!-- Form Add Item -->
+    @if($plan->isEditable() && $canPrepare)
     <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Tambah Item Pos Anggaran</h3>
         <form action="{{ route('financial.budget.store_line_item', $plan->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -67,15 +69,13 @@
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Anggaran Rencana (Rp)</label>
                 <input type="number" name="planned_amount" placeholder="500000000" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-sm font-semibold">
             </div>
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Realisasi Aktual (Rp)</label>
-                <input type="number" name="actual_amount" value="0" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-sm font-semibold">
-            </div>
             <div class="md:col-span-4 flex justify-end">
-                <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md">+ Tambah Item</button>
+                <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md">+ {{ __('Tambah Pos') }}</button>
             </div>
         </form>
+        <p class="text-xs text-gray-500">{{ __('Bila kode akun ada di bagan akun, realisasinya dihitung otomatis dari buku besar. Selain itu, realisasi dicatat manual di tabel di bawah.') }}</p>
     </div>
+    @endif
 
     <!-- Line Items Table -->
     <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
@@ -94,11 +94,12 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                @forelse($plan->lineItems as $item)
+                @forelse($report['items'] as $line)
+                @php($item = $line['item'])
                 <tr>
                     <td class="py-3 px-4">
                         <span class="px-2 py-0.5 text-xs font-bold rounded {{ $item->category === 'revenue' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">
-                            {{ strtoupper($item->category) }}
+                            {{ $item->category === 'revenue' ? __('Pendapatan') : __('Belanja') }}
                         </span>
                     </td>
                     <td class="py-3 px-4 font-mono font-bold">{{ $item->account_code }}</td>
@@ -106,14 +107,28 @@
                     <td class="py-3 px-4">{{ $item->description }}</td>
                     <td class="py-3 px-4 text-xs font-bold">{{ $item->quarter }}</td>
                     <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">Rp {{ number_format($item->planned_amount, 0, ',', '.') }}</td>
-                    <td class="py-3 px-4 font-semibold text-emerald-600">Rp {{ number_format($item->actual_amount, 0, ',', '.') }}</td>
-                    <td class="py-3 px-4 font-bold {{ $item->variance_amount >= 0 ? 'text-teal-600' : 'text-rose-600' }}">
-                        Rp {{ number_format($item->variance_amount, 0, ',', '.') }}
+                    <td class="py-3 px-4 font-semibold text-emerald-600">
+                        @if($line['source'] === 'ledger')
+                            Rp {{ number_format($line['actual'], 0, ',', '.') }}
+                            <span class="block text-[10px] text-gray-400 font-bold">{{ __('dari buku besar') }}</span>
+                        @elseif($canPrepare)
+                            <form action="{{ route('financial.budget.realization', [$plan->id, $item->id]) }}" method="POST" class="flex items-center gap-1">
+                                @csrf
+                                @method('PUT')
+                                <input type="number" name="actual_amount" min="0" value="{{ $line['actual'] === null ? '' : (int) $line['actual'] }}" placeholder="–" class="w-32 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 text-xs font-mono">
+                                <button type="submit" class="text-[10px] font-bold text-emerald-700 hover:underline">{{ __('Simpan') }}</button>
+                            </form>
+                        @else
+                            {{ $line['actual'] === null ? '–' : 'Rp '.number_format($line['actual'], 0, ',', '.') }}
+                        @endif
+                    </td>
+                    <td class="py-3 px-4 font-bold {{ ($line['variance'] ?? 0) >= 0 ? 'text-teal-600' : 'text-rose-600' }}">
+                        {{ $line['variance'] === null ? '–' : 'Rp '.number_format($line['variance'], 0, ',', '.') }}
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="py-6 text-center text-gray-400">Belum ada item pos anggaran yang ditambahkan.</td>
+                    <td colspan="8" class="py-6 text-center text-gray-400">{{ __('Belum ada pos anggaran.') }}</td>
                 </tr>
                 @endforelse
             </tbody>
