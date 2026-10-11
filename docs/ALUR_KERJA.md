@@ -519,7 +519,11 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   - Wali kelas bisa me-reset password siswa di kelasnya.
   - TU bisa me-reset semua akun.
   - Bila WA gateway aktif, pengguna bisa reset sendiri lewat OTP WA ke nomor yang terdaftar.
-- **Orang tua:** cara login (akun per keluarga atau per orang tua, password atau OTP WA) **menunggu keputusan pemilik produk**.
+- **Orang tua (bawaan PM, T3):**
+  - satu akun per orang tua/wali, tertaut ke semua anaknya;
+  - username = nomor HP;
+  - password awal lewat lembar akun anak;
+  - OTP WA menyusul bila WA gateway aktif.
 
 #### K2. Buku Induk Siswa · ❌ → FASE 122
 - **Isi:** identitas, riwayat rombel per TA (FASE 120), mutasi, nilai rapor per semester, prestasi, kelulusan. Dicetak per siswa sesuai format dinas.
