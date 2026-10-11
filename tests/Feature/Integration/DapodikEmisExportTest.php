@@ -38,14 +38,14 @@ test('ekspor siswa Dapodik memakai tempat lahir dan nama ibu yang tercatat', fun
 });
 
 test('data yang belum diisi diekspor kosong dan ditandai, bukan diisi teks karangan', function () {
-    dapodikStudent(['classroom_id' => null]);
+    // The address may legitimately mention Semarang; only the empty fields must stay empty.
+    dapodikStudent(['classroom_id' => null, 'address' => 'Jl. Kaligawe Raya, Semarang']);
 
     $service = app(DapodikService::class);
     $rows = $service->exportStudentData();
-    $flat = json_encode($rows);
 
     expect($rows[0])->toMatchArray(['tempat_lahir' => '', 'ibu_kandung' => '', 'kelas' => ''])
-        ->and($flat)->not->toContain('Semarang')->not->toContain('Ibu Kandung Siswa')->not->toContain('Belum ada kelas');
+        ->and(array_values($rows[0]))->not->toContain('Semarang')->not->toContain('Ibu Kandung Siswa')->not->toContain('Belum ada kelas');
 
     $errors = $service->validateAgainstDapodik('students', $rows)[0]['errors'];
     expect($errors)->toContain('Tempat Lahir wajib diisi.')
