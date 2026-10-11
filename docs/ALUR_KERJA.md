@@ -16,23 +16,42 @@
 4. **Penyusun tidak menyetujui buatannya sendiri.**
 5. **Notifikasi mengikuti status, bukan tombol.** Setiap perpindahan status yang menunggu orang lain mengirim notifikasi (aplikasi/push, dan WA hanya untuk orang tua bila penting).
 6. **Kanal mengikuti pemakai.** Pekerjaan meja (TU, waka, kepsek) ada di web. Pekerjaan di kelas dan di rumah (guru, siswa, orang tua) ada di Android, dan web tetap bisa sebagai cadangan.
-7. **Satu aturan akses** (CLAUDE.md aturan 3): role di route menentukan siapa boleh membuka, dan data dibatasi ke miliknya (ortu → anaknya, guru → kelas yang diajar tahun ini).
+7. **Satu aturan akses** (CLAUDE.md aturan 3): route memeriksa **hak akses**, bukan nama jabatan, karena nama jabatan bisa diubah Admin. Data dibatasi ke miliknya (ortu → anaknya, guru → kelas yang diajar tahun ini).
 8. **Tidak ada tanggal kegiatan yang ditanam di kode.** Kapan semester mulai, kapan ujian, kapan survei peminatan, kapan rapor dibagi: semuanya berubah setiap tahun dan dibaca dari **Kalender Akademik** tahun ajaran itu (A0). Kode hanya mengenal *urutan* kegiatan, bukan bulannya.
 
-## 2. Peran (Aktor)
+## 2. Peran: Jenis Akun & Jabatan
 
-| Peran | Kode di sistem | Kanal utama |
+Akses seseorang adalah **gabungan** dari tiga lapis. Satu orang boleh memegang beberapa jabatan sekaligus (*double role*).
+
+**Lapis 1: Jenis akun (statis, satu per orang, tetap di kode)**
+
+| Jenis akun | Kanal utama | Berakhir (dinonaktifkan, tidak dihapus) |
 |---|---|---|
-| Kepala Sekolah | `kepala_sekolah` | Web (+ Android untuk persetujuan) |
-| Waka Kurikulum / Kesiswaan / Sarpras / Humas | `waka_*` | Web |
-| Guru mapel | `guru` (`TEACHER_ROLES`) | Android di kelas, Web untuk perangkat ajar |
-| Wali Kelas | guru dengan `classrooms.teacher_id` | Android + Web |
-| Guru BK | `bk` | Web + Android |
-| Staf TU / Bendahara | `staf_tu` | Web |
-| Petugas UKS | (peran UKS di route `uks`) | Web + Android |
-| Siswa | `STUDENT_ROLES` | Android |
-| Orang Tua / Wali | `PARENT_ROLES` | Android |
-| Admin sistem | `admin` (operator) / `superadmin` | Web |
+| Siswa | Android | lulus / mutasi keluar |
+| Orang Tua | Android | semua anak lulus / keluar |
+| Guru | Android di kelas, Web | resign / pensiun |
+| Karyawan | Web | resign / pensiun |
+
+**Lapis 2: Jabatan (dinamis, katalognya diatur Admin di aplikasi)**
+
+Jabatan bawaan, sesuai struktur sekolah (keputusan pemilik produk, 11 Okt 2026): **Kepala Sekolah, Waka Kurikulum, Waka Kesiswaan, Waka Sarpras, Waka Humas, Kepala Perpustakaan, Kepala TU.**
+- Admin bisa **menambah, mengubah, atau menonaktifkan** jabatan (misalnya Guru BK, Bendahara, Koordinator Keislaman) tanpa developer (alur L1).
+- Setiap jabatan adalah **kumpulan hak akses** yang dipilih dari daftar tetap (L1). Jabatan dipegang orang tertentu dalam periode tertentu (L2).
+
+**Lapis 3: Penugasan dari data (otomatis, bukan jabatan)**
+
+| Penugasan | Dibaca dari |
+|---|---|
+| Guru mapel | jadwal pelajaran |
+| Wali kelas | rombel |
+| Pembina ekskul / OSIS / MPK | data ekskul atau organisasi |
+| Ketua & wakil OSIS / MPK / ekskul | hasil pemilihan atau data anggota |
+| Koordinator P5 | data projek |
+| Guru wali (Kepmendikdasmen 221/P/2025, bila dipakai) | data pendampingan |
+
+Akses lapis ini **terbatas pada objeknya**: wali kelas XI-3 hanya untuk rombel XI-3.
+
+Akun teknis `superadmin` (Admin Utama) bukan bagian dari struktur sekolah. Akun ini hanya untuk tim IT.
 
 ## 3. Urutan Kegiatan Satu Tahun Ajaran
 
@@ -432,11 +451,36 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ---
 
+### L. Sistem & Akses
+
+#### L1. Katalog Jabatan & Hak Akses · ❌ → FASE 120
+- **Pemilik:** Admin. Hak akses sensitif hanya oleh Admin Utama (`superadmin`).
+- **Langkah:**
+  1. Admin membuat atau mengubah jabatan: nama, deskripsi, dan **centang hak akses** dari daftar tetap yang dikelompokkan per modul.
+  2. Sebelum menyimpan, sistem menampilkan **dampaknya**, misalnya "3 orang akan mendapat akses Keuangan" atau "2 orang kehilangan akses BK".
+  3. Simpan. Perubahan tercatat di audit log.
+- **Pagar pengaman:**
+  - **Hak akses sensitif** hanya bisa diberikan atau dicabut Admin Utama: keuangan dan gaji, catatan BK/perundungan, data kesehatan, serta pengelolaan akun admin.
+  - **Kepala Sekolah** adalah jabatan sistem: tidak bisa dihapus, dan hak "pengesahan kepala sekolah" tidak bisa dicabut darinya.
+  - Jabatan yang pernah dipegang hanya bisa **dinonaktifkan**, tidak dihapus, supaya riwayat persetujuan tetap terbaca.
+  - Jabatan yang masih dipakai sebagai langkah persetujuan (`workflow_definitions`) tidak bisa dinonaktifkan sebelum langkah itu dialihkan.
+
+#### L2. Penetapan Pejabat (siapa memegang jabatan apa) · ❌ → FASE 120
+- **Pemilik:** Admin / Kepala TU, berdasarkan SK Kepala Sekolah.
+- **Langkah:**
+  1. Pilih orang (Guru atau Karyawan; jabatan tertentu boleh dibatasi ke jenis akun tertentu).
+  2. Pilih jabatan.
+  3. Isi periode (tanggal mulai–selesai, biasanya satu TA) dan nomor SK (opsional).
+  4. Simpan.
+- **Plt / pengganti sementara:** jabatan yang sama untuk orang lain dengan periode pendek. Aksesnya hilang otomatis setelah lewat.
+- **Pergantian TA:** daftar pejabat disalin sebagai draf untuk TA baru dan ditinjau, seperti rombel.
+- **Aturan:** penyusun dan penyetuju dalam satu alur tetap harus orang berbeda, walau satu orang memegang dua jabatan.
+
 ## 5. Lubang Alur yang Harus Ditutup (urut prioritas)
 
 | # | Alur | Kenapa mendesak | Fase |
 |---|---|---|---|
-| 1 | A0–A6 Kalender akademik, rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
+| 1 | L1–L2 Jenis akun & jabatan, lalu A0–A6 kalender akademik, rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
 | 2 | C3 Izin/sakit siswa dari orang tua | Dipakai setiap hari, dan rekap presensi rapor salah tanpanya | 121 |
 | 3 | D5 Pengesahan & penerbitan rapor | Rapor Genap Juni 2027 harus resmi | 121 |
 | 4 | J1 Persetujuan surat keluar + J2 surat masuk & disposisi | Alur inti TU dan kepala sekolah | 121 |

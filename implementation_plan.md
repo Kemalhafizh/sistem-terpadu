@@ -36,6 +36,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 5 Okt 2026 | Presensi siswa **hanya QR per mapel**. Pegawai memakai **mesin sidik jari** (diimpor) |
 | 5 Okt 2026 | Inklusi dipertahankan. Penggajian diurus sekolah. Tidak ada Adiwiyata/kantin. Gamifikasi dihapus |
 | 11 Okt 2026 | **Full Kurikulum Merdeka.** Tidak ada jurusan IPA/IPS. **Survei peminatan** di kelas X hanya memetakan minat. Waka Kurikulum merancang susunan mapel pilihan tiap rombel XI dan **memplot siswa secara manual** berdasarkan statistiknya. Sistem tidak mengalokasikan otomatis |
+| 11 Okt 2026 | **Peran dua lapis:** 4 jenis akun statis (Siswa, Orang Tua, Guru, Karyawan) + **jabatan dinamis yang katalognya diatur Admin** di aplikasi. Jabatan bawaan: Kepala Sekolah, 4 Waka (Kurikulum, Kesiswaan, Sarpras, Humas), Kepala Perpustakaan, Kepala TU. Wali kelas, pembina, guru mapel, dan pengurus OSIS dibaca dari data modul, bukan jabatan |
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
 | 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
 | 11 Okt 2026 | Widget jadwal sholat Android **dipertahankan** |
@@ -54,7 +55,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 118 | Tutup akses bocor | ✅ Selesai | — |
 | 119 | Debloat ke ERP sekolah | ✅ Selesai (sisa di 119.12) | — |
 | 119.12 | Sisa bersih-bersih | ⏳ Berikutnya | 1–2 hari |
-| **120** | **Kalender akademik, rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
+| **120** | **Jenis akun & jabatan, kalender akademik, rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
 | 121 | Alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, persetujuan surat keluar, surat masuk & disposisi, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
 | 122 | Buku Induk Siswa | 📝 Garis besar | Jan 2027 |
 | 123 | Go-live: server, deploy, backup, impor data, akun massal, **pilot semester Genap** (menyerap FASE 116) | 📝 Garis besar | Pilot Jan 2027, penuh **Juli 2027** (TA 2027/2028) |
@@ -510,12 +511,12 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 
 ---
 
-## FASE 120: ROMBEL, TAHUN AJARAN, MAPEL PILIHAN, KENAIKAN & KELULUSAN `[RANCANGAN BARU]`
+## FASE 120: JENIS AKUN & JABATAN, ROMBEL, TAHUN AJARAN, MAPEL PILIHAN, KENAIKAN & KELULUSAN `[RANCANGAN BARU]`
 
 > **Tanggal rancangan:** 11 Oktober 2026
 > **Pelaksana:** Agent Backend (backend + web). Pasangan Android: **FASE 80**.
 > **Prioritas:** P0, fondasi sebelum go-live. Wajib selesai sebelum pilot Januari 2027.
-> **Alur yang dibangun:** `docs/ALUR_KERJA.md` A0–A6.
+> **Alur yang dibangun:** `docs/ALUR_KERJA.md` L1–L2 dan A0–A6.
 
 ### 120.0: Masalah
 
@@ -524,7 +525,12 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 3. **Model masih kurikulum lama.** `classrooms.major` diisi IPA/IPS oleh seeder, dan `subjects.category` berisi `Nasional/Lokal/Kejuruan/Ciri Khas` (Kejuruan adalah SMK). Sekolah sudah **full Kurikulum Merdeka**: tanpa jurusan, dengan mapel pilihan di XI–XII.
 4. **Tidak ada alur kenaikan kelas.** Kelulusan sudah ada (`AlumniController::bulkGraduate`), tetapi tidak terikat ke keputusan atau riwayat. Mutasi (`student_mutations`) tidak lewat persetujuan dan tidak mengubah rombel.
 5. **106 tempat di kode** membaca `student->classroom_id` / `->classroom` langsung.
-6. **Kalender akademik belum jadi sumber tanggal.** `academic_events` hanya daftar acara (`event_type` teks bebas). Tidak ada pengesahan dan tidak ada penanda kegiatan kunci, sehingga alur lain (survei peminatan, batas rapor, rapat kenaikan) tidak tahu tanggalnya dan cenderung ditanam di kode.
+6. **Peran disimpan di satu kolom `users.role`.** Kepala sekolah dan waka adalah nilai kolom itu, padahal mereka **jabatan berperiode** yang dipegang guru. Akibatnya:
+   - kepala sekolah yang mengajar tidak bisa sekaligus guru, dan waka yang juga wali kelas harus memilih salah satu;
+   - ejaan peran bercabang (`student`/`siswa`, `parent`/`orang_tua`/`orangtua`/`wali_murid`, `guru`/`teacher`, `kepala_sekolah`/`kepsek`);
+   - ada sekitar 385 pemeriksaan `->role` di `app/` dan 114 di `resources/views/`;
+   - struktur jabatan tidak bisa diubah sekolah tanpa developer.
+7. **Kalender akademik belum jadi sumber tanggal.** `academic_events` hanya daftar acara (`event_type` teks bebas). Tidak ada pengesahan dan tidak ada penanda kegiatan kunci, sehingga alur lain (survei peminatan, batas rapor, rapat kenaikan) tidak tahu tanggalnya dan cenderung ditanam di kode.
 
 ### 120.1: Keputusan Pemilik Produk (11 Okt 2026)
 
@@ -536,12 +542,21 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 - **Alurnya dinamis dan dikendalikan pengguna.** Sistem **tidak** mengalokasikan siswa secara otomatis, tidak memakai kuota, dan tidak punya kriteria prioritas. Semua keputusan plotting ada di tangan Waka Kurikulum. Sistem hanya menyajikan statistik, menandai kecocokan, dan mencatat keputusan.
 - **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah. Kepala sekolah menerima notifikasi dan dapat **menahan** keputusan sebelum dieksekusi.
 - **Kelulusan disahkan Kepala Sekolah** (SK kelulusan), sesuai praktik umum.
+- **Peran dua lapis + penugasan dari data** (lihat `ALUR_KERJA.md` bagian 2):
+  - 4 jenis akun statis;
+  - jabatan dinamis yang **bisa ditambah, diubah, dan dinonaktifkan oleh Admin**. Hak akses sensitif hanya oleh Admin Utama;
+  - jabatan bawaan: Kepala Sekolah, Waka Kurikulum, Waka Kesiswaan, Waka Sarpras, Waka Humas, Kepala Perpustakaan, Kepala TU.
 - **Kalender akademik disusun ulang setiap tahun** oleh Waka Kurikulum dan disahkan Kepala Sekolah. Urutan kegiatan tetap, tetapi tanggalnya berubah. Sistem membaca tanggal dari kalender itu.
 
 ### 120.2: Model Data (usulan, boleh disesuaikan dengan alasan tertulis)
 
 | Tabel | Isi | Catatan |
 |---|---|---|
+| `users` *(ubah)* | `role` → `account_type` (`siswa/orang_tua/guru/karyawan`), + `status` (`aktif/nonaktif`) dan `deactivated_reason` (`lulus/mutasi/resign/pensiun/…`). `superadmin` dipisah sebagai penanda akun teknis | Semua ejaan lama dipetakan ke satu kode. Akun tidak pernah dihapus |
+| `positions` *(baru)* | `code` (otomatis, stabil), `name`, `description`, `allowed_account_types` (json), `is_system`, `is_active` | Katalog jabatan, dikelola Admin. Seed 7 jabatan bawaan. `kepala_sekolah` ber-`is_system` |
+| `position_permissions` *(baru)* | `position_id`, `permission` | `permission` adalah kode dari **daftar tetap di kode** (`config/permissions.php`), dikelompokkan per modul dan ditandai `sensitive` |
+| `position_assignments` *(baru)* | `position_id`, `user_id`, `starts_on`, `ends_on`, `school_year_id` (nullable), `decree_number`, `is_acting` (Plt), `assigned_by` | Boleh banyak per orang. Aktif bila hari ini di dalam periode |
+| `workflow_definitions.steps` *(ubah)* | langkah merujuk `position` (kode jabatan) atau `permission`, bukan string role | Kotak masuk persetujuan mengikuti siapa pemegang jabatan saat itu |
 | `school_years` *(baru)* | `name` ("2027/2028"), `start_date`, `end_date`, `status` (`draf/aktif/ditutup`) | Satu baris per tahun ajaran. Hanya satu yang `aktif` |
 | `academic_years` *(ubah)* | + `school_year_id` | Tetap baris per semester. Diisi dari kolom `year` yang ada |
 | `academic_calendars` *(baru)* | `school_year_id`, `status` (`draf/disahkan/terbit`), `approved_by`, `approved_at`, `published_at` | Satu kalender akademik per TA |
@@ -560,6 +575,32 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 **`students.classroom_id` dipertahankan** sebagai *rombel aktif* yang ditulis **hanya** oleh `EnrollmentService`. Dengan begitu 106 pemakainya tidak rusak sekaligus. Test arsitektur menolak penulisan `classroom_id` siswa di luar service itu. Pembacaan untuk konteks lampau (rapor lama, rekap TA lalu, buku induk) wajib lewat `class_enrollments`.
 
 ### 120.3: Alur yang Dibangun
+
+**R. Jenis akun & jabatan (ALUR L1–L2), dikerjakan paling awal**
+- **Daftar hak akses tetap di kode** (`config/permissions.php`). Diturunkan dari kelompok route yang ada, misalnya:
+  - `kurikulum.kelola`, `kurikulum.tetapkan_kenaikan`;
+  - `kesiswaan.kelola`, `bk.catatan_rahasia`*, `sarpras.kelola`, `humas.kelola`, `perpustakaan.kelola`, `tu.kelola`, `uks.kelola`*;
+  - `keuangan.kelola`*, `keuangan.setujui`*, `kepegawaian.gaji`*;
+  - `pimpinan.dasbor`, `pimpinan.mengesahkan`;
+  - `sistem.kelola_jabatan`, `sistem.kelola_admin`*.
+
+  Tanda `*` berarti sensitif. Daftar final disusun pelaksana dari route yang ada, dan setiap kode punya label tiga bahasa.
+- **Route memeriksa hak akses** (`can:`/`Gate`), bukan nama jabatan:
+  - Jenis akun memberi hak dasar: menu siswa, orang tua, guru, atau karyawan.
+  - Jabatan aktif menambah hak.
+  - Penugasan dari data (wali kelas, pembina, guru mapel) tetap diperiksa lewat policy per objek.
+  - `RouteAccess`, `MobileCapabilities`, dan sidebar membaca aturan yang sama, sehingga menu dan aplikasi Android otomatis mengikuti.
+- **Layar Admin "Jabatan & Hak Akses" (L1):**
+  - buat, ubah, dan nonaktifkan jabatan;
+  - centang hak akses per modul, dengan pratinjau dampak sebelum disimpan.
+
+  Hak akses sensitif hanya bisa diubah `superadmin`. `kepala_sekolah` tidak bisa dihapus dan tidak bisa kehilangan `pimpinan.mengesahkan`.
+- **Layar "Pejabat" (L2):** tetapkan orang ke jabatan dengan periode dan nomor SK, termasuk Plt. Daftar pejabat bisa disalin ke TA baru sebagai draf.
+- **Migrasi dari kolom `role` lama:**
+  - Akun `kepala_sekolah`/`waka_*` menjadi Guru (atau Karyawan) + penugasan jabatan yang sesuai.
+  - Akun `staf_tu` menjadi Karyawan + jabatan sesuai data seed.
+  - Semua `->role ===`/`in_array(role…)` diganti `hasPermission()`/`can()`. Test arsitektur menolak pemeriksaan `->role` baru.
+  - `StudentDataAccess::*_ROLES` diganti pemeriksaan `account_type`.
 
 **A0. Kalender akademik (ALUR A0)**
 - Waka Kurikulum menyusun kalender TA baru: libur, hari efektif, acara, dan **kegiatan kunci** (kolom `milestone`). Kalender bisa disalin dari TA sebelumnya sebagai draf, tetapi **semua tanggal wajib ditinjau ulang**. Draf salinan ditandai "belum ditinjau" sampai disimpan ulang.
@@ -627,6 +668,7 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 
 | PR | Isi |
 |---|---|
+| 0 | Jenis akun & jabatan: `account_type`, `positions`, `position_permissions`, `position_assignments`, daftar hak akses, `hasPermission()`, `RoleMiddleware`/`RouteAccess`/`MobileCapabilities` membaca hak akses, migrasi ejaan lama, layar Jabatan & Pejabat. Boleh dipecah 0a (model + middleware) dan 0b (ganti pemeriksaan `->role` + layar). Perbarui CLAUDE.md aturan 3 (ejaan peran dan `StudentDataAccess`) di PR yang sama |
 | 1 | `school_years`, FK di `academic_years`/`classrooms`, `class_enrollments`, `EnrollmentService` + backfill dari data seed, test arsitektur penulisan `classroom_id` |
 | 1b | Kalender akademik: `academic_calendars`, kolom `milestone` di `academic_events`, pengesahan kepala sekolah, salin dari TA lalu dengan tanda "belum ditinjau", notifikasi revisi |
 | 2 | Kurikulum Merdeka: kategori mapel, `classroom_subjects` (susunan mapel per rombel, dipakai jadwal), hapus `major` IPA/IPS dari model, seeder, dan view |
@@ -645,6 +687,14 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 - **Plotting:** sistem tidak pernah membuat `class_placements` tanpa aksi Waka Kurikulum. Satu siswa hanya punya satu penempatan per TA target. Kecocokan dihitung benar, termasuk untuk siswa yang belum mengisi (`null`, bukan 0%).
 - **Eksekusi kenaikan** ditolak bila ada siswa X yang naik tetapi belum diplot.
 - Ambang kenaikan kosong: tidak ada label otomatis (`null`, bukan "tinggal").
+- **Jabatan & hak akses:**
+  - satu orang dengan Guru + Waka Kurikulum + wali kelas mendapat gabungan haknya;
+  - jabatan yang periodenya lewat tidak memberi akses lagi (Plt berakhir otomatis);
+  - Admin tidak bisa memberi hak sensitif (hanya `superadmin`);
+  - `kepala_sekolah` tidak bisa dihapus atau kehilangan `pimpinan.mengesahkan`;
+  - jabatan yang dipakai di langkah persetujuan tidak bisa dinonaktifkan;
+  - penyusun ≠ penyetuju walau memegang dua jabatan;
+  - test arsitektur menolak pemeriksaan `->role` baru di `app/` dan `resources/views/`.
 - **Tanggal dari kalender:** test arsitektur menolak tanggal atau bulan kegiatan yang ditanam di kode alur akademik (misalnya `month === 7`). Kegiatan kunci yang kosong menghasilkan `null` dan pesan "belum ditetapkan", bukan tanggal bawaan. Satu kode `milestone` per semester per kalender.
 
 ### 120.7: Kriteria Selesai
