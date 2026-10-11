@@ -45,6 +45,12 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 1. **CLAUDE.md** berlaku penuh: tidak ada angka karangan, aksi harus tersimpan, satu aturan akses, setiap PR punya test.
 2. **Alur dulu, kode kemudian.** Fitur yang alurnya belum ada di `docs/ALUR_KERJA.md` tidak dibangun. Setelah PR selesai, perbarui baris "Status" alurnya.
 3. **Persetujuan berjenjang memakai `WorkflowService`**, agar ada satu kotak masuk persetujuan untuk pimpinan.
+3b. **Anti-macet** (`docs/ALUR_KERJA.md` bagian 1b): tidak ada pekerjaan yang tertahan di satu orang. Aturannya:
+   - "mengetahui" tidak menahan alur;
+   - setiap langkah menunggu punya tenggat, pengingat, dan eskalasi;
+   - setiap penyetuju punya cadangan;
+   - hal berulang disetujui massal;
+   - batas nominal dan jenis diatur sekolah.
 4. **Tidak ada fitur baru di luar roadmap sampai go-live.** Fitur berikutnya ditentukan dari keluhan pengguna asli setelah pilot.
 5. **PR kecil, satu kelompok per PR.** Cantumkan angka sebelum/sesudah bila menghapus.
 6. **Perubahan API yang dibaca Android** wajib punya PR pasangan di `sista-android`, dan kedua PR saling menautkan.
@@ -56,7 +62,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 119 | Debloat ke ERP sekolah | ✅ Selesai (sisa di 119.12) | — |
 | 119.12 | Sisa bersih-bersih | ⏳ Berikutnya | 1–2 hari |
 | **120** | **Jenis akun & jabatan, kalender akademik, rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
-| 121 | Alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, persetujuan surat keluar, surat masuk & disposisi, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
+| 121 | **Anti-macet** (tenggat, eskalasi, persetujuan massal, langkah & batas yang diatur sekolah, dasbor alur tertahan) + alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, surat keluar & masuk, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
 | 122 | Buku Induk Siswa | 📝 Garis besar | Jan 2027 |
 | 123 | Go-live: server, deploy, backup, impor data, akun massal, **pilot semester Genap** (menyerap FASE 116) | 📝 Garis besar | Pilot Jan 2027, penuh **Juli 2027** (TA 2027/2028) |
 
@@ -706,15 +712,36 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 
 ---
 
-## FASE 121: ALUR HARIAN YANG HILANG `[GARIS BESAR]`
+## FASE 121: ANTI-MACET & ALUR HARIAN YANG HILANG `[GARIS BESAR]`
 
-> Dirinci setelah FASE 120 berjalan. Alurnya sudah tertulis di `docs/ALUR_KERJA.md`.
+> Dirinci setelah FASE 120 berjalan. Alurnya sudah tertulis di `docs/ALUR_KERJA.md`, termasuk bagian 1b (Anti-Macet). **Tujuan pemilik produk: workflow jelas dan mengalir, tidak terjadi bottleneck di user.**
 
-1. **C3 Izin/sakit siswa dari orang tua** (Android) → wali kelas menyetujui → presensi sesi hari itu otomatis `izin`/`sakit`.
-2. **D5 Pengesahan & penerbitan rapor:** nilai dikunci → wali kelas mengajukan → kepala sekolah mengesahkan per rombel → terbit ke orang tua/siswa di Android.
-3. **J1 Surat keluar** memakai definisi `letter_approval` yang sudah ada di seeder tetapi belum dipakai.
-4. **J2 Surat masuk & disposisi** (baru).
-5. **Satu kotak masuk "Menunggu Persetujuan Saya"** di web dan Android untuk kepala sekolah dan waka, mencakup cuti, surat, kenaikan, mutasi, rapor, dan RKAS. Alur yang punya persetujuan sendiri (RKAS, kas kecil) dipindah ke `WorkflowService` atau minimal muncul di kotak masuk yang sama.
+**A. Mesin anti-macet di `WorkflowService` (dikerjakan dulu, dipakai semua alur di bawahnya)**
+1. **Tenggat per langkah**, berupa durasi atau tanggal dari kegiatan kunci kalender. Ada pengingat otomatis sebelum tenggat dan **eskalasi** ke cadangan setelah lewat. Semuanya tercatat.
+2. **Cadangan penyetuju.** Yang dipakai berurutan: Plt aktif, delegasi, lalu atasan yang ditetapkan. Jabatan penyetuju yang kosong tampil sebagai peringatan di layar Admin.
+3. **Langkah bertipe "mengetahui"** hanya mengirim notifikasi dan tidak menahan alur. Langkah "menahan" hanya untuk persetujuan wajib.
+4. **Persetujuan massal**, dengan tetap bisa membuka satu per satu: rapor per rombel/angkatan, slip gaji per bulan, izin siswa per hari, dan kelulusan satu angkatan.
+5. **Langkah dan batas alur diatur Admin**, seperti katalog jabatan:
+   - langkah per alur, merujuk jabatan;
+   - batas nominal (kas kecil) dan batas hari (cuti panjang) di pengaturan;
+   - jenis surat yang boleh ditandatangani Kepala TU.
+
+   Bila batas belum diisi, langkahnya ke Kepala Sekolah.
+6. **Dasbor "Alur Tertahan"** untuk pimpinan dan Admin: jumlah dokumen per langkah, umur tertua, dan siapa pemegangnya.
+7. **Satu kotak masuk "Menunggu Persetujuan Saya"** di web dan Android, diurutkan menurut tenggat. Mencakup cuti, surat, kenaikan, mutasi, rapor, RKAS, kas kecil, dan izin siswa. Alur yang punya persetujuan sendiri (RKAS, kas kecil) dipindah ke `WorkflowService`.
+8. **Pelonggaran beban Kepala Sekolah** sesuai tabel di `ALUR_KERJA.md` 1b. Ini usulan bawaan; keputusan akhirnya di pengaturan oleh sekolah. Contohnya cuti guru ke Waka Kurikulum, cuti karyawan ke Kepala TU, dan surat rutin ke Kepala TU.
+
+**B. Alur harian yang hilang**
+1. **C3 Izin/sakit siswa dari orang tua** (Android) → wali kelas menyetujui (bisa massal) → presensi sesi hari itu otomatis `izin`/`sakit`.
+   - Sakit 1 hari tercatat otomatis bila sekolah mengaktifkannya; wali tetap diberi tahu dan bisa membatalkan.
+   - Izin yang lewat tenggat dieskalasi ke Waka Kesiswaan.
+2. **D5 Pengesahan & penerbitan rapor:**
+   - nilai dikunci, dengan pengingat dari kegiatan kunci "batas input nilai";
+   - wali kelas mengajukan;
+   - kepala sekolah mengesahkan **massal per angkatan**;
+   - rapor terbit ke orang tua dan siswa di Android.
+3. **J1 Surat keluar** memakai definisi `letter_approval` (yang sudah ada di seeder tetapi belum dipakai), dengan pembagian jenis surat Kepala TU vs Kepala Sekolah.
+4. **J2 Surat masuk & disposisi** (baru), dengan delegasi disposisi saat kepala sekolah berhalangan.
 
 ## FASE 122: BUKU INDUK SISWA `[GARIS BESAR]`
 

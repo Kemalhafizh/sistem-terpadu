@@ -19,7 +19,58 @@
 7. **Satu aturan akses** (CLAUDE.md aturan 3): route memeriksa **hak akses**, bukan nama jabatan, karena nama jabatan bisa diubah Admin. Data dibatasi ke miliknya (ortu → anaknya, guru → kelas yang diajar tahun ini).
 8. **Tidak ada tanggal kegiatan yang ditanam di kode.** Kapan semester mulai, kapan ujian, kapan survei peminatan, kapan rapor dibagi: semuanya berubah setiap tahun dan dibaca dari **Kalender Akademik** tahun ajaran itu (A0). Kode hanya mengenal *urutan* kegiatan, bukan bulannya.
 
-## 2. Peran: Jenis Akun & Jabatan
+## 1b. Anti-Macet: Alur Harus Mengalir
+
+**Ukuran keberhasilan SISTA:** setiap alur jelas dan mengalir, tanpa ada pekerjaan yang tertahan di satu orang. Setiap alur yang punya langkah "menunggu orang" wajib memenuhi tujuh aturan ini.
+
+1. **Mengetahui ≠ menyetujui.** Bila pimpinan cukup tahu, kirim notifikasi dan jangan tahan alurnya. Langkah persetujuan yang **menahan** hanya untuk yang memang wajib ditandatangani: rapor, kelulusan, surat keluar resmi, RKAS, gaji, mutasi, dan kalender akademik.
+2. **Setiap langkah menunggu punya tenggat.** Dua jenis tenggat diatur di pengaturan alur:
+   - pengingat otomatis kepada pemegang langkah sebelum tenggat;
+   - setelah tenggat lewat, **eskalasi** ke cadangan yang ditetapkan (Plt, atau atasan langsung).
+
+   Tidak ada langkah yang menunggu tanpa batas.
+3. **Tidak ada langkah tanpa cadangan.** Setiap jabatan penyetuju punya pengganti saat berhalangan:
+   - Plt atau delegasi lewat `WorkflowService::delegate`;
+   - jabatan yang kosong (tidak ada pemegang aktif) langsung terlihat sebagai peringatan di layar Admin.
+4. **Persetujuan massal untuk hal yang berulang.** Rapor disahkan per rombel atau per angkatan sekaligus, begitu pula slip gaji per bulan dan izin siswa per hari. Satu klik untuk banyak dokumen, dengan tetap bisa membuka satu per satu.
+5. **Pengguna meninjau, bukan mengetik ulang.** Sistem menyiapkan draf dari data yang sudah ada:
+   - jurnal dari sesi kelas;
+   - kehadiran rapor dari presensi;
+   - draf kenaikan dari rapor;
+   - kalender, rombel, dan pejabat disalin dari tahun lalu.
+6. **Batas nominal dan jenis diatur sekolah, bukan di kode.** Contohnya: kas kecil di bawah batas tertentu cukup disetujui Kepala TU, di atasnya Kepala Sekolah. Surat keterangan rutin boleh ditandatangani Kepala TU, surat keputusan oleh Kepala Sekolah. Bila batas belum diisi, langkahnya ke Kepala Sekolah. Langkah dan batas setiap alur diatur Admin seperti katalog jabatan.
+7. **Antrean bisa dilihat.** Ada satu dasbor "Alur Tertahan": berapa dokumen menunggu di tiap langkah, berapa lama, dan di siapa. Bottleneck terlihat dari data, bukan dari keluhan.
+
+### Beban persetujuan Kepala Sekolah (usulan pelonggaran, diputuskan sekolah)
+
+| Alur | Sekarang | Usulan |
+|---|---|---|
+| A0 Kalender akademik | Kepsek mengesahkan | Tetap (sekali setahun) |
+| A4 Kenaikan kelas | Waka menetapkan, kepsek bisa menahan | Tetap (tidak menahan bila kepsek diam) |
+| A5 Kelulusan | Kepsek mengesahkan | Tetap, **massal satu angkatan** |
+| A6 Mutasi | Kepsek menyetujui | Tetap |
+| B1 SPMB | Kepsek mengesahkan | **Sekali per gelombang** (massal) |
+| D5 Rapor | Kepsek mengesahkan | **Massal per angkatan** |
+| G2 Beasiswa | Kepsek | Massal per periode |
+| G3 Kas kecil | Kepsek | **Kepala TU di bawah batas nominal**, kepsek di atasnya |
+| G5 RKAS | Kepsek | Tetap (sekali setahun + revisi) |
+| H2 Cuti | Waka Kurikulum → Kepsek | **Guru → Waka Kurikulum, karyawan → Kepala TU.** Kepsek hanya untuk cuti panjang (batas hari di pengaturan) |
+| H3 Gaji | Kepsek | Massal per bulan |
+| J1 Surat keluar | Kepsek | **Surat rutin (keterangan aktif, dll.) → Kepala TU**, surat keputusan/resmi → kepsek |
+| J2 Disposisi surat masuk | Kepsek | Tetap, dengan delegasi ke waka saat berhalangan |
+
+Hasilnya, persetujuan rutin harian dan mingguan tidak lagi menumpuk di Kepala Sekolah. Yang tersisa adalah tanda tangan penting dan massal.
+
+### Titik rawan macet lain
+
+| Pemegang | Risiko | Penangkal |
+|---|---|---|
+| Waka Kurikulum (Mei–Juni) | Rancang & plot ±360 siswa, jadwal XI, kenaikan, kalender | Statistik + saran kecocokan, plotting massal, salin dari tahun lalu, tenggat dari kalender akademik |
+| Wali kelas | Menyetujui izin siswa setiap hari | Izin **sakit 1 hari tercatat otomatis** (wali tetap diberi tahu dan bisa membatalkan). Izin lain yang tidak diputuskan sampai tenggat dieskalasi ke Waka Kesiswaan. Batasnya diatur sekolah |
+| Guru mapel | Batas input nilai rapor | Pengingat dari kegiatan kunci "batas input nilai". Wali kelas melihat mapel mana yang belum lengkap |
+| Kepala TU | Impor sidik jari, tagihan, surat | Impor file sekali per bulan, tagihan massal, template surat |
+
+
 
 Akses seseorang adalah **gabungan** dari tiga lapis. Satu orang boleh memegang beberapa jabatan sekaligus (*double role*).
 
