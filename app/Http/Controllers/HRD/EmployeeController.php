@@ -4,11 +4,11 @@ namespace App\Http\Controllers\HRD;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
-use App\Models\EmployeeAttendance;
 use App\Models\EmployeeDocument;
 use App\Models\EmployeeTraining;
 use App\Models\PerformanceEvaluation;
 use App\Models\User;
+use App\Services\HRD\EmployeeAttendanceRecap;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -59,6 +59,8 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id|unique:employees,user_id',
             'employee_number' => 'required|string|unique:employees,employee_number',
+            // The ID this person enrols under on the fingerprint machine (FASE 119.6.1).
+            'fingerprint_id' => 'nullable|string|max:32|unique:employees,fingerprint_id',
             'position' => 'required|string|max:255',
             'employment_status' => 'required|in:gty,gtt,staf_tetap,honorer',
             'hire_date' => 'required|date',
@@ -102,6 +104,7 @@ class EmployeeController extends Controller
     {
         $validated = $request->validate([
             'employee_number' => 'required|string|unique:employees,employee_number,'.$employee->id,
+            'fingerprint_id' => 'nullable|string|max:32|unique:employees,fingerprint_id,'.$employee->id,
             'position' => 'required|string|max:255',
             'employment_status' => 'required|in:gty,gtt,staf_tetap,honorer',
             'hire_date' => 'required|date',
@@ -355,51 +358,23 @@ class EmployeeController extends Controller
     /**
      * Monthly attendance report.
      */
-    public function attendanceReport(Request $request)
+    public function attendanceReport(Request $request, EmployeeAttendanceRecap $recap)
     {
         $month = $request->input('month', date('m'));
         $year = $request->input('year', date('Y'));
 
-        $employees = Employee::with('user')->get();
-        $reportData = [];
+        // Working days are the days the attendance data covers, not an assumed 25 (FASE 119).
+        $result = $recap->month((int) $year, (int) $month);
+        $reportData = $result['rows'];
+        $workingDays = $result['working_days'];
 
-        foreach ($employees as $employee) {
-            $attendances = EmployeeAttendance::where('employee_id', $employee->id)
-                ->whereMonth('date', $month)
-                ->whereYear('date', $year)
-                ->get();
-
-            $hadir = $attendances->where('status', 'hadir')->count();
-            $terlambat = $attendances->where('status', 'terlambat')->count();
-            $izin = $attendances->where('status', 'izin')->count();
-            $sakit = $attendances->where('status', 'sakit')->count();
-            $cuti = $attendances->where('status', 'cuti')->count();
-            $alfa = $attendances->where('status', 'alfa')->count();
-
-            $totalWorkdays = 25; // standard KBM workdays in a month
-            $present = $hadir + $terlambat;
-            $rate = $totalWorkdays > 0 ? round(($present / $totalWorkdays) * 100, 1) : 0;
-
-            $reportData[] = [
-                'employee' => $employee,
-                'hadir' => $hadir,
-                'terlambat' => $terlambat,
-                'izin' => $izin,
-                'sakit' => $sakit,
-                'cuti' => $cuti,
-                'alfa' => $alfa,
-                'present' => $present,
-                'rate' => $rate,
-            ];
-        }
-
-        return view('hrd.attendance-report', compact('reportData', 'month', 'year'));
+        return view('hrd.attendance-report', compact('reportData', 'month', 'year', 'workingDays'));
     }
 
     /**
      * Export attendance to CSV.
      */
-    public function exportAttendanceCsv(Request $request)
+    public function exportAttendanceCsv(Request $request, EmployeeAttendanceRecap $recap)
     {
         $month = $request->input('month', date('m'));
         $year = $request->input('year', date('Y'));
@@ -412,39 +387,24 @@ class EmployeeController extends Controller
             'Expires' => '0',
         ];
 
-        $callback = function () use ($month, $year) {
+        $rows = $recap->month((int) $year, (int) $month)['rows'];
+        $callback = function () use ($rows) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['Nama Pegawai', 'NIP', 'Jabatan', 'Hadir', 'Terlambat', 'Izin', 'Sakit', 'Cuti', 'Alpa', 'Tingkat Kehadiran (%)']);
+            fputcsv($file, ['Nama Pegawai', 'NIP', 'Jabatan', 'Hadir', 'Terlambat', 'Izin', 'Sakit', 'Cuti', 'Tidak Hadir', 'Tingkat Kehadiran (%)']);
 
-            $employees = Employee::with('user')->get();
-            foreach ($employees as $employee) {
-                $attendances = EmployeeAttendance::where('employee_id', $employee->id)
-                    ->whereMonth('date', $month)
-                    ->whereYear('date', $year)
-                    ->get();
-
-                $hadir = $attendances->where('status', 'hadir')->count();
-                $terlambat = $attendances->where('status', 'terlambat')->count();
-                $izin = $attendances->where('status', 'izin')->count();
-                $sakit = $attendances->where('status', 'sakit')->count();
-                $cuti = $attendances->where('status', 'cuti')->count();
-                $alfa = $attendances->where('status', 'alfa')->count();
-
-                $totalWorkdays = 25;
-                $present = $hadir + $terlambat;
-                $rate = round(($present / $totalWorkdays) * 100, 1);
-
+            // Empty cells, not zeros, for a month with no attendance data.
+            foreach ($rows as $row) {
                 fputcsv($file, [
-                    $employee->user->name ?? '-',
-                    $employee->employee_number,
-                    $employee->position,
-                    $hadir,
-                    $terlambat,
-                    $izin,
-                    $sakit,
-                    $cuti,
-                    $alfa,
-                    $rate,
+                    $row['employee']->user->name ?? '-',
+                    $row['employee']->employee_number,
+                    $row['employee']->position,
+                    $row['hadir'],
+                    $row['terlambat'],
+                    $row['izin'],
+                    $row['sakit'],
+                    $row['cuti'],
+                    $row['tidak_hadir'],
+                    $row['rate'],
                 ]);
             }
             fclose($file);

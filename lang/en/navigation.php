@@ -96,4 +96,5 @@ return [
     'school_settings' => 'School Identity & Appearance',
     'school_identity' => 'School Identity',
     'school_appearance' => 'Appearance',
+    'fingerprint_import' => 'Fingerprint Import',
 ];

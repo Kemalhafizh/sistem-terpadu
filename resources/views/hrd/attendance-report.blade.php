@@ -56,6 +56,13 @@
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
             <div class="p-6 border-b border-gray-100 dark:border-gray-700/50">
                 <h3 class="font-bold text-gray-800 dark:text-white text-sm"> Rekap Presensi Pegawai</h3>
+                <p class="text-[11px] text-gray-400 mt-1">
+                    @if($workingDays)
+                        {{ __('Hari kerja yang tercakup data presensi: :count hari.', ['count' => $workingDays]) }}
+                    @else
+                        {{ __('Belum ada data presensi untuk bulan ini. Impor log mesin sidik jari terlebih dahulu.') }}
+                    @endif
+                </p>
             </div>
 
             <div class="overflow-x-auto">
@@ -67,7 +74,7 @@
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Hadir</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Terlambat</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Izin/Sakit/Cuti</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Alpa</th>
+                            <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Tidak Hadir</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Persentase</th>
                         </tr>
                     </thead>
@@ -82,20 +89,20 @@
                                     {{ $row['employee']->position }}
                                 </td>
                                 <td class="px-6 py-4 text-center font-bold text-gray-800 dark:text-white">
-                                    {{ $row['hadir'] }}
+                                    {{ $row['hadir'] ?? '–' }}
                                 </td>
                                 <td class="px-6 py-4 text-center text-amber-600 dark:text-amber-400 font-bold">
-                                    {{ $row['terlambat'] }}
+                                    {{ $row['terlambat'] ?? '–' }}
                                 </td>
                                 <td class="px-6 py-4 text-center text-blue-600 dark:text-blue-400">
-                                    {{ $row['izin'] + $row['sakit'] + $row['cuti'] }}
+                                    {{ $row['izin'] === null ? '–' : $row['izin'] + $row['sakit'] + $row['cuti'] }}
                                 </td>
                                 <td class="px-6 py-4 text-center text-rose-600 dark:text-rose-400">
-                                    {{ $row['alfa'] }}
+                                    {{ $row['tidak_hadir'] ?? '–' }}
                                 </td>
                                 <td class="px-6 py-4 text-right">
-                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-black {{ $row['rate'] >= 90 ? 'bg-emerald-50 text-emerald-700' : ($row['rate'] >= 75 ? 'bg-blue-50 text-blue-700' : 'bg-rose-50 text-rose-700') }}">
-                                        {{ $row['rate'] }}%
+                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-black {{ $row['rate'] === null ? 'bg-gray-50 text-gray-500' : ($row['rate'] >= 90 ? 'bg-emerald-50 text-emerald-700' : ($row['rate'] >= 75 ? 'bg-blue-50 text-blue-700' : 'bg-rose-50 text-rose-700')) }}">
+                                        {{ $row['rate'] === null ? '–' : $row['rate'].'%' }}
                                     </span>
                                 </td>
                             </tr>

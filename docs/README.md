@@ -29,7 +29,7 @@ Gunakan menu berikut untuk menelusuri dokumentasi teknis secara menyeluruh:
 ### 📦 Panduan Fitur & Modul Bisnis
 *   [**modules/academic.md**](modules/academic.md): E-Rapor, jadwal, penjurnalan kelas, dan presensi.
 *   [**modules/finance.md**](modules/finance.md): Billing massal, payment gateway Midtrans, audit ledger double-entry.
-*   [**modules/hrd.md**](modules/hrd.md): GPS & Geofencing kehadiran, penggajian staf, dan jurnal mengajar.
+*   [**modules/hrd.md**](modules/hrd.md): Impor presensi dari mesin sidik jari, rekap bulanan, penggajian staf, dan jurnal mengajar.
 *   [**modules/elearning.md**](modules/elearning.md): E-Learning, bank soal, pengerjaan ujian online, visibility tracking & anti-cheat CBT.
 *   [**modules/communication.md**](modules/communication.md): WhatsApp Gateway transaksional, obrolan wali-guru real-time Reverb, forum diskusi akademik.
 *   [**modules/import_export.md**](modules/import_export.md): Hub migrasi data massal, column mapping wizard, transactional imports, cascading rollbacks.

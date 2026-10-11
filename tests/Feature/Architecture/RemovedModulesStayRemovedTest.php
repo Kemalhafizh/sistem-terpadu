@@ -38,6 +38,8 @@ dataset('removed prefixes', [
     'api/v1/documents/ocr', 'api/v1/documents/signature',
     // PR 4: the second calendar (one calendar per school, AcademicEvent).
     'calendar-hub',
+    // PR 6: GPS and selfie check-in (staff use the fingerprint machine, students the per-lesson QR).
+    'api/v1/mobile/geofence', 'my-hrd/attendance',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {
