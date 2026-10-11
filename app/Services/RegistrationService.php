@@ -44,6 +44,12 @@ class RegistrationService
             throw new \Exception('Pendaftar ini sudah dikonversi sebelumnya.');
         }
 
+        // A student needs their real NISN (Dapodik, the app). An empty one
+        // used to become an invented "NSN<timestamp>".
+        if (blank($registration->nisn)) {
+            throw new \DomainException(__('NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.', ['name' => $registration->full_name]));
+        }
+
         return DB::transaction(function () use ($registration) {
             // 1. Create User Account
             $email = strtolower($registration->registration_number).'@student.sch.id';
@@ -59,15 +65,18 @@ class RegistrationService
 
             // 2. Create Student Profile
             $nis = 'NIS-'.date('Y').'-'.substr($registration->registration_number, -4);
-            $nisn = $registration->nisn ?: 'NSN'.time();
 
+            // What the applicant filled in on the SPMB form. This used to be
+            // gender "L" for everyone, address "Belum diisi", and no birth date.
             $newStudent = Student::create([
                 'user_id' => $newUser->id,
                 'classroom_id' => null,
                 'nis' => $nis,
-                'nisn' => $nisn,
-                'gender' => 'L',
-                'address' => 'Belum diisi',
+                'nisn' => $registration->nisn,
+                'gender' => in_array($registration->gender, ['L', 'P'], true) ? $registration->gender : 'L',
+                'birth_place' => $registration->birth_place,
+                'birth_date' => $registration->birth_date,
+                'address' => $registration->address,
             ]);
 
             // 3. Link User ID to Registration
@@ -75,21 +84,26 @@ class RegistrationService
             $registration->status = 'accepted';
             $registration->save();
 
-            // 4. Generate Initial Billing (Uang Pangkal)
-            $paymentCategory = PaymentCategory::firstOrCreate(
-                ['name' => 'Uang Pangkal / Pendaftaran'],
-                ['default_amount' => 5000000, 'is_monthly' => false]
-            );
+            // 4. Initial billing (Uang Pangkal), at the amount Keuangan set.
+            // There used to be a made-up Rp 5.000.000 category when the
+            // school had none (and it never matched the seeded "Uang Pangkal").
+            $paymentCategory = PaymentCategory::where('is_monthly', false)
+                ->where('name', 'like', 'Uang Pangkal%')
+                ->where('default_amount', '>', 0)
+                ->orderBy('id')
+                ->first();
 
-            Billing::create([
-                'student_id' => $newStudent->id,
-                'payment_category_id' => $paymentCategory->id,
-                'academic_year_id' => $registration->academic_year_id,
-                'month' => null,
-                'amount' => $paymentCategory->default_amount,
-                'due_date' => now()->addDays(14)->format('Y-m-d'),
-                'status' => 'unpaid',
-            ]);
+            if ($paymentCategory) {
+                Billing::create([
+                    'student_id' => $newStudent->id,
+                    'payment_category_id' => $paymentCategory->id,
+                    'academic_year_id' => $registration->academic_year_id,
+                    'month' => null,
+                    'amount' => $paymentCategory->default_amount,
+                    'due_date' => now()->addDays(14)->format('Y-m-d'),
+                    'status' => 'unpaid',
+                ]);
+            }
 
             // Send Account Email
             try {
@@ -99,11 +113,15 @@ class RegistrationService
             }
 
             $message = "Berhasil! Pendaftar Diterima. Akun siswa otomatis dibuat dengan Email: {$email}, Password Sementara: {$password}. Siswa wajib ganti password saat login pertama.";
+            if (! $paymentCategory) {
+                $message .= ' '.__('Tagihan uang pangkal belum dibuat karena kategori "Uang Pangkal" beserta nominalnya belum diatur di Keuangan.');
+            }
 
             return [
                 'message' => $message,
                 'password' => $password,
                 'email' => $email,
+                'billed' => (bool) $paymentCategory,
             ];
         });
     }

@@ -5,6 +5,7 @@
 use App\Mail\RegistrationSubmitted;
 use App\Mail\StudentAccountCreated;
 use App\Models\AcademicYear;
+use App\Models\PaymentCategory;
 use App\Models\Registration;
 use App\Models\SpmbPeriod;
 use App\Models\SpmbTrack;
@@ -94,6 +95,8 @@ test('public user can submit registration', function () {
 test('admin can convert registration to student', function () {
     Mail::fake();
     $admin = User::factory()->create(['role' => 'admin']);
+    // The admission fee comes from the category Keuangan set up; without one no bill is issued.
+    $category = PaymentCategory::create(['name' => 'Uang Pangkal', 'default_amount' => 6000000, 'is_monthly' => false]);
     $registration = Registration::factory()->create([
         'email' => 'calon@example.com',
         'academic_year_id' => $this->academicYear->id,
@@ -122,6 +125,8 @@ test('admin can convert registration to student', function () {
 
     $this->assertDatabaseHas('billings', [
         'academic_year_id' => $this->academicYear->id,
+        'payment_category_id' => $category->id,
+        'amount' => 6000000,
     ]);
 
     Mail::assertQueued(StudentAccountCreated::class);

@@ -20,7 +20,7 @@ class Student extends Model
 {
     use HasFactory, HasUuid, LogsActivity, SoftDeletes;
 
-    protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_date', 'address', 'status'];
+    protected $fillable = ['user_id', 'parent_id', 'classroom_id', 'nis', 'nisn', 'gender', 'birth_place', 'birth_date', 'address', 'mother_name', 'status'];
 
     /** Roles that may see every student's records (school-wide duties). */
     public const SCHOOL_WIDE_ROLES = ['superadmin', 'admin', 'bk', 'staf_tu', ...RoleMiddleware::LEADERSHIP_ROLES];

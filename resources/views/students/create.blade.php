@@ -93,6 +93,25 @@
                         @enderror
                     </div>
 
+                    <!-- Dapodik identity -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">
+                        <div>
+                            <label for="birth_place" class="block font-medium text-sm text-gray-700">{{ __('Tempat Lahir') }}</label>
+                            <input id="birth_place" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50" type="text" name="birth_place" maxlength="100" value="{{ old('birth_place') }}" />
+                            @error('birth_place')
+                                <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="mother_name" class="block font-medium text-sm text-gray-700">{{ __('Nama Ibu Kandung') }}</label>
+                            <input id="mother_name" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50" type="text" name="mother_name" maxlength="255" value="{{ old('mother_name') }}" />
+                            <p class="text-xs text-gray-400 mt-1">{{ __('Wajib untuk Dapodik.') }}</p>
+                            @error('mother_name')
+                                <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-end mt-6 pt-4 border-t border-gray-100">
                         <a href="{{ route('students.index') }}" class="text-sm text-gray-600 hover:text-gray-900 mr-4">
                             Batal

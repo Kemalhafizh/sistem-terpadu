@@ -97,10 +97,13 @@
                                             <th class="pb-3">NIS</th>
                                             <th class="pb-3">Nama Lengkap</th>
                                             <th class="pb-3">L/P</th>
+                                            <th class="pb-3">Tempat Lahir</th>
                                             <th class="pb-3">Tanggal Lahir</th>
+                                            <th class="pb-3">Ibu Kandung</th>
                                             <th class="pb-3">Rombel</th>
                                         @elseif($type === 'teachers')
-                                            <th class="pb-3">NIP/NUPTK</th>
+                                            <th class="pb-3">NUPTK</th>
+                                            <th class="pb-3">NIY</th>
                                             <th class="pb-3">Nama Lengkap</th>
                                             <th class="pb-3">Email</th>
                                             <th class="pb-3">Jabatan</th>
@@ -137,8 +140,10 @@
                                                 <td class="py-4 text-xs text-gray-400">{{ $row['nis'] }}</td>
                                                 <td class="py-4 font-semibold text-gray-200">{{ $row['nama'] }}</td>
                                                 <td class="py-4 text-center">{{ $row['gender'] }}</td>
-                                                <td class="py-4 text-xs text-gray-400">{{ $row['tanggal_lahir'] }}</td>
-                                                <td class="py-4 text-xs">{{ $row['kelas'] }}</td>
+                                                <td class="py-4 text-xs {{ $row['tempat_lahir'] === '' ? 'text-rose-400 font-bold' : 'text-gray-400' }}">{{ $row['tempat_lahir'] ?: 'KOSONG' }}</td>
+                                                <td class="py-4 text-xs text-gray-400">{{ $row['tanggal_lahir'] ?: '–' }}</td>
+                                                <td class="py-4 text-xs {{ $row['ibu_kandung'] === '' ? 'text-rose-400 font-bold' : 'text-gray-400' }}">{{ $row['ibu_kandung'] ?: 'KOSONG' }}</td>
+                                                <td class="py-4 text-xs">{{ $row['kelas'] ?: '–' }}</td>
                                             @elseif($type === 'teachers')
                                                 <td class="py-4 font-mono text-xs text-gray-300">
                                                     @if(empty($row['nuptk']))
@@ -149,6 +154,7 @@
                                                         {{ $row['nuptk'] }}
                                                     @endif
                                                 </td>
+                                                <td class="py-4 font-mono text-xs text-gray-400">{{ $row['niy'] ?: '–' }}</td>
                                                 <td class="py-4 font-semibold text-gray-200">{{ $row['nama'] }}</td>
                                                 <td class="py-4 text-xs text-gray-400">{{ $row['email'] }}</td>
                                                 <td class="py-4 text-xs">{{ $row['jabatan'] }}</td>
@@ -170,7 +176,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="py-8 text-center text-gray-500 text-sm">
+                                            <td colspan="9" class="py-8 text-center text-gray-500 text-sm">
                                                 Tidak ada data pratinjau yang tersedia.
                                             </td>
                                         </tr>

@@ -601,12 +601,6 @@ parameters:
 			path: app/Http/Controllers/HRD/EmployeeController.php
 
 		-
-			message: '#^Relation ''documents'' is not found in App\\Models\\Employee model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/HRD/EmployeeController.php
-
-		-
 			message: '#^Relation ''employee'' is not found in App\\Models\\EmployeeDocument model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -1290,12 +1284,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/ExtracurricularService.php
-
-		-
-			message: '#^Relation ''tahfidzLogs'' is not found in App\\Models\\Student model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Integration/EmisService.php
 
 		-
 			message: '#^Relation ''employee'' is not found in App\\Models\\User model\.$#'

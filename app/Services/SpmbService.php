@@ -139,8 +139,10 @@ class SpmbService
 
     /**
      * Batch convert accepted applicants who have re-registered to Student/User accounts.
+     *
+     * @return array{converted: int, skipped: list<string>} skipped: why each applicant was left out
      */
-    public function bulkConvert(int $waveId): int
+    public function bulkConvert(int $waveId): array
     {
         $applicants = Registration::where('spmb_wave_id', $waveId)
             ->where('status', 'accepted')
@@ -149,17 +151,21 @@ class SpmbService
             ->get();
 
         $count = 0;
+        $skipped = [];
         $regService = new RegistrationService;
 
         foreach ($applicants as $applicant) {
             try {
                 $regService->convertToStudent($applicant);
                 $count++;
+            } catch (\DomainException $e) {
+                $skipped[] = $e->getMessage();
             } catch (\Exception $e) {
                 Log::error("Failed to convert applicant {$applicant->id} in bulk: ".$e->getMessage());
+                $skipped[] = __(':name gagal dikonversi. Lihat log sistem.', ['name' => $applicant->full_name]);
             }
         }
 
-        return $count;
+        return ['converted' => $count, 'skipped' => $skipped];
     }
 }

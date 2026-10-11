@@ -496,5 +496,14 @@
     "Dinas Luar": "Official Duty",
     "Presensi per mapel berhasil diambil": "Per-lesson attendance retrieved",
     "Presensi per mapel anak berhasil diambil": "Your child's per-lesson attendance retrieved",
-    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future."
+    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future.",
+    "Tempat Lahir": "Place of Birth",
+    "Nama Ibu Kandung": "Mother's Maiden Name",
+    "Wajib untuk Dapodik.": "Required for Dapodik.",
+    "16 digit, untuk ekspor Dapodik. Kosongkan bila pegawai belum punya NUPTK.": "16 digits, for the Dapodik export. Leave empty if the employee has no NUPTK yet.",
+    "Belum tercatat": "Not recorded",
+    "Tagihan uang pangkal belum dibuat karena kategori \"Uang Pangkal\" beserta nominalnya belum diatur di Keuangan.": "No admission fee bill was created because the \"Uang Pangkal\" category and its amount have not been set up in Finance.",
+    "NISN :name belum diisi. Lengkapi NISN pendaftar sebelum dijadikan siswa.": "NISN for :name is empty. Fill in the applicant's NISN before enrolling them.",
+    ":name gagal dikonversi. Lihat log sistem.": ":name could not be converted. See the system log.",
+    ":count calon siswa dijadikan siswa aktif.": ":count applicants enrolled as active students."
 }

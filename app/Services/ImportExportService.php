@@ -88,6 +88,18 @@ class ImportExportService
                         'rules' => 'nullable|string',
                         'description' => 'Alamat lengkap tempat tinggal siswa.',
                     ],
+                    'birth_place' => [
+                        'label' => 'Tempat Lahir',
+                        'required' => false,
+                        'rules' => 'nullable|string|max:100',
+                        'description' => 'Kota/kabupaten tempat lahir (wajib untuk Dapodik).',
+                    ],
+                    'mother_name' => [
+                        'label' => 'Nama Ibu Kandung',
+                        'required' => false,
+                        'rules' => 'nullable|string|max:255',
+                        'description' => 'Nama ibu kandung siswa (wajib untuk Dapodik).',
+                    ],
                 ];
 
             case 'employees':
@@ -404,7 +416,9 @@ class ImportExportService
                         'nisn' => $mappedData['nisn'],
                         'gender' => $mappedData['gender'],
                         'birth_date' => $mappedData['birth_date'] ?? null,
+                        'birth_place' => $mappedData['birth_place'] ?? null,
                         'address' => $mappedData['address'] ?? null,
+                        'mother_name' => $mappedData['mother_name'] ?? null,
                         'status' => 'active',
                     ]);
                     $createdIds['students'][] = $student->id;
