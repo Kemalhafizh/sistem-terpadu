@@ -7,7 +7,6 @@ namespace Tests\Feature\SuperApp;
 use App\Events\CampusAnnouncementEvent;
 use App\Events\EmergencyBroadcastEvent;
 use App\Models\User;
-use App\Services\Mobile\DynamicQrService;
 use App\Services\Mobile\FcmNotificationService;
 use App\Services\Mobile\OfflineSyncManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,20 +31,6 @@ class Fase69SuperAppGatewayTest extends TestCase
 
         $service->sendToUser($user->id, 'Tagihan Baru', 'SPP Bulan September telah terbit');
         $this->assertTrue(true);
-    }
-
-    public function test_dynamic_rotating_totp_qr_generation_and_verification(): void
-    {
-        $user = User::factory()->create(['role' => 'student']);
-        $service = app(DynamicQrService::class);
-
-        $tokenData = $service->generateDynamicToken($user);
-        $this->assertArrayHasKey('token', $tokenData);
-        $this->assertEquals(30, $tokenData['valid_seconds']);
-
-        $verifyResult = $service->verifyDynamicToken($tokenData['token']);
-        $this->assertTrue($verifyResult['valid']);
-        $this->assertEquals($user->id, $verifyResult['user_id']);
     }
 
     public function test_offline_sync_manager_delta_pull_and_mutation_queue(): void

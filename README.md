@@ -1,6 +1,6 @@
 # 🚀 Sistem Terpadu SMA Islam Sultan Agung 1 (SISTA)
 
-[![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg?style=flat-square&logo=laravel)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-13.x-red.svg?style=flat-square&logo=laravel)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.4-blue.svg?style=flat-square&logo=php)](https://php.net)
 [![Pest](https://img.shields.io/badge/Pest%20PHP-Testing-green.svg?style=flat-square)](https://pestphp.com)
 [![PWA](https://img.shields.io/badge/PWA-Fully%20Supported-blueviolet.svg?style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
@@ -107,14 +107,19 @@ Fase ini menghadirkan fitur-fitur skala *enterprise-grade* untuk operasional dan
 ### 🔄 6. Digital Approval Workflow Engine (Modul 18.2 - ✅ DONE)
 * **Alur Persetujuan**: Engine pengajuan berkas (cuti, surat dinas, silabus) berjenjang dengan SLA penanganan otomatis.
 
-### 🚨 7. Smart Alerts & Monitoring At-Risk Students (Modul 18.3 - ✅ DONE)
-* **Deteksi Dini**: Dasbor pemantauan otomatis indikator resiko tinggi siswa (seperti penurunan drastis kehadiran atau nilai, dan akumulasi poin pelanggaran) untuk intervensi dini.
+---
+
+## ✂️ Cakupan: ERP untuk Satu Sekolah (FASE 119)
+
+SISTA adalah ERP untuk **satu SMA Islam**, bukan platform korporat. Pada FASE 119 modul yang tidak dipakai siapa pun di sekolah dihapus permanen (kode, view, model, migrasi, dan test), antara lain: tools developer dan teknologi pamer (blockchain, IoT, observability), manajemen korporat dan marketing (RENSTRA, SOP, rekrutmen, omnichannel, majalah/podcast), serta gimmick (AI tutor/chatbot, gamifikasi XP, presensi GPS/QR dinamis/wajah, OCR, tanda tangan digital, smart campus, green school, knowledge hub, yayasan). Rinciannya ada di `implementation_plan.md` bagian FASE 119.
+
+Yang dipertahankan dan diperkuat: data induk, akademik (jadwal, sesi kelas + presensi QR per mapel, jurnal, penilaian, rapor, CBT, e-learning), kesiswaan (BK termasuk inklusi dan perundungan, UKS, ekskul, OSIS/MPK, perpustakaan), keislaman (Tahfidz, Mutaba'ah, Tahsin), keuangan, kepegawaian, administrasi, komunikasi, dan sistem.
 
 ---
 
 ## 💻 Tech Stack Utama
 
-* **Core Framework:** Laravel 12 & PHP 8.4 (PSR-12 Standardized via Laravel Pint)
+* **Core Framework:** Laravel 13 & PHP 8.4 (PSR-12 Standardized via Laravel Pint)
 * **Database Engine:** SQLite (Lokal) / MySQL & PostgreSQL (Produksi)
 * **Frontend Core:** Tailwind CSS v4, Alpine.js, Blade Components
 * **Dynamic Charting:** ApexCharts.js

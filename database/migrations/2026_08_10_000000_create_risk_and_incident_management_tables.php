@@ -8,22 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('risk_registers', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->enum('category', ['Academic', 'Financial', 'Safety', 'IT/Cyber', 'Reputational', 'Regulatory'])->default('Safety');
-            $table->enum('likelihood', ['rare', 'unlikely', 'possible', 'likely', 'almost_certain'])->default('possible');
-            $table->enum('impact', ['insignificant', 'minor', 'moderate', 'major', 'catastrophic'])->default('moderate');
-            $table->text('mitigation_plan')->nullable();
-            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('status', ['identified', 'mitigating', 'resolved', 'accepted'])->default('identified');
-            $table->date('review_date')->nullable();
-            $table->timestamps();
-
-            $table->index(['category', 'status']);
-        });
-
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -45,6 +29,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('incidents');
-        Schema::dropIfExists('risk_registers');
     }
 };

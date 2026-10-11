@@ -36,9 +36,6 @@ Gunakan menu berikut untuk menelusuri dokumentasi teknis secara menyeluruh:
 *   [**modules/workflow.md**](modules/workflow.md): Polymorphic approval workflow engine, visual stepper progress, automatic callback triggers.
 *   [**modules/portfolio.md**](modules/portfolio.md): Portofolio pencapaian siswa, shareable public UUID links, lencana prestasi terverifikasi sekolah.
 *   [**modules/security.md**](modules/security.md): Security monitoring SIEM, brute-force alarms, manajemen sesi aktif & forced logout.
-*   [**modules/report_builder.md**](modules/report_builder.md): Drag-drop custom report builder, dynamic SQL query compiler, ApexCharts visualizer, PDF/Excel exports.
-*   [**modules/chatbot.md**](modules/chatbot.md): Asisten cerdas chatbot sekolah, fuzzy navigation matching, dan secure Eloquent query data translations (100% lokal bebas biaya).
-*   [**modules/gamification.md**](modules/gamification.md): Sistem gamifikasi sekolah terpadu, papan peringkat visual 3 besar podium, level, streak presensi masuk kelas, setoran hafalan Al-Quran Tahfidz, mutaba'ah ibadah yaumi harian, lencana kelayakan otomatis.
 
 ---
 

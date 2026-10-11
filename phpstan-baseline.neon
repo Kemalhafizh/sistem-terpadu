@@ -1346,12 +1346,6 @@ parameters:
 			path: app/Services/SpmbService.php
 
 		-
-			message: '#^Relation ''student'' is not found in App\\Models\\StudentShowcase model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Student/ShowcaseService.php
-
-		-
 			message: '#^Relation ''extracurricular'' is not found in App\\Models\\ExtracurricularMember model\.$#'
 			identifier: larastan.relationExistence
 			count: 1

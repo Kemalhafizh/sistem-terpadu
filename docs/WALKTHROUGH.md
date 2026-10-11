@@ -14,7 +14,7 @@ Password untuk semua akun pengujian di bawah ini adalah **`password`**:
 | **Kepala Sekolah** | `kepala.sekolah@sultanagung1.sch.id` | Dashboard analitik eksekutif, rekapitulasi mutu EDS, approval workflow. |
 | **Waka Kurikulum** | `waka.kurikulum@sultanagung1.sch.id` | Manajemen kurikulum, approval bank silabus, kalender akademik. |
 | **Waka Kesiswaan** | `waka.kesiswaan@sultanagung1.sch.id` | Manajemen ekstrakurikuler, pembinaan OSIS & MPK, approval proposal kegiatan. |
-| **Guru BK (Konselor)** | `guru.bk@sultanagung1.sch.id` | Konseling BK terenkripsi, pemantauan status siswa beresiko (Smart Alerts). |
+| **Guru BK (Konselor)** | `guru.bk@sultanagung1.sch.id` | Konseling BK terenkripsi, poin pelanggaran, laporan perundungan, dan pendidikan inklusi. |
 | **Guru / Petugas UKS** | `guru@sekolah.com` | Absensi harian kelas, rekam medis harian UKS, kurangi stok obat. |
 | **Siswa (Student)** | `demo.siswa1@student.sa1.sch.id` | Pengerjaan ujian online (CBT), jurnal mutaba'ah ibadah, forum kelas. |
 | **Orang Tua (Parent)** | `parent@sekolah.com` | Parent Portal (pantau rapor, kehadiran, keuangan SPP, & mutaba'ah anak). |
@@ -36,15 +36,15 @@ Tujuan: Menguji analisis data eksekutif dan persetujuan pengajuan dokumen secara
 
 ---
 
-## 🚶 2. Alur Demo: Guru BK & Smart Alerts (Intervensi Dini Siswa)
+## 🚶 2. Alur Demo: Guru BK (Konseling & Laporan Perundungan)
 
-Tujuan: Menguji sistem analitik prediktif dan konseling siswa.
+Tujuan: Menguji menu Bimbingan Konseling.
 
 1. **Login** menggunakan akun **`guru.bk@sultanagung1.sch.id`**.
-2. **Dashboard Smart Alerts**:
-   - Masuk ke menu **Smart Alerts**. Anda akan melihat daftar siswa yang masuk kategori *At-Risk* secara otomatis terpicu oleh sistem (seperti kehadiran di bawah 80% atau nilai rata-rata di bawah KKM).
+2. **Laporan Perundungan**:
+   - Buka menu **Bimbingan Konseling → Laporan Perundungan**. Laporan dari siswa dan orang tua (web maupun aplikasi) tampil di sini; identitas pelapor anonim tidak disimpan.
 3. **Konseling BK Terenkripsi**:
-   - Pilih salah satu siswa bermasalah, lalu buat pengajuan sesi konseling daring.
+   - Pilih salah satu siswa, lalu buat sesi konseling.
    - Isi formulir catatan konseling. Data catatan konseling ini akan langsung terenkripsi di database agar terjaga kerahasiaannya.
 
 ---

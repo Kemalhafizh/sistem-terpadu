@@ -23,7 +23,6 @@ use App\Models\MpkAudit;
 use App\Models\MpkLpj;
 use App\Models\PortfolioItem;
 use App\Models\StudentAspiration;
-use App\Models\StudentShowcase;
 use App\Models\Syllabus;
 use App\Models\UksVisit;
 use App\Models\User;
@@ -38,7 +37,6 @@ use App\Policies\ExamPolicy;
 use App\Policies\ForumPolicy;
 use App\Policies\MpkPolicy;
 use App\Policies\PortfolioPolicy;
-use App\Policies\StudentShowcasePolicy;
 use App\Policies\UksPolicy;
 use App\Policies\WorkflowPolicy;
 use App\Services\AppearanceService;
@@ -92,9 +90,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Register Counseling Policy
         Gate::policy(CounselingSession::class, CounselingSessionPolicy::class);
-
-        // Register Student Showcase Policy
-        Gate::policy(StudentShowcase::class, StudentShowcasePolicy::class);
 
         // Register Forum Policy
         Gate::policy(ForumThread::class, ForumPolicy::class);
