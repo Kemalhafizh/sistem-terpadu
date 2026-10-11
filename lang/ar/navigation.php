@@ -96,4 +96,5 @@ return [
     'school_settings' => 'هوية المدرسة ومظهرها',
     'school_identity' => 'هوية المدرسة',
     'school_appearance' => 'المظهر',
+    'fingerprint_import' => 'استيراد البصمة',
 ];

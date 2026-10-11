@@ -30,7 +30,6 @@ use App\Http\Controllers\Api\v1\EvaluationMobileApiController;
 use App\Http\Controllers\Api\v1\ExternalIntegrationApiController;
 use App\Http\Controllers\Api\v1\ExtracurricularMobileApiController;
 use App\Http\Controllers\Api\v1\LibraryMobileApiController;
-use App\Http\Controllers\Api\v1\Mobile\GeofenceController;
 use App\Http\Controllers\Api\v1\Mobile\MobileAuthController;
 use App\Http\Controllers\Api\v1\Mobile\MobileConfigController;
 use App\Http\Controllers\Api\v1\Mobile\MobileSyncController;
@@ -506,13 +505,6 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::prefix('gateway')->middleware(RoleBasedRateLimiterMiddleware::class)->group(function () {
             Route::get('student/me', [StudentApiController::class, 'profile'])->name('api.v1.student.me');
             Route::post('whatsapp/send', [ExternalIntegrationApiController::class, 'sendWhatsapp'])->name('api.v1.whatsapp.send');
-        });
-
-        // =====================================================================
-        // FASE 69: SUPER APP ENTERPRISE API & MOBILE GATEWAY
-        // =====================================================================
-        Route::prefix('mobile')->group(function () {
-            Route::post('geofence/checkin', [GeofenceController::class, 'checkin']);
         });
 
         // =====================================================================

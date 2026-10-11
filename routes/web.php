@@ -61,6 +61,7 @@ use App\Http\Controllers\Grc\AccreditationController;
 use App\Http\Controllers\Growth\P5AssessmentController;
 use App\Http\Controllers\Growth\PtcSchedulerController;
 use App\Http\Controllers\HRD\EmployeeController;
+use App\Http\Controllers\HRD\FingerprintImportController;
 use App\Http\Controllers\HRD\MyHRDController;
 use App\Http\Controllers\HRD\PayrollController;
 use App\Http\Controllers\HumanCapital\Evaluation360Controller;
@@ -893,12 +894,17 @@ Route::middleware('auth')->group(function () {
         Route::resource('payrolls', PayrollController::class)->except(['store', 'edit']);
     });
 
+    // FASE 119.6.1: staff attendance comes from the fingerprint machine; TU uploads its log.
+    Route::middleware(['auth', Roles::only('staf_tu', Roles::PRINCIPAL, 'admin')])->prefix('hrd/fingerprint-import')->name('hrd.fingerprint-import.')->group(function () {
+        Route::get('/', [FingerprintImportController::class, 'index'])->name('index');
+        Route::post('/', [FingerprintImportController::class, 'store'])->name('store');
+    });
+
     // =========================================================
     // SELF-SERVICE HRD (Semua Pegawai/Staf/Guru)
     // =========================================================
     Route::middleware('auth')->prefix('my-hrd')->name('my-hrd.')->group(function () {
         Route::get('portal', [MyHRDController::class, 'index'])->name('portal');
-        Route::post('attendance', [MyHRDController::class, 'recordAttendance'])->name('attendance');
         Route::post('leaves', [MyHRDController::class, 'storeLeaveRequest'])->name('leaves');
 
         // Employee Payslip Download

@@ -6675,7 +6675,7 @@ Setelah 118.1 selesai, nyalakan *deny-by-default* untuk route web ber-`auth` tan
 
 ---
 
-## FASE 119: DEBLOAT, KEMBALI KE ERP SEKOLAH YANG JELAS `[RANCANGAN BARU]`
+## FASE 119: DEBLOAT, KEMBALI KE ERP SEKOLAH YANG JELAS `[SELESAI]`
 
 > **Tanggal Rancangan:** 5 Oktober 2026
 > **Pelaksana:** Agent Backend (repo `sistem-terpadu`, backend + web). Pasangannya di Android: **FASE 78** di `sista-android/android_implementation.md`.
@@ -6789,13 +6789,13 @@ Setiap PR mencantumkan angka sebelum/sesudah: jumlah controller, route, tabel, d
 
 ### 119.8: Kriteria Selesai
 
-- [ ] Tidak ada lagi namespace/folder 119.1 B di `app/`. `phpstan` dan `pint` hijau, `php artisan test` hijau (kecuali `Fase85DebloatPragmatismTest > single vps` yang khusus produksi, atau test itu sekalian disesuaikan).
-- [ ] `php artisan migrate:fresh --seed` sukses dari nol.
-- [ ] Test arsitektur baru: daftar prefix route terlarang (`blockchain`, `iot`, `gamification`, `ai/`, `green-school`, `treasury-forecast`, dst.) tidak muncul di `route:list`, agar modul yang sudah dipotong tidak hidup lagi.
-- [ ] Sidebar tidak punya seksi Enterprise. Setiap peran melihat satu dashboard.
-- [ ] Endpoint lapor perundungan untuk mobile tersedia, dengan test akses (semua user login boleh lapor, hanya BK/pimpinan yang boleh lihat).
-- [ ] Impor sidik jari berjalan dengan test 119.6.1.
-- [ ] Bagian ini diperbarui menjadi `[SELESAI]` beserta angka sebelum/sesudah dan daftar modul yang ternyata dipertahankan (beserta alasannya).
+- [x] Tidak ada lagi namespace/folder 119.1 B di `app/`. `phpstan` dan `pint` hijau, `php artisan test` hijau (kecuali `Fase85DebloatPragmatismTest > single vps` yang khusus produksi, atau test itu sekalian disesuaikan).
+- [x] `php artisan migrate:fresh --seed` sukses dari nol.
+- [x] Test arsitektur baru: daftar prefix route terlarang (`blockchain`, `iot`, `gamification`, `ai/`, `green-school`, `treasury-forecast`, dst.) tidak muncul di `route:list`, agar modul yang sudah dipotong tidak hidup lagi.
+- [x] Sidebar tidak punya seksi Enterprise. Setiap peran melihat satu dashboard.
+- [x] Endpoint lapor perundungan untuk mobile tersedia, dengan test akses (semua user login boleh lapor, hanya BK/pimpinan yang boleh lihat).
+- [x] Impor sidik jari berjalan dengan test 119.6.1.
+- [x] Bagian ini diperbarui menjadi `[SELESAI]` beserta angka sebelum/sesudah dan daftar modul yang ternyata dipertahankan (beserta alasannya).
 
 ### 119.9: Menunggu Keputusan Pemilik Produk (jangan disentuh di FASE 119)
 
@@ -6807,3 +6807,48 @@ Modul berikut abu-abu. Biarkan apa adanya sampai pemilik produk memutuskan:
 - Kampanye donasi/infaq (`Finance/CharityController`).
 - Perencanaan anggaran/RKAS (`Financial/BudgetPlanningController`).
 - Portofolio siswa, To-do guru, penjadwal pertemuan ortu–guru (`PortfolioController`, `TeacherTodoController`, `Growth/PtcSchedulerController`).
+
+### 119.10: Hasil `[SELESAI]`
+
+Dikerjakan dalam enam PR sesuai 119.7: #41 (tools developer & teknologi pamer), #42 (korporat, marketing & media), #43 (gimmick & endpoint mobile), #44 (gabung & sederhanakan, sidebar, lapor perundungan), #45 (bersih-bersih data & repo), dan #46 (impor sidik jari).
+
+| | Sebelum FASE 119 | Sesudah |
+|---|---:|---:|
+| Controller | 351 | 177 |
+| Route | 1734 | 1113 |
+| View | 946 | 564 |
+| Tabel (`Schema::create`) | 504 | 252 |
+| Model | 490 | 238 |
+| Service | 262 | 111 |
+
+**Yang ditambahkan atau diperbaiki di sepanjang jalan:**
+- **Endpoint lapor perundungan** untuk Android (`api/v1/counseling/bullying-reports`).
+- **Impor presensi sidik jari** dengan rekap bulanan yang jujur.
+- **Satu kalender** (`AcademicEvent::visibleTo`) untuk web dan aplikasi.
+- **Satu dashboard per peran** (`User::dashboardRole`) tanpa angka karangan.
+- **Menu sidebar per area** yang mengikuti aturan route dan policy.
+- **Celah akses yang ditutup:**
+  - Route beasiswa dan kalender kedua yang terbuka untuk semua akun.
+  - Gateway pembayaran tiruan yang bisa menandai tagihan lunas tanpa uang masuk.
+  - Akun `siswa` yang terkunci dari tagihannya sendiri.
+
+**Modul yang dipertahankan walau berada di folder 119.1 B, beserta alasannya:**
+- **`Integration/` (Dapodik, EMIS):** ekspor Dapodik termasuk inti 119.3. Yang dihapus hanya tools integrasi developer.
+- **`Grc/AccreditationController`, `HumanCapital/Evaluation360Controller`:**
+  - Accreditation termasuk 119.9.
+  - Evaluasi 360 adalah satu-satunya tempat siklus evaluasi dibuat untuk `EvaluationMobileApi` (119.9).
+- **`Communication/`:**
+  - Messaging dan pusat notifikasi dipakai web dan Android (119.2).
+  - Booking ruang/alat dipertahankan atas keputusan pemilik produk (6 Okt 2026).
+- **`Islamic/TahsinRecordController`:** Tahsin termasuk inti keislaman (119.3).
+- **`Campus/VisitorService`, `EventTicketingService`:** masih dipakai `ScannerMobileApiController`.
+- **`Mobile/*`:** API, sync, dan push untuk aplikasi Android, bukan halaman mobile web `extended_diamond` yang dihapus.
+- **`Dashboard/FinancialScoreboardService`:** kini tampil sebagai "Kesehatan Keuangan" di dashboard pimpinan.
+- **Model wadiah dan kantin:** dipakai `Finance/CharityController` (119.9) dan portal orang tua. UI-nya sudah dihapus.
+- **`AdaptiveRiskEngine`:** mesin risiko login (keamanan), bukan adaptive learning.
+
+**Belum diputuskan atau ditindaklanjuti di luar FASE 119:**
+- **Modul 119.9** tetap menunggu keputusan pemilik produk.
+- **EMIS:** `EmisService` masih mengirim `'Sudah Sertifikasi'` tetap untuk profil sekolah, dan dokumentasi menyebut fallback `"Ibu Kandung Siswa"` untuk Dapodik. Bila kode masih mengirimnya, itu teks karangan (CLAUDE.md aturan 1).
+- **Payroll** masih menghitung hari kerja sendiri (Senin–Jumat). `EmployeeAttendanceRecap::forEmployee()` siap dipakai bila payroll ingin memakai hari yang tercakup log mesin.
+- **Tahsin:** `TahsinRecordController` (penilaian guru) dan `TahsinSubmissionApi` (setoran audio siswa) bukan duplikat. Penggabungan alurnya perlu keputusan produk.

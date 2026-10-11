@@ -51,6 +51,13 @@
                             </div>
 
                             <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">{{ __('ID di Mesin Sidik Jari') }}</label>
+                                <input type="text" name="fingerprint_id" value="{{ old('fingerprint_id') }}" maxlength="32" class="w-full rounded-2xl border-gray-200 bg-gray-50 p-4 focus:ring-primary-500 font-medium">
+                                <p class="text-xs text-gray-400 mt-2">{{ __('Nomor yang dipakai pegawai ini saat mendaftar sidik jari di mesin. Dipakai untuk mencocokkan log mesin yang diimpor.') }}</p>
+                                @error('fingerprint_id')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
+                            </div>
+
+                            <div>
                                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Jabatan / Posisi <span class="text-red-500">*</span></label>
                                 <input type="text" name="position" value="{{ old('position') }}" required placeholder="Contoh: Guru Matematika" class="w-full rounded-2xl border-gray-200 bg-gray-50 p-4 focus:ring-primary-500 font-medium">
                             </div>

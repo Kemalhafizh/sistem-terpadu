@@ -96,4 +96,5 @@ return [
     'school_settings' => 'Identitas & Tampilan Sekolah',
     'school_identity' => 'Identitas Sekolah',
     'school_appearance' => 'Tampilan',
+    'fingerprint_import' => 'Impor Sidik Jari',
 ];

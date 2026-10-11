@@ -15,6 +15,7 @@ class EmployeeAttendance extends Model
         'check_in_time',
         'check_out_time',
         'status',
+        'source',
         'location_lat',
         'location_long',
         'distance_meters',
