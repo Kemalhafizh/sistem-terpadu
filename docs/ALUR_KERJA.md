@@ -17,6 +17,7 @@
 5. **Notifikasi mengikuti status, bukan tombol.** Setiap perpindahan status yang menunggu orang lain mengirim notifikasi (aplikasi/push, dan WA hanya untuk orang tua bila penting).
 6. **Kanal mengikuti pemakai.** Pekerjaan meja (TU, waka, kepsek) ada di web. Pekerjaan di kelas dan di rumah (guru, siswa, orang tua) ada di Android, dan web tetap bisa sebagai cadangan.
 7. **Satu aturan akses** (CLAUDE.md aturan 3): role di route menentukan siapa boleh membuka, dan data dibatasi ke miliknya (ortu → anaknya, guru → kelas yang diajar tahun ini).
+8. **Tidak ada tanggal kegiatan yang ditanam di kode.** Kapan semester mulai, kapan ujian, kapan survei peminatan, kapan rapor dibagi: semuanya berubah setiap tahun dan dibaca dari **Kalender Akademik** tahun ajaran itu (A0). Kode hanya mengenal *urutan* kegiatan, bukan bulannya.
 
 ## 2. Peran (Aktor)
 
@@ -33,23 +34,23 @@
 | Orang Tua / Wali | `PARENT_ROLES` | Android |
 | Admin sistem | `admin` (operator) / `superadmin` | Web |
 
-## 3. Siklus Satu Tahun Ajaran
+## 3. Urutan Kegiatan Satu Tahun Ajaran
+
+**Tanggalnya tidak tetap.** Setiap tahun sekolah menyusun **Kalender Akademik** sendiri (A0), mengacu ke kalender pendidikan Dinas Pendidikan Provinsi Jawa Tengah dan kalender keislaman (Ramadhan, Idul Fitri, Idul Adha bergeser ±11 hari tiap tahun). Yang tetap hanyalah **urutannya**:
 
 ```
-JUL  ── Tahun ajaran baru: aktifkan TA + semester Ganjil, rombel baru terbit, wali kelas ditetapkan,
-        jadwal disusun, tagihan SPP setahun digenerate, MPLS siswa baru (hasil SPMB)
-AGU–NOV ── KBM: sesi kelas + presensi QR, jurnal, penilaian harian, remedial, CBT/PTS
-DES  ── PAS Ganjil → nilai rapor → pengesahan → rapor Ganjil terbit ke ortu
-JAN  ── Semester Genap aktif (rombel TIDAK berubah)
-FEB–MAR ── SPMB dibuka (gelombang), seleksi
-APR  ── Survei peminatan kelas X (pemetaan minat mapel pilihan)
-MEI  ── Statistik survei → Waka rancang rombel XI + plot siswa + jadwal XI; ujian akhir kelas XII
-JUN  ── PAT → rapor Genap → RAPAT KENAIKAN KELAS → pengesahan → kelulusan XII → alumni
-        SPMB: pengumuman, daftar ulang, konversi jadi siswa
-JUL  ── Kenaikan dieksekusi → rombel TA baru → siklus berulang
+① Kalender akademik TA baru disusun & disahkan        (sebelum TA mulai)
+② TA baru aktif → rombel & wali kelas → jadwal → tagihan → MPLS siswa baru
+③ Semester 1: KBM, presensi, jurnal, penilaian, PTS
+④ Penilaian akhir semester 1 → rapor semester 1 disahkan & terbit
+⑤ Semester 2 aktif (rombel TIDAK berubah)
+⑥ SPMB untuk calon siswa baru (berjalan paralel)
+⑦ Survei peminatan kelas X → statistik → rancang & plot rombel XI → jadwal XI
+⑧ Penilaian akhir tahun → rapor semester 2 → RAPAT KENAIKAN → kelulusan XII
+⑨ Kembali ke ① untuk TA berikutnya
 ```
 
-Rombel hanya berubah sekali setahun (Juli). Semester Genap memakai rombel yang sama.
+Bulan yang biasa dipakai (misalnya Juli untuk awal TA) hanya **contoh**. Di sistem, setiap langkah membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu.
 
 ---
 
@@ -59,11 +60,31 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### A. Siklus Akademik & Rombel
 
+#### A0. Kalender Akademik · 🟡 → FASE 120
+- **Pemilik:** Waka Kurikulum. **Mengesahkan:** Kepala Sekolah.
+- **Pemicu:** sebelum TA baru dimulai, setelah kalender pendidikan Dinas terbit. Bisa direvisi di tengah tahun.
+- **Langkah:**
+  1. Waka menyusun kalender TA baru: hari efektif, libur nasional dan keagamaan, serta **kegiatan kunci** (lihat di bawah).
+  2. Kepala sekolah mengesahkan.
+  3. Kalender terbit ke semua warga sekolah di web dan Android (J5).
+  4. Revisi setelah terbit tercatat, dan semua yang terdampak diberi notifikasi.
+- **Kegiatan kunci** adalah acara kalender yang diberi kode tetap, supaya alur lain bisa membaca tanggalnya, bukan menebak bulan:
+  - awal/akhir TA dan tiap semester
+  - PTS, penilaian akhir semester, penilaian akhir tahun
+  - batas input nilai dan pembagian rapor tiap semester
+  - jendela survei peminatan
+  - rapat kenaikan kelas, kelulusan
+  - MPLS
+  - periode SPMB
+- **Status:** `draf → disahkan → terbit` (revisi tercatat).
+- **Kini:** kalender sekolah (`academic_events`) sudah ada, tetapi belum ada pengesahan dan belum ada kode kegiatan kunci yang dibaca alur lain.
+
+
 #### A1. Pembukaan Tahun Ajaran & Semester · 🟡 → FASE 120
 - **Pemilik:** Waka Kurikulum (eksekusi teknis oleh admin).
-- **Pemicu:** Juli (TA baru) dan Januari (semester Genap).
+- **Pemicu:** tanggal awal TA dan awal semester 2 menurut Kalender Akademik (A0).
 - **Langkah:**
-  1. Buat TA baru (mis. 2027/2028) beserta dua semester.
+  1. Buat TA baru (mis. 2027/2028) beserta dua semester. Tanggal awal dan akhirnya diambil dari kegiatan kunci kalender akademik.
   2. Salin struktur rombel dari TA lama sebagai draf.
   3. Tetapkan wali kelas.
   4. Aktifkan.
@@ -83,7 +104,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 #### A3. Survei Peminatan, Rancangan Rombel XI & Plotting · ❌ → FASE 120
 - **Pemilik:** Waka Kurikulum (dibantu guru kurikulum dan BK). **Mengetahui:** Kepala Sekolah.
-- **Pemicu:** semester Genap kelas X (± April).
+- **Pemicu:** jendela survei peminatan di Kalender Akademik (A0), biasanya di semester 2 kelas X.
 - **Prinsip:** survei **hanya memetakan minat**. Sistem tidak mengalokasikan siswa sendiri dan tidak memakai kuota; Waka Kurikulum yang memutuskan berdasarkan statistik.
 - **Langkah:**
   1. Waka membuka survei: mapel pilihan yang ditawarkan, dan berapa mapel yang harus dipilih siswa.
@@ -98,7 +119,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 #### A4. Kenaikan Kelas · ❌ → FASE 120
 - **Pemilik:** Waka Kurikulum, **dengan sepengetahuan Kepala Sekolah** (keputusan pemilik produk, 11 Okt 2026).
-- **Pemicu:** setelah rapor Genap disahkan (Juni).
+- **Pemicu:** setelah rapor semester 2 disahkan, sesuai tanggal rapat kenaikan di Kalender Akademik.
 - **Langkah:**
   1. Sistem menyusun **draf keputusan** per siswa: naik atau tinggal kelas, dengan dasar dari rapor dan presensi.
   2. Wali kelas meninjau draf kelasnya dan memberi catatan.
@@ -386,7 +407,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Langkah:** buat pengumuman dengan sasaran peran atau kelas → tampil di Android dan web → WA broadcast opsional ke orang tua (antrean setiap menit).
 
 #### J5. Kalender Sekolah · ✅
-- Satu kalender (`AcademicEvent::visibleTo`) dengan pengingat harian pukul 07.00.
+- Satu kalender (`AcademicEvent::visibleTo`) dengan pengingat harian pukul 07.00. Isinya berasal dari Kalender Akademik (A0) ditambah acara biasa.
 
 #### J6. Chat Orang Tua ↔ Wali Kelas · ✅
 
@@ -415,7 +436,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 | # | Alur | Kenapa mendesak | Fase |
 |---|---|---|---|
-| 1 | A1–A6 Rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
+| 1 | A0–A6 Kalender akademik, rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi semua data per tahun. Wajib ada sebelum Juli 2027 | **120** |
 | 2 | C3 Izin/sakit siswa dari orang tua | Dipakai setiap hari, dan rekap presensi rapor salah tanpanya | 121 |
 | 3 | D5 Pengesahan & penerbitan rapor | Rapor Genap Juni 2027 harus resmi | 121 |
 | 4 | J1 Persetujuan surat keluar + J2 surat masuk & disposisi | Alur inti TU dan kepala sekolah | 121 |

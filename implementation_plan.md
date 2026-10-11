@@ -37,6 +37,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 5 Okt 2026 | Inklusi dipertahankan. Penggajian diurus sekolah. Tidak ada Adiwiyata/kantin. Gamifikasi dihapus |
 | 11 Okt 2026 | **Full Kurikulum Merdeka.** Tidak ada jurusan IPA/IPS. **Survei peminatan** di kelas X hanya memetakan minat. Waka Kurikulum merancang susunan mapel pilihan tiap rombel XI dan **memplot siswa secara manual** berdasarkan statistiknya. Sistem tidak mengalokasikan otomatis |
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
+| 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
 | 11 Okt 2026 | Widget jadwal sholat Android **dipertahankan** |
 
 ### Aturan main untuk semua agent
@@ -53,7 +54,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 118 | Tutup akses bocor | ✅ Selesai | — |
 | 119 | Debloat ke ERP sekolah | ✅ Selesai (sisa di 119.12) | — |
 | 119.12 | Sisa bersih-bersih | ⏳ Berikutnya | 1–2 hari |
-| **120** | **Rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
+| **120** | **Kalender akademik, rombel, tahun ajaran, survei peminatan & plotting rombel XI, kenaikan & kelulusan** | ⏳ Berikutnya | Nov 2026 |
 | 121 | Alur harian yang hilang: izin siswa dari orang tua, pengesahan & penerbitan rapor, persetujuan surat keluar, surat masuk & disposisi, satu kotak masuk persetujuan | 📝 Garis besar | Des 2026 |
 | 122 | Buku Induk Siswa | 📝 Garis besar | Jan 2027 |
 | 123 | Go-live: server, deploy, backup, impor data, akun massal, **pilot semester Genap** (menyerap FASE 116) | 📝 Garis besar | Pilot Jan 2027, penuh **Juli 2027** (TA 2027/2028) |
@@ -514,7 +515,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 > **Tanggal rancangan:** 11 Oktober 2026
 > **Pelaksana:** Agent Backend (backend + web). Pasangan Android: **FASE 80**.
 > **Prioritas:** P0, fondasi sebelum go-live. Wajib selesai sebelum pilot Januari 2027.
-> **Alur yang dibangun:** `docs/ALUR_KERJA.md` A1–A6.
+> **Alur yang dibangun:** `docs/ALUR_KERJA.md` A0–A6.
 
 ### 120.0: Masalah
 
@@ -523,6 +524,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 3. **Model masih kurikulum lama.** `classrooms.major` diisi IPA/IPS oleh seeder, dan `subjects.category` berisi `Nasional/Lokal/Kejuruan/Ciri Khas` (Kejuruan adalah SMK). Sekolah sudah **full Kurikulum Merdeka**: tanpa jurusan, dengan mapel pilihan di XI–XII.
 4. **Tidak ada alur kenaikan kelas.** Kelulusan sudah ada (`AlumniController::bulkGraduate`), tetapi tidak terikat ke keputusan atau riwayat. Mutasi (`student_mutations`) tidak lewat persetujuan dan tidak mengubah rombel.
 5. **106 tempat di kode** membaca `student->classroom_id` / `->classroom` langsung.
+6. **Kalender akademik belum jadi sumber tanggal.** `academic_events` hanya daftar acara (`event_type` teks bebas). Tidak ada pengesahan dan tidak ada penanda kegiatan kunci, sehingga alur lain (survei peminatan, batas rapor, rapat kenaikan) tidak tahu tanggalnya dan cenderung ditanam di kode.
 
 ### 120.1: Keputusan Pemilik Produk (11 Okt 2026)
 
@@ -534,6 +536,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 - **Alurnya dinamis dan dikendalikan pengguna.** Sistem **tidak** mengalokasikan siswa secara otomatis, tidak memakai kuota, dan tidak punya kriteria prioritas. Semua keputusan plotting ada di tangan Waka Kurikulum. Sistem hanya menyajikan statistik, menandai kecocokan, dan mencatat keputusan.
 - **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah. Kepala sekolah menerima notifikasi dan dapat **menahan** keputusan sebelum dieksekusi.
 - **Kelulusan disahkan Kepala Sekolah** (SK kelulusan), sesuai praktik umum.
+- **Kalender akademik disusun ulang setiap tahun** oleh Waka Kurikulum dan disahkan Kepala Sekolah. Urutan kegiatan tetap, tetapi tanggalnya berubah. Sistem membaca tanggal dari kalender itu.
 
 ### 120.2: Model Data (usulan, boleh disesuaikan dengan alasan tertulis)
 
@@ -541,6 +544,8 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 |---|---|---|
 | `school_years` *(baru)* | `name` ("2027/2028"), `start_date`, `end_date`, `status` (`draf/aktif/ditutup`) | Satu baris per tahun ajaran. Hanya satu yang `aktif` |
 | `academic_years` *(ubah)* | + `school_year_id` | Tetap baris per semester. Diisi dari kolom `year` yang ada |
+| `academic_calendars` *(baru)* | `school_year_id`, `status` (`draf/disahkan/terbit`), `approved_by`, `approved_at`, `published_at` | Satu kalender akademik per TA |
+| `academic_events` *(ubah)* | + `academic_calendar_id` (nullable untuk acara biasa), + `milestone` (kode kegiatan kunci, nullable) | Daftar kode tetap di satu enum/konstanta: `ta_mulai`, `ta_selesai`, `semester_mulai`, `semester_selesai`, `pts`, `penilaian_akhir_semester`, `penilaian_akhir_tahun`, `batas_input_nilai`, `pembagian_rapor`, `survei_peminatan`, `rapat_kenaikan`, `kelulusan`, `mpls`, `spmb`. Untuk kode per semester, satu per semester per kalender. Label tampilan tiga bahasa; kode tidak diterjemahkan |
 | `classrooms` *(ubah)* | + `school_year_id`; kolom `major` dan teks `academic_year` dihapus setelah semua pemakai pindah | Nama rombel boleh sama tiap tahun; identitasnya `id` + `school_year_id` |
 | `class_enrollments` *(baru)* | `student_id`, `classroom_id`, `school_year_id`, `status` (`aktif/naik/tinggal/lulus/mutasi_keluar/keluar/pindah_rombel`), `started_on`, `ended_on`, `ended_reason`, `decided_by`, `promotion_decision_id` | Paling banyak **satu** `aktif` per siswa (ditegakkan service + test). Pindah rombel di tengah tahun menutup baris lama dan membuka baris baru |
 | `subjects` *(ubah)* | `category` → `umum / pilihan / muatan_lokal / ciri_khas` | Petakan data lama. `Kejuruan` dihapus |
@@ -556,8 +561,19 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 
 ### 120.3: Alur yang Dibangun
 
+**A0. Kalender akademik (ALUR A0)**
+- Waka Kurikulum menyusun kalender TA baru: libur, hari efektif, acara, dan **kegiatan kunci** (kolom `milestone`). Kalender bisa disalin dari TA sebelumnya sebagai draf, tetapi **semua tanggal wajib ditinjau ulang**. Draf salinan ditandai "belum ditinjau" sampai disimpan ulang.
+- Kepala sekolah mengesahkan lewat `WorkflowService` (definisi `academic_calendar`). Setelah terbit, kalender tampil di kalender web dan Android (J5).
+- Revisi setelah terbit tercatat. Bila tanggal kegiatan kunci berubah, peran yang terdampak diberi notifikasi.
+- **Alur lain membaca tanggal dari sini:**
+  - tanggal awal/akhir TA dan semester (A1);
+  - usulan jendela survei peminatan (B, tetap bisa diubah waka);
+  - pengingat batas input nilai dan pembagian rapor (D5, FASE 121);
+  - tanggal rapat kenaikan (C).
+- **Bila kegiatan kunci belum diisi**, alur yang membutuhkannya menampilkan "tanggal belum ditetapkan di kalender akademik" dan tidak memakai tanggal tebakan.
+
 **A. Tahun ajaran & rombel (ALUR A1–A2)**
-- Menu web **"Tahun Ajaran & Rombel"** (Waka Kurikulum + admin): buat TA (otomatis membuat dua semester) → salin struktur rombel dari TA aktif sebagai draf → tetapkan wali kelas → aktifkan.
+- Menu web **"Tahun Ajaran & Rombel"** (Waka Kurikulum + admin): buat TA (otomatis membuat dua semester, tanggalnya dari kalender akademik A0) → salin struktur rombel dari TA aktif sebagai draf → tetapkan wali kelas → aktifkan.
 - Aktivasi TA baru adalah satu aksi yang menutup TA lama, menjalankan eksekusi kenaikan (C), dan mengaktifkan semester Ganjil. Aksi ini idempoten dan punya konfirmasi ringkasan ("312 naik, 4 tinggal, 298 lulus, 340 siswa baru").
 - Pergantian semester Genap **tidak** mengubah rombel.
 
@@ -612,6 +628,7 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 | PR | Isi |
 |---|---|
 | 1 | `school_years`, FK di `academic_years`/`classrooms`, `class_enrollments`, `EnrollmentService` + backfill dari data seed, test arsitektur penulisan `classroom_id` |
+| 1b | Kalender akademik: `academic_calendars`, kolom `milestone` di `academic_events`, pengesahan kepala sekolah, salin dari TA lalu dengan tanda "belum ditinjau", notifikasi revisi |
 | 2 | Kurikulum Merdeka: kategori mapel, `classroom_subjects` (susunan mapel per rombel, dipakai jadwal), hapus `major` IPA/IPS dari model, seeder, dan view |
 | 3 | Survei peminatan + statistik + perancangan rombel XI + plotting manual (web waka) + API Android 120.4 |
 | 4 | Batch kenaikan kelas: draf, tinjau wali, tetapkan (`promotion_decision`), tahan kepala sekolah, eksekusi/batal |
@@ -628,13 +645,14 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
 - **Plotting:** sistem tidak pernah membuat `class_placements` tanpa aksi Waka Kurikulum. Satu siswa hanya punya satu penempatan per TA target. Kecocokan dihitung benar, termasuk untuk siswa yang belum mengisi (`null`, bukan 0%).
 - **Eksekusi kenaikan** ditolak bila ada siswa X yang naik tetapi belum diplot.
 - Ambang kenaikan kosong: tidak ada label otomatis (`null`, bukan "tinggal").
+- **Tanggal dari kalender:** test arsitektur menolak tanggal atau bulan kegiatan yang ditanam di kode alur akademik (misalnya `month === 7`). Kegiatan kunci yang kosong menghasilkan `null` dan pesan "belum ditetapkan", bukan tanggal bawaan. Satu kode `milestone` per semester per kalender.
 
 ### 120.7: Kriteria Selesai
 
 - [ ] Semua PR 120.5 di-merge. `pint`, `phpstan`, `php artisan test`, dan `migrate:fresh --seed` hijau.
-- [ ] Simulasi penuh di seeder demo: TA 2026/2027 → survei peminatan → statistik → rancang & plot rombel XI → kenaikan → TA 2027/2028 aktif. Rombel, riwayat, dan alumni benar.
+- [ ] Simulasi penuh di seeder demo: TA 2026/2027 → kalender akademik 2026/2027 disahkan → survei peminatan → statistik → rancang & plot rombel XI → kenaikan → kalender 2027/2028 → TA 2027/2028 aktif. Rombel, riwayat, dan alumni benar.
 - [ ] Tidak ada lagi IPA/IPS atau `Kejuruan` di kode, seeder, dan view.
-- [ ] `docs/ALUR_KERJA.md` A1–A6 menjadi ✅. Bagian ini diperbarui menjadi `[SELESAI]` beserta penyimpangan dari usulan 120.2 dan alasannya.
+- [ ] `docs/ALUR_KERJA.md` A0–A6 menjadi ✅. Bagian ini diperbarui menjadi `[SELESAI]` beserta penyimpangan dari usulan 120.2 dan alasannya.
 
 ---
 
