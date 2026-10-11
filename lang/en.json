@@ -496,5 +496,6 @@
     "Dinas Luar": "Official Duty",
     "Presensi per mapel berhasil diambil": "Per-lesson attendance retrieved",
     "Presensi per mapel anak berhasil diambil": "Your child's per-lesson attendance retrieved",
-    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future."
+    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future.",
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "Paying in the app is not available yet. Please pay the school treasurer or administration office directly."
 }

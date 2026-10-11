@@ -496,5 +496,6 @@
     "Dinas Luar": "مهمة رسمية",
     "Presensi per mapel berhasil diambil": "تم جلب الحضور لكل حصة",
     "Presensi per mapel anak berhasil diambil": "تم جلب حضور ابنك لكل حصة",
-    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل."
+    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل.",
+    "Pembayaran lewat aplikasi belum tersedia. Silakan bayar langsung ke Bendahara atau Tata Usaha sekolah.": "الدفع عبر التطبيق غير متاح بعد. يُرجى الدفع مباشرة لأمين الصندوق أو الإدارة المدرسية."
 }
