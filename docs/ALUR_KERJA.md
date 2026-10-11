@@ -21,7 +21,7 @@
 
 ## 1b. Anti-Macet: Alur Harus Mengalir
 
-**Ukuran keberhasilan SISTA:** setiap alur jelas dan mengalir, tanpa ada pekerjaan yang tertahan di satu orang. Setiap alur yang punya langkah "menunggu orang" wajib memenuhi tujuh aturan ini.
+**Ukuran keberhasilan SISTA:** setiap alur jelas dan mengalir, tanpa ada pekerjaan yang tertahan di satu orang. *Disetujui penuh oleh pemilik produk, 11 Oktober 2026.* Setiap alur yang punya langkah "menunggu orang" wajib memenuhi tujuh aturan ini.
 
 1. **Mengetahui ≠ menyetujui.** Bila pimpinan cukup tahu, kirim notifikasi dan jangan tahan alurnya. Langkah persetujuan yang **menahan** hanya untuk yang memang wajib ditandatangani: rapor, kelulusan, surat keluar resmi, RKAS, gaji, mutasi, dan kalender akademik.
 2. **Setiap langkah menunggu punya tenggat.** Dua jenis tenggat diatur di pengaturan alur:
@@ -41,9 +41,9 @@
 6. **Batas nominal dan jenis diatur sekolah, bukan di kode.** Contohnya: kas kecil di bawah batas tertentu cukup disetujui Kepala TU, di atasnya Kepala Sekolah. Surat keterangan rutin boleh ditandatangani Kepala TU, surat keputusan oleh Kepala Sekolah. Bila batas belum diisi, langkahnya ke Kepala Sekolah. Langkah dan batas setiap alur diatur Admin seperti katalog jabatan.
 7. **Antrean bisa dilihat.** Ada satu dasbor "Alur Tertahan": berapa dokumen menunggu di tiap langkah, berapa lama, dan di siapa. Bottleneck terlihat dari data, bukan dari keluhan.
 
-### Beban persetujuan Kepala Sekolah (usulan pelonggaran, diputuskan sekolah)
+### Beban persetujuan Kepala Sekolah (pengaturan bawaan, disetujui 11 Okt 2026; sekolah bisa mengubahnya)
 
-| Alur | Sekarang | Usulan |
+| Alur | Sebelumnya | Bawaan baru |
 |---|---|---|
 | A0 Kalender akademik | Kepsek mengesahkan | Tetap (sekali setahun) |
 | A4 Kenaikan kelas | Waka menetapkan, kepsek bisa menahan | Tetap (tidak menahan bila kepsek diam) |

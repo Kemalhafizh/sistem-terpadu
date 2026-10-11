@@ -38,6 +38,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 11 Okt 2026 | **Full Kurikulum Merdeka.** Tidak ada jurusan IPA/IPS. **Survei peminatan** di kelas X hanya memetakan minat. Waka Kurikulum merancang susunan mapel pilihan tiap rombel XI dan **memplot siswa secara manual** berdasarkan statistiknya. Sistem tidak mengalokasikan otomatis |
 | 11 Okt 2026 | **Peran dua lapis:** 4 jenis akun statis (Siswa, Orang Tua, Guru, Karyawan) + **jabatan dinamis yang katalognya diatur Admin** di aplikasi. Jabatan bawaan: Kepala Sekolah, 4 Waka (Kurikulum, Kesiswaan, Sarpras, Humas), Kepala Perpustakaan, Kepala TU. Wali kelas, pembina, guru mapel, dan pengurus OSIS dibaca dari data modul, bukan jabatan |
 | 11 Okt 2026 | **Kenaikan kelas ditetapkan Waka Kurikulum** dengan sepengetahuan Kepala Sekolah |
+| 11 Okt 2026 | **Anti-macet disetujui penuh:** ketujuh aturan di `ALUR_KERJA.md` 1b, dan tabel pelonggaran beban Kepala Sekolah menjadi **pengaturan bawaan**. Sekolah tetap bisa mengubah langkah dan batasnya di pengaturan |
 | 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
 | 11 Okt 2026 | Widget jadwal sholat Android **dipertahankan** |
 
@@ -729,7 +730,7 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
    Bila batas belum diisi, langkahnya ke Kepala Sekolah.
 6. **Dasbor "Alur Tertahan"** untuk pimpinan dan Admin: jumlah dokumen per langkah, umur tertua, dan siapa pemegangnya.
 7. **Satu kotak masuk "Menunggu Persetujuan Saya"** di web dan Android, diurutkan menurut tenggat. Mencakup cuti, surat, kenaikan, mutasi, rapor, RKAS, kas kecil, dan izin siswa. Alur yang punya persetujuan sendiri (RKAS, kas kecil) dipindah ke `WorkflowService`.
-8. **Pelonggaran beban Kepala Sekolah** sesuai tabel di `ALUR_KERJA.md` 1b. Ini usulan bawaan; keputusan akhirnya di pengaturan oleh sekolah. Contohnya cuti guru ke Waka Kurikulum, cuti karyawan ke Kepala TU, dan surat rutin ke Kepala TU.
+8. **Pelonggaran beban Kepala Sekolah** sesuai tabel di `ALUR_KERJA.md` 1b, yang sudah disetujui pemilik produk (11 Okt 2026) sebagai **pengaturan bawaan**. Sekolah tetap bisa mengubahnya di pengaturan. Contohnya cuti guru ke Waka Kurikulum, cuti karyawan ke Kepala TU, dan surat rutin ke Kepala TU.
 
 **B. Alur harian yang hilang**
 1. **C3 Izin/sakit siswa dari orang tua** (Android) → wali kelas menyetujui (bisa massal) → presensi sesi hari itu otomatis `izin`/`sakit`.
