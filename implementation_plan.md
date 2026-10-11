@@ -765,6 +765,8 @@ Semua mengikuti CLAUDE.md bagian Mobile API: `ApiResponseTrait`, pesan `__()` ti
    - **ekspor nilai akhir, deskripsi capaian, kehadiran, dan catatan wali ke template impor e-Rapor** per rombel/mapel. Formatnya mengikuti template asli dari operator (T1), jangan ditebak;
    - **Tujuan Pembelajaran (TP) per mapel, tingkat, dan semester.** Penilaian harian ditandai dengan TP-nya. Tabel `daily_assessments` saat ini belum punya kaitan TP, dan `report_card_entries.capaian_kompetensi` hanya teks bebas;
    - **draf kalimat capaian kompetensi otomatis** dari nilai per TP (TP terkuat dan terlemah, pola kalimat diatur sekolah), lalu ditinjau guru. Ini mengakhiri kalimat rusak seperti "sangat baik dalam FALSE" yang ada di rapor contoh. TP kosong menghasilkan kalimat kosong untuk diisi guru, bukan karangan;
+   - **dua jenis rapor per semester**: tengah semester (ringkas) dan akhir semester (lengkap), keduanya lewat e-Rapor;
+   - nilai yang belum ada diekspor **kosong**, bukan 0. Draf capaian **tidak mengulang** klausa bila TP terkuat sama dengan terlemah, dan kata awalnya mengikuti ambang yang diatur sekolah (`ALUR_KERJA.md` D5);
    - **ketidakhadiran rapor dihitung dalam hari** dengan aturan di `ALUR_KERJA.md` D5;
    - **keterangan kenaikan kelas** (semester genap) dari keputusan A4;
    - **nama Kepala Sekolah dan wali kelas menurut tanggal rapor** (pemegang jabatan saat itu);

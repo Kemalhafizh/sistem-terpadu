@@ -339,7 +339,17 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   - Satu hari dihitung **Sakit/Izin** bila ada izin yang disetujui (C3) untuk hari itu.
   - Satu hari dihitung **Tanpa Keterangan** bila siswa tidak tercatat hadir atau telat di **semua** sesi hari itu dan tidak ada izin.
   - Tidak hadir di sebagian jam pelajaran tidak dihitung sebagai hari di rapor, tetapi terlihat oleh wali kelas dan BK.
-- **Nama pejabat menurut tanggal.** Pada contoh, Kepala Sekolah di rapor semester 1 dan semester 2 berbeda orang. Nama Kepala Sekolah dan wali kelas yang dicetak atau diekspor diambil dari pemegang jabatan **pada tanggal rapor** (FASE 120 L2), bukan pejabat sekarang.
+- **Rapor tengah semester** (contoh keluaran e-Rapor, semester genap 2025/2026):
+  - Rapor terbit **dua kali per semester**: tengah semester (PTS) dan akhir semester.
+  - Rapor tengah semester lebih ringkas: kop yayasan dan sekolah, identitas, nilai + capaian per Kelompok, dan tanda tangan. Tidak ada ekskul, ketidakhadiran, atau catatan wali.
+  - Pembagian kedua jenis rapor menjadi kegiatan kunci di kalender akademik (A0).
+- **Nilai yang belum ada ditulis "-"** di e-Rapor (contoh: dua mapel pilihan di tengah semester). Ekspor SISTA mengirim **kosong**, bukan 0 (CLAUDE.md aturan 1).
+- **Pelajaran dari kalimat capaian di e-Rapor:**
+  - Bila TP terkuat sama dengan TP terlemah (misalnya baru satu TP dinilai), e-Rapor mengulang kalimat yang sama: "Sangat baik dalam X dan perlu bimbingan dalam X". Lebih parah lagi, "Perlu bimbingan dalam X dan perlu bimbingan dalam X".
+  - Draf SISTA **tidak mengulang**: bila hanya ada satu TP atau TP-nya sama, kalimatnya cukup satu klausa.
+  - Kata awal ("Sangat baik", "Baik", "Perlu bimbingan") mengikuti **ambang nilai yang diatur sekolah**.
+  - Bila format impor e-Rapor (T1) ternyata meminta TP terkuat/terlemah, bukan kalimat jadi, SISTA mengekspor pilihan TP itu dan kalimatnya disusun e-Rapor.
+- **Nama pejabat menurut tanggal.** Pada contoh rapor, Kepala Sekolah berganti **tiga kali dalam tiga tahun** (semester 1 dan semester 2 TA 2023/2024 pun berbeda). Nama Kepala Sekolah dan wali kelas yang dicetak atau diekspor diambil dari pemegang jabatan **pada tanggal rapor** (FASE 120 L2), bukan pejabat sekarang.
 - **Kini:** ada `ERaporPdfService` yang membuat PDF rapor sendiri. Ini **harus dialihkan** menjadi pratinjau nilai untuk wali kelas, atau dihapus, supaya tidak ada dua rapor berbeda di tangan orang tua.
 
 ### E. Kesiswaan, BK & Layanan Siswa
