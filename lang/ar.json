@@ -394,5 +394,8 @@
     "Saldo cukup untuk": "يكفي الرصيد لمدة",
     ":count bulan": ":count أشهر",
     "Proyeksi pendapatan": "الإيرادات المتوقعة",
-    "Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.": "الدفع الإلكتروني غير متاح بعد. يرجى الدفع مباشرة في مكتب الإدارة."
+    "Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.": "الدفع الإلكتروني غير متاح بعد. يرجى الدفع مباشرة في مكتب الإدارة.",
+    "Presensi per mapel berhasil diambil": "تم جلب الحضور لكل حصة",
+    "Presensi per mapel anak berhasil diambil": "تم جلب حضور ابنك لكل حصة",
+    "Tanggal presensi tidak boleh di masa depan.": "لا يمكن أن يكون تاريخ الحضور في المستقبل."
 }

@@ -150,6 +150,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::prefix('class-session')->group(function () {
                 Route::post('scan-qr', [StudentSessionAttendanceController::class, 'scanQr'])->middleware('throttle:20,1');
                 Route::get('active', [StudentSessionAttendanceController::class, 'activeSession']);
+                Route::get('attendance', [StudentSessionAttendanceController::class, 'dayAttendance']);
             });
         });
 
@@ -159,6 +160,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('child/{student}/summary', [ApiParentController::class, 'childSummary']);
             Route::get('child/{student}/grades', [ApiParentController::class, 'childGrades']);
             Route::get('child/{student}/attendance', [ApiParentController::class, 'childAttendance']);
+            Route::get('child/{student}/class-session-attendance', [ApiParentController::class, 'childSessionAttendance']);
             Route::get('child/{student}/billings', [ApiParentController::class, 'childBillings']);
             Route::get('child/{student}/points', [ApiParentController::class, 'childPoints']);
             Route::get('messages', [ApiParentController::class, 'messages']);

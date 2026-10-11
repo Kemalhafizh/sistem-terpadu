@@ -43,6 +43,28 @@ class StudentSessionAttendanceController extends Controller
     }
 
     /**
+     * Presensi Per Mapel Satu Hari
+     *
+     * Pelajaran siswa pada `date` (bawaan hari ini) dan status presensinya di tiap sesi.
+     * `status_code` null berarti belum tercatat. `awaiting_scan` true berarti kelas sedang
+     * berlangsung dan siswa belum memindai QR (status otomatis `alpha` masih bisa jadi `hadir`).
+     * `summary` hanya menghitung yang sudah tercatat.
+     *
+     * @queryParam date string Tanggal (Y-m-d), tidak boleh di masa depan. Example: 2026-10-05
+     */
+    public function dayAttendance(Request $request): JsonResponse
+    {
+        return $this->handle(function () use ($request) {
+            $date = $this->attendanceDate($request);
+
+            return $this->successResponse(
+                $this->sessions->dayAttendanceForUser($request->user(), $date),
+                __('Presensi per mapel berhasil diambil')
+            );
+        });
+    }
+
+    /**
      * Sesi Kelas Aktif
      *
      * Sesi yang sedang berlangsung untuk kelas siswa (untuk banner "Tap untuk absen"), atau `data: null`.

@@ -394,5 +394,8 @@
     "Saldo cukup untuk": "Balance lasts",
     ":count bulan": ":count months",
     "Proyeksi pendapatan": "Projected revenue",
-    "Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.": "Online payment is not available yet. Please pay at the school office."
+    "Pembayaran online belum tersedia. Silakan bayar langsung di Tata Usaha.": "Online payment is not available yet. Please pay at the school office.",
+    "Presensi per mapel berhasil diambil": "Per-lesson attendance retrieved",
+    "Presensi per mapel anak berhasil diambil": "Your child's per-lesson attendance retrieved",
+    "Tanggal presensi tidak boleh di masa depan.": "The attendance date cannot be in the future."
 }

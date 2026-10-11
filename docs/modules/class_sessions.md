@@ -48,6 +48,13 @@ scheduled ──Mulai Kelas──▶ active ──Akhiri Kelas──▶ complete
 |---|---|---|
 | POST | `student/class-session/scan-qr` | Body `{ qr_token }`. Dibatasi 20 request/menit. |
 | GET | `student/class-session/active` | Info untuk banner. `data: null` bila tidak ada sesi aktif. Aplikasi polling setiap 60 detik. |
+| GET | `student/class-session/attendance?date=Y-m-d` | Pelajaran siswa pada tanggal itu (bawaan hari ini) dan status presensinya per sesi. Tanggal di masa depan ditolak (422). Sumber widget presensi Android. |
+
+### Orang tua — `role: parent, orang_tua, orangtua, wali_murid`
+
+| Method | Path | Keterangan |
+|---|---|---|
+| GET | `parent/child/{uuid}/class-session-attendance?date=Y-m-d` | Bentuk sama dengan milik siswa, hanya untuk anak sendiri (403 untuk anak orang lain, 404 bila uuid tidak ada). |
 
 ### Waka Kurikulum / TU / Admin — `role: admin, superadmin, waka_kurikulum, staf_tu`
 
@@ -117,6 +124,21 @@ Isi `qr_token` di-encode **apa adanya** ke QR. Token sama untuk semua perangkat 
   "scheduled_start": "07:00", "scheduled_end": "08:30",
   "attendance_status": "alpha", "can_scan_qr": true }
 ```
+
+### Presensi per mapel satu hari (`GET student/class-session/attendance`, `GET parent/child/{uuid}/class-session-attendance`)
+```json
+{ "date": "2026-10-05",
+  "sessions": [
+    { "session_id": 45, "subject_name": "Matematika Peminatan", "teacher_name": "Pak Hadi", "jam_ke": 1,
+      "scheduled_start": "07:00", "scheduled_end": "08:30", "session_status": "active",
+      "status_code": "alpha", "status": "Alpha", "check_in_method": "auto_alpha",
+      "checked_in_at": null, "awaiting_scan": true } ],
+  "summary": { "sessions": 1, "recorded": 0, "hadir": 0, "telat": 0, "sakit": 0, "izin": 0, "alpha": 0 } }
+```
+- Isinya sesi kelas siswa pada tanggal itu (kecuali yang `cancelled`), ditambah sesi lain yang mencatat siswa itu (misalnya pindah kelas).
+- `status_code` `null` berarti belum tercatat, misalnya sesi masih `scheduled`.
+- `awaiting_scan: true` berarti kelas sedang berjalan dan status masih `alpha` otomatis, jadi siswa masih bisa scan untuk jadi `hadir`. Tampilkan sebagai "belum absen", bukan "alpha".
+- `summary` hanya menghitung yang sudah tercatat (`recorded`). Hari tanpa sesi berisi `sessions: []` dan semua angka 0.
 
 ### Hasil bulk
 ```json
