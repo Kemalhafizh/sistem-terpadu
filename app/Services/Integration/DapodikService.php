@@ -24,16 +24,19 @@ class DapodikService
 
         $mapped = [];
         foreach ($students as $student) {
+            // Only what the school recorded. An empty cell is flagged by
+            // validateAgainstDapodik(); it used to be "Semarang" and
+            // "Ibu Kandung Siswa" for every student.
             $mapped[] = [
                 'nisn' => $student->nisn ?? '',
                 'nis' => $student->nis ?? '',
                 'nama' => $student->name ?? '',
-                'gender' => $student->gender === 'P' ? 'P' : 'L',
-                'tempat_lahir' => 'Semarang', // Default fallback
+                'gender' => in_array($student->gender, ['L', 'P'], true) ? $student->gender : '',
+                'tempat_lahir' => $student->birth_place ?? '',
                 'tanggal_lahir' => $student->birth_date ? Carbon::parse($student->birth_date)->toDateString() : '',
                 'alamat' => $student->address ?? '',
-                'kelas' => $student->classroom?->name ?? 'Belum ada kelas',
-                'ibu_kandung' => 'Ibu Kandung Siswa', // Fallback standard
+                'kelas' => $student->classroom?->name ?? '',
+                'ibu_kandung' => $student->mother_name ?? '',
             ];
         }
 
@@ -49,8 +52,10 @@ class DapodikService
 
         $mapped = [];
         foreach ($teachers as $teacher) {
+            // NUPTK is the national number; the foundation's NIY used to be exported under it.
             $mapped[] = [
-                'nuptk' => $teacher->employee_number ?? '',
+                'nuptk' => $teacher->nuptk ?? '',
+                'niy' => $teacher->employee_number ?? '',
                 'nama' => $teacher->name ?? '',
                 'email' => $teacher->email ?? '',
                 'jabatan' => $teacher->position ?? '',
@@ -144,16 +149,28 @@ class DapodikService
                     $rowErrors[] = 'Nama Lengkap wajib diisi.';
                 }
 
+                if (empty($row['gender'])) {
+                    $rowErrors[] = 'Jenis Kelamin wajib diisi.';
+                }
+
+                if (empty($row['tempat_lahir'])) {
+                    $rowErrors[] = 'Tempat Lahir wajib diisi.';
+                }
+
                 if (empty($row['tanggal_lahir'])) {
                     $rowErrors[] = 'Tanggal Lahir wajib diisi.';
                 }
 
-                if ($row['kelas'] === 'Belum ada kelas') {
+                if (empty($row['ibu_kandung'])) {
+                    $rowErrors[] = 'Nama Ibu Kandung wajib diisi.';
+                }
+
+                if (empty($row['kelas'])) {
                     $rowErrors[] = 'Siswa belum dimasukkan ke Rombel Kelas.';
                 }
             } elseif ($type === 'teachers') {
                 if (empty($row['nuptk'])) {
-                    $rowErrors[] = 'NIP / NUPTK wajib diisi.';
+                    $rowErrors[] = 'NUPTK belum diisi.';
                 }
                 if (empty($row['nama'])) {
                     $rowErrors[] = 'Nama Lengkap wajib diisi.';
@@ -190,7 +207,7 @@ class DapodikService
             $title = 'Data Siswa Dapodik';
         } elseif ($type === 'teachers') {
             $data = $this->exportTeacherData();
-            $headings = ['NIP/NUPTK', 'Nama Lengkap', 'Email', 'Jabatan', 'Status Kepegawaian', 'Tanggal Rekrut'];
+            $headings = ['NUPTK', 'NIY', 'Nama Lengkap', 'Email', 'Jabatan', 'Status Kepegawaian', 'Tanggal Rekrut'];
             $title = 'Data PTK Dapodik';
         } elseif ($type === 'classrooms') {
             $data = $this->exportClassroomData();

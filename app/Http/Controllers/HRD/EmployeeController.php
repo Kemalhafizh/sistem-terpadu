@@ -61,6 +61,8 @@ class EmployeeController extends Controller
             'employee_number' => 'required|string|unique:employees,employee_number',
             // The ID this person enrols under on the fingerprint machine (FASE 119.6.1).
             'fingerprint_id' => 'nullable|string|max:32|unique:employees,fingerprint_id',
+            // NUPTK (16 digits) for Dapodik; not every staff member has one.
+            'nuptk' => 'nullable|digits:16|unique:employees,nuptk',
             'position' => 'required|string|max:255',
             'employment_status' => 'required|in:gty,gtt,staf_tetap,honorer',
             'hire_date' => 'required|date',
@@ -105,6 +107,7 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'employee_number' => 'required|string|unique:employees,employee_number,'.$employee->id,
             'fingerprint_id' => 'nullable|string|max:32|unique:employees,fingerprint_id,'.$employee->id,
+            'nuptk' => 'nullable|digits:16|unique:employees,nuptk,'.$employee->id,
             'position' => 'required|string|max:255',
             'employment_status' => 'required|in:gty,gtt,staf_tetap,honorer',
             'hire_date' => 'required|date',

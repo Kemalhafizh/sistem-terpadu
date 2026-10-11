@@ -32,6 +32,9 @@ class UpdateStudentRequest extends FormRequest
             'gender' => 'required|in:L,P',
             'birth_date' => 'required|date',
             'address' => 'nullable|string',
+            // Required by Dapodik; the export used to fill in "Semarang" and "Ibu Kandung Siswa".
+            'birth_place' => 'nullable|string|max:100',
+            'mother_name' => 'nullable|string|max:255',
         ];
     }
 }

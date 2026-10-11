@@ -10,6 +10,10 @@ Modul Keuangan mengelola seluruh transaksi pembayaran sekolah, penagihan SPP sis
 *   Staf keuangan dapat membuat tagihan bulanan (SPP) secara massal untuk seluruh siswa di tingkat kelas tertentu dengan satu klik.
 *   Tagihan mencatat jenis pembayaran, nominal dasar, batas jatuh tempo pengerjaan, dan status pembayaran (`pending`, `paid`, atau `partially_paid`).
 
+### Uang Pangkal siswa baru (SPMB)
+*   Saat pendaftar SPMB dikonversi menjadi siswa, tagihan uang pangkal diterbitkan dari kategori pembayaran non-bulanan bernama **"Uang Pangkal…"** dengan nominal yang diatur Keuangan.
+*   Bila kategori itu belum ada atau nominalnya 0, tagihan **tidak** dibuat dan admin diberi tahu. Tidak ada nominal bawaan (dulu Rp 5.000.000 karangan).
+
 ### B. Dasbor Keuangan Siswa (`StudentFinanceController`)
 *   Siswa dan orang tua dapat melihat daftar riwayat pembayaran masa lalu serta tagihan aktif yang harus segera diselesaikan.
 

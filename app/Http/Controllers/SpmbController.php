@@ -443,9 +443,11 @@ class SpmbController extends Controller
     // Konversi Massal Pendaftar Lolos -> Akun Siswa Baru
     public function bulkConvert(SpmbWave $wave)
     {
-        $count = $this->spmbService->bulkConvert($wave->id);
+        $result = $this->spmbService->bulkConvert($wave->id);
+        $back = back()->with('success', __(':count calon siswa dijadikan siswa aktif.', ['count' => $result['converted']]));
 
-        return back()->with('success', "Berhasil mengonversi {$count} calon siswa baru menjadi akun aktif.");
+        // Say who was left out and why, instead of only counting the ones that worked.
+        return $result['skipped'] === [] ? $back : $back->with('warning', implode(' ', $result['skipped']));
     }
 
     // Area Kanban Pendaftar (Lama)
