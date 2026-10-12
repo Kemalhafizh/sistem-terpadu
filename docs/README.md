@@ -8,6 +8,8 @@ SISTA dirancang sebagai platform manajemen digital **eksklusif SMA Islam Sultan 
 
 ## 🗺️ Peta Navigasi Dokumentasi
 
+> **Mulai dari sini:** [**ALUR_KERJA.md**](ALUR_KERJA.md) adalah peta alur kerja sekolah (siapa melakukan apa, kapan, dan disetujui siapa) per fitur. Setiap fitur dibangun mengikuti alur di sana.
+
 Gunakan menu berikut untuk menelusuri dokumentasi teknis secara menyeluruh:
 
 ### 🏗️ Arsitektur & Infrastruktur

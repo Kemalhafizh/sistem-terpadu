@@ -2,6 +2,8 @@
 
 Laravel 13: the school web app plus the API behind the Android app (`Kemalhafizh/sista-android`). Read this before changing anything; the rules below are why recent PRs exist, and CI enforces several of them.
 
+What to work on and why: the "Status Saat Ini" section at the top of `implementation_plan.md`. Who does what, when, and who approves it, for every feature: `docs/ALUR_KERJA.md`. Build a feature only when its workflow is written there, and update its status row in the same PR.
+
 ## Aturan main
 
 ### 1. Tidak ada angka karangan
