@@ -564,7 +564,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 - **D3. Akun demo per peran:** siswa, orang tua, guru + wali kelas, Waka Kurikulum, Kepala TU, Kepala Sekolah, Admin. Daftar akun tampil di halaman login staging saat `APP_DEMO=true`.
 - **D4. Reset otomatis harian.** Data demo dikembalikan ke keadaan awal setiap malam, supaya demo selalu bersih walau sudah dicoba-coba.
 - **D5. APK demo** yang menunjuk ke staging (butuh Android 79.3), dibagikan lewat tautan unduh.
-- **D6. Skrip demo 15 menit** (disiapkan PM): "satu hari di SMA Sula 1".
+- **D6. Skrip demo 15 menit** (disiapkan PM, ✅ draf di `docs/demo/SKRIP_DEMO.md`): "satu hari di SMA Sula 1".
   1. Guru membuka sesi kelas dan QR berganti.
   2. Siswa memindai QR.
   3. Orang tua menerima ringkasan kehadiran per mapel.
@@ -572,7 +572,7 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
   5. TU membuat tagihan massal.
   6. Kepala Sekolah menyetujui dari HP.
   7. Peta alur kerja ditutup dengan roadmap: rombel, kenaikan kelas, dan rapor yang diekspor ke e-Rapor **tanpa input dua kali dan tanpa "FALSE"**.
-- **D7. Materi presentasi** (disiapkan PM bersama pemilik produk):
+- **D7. Materi presentasi** (disiapkan PM bersama pemilik produk, ✅ kerangka di `docs/demo/MATERI_PRESENTASI.md`; slide final dibuat setelah server demo jalan):
   - masalah sekarang, solusi, dan demo langsung;
   - peta alur kerja;
   - keamanan data anak (UU PDP), serah terima ke IT sekolah, dan model penjualan (T9).
