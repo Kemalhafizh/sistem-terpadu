@@ -2,7 +2,8 @@
 
 > **Untuk:** pemilik produk. Bagian dari Milestone Demo D7.
 > **Durasi:** ±10 menit slide + 15 menit demo (`SKRIP_DEMO.md`) + tanya jawab.
-> **Pendengar:** Waka Kurikulum dan Kepala TU dulu (obrolan santai lewat jalur alumni), lalu Kepala Sekolah (presentasi resmi).
+> **Pendengar:** Waka Kurikulum, Kepala TU, dan **IT sekolah** dulu (obrolan santai lewat jalur alumni), lalu Kepala Sekolah (presentasi resmi).
+> **Soal IT sekolah:** beliau lulusan Informatika dan S2 Teknik Komputer, dan dialah yang akan merawat SISTA. Temui **sebelum** presentasi resmi. Posisikan beliau sebagai **calon pemilik sistem**, bukan orang yang pekerjaannya digantikan: tanyakan sistem apa yang sedang beliau jalankan, apa yang merepotkan, dan minta beliau menilai kode. Bila IT sekolah yakin, Kepala Sekolah akan bertanya kepadanya dan jawabannya menjadi penentu.
 > **Prinsip:** mulai dari **masalah sehari-hari mereka**, bukan dari daftar fitur. Jujur soal mana yang sudah jadi dan mana yang masih rancangan.
 > **Slide final** dibuat setelah server demo jalan, supaya bisa memakai tangkapan layar asli dari data fiktif.
 
@@ -21,6 +22,7 @@
 | 9 | **Rencana bertahap** | Demo (sekarang) → **pilot 1–2 kelas** di semester genap → penyempurnaan dari masukan → **pemakaian penuh di awal tahun ajaran baru** | Jangan menjanjikan tanggal pasti sebelum sekolah setuju |
 | 10 | **Kerja sama & serah terima** | Bentuk kerja sama (T9), serah terima ke IT sekolah (panduan, pelatihan, BAST), masa garansi | Isi setelah pemilik produk memutuskan T9 |
 | 11 | **Langkah berikutnya** | Ajakan: tunjuk satu **PIC** di sekolah + pilih 1–2 kelas pilot | Akhiri dengan pertanyaan: "Bagian mana yang paling sering bikin repot?" |
+| L | **Lampiran teknis (untuk IT sekolah)** | Stack (Laravel 13, PHP 8.4, Kotlin + Compose), arsitektur singkat, CI (Pint, PHPStan, seluruh test), guard test "tanpa angka karangan" dan "satu aturan akses", cara deploy (Docker Compose, satu VPS), backup terenkripsi, dan **utang teknis yang diakui** (`docs/CATATAN_TEKNIS.md`) | Tidak ditayangkan ke pimpinan. Dibuka saat obrolan dengan IT sekolah, atau bila ditanya. Jujur soal utang teknis lebih meyakinkan seorang ahli daripada klaim sempurna |
 
 ---
 
@@ -30,3 +32,4 @@
 - [ ] Izin memakai logo sekolah di slide, atau tanpa logo di versi pertama.
 - [ ] Contoh rapor "FALSE" yang **sudah dianonimkan**: ketik ulang satu baris, jangan pakai pindaian rapor asli.
 - [ ] Jalur kontak alumni: guru atau Waka yang dikenal, untuk obrolan awal sebelum presentasi resmi.
+- [ ] Obrolan awal dengan **IT sekolah**: apakah beliau sendirian atau bertim, sudah terbiasa Laravel/Kotlin atau belum, dan sistem apa yang sedang berjalan di sekolah. Jawabannya menentukan kedalaman alih pengetahuan (FASE 123 D5).

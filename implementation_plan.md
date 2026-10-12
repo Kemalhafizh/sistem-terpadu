@@ -42,6 +42,7 @@ Blockchain, IoT, digital twin, tools developer & monitoring di dalam aplikasi, H
 | 12 Okt 2026 | **Dapodik sumber resmi identitas.** Impor awal dari file ekspor Dapodik, sehingga siswa yang sudah bersekolah tidak diketik ulang. Siswa baru dari konversi SPMB. Perubahan data lewat **pengajuan perubahan** yang diverifikasi TU, lalu masuk daftar "perlu diperbarui di Dapodik" |
 | 12 Okt 2026 | **SISTA saat ini adalah blueprint untuk dipresentasikan ke sekolah** oleh pemilik produk (alumnus). Kepala Sekolah **belum** tahu. Prioritas terdekat adalah **demo yang meyakinkan**, bukan pilot. Pilot dan go-live bergantung pada persetujuan sekolah |
 | 12 Okt 2026 | **SISTA dijual ke sekolah sebagai jasa pembuatan, lalu dikelola IT sekolah.** Pemilik produk tidak merawatnya setelah serah terima. Akibatnya: semua akun pihak ketiga, server, domain, dan kunci atas nama sekolah; dokumentasi operasional untuk IT sekolah; dan serah terima resmi (BAST) masuk FASE 123 |
+| 12 Okt 2026 | **IT sekolah adalah ahli** (lulusan Informatika, S2 Teknik Komputer). Akibatnya: (1) serah terima sampai **tingkat pengembang**, bukan hanya runbook operasional; (2) IT sekolah adalah **penilai teknis** yang akan membaca kode dan dokumen, jadi dokumen teknis harus jujur dan sesuai kode (Milestone Demo D8); (3) IT sekolah diajak sejak awal sebagai **calon pemilik sistem**, bukan pihak yang digantikan |
 | 12 Okt 2026 | **Tidak ada Google Workspace for Education.** Login memakai akun SISTA. Akun dibuat massal, password awal dibagikan wali kelas, wajib diganti saat login pertama |
 | 11 Okt 2026 | **Anti-macet disetujui penuh:** ketujuh aturan di `ALUR_KERJA.md` 1b, dan tabel pelonggaran beban Kepala Sekolah menjadi **pengaturan bawaan**. Sekolah tetap bisa mengubah langkah dan batasnya di pengaturan |
 | 11 Okt 2026 | **Tanggal kegiatan tidak tetap.** Setiap tahun sekolah menyusun Kalender Akademik sendiri. Sistem tidak boleh menanam bulan atau tanggal kegiatan; semua alur membaca tanggalnya dari kegiatan kunci di kalender akademik TA itu |
@@ -65,8 +66,8 @@ Pemilik produk **mendelegasikan keputusan detail ke PM** (sesi perencana). Pemil
 |---|---|---|
 | T1 | Contoh **file template impor e-Rapor** dari operator e-Rapor sekolah | Sebelum FASE 121 D5 |
 | T6 | ~~Siapa yang merawat SISTA setelah live~~ → **IT sekolah**, setelah serah terima (12 Okt 2026) | — |
-| T8 | Kemampuan IT sekolah: hanya **operasional** (server, backup, akun, pengaturan) atau juga bisa **memperbaiki kode** (Laravel/Kotlin)? | Kedalaman dokumen serah terima FASE 123 |
-| T9 | Bentuk penjualan: **jual putus** (kode sumber + hak penuh ke sekolah) atau **dengan masa garansi/kontrak perawatan**? | Isi BAST dan pasal garansi |
+| T8 | ~~Kemampuan IT sekolah~~ → **ahli** (Informatika, S2 Teknik Komputer). Serah terima tingkat pengembang (12 Okt 2026). Yang masih perlu diketahui saat obrolan awal: apakah IT sekolah **satu orang** atau tim, dan sudah terbiasa **Laravel/Kotlin** atau belum | Sebelum FASE 123 |
+| T9 | Bentuk penjualan: **jual putus** (kode sumber + hak penuh ke sekolah) atau **dengan masa garansi/kontrak perawatan**? **Saran PM:** jual putus + **garansi perbaikan bug 3 bulan** setelah go-live + sesi alih pengetahuan dengan IT sekolah, **tanpa** kontrak perawatan berkelanjutan. Ini cocok karena IT sekolah mampu merawat dan pemilik produk tidak ingin merawat. Harga tetap keputusan pemilik produk | Sebelum presentasi (slide 10) |
 | T7 | ~~Restu Kepala Sekolah~~ → **belum**; SISTA akan dipresentasikan dulu (Milestone Demo). PIC sekolah ditentukan setelah presentasi | Setelah demo |
 
 ### Aturan main untuk semua agent
@@ -551,8 +552,8 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 ## MILESTONE DEMO: SIAP DIPRESENTASIKAN KE SEKOLAH `[RANCANGAN BARU]`
 
 > **Tanggal rancangan:** 12 Oktober 2026
-> **Konteks:** pemilik produk akan menawarkan SISTA ke SMA Islam Sultan Agung 1 Semarang. Sekolah belum tahu tentang proyek ini. Tujuan milestone ini: pihak sekolah (Waka Kurikulum, Kepala TU, Kepala Sekolah) bisa **mencoba sendiri** SISTA di web dan HP, dengan data yang terasa nyata tetapi **fiktif**.
-> **Pelaksana:** Agent Backend (D1–D4), Agent Android (D5), PM (D6–D7).
+> **Konteks:** pemilik produk akan menawarkan SISTA ke SMA Islam Sultan Agung 1 Semarang. Sekolah belum tahu tentang proyek ini. Tujuan milestone ini: pihak sekolah (Waka Kurikulum, Kepala TU, IT sekolah, Kepala Sekolah) bisa **mencoba sendiri** SISTA di web dan HP, dengan data yang terasa nyata tetapi **fiktif**.
+> **Pelaksana:** Agent Backend (D1–D4, D8), Agent Android (D5, bagian Android D8), PM (D6–D7).
 
 - **D1. Server staging khusus demo.** Satu VPS kecil dengan Docker Compose dan `deploy.sh` (bagian dari FASE 123 B, dikerjakan lebih awal). Server demo boleh atas nama pemilik produk karena bukan produksi; produksi tetap atas nama sekolah.
 - **D2. Data contoh fiktif bertanda jelas.**
@@ -575,7 +576,28 @@ Pemilik produk menyerahkan keputusan modul 119.9 ke tim backend (11 Okt 2026). U
 - **D7. Materi presentasi** (disiapkan PM bersama pemilik produk, ✅ kerangka di `docs/demo/MATERI_PRESENTASI.md`; slide final dibuat setelah server demo jalan):
   - masalah sekarang, solusi, dan demo langsung;
   - peta alur kerja;
-  - keamanan data anak (UU PDP), serah terima ke IT sekolah, dan model penjualan (T9).
+  - keamanan data anak (UU PDP), serah terima ke IT sekolah, dan model penjualan (T9);
+  - lampiran teknis untuk IT sekolah: stack, CI dan test, keamanan, dan utang teknis yang diakui (D8).
+
+- **D8. Siap dibaca ahli.** IT sekolah (Informatika, S2 Teknik Komputer) akan membuka repositori dan dokumen teknis. Satu klaim yang tidak sesuai kode merusak kepercayaan pada seluruh produk. Temuan PM (12 Okt 2026):
+  - `docs/ARCHITECTURE.md` menyebut `SmartAlertService` ("analitik prediktif") dan `ReportBuilderService`, padahal keduanya **tidak ada** di `app/Services`. `docs/TESTING.md` menyebut `PortfolioTest.php`, yang juga tidak ada.
+  - `docs/README.md` dan dokumen lain memakai bahasa pemasaran ("kelas dunia", "kecerdasan buatan prediktif", "SIEM"), sekitar 40 baris. Banyak di antaranya sudah dihapus di FASE 119.
+
+  Yang dikerjakan:
+  1. **Tulis ulang dokumen teknis agar sesuai kode:** `README.md`, `docs/README.md`, `ARCHITECTURE.md`, `TESTING.md`, `API.md`, `DATABASE.md`, dan `DEPLOYMENT.md`. Bahasanya datar, tanpa klaim pemasaran. Setiap kelas, file, atau test yang disebut harus ada; cek dengan grep.
+  2. **`docs/CATATAN_TEKNIS.md`**: utang teknis yang diakui terbuka.
+     - PHPStan masih level 0 dengan baseline ±370 error.
+     - Daftar `DEBT` di `NoFabricatedRandomnessTest`.
+     - Ukuran sistem: jumlah route, tabel, dan layar.
+     - Kode dibangun dengan bantuan agent AI, dan `CLAUDE.md` dipakai sebagai aturan main. IT sekolah bisa meneruskan cara kerja yang sama.
+     - Rencana menaikkan level PHPStan.
+  3. **Uji "mulai dari nol":** clone baru → ikuti `INSTALLATION.md` → aplikasi jalan dan `php artisan test` hijau, tanpa langkah yang tidak tertulis. Langkah yang ternyata kurang ditambahkan ke dokumen.
+  4. **ADR** untuk keputusan besar yang sudah diambil:
+     - satu aturan akses (`RouteAccess` + capabilities);
+     - e-Rapor tetap resmi;
+     - jenis akun dan jabatan yang bisa diatur;
+     - anti-macet lewat `WorkflowService`.
+  5. **Android:** `README` modul dan cara rilis (bagian dari 79.5) memenuhi syarat yang sama.
 
 **Selesai bila:** pemilik produk bisa menjalankan skrip demo D6 dari awal sampai akhir di staging dan HP tanpa error, dan semua layar yang ditunjukkan memakai data fiktif.
 
@@ -859,7 +881,14 @@ Identitas, riwayat rombel per TA (FASE 120), mutasi, nilai rapor per semester, p
    - langkah dan batas persetujuan (anti-macet);
    - template ekspor e-Rapor dan Dapodik.
 3. **Panduan per peran** (satu halaman per peran): guru, wali kelas, TU/bendahara, waka, kepala sekolah, siswa, dan orang tua.
-4. **Dokumen teknis** untuk pengembang berikutnya. Kedalamannya mengikuti T8: arsitektur, cara menjalankan lokal, cara rilis Android, dan `docs/ALUR_KERJA.md` sebagai peta fitur.
+4. **Dokumen teknis tingkat pengembang** (T8: IT sekolah ahli). Dasarnya dokumen D8 yang sudah sesuai kode, ditambah:
+   - cara rilis Android: keystore, Play App Signing, versi;
+   - cara menambah fitur mengikuti `CLAUDE.md` dan `docs/ALUR_KERJA.md`;
+   - CI dan arti setiap guard test;
+   - `CATATAN_TEKNIS.md` versi terbaru.
+5. **Alih pengetahuan langsung dengan IT sekolah:**
+   - satu sesi menelusuri kode bersama: struktur modul, aturan akses, `WorkflowService`, dan alur data mobile;
+   - IT sekolah mengerjakan **satu perbaikan kecil sungguhan** sampai lolos CI dan ter-deploy, didampingi pembuat.
 
 **E. Pilot, pelatihan, dan BAST**
 - **Pilot semester Genap (Jan–Jun 2027), bila sekolah menyetujui setelah demo:** 1–2 rombel, TU, BK, dan wali kelasnya. Keluhan pilot menjadi backlog.
@@ -868,7 +897,7 @@ Identitas, riwayat rombel per TA (FASE 120), mutasi, nilai rapor per semester, p
   - semua akun dan kunci sudah atas nama sekolah;
   - uji pemulihan backup berhasil;
   - dokumentasi diserahkan;
-  - IT sekolah sudah mencoba sendiri: deploy pembaruan, pulihkan backup, buat jabatan baru, buka TA baru.
+  - IT sekolah sudah mencoba sendiri: deploy pembaruan, pulihkan backup, buat jabatan baru, buka TA baru, serta satu perbaikan kode sampai lolos CI.
 
   Masa garansi dan dukungan mengikuti T9.
 - **Go-live penuh Juli 2027** bersamaan dengan TA 2027/2028.

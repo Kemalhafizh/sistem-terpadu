@@ -1,6 +1,6 @@
 # Skrip Demo SISTA: "Satu Hari di SMA Islam Sultan Agung 1"
 
-> **Untuk:** pemilik produk saat mempresentasikan SISTA ke pihak sekolah (Waka Kurikulum, Kepala TU, Kepala Sekolah).
+> **Untuk:** pemilik produk saat mempresentasikan SISTA ke pihak sekolah (Waka Kurikulum, Kepala TU, IT sekolah, Kepala Sekolah).
 > **Durasi:** ±15 menit demo + 10 menit tanya jawab.
 > **Bagian dari:** Milestone Demo D6 (`implementation_plan.md`).
 > **Aturan:** semua yang ditunjukkan adalah **data fiktif** di server demo (pita "DEMO, data fiktif"). Jangan pernah memakai data siswa atau guru asli, termasuk rapor pribadi.
@@ -106,3 +106,6 @@ Tutup dengan pertanyaan terbuka: **"Bagian mana yang paling sering bikin repot d
 | "Berapa biayanya?" | Siapkan jawaban sesuai keputusan pemilik produk (T9: jual putus atau dengan garansi/perawatan), ditambah biaya server ±Rp100–300 ribu per bulan yang dibayar sekolah |
 | "Apakah guru harus belajar banyak?" | Tidak. Guru cukup memakai tiga layar: Sesi Hari Ini, Input Nilai, Jurnal. Pelatihan 1 jam per kelompok |
 | "Bisa diubah sesuai kebutuhan sekolah?" | Jabatan, hak akses, kalender akademik, batas persetujuan, dan jenis biaya diatur Admin sekolah sendiri, tanpa developer |
+| "Kodenya bisa kami baca dan ubah?" (IT sekolah) | Bisa. Kode sumber diserahkan penuh, dengan dokumen teknis, CI, dan test. Ada sesi menelusuri kode bersama, dan IT sekolah mengerjakan satu perbaikan sungguhan sebelum serah terima |
+| "Dibuat pakai AI?" (IT sekolah) | Ya, dengan bantuan agent AI, di bawah aturan tertulis (`CLAUDE.md`) yang dijaga test otomatis: tidak ada angka karangan, setiap aksi tersimpan, satu aturan akses, setiap perubahan ada test-nya. IT sekolah bisa meneruskan cara kerja yang sama |
+| "Apa kekurangannya sekarang?" (IT sekolah) | Jawab jujur dari `docs/CATATAN_TEKNIS.md`, misalnya analisis statis masih level dasar dan rencana menaikkannya. Jangan menutupi |
