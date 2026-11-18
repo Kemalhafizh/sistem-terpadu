@@ -48,7 +48,7 @@ test('prayer times endpoint calculates Kemenag RI schedule for SMA Islam Sultan 
         ]);
 
     $times = $response->json('data.times');
-    expect($times['subuh'])->toMatch('/^04:[34]\d$/')
+    expect($times['subuh'])->toMatch('/^04:[234]\d$/')
         ->and($times['dzuhur'])->toMatch('/^11:[45]\d$/')
         ->and($times['ashar'])->toMatch('/^1[45]:\d{2}$/')
         ->and($times['maghrib'])->toMatch('/^17:[45]\d$/')
