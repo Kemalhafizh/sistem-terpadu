@@ -73,6 +73,8 @@ test('Smart notification preferences and digest work correctly', function () {
 });
 
 test('Advanced data visualization endpoints return complete metrics', function () {
+    $own = Student::factory()->create(['user_id' => $this->user->id])->id;
+
     // 1. Heatmap attendance
     $heatmapResp = $this->actingAs($this->user)->getJson('/api/v1/viz/heatmap/attendance');
     $heatmapResp->assertStatus(200)
@@ -84,12 +86,12 @@ test('Advanced data visualization endpoints return complete metrics', function (
         ->assertJsonStructure(['success', 'data' => ['exam_id', 'count', 'mean', 'median', 'standard_deviation', 'buckets']]);
 
     // 3. Radar student
-    $radarResp = $this->actingAs($this->user)->getJson('/api/v1/viz/radar/student/1');
+    $radarResp = $this->actingAs($this->user)->getJson("/api/v1/viz/radar/student/{$own}");
     $radarResp->assertStatus(200)
         ->assertJsonStructure(['success', 'data' => ['student_id', 'dimensions', 'benchmark_average']]);
 
     // 4. Trend student
-    $trendResp = $this->actingAs($this->user)->getJson('/api/v1/viz/trend/student/1');
+    $trendResp = $this->actingAs($this->user)->getJson("/api/v1/viz/trend/student/{$own}");
     $trendResp->assertStatus(200)
         ->assertJsonStructure(['success', 'data' => ['student_id', 'metric', 'points', 'months']]);
 
