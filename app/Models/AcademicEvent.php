@@ -17,6 +17,7 @@ class AcademicEvent extends Model
         'title',
         'description',
         'event_type',
+        'milestone',
         'start_date',
         'end_date',
         'is_all_day',
@@ -24,6 +25,7 @@ class AcademicEvent extends Model
         'target_role',
         'target_classroom_id',
         'academic_year_id',
+        'academic_calendar_id',
         'created_by',
         'is_active',
         'send_notification',
@@ -50,6 +52,11 @@ class AcademicEvent extends Model
     public function academicYear()
     {
         return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function academicCalendar()
+    {
+        return $this->belongsTo(AcademicCalendar::class);
     }
 
     // Scopes untuk filtering dinamis

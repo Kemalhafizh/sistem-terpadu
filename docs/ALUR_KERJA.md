@@ -128,7 +128,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### A. Siklus Akademik & Rombel
 
-#### A0. Kalender Akademik · `[Sebagian]`
+#### A0. Kalender Akademik · `[Tersedia]`
 - **Pemilik:** Waka Kurikulum. **Mengesahkan:** Kepala Sekolah.
 - **Pemicu:** sebelum TA baru dimulai, setelah kalender pendidikan Dinas terbit. Bisa direvisi di tengah tahun.
 - **Langkah:**
@@ -145,10 +145,10 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   - MPLS
   - periode SPMB
 - **Status:** `draf → disahkan → terbit` (revisi tercatat).
-- **Kini:** kalender sekolah (`academic_events`) sudah ada, tetapi belum ada pengesahan dan belum ada kode kegiatan kunci yang dibaca alur lain.
+- **Kini:** `AcademicCalendar` per `SchoolYear` dilengkapi status pengesahan oleh Kepala Sekolah (`pimpinan.mengesahkan`), penanda tinjauan ulang (`needs_review`) saat disalin dari tahun sebelumnya, dan kode kegiatan kunci (`milestone`) pada `academic_events`.
 
 
-#### A1. Pembukaan Tahun Ajaran & Semester · `[Sebagian]`
+#### A1. Pembukaan Tahun Ajaran & Semester · `[Tersedia]`
 - **Pemilik:** Waka Kurikulum (eksekusi teknis oleh admin).
 - **Pemicu:** tanggal awal TA dan awal semester 2 menurut Kalender Akademik (A0).
 - **Langkah:**
@@ -159,9 +159,9 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
   Hanya satu TA dan satu semester yang aktif.
 - **Status TA:** `draf → aktif → ditutup`.
-- **Kini:** `academic_years` per semester dengan `is_active`. Rombel memakai teks `classrooms.academic_year`, belum terikat.
+- **Kini:** `school_years` menjadi induk tahun ajaran dengan dua semester `academic_years` dan relasi `school_year_id` pada `classrooms`.
 
-#### A2. Penyusunan Rombel & Wali Kelas · `[Terjadwal]`
+#### A2. Penyusunan Rombel & Wali Kelas · `[Tersedia]`
 - **Pemilik:** Waka Kurikulum. **Mengetahui:** Kepala Sekolah.
 - **Langkah:**
   1. Rombel X diisi dari hasil SPMB.
@@ -170,7 +170,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   4. Wali kelas ditetapkan per rombel.
 - **Keluaran:** riwayat `class_enrollments` (siswa × rombel × TA). Kolom `students.classroom_id` menjadi "rombel aktif" yang disinkronkan.
 
-#### A3. Survei Peminatan, Rancangan Rombel XI & Plotting · `[Terjadwal]`
+#### A3. Survei Peminatan, Rancangan Rombel XI & Plotting · `[Tersedia]`
 - **Pemilik:** Waka Kurikulum (dibantu guru kurikulum dan BK). **Mengetahui:** Kepala Sekolah.
 - **Pemicu:** jendela survei peminatan di Kalender Akademik (A0), biasanya di semester 2 kelas X.
 - **Prinsip:** survei **hanya memetakan minat**. Sistem tidak mengalokasikan siswa sendiri dan tidak memakai kuota; Waka Kurikulum yang memutuskan berdasarkan statistik.
@@ -185,7 +185,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Status survei:** `draf → dibuka → ditutup → selesai`.
 - **Kanal:** Web (waka: statistik, rancang rombel, plotting), Android (siswa mengisi, orang tua melihat).
 
-#### A4. Kenaikan Kelas · `[Terjadwal]`
+#### A4. Kenaikan Kelas · `[Tersedia]`
 - **Pemilik:** Waka Kurikulum, **dengan sepengetahuan Kepala Sekolah**.
 - **Pemicu:** setelah rapor semester 2 disahkan, sesuai tanggal rapat kenaikan di Kalender Akademik.
 - **Langkah:**
@@ -407,7 +407,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 #### F3. Tahsin · `[Tersedia]`
 - **Langkah:** siswa merekam bacaan di Android (`pending`) → guru meninjau dan menilai (`reviewed`) → penilaian guru dicatat (`TahsinRecordController`).
 
-#### F4. Jadwal Sholat (informasi) · `[Terjadwal]`
+#### F4. Jadwal Sholat (informasi) · `[Tersedia]`
 - **Sumber:** server menghitung jadwal harian untuk koordinat sekolah dengan parameter Kemenag RI. Satu sumber untuk web, beranda Android, dan widget.
 - Bila koordinat belum diatur, jadwal tampil "belum tersedia", tanpa jadwal contoh.
 
@@ -559,7 +559,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### L. Sistem & Akses
 
-#### L1. Katalog Jabatan & Hak Akses · `[Terjadwal]`
+#### L1. Katalog Jabatan & Hak Akses · `[Tersedia]`
 - **Pemilik:** Admin. Hak akses sensitif hanya oleh Admin Utama (`superadmin`).
 - **Langkah:**
   1. Admin membuat atau mengubah jabatan: nama, deskripsi, dan **centang hak akses** dari daftar tetap yang dikelompokkan per modul.
@@ -571,7 +571,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   - Jabatan yang pernah dipegang hanya bisa **dinonaktifkan**, tidak dihapus, supaya riwayat persetujuan tetap terbaca.
   - Jabatan yang masih dipakai sebagai langkah persetujuan (`workflow_definitions`) tidak bisa dinonaktifkan sebelum langkah itu dialihkan.
 
-#### L2. Penetapan Pejabat (siapa memegang jabatan apa) · `[Terjadwal]`
+#### L2. Penetapan Pejabat (siapa memegang jabatan apa) · `[Tersedia]`
 - **Pemilik:** Admin / Kepala TU, berdasarkan SK Kepala Sekolah.
 - **Langkah:**
   1. Pilih orang (Guru atau Karyawan; jabatan tertentu boleh dibatasi ke jenis akun tertentu).

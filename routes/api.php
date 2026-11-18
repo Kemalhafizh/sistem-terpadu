@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\v1\DailyAssessmentMobileApiController;
 use App\Http\Controllers\Api\v1\DisciplineMobileApiController;
 use App\Http\Controllers\Api\v1\DocumentMobileApiController;
 use App\Http\Controllers\Api\v1\ElearningMobileApiController;
+use App\Http\Controllers\Api\v1\ElectiveSurveyApiController;
 use App\Http\Controllers\Api\v1\ERaporApiController;
 use App\Http\Controllers\Api\v1\EvaluationMobileApiController;
 use App\Http\Controllers\Api\v1\ExternalIntegrationApiController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\Api\v1\Mobile\MobileConfigController;
 use App\Http\Controllers\Api\v1\Mobile\MobileSyncController;
 use App\Http\Controllers\Api\v1\Mobile\ScannerMobileApiController;
 use App\Http\Controllers\Api\v1\ParentPortalController;
+use App\Http\Controllers\Api\v1\PrayerTimeApiController;
 use App\Http\Controllers\Api\v1\QuestionBankApiController;
 use App\Http\Controllers\Api\v1\SchoolOperationsApiController;
 use App\Http\Controllers\Api\v1\SmartNotificationController;
@@ -150,6 +152,12 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 Route::get('active', [StudentSessionAttendanceController::class, 'activeSession']);
                 Route::get('attendance', [StudentSessionAttendanceController::class, 'dayAttendance']);
             });
+
+            // Survei peminatan kelas X, rombel TA depan, & riwayat rombel (A2–A3)
+            Route::get('elective-survey', [ElectiveSurveyApiController::class, 'studentSurvey']);
+            Route::put('elective-survey/choices', [ElectiveSurveyApiController::class, 'submitChoices']);
+            Route::get('next-classroom', [ElectiveSurveyApiController::class, 'studentNextClassroom']);
+            Route::get('enrollment-history', [ElectiveSurveyApiController::class, 'studentEnrollmentHistory']);
         });
 
         // === NEW ORANG TUA SCOPED ===
@@ -161,6 +169,8 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('child/{student}/class-session-attendance', [ApiParentController::class, 'childSessionAttendance']);
             Route::get('child/{student}/billings', [ApiParentController::class, 'childBillings']);
             Route::get('child/{student}/points', [ApiParentController::class, 'childPoints']);
+            Route::get('child/{student}/elective-survey', [ElectiveSurveyApiController::class, 'parentChildSurvey']);
+            Route::get('child/{student}/enrollment-history', [ElectiveSurveyApiController::class, 'parentChildEnrollmentHistory']);
             Route::get('messages', [ApiParentController::class, 'messages']);
             Route::post('messages', [ApiParentController::class, 'sendMessage']);
         });
@@ -466,6 +476,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // === UNIVERSAL GENERAL ===
+        Route::get('prayer-times', [PrayerTimeApiController::class, 'show']);
         Route::get('announcements', [ApiGeneralController::class, 'announcements']);
         Route::get('announcements/{id}', [ApiGeneralController::class, 'announcementDetail'])->whereNumber('id');
         Route::post('announcements/{id}/acknowledge', [ApiGeneralController::class, 'acknowledgeAnnouncement'])->whereNumber('id');

@@ -61,9 +61,13 @@ class WorkflowService
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
-            // Izinkan jika user memiliki role yang sesuai (dan tidak sedang didelegasikan ke orang lain),
+            if ($request->requester_id === $approver->id) {
+                abort(403, 'Penyusun/pengaju tidak dapat menyetujui pengajuannya sendiri.');
+            }
+
+            // Izinkan jika user memiliki role/jabatan aktif yang sesuai (dan tidak sedang didelegasikan ke orang lain),
             // atau jika user adalah penerima delegasi.
-            $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
+            $isAuthorized = (in_array($currentApproval->role, $approver->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
             if (! $isAuthorized) {
@@ -112,7 +116,7 @@ class WorkflowService
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
-            $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
+            $isAuthorized = (in_array($currentApproval->role, $approver->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
             if (! $isAuthorized) {
@@ -148,7 +152,7 @@ class WorkflowService
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
-            $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
+            $isAuthorized = (in_array($currentApproval->role, $approver->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
             if (! $isAuthorized) {
@@ -230,7 +234,7 @@ class WorkflowService
                 abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
             }
 
-            $isAuthorized = ($currentApproval->role === $approver->role && $currentApproval->delegated_to_id === null)
+            $isAuthorized = (in_array($currentApproval->role, $approver->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
                 || $currentApproval->delegated_to_id === $approver->id;
 
             if (! $isAuthorized) {

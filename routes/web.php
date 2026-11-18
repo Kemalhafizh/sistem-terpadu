@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Academic\AcademicCycleController;
 use App\Http\Controllers\AcademicEventController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ActivityLogController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
 use App\Http\Controllers\Admin\FeatureFlagController;
 use App\Http\Controllers\Admin\IntegrationController;
 use App\Http\Controllers\Admin\PdplPrivacyController;
+use App\Http\Controllers\Admin\PositionCatalogController;
 use App\Http\Controllers\Admin\RbacAuditController;
 use App\Http\Controllers\Admin\ScheduledReportController;
 use App\Http\Controllers\Admin\SchoolBrandingController;
@@ -1308,6 +1310,43 @@ Route::middleware(['auth'])->group(function () {
         Route::get('tickets/{id}', [AssetMaintenanceTicketController::class, 'showTicket'])->name('show');
         Route::post('tickets/{id}/status', [AssetMaintenanceTicketController::class, 'updateTicketStatus'])->name('update-status');
         Route::get('print-qr', [AssetMaintenanceTicketController::class, 'generateQrLabels'])->name('print-qr');
+    });
+
+    // Katalog Jabatan Dinamis & Penetapan Pejabat (L1–L2)
+    Route::middleware('can:sistem.kelola_jabatan')->prefix('admin/positions')->name('admin.positions.')->group(function () {
+        Route::get('/', [PositionCatalogController::class, 'index'])->name('index');
+        Route::post('/', [PositionCatalogController::class, 'store'])->name('store');
+        Route::put('{position}', [PositionCatalogController::class, 'update'])->name('update');
+        Route::delete('{position}', [PositionCatalogController::class, 'destroy'])->name('destroy');
+        Route::post('assignments', [PositionCatalogController::class, 'storeAssignment'])->name('assignments.store');
+        Route::delete('assignments/{assignment}', [PositionCatalogController::class, 'destroyAssignment'])->name('assignments.destroy');
+    });
+
+    // Siklus Tahun Ajaran, Kalender Akademik, Survei Peminatan & Kenaikan Kelas (A0–A4)
+    Route::prefix('academic/cycle')->name('academic.cycle.')->group(function () {
+        Route::get('/', [AcademicCycleController::class, 'index'])
+            ->middleware('role:waka_kurikulum,kepala_sekolah,guru,teacher,wali_kelas,admin,superadmin')
+            ->name('index');
+
+        Route::middleware('can:akademik.kelola_struktur')->group(function () {
+            Route::post('school-years', [AcademicCycleController::class, 'storeSchoolYear'])->name('school-years.store');
+            Route::post('surveys', [AcademicCycleController::class, 'storeSurvey'])->name('surveys.store');
+            Route::put('classrooms/{classroom}/electives', [AcademicCycleController::class, 'configureClassroomElectives'])->name('classrooms.electives');
+            Route::post('placements', [AcademicCycleController::class, 'placeStudents'])->name('placements.store');
+            Route::post('surveys/{survey}/announce', [AcademicCycleController::class, 'announceSurvey'])->name('surveys.announce');
+            Route::post('promotion-batches', [AcademicCycleController::class, 'createPromotionBatch'])->name('promotion-batches.store');
+            Route::post('promotion-batches/{batch}/decide', [AcademicCycleController::class, 'decideBatch'])->name('promotion-batches.decide');
+            Route::post('promotion-batches/{batch}/execute', [AcademicCycleController::class, 'executeBatch'])->name('promotion-batches.execute');
+        });
+
+        Route::middleware('can:pimpinan.mengesahkan')->group(function () {
+            Route::post('calendars/{calendar}/approve', [AcademicCycleController::class, 'approveCalendar'])->name('calendars.approve');
+            Route::post('promotion-batches/{batch}/hold', [AcademicCycleController::class, 'holdBatch'])->name('promotion-batches.hold');
+        });
+
+        Route::post('promotion-decisions/{decision}/review', [AcademicCycleController::class, 'reviewDecision'])
+            ->middleware('role:guru,teacher,wali_kelas,waka_kurikulum,admin,superadmin')
+            ->name('promotion-decisions.review');
     });
 });
 
