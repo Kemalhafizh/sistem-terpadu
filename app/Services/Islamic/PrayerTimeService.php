@@ -95,25 +95,43 @@ class PrayerTimeService
             'isya' => $transit + $ishaOffset + $ihtiyatHours,
         ];
 
+        $labels = [
+            'subuh' => 'Subuh',
+            'terbit' => 'Terbit',
+            'dzuhur' => 'Dzuhur',
+            'ashar' => 'Ashar',
+            'maghrib' => 'Maghrib',
+            'isya' => 'Isya',
+        ];
+
         $times = [];
         $isoTimes = [];
+        $prayers = [];
         foreach ($rawHours as $name => $hours) {
             $totalMinutes = (int) ceil($hours * 60.0);
             $moment = $day->addMinutes($totalMinutes);
-            $times[$name] = $moment->format('H:i');
+            $formatted = $moment->format('H:i');
+            $times[$name] = $formatted;
             $isoTimes[$name] = $moment->toIso8601String();
+            $prayers[] = [
+                'key' => $name,
+                'label' => $labels[$name],
+                'time' => $formatted,
+            ];
         }
 
         return [
             'date' => $day->format('Y-m-d'),
             'timezone' => $timezone,
             'location' => $location,
+            'method' => 'Kemenag RI',
             'coordinates' => [
                 'latitude' => $latitude,
                 'longitude' => $longitude,
             ],
             'times' => $times,
             'iso_times' => $isoTimes,
+            'prayers' => $prayers,
         ];
     }
 

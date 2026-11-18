@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -55,6 +56,11 @@ class SchoolYear extends Model
     public function enrollments(): HasMany
     {
         return $this->hasMany(ClassEnrollment::class, 'school_year_id');
+    }
+
+    public function milestoneDate(string $milestoneCode, ?int $academicYearId = null): ?CarbonInterface
+    {
+        return $this->calendar?->milestoneEvent($milestoneCode, $academicYearId)?->start_date;
     }
 
     public static function active(): ?self

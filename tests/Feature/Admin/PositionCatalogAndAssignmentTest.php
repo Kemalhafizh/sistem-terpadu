@@ -1,12 +1,15 @@
 <?php
 
+use App\Models\AcademicCalendar;
 use App\Models\Position;
 use App\Models\PositionAssignment;
+use App\Models\SchoolYear;
 use App\Models\User;
 use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
 use App\Services\WorkflowService;
 use App\Support\Access\RouteAccess;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 test('migration seeds the 7 default school positions with their permissions', function () {
     $codes = Position::orderBy('code')->pluck('code')->all();
@@ -196,20 +199,29 @@ test('workflow service blocks self-approval even when requester holds the approv
         'name' => 'Persetujuan RKAS',
         'description' => 'Tes Persetujuan',
         'steps' => [
-            ['step' => 1, 'name' => 'Persetujuan Waka', 'role' => 'waka_kurikulum', 'action_label' => 'Setujui'],
+            ['order' => 1, 'name' => 'Persetujuan Waka', 'role' => 'waka_kurikulum', 'action_label' => 'Setujui'],
         ],
         'is_active' => true,
     ]);
 
-    $service = app(WorkflowService::class);
-    $request = $service->submit('rkas_test', $dualRoleTeacher, $dualRoleTeacher, 'Pengajuan dari pemegang jabatan ganda');
+    $schoolYear = SchoolYear::create([
+        'name' => '2026/2027',
+        'status' => SchoolYear::STATUS_DRAFT,
+    ]);
+    $calendar = AcademicCalendar::create([
+        'school_year_id' => $schoolYear->id,
+        'status' => AcademicCalendar::STATUS_DRAFT,
+    ]);
 
-    expect($request->canBeActedBy($dualRoleTeacher->fresh()))->toBeFalse()
-        ->and($request->canBeActedBy($otherWaka->fresh()))->toBeTrue();
+    $service = app(WorkflowService::class);
+    $request = $service->initiate('rkas_test', $dualRoleTeacher, $calendar, 'Pengajuan dari pemegang jabatan ganda');
+
+    expect(WorkflowRequest::awaitingDecisionBy($dualRoleTeacher->fresh())->whereKey($request->id)->exists())->toBeFalse()
+        ->and(WorkflowRequest::awaitingDecisionBy($otherWaka->fresh())->whereKey($request->id)->exists())->toBeTrue();
 
     expect(fn () => $service->approve($request, $dualRoleTeacher->fresh(), 'Setuju sendiri'))
-        ->toThrow(RuntimeException::class, 'Penyusun atau pengaju tidak diizinkan menyetujui pengajuannya sendiri.');
+        ->toThrow(HttpException::class);
 
-    $approved = $service->approve($request, $otherWaka->fresh(), 'Disetujui pejabat lain');
-    expect($approved->status)->toBe(WorkflowRequest::STATUS_APPROVED);
+    $service->approve($request, $otherWaka->fresh(), 'Disetujui pejabat lain');
+    expect($request->fresh()->status)->toBe('approved');
 });
