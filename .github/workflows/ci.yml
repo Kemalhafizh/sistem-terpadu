@@ -1,4 +1,4 @@
-name: 🧪 SISTA Continuous Integration
+name: SISTA Continuous Integration
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
   # Code Style Check (Laravel Pint)
   # ─────────────────────────────────────────────
   code-style:
-    name: 🎨 Lint & Style
+    name: Lint & Style
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +45,7 @@ jobs:
   # Automation Test Suite
   # ─────────────────────────────────────────────
   tests:
-    name: 🧪 Automated Test Suite
+    name: Automated Test Suite
     runs-on: ubuntu-latest
     needs: [code-style]
 
