@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\AcademicCalendar;
+use App\Models\AcademicYear;
 use App\Models\ClassEnrollment;
 use App\Models\Classroom;
 use App\Models\ElectiveSurvey;
@@ -58,6 +59,14 @@ test('copied academic calendar requires Waka review before Kepala Sekolah can ap
         'name' => '2025/2026',
         'status' => SchoolYear::STATUS_ACTIVE,
     ]);
+    $oldSemester = AcademicYear::create([
+        'school_year_id' => $oldYear->id,
+        'year' => '2025/2026',
+        'semester' => 'Ganjil',
+        'is_active' => true,
+        'start_date' => '2025-07-14',
+        'end_date' => '2025-12-20',
+    ]);
     $oldCalendar = AcademicCalendar::create([
         'school_year_id' => $oldYear->id,
         'status' => AcademicCalendar::STATUS_PUBLISHED,
@@ -67,6 +76,7 @@ test('copied academic calendar requires Waka review before Kepala Sekolah can ap
         'title' => 'Awal Tahun Ajaran',
         'event_type' => 'academic',
         'milestone' => 'awal_ta',
+        'academic_year_id' => $oldSemester->id,
         'start_date' => '2025-07-14',
         'end_date' => '2025-07-14',
         'created_by' => $waka->id,
@@ -244,13 +254,19 @@ test('promotion workflow enforces Grade X placement, supports Principal hold, an
     $batch = $enrollmentService->createPromotionBatch($fromYear, $toYear, $waka);
     expect($batch->decisions()->count())->toBe(2);
 
+    $decision1 = $batch->decisions()->where('student_id', $student1->id)->firstOrFail();
+    $decision2 = $batch->decisions()->where('student_id', $student2->id)->firstOrFail();
+
+    // Homeroom teacher marks both as naik initially, while student2 has no target classroom
+    $enrollmentService->reviewByHomeroom($decision1, $waliKelas, 'naik', 'Naik ke XI-1', $classXI1->id);
+    $enrollmentService->reviewByHomeroom($decision2, $waliKelas, 'naik', 'Naik ke kelas XI');
+
     // Waka tries to decide batch while student2 (naik from X) has no target classroom -> blocked
     expect(fn () => $enrollmentService->decideBatch($batch->fresh(), $waka))
         ->toThrow(ValidationException::class);
 
-    // Homeroom teacher reviews student2 as tinggal kelas in X-1
-    $decision2 = $batch->decisions()->where('student_id', $student2->id)->firstOrFail();
-    $enrollmentService->reviewByHomeroom($decision2, $waliKelas, 'tinggal', 'Perlu pengulangan di kelas X', $classX1->id);
+    // Homeroom teacher updates student2 as tinggal kelas in X-1
+    $enrollmentService->reviewByHomeroom($decision2->fresh(), $waliKelas, 'tinggal', 'Perlu pengulangan di kelas X', $classX1->id);
 
     // Now Waka can decide the batch
     $decided = $enrollmentService->decideBatch($batch->fresh(), $waka);

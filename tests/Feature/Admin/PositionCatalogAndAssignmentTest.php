@@ -150,7 +150,6 @@ test('position used in active workflow definition cannot be deactivated', functi
         'code' => 'leave_approval_test',
         'name' => 'Persetujuan Cuti',
         'description' => 'Alur persetujuan cuti',
-        'entity_type' => User::class,
         'steps' => [
             ['step' => 1, 'name' => 'Verifikasi Waka', 'role' => 'waka_kurikulum', 'action_label' => 'Setujui'],
         ],
@@ -196,7 +195,6 @@ test('workflow service blocks self-approval even when requester holds the approv
         'code' => 'rkas_test',
         'name' => 'Persetujuan RKAS',
         'description' => 'Tes Persetujuan',
-        'entity_type' => User::class,
         'steps' => [
             ['step' => 1, 'name' => 'Persetujuan Waka', 'role' => 'waka_kurikulum', 'action_label' => 'Setujui'],
         ],

@@ -70,9 +70,12 @@ class PositionCatalogController extends Controller
         $requestedPermissions = array_values(array_unique($validated['permissions'] ?? []));
         $this->authorizeSensitivePermissionChanges($request->user(), [], $requestedPermissions);
 
-        $code = $validated['code'] ?? Str::slug($validated['name'], '_');
-        if (Position::where('code', $code)->exists()) {
-            $code .= '_'.random_int(10, 99);
+        $baseCode = $validated['code'] ?? Str::slug($validated['name'], '_');
+        $code = $baseCode;
+        $suffix = 2;
+        while (Position::where('code', $code)->exists()) {
+            $code = $baseCode.'_'.$suffix;
+            $suffix++;
         }
 
         DB::transaction(function () use ($validated, $code, $requestedPermissions) {

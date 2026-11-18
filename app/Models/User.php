@@ -175,13 +175,14 @@ class User extends Authenticatable
             $roles[$this->role] = true;
         }
 
-        $accountType = $this->resolvedAccountType();
-        if ($accountType === 'guru') {
-            $roles['guru'] = true;
-        } elseif ($accountType === 'siswa') {
-            $roles['siswa'] = true;
-        } elseif ($accountType === 'orang_tua') {
-            $roles['orang_tua'] = true;
+        if (! empty($this->account_type)) {
+            if ($this->account_type === 'guru') {
+                $roles['guru'] = true;
+            } elseif ($this->account_type === 'siswa') {
+                $roles['siswa'] = true;
+            } elseif ($this->account_type === 'orang_tua') {
+                $roles['orang_tua'] = true;
+            }
         }
 
         if ($this->exists && Schema::hasTable('position_assignments')) {

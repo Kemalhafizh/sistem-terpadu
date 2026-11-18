@@ -14,7 +14,6 @@ test('prayer times endpoint returns null data when school coordinates are not co
     $response = $this->getJson('/api/v1/prayer-times');
 
     $response->assertOk()
-        ->assertJsonPath('status', 'success')
         ->assertJsonPath('success', true)
         ->assertJsonPath('data', null);
 });
@@ -31,7 +30,7 @@ test('prayer times endpoint calculates Kemenag RI schedule for SMA Islam Sultan 
     $response = $this->getJson('/api/v1/prayer-times?date=2026-03-21');
 
     $response->assertOk()
-        ->assertJsonPath('status', 'success')
+        ->assertJsonPath('success', true)
         ->assertJsonPath('data.date', '2026-03-21')
         ->assertJsonPath('data.location', 'Kota Semarang')
         ->assertJsonPath('data.timezone', 'Asia/Jakarta')

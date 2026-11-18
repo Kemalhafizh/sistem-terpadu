@@ -33,6 +33,12 @@ return [
     ],
 
     'catalog' => [
+        'akademik.kelola_struktur' => [
+            'label' => 'Kelola Tahun Ajaran, Rombel, Kalender & Siklus Akademik',
+            'module' => 'kurikulum',
+            'sensitive' => false,
+            'implies_roles' => ['waka_kurikulum'],
+        ],
         'kurikulum.kelola' => [
             'label' => 'Kelola Kurikulum, Jadwal & Perangkat Ajar',
             'module' => 'kurikulum',
@@ -93,6 +99,12 @@ return [
             'sensitive' => true,
             'implies_roles' => ['staf_tu', 'bendahara'],
         ],
+        'keuangan.kelola_tagihan' => [
+            'label' => 'Kelola Tagihan, Pembayaran & Keringanan Biaya Siswa',
+            'module' => 'keuangan',
+            'sensitive' => true,
+            'implies_roles' => ['staf_tu', 'bendahara'],
+        ],
         'keuangan.setujui' => [
             'label' => 'Setujui RKAS, Kas Kecil & Pengeluaran',
             'module' => 'keuangan',
@@ -142,6 +154,7 @@ return [
             'permissions' => [
                 'pimpinan.dasbor',
                 'pimpinan.mengesahkan',
+                'akademik.kelola_struktur',
                 'kurikulum.kelola',
                 'kesiswaan.kelola',
                 'sarpras.kelola',
@@ -159,6 +172,7 @@ return [
             'is_active' => true,
             'permissions' => [
                 'pimpinan.dasbor',
+                'akademik.kelola_struktur',
                 'kurikulum.kelola',
                 'kurikulum.tetapkan_kenaikan',
             ],

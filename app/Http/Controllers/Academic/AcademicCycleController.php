@@ -78,8 +78,9 @@ class AcademicCycleController extends Controller
                 'status' => SchoolYear::STATUS_DRAFT,
             ]);
 
+            $firstSemesterId = null;
             foreach (['Ganjil', 'Genap'] as $semester) {
-                AcademicYear::firstOrCreate(
+                $academicYear = AcademicYear::firstOrCreate(
                     [
                         'year' => $schoolYear->name,
                         'semester' => $semester,
@@ -91,6 +92,7 @@ class AcademicCycleController extends Controller
                         'end_date' => $schoolYear->end_date,
                     ]
                 );
+                $firstSemesterId ??= $academicYear->id;
             }
 
             $copiedFrom = isset($validated['copy_from_school_year_id'])
@@ -110,6 +112,7 @@ class AcademicCycleController extends Controller
                         'description' => $event->description,
                         'event_type' => $event->event_type,
                         'milestone' => $event->milestone,
+                        'academic_year_id' => $firstSemesterId ?? $event->academic_year_id,
                         'start_date' => $event->start_date?->addYear(),
                         'end_date' => $event->end_date?->addYear(),
                         'is_all_day' => $event->is_all_day,
