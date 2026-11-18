@@ -6,7 +6,7 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Manajemen ujian berbasis komputer dengan sistem anti-kecurangan canggih.</p>
             </div>
             <div class="flex items-center gap-3">
-                @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'admin', 'superadmin']))
+                @if(\App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', 'admin', 'superadmin']))
                     <a href="{{ route('cbt.question-banks.index') }}" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-slate-200 dark:border-slate-700">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         Bank Soal
@@ -144,10 +144,10 @@
                                     <span class="px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border {{ $statColor }}">{{ strtoupper($exam->status) }}</span>
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap space-x-1">
-                                    @if(auth()->user()->role === 'siswa' && $exam->isOngoing())
+                                    @if(\App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), \App\Support\Access\StudentDataAccess::STUDENT_ROLES) && $exam->isOngoing())
                                         <a href="{{ route('cbt.exams.take', $exam) }}" class="inline-block px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider hover:from-emerald-700 hover:to-teal-700 transition-all shadow-sm">Ikuti Ujian</a>
                                     @endif
-                                    @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'admin', 'superadmin']))
+                                    @if(\App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, ...\App\Support\Access\Roles::PRINCIPAL, 'waka_kurikulum', 'admin', 'superadmin']))
                                         <a href="{{ route('cbt.exams.show', $exam) }}" class="inline-block px-3 py-1.5 bg-slate-100 hover:bg-indigo-600 dark:bg-slate-800 dark:hover:bg-indigo-600 text-slate-700 hover:text-white dark:text-slate-300 dark:hover:text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border border-slate-200 dark:border-slate-700/60 hover:border-indigo-600">Detail</a>
                                         @if($exam->status === 'published')
                                             <a href="{{ route('cbt.exams.monitor', $exam) }}" class="inline-block px-3 py-1.5 bg-amber-500/10 hover:bg-amber-600 text-amber-600 hover:text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border border-amber-500/20 hover:border-amber-600">Monitor</a>

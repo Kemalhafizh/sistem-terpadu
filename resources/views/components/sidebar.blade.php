@@ -47,6 +47,9 @@
             $linkClass = "block px-3 py-2.5 rounded-lg font-medium transition-colors relative group sidebar-item ";
             $activeClass = "bg-primary-800 text-white shadow-sm border border-primary-700/50";
             $inactiveClass = "text-primary-100 hover:bg-primary-800/60 hover:text-white";
+            $sidebarUser = auth()->user();
+            $sidebarRoles = $sidebarUser->effectiveRoles();
+            $isStudentOrParent = array_intersect($sidebarRoles, [...\App\Support\Access\StudentDataAccess::STUDENT_ROLES, ...\App\Support\Access\StudentDataAccess::PARENT_ROLES]) !== [];
         @endphp
 
         @canVisit('dashboard')
@@ -69,7 +72,7 @@
         </a>
         @endcanVisit
 
-        @if(!in_array(auth()->user()->role, ['student', 'parent']))
+        @if(! $isStudentOrParent)
         @canVisit('teaching-journals.index')
         <a href="{{ route('teaching-journals.index') }}" class="{{ $linkClass }} {{ request()->routeIs('teaching-journals.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.journal') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -95,7 +98,7 @@
         @endcanVisit
         @endif
 
-        @if(in_array(auth()->user()->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']))
+        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', ...\App\Support\Access\Roles::PRINCIPAL, 'admin', 'superadmin']))
         @canVisit('curriculum.index')
         <a href="{{ route('curriculum.index') }}" class="{{ $linkClass }} {{ request()->routeIs('curriculum.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.curriculum') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -137,7 +140,7 @@
         {{-- Anyone signed in may report bullying (FASE 118.1). --}}
         <x-sidebar-link route="crisis.bullying.report" :label="__('navigation.report_bullying')" icon="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
 
-        @if(!in_array(auth()->user()->role, ['student', 'parent']))
+        @if(! $isStudentOrParent)
         @canVisit('assets.loans.index')
         <a href="{{ route('assets.loans.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.loans.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.asset_loans') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -155,7 +158,7 @@
         <x-sidebar-link route="announcements.index" :label="__('navigation.announcements')" icon="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" active="announcements.*" />
         
         {{-- Master Data: Hanya Admin & Kepsek --}}
-        @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @if($sidebarUser->isAdmin() || $sidebarUser->hasRole('kepala_sekolah') || $sidebarUser->hasRole('kepsek'))
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_master_data') }}</p>
         </div>
@@ -175,11 +178,11 @@
         {{-- Tahfidz Redirect Logic --}}
         @php
             $tahfidzRoute = '#';
-            if(auth()->user()->role === 'student' && auth()->user()->student) {
-                $tahfidzRoute = route('tahfidz.show', auth()->user()->student->id);
-            } elseif(auth()->user()->role === 'parent' && auth()->user()->children->first()) {
-                $tahfidzRoute = route('tahfidz.show', auth()->user()->children->first()->id);
-            } elseif(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'tahfidz.dashboard')) {
+            if(array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::STUDENT_ROLES) !== [] && $sidebarUser->student) {
+                $tahfidzRoute = route('tahfidz.show', $sidebarUser->student->id);
+            } elseif(array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::PARENT_ROLES) !== [] && $sidebarUser->children->first()) {
+                $tahfidzRoute = route('tahfidz.show', $sidebarUser->children->first()->id);
+            } elseif(\App\Support\Access\RouteAccess::allowsRoute($sidebarUser, 'tahfidz.dashboard')) {
                 // Staff get the Tahfidz overview, not an arbitrary "first student".
                 $tahfidzRoute = route('tahfidz.dashboard');
             }
@@ -188,7 +191,7 @@
         @if($tahfidzRoute !== '#')
         <a href="{{ $tahfidzRoute }}" class="{{ $linkClass }} {{ request()->routeIs('tahfidz.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.tahfidz') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
-                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'me-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 19 7.5 19s3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 19 16.5 19c-1.746 0-3.332-.477-4.5-1.253"></path></svg>
+                <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'me-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 19 16.5 19c-1.746 0-3.332-.477-4.5-1.253"></path></svg>
                 <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.tahfidz') }}</span>
             </div>
             <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.tahfidz') }}</div>
@@ -223,7 +226,7 @@
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_personnel') }}">•</p>
         </div>
-        @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @if($sidebarUser->isAdmin() || $sidebarUser->hasRole('kepala_sekolah') || $sidebarUser->hasRole('kepsek'))
         @canVisit('users.index')
         <a href="{{ route('users.index') }}" class="{{ $linkClass }} {{ request()->routeIs('users.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.users') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -252,7 +255,7 @@
         </a>
         @endcanVisit
 
-        @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'staf_tu']))
+        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, ['admin', 'superadmin', 'staf_tu']))
         @canVisit('import-export.index')
         <a href="{{ route('import-export.index') }}" class="{{ $linkClass }} {{ request()->routeIs('import-export.*') ? $activeClass : $inactiveClass }}" title="Import / Export Hub">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -411,11 +414,10 @@
         {{-- Kesiswaan. FASE 119: counselling, discipline points, bullying reports and
              inclusive education are one "Bimbingan Konseling" menu; OSIS and MPK are one entry. --}}
         @php
-            $sidebarUser = auth()->user();
             $visible = fn (string $routeName) => \App\Support\Access\RouteAccess::allowsRoute($sidebarUser, $routeName);
             $osisMpkHref = $visible('osis.dashboard') ? route('osis.dashboard')
-                : (in_array($sidebarUser->role, ['waka_kesiswaan', 'admin', 'superadmin', 'kepala_sekolah', 'guru'], true) ? route('mpk.index')
-                : (in_array($sidebarUser->role, \App\Support\Access\StudentDataAccess::STUDENT_ROLES, true) ? route('mpk.aspirations.index') : null));
+                : (\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, ['waka_kesiswaan', 'admin', 'superadmin', ...\App\Support\Access\Roles::PRINCIPAL, ...\App\Support\Access\StudentDataAccess::TEACHER_ROLES]) ? route('mpk.index')
+                : (array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::STUDENT_ROLES) !== [] ? route('mpk.aspirations.index') : null));
             $pointsMenu = $sidebarUser->hasRole('waka_kesiswaan') || $sidebarUser->hasRole('bk') || $sidebarUser->isAdmin();
             $counselingMenu = ($pointsMenu && $visible('points.index')) || collect(['counseling.dashboard', 'crisis.bullying.index', 'iep.index'])->contains($visible);
             $studentAffairsMenu = $osisMpkHref || collect(['uks.dashboard', 'ekskul.manage', 'growth.ptc.sessions'])->contains($visible);
@@ -450,14 +452,14 @@
         @endif
 
         {{-- Modul Sarpras: Admin, Waka Sarpras, Kepala Sekolah --}}
-        @if(auth()->user()->hasRole('waka_sarpras') || auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @if($sidebarUser->hasRole('waka_sarpras') || $sidebarUser->isAdmin() || $sidebarUser->hasRole('kepala_sekolah') || $sidebarUser->hasRole('kepsek'))
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_sarpras') }}</p>
         </div>
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_sarpras') }}">•</p>
         </div>
-        @if(auth()->user()->hasRole('waka_sarpras') || auth()->user()->isAdmin())
+        @if($sidebarUser->hasRole('waka_sarpras') || $sidebarUser->isAdmin())
         @canVisit('assets.index')
         <a href="{{ route('assets.index') }}" class="{{ $linkClass }} {{ request()->routeIs('assets.index') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.inventaris_assets') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -498,7 +500,7 @@
         @php
             $financeStaff = collect(['finance.billings.index', 'treasury.accounts.index', 'finance.reports.executive', 'financial.budget.dashboard'])->contains($visible);
         @endphp
-        @if($financeStaff || $visible('finance.student.index') || in_array($sidebarUser->role, \App\Support\Access\StudentDataAccess::PARENT_ROLES, true))
+        @if($financeStaff || $visible('finance.student.index') || array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::PARENT_ROLES) !== [])
         <x-sidebar-header :label="__('navigation.header_finance')" />
         <x-sidebar-link route="finance.student.index" :label="__('navigation.my_billings')" icon="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" active="finance.student.*" />
         <x-sidebar-link route="finance.billings.index" :label="__('navigation.finance_administration')" icon="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" active="finance.billings.*" />
@@ -514,14 +516,14 @@
         @endif
 
         {{-- Modul Administrasi: Admin, Staf TU --}}
-        @if(auth()->user()->hasRole('staf_tu') || auth()->user()->isAdmin())
+        @if($sidebarUser->hasRole('staf_tu') || $sidebarUser->isAdmin())
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_administration') }}</p>
         </div>
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_administration') }}">•</p>
         </div>
-        @if(in_array(auth()->user()->role, ['kepala_sekolah', 'admin', 'superadmin']))
+        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, [...\App\Support\Access\Roles::PRINCIPAL, 'admin', 'superadmin']))
         @canVisit('analytics.index')
         <a href="{{ route('analytics.index') }}" class="{{ $linkClass }} {{ request()->routeIs('analytics.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.school_analytics') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -537,7 +539,7 @@
 
         <x-sidebar-link route="hrd.fingerprint-import.index" :label="__('navigation.fingerprint_import')" icon="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" active="hrd.fingerprint-import.*" />
 
-        @if(in_array(auth()->user()->role, ['superadmin', 'admin', 'staf_tu', 'kepala_sekolah']))
+        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, ['superadmin', 'admin', 'staf_tu', ...\App\Support\Access\Roles::PRINCIPAL]))
         @canVisit('letters.index')
         <a href="{{ route('letters.index') }}" class="{{ $linkClass }} {{ request()->routeIs('letters.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.digital_letters') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -553,7 +555,7 @@
         @endif
 
         {{-- Modul HRD: Admin, Superadmin, Kepala Sekolah --}}
-        @if(auth()->user()->isAdmin() || auth()->user()->hasRole('kepala_sekolah'))
+        @if($sidebarUser->isAdmin() || $sidebarUser->hasRole('kepala_sekolah') || $sidebarUser->hasRole('kepsek'))
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_staff') }}</p>
         </div>
@@ -572,7 +574,7 @@
         @endif
 
         {{-- Modul Guru: Guru, Admin --}}
-        @if(auth()->user()->hasRole('guru') || auth()->user()->isAdmin())
+        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, \App\Support\Access\StudentDataAccess::TEACHER_ROLES) || $sidebarUser->isAdmin())
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_teacher') }}</p>
         </div>

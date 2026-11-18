@@ -48,7 +48,7 @@
      x-transition:leave="transition ease-in duration-200 transform"
      x-transition:leave-start="translate-y-0 opacity-100 scale-100"
      x-transition:leave-end="translate-y-10 opacity-0 scale-95"
-     class="fixed bottom-6 start-6 z-300 bg-slate-900/90 dark:bg-slate-950/95 text-slate-100 border border-slate-700/50 backdrop-blur-md rounded-2xl p-4 shadow-2xl flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 max-w-md w-[calc(100%-3rem)]"
+     class="fixed bottom-6 inset-x-6 sm:inset-x-auto sm:start-6 z-300 bg-slate-900/90 dark:bg-slate-950/95 text-slate-100 border border-slate-700/50 backdrop-blur-md rounded-2xl p-4 shadow-2xl flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 max-w-md sm:w-full"
      style="display: none;">
     <div class="shrink-0 flex items-center justify-center w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
         <img src="/images/logo-kotak.png" alt="Logo Sulaone" class="w-8 h-8 rounded-lg object-contain">

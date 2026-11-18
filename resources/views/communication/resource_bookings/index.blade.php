@@ -109,7 +109,7 @@
                                         @endswitch
                                     </td>
                                     <td class="px-6 py-4 text-right space-x-2">
-                                        @if($b->status === 'pending' && auth()->user()->hasRole(['superadmin', 'admin']))
+                                        @if($b->status === 'pending' && \App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), ['admin', 'superadmin', 'waka_sarpras', 'staf_tu']))
                                             <form action="{{ route('resource_bookings.approve', $b->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-bold transition-all shadow-sm">

@@ -57,7 +57,7 @@ class PublicLocalizationTest extends TestCase
         $response = $this->withSession(['locale' => 'id'])->get('/');
         $response->assertStatus(200);
         $response->assertSee('dir="ltr"', false);
-        $response->assertSee('Sistem Terpadu');
+        $response->assertSee('Sulaone');
 
         // English
         $response = $this->withSession(['locale' => 'en'])->get('/');
