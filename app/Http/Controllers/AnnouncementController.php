@@ -75,7 +75,7 @@ class AnnouncementController extends Controller
             'is_active' => true,
         ]);
 
-        // FASE 71: real-time push to every connected mobile app (Home/announcements feed).
+        // real-time push to every connected mobile app (Home/announcements feed).
         event(new CampusAnnouncementEvent([
             'id' => $announcement->id,
             'title' => $announcement->title,

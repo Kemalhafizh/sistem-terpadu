@@ -5,7 +5,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 
 /*
- * FASE 119 (119.2, 119.4): the sidebar has one menu per area and no
+ * (119.2, 119.4): the sidebar has one menu per area and no
  * "Enterprise" sections. Counselling, bullying reports and inclusive
  * education sit under Bimbingan Konseling; bills, bank accounts, petty cash
  * and scholarships under Keuangan.

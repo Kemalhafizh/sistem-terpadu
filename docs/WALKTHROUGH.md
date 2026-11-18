@@ -1,92 +1,60 @@
-# 🚶 Panduan Alur Demo Peran (Walkthrough Guide) SISTA
+# Panduan Penelusuran Fitur per Peran (Walkthrough)
 
-Panduan ini menjelaskan langkah-langkah demo sistem SISTA berdasarkan masing-masing peran (*role*) pengguna untuk membantu evaluasi fitur dan presentasi portofolio.
+Dokumen ini menjelaskan cara menguji alur kerja utama **SISTA** menggunakan akun data awal (*seeder*) pada lingkungan pengembangan lokal.
 
 ---
 
-## 🔑 Kredensial Akses Uji Coba
+## Akun Pengujian Lokal
 
-Password untuk semua akun pengujian di bawah ini adalah **`password`**:
+Kata sandi bawaan untuk seluruh akun di bawah ini adalah `password`:
 
-| Peran (Role) | Alamat Email Demo | Tujuan Utama Tinjauan |
+| Peran | Email | Fokus Pengujian |
 | :--- | :--- | :--- |
-| **Superadmin** | `superadmin@sekolah.com` | Konfigurasi sistem global, backup, log audit, and kelola akun. |
-| **Kepala Sekolah** | `kepala.sekolah@sultanagung1.sch.id` | Dashboard analitik eksekutif, approval workflow, RKAS. |
-| **Waka Kurikulum** | `waka.kurikulum@sultanagung1.sch.id` | Manajemen kurikulum, approval bank silabus, kalender akademik. |
-| **Waka Kesiswaan** | `waka.kesiswaan@sultanagung1.sch.id` | Manajemen ekstrakurikuler, pembinaan OSIS & MPK, approval proposal kegiatan. |
-| **Guru BK (Konselor)** | `guru.bk@sultanagung1.sch.id` | Konseling BK terenkripsi, poin pelanggaran, laporan perundungan, dan pendidikan inklusi. |
-| **Guru / Petugas UKS** | `guru@sekolah.com` | Absensi harian kelas, rekam medis harian UKS, kurangi stok obat. |
-| **Siswa (Student)** | `demo.siswa1@student.sa1.sch.id` | Pengerjaan ujian online (CBT), jurnal mutaba'ah ibadah, evaluasi guru. |
-| **Orang Tua (Parent)** | `parent@sekolah.com` | Parent Portal (pantau rapor, kehadiran, keuangan SPP, & mutaba'ah anak). |
+| Superadmin | `superadmin@sekolah.com` | Konfigurasi sistem, manajemen pengguna, backup, dan log audit |
+| Kepala Sekolah | `kepala.sekolah@sultanagung1.sch.id` | Dasbor pimpinan, persetujuan alur kerja, RKAS |
+| Waka Kurikulum | `waka.kurikulum@sultanagung1.sch.id` | Jadwal pelajaran, silabus/RPP, kalender akademik, monitoring sesi kelas |
+| Waka Kesiswaan | `waka.kesiswaan@sultanagung1.sch.id` | Ekstrakurikuler, OSIS & MPK |
+| Guru BK | `guru.bk@sultanagung1.sch.id` | Konseling terenkripsi, poin pelanggaran, laporan perundungan, pendidikan inklusi |
+| Guru | `guru@sekolah.com` | Sesi kelas & QR presensi, jurnal mengajar, penilaian harian, UKS |
+| Siswa | `demo.siswa1@student.sa1.sch.id` | Ujian CBT, e-learning, mutaba'ah harian, evaluasi guru |
+| Orang Tua | `parent@sekolah.com` | Pemantauan kehadiran per mapel, nilai, tagihan SPP, dan chat wali kelas |
 
 ---
 
-## 🚶 1. Alur Demo: Kepala Sekolah & Manajemen (Executive Dashboard & Approval)
+## 1. Alur Pimpinan & Persetujuan (`kepala.sekolah@sultanagung1.sch.id`)
 
-Tujuan: Menguji analisis data eksekutif dan persetujuan pengajuan dokumen secara digital.
-
-1. **Login** menggunakan akun **`kepala.sekolah@sultanagung1.sch.id`**.
-2. **Lihat Dashboard Eksekutif**:
-   - Amati grafik ApexCharts rata-rata nilai, status pembayaran SPP siswa, dan radar chart kepatuhan kurikulum.
-3. **Approval Alur Kerja (Workflow Engine)**:
-   - Masuk ke menu **Approval Workflow** > **Pending Approvals**.
-   - Di sini Anda dapat menyetujui, menolak, atau meminta revisi pengajuan dari guru (seperti pengajuan cuti atau draf silabus mata pelajaran).
+1. Masuk menggunakan akun Kepala Sekolah.
+2. Pada **Dasbor Pimpinan**, tinjau ringkasan kehadiran, akademik, dan indikator kesehatan keuangan yang dihitung dari transaksi nyata.
+3. Buka menu **Persetujuan (Workflow)** untuk meninjau, menyetujui, atau menolak permohonan cuti pegawai, silabus, maupun anggaran RKAS.
 
 ---
 
-## 🚶 2. Alur Demo: Guru BK (Konseling & Laporan Perundungan)
+## 2. Alur Bimbingan Konseling (`guru.bk@sultanagung1.sch.id`)
 
-Tujuan: Menguji menu Bimbingan Konseling.
-
-1. **Login** menggunakan akun **`guru.bk@sultanagung1.sch.id`**.
-2. **Laporan Perundungan**:
-   - Buka menu **Bimbingan Konseling → Laporan Perundungan**. Laporan dari siswa dan orang tua (web maupun aplikasi) tampil di sini; identitas pelapor anonim tidak disimpan.
-3. **Konseling BK Terenkripsi**:
-   - Pilih salah satu siswa, lalu buat sesi konseling.
-   - Isi formulir catatan konseling. Data catatan konseling ini akan langsung terenkripsi di database agar terjaga kerahasiaannya.
+1. Masuk menggunakan akun Guru BK.
+2. Buka **Bimbingan Konseling → Laporan Perundungan** untuk meninjau laporan masuk dari siswa/orang tua dan memperbarui status tindak lanjutnya.
+3. Buka **Sesi Konseling** untuk mencatat sesi konseling baru; catatan masalah dan solusi dienkripsi secara otomatis di database.
 
 ---
 
-## 🚶 3. Alur Demo: Wali Murid / Orang Tua (Parent Portal Switching)
+## 3. Alur Orang Tua (`parent@sekolah.com`)
 
-Tujuan: Menguji transparansi laporan perkembangan anak untuk wali murid.
-
-1. **Login** menggunakan akun **`parent@sekolah.com`**.
-2. **Dashboard Portal Orang Tua**:
-   - Amati panel perkembangan akademis anak, sisa tagihan SPP, dan log catatan pelanggaran BK anak.
-3. **Multi-Child Switcher**:
-   - Jika orang tua terikat dengan lebih dari satu anak, gunakan dropdown **Pilih Anak** di bagian kanan atas dashboard untuk beralih data perkembangan anak secara instan.
-4. **Log Mutaba'ah & UKS**:
-   - Masuk ke tab **Mutaba'ah Ibadah** untuk memantau ibadah harian anak, serta tab **Rekam Medis UKS** untuk melihat log keluhan kesehatan anak selama di sekolah.
+1. Masuk menggunakan akun Orang Tua.
+2. Jika memiliki lebih dari satu anak terdaftar, pilih anak melalui pemilih siswa di bagian atas halaman.
+3. Tinjau ringkasan kehadiran per mata pelajaran, nilai akademik, catatan mutaba'ah, serta daftar tagihan SPP anak.
+4. Gunakan fitur **Pesan Wali Kelas** untuk berkomunikasi langsung dengan wali kelas anak.
 
 ---
 
-## 🚶 4. Alur Demo: Siswa (CBT Aman & Kolaborasi)
+## 4. Alur Siswa (`demo.siswa1@student.sa1.sch.id`)
 
-Tujuan: Menguji sistem e-learning terproteksi dan jurnal harian.
-
-1. **Login** menggunakan akun **`demo.siswa1@student.sa1.sch.id`**.
-2. **Ujian Online CBT**:
-   - Masuk ke menu **CBT Online** > **Daftar Ujian**.
-   - Mulai salah satu ujian aktif. Coba keluar dari layar fullscreen atau pindah tab browser; sistem akan mencatat deteksi kecurangan tersebut dan melarang pengerjaan jika batas pelanggaran terlampaui.
-3. **Jurnal Mutaba'ah Harian**:
-   - Masuk ke menu **Mutaba'ah Ibadah**. Isi setoran ibadah harian Anda (seperti shalat fardhu, tilawah Quran, dan bakti orang tua) untuk dinilai oleh guru/ortu.
+1. Masuk menggunakan akun Siswa.
+2. Buka menu **CBT** untuk mengikuti ujian aktif dan menguji pencatatan pelanggaran pindah tab/layar penuh.
+3. Buka menu **Mutaba'ah** untuk mencatat pelaksanaan ibadah harian.
 
 ---
 
-## 🚶 5. Alur Demo: Guru & Staf (Administrasi Kelas & UKS)
+## 5. Alur Guru & Tata Usaha (`guru@sekolah.com` / `admin@sekolah.com`)
 
-Tujuan: Menguji pengelolaan presensi, silabus kurikulum, dan pelayanan kesehatan UKS.
-
-1. **Login** menggunakan akun **`guru@sekolah.com`**.
-2. **Absensi & Jurnal Kelas**:
-   - Buka menu **Akademik** > **Input Presensi**. Input data kehadiran siswa hari ini.
-   - Buat entri **Jurnal Mengajar** harian (materi, penugasan).
-3. **Buku Kunjungan UKS**:
-   - Masuk ke menu **UKS** > **Kunjungan Baru**.
-   - Input siswa yang berobat (misal: "Sakit Kepala"), berikan obat dari inventaris UKS. Sistem akan langsung memotong stok obat secara otomatis.
-   - Jika keluhan berkategori `berat`, sistem secara otomatis akan mengirimkan pesan WhatsApp darurat ke orang tua siswa.
-
----
-
-*Panduan alur demo ini mempermudah proses verifikasi fitur di lingkungan sandbox lokal.*
+1. Masuk sebagai Guru untuk memulai **Sesi Kelas**, menampilkan QR presensi per mata pelajaran, mengisi **Jurnal Mengajar**, dan menginput **Penilaian Harian**.
+2. Masuk sebagai Admin/TU untuk mengimpor log presensi pegawai pada menu **Kepegawaian → Impor Sidik Jari**, mengelola tagihan siswa, dan mengekspor data Dapodik/EMIS.

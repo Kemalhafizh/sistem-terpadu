@@ -22,7 +22,7 @@ use Illuminate\Support\Str;
 use Throwable;
 
 /**
- * FASE 117 — Sesi Kelas Hidup & Presensi Per-Mapel.
+ * Sesi Kelas Hidup & Presensi Per-Mapel.
  *
  * Owns every rule of the live-lesson lifecycle so the three controllers
  * (teacher, student, admin) stay thin:

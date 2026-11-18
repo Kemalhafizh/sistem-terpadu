@@ -1,6 +1,6 @@
-# 📚 Sesi Kelas Hidup & Presensi Per-Mapel (FASE 117)
+# Sesi Kelas Hidup & Presensi Per-Mapel
 
-Backend untuk **FASE 77 Android**. Setiap jam pelajaran punya sesi hidup: guru memulai kelas, siswa memindai QR yang berganti setiap 30 detik dari layar guru, dan siswa yang tidak absen otomatis tercatat **alpha** saat sesi ditutup.
+Backend untuk ** Android**. Setiap jam pelajaran punya sesi hidup: guru memulai kelas, siswa memindai QR yang berganti setiap 30 detik dari layar guru, dan siswa yang tidak absen otomatis tercatat **alpha** saat sesi ditutup.
 
 Semua endpoint berada di bawah `/api/v1`, memakai `Authorization: Bearer <token>`, dan **selalu** membalas dengan envelope `{ success, message, data }`. Ini termasuk error validasi, yang dibalas 422 dengan tambahan `errors: { field: [pesan] }`. Semua key memakai **snake_case**, jadi di Android pakai `@SerializedName`.
 
@@ -192,7 +192,7 @@ Setiap penolakan membawa `error_code` yang tetap. `message` ditulis dalam bahasa
 
 ---
 
-## 5. Selisih dengan Draf FASE 77 (`android_implementation.md` 77.1.2)
+## 5. Selisih dengan Draf (`android_implementation.md` 77.1.2)
 
 | Draf Android | Backend | Tindakan di Android |
 |---|---|---|

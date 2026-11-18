@@ -59,7 +59,7 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id|unique:employees,user_id',
             'employee_number' => 'required|string|unique:employees,employee_number',
-            // The ID this person enrols under on the fingerprint machine (FASE 119.6.1).
+            // The ID this person enrols under on the fingerprint machine.
             'fingerprint_id' => 'nullable|string|max:32|unique:employees,fingerprint_id',
             // NUPTK (16 digits) for Dapodik; not every staff member has one.
             'nuptk' => 'nullable|digits:16|unique:employees,nuptk',
@@ -366,7 +366,7 @@ class EmployeeController extends Controller
         $month = $request->input('month', date('m'));
         $year = $request->input('year', date('Y'));
 
-        // Working days are the days the attendance data covers, not an assumed 25 (FASE 119).
+        // Working days are the days the attendance data covers, not an assumed 25.
         $result = $recap->month((int) $year, (int) $month);
         $reportData = $result['rows'];
         $workingDays = $result['working_days'];

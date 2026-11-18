@@ -4,7 +4,7 @@ Dokumen ini menjelaskan arsitektur, skema data, alur validasi, dan integrasi web
 
 ---
 
-## 🏗️ 1. Arsitektur Sistem
+## 1. Arsitektur Sistem
 
 Modul integrasi ini memadukan ekspor file spreadsheet biner dinamis (.xlsx) untuk pelaporan instan ke instansi pemerintah dengan push notifikasi HTTP real-time (Webhooks) untuk sinkronisasi dengan database yayasan.
 
@@ -21,7 +21,7 @@ graph TD
 
 ---
 
-## 🗃️ 2. Skema Tabel Database
+## 2. Skema Tabel Database
 
 Modul ini memperkenalkan tiga tabel baru pada database SISTA:
 
@@ -45,7 +45,7 @@ Mengelola pendaftaran endpoint webhook outgoing untuk transfer data real-time.
 
 ---
 
-## 🧑‍🎓 3. Mapping Skema Kolom Ekspor
+## ‍3. Mapping Skema Kolom Ekspor
 
 ### A. Format Dapodik Kemendikbud
 
@@ -77,11 +77,11 @@ Data guru EMIS: **NUPTK** dan **Status Sertifikasi**. Sertifikasi bernilai "Suda
 
 ---
 
-## ⚠️ 4. Pra-Validasi Validasi Kelayakan (*Pre-flight Check*)
+## 4. Pra-Validasi Validasi Kelayakan (*Pre-flight Check*)
 
 Untuk mencegah penolakan impor data pada sistem Dapodik pusat, `DapodikService` dilengkapi dengan aturan pra-validasi sebelum proses unduh berkas dijalankan:
 
-1.  **NISN Format Check**: Sistem memverifikasi bahwa NISN tidak boleh kosong dan harus berupa deretan angka yang tepat berjumlah 10 digit. Jika melanggar, baris data akan ditandai dengan ikon peringatan (⚠️) disertai deskripsi kesalahan.
+1.  **NISN Format Check**: Sistem memverifikasi bahwa NISN tidak boleh kosong dan harus berupa deretan angka yang tepat berjumlah 10 digit. Jika melanggar, baris data akan ditandai dengan ikon peringatan () disertai deskripsi kesalahan.
 2.  **Rombel Assignment Check**: Memastikan siswa telah resmi dimasukkan ke dalam suatu rombongan belajar kelas aktif.
 3.  **Required Identity Check**: Nama, jenis kelamin, tempat lahir, tanggal lahir, dan nama ibu kandung wajib diisi. Tidak ada nilai pengganti: data yang kosong diekspor kosong dan ditandai di sini, bukan diisi teks karangan.
 4.  **PTK**: NUPTK yang belum diisi ditandai.
@@ -90,7 +90,7 @@ Daftar ketidaklengkapan data akan dimunculkan secara interaktif pada panel kanan
 
 ---
 
-## 🚀 5. Outgoing Webhook & Keamanan Signature
+## 5. Outgoing Webhook & Keamanan Signature
 
 Setiap event webhook dikirimkan menggunakan request `POST` berupa payload `JSON` yang dilengkapi dengan header keamanan **`X-Sista-Signature`** untuk memverifikasi keaslian data pada server penerima:
 

@@ -14,12 +14,12 @@ class IepController extends Controller
         // A teacher sees the IEPs of the students they teach this year (Student::visibleTo).
         $ieps = IepDocument::with('student', 'caseManager')->whereHas('student', fn ($q) => $q->visibleTo(request()->user()))->get();
 
-        return view('fase58.iep.list', compact('ieps'));
+        return view('inclusive.iep.list', compact('ieps'));
     }
 
     public function create()
     {
-        return view('fase58.iep.builder');
+        return view('inclusive.iep.builder');
     }
 
     public function store(Request $request)
@@ -44,14 +44,14 @@ class IepController extends Controller
     {
         StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
 
-        return view('fase58.iep.progress', compact('iep'));
+        return view('inclusive.iep.progress', compact('iep'));
     }
 
     public function edit(IepDocument $iep)
     {
         StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
 
-        return view('fase58.iep.builder', compact('iep'));
+        return view('inclusive.iep.builder', compact('iep'));
     }
 
     public function update(Request $request, IepDocument $iep)
@@ -85,6 +85,6 @@ class IepController extends Controller
     {
         StudentDataAccess::authorizeStudentRecord(request()->user(), $iep->student);
 
-        return view('fase58.iep.progress', compact('iep'));
+        return view('inclusive.iep.progress', compact('iep'));
     }
 }

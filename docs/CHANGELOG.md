@@ -1,36 +1,29 @@
-# 📜 Catatan Perubahan (Changelog) SISTA — SMA Islam Sultan Agung 1 Semarang
+# Riwayat Perubahan (Changelog) SISTA
 
-Seluruh pembaruan penting pada basis kode **SISTA** dicatat di dokumen ini berdasarkan versi rilis.
-
----
-
-## [2.0.0] - 2026-05-28
-### 🚀 Rilis Besar: Fitur Premium & Hardening
-Rilis ini menghadirkan berbagai peningkatan fitur premium, komunikasi real-time, sistem workflow persetujuan, modul CBT ujian online aman, portal laporan kustom, dan optimalisasi keamanan.
-
-### Added
-*   **Real-Time WebSocket Engine:** Mengintegrasikan **Laravel Reverb** untuk komunikasi instan.
-*   **REST API Mobile-Ready (v1):** Kumpulan endpoint terstandardisasi JSON untuk aplikasi Android/iOS yang terproteksi Sanctum.
-*   **Computer-Based Test (CBT):** Modul ujian online aman dengan fullscreen lock, visibility tab change blocker, mobile vibration shock, dan dasbor pemantauan real-time guru.
-*   **Digital Approval Workflow:** Sistem persetujuan berjenjang dinamis polimorfik untuk penanganan cuti, surat, RPP, dll.
-*   **Smart Recommendation Engine:** Deteksi dini siswa bermasalah secara akademis/BK serta prediksi keterlambatan pembayaran SPP.
-*   **Custom Report Builder:** Pembuat laporan *ad-hoc* drag-drop dinamis dengan grafik ApexCharts dan ekspor Excel/PDF.
-*   **e-Portfolio Siswa:** Portofolio digital mandiri dengan penganugerahan lencana prestasi terverifikasi sekolah serta halaman showcase publik berdesain glassmorphism.
-*   **Security SIEM Dashboard:** Audit log autentikasi, deteksi brute-force, dan forced forced-logout sesi perangkat mencurigakan.
-*   **CI/CD Pipeline:** Otomasi alur kerja pengujian dan deployment via GitHub Actions.
+Dokumen ini mencatat perubahan utama pada sistem **SISTA (Sistem Terpadu SMA Islam Sultan Agung 1 Semarang)**.
 
 ---
 
-## [1.5.0] - 2026-04-12
-### Added
-*   Sistem Compliance Dashboard terpadu untuk Akreditasi Sekolah.
-*   Sistem Dashboard Orang Tua Premium (Parent Portal) dengan obrolan wali kelas.
-*   Modul Helpdesk Internal (Tiket & SLA tracking) untuk pelaporan kerusakan fasilitas sekolah.
-*   E-learning & Jurnal Mengajar Guru.
+## [2.1.0] - 2026-10
+### Perbaikan & Penyempurnaan Inti ERP Sekolah
+- **Sesi Kelas & Presensi QR per Mata Pelajaran:** Penambahan modul sesi kelas langsung dengan QR berputar setiap 30 detik, integrasi otomatis ke draf jurnal mengajar, serta endpoint kehadiran harian untuk widget dan aplikasi Android.
+- **Kepegawaian & Penggajian:** Penambahan fitur impor log mesin sidik jari pegawai (`FingerprintImportController`), perhitungan rekap bulanan (`EmployeeAttendanceRecap`), integrasi alur persetujuan cuti pegawai (`leave_approval`), dan perhitungan slip gaji dari data kehadiran nyata.
+- **Kesiswaan & BK:** Penambahan endpoint dan antarmuka pelaporan perundungan (TPPK) dengan dukungan laporan anonim, serta penggabungan modul pendidikan inklusi di bawah Bimbingan Konseling.
+- **Keuangan & RKAS:** Perbaikan alur persetujuan RKAS antara penyusun (TU) dan pengesah (Kepala Sekolah), pembacaan realisasi dari buku besar, serta isolasi pemotongan tabungan infaq per keluarga.
+- **Integrasi Pemerintah:** Penyempurnaan validasi dan ekspor data Dapodik Kemendikdasmen serta EMIS Kemenag tanpa nilai bawaan fiktif, ditambah pemetaan lengkap konversi pendaftar SPMB menjadi siswa.
+- **Keamanan & Kontrol Akses:** Penerapan *fail-closed* pada `RouteAccess`, pembatasan cakupan data siswa/kelas melalui `Student::visibleTo` dan `Classroom::isVisibleTo`, serta perampingan modul agar berfokus penuh pada kebutuhan operasional SMA Islam Sultan Agung 1 Semarang.
 
 ---
 
-## [1.0.0] - 2026-02-10
-### Added
-*   Rilis awal fitur operasional sekolah SISTA: Akademik, Keuangan, Kepegawaian, Kesiswaan, Administrasi, Perpustakaan, SPMB, dan E-Rapor PDF.
-*   Otentikasi 2FA (Email OTP), Enkripsi data sensitif, dan log audit aktivitas.
+## [2.0.0] - 2026-05
+### Penambahan
+- Integrasi komunikasi waktu nyata menggunakan **Laravel Reverb** untuk obrolan wali murid–wali kelas dan notifikasi in-app.
+- Penyediaan REST API v1 berbasis **Laravel Sanctum** untuk aplikasi Android.
+- Modul Computer-Based Test (CBT) dengan pengacakan soal ber-seed dan pemantauan ujian.
+- Mesin persetujuan berjenjang polimorfik (`WorkflowService`) untuk pengajuan surat, cuti, dan dokumen akademik.
+
+---
+
+## [1.0.0] - 2026-02
+### Penambahan
+- Rilis fondasi operasional sekolah: Akademik, Keuangan, Kepegawaian, Kesiswaan, Administrasi, Perpustakaan, UKS, SPMB, Tahfidz, Mutaba'ah, serta autentikasi 2FA dan enkripsi catatan konseling BK.

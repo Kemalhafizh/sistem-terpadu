@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 /*
- * FASE 119: modules cut from the school ERP stay cut. Each PR of the debloat
+ * modules cut from the school ERP stay cut. Each PR of the debloat
  * adds the URI prefixes it removed; a route that comes back under one of them
  * fails here.
  */
@@ -42,8 +42,8 @@ dataset('removed prefixes', [
     'api/v1/mobile/geofence', 'my-hrd/attendance',
     // 119.9: forum, teacher to-do, student portfolio, EDS/accreditation/compliance (the Kemenag/Dapodik export stays under integrations).
     'forum', 'todos', 'portfolio', 'eds', 'compliance', 'accreditation',
-    // 119.9: UTBK tryout and PTN recommendations (sista-android dropped the screen first).
-    'api/v1/utbk',
+    // UTBK tryout, PTN recommendations, and unused facility/IoT/bus dashboards.
+    'api/v1/utbk', 'facility/',
 ]);
 
 test('route modul yang sudah dipotong tidak muncul lagi', function (string $prefix) {

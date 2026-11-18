@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * FASE 117 — a student's attendance in one ClassSession (one lesson).
+ * a student's attendance in one ClassSession (one lesson).
  */
 class SessionAttendance extends Model
 {

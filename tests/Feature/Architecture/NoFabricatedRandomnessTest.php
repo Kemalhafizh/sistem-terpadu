@@ -15,7 +15,7 @@ use Tests\TestCase;
  *   Each must be replaced with real data (or an honest null/error) and then
  *   removed here. The counts are exact, so the list can only shrink.
  *
- * Anything else fails CI. See CLAUDE.md, "Tidak ada angka karangan".
+ * Anything else fails CI. See docs/CONTRIBUTING.md, "Tidak ada angka karangan".
  */
 class NoFabricatedRandomnessTest extends TestCase
 {

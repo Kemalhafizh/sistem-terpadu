@@ -19,7 +19,7 @@ use Tests\Concerns\StartsWorkflows;
 use Tests\TestCase;
 
 /**
- * FASE 71.4 follow-up: real KPI computation (SPP ratio per academic year,
+ * follow-up: real KPI computation (SPP ratio per academic year,
  * CBT server usage) and a real GET endpoint for the pending-approvals list
  * — both previously either "Dummy" (KPI) or entirely missing (approvals list).
  */
@@ -194,7 +194,7 @@ class AdminKpiAndApprovalsTest extends TestCase
     }
 
     /**
-     * FASE 76.2 finding: monthly_revenue used to query `payment_date` on the
+     * finding: monthly_revenue used to query `payment_date` on the
      * `billings` table — a column that only exists on `payments`. SQLite
      * silently treats an unknown double-quoted identifier as a string
      * literal (so this returned 0 locally and in every test), but MySQL

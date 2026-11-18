@@ -392,8 +392,8 @@ class ApiStudentController extends Controller
      * Used to answer with a virtual account number made up from a bank prefix
      * and the student's NIS: nothing was created at any bank or gateway, and a
      * transfer to that number could reach someone else's account. Until the
-     * app is connected to the school's payment gateway, this says so instead
-     * (CLAUDE.md rule 2). The bill must still be the caller's own.
+     * app is connected to the school's payment gateway, this says so instead.
+     * The bill must still be the caller's own.
      */
     public function payBilling(Request $request, $billingId)
     {

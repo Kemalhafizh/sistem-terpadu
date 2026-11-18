@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/** One upload of a fingerprint machine log and what it did (FASE 119.6.1). */
+/** One upload of a fingerprint machine log and what it did. */
 class FingerprintImport extends Model
 {
     protected $fillable = [

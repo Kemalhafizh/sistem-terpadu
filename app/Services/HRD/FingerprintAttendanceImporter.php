@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Throwable;
 
 /**
- * Turns a fingerprint machine log into staff attendance (FASE 119.6.1).
+ * Turns a fingerprint machine log into staff attendance.
  *
  * The machine writes one line per scan. For each employee and day the first
  * scan is the check-in and the last the check-out, merged with what is

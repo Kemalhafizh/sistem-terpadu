@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 
 /*
- * FASE 117 — Sesi Kelas Hidup & Presensi Per-Mapel.
+ * Sesi Kelas Hidup & Presensi Per-Mapel.
  *
  * Fixture: Monday 2026-10-05. Preset periods 1 = 07:00–07:45, 2 = 07:45–08:30,
  * so the Monday schedule "jam 1–2" runs 07:00–08:30: startable from 06:50,

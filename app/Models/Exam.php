@@ -32,7 +32,7 @@ class Exam extends Model
         'max_violations',
         'passing_score',
         'status',
-        // Fase 87: Token-Gated Mobile-Only (Berlaku 5 Menit)
+        // Token-Gated Mobile-Only (Berlaku 5 Menit)
         'access_token',
         'token_expires_at',
         'mobile_only',
@@ -74,7 +74,7 @@ class Exam extends Model
     }
 
     /**
-     * Fase 87: Guru Operator Ujian (untuk UTS/UAS).
+     * Guru Operator Ujian (untuk UTS/UAS).
      */
     public function operator(): BelongsTo
     {

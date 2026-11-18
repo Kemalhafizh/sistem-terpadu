@@ -1,10 +1,10 @@
-# 💰 Modul Keuangan & SPP SISTA
+# Modul Keuangan & SPP SISTA
 
 Modul Keuangan mengelola seluruh transaksi pembayaran sekolah, penagihan SPP siswa, serta pembukuan jurnal akuntansi keuangan di **SISTA**.
 
 ---
 
-## 💸 1. Tagihan Keuangan Siswa (SPP & Uang Pangkal)
+## 1. Tagihan Keuangan Siswa (SPP & Uang Pangkal)
 
 ### A. Mass Billing Generator (`FinanceController`)
 *   Staf keuangan dapat membuat tagihan bulanan (SPP) secara massal untuk seluruh siswa di tingkat kelas tertentu dengan satu klik.
@@ -19,7 +19,7 @@ Modul Keuangan mengelola seluruh transaksi pembayaran sekolah, penagihan SPP sis
 
 ---
 
-## 💳 2. Integrasi Payment Gateway Midtrans & Akuntansi Ledger
+## 2. Integrasi Payment Gateway Midtrans & Akuntansi Ledger
 
 ### A. Otomasi Pembayaran Online (Midtrans)
 *   Siswa/orang tua dapat melakukan pembayaran tagihan SPP online secara aman menggunakan Virtual Account bank mandiri, BNI, BRI, Permata, atau kode QRIS.
@@ -33,7 +33,7 @@ Setiap kali pembayaran diverifikasi lunas (baik secara tunai di kasir sekolah ma
 Laporan neraca saldo dan buku besar pembukuan sekolah dapat diunduh secara landscape oleh staf keuangan untuk keperluan kepatuhan audit.
 ---
 
-## 📊 3. RKAS / RAPBS (`BudgetPlanningController`)
+## 3. RKAS / RAPBS (`BudgetPlanningController`)
 
 Menu **Keuangan → RKAS / Anggaran**.
 *   **Alur:** TU atau bendahara menyusun RKAS dan pos anggarannya (kategori, kode akun, nominal rencana), lalu mengajukannya. Kepala Sekolah menyetujui. Penyusun tidak bisa menyetujui RKAS buatannya sendiri, dan pos tidak bisa diubah setelah diajukan.
@@ -43,14 +43,14 @@ Menu **Keuangan → RKAS / Anggaran**.
 
 ---
 
-## 🤲 4. Infaq & Donasi (`CharityController`)
+## 4. Infaq & Donasi (`CharityController`)
 
 *   **Kampanye** dibuat dan donasinya diverifikasi oleh TU (menu Keuangan → Kelola Infaq & Donasi).
 *   **Berdonasi:** semua warga sekolah lewat transfer (bukti diunggah) atau tunai; statusnya menunggu verifikasi TU.
 *   **Dari tabungan wadiah:** hanya siswa untuk tabungannya sendiri, atau orang tua untuk tabungan anaknya. Orang tua dengan lebih dari satu anak memilih tabungan anak yang dipakai. Dulu donatur lain (guru, admin) memotong tabungan siswa pertama di database, dan orang tua selalu memotong anak pertamanya.
 *   Siswa tanpa rekening tabungan tampil "Belum punya tabungan", bukan Rp 0.
 
-## 🤝 5. Konsultasi Orang Tua–Guru (`PtcSchedulerController`)
+## 5. Konsultasi Orang Tua–Guru (`PtcSchedulerController`)
 
 *   Waka kesiswaan, kepala sekolah, TU, atau admin membuka sesi; slot dibuat otomatis untuk setiap guru, BK, dan wali kelas.
 *   Orang tua memesan slot untuk anaknya sendiri dan bisa membatalkannya. Dua orang tua yang memesan bersamaan tidak bisa mendapat slot yang sama. Orang tua lain hanya melihat "Terisi".

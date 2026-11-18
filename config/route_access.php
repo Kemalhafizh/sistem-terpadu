@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Signed-in web routes that carry neither `role:` nor `can:` (FASE 118.4).
+ * Signed-in web routes that carry neither `role:` nor `can:`.
  * RouteAccess closes every such route to everyone but superadmin unless it
  * is listed here, and tests/Feature/Architecture/RouteGuardTest.php fails on
  * any such route that is not listed.
@@ -46,13 +46,13 @@ return [
         // Scoped by the model: Announcement::canBeSeenBy() answers 404 to anyone outside the audience.
         'GET announcements/{announcement}',
         'POST announcements/{announcement}/acknowledge',
-        // Anyone may report bullying (FASE 118.1); the list and details stay with counsellors and leadership.
+        // Anyone may report bullying; the list and details stay with counsellors and leadership.
         'GET crisis/bullying/report',
         'POST crisis/bullying/report',
     ],
 
-    // Routes that were already unguarded when FASE 118 arrived, outside the
-    // FASE 45-62 modules it fixed. They stay reachable (and in the menus) for
+    // Routes that were already unguarded outside the
+    // 62 modules it fixed. They stay reachable (and in the menus) for
     // now. Give a route its `role:`, then remove its line: the test rejects
     // entries that are guarded or gone, so this list only shrinks.
     'unguarded_debt' => [
@@ -146,10 +146,6 @@ return [
         'GET extracurriculars/schedule',
         'GET extracurriculars/{extracurricular}',
         'POST extracurriculars/{extracurricular}/register',
-        'GET facility/iot/dashboard',
-        'GET facility/maintenance/schedule',
-        'GET facility/transport/routes',
-        'GET facility/utility/dashboard',
         'GET growth/character/assess',
         'POST growth/character/assess',
         'GET growth/character/dimensions',

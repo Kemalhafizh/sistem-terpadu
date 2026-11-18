@@ -21,7 +21,7 @@ return new class extends Migration
         Schema::create('issued_certificates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('template_id')->constrained('certificate_templates');
+            $table->foreignId('template_id')->nullable()->constrained('certificate_templates')->nullOnDelete();
             $table->string('verification_code')->unique();
             $table->json('metadata')->nullable();
             $table->string('pdf_path')->nullable();

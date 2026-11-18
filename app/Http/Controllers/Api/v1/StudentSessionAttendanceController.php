@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * @group Sesi Kelas — Siswa (FASE 117)
+ * @group Sesi Kelas — Siswa
  *
  * Presensi mandiri per jam pelajaran dengan memindai QR dari layar guru.
  *

@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Monthly staff attendance per employee, for the HRD report and payroll
- * (FASE 119.6.1).
+ *.
  *
  * A working day is a day the school works (config hrd.work_days) that the
  * attendance data covers: someone scanned in or was recorded on leave. So a

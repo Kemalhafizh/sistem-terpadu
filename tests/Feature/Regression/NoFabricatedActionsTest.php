@@ -8,7 +8,7 @@ use App\Services\AlumniEnhancedService;
 /*
  * Entries of the made-up-value DEBT list: alumni in a city without
  * coordinates were pinned at a random spot around Semarang. (The rule engine
- * and the AI copilot that also made things up were removed in FASE 119.)
+ * and the AI copilot that also made things up were removed in .)
  */
 
 // ── Alumni map ──────────────────────────────────────────────────────────────

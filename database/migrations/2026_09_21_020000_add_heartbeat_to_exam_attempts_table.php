@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * FASE 72.2: CBT Live Proctoring — tracks whether the exam app is still
+     * CBT Live Proctoring — tracks whether the exam app is still
      * alive/foregrounded so the proctor dashboard can flag a student who
      * silently dropped connection (app killed, network loss) without
      * needing an explicit violation event.

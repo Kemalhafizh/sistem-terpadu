@@ -1,10 +1,10 @@
-# 💬 Modul WhatsApp Gateway & Chat Real-Time SISTA
+# Modul WhatsApp Gateway & Chat Real-Time SISTA
 
 Modul Komunikasi SISTA dirancang untuk menjembatani komunikasi interaktif, instan, dan real-time antara seluruh ekosistem sekolah: pihak sekolah (admin/guru), orang tua/wali siswa, dan siswa itu sendiri.
 
 ---
 
-## 📚 1. Komponen Utama & Database Schema
+## 1. Komponen Utama & Database Schema
 
 ### A. WhatsApp Notification Gateway
 *   **`WhatsappLog`**: Mencatat log riwayat pengiriman pesan WA, nomor tujuan, isi pesan, status pengiriman (`sent`, `failed`), dan response payload dari API gateway (Fonnte).
@@ -16,7 +16,7 @@ Modul Komunikasi SISTA dirancang untuk menjembatani komunikasi interaktif, insta
 
 ---
 
-## 🚀 2. Alur Pesan Real-Time & WhatsApp Gateway
+## 2. Alur Pesan Real-Time & WhatsApp Gateway
 
 Modul komunikasi mengombinasikan polling transaksional (WhatsApp) dengan penyaluran real-time interaktif (WebSocket):
 
@@ -44,7 +44,7 @@ graph TD
 
 ---
 
-## 📝 3. Pest Feature Test Scenarios
+## 3. Pest Feature Test Scenarios
 
 Sistem notifikasi multi-channel dan alur pesan divalidasi oleh Pest PHP:
 

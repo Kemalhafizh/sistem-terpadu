@@ -2,11 +2,11 @@
 
 use App\Models\AcademicYear;
 use App\Models\Achievement;
-use App\Models\BlockchainCredential;
 use App\Models\Classroom;
 use App\Models\Extracurricular;
 use App\Models\ExtracurricularMember;
 use App\Models\Grade;
+use App\Models\IssuedCertificate;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
@@ -266,16 +266,10 @@ test('siswa ditolak 403 saat mencoba memverifikasi prestasi mandiri', function (
 // ─────────────────────────────────────────────────────────────────────────────
 
 test('endpoint certificates mengembalikan daftar e-sertifikat digital siswa', function () {
-    BlockchainCredential::create([
+    IssuedCertificate::create([
         'student_id' => $this->studentUser->id,
-        'credential_type' => 'Sertifikat Kepanitiaan Fest 2026',
-        'certificate_number' => 'CERT/SA1/2026/089',
-        'recipient_name' => $this->studentUser->name,
-        'merkle_root' => '0xroot',
-        'transaction_hash' => '0x7f8a9b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a',
-        'contract_address' => '0xcontract',
-        'block_number' => 100,
-        'metadata_json' => [
+        'verification_code' => 'CERT/SA1/2026/089',
+        'metadata' => [
             'title' => 'Sertifikat Kepanitiaan Sultan Agung Fest 2026',
             'role' => 'Koordinator Divisi IT',
         ],

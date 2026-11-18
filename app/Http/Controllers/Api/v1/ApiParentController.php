@@ -149,7 +149,7 @@ class ApiParentController extends Controller
      * Get Child Per-Lesson Attendance
      *
      * Pelajaran anak pada `date` (bawaan hari ini) dan status presensi QR per mapel
-     * (FASE 117), dengan bentuk yang sama seperti `student/class-session/attendance`.
+     *, dengan bentuk yang sama seperti `student/class-session/attendance`.
      * Hanya untuk anak sendiri.
      *
      * @queryParam date string Tanggal (Y-m-d), tidak boleh di masa depan. Example: 2026-10-05

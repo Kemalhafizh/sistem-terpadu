@@ -80,7 +80,7 @@ class MobileConfigController extends Controller
                 'whatsapp' => School::whatsapp(),
                 'email' => School::email(),
             ],
-            // The school's location (map pin). FASE 119 removed GPS check-in, so
+            // The school's location (map pin). removed GPS check-in, so
             // nothing enforces the radius any more.
             'campus' => School::campus(),
             // The school's identity for the app's "Tentang" page, from the same

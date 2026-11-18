@@ -1,29 +1,69 @@
-# 🚀 Panduan Deployment Produksi SISTA
+# Panduan Deployment Produksi SISTA
 
-Dokumen ini memuat prosedur deployment **SISTA** di server produksi menggunakan arsitektur modern (VPS Ubuntu, Nginx, Systemd, dan Docker).
+Dokumen ini menjelaskan prosedur deployment **SISTA** pada server produksi (VPS Ubuntu/Debian) menggunakan Docker Compose maupun instalasi langsung Nginx + PHP-FPM + Systemd.
 
 ---
 
-## 🖥️ Pendekatan 1: Deployment VPS Klasik (Ubuntu 22.04 / 24.04 LTS)
+## 1. Deployment Menggunakan Docker Compose
 
-### 1. Instalasi Stack PHP 8.4 & Nginx
-Tambahkan repositori PHP Ondrej, lalu instal Nginx beserta ekstensi PHP yang diperlukan:
+Repositori menyediakan berkas `Dockerfile` (multi-stage build) dan `docker-compose.prod.yml` untuk menjalankan aplikasi di server produksi.
+
+### Langkah Deployment
+1. **Kloning repositori di server:**
+   ```bash
+   git clone https://github.com/Kemalhafizh/sistem-terpadu.git /var/www/sistem-terpadu
+   cd /var/www/sistem-terpadu
+   ```
+
+2. **Siapkan berkas `.env` produksi:**
+   ```bash
+   cp .env.example .env
+   ```
+   Pastikan variabel berikut diatur untuk lingkungan produksi:
+   ```env
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_URL=https://sista.sultanagung1.sch.id
+   ```
+
+3. **Bangun dan jalankan container:**
+   ```bash
+   docker compose -f docker-compose.prod.yml up -d --build
+   docker compose -f docker-compose.prod.yml exec app php artisan key:generate --force
+   docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
+   docker compose -f docker-compose.prod.yml exec app php artisan config:cache
+   docker compose -f docker-compose.prod.yml exec app php artisan route:cache
+   docker compose -f docker-compose.prod.yml exec app php artisan view:cache
+   ```
+
+---
+
+## 2. Deployment VPS Langsung (Ubuntu / Debian, Nginx, PHP 8.4, Systemd)
+
+### A. Instalasi Paket Server
 ```bash
 sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
-sudo apt install nginx php8.4-fpm php8.4-cli php8.4-sqlite3 php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-gd -y
+sudo apt install nginx php8.4-fpm php8.4-cli php8.4-sqlite3 php8.4-mysql php8.4-pgsql \
+  php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-gd unzip git -y
 ```
 
-### 2. Kloning Projek & Konfigurasi Direktori
-Kloning projek Anda ke `/var/www/sistem-terpadu`, sesuaikan kepemilikan folder ke user `www-data`:
+### B. Penyiapan Aplikasi
 ```bash
-sudo chown -R www-data:www-data /var/www/sistem-terpadu
-sudo chmod -R 775 /var/www/sistem-terpadu/storage
-sudo chmod -R 775 /var/www/sistem-terpadu/bootstrap/cache
+cd /var/www/sistem-terpadu
+composer install --no-dev --optimize-autoloader
+npm ci && npm run build
+cp .env.example .env
+php artisan key:generate --force
+php artisan migrate --force
+php artisan storage:link
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+sudo chown -R www-data:www-data /var/www/sistem-terpadu/storage /var/www/sistem-terpadu/bootstrap/cache
 ```
 
-### 3. Konfigurasi Nginx Server Block
-Buat file konfigurasi Nginx baru di `/etc/nginx/sites-available/sista`:
+### C. Konfigurasi Nginx (`/etc/nginx/sites-available/sista`)
 ```nginx
 server {
     listen 80;
@@ -34,7 +74,6 @@ server {
     add_header X-Content-Type-Options "nosniff";
 
     index index.php;
-
     charset utf-8;
 
     location / {
@@ -57,69 +96,45 @@ server {
     }
 }
 ```
-Aktifkan site dan restart Nginx:
-```bash
-sudo ln -s /etc/nginx/sites-available/sista /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
 
-### 4. Menjalankan Laravel Reverb sebagai Background Service (Systemd)
-Server WebSocket Reverb harus berjalan terus di latar belakang. Buat file systemd baru di `/etc/systemd/system/reverb.service`:
+### D. Layanan Latar Belakang (Queue Worker, Reverb, dan Scheduler)
+
+Buat unit systemd `/etc/systemd/system/sista-queue.service`:
 ```ini
 [Unit]
-Description=Laravel Reverb Daemon
+Description=SISTA Queue Worker
 After=network.target
 
 [Service]
 User=www-data
 Group=www-data
 Restart=always
+WorkingDirectory=/var/www/sistem-terpadu
+ExecStart=/usr/bin/php8.4 /var/www/sistem-terpadu/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Buat unit systemd `/etc/systemd/system/sista-reverb.service`:
+```ini
+[Unit]
+Description=SISTA Reverb WebSocket Server
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+WorkingDirectory=/var/www/sistem-terpadu
 ExecStart=/usr/bin/php8.4 /var/www/sistem-terpadu/artisan reverb:start --host=127.0.0.1 --port=8080
 
 [Install]
 WantedBy=multi-user.target
 ```
-Aktifkan dan jalankan service Reverb:
+
+Aktifkan kedua layanan dan tambahkan cron untuk scheduler Laravel (`* * * * * cd /var/www/sistem-terpadu && php artisan schedule:run >> /dev/null 2>&1`):
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable reverb.service
-sudo systemctl start reverb.service
-```
-
----
-
-## 🐳 Pendekatan 2: Deployment Berbasis Docker (Containerized)
-
-SISTA menyediakan konfigurasi Docker multi-stage produksi siap pakai:
-
-### 1. File: `Dockerfile`
-Dockerfile dioptimasi menggunakan multi-stage build:
-*   **Stage 1 (Node Builder):** Mengompilasi aset frontend menggunakan NPM.
-*   **Stage 2 (PHP-Apache):** Menyalin kode sumber, dependensi Composer, aset frontend yang dikompilasi, serta mengonfigurasi Apache server dengan `mod_rewrite`.
-
-### 2. File: `docker-compose.yml`
-Menjalankan container aplikasi web SISTA dan penampung data database:
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "8080:8080" # Untuk port websocket Reverb
-    volumes:
-      - ./database:/var/www/html/database
-      - ./storage:/var/www/html/storage
-    environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
-    restart: always
-```
-Jalankan container dengan perintah:
-```bash
-docker-compose up -d --build
+sudo systemctl enable --now sista-queue.service sista-reverb.service
 ```

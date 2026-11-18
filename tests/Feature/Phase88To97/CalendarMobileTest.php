@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
- * FASE 119: the school has one calendar. The app (GET academic-calendar) used
+ * the school has one calendar. The app (GET academic-calendar) used
  * to read a second "enterprise" calendar that nobody filled from the web, so
  * events entered on the web calendar never reached phones.
  */

@@ -27,7 +27,7 @@ class SyncController extends Controller
         $since = (int) $request->query('since', 0);
         $delta = $this->syncService->getDeltaChanges($since);
 
-        // FASE 74.2: Last-Modified reflects this delta's own real
+        // Last-Modified reflects this delta's own real
         // "as of" instant (sync_timestamp is Carbon::now() at compute
         // time — see OfflineSyncService::getDeltaChanges()), not a
         // fabricated value.

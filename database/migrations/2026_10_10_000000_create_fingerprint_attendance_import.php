@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /*
- * FASE 119.6.1: staff attendance comes from the fingerprint machine. Each
+ * staff attendance comes from the fingerprint machine. Each
  * employee carries the ID the machine knows them by; each upload is recorded
  * with what it did, including the machine IDs nobody is mapped to.
  */

@@ -12,19 +12,19 @@ class DifferentiatedPlanController extends Controller
     {
         $plans = DifferentiatedPlan::latest()->get();
 
-        return view('fase58.differentiation.planner', compact('plans'));
+        return view('inclusive.differentiation.planner', compact('plans'));
     }
 
     public function library()
     {
         $plans = DifferentiatedPlan::all();
 
-        return view('fase58.differentiation.library', compact('plans'));
+        return view('inclusive.differentiation.library', compact('plans'));
     }
 
     public function create()
     {
-        return view('fase58.differentiation.planner');
+        return view('inclusive.differentiation.planner');
     }
 
     public function store(Request $request)
@@ -43,12 +43,12 @@ class DifferentiatedPlanController extends Controller
 
     public function show(DifferentiatedPlan $plan)
     {
-        return view('fase58.differentiation.tier-mapping', compact('plan'));
+        return view('inclusive.differentiation.tier-mapping', compact('plan'));
     }
 
     public function edit(DifferentiatedPlan $plan)
     {
-        return view('fase58.differentiation.planner', compact('plan'));
+        return view('inclusive.differentiation.planner', compact('plan'));
     }
 
     public function update(Request $request, DifferentiatedPlan $plan)

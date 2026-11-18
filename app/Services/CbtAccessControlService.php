@@ -46,7 +46,7 @@ class CbtAccessControlService
      */
     public function canViewToken(User $user, Exam $exam): bool
     {
-        // Only superadmin bypasses the rule; admin does not (CLAUDE.md, rule 3).
+        // Only superadmin bypasses the rule; admin does not.
         if ($user->role === 'superadmin') {
             return true;
         }

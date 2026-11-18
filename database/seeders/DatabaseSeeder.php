@@ -75,7 +75,6 @@ class DatabaseSeeder extends Seeder
                 StudentGrowthSeeder::class,
                 HumanCapitalSeeder::class,
                 StudentExperienceSeeder::class,
-                FacilityOperationsSeeder::class,
             ]);
         });
     }

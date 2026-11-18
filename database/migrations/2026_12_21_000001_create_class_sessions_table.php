@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * FASE 117.1 — Sesi Kelas Hidup (Live Class Session).
+ * Sesi Kelas Hidup (Live Class Session).
  *
  * One row per (schedule, date): a teacher "starts" a scheduled lesson, the
  * students scan a rotating QR, and the session is ended by the teacher or

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * FASE 117 / Android FASE 77 `ClassSessionResponse` (snake_case, Gson @SerializedName).
+ * / Android FASE 77 `ClassSessionResponse` (snake_case, Gson @SerializedName).
  *
  * Expects the session loaded through ClassSessionService::withListData()
  * (subject/classroom/teacher + total_students/present_count/absent_count).

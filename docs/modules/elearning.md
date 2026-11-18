@@ -1,10 +1,10 @@
-# 🖥️ Modul E-Learning & Secure CBT SISTA
+# Modul E-Learning & Secure CBT SISTA
 
 Modul E-Learning dan Computer-Based Test (CBT) SISTA dirancang untuk memfasilitasi kegiatan belajar-mengajar digital yang efisien, terstruktur, serta pelaksanaan ujian online dengan integritas tinggi yang dilindungi oleh berbagai sistem keamanan pencegahan kecurangan (*cheat prevention*).
 
 ---
 
-## 📚 1. Komponen Utama & Database Schema
+## 1. Komponen Utama & Database Schema
 
 ### A. E-Learning Classroom & Materials
 *   **`ElearningClass`**: Menghubungkan kelas fisik (`Classroom`) dengan guru pengampu, mata pelajaran (`Subject`), dan topik belajar.
@@ -19,7 +19,7 @@ Modul E-Learning dan Computer-Based Test (CBT) SISTA dirancang untuk memfasilita
 
 ---
 
-## 🔒 2. Sistem Proteksi CBT (Anti-Cheat Security Framework)
+## 2. Sistem Proteksi CBT (Anti-Cheat Security Framework)
 
 Untuk menjamin kejujuran ujian online, sistem CBT SISTA mengintegrasikan lapis pengawasan sisi klien (*client-side*) menggunakan Alpine.js dan deteksi perilaku mencurigakan:
 
@@ -53,7 +53,7 @@ sequenceDiagram
 
 ---
 
-## 📝 3. Pest Feature Test Scenarios
+## 3. Pest Feature Test Scenarios
 
 Kestabilan dan kepatuhan sistem keamanan CBT dipastikan oleh suite pengujian otomatis pada [CbtSecurityTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Cbt/CbtSecurityTest.php):
 

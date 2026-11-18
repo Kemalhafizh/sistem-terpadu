@@ -7,7 +7,7 @@ beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'student', 'must_change_password' => false]);
 });
 
-test('Fase 99: Contextual home feed, suggestions and dismissal work correctly', function () {
+test('Contextual home feed, suggestions and dismissal work correctly', function () {
     // 1. Contextual Home Payload
     $homeResp = $this->actingAs($this->user)->getJson('/api/v1/home/contextual');
     $homeResp->assertStatus(200)
@@ -34,7 +34,7 @@ test('Fase 99: Contextual home feed, suggestions and dismissal work correctly', 
         ->assertJson(['success' => true]);
 });
 
-test('Fase 100: Micro-interactions and animation preferences work correctly', function () {
+test('Micro-interactions and animation preferences work correctly', function () {
     // 1. Get animation config
     $animResp = $this->actingAs($this->user)->getJson('/api/v1/config/animations');
     $animResp->assertStatus(200)
@@ -50,7 +50,7 @@ test('Fase 100: Micro-interactions and animation preferences work correctly', fu
         ->assertJson(['success' => true]);
 });
 
-test('Fase 102: Smart notification preferences and digest work correctly', function () {
+test('Smart notification preferences and digest work correctly', function () {
     // 1. Get preferences
     $prefResp = $this->actingAs($this->user)->getJson('/api/v1/notifications/preferences');
     $prefResp->assertStatus(200)
@@ -72,7 +72,7 @@ test('Fase 102: Smart notification preferences and digest work correctly', funct
         ->assertJsonStructure(['success', 'data' => ['has_digest', 'count', 'summary', 'items']]);
 });
 
-test('Fase 104: Advanced data visualization endpoints return complete metrics', function () {
+test('Advanced data visualization endpoints return complete metrics', function () {
     // 1. Heatmap attendance
     $heatmapResp = $this->actingAs($this->user)->getJson('/api/v1/viz/heatmap/attendance');
     $heatmapResp->assertStatus(200)
@@ -104,7 +104,7 @@ test('Fase 104: Advanced data visualization endpoints return complete metrics', 
         ->assertJsonStructure(['success', 'data' => ['active_students_online', 'attendance_today_percentage', 'active_cbt_exams', 'unpaid_billings_count']]);
 });
 
-test('Fase 105: Offline-first sync delta, batch processing and version check work', function () {
+test('Offline-first sync delta, batch processing and version check work', function () {
     // 1. Delta
     $deltaResp = $this->actingAs($this->user)->getJson('/api/v1/sync/delta?since=1700000000');
     $deltaResp->assertStatus(200)
@@ -136,7 +136,7 @@ test('Fase 105: Offline-first sync delta, batch processing and version check wor
         ->assertJsonStructure(['success', 'data' => ['schema_version', 'min_supported_mobile_version']]);
 });
 
-test('Fase 106: Parent portal activity feed, weekly digest, benchmarks and actions work', function () {
+test('Parent portal activity feed, weekly digest, benchmarks and actions work', function () {
     // A student sees only their own profile; an account without one gets nothing
     // (it used to fall back to students.id = 1).
     $own = Student::factory()->create(['user_id' => $this->user->id])->id;
@@ -162,7 +162,7 @@ test('Fase 106: Parent portal activity feed, weekly digest, benchmarks and actio
         ->assertJsonStructure(['success', 'data']);
 });
 
-test('Fase 107: Progressive Web App manifest, service worker and subscribe work', function () {
+test('Progressive Web App manifest, service worker and subscribe work', function () {
     // 1. Manifest
     $manifestResp = $this->get('/manifest.json');
     $manifestResp->assertStatus(200);

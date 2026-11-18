@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * FASE 117.2 — Presensi per sesi kelas (per jam pelajaran).
+ * Presensi per sesi kelas (per jam pelajaran).
  *
  * Separate from the daily `attendances` table, which keeps working as-is.
  */

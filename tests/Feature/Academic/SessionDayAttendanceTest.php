@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /*
- * FASE 78.2 (Android) — presensi QR per mapel satu hari untuk siswa dan
+ * (Android) — presensi QR per mapel satu hari untuk siswa dan
  * orang tua, sumber widget presensi. Fixture: Senin 2026-10-05, jam 1–2 =
  * 07:00–08:30, scan setelah 07:15 tercatat telat.
  */

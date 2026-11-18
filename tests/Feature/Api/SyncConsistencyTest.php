@@ -119,7 +119,7 @@ class SyncConsistencyTest extends TestCase
     }
 
     /**
-     * FASE 74.2: sync/delta must carry real cache-validation headers so a
+     * sync/delta must carry real cache-validation headers so a
      * client (or a Proxyman-style interception rule) can verify freshness
      * without re-downloading the full payload every poll.
      */
@@ -145,7 +145,7 @@ class SyncConsistencyTest extends TestCase
     }
 
     /**
-     * FASE 74.2: sync/catch-up must also carry an ETag (no Last-Modified —
+     * sync/catch-up must also carry an ETag (no Last-Modified —
      * the underlying event stream has no single "as of" instant).
      */
     public function test_sync_catch_up_menyertakan_etag()
@@ -158,14 +158,14 @@ class SyncConsistencyTest extends TestCase
     }
 
     /**
-     * FASE 74.2: a validation failure (422) must still come back as the
+     * a validation failure (422) must still come back as the
      * standard { success, message, data } envelope Android's ApiEnvelope
      * expects — never a bare Laravel validation-error shape that would
      * deserialize with success/data missing and crash the client.
      */
     public function test_payload_error_422_tetap_dalam_bentuk_envelope_standar()
     {
-        // Scanning the class-session QR is a student feature (FASE 117).
+        // Scanning the class-session QR is a student feature.
         $student = User::factory()->create(['role' => 'student']);
         $response = $this->actingAs($student)
             ->postJson('/api/v1/student/class-session/scan-qr', []);

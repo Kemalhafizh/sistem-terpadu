@@ -13,7 +13,7 @@ class CrisisManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // FASE 118: crisis management is for leadership; the bullying form for everyone.
+        // crisis management is for leadership; the bullying form for everyone.
         $this->user = User::factory()->create(['role' => 'kepala_sekolah']);
     }
 
@@ -24,7 +24,7 @@ class CrisisManagementTest extends TestCase
         $response->assertSee('Laporan');
     }
 
-    /** FASE 118: anyone signed in may report bullying, but not read the reports. */
+    /** anyone signed in may report bullying, but not read the reports. */
     public function test_students_and_parents_report_bullying_but_cannot_read_reports()
     {
         foreach (['siswa', 'orang_tua'] as $role) {

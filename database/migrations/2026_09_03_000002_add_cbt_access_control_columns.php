@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * FASE 87: Token-Gated Mobile-Only CBT Access Control
+     * Token-Gated Mobile-Only CBT Access Control
      *
      * Adds token-based exam entry, mobile-only enforcement,
      * and force-close tracking columns.

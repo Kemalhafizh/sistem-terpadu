@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FacilityAsset extends Model
 {
@@ -25,9 +24,4 @@ class FacilityAsset extends Model
     protected $casts = [
         'purchase_date' => 'date',
     ];
-
-    public function maintenanceLogs(): HasMany
-    {
-        return $this->hasMany(MaintenanceLog::class, 'asset_id');
-    }
 }
