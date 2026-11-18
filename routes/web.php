@@ -239,11 +239,15 @@ Route::middleware('auth')->group(function () {
     // Resource booking (rooms and equipment). removed the second
     // "enterprise" calendar that used to live here: the school has one
     // calendar, `calendar` (AcademicEvent), which the app reads too.
-    Route::get('resource-bookings', [ResourceBookingController::class, 'index'])->name('resource_bookings.index');
-    Route::post('resource-bookings', [ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
-    Route::post('resource-bookings/{id}/approve', [ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');
-    Route::post('resource-bookings/{id}/reject', [ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
-    Route::get('resource-bookings/check', [ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin', 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+        Route::get('resource-bookings', [ResourceBookingController::class, 'index'])->name('resource_bookings.index');
+        Route::post('resource-bookings', [ResourceBookingController::class, 'createBooking'])->name('resource_bookings.store');
+        Route::get('resource-bookings/check', [ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
+    });
+    Route::middleware('role:admin,superadmin,waka_sarpras,staf_tu')->group(function () {
+        Route::post('resource-bookings/{id}/approve', [ResourceBookingController::class, 'approveBooking'])->name('resource_bookings.approve');
+        Route::post('resource-bookings/{id}/reject', [ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
+    });
 
     // RKAS / RAPBS: TU drafts, the principal approves. These
     // routes carried no role, so any account could approve the budget.
@@ -403,7 +407,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // Bilik Suara E-Voting (Siswa & Staff)
-        Route::middleware(['role:waka_kesiswaan,admin,superadmin,student'])->group(function () {
+        Route::middleware(['role:waka_kesiswaan,admin,superadmin,student,siswa'])->group(function () {
             Route::get('elections/{election}/voting', [OsisController::class, 'votingPage'])->name('elections.voting');
             Route::post('elections/{election}/vote', [OsisController::class, 'castVote'])->name('elections.vote');
             Route::get('elections/{election}/results', [OsisController::class, 'electionResults'])->name('elections.results');
@@ -481,9 +485,22 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
+    // E-RAPOR & LEDGER NILAI
+    // =========================================================
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))->group(function () {
+        Route::get('report-cards', [ReportCardController::class, 'index'])->name('report-cards.index');
+        Route::post('report-cards/sync', [ReportCardController::class, 'sync'])->name('report-cards.sync');
+        Route::post('report-cards/notes', [ReportCardController::class, 'storeNotes'])->name('report-cards.store-notes');
+    });
+
+    Route::get('report-cards/{student}/pdf', [ReportCardController::class, 'printPdf'])
+        ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))
+        ->name('report-cards.pdf');
+
+    // =========================================================
     // GURU â€” Fitur Akademik Pengajar
     // =========================================================
-    Route::middleware('role:guru,bk,admin,superadmin')->group(function () {
+    Route::middleware('role:guru,teacher,bk,admin,superadmin')->group(function () {
         // Absensi
         Route::get('attendances', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('attendances/create', [AttendanceController::class, 'create'])->name('attendances.create');
@@ -493,12 +510,6 @@ Route::middleware('auth')->group(function () {
         Route::get('grades', [GradeController::class, 'index'])->name('grades.index');
         Route::get('grades/create', [GradeController::class, 'create'])->name('grades.create');
         Route::post('grades', [GradeController::class, 'store'])->name('grades.store');
-
-        // E-Rapor (Wali Kelas)
-        Route::get('report-cards', [ReportCardController::class, 'index'])->name('report-cards.index');
-        Route::post('report-cards/sync', [ReportCardController::class, 'sync'])->name('report-cards.sync');
-        Route::post('report-cards/notes', [ReportCardController::class, 'storeNotes'])->name('report-cards.store-notes');
-        Route::get('report-cards/{student}/pdf', [ReportCardController::class, 'printPdf'])->name('report-cards.pdf');
 
         // Tahfidz (store â€” guru input setoran)
         Route::post('tahfidz', [TahfidzController::class, 'store'])->name('tahfidz.store');
@@ -994,7 +1005,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('elearning/material/{material}/comment/{comment}', [ElearningController::class, 'deleteComment'])->name('elearning.comment.destroy');
 
     // Student Actions
-    Route::middleware('role:student')->group(function () {
+    Route::middleware('role:student,siswa')->group(function () {
         Route::get('elearning/assignment/{elearningAssignment}', [ElearningController::class, 'showAssignment'])->name('elearning.assignment.show');
         Route::get('elearning/assignment/{elearningAssignment}/secure', [ElearningSecureController::class, 'secureView'])->name('elearning.assignment.secure');
         Route::post('elearning/assignment/{elearningAssignment}/submit', [ElearningController::class, 'submitAssignment'])->name('elearning.assignment.submit');
@@ -1002,7 +1013,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Teacher & Admin Actions
-    Route::middleware('role:guru,staf_tu,admin,superadmin')->group(function () {
+    Route::middleware('role:guru,teacher,staf_tu,admin,superadmin')->group(function () {
         Route::post('elearning', [ElearningController::class, 'storeClass'])->name('elearning.store');
         Route::post('elearning/class/{elearningClass}/material', [ElearningController::class, 'storeMaterial'])->name('elearning.material.store');
         Route::post('elearning/class/{elearningClass}/assignment', [ElearningController::class, 'storeAssignment'])->name('elearning.assignment.store');
@@ -1090,24 +1101,42 @@ Route::middleware('auth')->group(function () {
     // ðŸ“ UJIAN ONLINE / CBT (COMPUTER-BASED TEST)
     // =========================================================
     Route::prefix('cbt')->name('cbt.')->group(function () {
-        // Bank Soal â€” Guru & Admin
-        Route::resource('question-banks', QuestionBankController::class);
+        // Bank Soal — Guru, Waka Kurikulum, Staf TU & Admin
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', 'staf_tu', 'admin'))->group(function () {
+            Route::resource('question-banks', QuestionBankController::class);
+        });
 
-        // Exam CRUD â€” Guru & Admin
-        Route::resource('exams', ExamController::class);
+        // Exam Authoring & Editing (register `create` before `exams/{exam}`)
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', 'admin'))->group(function () {
+            Route::get('exams/create', [ExamController::class, 'create'])->name('exams.create');
+            Route::post('exams', [ExamController::class, 'store'])->name('exams.store');
+            Route::get('exams/{exam}/edit', [ExamController::class, 'edit'])->name('exams.edit');
+            Route::match(['put', 'patch'], 'exams/{exam}', [ExamController::class, 'update'])->name('exams.update');
+            Route::delete('exams/{exam}', [ExamController::class, 'destroy'])->name('exams.destroy');
+        });
 
-        // Exam Taking â€” Siswa
-        Route::get('exams/{exam}/take', [ExamController::class, 'take'])->name('exams.take');
-        Route::post('exams/{exam}/start', [ExamController::class, 'start'])->name('exams.start');
-        Route::post('exams/{exam}/save-answers', [ExamController::class, 'saveAnswers'])->name('exams.save-answers');
-        Route::post('exams/{exam}/log-violation', [ExamController::class, 'logViolation'])->name('exams.log-violation');
-        Route::post('exams/{exam}/submit', [ExamController::class, 'submit'])->name('exams.submit');
+        // Exam Listing & Results — Guru, Siswa, Waka Kurikulum, Kepala Sekolah & Admin
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STUDENT_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->group(function () {
+            Route::get('exams', [ExamController::class, 'index'])->name('exams.index');
+            Route::get('exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
+            Route::get('exams/{exam}/results', [ExamController::class, 'results'])->name('exams.results');
+        });
 
-        // Proctor Monitor & Results â€” Guru & Admin
-        Route::get('exams/{exam}/monitor', [ExamController::class, 'monitor'])->name('exams.monitor');
-        Route::get('exams/{exam}/results', [ExamController::class, 'results'])->name('exams.results');
-        Route::get('exams/{exam}/analysis', [ExamController::class, 'itemAnalysis'])->name('exams.analysis');
-        Route::get('exams/{exam}/analysis/pdf', [ExamController::class, 'exportAnalysisPdf'])->name('exams.analysis.pdf');
+        // Proctor Monitor & Item Analysis — Guru, Waka Kurikulum, Kepala Sekolah & Admin
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->group(function () {
+            Route::get('exams/{exam}/monitor', [ExamController::class, 'monitor'])->name('exams.monitor');
+            Route::get('exams/{exam}/analysis', [ExamController::class, 'itemAnalysis'])->name('exams.analysis');
+            Route::get('exams/{exam}/analysis/pdf', [ExamController::class, 'exportAnalysisPdf'])->name('exams.analysis.pdf');
+        });
+
+        // Exam Taking — Siswa
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
+            Route::get('exams/{exam}/take', [ExamController::class, 'take'])->name('exams.take');
+            Route::post('exams/{exam}/start', [ExamController::class, 'start'])->name('exams.start');
+            Route::post('exams/{exam}/save-answers', [ExamController::class, 'saveAnswers'])->name('exams.save-answers');
+            Route::post('exams/{exam}/log-violation', [ExamController::class, 'logViolation'])->name('exams.log-violation');
+            Route::post('exams/{exam}/submit', [ExamController::class, 'submit'])->name('exams.submit');
+        });
     });
 
     // =========================================================

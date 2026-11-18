@@ -45,16 +45,13 @@ class SessionFingerprintMiddleware
     }
 
     /**
-     * Generate SHA-256 fingerprint hash of IP Subnet (/24) + User-Agent.
+     * Generate SHA-256 fingerprint hash of User-Agent.
+     * Avoids binding to /24 IP subnet because mobile 4G/LTE & roaming WiFi users shift subnets frequently.
      */
     private function generateFingerprint(Request $request): string
     {
-        $ip = $request->ip();
-        // Extract IP Subnet (e.g. 192.168.1.x) to allow minor DHCP lease changes while stopping hijackers
-        $ipParts = explode('.', $ip);
-        $subnet = count($ipParts) === 4 ? "{$ipParts[0]}.{$ipParts[1]}.{$ipParts[2]}" : $ip;
         $userAgent = $request->userAgent() ?? 'unknown_device';
 
-        return hash('sha256', "{$subnet}:{$userAgent}");
+        return hash('sha256', "ua:{$userAgent}");
     }
 }

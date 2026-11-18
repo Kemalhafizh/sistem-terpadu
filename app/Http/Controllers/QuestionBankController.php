@@ -2,18 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\QuestionBank;
 use App\Models\Subject;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class QuestionBankController extends Controller
 {
+    private function authorizeBankManager(?QuestionBank $questionBank = null): void
+    {
+        $user = auth()->user();
+        $allowedRoles = [...StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', 'staf_tu', 'admin', 'superadmin'];
+
+        if (! $user || ! RoleMiddleware::allowsUser($user, $allowedRoles)) {
+            abort(403, 'Anda tidak memiliki akses ke Bank Soal.');
+        }
+
+        if ($questionBank && ! RoleMiddleware::allowsUser($user, ['waka_kurikulum', 'admin', 'superadmin']) && $questionBank->created_by !== $user->id) {
+            abort(403, 'Anda hanya dapat mengelola butir soal yang Anda buat sendiri.');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        $this->authorizeBankManager();
+
         $subjects = Subject::all();
 
         $query = QuestionBank::with(['subject', 'creator']);
@@ -38,6 +56,8 @@ class QuestionBankController extends Controller
      */
     public function create()
     {
+        $this->authorizeBankManager();
+
         $subjects = Subject::all();
 
         return view('cbt.question-bank.create', compact('subjects'));
@@ -48,6 +68,8 @@ class QuestionBankController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorizeBankManager();
+
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
             'question_text' => 'required|string',
@@ -96,6 +118,8 @@ class QuestionBankController extends Controller
      */
     public function show(QuestionBank $questionBank)
     {
+        $this->authorizeBankManager();
+
         $questionBank->load(['subject', 'creator']);
 
         return view('cbt.question-bank.show', compact('questionBank'));
@@ -106,10 +130,7 @@ class QuestionBankController extends Controller
      */
     public function edit(QuestionBank $questionBank)
     {
-        $user = auth()->user();
-        if (in_array($user->role, ['guru', 'staf_tu']) && $questionBank->created_by !== $user->id) {
-            abort(403, 'Anda hanya dapat mengedit butir soal yang Anda buat sendiri.');
-        }
+        $this->authorizeBankManager($questionBank);
 
         $subjects = Subject::all();
 
@@ -121,10 +142,7 @@ class QuestionBankController extends Controller
      */
     public function update(Request $request, QuestionBank $questionBank)
     {
-        $user = auth()->user();
-        if (in_array($user->role, ['guru', 'staf_tu']) && $questionBank->created_by !== $user->id) {
-            abort(403, 'Anda tidak memiliki hak akses untuk mengubah butir soal ini.');
-        }
+        $this->authorizeBankManager($questionBank);
 
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
@@ -176,10 +194,7 @@ class QuestionBankController extends Controller
      */
     public function destroy(QuestionBank $questionBank)
     {
-        $user = auth()->user();
-        if (in_array($user->role, ['guru', 'staf_tu']) && $questionBank->created_by !== $user->id) {
-            abort(403, 'Anda hanya dapat menghapus butir soal yang Anda buat sendiri.');
-        }
+        $this->authorizeBankManager($questionBank);
 
         if ($questionBank->question_image) {
             Storage::disk('public')->delete($questionBank->question_image);

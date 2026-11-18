@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\WhatsappBroadcast;
 use App\Services\WhatsappAutomationService;
 use App\Services\WhatsappService;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -35,24 +37,39 @@ class SendWhatsappBroadcastJob implements ShouldQueue
 
         // 1. Gather recipients
         $recipients = collect();
+        $activeScope = fn ($q) => $q->whereNull('account_status')->orWhere('account_status', '!=', 'nonaktif');
 
         switch ($broadcast->target_type) {
             case 'all_parents':
-                $recipients = User::where('role', 'parent')->whereNotNull('phone_number')->get();
+                $recipients = User::whereIn('role', StudentDataAccess::PARENT_ROLES)
+                    ->where($activeScope)
+                    ->whereNotNull('phone_number')
+                    ->get();
                 break;
             case 'all_teachers':
-                $recipients = User::whereIn('role', ['guru', 'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah'])
+                $recipients = User::whereIn('role', [
+                    ...StudentDataAccess::TEACHER_ROLES,
+                    'wali_kelas',
+                    'bk',
+                    ...Roles::LEADERSHIP,
+                ])
+                    ->where($activeScope)
                     ->whereNotNull('phone_number')
                     ->get();
                 break;
             case 'specific_class':
                 $classroomIds = (array) $broadcast->target_ids;
                 $students = Student::whereIn('classroom_id', $classroomIds)->with('parent')->get();
-                $recipients = $students->map(fn ($s) => $s->parent)->filter()->unique('id');
+                $recipients = $students->map(fn ($s) => $s->parent)
+                    ->filter(fn ($u) => $u && ($u->account_status ?? 'aktif') !== 'nonaktif' && ! empty($u->phone_number))
+                    ->unique('id');
                 break;
             case 'custom':
                 $userIds = (array) $broadcast->target_ids;
-                $recipients = User::whereIn('id', $userIds)->whereNotNull('phone_number')->get();
+                $recipients = User::whereIn('id', $userIds)
+                    ->where($activeScope)
+                    ->whereNotNull('phone_number')
+                    ->get();
                 break;
         }
 
@@ -78,7 +95,7 @@ class SendWhatsappBroadcastJob implements ShouldQueue
         foreach ($recipients as $recipient) {
             // Determine placeholders context
             $context = [];
-            if ($recipient->role === 'parent') {
+            if ($recipient->isParent()) {
                 // Find first child
                 $student = Student::where('parent_id', $recipient->id)->with('classroom')->first();
                 $context = [

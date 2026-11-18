@@ -96,7 +96,7 @@ class ElearningMobileApiController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
             'type' => 'nullable|in:pdf,video,link,document',
-            'file' => 'nullable|file|max:20480',
+            'file' => 'nullable|file|max:20480|mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,txt,jpg,jpeg,png,webp,zip',
         ]);
 
         $filePath = null;

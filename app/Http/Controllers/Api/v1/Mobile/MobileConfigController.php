@@ -27,7 +27,7 @@ class MobileConfigController extends Controller
 
         if (! $config) {
             $config = MobileAppConfig::create([
-                'app_name' => 'SISTA '.school_short_name(),
+                'app_name' => 'Hanyakra '.school_short_name(),
                 'min_android_build' => 100,
                 'latest_android_build' => 105,
                 'min_ios_build' => 100,
@@ -35,11 +35,11 @@ class MobileConfigController extends Controller
                 'force_update' => false,
                 'maintenance_mode' => false,
                 'maintenance_message' => 'Sistem sedang dalam peningkatan performa rutin.',
-                'play_store_url' => 'https://play.google.com/store/apps/details?id=sch.id.sultanagung1.sista',
+                'play_store_url' => 'https://play.google.com/store/apps/details?id=com.sultanagung1.sista',
                 'app_store_url' => 'https://apps.apple.com/app/sista-sultan-agung-1/id6400000000',
                 'active_features' => [
                     'academic_grades' => true,
-                    'spp_payment_gateway' => true,
+                    'spp_payment_gateway' => false,
                     'tahfidz_quran' => true,
                     'cbt_exam_mode' => true,
                     'biometric_login' => true,

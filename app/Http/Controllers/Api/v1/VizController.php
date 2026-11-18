@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Services\DataVisualizationService;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
@@ -46,13 +48,20 @@ class VizController extends Controller
             abort(401, 'Unauthenticated');
         }
 
-        // 1. Staff / Teacher / Counselor / Admin have full pedagogical monitoring access
-        if (in_array($user->role, ['admin', 'superadmin', 'guru', 'teacher', 'bk', 'kepala_sekolah', 'kepsek'], true)) {
+        $roles = $user->effectiveRoles();
+
+        // 1. Staff / Teacher / Counselor / Leadership have full pedagogical monitoring access
+        if (array_intersect($roles, [
+            'admin', 'superadmin', 'bk', 'wali_kelas',
+            'waka_kurikulum', 'waka_kesiswaan',
+            ...StudentDataAccess::TEACHER_ROLES,
+            ...Roles::PRINCIPAL,
+        ]) !== []) {
             return;
         }
 
         // 2. Parent: must be parent of this student
-        if (in_array($user->role, ['parent', 'orangtua'], true)) {
+        if (array_intersect($roles, StudentDataAccess::PARENT_ROLES) !== []) {
             $isChild = Student::where('parent_id', $user->id)->where('id', $studentId)->exists();
             if (! $isChild) {
                 abort(403, 'Akses ditolak. Anda bukan orang tua yang berwenang untuk siswa ini.');
@@ -62,10 +71,9 @@ class VizController extends Controller
         }
 
         // 3. Student: can only inspect their own metrics
-        if (in_array($user->role, ['student', 'siswa'], true)) {
+        if (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== []) {
             $ownStudent = $user->student;
-            $ownId = $ownStudent ? (int) $ownStudent->id : 1;
-            if ((int) $studentId !== $ownId) {
+            if (! $ownStudent || (int) $studentId !== (int) $ownStudent->id) {
                 abort(403, 'Akses ditolak. Siswa dilarang melihat visualisasi radar/trend siswa lain.');
             }
 

@@ -13,8 +13,14 @@ class ElearningMobileService
 {
     public function getStudentClasses(int $studentId)
     {
+        $student = Student::where('user_id', $studentId)->first();
+        if (! $student || ! $student->classroom_id) {
+            return collect();
+        }
+
         return ElearningClass::with(['subject', 'classroom', 'teacher'])
             ->withCount(['materials', 'assignments'])
+            ->where('classroom_id', $student->classroom_id)
             ->where('is_archived', false)
             ->get();
     }
@@ -43,10 +49,13 @@ class ElearningMobileService
             ->get();
 
         if ($studentId) {
-            $assignments->map(function ($assignment) use ($studentId) {
-                $sub = ElearningSubmission::where('elearning_assignment_id', $assignment->id)
-                    ->where('student_id', $studentId)
-                    ->first();
+            $studentRecordId = Student::where('user_id', $studentId)->value('id');
+            $assignments->map(function ($assignment) use ($studentRecordId) {
+                $sub = $studentRecordId
+                    ? ElearningSubmission::where('elearning_assignment_id', $assignment->id)
+                        ->where('student_id', $studentRecordId)
+                        ->first()
+                    : null;
                 $assignment->student_submission = $sub;
                 $assignment->is_submitted = $sub !== null;
 
@@ -59,18 +68,18 @@ class ElearningMobileService
 
     public function submitAssignment(int $assignmentId, int $studentId, ?string $content, ?UploadedFile $file): ElearningSubmission
     {
+        $student = Student::where('user_id', $studentId)->first();
+        abort_unless($student !== null, 403, 'Profil siswa tidak ditemukan.');
+
         $filePath = null;
         if ($file) {
             $filePath = $file->store('uploads/elearning/submissions', 'public');
         }
 
-        $student = Student::where('user_id', $studentId)->first();
-        $targetStudentId = $student ? $student->id : $studentId;
-
         return ElearningSubmission::updateOrCreate(
             [
                 'elearning_assignment_id' => $assignmentId,
-                'student_id' => $targetStudentId,
+                'student_id' => $student->id,
             ],
             [
                 'content' => $content,

@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\Models\Exam;
 use App\Models\User;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 
 class ExamPolicy
 {
@@ -12,7 +14,14 @@ class ExamPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['guru', 'siswa', 'student', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']);
+        return array_intersect($user->effectiveRoles(), [
+            ...StudentDataAccess::TEACHER_ROLES,
+            ...StudentDataAccess::STUDENT_ROLES,
+            ...Roles::PRINCIPAL,
+            'waka_kurikulum',
+            'admin',
+            'superadmin',
+        ]) !== [];
     }
 
     /**
@@ -20,15 +29,17 @@ class ExamPolicy
      */
     public function view(User $user, Exam $exam): bool
     {
-        if (in_array($user->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin'])) {
+        $roles = $user->effectiveRoles();
+
+        if (array_intersect($roles, [...Roles::PRINCIPAL, 'waka_kurikulum', 'admin', 'superadmin']) !== []) {
             return true;
         }
 
-        if ($user->role === 'guru') {
+        if (array_intersect($roles, StudentDataAccess::TEACHER_ROLES) !== []) {
             return $exam->created_by === $user->id;
         }
 
-        if (in_array($user->role, ['siswa', 'student'])) {
+        if (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== []) {
             // Null classroom means open to all, or classroom matches student classroom
             return is_null($exam->classroom_id) || $exam->classroom_id === $user->student?->classroom_id;
         }
@@ -41,7 +52,12 @@ class ExamPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['guru', 'waka_kurikulum', 'admin', 'superadmin']);
+        return array_intersect($user->effectiveRoles(), [
+            ...StudentDataAccess::TEACHER_ROLES,
+            'waka_kurikulum',
+            'admin',
+            'superadmin',
+        ]) !== [];
     }
 
     /**
@@ -49,11 +65,14 @@ class ExamPolicy
      */
     public function update(User $user, Exam $exam): bool
     {
-        if (in_array($user->role, ['waka_kurikulum', 'admin', 'superadmin'])) {
+        $roles = $user->effectiveRoles();
+
+        if (array_intersect($roles, ['waka_kurikulum', 'admin', 'superadmin']) !== []) {
             return true;
         }
 
-        return $user->role === 'guru' && $exam->created_by === $user->id;
+        return array_intersect($roles, StudentDataAccess::TEACHER_ROLES) !== []
+            && $exam->created_by === $user->id;
     }
 
     /**
@@ -61,11 +80,14 @@ class ExamPolicy
      */
     public function delete(User $user, Exam $exam): bool
     {
-        if (in_array($user->role, ['waka_kurikulum', 'admin', 'superadmin'])) {
+        $roles = $user->effectiveRoles();
+
+        if (array_intersect($roles, ['waka_kurikulum', 'admin', 'superadmin']) !== []) {
             return true;
         }
 
-        return $user->role === 'guru' && $exam->created_by === $user->id;
+        return array_intersect($roles, StudentDataAccess::TEACHER_ROLES) !== []
+            && $exam->created_by === $user->id;
     }
 
     /**
@@ -73,11 +95,14 @@ class ExamPolicy
      */
     public function monitor(User $user, Exam $exam): bool
     {
-        if (in_array($user->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin'])) {
+        $roles = $user->effectiveRoles();
+
+        if (array_intersect($roles, [...Roles::PRINCIPAL, 'waka_kurikulum', 'admin', 'superadmin']) !== []) {
             return true;
         }
 
-        return $user->role === 'guru' && $exam->created_by === $user->id;
+        return array_intersect($roles, StudentDataAccess::TEACHER_ROLES) !== []
+            && $exam->created_by === $user->id;
     }
 
     /**
@@ -85,7 +110,7 @@ class ExamPolicy
      */
     public function take(User $user, Exam $exam): bool
     {
-        if (! in_array($user->role, ['siswa', 'student'])) {
+        if (array_intersect($user->effectiveRoles(), StudentDataAccess::STUDENT_ROLES) === []) {
             return false;
         }
 

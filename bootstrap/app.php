@@ -3,6 +3,7 @@
 use App\Http\Middleware\AdminIpWhitelistMiddleware;
 use App\Http\Middleware\CheckTwoFactor;
 use App\Http\Middleware\CorrelationIdMiddleware;
+use App\Http\Middleware\EnsureActiveAccount;
 use App\Http\Middleware\EnsureElevatedSessionMiddleware;
 use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\HoneypotTrapMiddleware;
@@ -40,6 +41,18 @@ return Application::configure(basePath: dirname(__DIR__))
         ['middleware' => ['auth:sanctum']],
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $trustedProxies = app()->bound('config')
+            ? config('app.trusted_proxies')
+            : null;
+        if (is_string($trustedProxies) && trim($trustedProxies) !== '') {
+            $proxyValue = trim($trustedProxies) === '*'
+                ? '*'
+                : array_values(array_filter(array_map('trim', explode(',', $trustedProxies))));
+            if ($proxyValue !== []) {
+                $middleware->trustProxies(at: $proxyValue);
+            }
+        }
+
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'mfa' => VerifyMfa::class,
@@ -53,6 +66,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(SecurityHeaders::class);
 
         $middleware->appendToGroup('web', [
+            EnsureActiveAccount::class,
             EnsurePasswordChanged::class,
             RestrictImpersonation::class,
             CheckTwoFactor::class,
@@ -65,6 +79,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->appendToGroup('api', [
+            EnsureActiveAccount::class,
             // Messages in the language the user picked (see SetLocale).
             SetLocale::class,
             IdempotencyMiddleware::class,

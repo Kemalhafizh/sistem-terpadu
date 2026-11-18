@@ -34,9 +34,11 @@ class PublicSiteController extends Controller
 
         // Calculate real-time stats
         $studentCount = Student::where('status', 'active')->count();
-        $teacherStaffCount = User::whereIn('role', [
-            'guru', 'staf_tu', 'admin', 'superadmin', 'bk',
-            'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah',
+        $teacherStaffCount = User::where(function ($q) {
+            $q->whereNull('account_status')->orWhere('account_status', '!=', 'nonaktif');
+        })->whereIn('role', [
+            'guru', 'teacher', 'staf_tu', 'admin', 'superadmin', 'bk', 'wali_kelas',
+            'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah', 'kepsek',
         ])->count();
         $classroomCount = Classroom::count();
 
@@ -210,7 +212,9 @@ class PublicSiteController extends Controller
     public function staffDirectory()
     {
         $navPages = CmsPage::published()->inNavbar()->get();
-        $staff = User::whereIn('role', ['guru', 'staf_tu', 'bk', 'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah'])
+        $staff = User::where(function ($q) {
+            $q->whereNull('account_status')->orWhere('account_status', '!=', 'nonaktif');
+        })->whereIn('role', ['guru', 'teacher', 'staf_tu', 'bk', 'wali_kelas', 'waka_kesiswaan', 'waka_kurikulum', 'waka_sarpras', 'waka_humas', 'kepala_sekolah', 'kepsek'])
             ->orderBy('name')
             ->get();
 

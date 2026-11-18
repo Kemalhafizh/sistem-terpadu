@@ -21,49 +21,52 @@ class MobileSsoBridgeController extends Controller
     public function autoLogin(Request $request)
     {
         $token = $request->query('token');
-        $email = $request->query('email');
-        $role = $request->query('role');
-        $redirectUrl = $request->query('redirect', '/dashboard');
+        $redirectUrl = (string) $request->query('redirect', '/dashboard');
 
         $user = null;
 
         // 1. Check Sanctum Personal Access Token if provided
-        if ($token) {
+        if (is_string($token) && $token !== '') {
             $accessToken = PersonalAccessToken::findToken($token);
             if ($accessToken && $accessToken->tokenable instanceof User) {
-                $user = $accessToken->tokenable;
+                if (! $accessToken->expires_at || $accessToken->expires_at->isFuture()) {
+                    $user = $accessToken->tokenable;
+                }
             }
         }
 
-        // 2. Fallback lookup by email if token is a demo / offline bridge
-        if (! $user && $email) {
-            $user = User::where('email', $email)->first();
+        // 2. Demo / offline email/role fallback is strictly limited to local dev.
+        if (! $user && app()->environment('local')) {
+            $email = $request->query('email');
+            $role = $request->query('role');
+
+            if (is_string($email) && $email !== '') {
+                $user = User::where('email', $email)->first();
+            }
+
+            if (! $user && is_string($role) && $role !== '') {
+                $user = User::where('role', $role)->first();
+            }
+
+            if (! $user) {
+                $user = User::where('role', 'student')->first() ?? User::first();
+            }
         }
 
-        // 3. Fallback lookup by role if still not found
-        if (! $user && $role) {
-            $user = User::where('role', $role)->first();
-        }
-
-        // 4. Default fallback to first active student or admin
-        if (! $user) {
-            $user = User::where('role', 'student')->first() ?? User::first();
-        }
-
-        if ($user) {
-            // Login to the 'web' session guard
-            Auth::guard('web')->login($user, remember: true);
+        if ($user && ($user->account_status ?? 'aktif') !== 'nonaktif') {
+            Auth::guard('web')->login($user, remember: false);
             $request->session()->regenerate();
 
-            // Clean redirect URL (prevent open redirect vulnerabilities)
-            $cleanRedirect = filter_var($redirectUrl, FILTER_SANITIZE_URL);
-            if (! str_starts_with($cleanRedirect, '/') && ! str_starts_with($cleanRedirect, config('app.url'))) {
-                $cleanRedirect = '/'.ltrim($cleanRedirect, '/');
-            }
+            // Clean relative path only to prevent open redirects (e.g. //evil.com).
+            $cleanRedirect = str_starts_with($redirectUrl, '/') && ! str_starts_with($redirectUrl, '//')
+                ? $redirectUrl
+                : '/dashboard';
 
             return redirect($cleanRedirect);
         }
 
-        return redirect()->route('login');
+        return redirect()->route('login')->withErrors([
+            'email' => 'Sesi SSO tidak valid atau akun tidak aktif.',
+        ]);
     }
 }

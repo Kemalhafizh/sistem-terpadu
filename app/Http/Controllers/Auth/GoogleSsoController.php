@@ -56,6 +56,12 @@ class GoogleSsoController extends Controller
             ]);
         }
 
+        if (($user->account_status ?? 'aktif') === 'nonaktif') {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.',
+            ]);
+        }
+
         // 3. Update google_id & google_token
         $user->update([
             'google_id' => $googleUser->getId(),

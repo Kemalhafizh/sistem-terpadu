@@ -33,10 +33,6 @@ class User extends Authenticatable
         'deactivated_reason',
         'must_change_password',
         'two_factor_code',
-        'two_factor_expires_at',
-        'totp_secret',
-        'totp_enabled_at',
-        'totp_recovery_codes',
         'google_id',
         'google_token',
         'dashboard_layout',
@@ -47,7 +43,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_code',
+        'two_factor_expires_at',
         'totp_secret',
+        'totp_recovery_codes',
+        'google_token',
     ];
 
     /**
@@ -169,6 +169,10 @@ class User extends Authenticatable
      */
     public function effectiveRoles(?CarbonInterface $onDate = null): array
     {
+        if (($this->account_status ?? 'aktif') === 'nonaktif') {
+            return [];
+        }
+
         $roles = [];
 
         if (! empty($this->role)) {
@@ -205,6 +209,19 @@ class User extends Authenticatable
                     foreach ($catalog[$perm->permission]['implies_roles'] ?? [] as $impliedRole) {
                         $roles[$impliedRole] = true;
                     }
+                }
+            }
+        }
+
+        foreach ([
+            StudentDataAccess::STUDENT_ROLES,
+            StudentDataAccess::PARENT_ROLES,
+            StudentDataAccess::TEACHER_ROLES,
+            Roles::PRINCIPAL,
+        ] as $synonymGroup) {
+            if (array_intersect(array_keys($roles), $synonymGroup) !== []) {
+                foreach ($synonymGroup as $synonym) {
+                    $roles[$synonym] = true;
                 }
             }
         }
@@ -283,7 +300,7 @@ class User extends Authenticatable
     public function isParent(): bool
     {
         return $this->resolvedAccountType() === 'orang_tua'
-            || in_array($this->role, ['parent', 'orang_tua'], true);
+            || array_intersect($this->effectiveRoles(), StudentDataAccess::PARENT_ROLES) !== [];
     }
 
     /**
@@ -344,11 +361,13 @@ class User extends Authenticatable
      */
     public function dashboardRole(): string
     {
+        $roles = $this->effectiveRoles();
+
         return match (true) {
-            in_array($this->role, StudentDataAccess::STUDENT_ROLES, true) => 'student',
-            in_array($this->role, StudentDataAccess::PARENT_ROLES, true) => 'parent',
-            in_array($this->role, [...StudentDataAccess::TEACHER_ROLES, 'bk', 'wali_kelas'], true) => 'teacher',
-            in_array($this->role, ['admin', 'superadmin', 'staf_tu', ...Roles::LEADERSHIP], true) => 'leadership',
+            array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== [] => 'student',
+            array_intersect($roles, StudentDataAccess::PARENT_ROLES) !== [] => 'parent',
+            array_intersect($roles, [...StudentDataAccess::TEACHER_ROLES, 'bk', 'wali_kelas']) !== [] => 'teacher',
+            array_intersect($roles, ['admin', 'superadmin', 'staf_tu', ...Roles::LEADERSHIP]) !== [] => 'leadership',
             default => 'general',
         };
     }

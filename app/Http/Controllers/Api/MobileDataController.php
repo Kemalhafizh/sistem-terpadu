@@ -13,6 +13,8 @@ use App\Http\Resources\StudentResource;
 use App\Http\Resources\TahfidzLogResource;
 use App\Models\Announcement;
 use App\Models\Student;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 
@@ -38,10 +40,11 @@ class MobileDataController extends Controller
     public function getStudents(Request $request)
     {
         $user = $request->user();
+        $roles = $user->effectiveRoles();
 
-        if ($user->role === 'parent') {
+        if (array_intersect($roles, StudentDataAccess::PARENT_ROLES) !== []) {
             $students = $user->children;
-        } elseif ($user->role === 'student') {
+        } elseif (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== []) {
             $students = Student::where('user_id', $user->id)->get();
         } else {
             return $this->errorResponse('Unauthorized access', 403);
@@ -169,18 +172,30 @@ class MobileDataController extends Controller
      */
     private function getStudentByUuid($user, $uuid)
     {
+        if (! $user) {
+            return null;
+        }
+
         $student = Student::where('uuid', $uuid)->first();
         if (! $student) {
             return null;
         }
 
-        if ($user->role === 'parent' && $student->parent_id !== $user->id) {
-            return null;
-        }
-        if ($user->role === 'student' && $student->user_id !== $user->id) {
-            return null;
+        $roles = $user->effectiveRoles();
+
+        if ($user->role === 'superadmin'
+            || array_intersect($roles, [...StudentDataAccess::STAFF_ROLES, ...Roles::LEADERSHIP]) !== []) {
+            return $student;
         }
 
-        return $student;
+        if (array_intersect($roles, StudentDataAccess::PARENT_ROLES) !== [] && $student->parent_id === $user->id) {
+            return $student;
+        }
+
+        if (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== [] && $student->user_id === $user->id) {
+            return $student;
+        }
+
+        return null;
     }
 }

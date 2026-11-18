@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReportCard extends Model
@@ -21,7 +22,8 @@ class ReportCard extends Model
         'recorded_by',
     ];
 
-    public function student()
+    /** @return BelongsTo<Student, $this> */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }
@@ -31,7 +33,8 @@ class ReportCard extends Model
         return $this->belongsTo(AcademicYear::class);
     }
 
-    public function classroom()
+    /** @return BelongsTo<Classroom, $this> */
+    public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
     }

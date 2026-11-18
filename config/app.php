@@ -81,6 +81,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Trusted Reverse Proxies
+    |--------------------------------------------------------------------------
+    |
+    | Comma-separated proxy IPs/CIDRs (or "*" behind a managed proxy). Used so
+    | $request->ip() reflects real client IPs instead of the local proxy address.
+    |
+    */
+
+    'trusted_proxies' => env('TRUSTED_PROXIES', '127.0.0.1,::1'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |

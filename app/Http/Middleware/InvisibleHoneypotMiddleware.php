@@ -30,14 +30,14 @@ class InvisibleHoneypotMiddleware
                 $incidentId = 'SEC-SA1-BOT-'.date('Ymd').'-'.strtoupper(Str::random(6));
                 $banKey = 'banned_ip_'.md5($clientIp);
 
-                // Auto ban bot IP for 30 days
+                // Auto ban bot IP briefly (15 minutes) to prevent shared-NAT false positives
                 Cache::put($banKey, [
                     'ip' => $clientIp,
                     'incident_id' => $incidentId,
                     'triggered_pattern' => 'Invisible Form Honeypot Field Filled',
                     'user_agent' => $request->userAgent(),
                     'banned_at' => now()->toDateTimeString(),
-                ], now()->addDays(30));
+                ], now()->addMinutes(15));
 
                 Log::channel('siem')->warning('AUTOMATED BOT TRAPPED: Invisible Form Field Filled', [
                     'incident_id' => $incidentId,
@@ -45,10 +45,6 @@ class InvisibleHoneypotMiddleware
                     'user_agent' => $request->userAgent(),
                     'form_url' => $request->fullUrl(),
                 ]);
-
-                if (! app()->environment('testing')) {
-                    sleep(2);
-                }
 
                 if ($request->expectsJson()) {
                     return response()->json([
