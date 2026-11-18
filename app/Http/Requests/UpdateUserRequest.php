@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,6 +13,17 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        $actor = $this->user();
+        $target = User::find($this->route('user'));
+
+        if ($target?->role === 'superadmin' && $actor?->role !== 'superadmin') {
+            return false;
+        }
+
+        if ($this->input('role') === 'superadmin' && $actor?->role !== 'superadmin') {
+            return false;
+        }
+
         return true;
     }
 

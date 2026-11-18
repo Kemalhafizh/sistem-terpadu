@@ -50,6 +50,15 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::user();
+        if ($user && ($user->account_status ?? 'aktif') === 'nonaktif') {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

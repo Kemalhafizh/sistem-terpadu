@@ -54,14 +54,14 @@ class HoneypotTrapMiddleware
             if (preg_match('#'.$pattern.'#i', $path)) {
                 $incidentId = 'SEC-SA1-'.date('Ymd').'-'.strtoupper(Str::random(6));
 
-                // Lock down IP in cache for 30 days
+                // Lock down IP in cache briefly (15 minutes) to prevent NAT/school-WiFi collateral lockout
                 Cache::put($banKey, [
                     'ip' => $clientIp,
                     'incident_id' => $incidentId,
                     'triggered_pattern' => $pattern,
                     'user_agent' => $request->userAgent(),
                     'banned_at' => now()->toDateTimeString(),
-                ], now()->addDays(30));
+                ], now()->addMinutes(15));
 
                 // Log threat incident to security SIEM log
                 Log::channel('siem')->warning('CYBER THREAT TRAPPED: Honeypot Triggered', [
@@ -71,11 +71,6 @@ class HoneypotTrapMiddleware
                     'pattern' => $pattern,
                     'user_agent' => $request->userAgent(),
                 ]);
-
-                // Tarpit delay to frustrate automated scanners (unless in testing environment)
-                if (! app()->environment('testing')) {
-                    sleep(2);
-                }
 
                 return $this->renderInterceptNotice($request, $clientIp, $incidentId, 'Canary Trap Triggered: Attempted access to decoy route.');
             }

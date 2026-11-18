@@ -55,6 +55,10 @@ class AuthController extends Controller
             return $this->errorResponse('Kredensial tidak valid', 401);
         }
 
+        if (($user->account_status ?? 'aktif') === 'nonaktif') {
+            return $this->errorResponse('Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.', 403);
+        }
+
         // --- SANCTUM TOKEN ROTATION ---
         // Bersihkan token lama dengan nama perangkat yang sama sebelum membuat token baru
         $user->tokens()->where('name', $request->device_name)->delete();

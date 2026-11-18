@@ -12,6 +12,10 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->input('role') === 'superadmin') {
+            return $this->user()?->role === 'superadmin';
+        }
+
         return true;
     }
 

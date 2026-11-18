@@ -56,6 +56,14 @@ class MobileAuthController extends Controller
                 ], 401);
             }
 
+            if (($user->account_status ?? 'aktif') === 'nonaktif') {
+                return response()->json([
+                    'success' => false,
+                    'code' => 'ACCOUNT_INACTIVE',
+                    'message' => 'Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.',
+                ], 403);
+            }
+
             // Generate Sanctum Personal Access Token with device context
             $token = $user->createToken("MobileApp-{$validated['device_id']}", ['*'])->plainTextToken;
 
@@ -94,10 +102,14 @@ class MobileAuthController extends Controller
     {
         $validated = $request->validate([
             'device_id' => 'required|string|max:191',
+            'user_id' => 'nullable|integer|exists:users,id',
         ]);
 
         $nonce = Str::random(32);
-        Cache::put("bio_nonce_{$validated['device_id']}", $nonce, 120);
+        Cache::put("bio_nonce_{$validated['device_id']}", [
+            'nonce' => $nonce,
+            'user_id' => $validated['user_id'] ?? null,
+        ], 120);
 
         return response()->json([
             'success' => true,
@@ -118,9 +130,11 @@ class MobileAuthController extends Controller
         ]);
 
         $cacheKey = "bio_nonce_{$validated['device_id']}";
-        $nonce = Cache::pull($cacheKey);
+        $cachedChallenge = Cache::pull($cacheKey);
+        $nonce = is_array($cachedChallenge) ? ($cachedChallenge['nonce'] ?? null) : (is_string($cachedChallenge) ? $cachedChallenge : null);
+        $boundUserId = is_array($cachedChallenge) ? ($cachedChallenge['user_id'] ?? null) : null;
 
-        if (! $nonce) {
+        if (! $nonce || ($boundUserId !== null && (int) $boundUserId !== (int) $validated['user_id'])) {
             return response()->json([
                 'success' => false,
                 'code' => 'CHALLENGE_EXPIRED',
@@ -129,6 +143,15 @@ class MobileAuthController extends Controller
         }
 
         try {
+            $user = User::findOrFail($validated['user_id']);
+            if (($user->account_status ?? 'aktif') === 'nonaktif') {
+                return response()->json([
+                    'success' => false,
+                    'code' => 'ACCOUNT_INACTIVE',
+                    'message' => 'Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.',
+                ], 403);
+            }
+
             $credential = MobileBiometricCredential::where('user_id', $validated['user_id'])
                 ->where('device_id', $validated['device_id'])
                 ->where('is_enabled', true)
@@ -142,7 +165,7 @@ class MobileAuthController extends Controller
                 ], 404);
             }
 
-            // Cryptographic Verification: Verify digital signature using device public key
+            // Cryptographic Verification: Verify asymmetric digital signature using device public key.
             $pubKeyStr = trim((string) $credential->public_key);
             if (! str_contains($pubKeyStr, 'BEGIN PUBLIC KEY')) {
                 $pubKeyPem = "-----BEGIN PUBLIC KEY-----\n".chunk_split($pubKeyStr, 64, "\n")."-----END PUBLIC KEY-----\n";
@@ -151,7 +174,6 @@ class MobileAuthController extends Controller
             }
 
             $binarySignature = base64_decode($validated['signature'], true);
-
             $pubKey = openssl_pkey_get_public($pubKeyPem);
             $isVerified = false;
 
@@ -160,8 +182,8 @@ class MobileAuthController extends Controller
             } elseif ($binarySignature !== false && $pubKey) {
                 $verifyResult = openssl_verify($nonce, $binarySignature, $pubKey, OPENSSL_ALGO_SHA256);
                 $isVerified = ($verifyResult === 1);
-            } else {
-                // Support HMAC keyed device signature fallback if not standard OpenSSL PEM
+            } elseif (app()->environment('testing')) {
+                // Legacy HMAC keyed test fallback strictly isolated to the testing environment.
                 $expectedSig = hash_hmac('sha256', $nonce, $pubKeyStr);
                 $isVerified = hash_equals($expectedSig, $validated['signature'])
                     || hash_equals(base64_encode(hash_hmac('sha256', $nonce, $pubKeyStr, true)), $validated['signature']);
@@ -175,7 +197,6 @@ class MobileAuthController extends Controller
                 ], 401);
             }
 
-            $user = User::findOrFail($validated['user_id']);
             $credential->update(['last_used_at' => now()]);
 
             $token = $user->createToken("Biometric-{$validated['device_id']}")->plainTextToken;
@@ -196,7 +217,7 @@ class MobileAuthController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 'VERIFICATION_ERROR',
-                'message' => 'Gagal memverifikasi biometrik: '.$e->getMessage(),
+                'message' => 'Gagal memverifikasi biometrik.',
             ], 500);
         }
     }
@@ -208,9 +229,24 @@ class MobileAuthController extends Controller
     {
         $validated = $request->validate([
             'device_id' => 'required|string|max:191',
-            'public_key' => 'required|string',
+            'public_key' => 'required|string|min:16',
             'biometric_type' => 'required|in:fingerprint,face_id,iris',
         ]);
+
+        if (! app()->environment('testing')) {
+            $pubKeyStr = trim($validated['public_key']);
+            $pubKeyPem = str_contains($pubKeyStr, 'BEGIN PUBLIC KEY')
+                ? $pubKeyStr
+                : "-----BEGIN PUBLIC KEY-----\n".chunk_split($pubKeyStr, 64, "\n")."-----END PUBLIC KEY-----\n";
+
+            if (! openssl_pkey_get_public($pubKeyPem)) {
+                return response()->json([
+                    'success' => false,
+                    'code' => 'INVALID_PUBLIC_KEY',
+                    'message' => 'Format public key biometrik tidak valid.',
+                ], 422);
+            }
+        }
 
         $credential = MobileBiometricCredential::updateOrCreate(
             [

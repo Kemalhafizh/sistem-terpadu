@@ -75,6 +75,10 @@ class ApiAuthController extends Controller
             return $this->errorResponse(__('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.'), 401);
         }
 
+        if (($user->account_status ?? 'aktif') === 'nonaktif') {
+            return $this->errorResponse(__('Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.'), 403);
+        }
+
         // --- TOKEN ROTATION ---
         // Bersihkan token lama dengan nama perangkat yang sama sebelum membuat token baru
         $user->tokens()->where('name', $deviceName)->delete();

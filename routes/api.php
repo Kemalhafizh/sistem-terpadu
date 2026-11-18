@@ -176,7 +176,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // === NEW GURU & BK SCOPED ===
-        Route::prefix('teacher')->middleware('role:guru,bk')->group(function () {
+        Route::prefix('teacher')->middleware('role:guru,teacher,bk')->group(function () {
             Route::get('schedule', [ApiTeacherController::class, 'schedule']);
             Route::get('classes', [ApiTeacherController::class, 'classes']);
             Route::get('classes/{id}/students', [ApiTeacherController::class, 'classStudents']);
@@ -292,7 +292,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 Route::get('appointments/my', [CounselingMobileApiController::class, 'studentAppointments']);
             });
 
-            Route::middleware('role:admin,superadmin,bk,guru,kepala_sekolah')->group(function () {
+            Route::middleware('role:admin,superadmin,bk,guru,teacher,kepala_sekolah')->group(function () {
                 Route::get('dashboard', [CounselingMobileApiController::class, 'dashboard']);
                 Route::post('sessions', [CounselingMobileApiController::class, 'storeSession']);
                 Route::get('at-risk', [CounselingMobileApiController::class, 'atRiskStudents']);
@@ -325,11 +325,11 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
         // === REKAM MEDIS UKS & SKRINING KESEHATAN ===
         Route::prefix('uks')->group(function () {
-            Route::get('visits/my', [SchoolOperationsApiController::class, 'uksVisits'])->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,petugas_uks,staf_tu,guru,bk,wali_kelas,kepala_sekolah,waka_kesiswaan,admin');
-            Route::post('visits', [SchoolOperationsApiController::class, 'recordUksVisit'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru');
-            Route::get('screening/{studentId?}', [SchoolOperationsApiController::class, 'healthScreening'])->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,petugas_uks,staf_tu,guru,bk,wali_kelas,kepala_sekolah,waka_kesiswaan,admin');
-            Route::get('students/search', [SchoolOperationsApiController::class, 'searchUksStudents'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru');
-            Route::get('medicines', [SchoolOperationsApiController::class, 'uksMedicines'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru');
+            Route::get('visits/my', [SchoolOperationsApiController::class, 'uksVisits'])->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,petugas_uks,staf_tu,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kesiswaan,admin');
+            Route::post('visits', [SchoolOperationsApiController::class, 'recordUksVisit'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru,teacher');
+            Route::get('screening/{studentId?}', [SchoolOperationsApiController::class, 'healthScreening'])->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,petugas_uks,staf_tu,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kesiswaan,admin');
+            Route::get('students/search', [SchoolOperationsApiController::class, 'searchUksStudents'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru,teacher');
+            Route::get('medicines', [SchoolOperationsApiController::class, 'uksMedicines'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru,teacher');
         });
 
         // =====================================================================

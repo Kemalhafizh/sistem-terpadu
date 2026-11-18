@@ -35,7 +35,7 @@ test('nama sekolah tidak ditulis langsung di app atau view', function () {
 });
 
 test('API dan halaman memakai nama sekolah dari pengaturan', function () {
-    $this->getJson('/api/v1/mobile/config')->assertOk()->assertJsonFragment(['app_name' => 'SISTA SMA Contoh Nusantara']);
+    $this->getJson('/api/v1/mobile/config')->assertOk()->assertJsonFragment(['app_name' => 'Hanyakra SMA Contoh Nusantara']);
 
     Sanctum::actingAs(User::factory()->create(['role' => 'student']));
     $this->getJson('/api/v1/gateway/student/me')->assertOk()->assertJsonPath('data.school', 'SMA Contoh Nusantara Kota Baru');

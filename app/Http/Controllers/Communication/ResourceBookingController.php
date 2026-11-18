@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Communication;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\BookableResource;
 use App\Models\ResourceBooking;
 use App\Services\Communication\ResourceBookingService;
@@ -51,11 +52,16 @@ class ResourceBookingController extends Controller
     }
 
     /**
-     * Approve booking reservation (Admin/Superadmin).
+     * Approve booking reservation (Admin/Superadmin/Waka Sarpras/Staf TU).
      */
     public function approveBooking(int $id, ResourceBookingService $bookingService)
     {
-        $approvedBy = auth()->id();
+        $user = auth()->user();
+        if (! $user || ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_sarpras', 'staf_tu'])) {
+            abort(403, 'Anda tidak memiliki wewenang untuk menyetujui reservasi aset.');
+        }
+
+        $approvedBy = $user->id;
 
         try {
             $booking = $bookingService->approveBooking($id, $approvedBy);
@@ -67,11 +73,16 @@ class ResourceBookingController extends Controller
     }
 
     /**
-     * Reject booking reservation (Admin/Superadmin).
+     * Reject booking reservation (Admin/Superadmin/Waka Sarpras/Staf TU).
      */
     public function rejectBooking(int $id, ResourceBookingService $bookingService)
     {
-        $approvedBy = auth()->id();
+        $user = auth()->user();
+        if (! $user || ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_sarpras', 'staf_tu'])) {
+            abort(403, 'Anda tidak memiliki wewenang untuk menolak reservasi aset.');
+        }
+
+        $approvedBy = $user->id;
 
         try {
             $booking = $bookingService->rejectBooking($id, $approvedBy);

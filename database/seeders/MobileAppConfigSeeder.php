@@ -12,7 +12,7 @@ class MobileAppConfigSeeder extends Seeder
         MobileAppConfig::updateOrCreate(
             ['id' => 1],
             [
-                'app_name' => 'SISTA SMA Islam Sultan Agung 1',
+                'app_name' => 'Hanyakra '.school_short_name(),
                 'min_android_build' => 100,
                 'latest_android_build' => 105,
                 'min_ios_build' => 100,
@@ -25,7 +25,7 @@ class MobileAppConfigSeeder extends Seeder
                 'active_features' => [
                     'academic_grades' => true,
                     'attendance_gps' => true,
-                    'spp_payment_gateway' => true,
+                    'spp_payment_gateway' => false,
                     'tahfidz_quran' => true,
                     'cbt_exam_mode' => true,
                     'biometric_login' => true,

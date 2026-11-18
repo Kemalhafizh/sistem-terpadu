@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\StudentCheatedEvent;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Exam;
@@ -11,6 +12,8 @@ use App\Models\QuestionBank;
 use App\Models\Subject;
 use App\Services\CbtService;
 use App\Services\ItemAnalysisService;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -29,13 +32,18 @@ class ExamController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Exam::class);
+
         $user = auth()->user();
+        $roles = $user->effectiveRoles();
+        $isExamManager = RoleMiddleware::allowsUser($user, ['waka_kurikulum', ...Roles::PRINCIPAL, 'admin', 'superadmin']);
+        $isTeacherOnly = array_intersect($roles, StudentDataAccess::TEACHER_ROLES) !== [] && ! $isExamManager;
         $query = Exam::with(['subject', 'classroom', 'creator']);
 
         // Filter by role
-        if ($user->role === 'guru') {
+        if ($isTeacherOnly) {
             $query->where('created_by', $user->id);
-        } elseif ($user->role === 'siswa') {
+        } elseif (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== [] && ! $isExamManager) {
             $student = $user->student;
             if ($student) {
                 $query->where(function ($q) use ($student) {
@@ -65,8 +73,18 @@ class ExamController extends Controller
 
         // Metrics
         $metricsQuery = Exam::query();
-        if ($user->role === 'guru') {
+        if ($isTeacherOnly) {
             $metricsQuery->where('created_by', $user->id);
+        } elseif (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== [] && ! $isExamManager) {
+            $student = $user->student;
+            if ($student) {
+                $metricsQuery->where(function ($q) use ($student) {
+                    $q->whereNull('classroom_id')
+                        ->orWhere('classroom_id', $student->classroom_id);
+                })->where('status', 'published');
+            } else {
+                $metricsQuery->whereRaw('1 = 0');
+            }
         }
 
         $now = now();
@@ -315,6 +333,8 @@ class ExamController extends Controller
      */
     public function saveAnswers(Request $request, Exam $exam)
     {
+        Gate::authorize('take', $exam);
+
         $user = auth()->user();
         $student = $user->student;
 
@@ -342,6 +362,8 @@ class ExamController extends Controller
      */
     public function logViolation(Request $request, Exam $exam)
     {
+        Gate::authorize('take', $exam);
+
         $user = auth()->user();
         $student = $user->student;
 
@@ -396,6 +418,8 @@ class ExamController extends Controller
      */
     public function submit(Request $request, Exam $exam)
     {
+        Gate::authorize('take', $exam);
+
         $user = auth()->user();
         $student = $user->student;
 
@@ -475,15 +499,24 @@ class ExamController extends Controller
      */
     public function results(Exam $exam)
     {
+        Gate::authorize('view', $exam);
+
         $user = auth()->user();
         $exam->load(['subject', 'classroom', 'questions']);
 
         $attemptsQuery = ExamAttempt::with(['student.user'])
             ->where('exam_id', $exam->id);
 
+        $isStudentOnly = array_intersect($user->effectiveRoles(), StudentDataAccess::STUDENT_ROLES) !== []
+            && ! RoleMiddleware::allowsUser($user, [...Roles::PRINCIPAL, 'waka_kurikulum', 'admin', 'superadmin']);
+
         // Students can only see their own results
-        if ($user->role === 'siswa' && $user->student) {
-            $attemptsQuery->where('student_id', $user->student->id);
+        if ($isStudentOnly) {
+            if ($user->student) {
+                $attemptsQuery->where('student_id', $user->student->id);
+            } else {
+                $attemptsQuery->whereRaw('1 = 0');
+            }
         }
 
         $allAttempts = $attemptsQuery->get();

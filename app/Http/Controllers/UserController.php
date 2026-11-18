@@ -65,6 +65,10 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
+        if ($user->role === 'superadmin' && auth()->user()?->role !== 'superadmin') {
+            abort(403, 'Hanya Superadmin yang dapat mengelola akun Superadmin.');
+        }
+
         $subjects = Subject::all()->groupBy('category');
         $userSubjects = $user->subjects->pluck('id')->toArray();
 
@@ -98,6 +102,15 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+
+        if ($user->id === auth()->id()) {
+            abort(403, 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        if ($user->role === 'superadmin' && auth()->user()?->role !== 'superadmin') {
+            abort(403, 'Hanya Superadmin yang dapat menghapus akun Superadmin.');
+        }
+
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus');

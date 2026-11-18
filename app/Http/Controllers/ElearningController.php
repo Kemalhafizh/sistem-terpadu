@@ -11,7 +11,10 @@ use App\Models\ElearningMaterialComment;
 use App\Models\ElearningSubmission;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\User;
 use App\Services\ElearningService;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -22,6 +25,11 @@ class ElearningController extends Controller
     public function __construct(ElearningService $elearningService)
     {
         $this->elearningService = $elearningService;
+    }
+
+    private function userHasAnyRole(User $user, array $roles): bool
+    {
+        return array_intersect($user->effectiveRoles(), $roles) !== [];
     }
 
     /**
@@ -45,7 +53,7 @@ class ElearningController extends Controller
 
         $showArchived = $request->boolean('show_archived', false);
 
-        if ($user->role === 'student' && $user->student) {
+        if ($this->userHasAnyRole($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
             // Student: load classes for their classroom (students do not see archived classes unless specified)
             $classesQuery = ElearningClass::where('classroom_id', $user->student->classroom_id)
                 ->with(['subject', 'teacher', 'materials', 'assignments']);
@@ -55,9 +63,9 @@ class ElearningController extends Controller
             } else {
                 $classes = $classesQuery->where('is_archived', false)->get();
             }
-        } elseif (in_array($user->role, ['guru', 'staf_tu', 'admin', 'superadmin', 'kepala_sekolah'])) {
+        } elseif ($this->userHasAnyRole($user, [...StudentDataAccess::TEACHER_ROLES, 'staf_tu', 'admin', 'superadmin', ...Roles::PRINCIPAL])) {
             // Teacher / Admin: load classes they teach or all classes
-            if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+            if ($this->userHasAnyRole($user, ['admin', 'superadmin', ...Roles::PRINCIPAL])) {
                 $classesQuery = ElearningClass::with(['subject', 'classroom', 'teacher', 'materials', 'assignments']);
             } else {
                 $classesQuery = ElearningClass::where('teacher_id', $user->id)
@@ -112,17 +120,17 @@ class ElearningController extends Controller
 
         // Security check
         $isAuthorized = false;
-        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+        if ($this->userHasAnyRole($user, ['admin', 'superadmin', ...Roles::PRINCIPAL])) {
             $isAuthorized = true;
-        } elseif ($user->role === 'student' && $user->student) {
+        } elseif ($this->userHasAnyRole($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
             if ($user->student->classroom_id === $elearningClass->classroom_id) {
                 $isAuthorized = true;
             }
-        } elseif ($user->role === 'parent') {
+        } elseif ($this->userHasAnyRole($user, StudentDataAccess::PARENT_ROLES)) {
             $isAuthorized = Student::where('parent_id', $user->id)
                 ->where('classroom_id', $elearningClass->classroom_id)
                 ->exists();
-        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
+        } elseif ($this->userHasAnyRole($user, [...StudentDataAccess::TEACHER_ROLES, 'staf_tu'])) {
             if ($elearningClass->teacher_id === $user->id) {
                 $isAuthorized = true;
             }
@@ -138,7 +146,7 @@ class ElearningController extends Controller
 
         // Calculate progress if student
         $studentProgress = null;
-        if ($user->role === 'student' && $user->student) {
+        if ($this->userHasAnyRole($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
             $studentProgress = $this->elearningService->getStudentProgress($elearningClass->id, $user->student->id);
         }
 
@@ -151,7 +159,7 @@ class ElearningController extends Controller
     public function storeMaterial(Request $request, ElearningClass $elearningClass)
     {
         $user = auth()->user();
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403, 'Anda hanya dapat menambahkan materi ke kelas mengajar Anda.');
         }
 
@@ -188,7 +196,7 @@ class ElearningController extends Controller
     public function storeAssignment(Request $request, ElearningClass $elearningClass)
     {
         $user = auth()->user();
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403, 'Anda hanya dapat menambahkan tugas ke kelas mengajar Anda.');
         }
 
@@ -299,7 +307,7 @@ class ElearningController extends Controller
     {
         $user = auth()->user();
         $classTeacherId = $elearningAssignment->elearningClass->teacher_id ?? null;
-        if (in_array($user->role, ['guru', 'staf_tu']) && $classTeacherId !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $classTeacherId !== $user->id) {
             abort(403, 'Anda hanya dapat melihat pengumpulan tugas dari kelas yang Anda ampu.');
         }
 
@@ -315,7 +323,7 @@ class ElearningController extends Controller
     {
         $user = auth()->user();
         $classTeacherId = $elearningSubmission->assignment->elearningClass->teacher_id ?? null;
-        if (in_array($user->role, ['guru', 'staf_tu']) && $classTeacherId !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $classTeacherId !== $user->id) {
             abort(403, 'Anda tidak memiliki hak akses untuk menilai pengumpulan tugas ini.');
         }
 
@@ -343,7 +351,7 @@ class ElearningController extends Controller
     public function storeAnnouncement(Request $request, ElearningClass $elearningClass)
     {
         $user = auth()->user();
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403, 'Anda hanya dapat menambahkan pengumuman ke kelas mengajar Anda.');
         }
 
@@ -371,7 +379,8 @@ class ElearningController extends Controller
             abort(400);
         }
 
-        if (auth()->id() !== $announcement->user_id && ! in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        $user = auth()->user();
+        if (auth()->id() !== $announcement->user_id && ! $this->userHasAnyRole($user, ['admin', 'superadmin'])) {
             abort(403);
         }
 
@@ -392,17 +401,17 @@ class ElearningController extends Controller
             abort(404);
         }
         $isAuthorized = false;
-        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+        if ($this->userHasAnyRole($user, ['admin', 'superadmin', ...Roles::PRINCIPAL])) {
             $isAuthorized = true;
-        } elseif ($user->role === 'student' && $user->student) {
+        } elseif ($this->userHasAnyRole($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
             if ($user->student->classroom_id === $elearningClass->classroom_id) {
                 $isAuthorized = true;
             }
-        } elseif ($user->role === 'parent') {
+        } elseif ($this->userHasAnyRole($user, StudentDataAccess::PARENT_ROLES)) {
             $isAuthorized = Student::where('parent_id', $user->id)
                 ->where('classroom_id', $elearningClass->classroom_id)
                 ->exists();
-        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
+        } elseif ($this->userHasAnyRole($user, [...StudentDataAccess::TEACHER_ROLES, 'staf_tu'])) {
             if ($elearningClass->teacher_id === $user->id) {
                 $isAuthorized = true;
             }
@@ -413,7 +422,7 @@ class ElearningController extends Controller
         }
 
         // Log view if student
-        if ($user->role === 'student' && $user->student) {
+        if ($this->userHasAnyRole($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
             $this->elearningService->logMaterialView($user->student->id, $material->id);
         }
 
@@ -432,17 +441,17 @@ class ElearningController extends Controller
 
         // Security check
         $isAuthorized = false;
-        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah'])) {
+        if ($this->userHasAnyRole($user, ['admin', 'superadmin', ...Roles::PRINCIPAL])) {
             $isAuthorized = true;
-        } elseif ($user->role === 'student' && $user->student) {
+        } elseif ($this->userHasAnyRole($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
             if ($user->student->classroom_id === $elearningClass->classroom_id) {
                 $isAuthorized = true;
             }
-        } elseif ($user->role === 'parent') {
+        } elseif ($this->userHasAnyRole($user, StudentDataAccess::PARENT_ROLES)) {
             $isAuthorized = Student::where('parent_id', $user->id)
                 ->where('classroom_id', $elearningClass->classroom_id)
                 ->exists();
-        } elseif (in_array($user->role, ['guru', 'staf_tu'])) {
+        } elseif ($this->userHasAnyRole($user, [...StudentDataAccess::TEACHER_ROLES, 'staf_tu'])) {
             if ($elearningClass->teacher_id === $user->id) {
                 $isAuthorized = true;
             }
@@ -478,8 +487,10 @@ class ElearningController extends Controller
             abort(400);
         }
 
-        $isTeacher = in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']) && auth()->id() === $material->elearningClass->teacher_id;
-        $isAdmin = in_array(auth()->user()->role, ['admin', 'superadmin']);
+        $user = auth()->user();
+        $isTeacher = $this->userHasAnyRole($user, [...StudentDataAccess::TEACHER_ROLES, 'staf_tu', 'admin', 'superadmin'])
+            && auth()->id() === $material->elearningClass->teacher_id;
+        $isAdmin = $this->userHasAnyRole($user, ['admin', 'superadmin']);
 
         if (auth()->id() !== $comment->user_id && ! $isTeacher && ! $isAdmin) {
             abort(403, 'Akses ditolak.');
@@ -498,7 +509,7 @@ class ElearningController extends Controller
         $user = auth()->user();
 
         // Security check
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403);
         }
 
@@ -516,7 +527,7 @@ class ElearningController extends Controller
         $user = auth()->user();
 
         // Security check
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403);
         }
         if ($student->classroom_id !== $elearningClass->classroom_id) {
@@ -535,7 +546,7 @@ class ElearningController extends Controller
     {
         $user = auth()->user();
 
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403);
         }
 
@@ -552,7 +563,7 @@ class ElearningController extends Controller
     {
         $user = auth()->user();
 
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403);
         }
 
@@ -569,7 +580,7 @@ class ElearningController extends Controller
     {
         $user = auth()->user();
 
-        if (in_array($user->role, ['guru', 'staf_tu']) && $elearningClass->teacher_id !== $user->id) {
+        if (! $this->userHasAnyRole($user, ['admin', 'superadmin']) && $elearningClass->teacher_id !== $user->id) {
             abort(403);
         }
 

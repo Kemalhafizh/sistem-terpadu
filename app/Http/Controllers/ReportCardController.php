@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Classroom;
@@ -10,8 +11,11 @@ use App\Models\ReportCard;
 use App\Models\Student;
 use App\Models\User;
 use App\Services\ReportCardService;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ReportCardController extends Controller
 {
@@ -24,6 +28,8 @@ class ReportCardController extends Controller
 
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', ReportCard::class);
+
         $classrooms = Classroom::all();
         $selectedClassroomId = $request->get('classroom_id');
         $activeYear = AcademicYear::where('is_active', true)->first();
@@ -57,6 +63,17 @@ class ReportCardController extends Controller
             'classroom_id' => 'required|exists:classrooms,id',
         ]);
 
+        $user = auth()->user();
+        $classroom = Classroom::findOrFail($request->classroom_id);
+        $isAcademicManager = $user && RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_kurikulum', 'staf_tu']);
+        $isClassroomTeacher = $user
+            && RoleMiddleware::allowsUser($user, [...StudentDataAccess::TEACHER_ROLES, 'wali_kelas'])
+            && $classroom->teacher_id === $user->id;
+
+        if (! $isAcademicManager && ! $isClassroomTeacher) {
+            abort(403, 'Hanya Admin, Waka Kurikulum, Staf TU, atau Wali Kelas bersangkutan yang dapat menyinkronkan rapor.');
+        }
+
         $activeYear = AcademicYear::where('is_active', true)->first();
         if (! $activeYear) {
             return back()->with('error', 'Tahun Ajaran aktif tidak ditemukan.');
@@ -73,9 +90,23 @@ class ReportCardController extends Controller
             'report_cards' => 'required|array',
         ]);
 
-        foreach ($request->report_cards as $id => $data) {
-            ReportCard::where('id', $id)->update([
-                'homeroom_notes' => $data['homeroom_notes'] ?? null,
+        $user = auth()->user();
+        $ids = array_keys($request->report_cards);
+        $cards = ReportCard::with('classroom')->whereIn('id', $ids)->get();
+
+        foreach ($cards as $card) {
+            if (! $user || ! $user->can('update', $card)) {
+                abort(403, 'Anda hanya dapat mengubah catatan wali kelas pada kelas binaan Anda sendiri.');
+            }
+        }
+
+        if ($cards->isEmpty() && (! $user || ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_kurikulum', 'staf_tu', ...StudentDataAccess::TEACHER_ROLES, 'wali_kelas']))) {
+            abort(403, 'Anda tidak memiliki akses untuk menyimpan catatan wali kelas.');
+        }
+
+        foreach ($cards as $card) {
+            $card->update([
+                'homeroom_notes' => $request->report_cards[$card->id]['homeroom_notes'] ?? null,
             ]);
         }
 
@@ -85,14 +116,26 @@ class ReportCardController extends Controller
     public function printPdf(Request $request, Student $student)
     {
         $user = auth()->user();
+        $roles = $user ? $user->effectiveRoles() : [];
 
-        // Security check for Students and Parents
-        if ($user->role === 'student' && $student->user_id !== $user->id) {
-            abort(403, 'Akses ditolak. Anda hanya dapat mengunduh rapor Anda sendiri.');
-        }
+        // Security check using canonical role groups & effective roles
+        $isStaffReader = $user && array_intersect($roles, [
+            'admin',
+            'superadmin',
+            'waka_kurikulum',
+            'staf_tu',
+            'wali_kelas',
+            ...Roles::PRINCIPAL,
+            ...StudentDataAccess::TEACHER_ROLES,
+        ]) !== [];
 
-        if ($user->role === 'parent' && $student->parent_id !== $user->id) {
-            abort(403, 'Akses ditolak. Anda hanya dapat mengunduh rapor anak Anda sendiri.');
+        if (! $isStaffReader) {
+            $isOwnStudent = array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== [] && $student->user_id === $user?->id;
+            $isOwnChild = array_intersect($roles, StudentDataAccess::PARENT_ROLES) !== [] && $student->parent_id === $user?->id;
+
+            if (! $isOwnStudent && ! $isOwnChild) {
+                abort(403, 'Akses ditolak. Anda tidak memiliki hak akses untuk mengunduh rapor siswa ini.');
+            }
         }
 
         $activeYear = AcademicYear::where('is_active', true)->first();

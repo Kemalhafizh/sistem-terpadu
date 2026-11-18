@@ -35,10 +35,10 @@ class CounselingMobileService
     {
         $rawStudentId = (int) $data['student_id'];
         $student = Student::where('user_id', $rawStudentId)->first() ?? Student::find($rawStudentId);
-        $targetStudentId = $student ? $student->id : $rawStudentId;
+        abort_unless($student !== null, 422, 'Profil siswa tidak ditemukan.');
 
         return CounselingSession::create([
-            'student_id' => $targetStudentId,
+            'student_id' => $student->id,
             'counselor_id' => $counselorId,
             'requested_by' => $counselorId,
             'scheduled_at' => $data['scheduled_at'] ?? now(),
@@ -57,10 +57,10 @@ class CounselingMobileService
     public function requestAppointment(int $studentId, array $data): CounselingSession
     {
         $student = Student::where('user_id', $studentId)->first() ?? Student::find($studentId);
-        $targetStudentId = $student ? $student->id : $studentId;
+        abort_unless($student !== null, 422, 'Profil siswa tidak ditemukan.');
 
         return CounselingSession::create([
-            'student_id' => $targetStudentId,
+            'student_id' => $student->id,
             'requested_by' => $studentId,
             'scheduled_at' => $data['preferred_date'] ?? now()->addDays(1),
             'type' => 'individual',
@@ -74,9 +74,11 @@ class CounselingMobileService
     public function getStudentAppointments(int $studentId)
     {
         $student = Student::where('user_id', $studentId)->first() ?? Student::find($studentId);
-        $targetStudentId = $student ? $student->id : $studentId;
+        if (! $student) {
+            return collect();
+        }
 
-        return CounselingSession::where('student_id', $targetStudentId)
+        return CounselingSession::where('student_id', $student->id)
             ->select('id', 'uuid', 'category', 'status', 'scheduled_at', 'reason', 'created_at')
             ->latest()
             ->get();
@@ -84,8 +86,13 @@ class CounselingMobileService
 
     public function getAtRiskStudents(): array
     {
-        // Algorithm: query students flagged with discipline points or low attendance
-        $students = User::whereIn('role', ['siswa', 'student'])->take(10)->get();
+        // Algorithm: query active students flagged with discipline points or low attendance
+        $students = User::whereIn('role', ['siswa', 'student'])
+            ->where(function ($q) {
+                $q->whereNull('account_status')->orWhere('account_status', '!=', 'nonaktif');
+            })
+            ->take(10)
+            ->get();
 
         $atRisk = [];
         foreach ($students as $student) {
