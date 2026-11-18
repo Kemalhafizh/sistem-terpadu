@@ -23,7 +23,7 @@
             <form method="GET" action="{{ route('alumni.bulk-graduate') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Kelas XII</label>
-                    <select name="classroom_id" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select name="classroom_id" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">-- Pilih Kelas --</option>
                         @foreach($classrooms as $c)
                             <option value="{{ $c->id }}" {{ $selectedClassroomId == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -52,14 +52,14 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <label class="text-xs font-bold text-gray-500">Tahun Lulus:</label>
-                            <input type="number" name="graduation_year" value="{{ date('Y') }}" required min="2000" max="{{ date('Y') + 1 }}" class="bg-white dark:bg-gray-800 border border-gray-250 dark:border-gray-700 rounded-xl px-3 py-1.5 text-xs text-gray-850 dark:text-white focus:outline-none w-24">
+                            <input type="number" name="graduation_year" value="{{ date('Y') }}" required min="2000" max="{{ date('Y') + 1 }}" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1.5 text-xs text-gray-900 dark:text-white focus:outline-none w-24">
                         </div>
                     </div>
 
                     <div class="overflow-hidden rounded-2xl border border-gray-200/50 dark:border-gray-700/50">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-150 dark:border-gray-700/50">
+                                <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700/50">
                                     <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider w-12">
                                         <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                                     </th>
@@ -97,7 +97,7 @@
 
                     @if($students->isNotEmpty())
                         <div class="flex justify-end gap-2 pt-4 border-t border-gray-100 dark:border-gray-700/50">
-                            <a href="{{ route('alumni.bulk-graduate') }}" class="bg-gray-250 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-6 text-xs font-bold transition-all">
+                            <a href="{{ route('alumni.bulk-graduate') }}" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-2 px-6 text-xs font-bold transition-all">
                                 Batal
                             </a>
                             <button type="submit" onclick="return confirm('Apakah Anda yakin ingin meluluskan siswa terpilih? Aksi ini akan mengubah status mereka menjadi ALUMNI.')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-2 px-6 text-xs font-bold transition-all shadow-md">

@@ -4,8 +4,10 @@ use App\Models\Classroom;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 
-test('service-worker.js file exists in public directory', function () {
-    $this->assertTrue(File::exists(public_path('service-worker.js')));
+test('service worker /sw.js route responds successfully', function () {
+    $response = $this->get('/sw.js');
+    $response->assertOk();
+    expect($response->headers->get('Content-Type'))->toContain('application/javascript');
 });
 
 test('offline-queue.js file exists in public directory', function () {

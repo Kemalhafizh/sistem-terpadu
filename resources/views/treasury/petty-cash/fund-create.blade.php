@@ -4,7 +4,7 @@
     @include('treasury.partials.nav')
     <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6">{{ school_name() }} - Buat Dana Kas Kecil</h1>
     @include('treasury.partials.alerts')
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
         <form action="{{ route('treasury.petty-cash.funds.store') }}" method="POST">
             @csrf
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">

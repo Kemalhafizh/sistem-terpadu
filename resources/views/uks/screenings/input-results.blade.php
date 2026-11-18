@@ -31,7 +31,7 @@
                                 <span class="w-2 h-5 bg-teal-600 rounded-full mr-3"></span>
                                 Daftar Murid Sasaran Pemeriksaan
                             </h4>
-                            <p class="text-xs text-gray-450 dark:text-gray-550 uppercase tracking-widest mt-1">Harap isi tinggi, berat, penglihatan, dan dental siswa.</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 uppercase tracking-widest mt-1">Harap isi tinggi, berat, penglihatan, dan dental siswa.</p>
                         </div>
                     </div>
 
@@ -48,7 +48,7 @@
                                     <th class="pb-3 w-1/4">Temuan & Rekomendasi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-55/30 dark:divide-gray-700/30">
+                            <tbody class="divide-y divide-gray-50/30 dark:divide-gray-700/30">
                                 @forelse($students as $index => $std)
                                     @php
                                         $existing = $existingResults->get($std->id);
@@ -128,7 +128,7 @@
 
                 <!-- Form submission bar -->
                 <div class="flex justify-end gap-3 pt-4">
-                    <a href="{{ route('uks.screenings.index') }}" class="px-6 py-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+                    <a href="{{ route('uks.screenings.index') }}" class="px-6 py-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                         Kembali
                     </a>
                     <button type="submit" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-teal-600/15">

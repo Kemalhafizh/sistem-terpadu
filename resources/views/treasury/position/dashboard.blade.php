@@ -11,11 +11,11 @@
     </div>
     <p class="text-gray-500 text-sm mb-4">Dihitung dari mutasi rekening koran yang sudah diimpor per {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}.</p>
     @if($positions->isEmpty())
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">Belum ada rekening bank aktif.</div>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">Belum ada rekening bank aktif.</div>
     @endif
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @foreach($positions as $pos)
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ $pos->account->bank_name }} - {{ $pos->account->account_name }}</h3>
             <p class="text-gray-500 text-sm mt-1">{{ $pos->position_date->format('d/m/Y') }}</p>
             <div class="mt-4 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($pos->closing_balance, 0, ',', '.') }}</div>

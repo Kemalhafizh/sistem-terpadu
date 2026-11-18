@@ -17,9 +17,9 @@
 
     {{-- Hero Header --}}
     <div class="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
-        <div class="inline-flex items-center px-5 py-2 rounded-full bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200/60 mb-6">
-            <svg class="w-4 h-4 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span class="text-[10px] font-black text-indigo-700 uppercase tracking-[0.2em]">Tur 360°</span>
+        <div class="inline-flex items-center px-5 py-2 rounded-full bg-gradient-to-r from-primary-50 to-emerald-50 border border-primary-200/60 mb-6">
+            <svg class="w-4 h-4 text-primary-600 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span class="text-[10px] font-black text-primary-700 uppercase tracking-[0.2em]">Tur 360°</span>
         </div>
         <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Virtual Tour Sekolah</h2>
         <p class="text-slate-500 text-lg font-medium leading-relaxed">Jelajahi kampus kami secara virtual dan rasakan pengalaman menjadi bagian dari keluarga besar {{ school_name() }}.</p>
@@ -28,21 +28,16 @@
     {{-- 360° Viewer Placeholder --}}
     <div class="glass rounded-[2.5rem] overflow-hidden border border-slate-200/60 shadow-sm mb-16 animate-fade-in-up" style="animation-delay: 150ms;">
         <div class="relative w-full" style="min-height: 28rem;">
-            {{-- Gradient Background --}}
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 overflow-hidden">
-                {{-- Decorative Elements --}}
-                <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-blob"></div>
-                <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-indigo-300/20 rounded-full blur-2xl animate-blob animation-delay-2000"></div>
-                <div class="absolute top-1/2 right-1/3 w-32 h-32 bg-violet-300/15 rounded-full blur-2xl animate-blob animation-delay-4000"></div>
-
-                {{-- Grid pattern overlay --}}
+            {{-- Institutional Gradient Background --}}
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary-900 to-teal-900 overflow-hidden">
+                {{-- Subtle Grid pattern overlay --}}
                 <div class="absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div>
             </div>
 
             {{-- Center Content --}}
             <div class="relative flex flex-col items-center justify-center text-center px-8 py-20 md:py-24 z-10">
                 {{-- VR/360° Icon --}}
-                <div class="w-24 h-24 rounded-[1.5rem] bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-8 animate-float shadow-2xl shadow-violet-900/30">
+                <div class="w-24 h-24 rounded-[1.5rem] bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-8 shadow-xl">
                     <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         {{-- 360° panoramic icon --}}
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
@@ -51,13 +46,13 @@
                 </div>
 
                 <h3 class="text-white font-black text-2xl md:text-3xl mb-4 tracking-tight">Segera Hadir</h3>
-                <p class="text-white/80 font-medium text-base md:text-lg max-w-lg leading-relaxed mb-8">
-                    Konten Virtual Tour akan segera tersedia. Silakan kunjungi sekolah kami untuk pengalaman langsung.
+                <p class="text-white/85 font-medium text-base md:text-lg max-w-lg leading-relaxed mb-8">
+                    Konten Virtual Tour sedang disiapkan. Silakan hubungi atau kunjungi sekolah kami untuk melihat fasilitas kampus secara langsung.
                 </p>
 
                 {{-- CTA Button --}}
-                <a href="{{ route('home') }}#kontak" class="inline-flex items-center px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-bold text-xs uppercase tracking-widest rounded-2xl border border-white/25 transition-all duration-300 hover:-translate-y-0.5 shadow-lg">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <a href="{{ route('public.contact') }}" class="inline-flex items-center px-8 py-4 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white font-bold text-xs uppercase tracking-widest rounded-2xl border border-white/25 transition-all duration-300 hover:-translate-y-0.5 shadow-lg">
+                    <svg class="w-4 h-4 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     Kunjungi Sekolah
                 </a>
             </div>

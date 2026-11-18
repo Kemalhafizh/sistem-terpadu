@@ -33,7 +33,7 @@
         @if($hasVoted)
             <div class="bg-emerald-50/50 dark:bg-emerald-950/20 p-8 rounded-3xl border border-emerald-200/50 dark:border-emerald-900/50 text-center space-y-3">
                 <div class="text-4xl"></div>
-                <h3 class="font-black text-gray-850 dark:text-white text-lg">Terima Kasih, Suara Anda Telah Tercatat!</h3>
+                <h3 class="font-black text-gray-900 dark:text-white text-lg">Terima Kasih, Suara Anda Telah Tercatat!</h3>
                 <p class="text-xs text-gray-500">Anda telah berpartisipasi dalam e-voting pemilihan Ketua OSIS periode ini. Partisipasi Anda sangat berharga bagi demokrasi sekolah.</p>
             </div>
         @else

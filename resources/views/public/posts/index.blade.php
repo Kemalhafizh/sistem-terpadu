@@ -9,7 +9,7 @@
 <div class="w-full px-6">
     <!-- Header Section -->
     <div class="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
-        <h1 class="text-primary-600 font-black tracking-[0.2em] uppercase text-xs mb-4">Warta Sultan Agung</h1>
+        <h1 class="text-primary-600 font-black tracking-[0.2em] uppercase text-xs mb-4">Warta Sekolah</h1>
         <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Berita & Kegiatan Terkini</h2>
         <p class="text-slate-500 text-lg font-medium">Ikuti kabar terbaru, pengumuman resmi, artikel pendidikan, serta ukiran prestasi dari keluarga besar {{ school_name() }}.</p>
     </div>

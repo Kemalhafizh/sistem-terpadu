@@ -12,7 +12,7 @@
 
     <div class="py-12">
         <div class="max-w-md mx-auto px-4">
-            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-xl space-y-6">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-xl space-y-6">
                 <div class="text-center space-y-2">
                     <h3 class="text-lg font-black text-gray-900 dark:text-white">Tindakan Memerlukan Verifikasi Ulang</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Silakan masukkan Kata Sandi Anda (dan Kode 2FA jika aktif) untuk menyetujui akses tindakan berdampak tinggi ini selama 15 menit.</p>

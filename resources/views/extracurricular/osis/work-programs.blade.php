@@ -26,12 +26,12 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Program Kerja</label>
-                    <input type="text" name="title" required placeholder="LDKMS Pengurus OSIS..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <input type="text" name="title" required placeholder="LDKMS Pengurus OSIS..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Bidang / Sekbid Penanggungjawab</label>
-                    <select name="sekbid" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="sekbid" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         <option value="Sekbid 1: Keimanan & Ketaqwaan YME">Sekbid 1: Keimanan & Ketaqwaan YME</option>
                         <option value="Sekbid 2: Budi Pekerti & Akhlak Mulia">Sekbid 2: Budi Pekerti & Akhlak Mulia</option>
                         <option value="Sekbid 3: Kepribadian Unggul & Bela Negara">Sekbid 3: Kepribadian Unggul & Bela Negara</option>
@@ -46,17 +46,17 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Anggaran Rencana (Rp)</label>
-                        <input type="number" name="budget_plan" min="0" required placeholder="e.g. 1500000" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
+                        <input type="number" name="budget_plan" min="0" required placeholder="e.g. 1500000" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Tanggal Rencana</label>
-                        <input type="date" name="planned_date" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
+                        <input type="date" name="planned_date" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Deskripsi Rencana Kegiatan</label>
-                    <textarea name="description" rows="3" required placeholder="Jelaskan maksud dan tujuan kegiatan..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                    <textarea name="description" rows="3" required placeholder="Jelaskan maksud dan tujuan kegiatan..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
@@ -84,19 +84,19 @@
                     <p class="text-xs text-gray-500 leading-relaxed">{{ $prog->description }}</p>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-                        <div class="p-2 bg-gray-55/50 dark:bg-gray-900/50 rounded-xl">
+                        <div class="p-2 bg-gray-50/50 dark:bg-gray-900/50 rounded-xl">
                             <span class="block text-[8px] text-gray-400 font-bold uppercase">Anggaran Rencana</span>
                             <p class="font-extrabold text-gray-800 dark:text-white mt-0.5">Rp {{ number_format($prog->budget_plan, 0, ',', '.') }}</p>
                         </div>
-                        <div class="p-2 bg-gray-55/50 dark:bg-gray-900/50 rounded-xl">
+                        <div class="p-2 bg-gray-50/50 dark:bg-gray-900/50 rounded-xl">
                             <span class="block text-[8px] text-gray-400 font-bold uppercase">Realisasi Dana</span>
-                            <p class="font-extrabold text-teal-650 mt-0.5">Rp {{ number_format($prog->budget_actual, 0, ',', '.') }}</p>
+                            <p class="font-extrabold text-teal-700 mt-0.5">Rp {{ number_format($prog->budget_actual, 0, ',', '.') }}</p>
                         </div>
-                        <div class="p-2 bg-gray-55/50 dark:bg-gray-900/50 rounded-xl">
+                        <div class="p-2 bg-gray-50/50 dark:bg-gray-900/50 rounded-xl">
                             <span class="block text-[8px] text-gray-400 font-bold uppercase">Tanggal Rencana</span>
                             <p class="font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $prog->planned_date ? $prog->planned_date->format('d M Y') : '-' }}</p>
                         </div>
-                        <div class="p-2 bg-gray-55/50 dark:bg-gray-900/50 rounded-xl">
+                        <div class="p-2 bg-gray-50/50 dark:bg-gray-900/50 rounded-xl">
                             <span class="block text-[8px] text-gray-400 font-bold uppercase">Tanggal Realisasi</span>
                             <p class="font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $prog->actual_date ? $prog->actual_date->format('d M Y') : '-' }}</p>
                         </div>
@@ -112,7 +112,7 @@
                             <div class="space-y-3">
                                 <div>
                                     <label class="block text-[9px] font-bold text-gray-400 uppercase">Status Progres</label>
-                                    <select name="status" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                                    <select name="status" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                                         <option value="planned" {{ $prog->status === 'planned' ? 'selected' : '' }}>Planned</option>
                                         <option value="in_progress" {{ $prog->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
                                         <option value="completed" {{ $prog->status === 'completed' ? 'selected' : '' }}>Completed</option>
@@ -121,11 +121,11 @@
                                 </div>
                                 <div>
                                     <label class="block text-[9px] font-bold text-gray-400 uppercase">Dana Realisasi Aktual (Rp)</label>
-                                    <input type="number" name="budget_actual" value="{{ $prog->budget_actual }}" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1 text-xs text-gray-800 dark:text-white focus:outline-none">
+                                    <input type="number" name="budget_actual" value="{{ $prog->budget_actual }}" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1 text-xs text-gray-800 dark:text-white focus:outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-[9px] font-bold text-gray-400 uppercase">Tanggal Aktual</label>
-                                    <input type="date" name="actual_date" value="{{ $prog->actual_date ? $prog->actual_date->toDateString() : '' }}" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1 text-xs text-gray-800 dark:text-white">
+                                    <input type="date" name="actual_date" value="{{ $prog->actual_date ? $prog->actual_date->toDateString() : '' }}" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-1 text-xs text-gray-800 dark:text-white">
                                 </div>
                             </div>
 
@@ -136,7 +136,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-[9px] font-bold text-gray-400 uppercase">Laporan Keterangan LPJ</label>
-                                    <textarea name="report" rows="2" placeholder="Ulasan pelaksanaan kegiatan LPJ..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none">{{ $prog->report }}</textarea>
+                                    <textarea name="report" rows="2" placeholder="Ulasan pelaksanaan kegiatan LPJ..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none">{{ $prog->report }}</textarea>
                                 </div>
                                 <div class="flex justify-end pt-1">
                                     <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl py-2 px-6 text-xs font-bold transition-all shadow-md">

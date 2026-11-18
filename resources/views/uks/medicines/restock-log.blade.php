@@ -57,7 +57,7 @@
                                 <th class="pb-3 text-right">Catatan / Keterangan</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-55/30 dark:divide-gray-700/30">
+                        <tbody class="divide-y divide-gray-50/30 dark:divide-gray-700/30">
                             @forelse($logs as $log)
                                 <tr class="group hover:bg-gray-50/55 dark:hover:bg-gray-900/10 transition-all">
                                     <td class="py-4 text-xs font-semibold text-gray-600 dark:text-gray-400">
@@ -69,7 +69,7 @@
                                     <td class="py-4 text-center text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
                                         +{{ $log->quantity }} Pcs
                                     </td>
-                                    <td class="py-4 text-xs font-semibold text-gray-650 dark:text-gray-400">
+                                    <td class="py-4 text-xs font-semibold text-gray-700 dark:text-gray-400">
                                         {{ $log->restocker->name ?? '-' }}
                                     </td>
                                     <td class="py-4 text-right text-xs text-gray-400 dark:text-gray-500 font-semibold">
@@ -126,7 +126,7 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-6">
-                <button type="button" @click="$dispatch('close-modal', 'add-restock-modal')" class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black uppercase hover:bg-gray-50 dark:hover:bg-gray-750 transition-all text-gray-700 dark:text-gray-300">
+                <button type="button" @click="$dispatch('close-modal', 'add-restock-modal')" class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black uppercase hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-gray-700 dark:text-gray-300">
                     Batal
                 </button>
                 <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase transition-all shadow-md shadow-teal-600/10">

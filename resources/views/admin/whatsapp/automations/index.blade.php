@@ -54,7 +54,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
                     <h3 class="text-sm font-bold text-gray-800 dark:text-white uppercase tracking-wider">Aturan Pemicu Otomasi WhatsApp</h3>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100 dark:bg-teal-900/30 text-teal-850 dark:text-teal-350">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100 dark:bg-teal-900/30 text-teal-900 dark:text-teal-300">
                         {{ $automations->count() }} Aturan
                     </span>
                 </div>
@@ -100,7 +100,7 @@
                                             @csrf
                                             <button type="submit" class="relative inline-flex items-center cursor-pointer group">
                                                 <div class="relative w-10 h-5 bg-gray-200 group-hover:bg-gray-300 dark:bg-gray-700 rounded-full transition-colors {{ $automation->is_active ? 'bg-teal-600' : '' }}">
-                                                    <div class="absolute top-[2px] start-[2px] bg-white border border-gray-300 dark:border-gray-650 rounded-full h-4 w-4 transition-transform {{ $automation->is_active ? 'translate-x-5' : '' }}"></div>
+                                                    <div class="absolute top-[2px] start-[2px] bg-white border border-gray-300 dark:border-gray-700 rounded-full h-4 w-4 transition-transform {{ $automation->is_active ? 'translate-x-5' : '' }}"></div>
                                                 </div>
                                                 <span class="ml-2 font-bold uppercase text-[9px] tracking-wider {{ $automation->is_active ? 'text-teal-600 dark:text-teal-400' : 'text-gray-400' }}">
                                                     {{ $automation->is_active ? 'Aktif' : 'Nonaktif' }}
@@ -135,10 +135,10 @@
                     <!-- Billing Reminder H-3 -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-teal-50 dark:bg-teal-950/30 text-teal-650 dark:text-teal-400">
+                            <span class="p-1.5 rounded-lg bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-850 dark:text-white uppercase tracking-wider">Remind Tagihan H-3</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Remind Tagihan H-3</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">billing_due_3_days</code>
                         <p class="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
@@ -149,13 +149,13 @@
                     <!-- Overdue Billing -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-650 dark:text-red-400">
+                            <span class="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-850 dark:text-white uppercase tracking-wider">Tagihan Terlambat</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Tagihan Terlambat</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">billing_overdue</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Pemberitahuan kepada orang tua jika pembayaran SPP/iuran belum diselesaikan melewati tanggal jatuh tempo yang ditentukan.
                         </p>
                     </div>
@@ -163,13 +163,13 @@
                     <!-- Attendance Absent -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-655 dark:text-amber-400">
+                            <span class="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-855 dark:text-white uppercase tracking-wider">Absensi Siswa Alpa</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Absensi Siswa Alpa</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">attendance_absent</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Kirim pesan instan secara otomatis kepada orang tua di pagi hari ketika siswa tidak hadir tanpa keterangan (Alpa).
                         </p>
                     </div>
@@ -177,13 +177,13 @@
                     <!-- CBT Exam Reminder -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-blue-650 dark:text-blue-400">
+                            <span class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-855 dark:text-white uppercase tracking-wider">Ujian CBT Besok</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Ujian CBT Besok</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">exam_upcoming_1_day</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Pemberitahuan terjadwal sehari sebelum pelaksanaan ujian online CBT agar siswa mempersiapkan diri.
                         </p>
                     </div>
@@ -191,13 +191,13 @@
                     <!-- UKS Emergency -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/30 text-rose-650 dark:text-rose-400">
+                            <span class="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-855 dark:text-white uppercase tracking-wider">Darurat UKS</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Darurat UKS</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">uks_visit_severe</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Kirim notifikasi mendesak/darurat ketika siswa dirujuk ke UKS dengan indikasi gejala atau sakit yang parah/severe.
                         </p>
                     </div>
@@ -205,13 +205,13 @@
                     <!-- Grade Below KKM -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-650 dark:text-indigo-400">
+                            <span class="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-855 dark:text-white uppercase tracking-wider">Nilai di Bawah KKM</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Nilai di Bawah KKM</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">grade_below_kkm</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Kirim pemberitahuan nilai hasil ujian kepada orang tua apabila nilai siswa di bawah kriteria kelulusan minimum (KKM).
                         </p>
                     </div>
@@ -219,13 +219,13 @@
                     <!-- Mutaba'ah Grade D -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-orange-50 dark:bg-orange-950/30 text-orange-650 dark:text-orange-400">
+                            <span class="p-1.5 rounded-lg bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-855 dark:text-white uppercase tracking-wider">Mutaba'ah Kurang</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Mutaba'ah Kurang</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">mutabaah_grade_d</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Kirim laporan khusus jika mutaba'ah yaumiyah (ibadah & karakter harian) siswa mendapat predikat D (kurang).
                         </p>
                     </div>
@@ -233,13 +233,13 @@
                     <!-- Tahfidz Behind Target -->
                     <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-650 dark:text-emerald-400">
+                            <span class="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                             </span>
-                            <span class="text-xs font-bold text-gray-855 dark:text-white uppercase tracking-wider">Tahfidz Tertinggal</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Tahfidz Tertinggal</span>
                         </div>
                         <code class="block text-[9px] text-gray-400 dark:text-gray-500 font-mono mb-2">tahfidz_behind_target</code>
-                        <p class="text-[11px] text-gray-550 dark:text-gray-400 leading-relaxed font-medium">
+                        <p class="text-[11px] text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                             Kirim pengingat jika progres setoran hafalan Al-Qur'an siswa belum mencapai target berkala yang ditentukan.
                         </p>
                     </div>

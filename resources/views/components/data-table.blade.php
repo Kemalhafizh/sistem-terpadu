@@ -43,7 +43,7 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-150 dark:divide-slate-700 bg-white dark:bg-slate-800">
+                <tbody class="divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800">
                     {{ $slot }}
                 </tbody>
             </table>
@@ -61,7 +61,7 @@
 
     {{-- Pagination Footer --}}
     @if($items && method_exists($items, 'links') && $items->hasPages())
-        <div class="p-5 border-t border-gray-150 dark:border-slate-700 bg-gray-50/10 dark:bg-slate-900/5">
+        <div class="p-5 border-t border-gray-200 dark:border-slate-700 bg-gray-50/10 dark:bg-slate-900/5">
             {{ $items->links() }}
         </div>
     @endif

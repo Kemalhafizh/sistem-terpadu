@@ -42,7 +42,7 @@
                 
                 <!-- 1. Left Panel: Teacher Card info -->
                 <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                    <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 relative overflow-hidden group hover:shadow-md transition-all duration-300">
                         <div class="absolute -right-16 -top-16 w-36 h-36 bg-indigo-50/50 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
                         
                         <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Wali Kelas Terkait</h4>
@@ -193,7 +193,7 @@
                                 console.error(err);
                             }
                         }
-                    }" class="bg-white rounded-[2rem] shadow-sm border border-gray-150/60 flex flex-col h-[650px] overflow-hidden">
+                    }" class="bg-white rounded-[2rem] shadow-sm border border-gray-200/60 flex flex-col h-[650px] overflow-hidden">
                         <!-- Chat Header -->
                         <div class="px-8 py-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
                             <div class="flex items-center gap-4">
@@ -222,7 +222,7 @@
                                         <div class="px-5 py-3.5 rounded-3xl text-xs font-semibold leading-relaxed shadow-sm"
                                             :class="msg.sender_id === authId 
                                                 ? 'bg-gradient-to-r from-primary-600 to-indigo-600 text-white rounded-tr-none shadow-indigo-900/10' 
-                                                : 'bg-white text-gray-800 border border-gray-150/60 rounded-tl-none' 
+                                                : 'bg-white text-gray-800 border border-gray-200/60 rounded-tl-none' 
                                             ">
                                             <p class="whitespace-pre-wrap" x-text="msg.message"></p>
                                         </div>
@@ -243,7 +243,7 @@
                             <template x-if="isTyping">
                                 <div class="flex justify-start animate-pulse">
                                     <div class="max-w-[70%] space-y-1">
-                                        <div class="px-5 py-3 rounded-3xl text-xs font-semibold leading-relaxed bg-white text-gray-500 border border-gray-150/60 rounded-tl-none flex items-center gap-1">
+                                        <div class="px-5 py-3 rounded-3xl text-xs font-semibold leading-relaxed bg-white text-gray-500 border border-gray-200/60 rounded-tl-none flex items-center gap-1">
                                             <span x-text="typingUser" class="font-bold"></span> sedang mengetik
                                             <span class="flex gap-0.5 ml-1">
                                                 <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>

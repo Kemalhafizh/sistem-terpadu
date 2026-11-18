@@ -48,7 +48,7 @@
            x-transition:leave="transition ease-in duration-75"
            x-transition:leave-start="transform opacity-100 scale-100"
            x-transition:leave-end="transform opacity-0 scale-95"
-           class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-36 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-150 dark:border-slate-800 z-50 overflow-hidden" 
+           class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-36 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 z-50 overflow-hidden" 
            style="display:none">
           <div class="p-1.5 space-y-1">
             <form action="{{ route('preferences.locale', 'id') }}" method="POST" class="block">
@@ -98,7 +98,7 @@
             value="{{ request('registration_number') }}" 
             required 
             placeholder="Contoh: SPMB-2026-0001" 
-            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
+            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
           >
         </div>
         <div>
@@ -109,7 +109,7 @@
             value="{{ request('nisn') }}" 
             required 
             placeholder="{{ __('spmb.placeholder_nisn') }}"
-            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
+            class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
           >
         </div>
       </div>
@@ -200,7 +200,7 @@
               $email = strtolower($registration->registration_number) . '@student.sch.id';
               $password = 'password123'; // Default temporary password
             @endphp
-            <div class="mt-6 pt-6 border-t border-slate-200 border-dashed text-left space-y-3 bg-white p-5 rounded-2xl border border-slate-150 shadow-sm relative overflow-hidden">
+            <div class="mt-6 pt-6 border-t border-slate-200 border-dashed text-left space-y-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
               <div class="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
               
               <div class="relative z-10">
@@ -215,7 +215,7 @@
                     <span x-text="copied ? ' ' + '{{ __('spmb.btn_copied') }}' : ' ' + '{{ __('spmb.btn_copy_account') }}'"></span>
                   </button>
                 </div>
-                <div class="text-xs text-slate-650 space-y-1">
+                <div class="text-xs text-slate-700 space-y-1">
                   <div class="flex justify-between">
                     <span class="text-slate-400 font-medium">{{ __('spmb.label_email_address') }}</span>
                     <strong class="text-slate-800">{{ $email }}</strong>

@@ -27,19 +27,19 @@
 
             <!-- Compliance Policy Overview Banner -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-2">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-2">
                     <span class="text-xs font-bold text-indigo-500 uppercase tracking-wider">Masking PII Otomatis</span>
                     <h4 class="text-lg font-black text-gray-900 dark:text-white">Pseudonimisasi Data NIK & Kontak</h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">Penyambaran NIK, nomor telepon, dan email untuk ekspor analitik agar terhindar dari kebocoran identitas.</p>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-2">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-2">
                     <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Right to be Forgotten</span>
                     <h4 class="text-lg font-black text-gray-900 dark:text-white">Protokol Penghapusan Identitas</h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">Anonimisasi data identitas alumni/siswa keluar tanpa merusak integritas riwayat nilai & presensi sekolah.</p>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-2">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-2">
                     <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Retensi Data PDP</span>
                     <h4 class="text-lg font-black text-gray-900 dark:text-white">Retensi 5 Tahun Regulasi</h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">Pemberlakuan masa simpan data PII sesuai batas hukum nasional sebelum dianonimkan permanen.</p>
@@ -50,7 +50,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 <!-- Left: Interactive PII Masking Simulator -->
-                <div class="lg:col-span-6 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                <div class="lg:col-span-6 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                     <div>
                         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Simulator Masking Data PII (Personally Identifiable Information)</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Uji coba aturan penyambaran NIK, nomor HP, dan email sesuai regulasi PDP.</p>
@@ -89,7 +89,7 @@
                 </div>
 
                 <!-- Right: Right to be Forgotten Protocol Executor -->
-                <div class="lg:col-span-6 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                <div class="lg:col-span-6 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                     <div>
                         <h3 class="text-sm font-black text-rose-600 dark:text-rose-400 uppercase tracking-wider">Eksekutor Protokol Hak untuk Dilupakan (Right to be Forgotten)</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Memproses permintaan anonimisasi permanen data pribadi pengguna sesuai permintaan hukum PDP.</p>

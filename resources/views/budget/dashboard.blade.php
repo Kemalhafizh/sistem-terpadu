@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
                 <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -54,7 +54,7 @@
     </div>
 
     <!-- Active RAPBS List Table -->
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm overflow-hidden p-6 space-y-4">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm overflow-hidden p-6 space-y-4">
         <h3 class="text-base font-black text-gray-900 dark:text-white">Daftar Dokumen RAPBS Multi-Tahun</h3>
 
         <div class="overflow-x-auto">
@@ -71,7 +71,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                     @forelse($plans as $plan)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-750">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">{{ $plan->fiscal_year }}</td>
                         <td class="py-3 px-4 font-semibold">{{ $plan->title }}</td>
                         <td class="py-3 px-4 font-semibold text-emerald-600">Rp {{ number_format($plan->total_revenue_planned, 0, ',', '.') }}</td>

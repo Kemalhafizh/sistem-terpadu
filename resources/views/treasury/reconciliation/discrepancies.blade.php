@@ -16,20 +16,20 @@
     </div>
     @include('treasury.partials.alerts')
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Mutasi masuk belum cocok</p>
             <div class="mt-2 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($totals['credit'], 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Mutasi keluar belum cocok</p>
             <div class="mt-2 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($totals['debit'], 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Selisih nominal (disputed)</p>
             <div class="mt-2 text-2xl font-black text-amber-700">{{ $totals['disputed'] }} mutasi</div>
         </div>
     </div>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>

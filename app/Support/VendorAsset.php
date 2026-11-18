@@ -39,7 +39,6 @@ class VendorAsset
         'marked' => 'node_modules/marked/lib/marked.umd.js',
         'qrcodejs' => 'node_modules/qrcodejs/qrcode.min.js',
         'sweetalert2' => 'node_modules/sweetalert2/dist/sweetalert2.all.min.js',
-        'tailwind-browser' => 'node_modules/@tailwindcss/browser/dist/index.global.js',
     ];
 
     public const STYLES = [

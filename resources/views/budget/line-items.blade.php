@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-xl font-black text-gray-900 dark:text-white">{{ $plan->title }} ({{ $plan->fiscal_year }})</h1>
             <p class="text-xs text-gray-500 mt-1">{{ __('Status') }}: <span class="uppercase font-bold text-emerald-600">{{ __('budget.status.'.$plan->status) }}</span> | {{ __('Disusun oleh') }}: {{ $plan->creator->name }}@if($plan->approver) | {{ __('Disetujui oleh') }}: {{ $plan->approver->name }}@endif</p>
@@ -32,7 +32,7 @@
 
     <!-- Form Add Item -->
     @if($plan->isEditable() && $canPrepare)
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Tambah Item Pos Anggaran</h3>
         <form action="{{ route('financial.budget.store_line_item', $plan->id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             @csrf
@@ -78,7 +78,7 @@
     @endif
 
     <!-- Line Items Table -->
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
         <h3 class="text-base font-black text-gray-900 dark:text-white mb-4">Rincian Pos Anggaran RAPBS</h3>
         <table class="w-full text-left text-sm text-gray-600 dark:text-gray-300">
             <thead class="bg-gray-50 dark:bg-gray-900 text-xs font-bold text-gray-400 uppercase">

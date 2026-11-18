@@ -17,18 +17,18 @@
     </div>
     <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Transaksi yang sudah disetujui pada {{ $month->locale('id')->translatedFormat('F Y') }}.</p>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Total pengeluaran</p>
             <div class="mt-2 text-2xl font-black text-rose-700">Rp {{ number_format($totals['spent'], 0, ',', '.') }}</div>
             <p class="text-xs text-gray-500 mt-1">{{ $spending->count() }} transaksi</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Total pengisian ulang</p>
             <div class="mt-2 text-2xl font-black text-emerald-700">Rp {{ number_format($totals['replenished'], 0, ',', '.') }}</div>
         </div>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
             <h3 class="px-6 pt-6 font-bold text-lg text-gray-900 dark:text-white">Pengeluaran per Kategori</h3>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4 text-sm">
                 <thead class="bg-gray-50 dark:bg-gray-900">
@@ -53,7 +53,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
             <h3 class="px-6 pt-6 font-bold text-lg text-gray-900 dark:text-white">Pengeluaran per Dana</h3>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4 text-sm">
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">
@@ -69,7 +69,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm lg:col-span-2 overflow-x-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm lg:col-span-2 overflow-x-auto">
             <h3 class="px-6 pt-6 font-bold text-lg text-gray-900 dark:text-white">Rincian Pengeluaran</h3>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4 text-sm">
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">

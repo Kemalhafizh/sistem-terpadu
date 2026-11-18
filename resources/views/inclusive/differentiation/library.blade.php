@@ -10,7 +10,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ school_name() }}</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
         <div class="p-6">
             <div class="flex justify-end mb-4">
                 <a href="{{ route('differentiation.create') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-bold hover:bg-indigo-700">Rencana Baru</a>

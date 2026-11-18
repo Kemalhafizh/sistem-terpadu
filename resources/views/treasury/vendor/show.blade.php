@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6">{{ school_name() }} - Detail Pembayaran Vendor</h1>
     @include('treasury.partials.alerts')
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ $payment->vendor_name }}</h3>
             <div class="mt-2 text-3xl font-black text-gray-900 dark:text-white">Rp {{ number_format($payment->amount, 0, ',', '.') }}</div>
             <dl class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
@@ -24,7 +24,7 @@
             </dl>
         </div>
         @if($payment->isOpen())
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4">Catat Pembayaran</h3>
             <form action="{{ route('treasury.vendor.pay', $payment) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf

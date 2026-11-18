@@ -119,7 +119,7 @@
                         <div class="pt-3 first:pt-0 flex justify-between items-center text-xs">
                             <div>
                                 <span class="font-bold text-gray-800 dark:text-white">{{ $res->alumni->student->name }}</span>
-                                <span class="text-[10px] text-gray-450 ml-1">(Angkatan {{ $res->alumni->graduation_year }})</span>
+                                <span class="text-[10px] text-gray-500 ml-1">(Angkatan {{ $res->alumni->graduation_year }})</span>
                                 <p class="text-[10px] text-gray-400 mt-0.5">{{ $res->job_title ?? $res->study_major ?? 'Lainnya' }}</p>
                             </div>
                             <span class="text-[10px] text-gray-400 font-bold">{{ $res->created_at->format('d M Y') }}</span>

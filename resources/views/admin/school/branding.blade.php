@@ -28,7 +28,7 @@
             @endif
 
             <!-- Kop Surat Preview Card -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-4">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-4">
                 <h3 class="text-xs font-black uppercase text-gray-400 tracking-wider">Pratinjau Kop Surat Resmi Sekolah (PDF & Dokumen)</h3>
                 
                 <div class="p-6 bg-slate-50 dark:bg-gray-900 rounded-2xl border-2 border-slate-900 dark:border-gray-700 text-center space-y-1 font-serif">
@@ -47,7 +47,7 @@
             </div>
 
             <!-- Profile Settings Form -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-6">
                 <div class="border-b border-gray-100 dark:border-gray-700 pb-4">
                     <h3 class="text-base font-black text-gray-900 dark:text-white">Identitas Lembaga & Kepala Sekolah</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Pengaturan ini menjadi sumber rujukan tunggal (Single Source of Truth) seluruh modul aplikasi.</p>

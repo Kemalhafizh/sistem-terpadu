@@ -51,7 +51,7 @@
                     </div>
 
                     @if($student->allergies)
-                        <div class="space-y-1 pt-3 border-t border-gray-100 dark:border-gray-750">
+                        <div class="space-y-1 pt-3 border-t border-gray-100 dark:border-gray-700">
                             <span class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider block text-left">Riwayat Alergi Murid</span>
                             <div class="p-3.5 bg-red-50/50 dark:bg-red-950/15 border border-red-100/50 dark:border-red-900/30 rounded-2xl text-xs text-red-700 dark:text-red-400 font-semibold leading-relaxed text-left">
                                 {{ $student->allergies }}
@@ -123,7 +123,7 @@
                                 </div>
 
                                 <!-- Body details -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs font-semibold text-gray-650 dark:text-gray-400">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs font-semibold text-gray-700 dark:text-gray-400">
                                     <div class="space-y-1">
                                         <span class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest block">Diagnosis Sementara</span>
                                         <p class="text-gray-800 dark:text-gray-200 font-extrabold">{{ $visit->diagnosis ?: '-' }}</p>
@@ -137,11 +137,11 @@
 
                                 <!-- Medicines administered -->
                                 @if($visit->medicines->count() > 0)
-                                    <div class="pt-3 border-t border-gray-150 dark:border-gray-700 space-y-2">
+                                    <div class="pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
                                         <span class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest block">Obat yang Diberikan</span>
                                         <div class="flex flex-wrap gap-2">
                                             @foreach($visit->medicines as $med)
-                                                <span class="inline-flex items-center px-2.5 py-1 bg-gray-50 dark:bg-gray-900 border border-gray-150 dark:border-gray-750 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-bold">
+                                                <span class="inline-flex items-center px-2.5 py-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-bold">
                                                     {{ $med->name }} ({{ $med->pivot->quantity }} Pcs)
                                                 </span>
                                             @endforeach
@@ -167,7 +167,7 @@
                         </div>
                     @empty
                         <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 text-center border border-gray-100 dark:border-gray-700/50 flex flex-col items-center justify-center opacity-55">
-                            <svg class="w-16 h-16 text-gray-300 dark:text-gray-650 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                             <h5 class="text-sm font-black text-gray-800 dark:text-white uppercase tracking-wide">Belum Ada Riwayat Kunjungan</h5>

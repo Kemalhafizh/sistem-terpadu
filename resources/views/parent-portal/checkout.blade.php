@@ -27,7 +27,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
         <!-- Rincian Pembayaran Card -->
-        <div class="md:col-span-3 bg-white rounded-[2.5rem] p-8 shadow-2xl border border-gray-150/60 relative overflow-hidden flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+        <div class="md:col-span-3 bg-white rounded-[2.5rem] p-8 shadow-2xl border border-gray-200/60 relative overflow-hidden flex flex-col justify-between group hover:shadow-md transition-all duration-300">
           <div class="absolute top-0 right-0 w-40 h-40 bg-indigo-50/30 rounded-bl-[6rem] -mr-16 -mt-16 -z-0"></div>
           
           <div class="relative z-10">

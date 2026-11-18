@@ -27,7 +27,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @forelse($templates as $template)
-                    <div class="bg-gray-50 dark:bg-gray-900 border border-gray-200/60 dark:border-gray-750 p-5 rounded-2xl flex flex-col justify-between">
+                    <div class="bg-gray-50 dark:bg-gray-900 border border-gray-200/60 dark:border-gray-700 p-5 rounded-2xl flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-start gap-2">
                                 <span class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 rounded-md text-[10px] font-black tracking-widest uppercase">
@@ -42,7 +42,7 @@
                             <!-- Placeholder Tags -->
                             <div class="flex flex-wrap gap-1 mt-3">
                                 @foreach($template->required_fields as $field)
-                                    <span class="text-[9px] font-bold bg-gray-200 dark:bg-gray-800 text-gray-650 dark:text-gray-350 px-2 py-0.5 rounded-full border border-gray-300/40 dark:border-gray-700/40">
+                                    <span class="text-[9px] font-bold bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full border border-gray-300/40 dark:border-gray-700/40">
                                         {{ $field }}
                                     </span>
                                 @endforeach
@@ -75,19 +75,19 @@
                 <!-- name -->
                 <div>
                     <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Nama Surat</label>
-                    <input type="text" name="name" id="name" required placeholder="Misal: Surat Keterangan Aktif Siswa" class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <input type="text" name="name" id="name" required placeholder="Misal: Surat Keterangan Aktif Siswa" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                 </div>
 
                 <!-- code -->
                 <div>
                     <label for="code" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Kode Surat (Max 10 Karakter)</label>
-                    <input type="text" name="code" id="code" required placeholder="Misal: SKA, STG, SDM" class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <input type="text" name="code" id="code" required placeholder="Misal: SKA, STG, SDM" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                 </div>
 
                 <!-- body_template -->
                 <div>
                     <label for="body_template" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Badan Surat (HTML / Text)</label>
-                    <textarea name="body_template" id="body_template" rows="8" required placeholder="Tuliskan badan surat di sini... Gunakan placeholder @{{nama_siswa}}, @{{nisn}}, @{{purpose}}, dsb." class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500 font-mono"></textarea>
+                    <textarea name="body_template" id="body_template" rows="8" required placeholder="Tuliskan badan surat di sini... Gunakan placeholder @{{nama_siswa}}, @{{nisn}}, @{{purpose}}, dsb." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500 font-mono"></textarea>
                     
                     <div class="mt-2 bg-gray-50 dark:bg-gray-900 border border-gray-200/40 dark:border-gray-700/30 p-3 rounded-xl">
                         <span class="block text-[10px] font-black uppercase text-gray-400 tracking-wider"> PANDUAN PLACEHOLDER:</span>
@@ -136,13 +136,13 @@
                 <!-- signer_name -->
                 <div>
                     <label for="signer_name" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Nama Penandatangan</label>
-                    <input type="text" name="signer_name" id="signer_name" required placeholder="Nama lengkap &amp; gelar penanda tangan" class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <input type="text" name="signer_name" id="signer_name" required placeholder="Nama lengkap &amp; gelar penanda tangan" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                 </div>
 
                 <!-- signer_title -->
                 <div>
                     <label for="signer_title" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Jabatan Penandatangan</label>
-                    <input type="text" name="signer_title" id="signer_title" required placeholder="Kepala Sekolah" class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <input type="text" name="signer_title" id="signer_title" required placeholder="Kepala Sekolah" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                 </div>
 
                 <!-- signature image file -->

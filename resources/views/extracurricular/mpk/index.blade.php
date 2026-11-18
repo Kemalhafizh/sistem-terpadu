@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-3">
-            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-xl dark:bg-emerald-950 dark:text-emerald-350"></span>
+            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-xl dark:bg-emerald-950 dark:text-emerald-300"></span>
             Dashboard Pengawasan & Audit MPK
         </h2>
     </x-slot>
@@ -21,10 +21,10 @@
             <a href="{{ route('mpk.index') }}" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all">
                  Audit Keuangan
             </a>
-            <a href="{{ route('mpk.lpj.index') }}" class="px-4 py-2 bg-white text-slate-650 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+            <a href="{{ route('mpk.lpj.index') }}" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                  Repositori LPJ OSIS
             </a>
-            <a href="{{ route('mpk.aspirations.index') }}" class="px-4 py-2 bg-white text-slate-650 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+            <a href="{{ route('mpk.aspirations.index') }}" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                  Kotak Suara Aspirasi
             </a>
         </div>
@@ -41,7 +41,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Saldo Card -->
             <div class="bg-white border border-slate-100 dark:bg-gray-800 dark:border-gray-700 p-6 rounded-3xl shadow-xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-550/5 rounded-full blur-2xl"></div>
+                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-600/5 rounded-full blur-2xl"></div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Saldo Kas OSIS Terkini</p>
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-none">
                     Rp {{ number_format($currentBalance, 0, ',', '.') }}
@@ -53,7 +53,7 @@
 
             <!-- Total Audit Card -->
             <div class="bg-white border border-slate-100 dark:bg-gray-800 dark:border-gray-700 p-6 rounded-3xl shadow-xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-550/5 rounded-full blur-2xl"></div>
+                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-600/5 rounded-full blur-2xl"></div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Status Audit Kas</p>
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-none">
                     {{ $verifiedCount + $flaggedCount }} / {{ $totalTransactions }}
@@ -66,7 +66,7 @@
 
             <!-- Pending Card -->
             <div class="bg-white border border-slate-100 dark:bg-gray-800 dark:border-gray-700 p-6 rounded-3xl shadow-xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-amber-550/5 rounded-full blur-2xl"></div>
+                <div class="absolute top-0 right-0 w-24 h-24 bg-amber-600/5 rounded-full blur-2xl"></div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Belum Diaudit (Pending)</p>
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-none">
                     {{ $pendingAuditCount }}
@@ -168,7 +168,7 @@
                                         @if(in_array(auth()->user()->role, ['waka_kesiswaan', 'admin', 'superadmin', 'kepala_sekolah']))
                                             <button 
                                                 @click="openAuditModal({{ json_encode($tx) }})" 
-                                                class="px-3 py-1.5 bg-emerald-650 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all"
+                                                class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all"
                                             >
                                                  Audit
                                             </button>
@@ -221,7 +221,7 @@
                             <input type="hidden" name="osis_transaction_id" :value="selectedTx.id">
 
                             <!-- Details Card -->
-                            <div class="bg-slate-50 dark:bg-gray-700/30 p-4 rounded-2xl border border-slate-150/40 space-y-2 text-xs">
+                            <div class="bg-slate-50 dark:bg-gray-700/30 p-4 rounded-2xl border border-slate-200/40 space-y-2 text-xs">
                                 <div class="flex justify-between">
                                     <span class="text-slate-400 font-bold">Deskripsi:</span>
                                     <span class="font-extrabold text-slate-800 dark:text-slate-200" x-text="selectedTx.description"></span>
@@ -232,28 +232,28 @@
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-slate-400 font-bold">Pencatat:</span>
-                                    <span class="font-extrabold text-slate-850 dark:text-slate-250" x-text="selectedTx.recorder.name"></span>
+                                    <span class="font-extrabold text-slate-900 dark:text-slate-200" x-text="selectedTx.recorder.name"></span>
                                 </div>
                             </div>
 
                             <!-- Audit Status -->
                             <div class="space-y-2">
-                                <label class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Keputusan Status Audit</label>
+                                <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Keputusan Status Audit</label>
                                 <div class="grid grid-cols-2 gap-3">
                                     <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
                                         <input type="radio" name="status" value="verified" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500/10" :checked="selectedTx.audit && selectedTx.audit.status === 'verified'">
-                                        <span class="text-xs font-bold text-slate-700 dark:text-slate-350">Verified</span>
+                                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Verified</span>
                                     </label>
                                     <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
                                         <input type="radio" name="status" value="flagged" class="w-4 h-4 text-rose-600 focus:ring-rose-500/10" :checked="selectedTx.audit && selectedTx.audit.status === 'flagged'">
-                                        <span class="text-xs font-bold text-slate-700 dark:text-slate-350">Flagged (Revisi)</span>
+                                        <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Flagged (Revisi)</span>
                                     </label>
                                 </div>
                             </div>
 
                             <!-- Audit Notes -->
                             <div class="space-y-2">
-                                <label for="notes" class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Catatan Evaluasi / Temuan</label>
+                                <label for="notes" class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Catatan Evaluasi / Temuan</label>
                                 <textarea 
                                     id="notes" 
                                     name="notes" 
@@ -269,7 +269,7 @@
                                 <button type="button" @click="selectedTx = null" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-black uppercase tracking-wider transition-colors">
                                     Batal
                                 </button>
-                                <button type="submit" class="px-5 py-2 bg-emerald-650 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-650/10 transition-colors">
+                                <button type="submit" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-700/10 transition-colors">
                                     Simpan Hasil Audit
                                 </button>
                             </div>

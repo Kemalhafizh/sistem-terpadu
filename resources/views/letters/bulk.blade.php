@@ -29,7 +29,7 @@
                 <!-- template_id -->
                 <div>
                     <label for="template_id" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Pilih Template Surat</label>
-                    <select name="template_id" id="template_id" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <select name="template_id" id="template_id" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">-- Pilih Template --</option>
                         @foreach($templates as $t)
                             <option value="{{ $t->id }}">{{ $t->name }} ({{ $t->code }})</option>
@@ -40,7 +40,7 @@
                 <!-- classroom_id -->
                 <div>
                     <label for="classroom_id" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Pilih Kelas Target</label>
-                    <select name="classroom_id" id="classroom_id" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <select name="classroom_id" id="classroom_id" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">-- Pilih Kelas --</option>
                         @foreach($classrooms as $c)
                             <option value="{{ $c->id }}">{{ $c->name }}</option>
@@ -54,17 +54,17 @@
                     
                     <div>
                         <label for="purpose" class="block text-[11px] font-bold text-gray-500 mb-1">Keperluan (purpose)</label>
-                        <input type="text" name="field_values[purpose]" id="purpose" placeholder="Misal: Mengikuti Kegiatan Kunjungan Industri..." class="w-full bg-white dark:bg-gray-850 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                        <input type="text" name="field_values[purpose]" id="purpose" placeholder="Misal: Mengikuti Kegiatan Kunjungan Industri..." class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label for="start_date" class="block text-[11px] font-bold text-gray-500 mb-1">Tanggal Mulai (start_date)</label>
-                            <input type="date" name="field_values[start_date]" id="start_date" class="w-full bg-white dark:bg-gray-850 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                            <input type="date" name="field_values[start_date]" id="start_date" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         </div>
                         <div>
                             <label for="end_date" class="block text-[11px] font-bold text-gray-500 mb-1">Tanggal Selesai (end_date)</label>
-                            <input type="date" name="field_values[end_date]" id="end_date" class="w-full bg-white dark:bg-gray-850 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                            <input type="date" name="field_values[end_date]" id="end_date" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         </div>
                     </div>
                 </div>

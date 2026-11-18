@@ -9,7 +9,7 @@
             <a href="{{ route('treasury.reconciliation.import') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md font-bold">Impor Rekening Koran</a>
         </div>
     </div>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>

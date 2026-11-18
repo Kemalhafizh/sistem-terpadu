@@ -16,7 +16,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- activePreset information -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
                     <h3 class="font-black text-lg text-gray-800">Kelas Aktif: <span class="text-indigo-600">{{ $student->classroom->name }}</span></h3>
                     <p class="text-xs text-gray-400 font-semibold mt-1">
@@ -34,7 +34,7 @@
                     @php 
                         $daySchedules = $schedules->where('day', $day)->sortBy('session_start');
                     @endphp
-                    <div class="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-150/60 flex flex-col">
+                    <div class="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-200/60 flex flex-col">
                         <div class="border-b border-gray-100 pb-3 mb-4 flex justify-between items-center">
                             <h4 class="font-black text-gray-800 text-base">{{ $day }}</h4>
                             <span class="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-[10px] font-black uppercase tracking-widest">

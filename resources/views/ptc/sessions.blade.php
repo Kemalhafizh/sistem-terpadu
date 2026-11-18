@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
                 <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -27,7 +27,7 @@
 
     <!-- Form Create Session -->
     @if(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'growth.ptc.store_session'))
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Buat Sesi PTC Baru (Wali Kelas / Sekolah)</h3>
         <form action="{{ route('growth.ptc.store_session') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @csrf
@@ -61,7 +61,7 @@
     <!-- Sessions Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @forelse($sessions as $s)
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-3">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-3">
             <div class="flex justify-between items-center">
                 <span class="px-2.5 py-1 text-xs font-bold rounded-lg uppercase bg-indigo-100 text-indigo-700">
                     {{ $s->status }}

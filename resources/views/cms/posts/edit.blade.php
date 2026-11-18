@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Edit Artikel / Berita') }}
             </h2>
-            <a href="{{ route('cms.posts.index') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-250 text-gray-700 text-sm font-semibold rounded-xl transition-all flex items-center space-x-1">
+            <a href="{{ route('cms.posts.index') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-xl transition-all flex items-center space-x-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 <span>Kembali</span>
             </a>
@@ -13,7 +13,7 @@
 
     <div class="py-6">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm border border-gray-150 rounded-xl overflow-hidden p-6 md:p-8">
+            <div class="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden p-6 md:p-8">
                 <form action="{{ route('cms.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
                     @method('PUT')
@@ -69,7 +69,7 @@
                         </div>
 
                         <!-- Sidebar parameters (column 3) -->
-                        <div class="space-y-6 bg-gray-50 p-5 rounded-xl border border-gray-150 h-fit">
+                        <div class="space-y-6 bg-gray-50 p-5 rounded-xl border border-gray-200 h-fit">
                             <div>
                                 <label for="category" class="block text-sm font-bold text-gray-700">Kategori</label>
                                 <select name="category" id="category" required

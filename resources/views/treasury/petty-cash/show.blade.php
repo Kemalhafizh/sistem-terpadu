@@ -13,25 +13,25 @@
     </div>
     @include('treasury.partials.alerts')
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Saldo saat ini</p>
             <div class="mt-2 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($fund->current_balance, 0, ',', '.') }}</div>
             <p class="text-xs text-gray-500 mt-1">Imprest Rp {{ number_format($fund->imprest_amount, 0, ',', '.') }} &middot; pemegang {{ $fund->custodian?->name ?? '-' }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Total pengeluaran disetujui</p>
             <div class="mt-2 text-2xl font-black text-rose-700">Rp {{ number_format($totals['spent'], 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Total pengisian ulang disetujui</p>
             <div class="mt-2 text-2xl font-black text-emerald-700">Rp {{ number_format($totals['replenished'], 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Pengeluaran menunggu persetujuan</p>
             <div class="mt-2 text-2xl font-black text-amber-700">Rp {{ number_format($totals['pending'], 0, ',', '.') }}</div>
         </div>
     </div>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>

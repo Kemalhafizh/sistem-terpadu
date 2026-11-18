@@ -38,7 +38,7 @@
 <body 
   x-data="{ scrolled: false }" 
   @scroll.window="scrolled = (window.pageYOffset > 30)" 
-  class="bg-slate-55 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white transition-colors duration-300"
+  class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white transition-colors duration-300"
 >
 
   <!-- Premium Dynamic Frosted White Navbar -->
@@ -65,7 +65,7 @@
               {{ school_short_name() }}
             </span>
             <p 
-              :class="scrolled ? 'text-slate-500' : 'text-slate-650'"
+              :class="scrolled ? 'text-slate-500' : 'text-slate-700'"
               class="text-[9px] font-bold uppercase tracking-widest leading-none mt-0.5 transition-all duration-300"
             >
               {{ __('spmb.spmb_portal_subtitle') }}
@@ -117,7 +117,7 @@
             href="{{ route('spmb.status') }}" 
             :class="scrolled 
               ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200' 
-              : 'bg-white/80 hover:bg-white text-slate-750 border-slate-200/70 shadow-sm'"
+              : 'bg-white/80 hover:bg-white text-slate-800 border-slate-200/70 shadow-sm'"
             class="px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 border hover:scale-[1.02]"
           >
             <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -136,7 +136,7 @@
           </a>
           <a 
             href="{{ route('login') }}" 
-            :class="scrolled ? 'text-slate-650 hover:text-emerald-650' : 'text-slate-700 hover:text-emerald-700'"
+            :class="scrolled ? 'text-slate-700 hover:text-emerald-700' : 'text-slate-700 hover:text-emerald-700'"
             class="text-xs font-bold uppercase tracking-wider transition-all duration-300 hidden md:flex items-center gap-1 hover:translate-x-1"
           >
             {{ __('spmb.staff_login') }}
@@ -204,7 +204,7 @@
           </svg>
         </div>
         <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">A</h4>
-        <p class="text-[9px] font-black text-slate-550 uppercase tracking-widest mt-1">{{ __('spmb.stat_accreditation') }}</p>
+        <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_accreditation') }}</p>
       </div>
       
       <!-- Stat 2 -->
@@ -215,7 +215,7 @@
           </svg>
         </div>
         <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">30+</h4>
-        <p class="text-[9px] font-black text-slate-550 uppercase tracking-widest mt-1">{{ __('spmb.stat_extracurricular') }}</p>
+        <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_extracurricular') }}</p>
       </div>
 
       <!-- Stat 3 -->
@@ -226,7 +226,7 @@
           </svg>
         </div>
         <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">100%</h4>
-        <p class="text-[9px] font-black text-slate-550 uppercase tracking-widest mt-1">{{ __('spmb.stat_islamic') }}</p>
+        <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_islamic') }}</p>
       </div>
 
       <!-- Stat 4 -->
@@ -237,7 +237,7 @@
           </svg>
         </div>
         <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">500+</h4>
-        <p class="text-[9px] font-black text-slate-550 uppercase tracking-widest mt-1">{{ __('spmb.stat_achievement') }}</p>
+        <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_achievement') }}</p>
       </div>
     </div>
   </div>
@@ -306,7 +306,7 @@
       <div class="text-center mb-16">
         <span class="text-[10px] font-black tracking-widest text-emerald-600 uppercase">Tanya Jawab Umum</span>
         <h2 class="text-3xl font-black text-slate-950 tracking-tight mt-1">{{ __('spmb.faq_title') }}</h2>
-        <div class="w-16 h-1 bg-emerald-550 mx-auto mt-4 rounded-full"></div>
+        <div class="w-16 h-1 bg-emerald-600 mx-auto mt-4 rounded-full"></div>
       </div>
 
       <div class="space-y-4">
@@ -368,7 +368,7 @@
   </div>
 
   <!-- Call to Action Banner -->
-  <div class="py-24 bg-gradient-to-br from-emerald-800 to-teal-850 text-center relative overflow-hidden">
+  <div class="py-24 bg-gradient-to-br from-emerald-800 to-teal-800 text-center relative overflow-hidden">
     <!-- Ambient mesh light overlay -->
     <div class="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:24px_24px] z-0"></div>
     <div class="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2"></div>
@@ -388,12 +388,12 @@
   </div>
 
   <!-- Premium Footer -->
-  <footer class="bg-slate-50 text-slate-550 py-16 border-t border-slate-200/50">
+  <footer class="bg-slate-50 text-slate-600 py-16 border-t border-slate-200/50">
     <div class="w-full px-4 sm:px-6 lg:px-8 text-center space-y-6">
       <div class="h-10 w-auto flex items-center justify-center filter grayscale opacity-60 mx-auto">
         <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain">
       </div>
-      <p class="text-xs font-black uppercase tracking-widest text-slate-650">&copy; {{ date('Y') }} {{ __('public.footer_copyright', school_placeholders()) }}</p>
+      <p class="text-xs font-black uppercase tracking-widest text-slate-700">&copy; {{ date('Y') }} {{ __('public.footer_copyright', school_placeholders()) }}</p>
       <p class="text-[10px] font-inter text-slate-500 max-w-md mx-auto leading-relaxed">
         {{ __('public.footer_address') }}
       </p>

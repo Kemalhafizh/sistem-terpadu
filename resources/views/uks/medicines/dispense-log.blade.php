@@ -37,7 +37,7 @@
                                 <th class="pb-3 text-right">Keterangan</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-55/30 dark:divide-gray-700/30">
+                        <tbody class="divide-y divide-gray-50/30 dark:divide-gray-700/30">
                             @forelse($logs as $log)
                                 <tr class="group hover:bg-gray-50/55 dark:hover:bg-gray-900/10 transition-all">
                                     <td class="py-4 text-xs font-semibold text-gray-600 dark:text-gray-400">

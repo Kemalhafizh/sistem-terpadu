@@ -160,14 +160,14 @@
                     <div class="space-y-1.5">
                         <label for="title" class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Subjek Masalah / Judul Laporan <span class="text-rose-500">*</span></label>
                         <input type="text" name="title" id="title" value="{{ old('title') }}" required placeholder="Contoh: AC Kelas XI-A Tidak Dingin / Printer TU Macet"
-                               class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-850 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200">
+                               class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-900 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200">
                     </div>
 
                     <!-- Description Textarea -->
                     <div class="space-y-1.5">
                         <label for="description" class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Deskripsi Detail Masalah <span class="text-rose-500">*</span></label>
                         <textarea name="description" id="description" rows="6" required placeholder="Jelaskan secara kronologis dan detail mengenai kendala yang terjadi, lokasi, serta dampaknya..."
-                                  class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-850 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 resize-none">{{ old('description') }}</textarea>
+                                  class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-900 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 resize-none">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Premium Upload Attachment Zone -->
@@ -181,7 +181,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                     </svg>
                                 </div>
-                                <span class="text-xs font-bold text-slate-700 dark:text-slate-355" x-text="fileName ? 'Berkas dipilih: ' + fileName : 'Klik atau seret berkas ke sini untuk mengunggah'"></span>
+                                <span class="text-xs font-bold text-slate-700 dark:text-slate-300" x-text="fileName ? 'Berkas dipilih: ' + fileName : 'Klik atau seret berkas ke sini untuk mengunggah'"></span>
                                 <span class="text-[10px] text-slate-400 mt-1.5">Mendukung berkas JPG, PNG, PDF, DOCX, ZIP (Maksimal 5MB)</span>
                                 
                                 <input type="file" name="attachment" id="attachment" class="hidden" accept=".jpg,.jpeg,.png,.pdf,.docx,.zip" @change="fileName = $event.target.files[0] ? $event.target.files[0].name : ''">

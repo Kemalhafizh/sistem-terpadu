@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
                 <svg class="w-7 h-7 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -27,7 +27,7 @@
 
     <!-- Form Create Cycle -->
     @if(\App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'hc.evaluation.store_cycle'))
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Aktifkan Siklus Evaluasi 360° Baru</h3>
         <form action="{{ route('hc.evaluation.store_cycle') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @csrf
@@ -49,7 +49,7 @@
     <!-- Cycles Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @forelse($cycles as $cyc)
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-3">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-3">
             <div class="flex justify-between items-center">
                 <span class="px-2.5 py-1 text-xs font-bold rounded-lg uppercase bg-sky-100 text-sky-700">
                     {{ strtoupper($cyc->status) }}

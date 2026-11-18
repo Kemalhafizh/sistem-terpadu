@@ -31,13 +31,13 @@
                 emptyActionText="Buat Pengumuman"
             >
                 @foreach ($announcements as $announcement)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-750/30 transition-colors">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
                         <!-- Poster -->
                         <td class="py-4 px-6 whitespace-nowrap">
                             @if($announcement->image_path)
                                 <img src="{{ Storage::url($announcement->image_path) }}" alt="Poster" class="h-12 w-12 object-cover rounded-xl border border-gray-200 dark:border-slate-700 shadow-xs">
                             @else
-                                <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-slate-900 flex items-center justify-center text-gray-400 dark:text-slate-650 border border-gray-150 dark:border-slate-700/50">
+                                <div class="h-12 w-12 rounded-xl bg-gray-100 dark:bg-slate-900 flex items-center justify-center text-gray-400 dark:text-slate-600 border border-gray-200 dark:border-slate-700/50">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 </div>
                             @endif
@@ -48,7 +48,7 @@
                             <div class="flex items-center gap-1.5 flex-wrap mb-1">
                                 <!-- Pinned indicator -->
                                 @if($announcement->is_pinned)
-                                    <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/45 dark:text-amber-300 text-[9px] font-extrabold uppercase tracking-wider border border-amber-250 dark:border-amber-900/30 shadow-xs">
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/45 dark:text-amber-300 text-[9px] font-extrabold uppercase tracking-wider border border-amber-200 dark:border-amber-900/30 shadow-xs">
                                          PINNED
                                     </span>
                                 @endif
@@ -56,16 +56,16 @@
                                 <!-- Category Badge -->
                                 <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider border {{ 
                                     $announcement->category === 'akademik' ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-200 dark:border-blue-900/40' : (
-                                    $announcement->category === 'keuangan' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-250 dark:border-emerald-900/40' : (
-                                    $announcement->category === 'kegiatan' ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-250 dark:border-purple-900/40' : (
-                                    $announcement->category === 'keislaman' ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-250 dark:border-amber-900/40' : 'bg-slate-50 text-slate-755 dark:bg-slate-800/80 dark:text-slate-300 border-slate-200 dark:border-slate-700/60')))
+                                    $announcement->category === 'keuangan' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900/40' : (
+                                    $announcement->category === 'kegiatan' ? 'bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border-purple-200 dark:border-purple-900/40' : (
+                                    $announcement->category === 'keislaman' ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-200 dark:border-amber-900/40' : 'bg-slate-50 text-slate-800 dark:bg-slate-800/80 dark:text-slate-300 border-slate-200 dark:border-slate-700/60')))
                                 }}">
                                     {{ $announcement->category ?? 'umum' }}
                                 </span>
 
                                 <!-- Priority level -->
                                 @if($announcement->priority === 'urgent')
-                                    <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-red-50 text-red-700 dark:bg-red-950/45 dark:text-red-300 border border-red-250 dark:border-red-900/40 uppercase tracking-wider animate-pulse">
+                                    <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-red-50 text-red-700 dark:bg-red-950/45 dark:text-red-300 border border-red-200 dark:border-red-900/40 uppercase tracking-wider animate-pulse">
                                          URGENT
                                     </span>
                                 @endif
@@ -80,12 +80,12 @@
 
                         <!-- Target Penerima -->
                         <td class="py-4 px-6 whitespace-nowrap">
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-750 dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
+                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
                                  {{ $announcement->target_role ? ucfirst($announcement->target_role) : 'Semua Orang' }}
                             </span>
                             @if($announcement->targetClassroom)
                                 <div class="mt-1.5">
-                                    <span class="px-2.5 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-750 dark:text-purple-400 border border-purple-200 dark:border-purple-900/40">
+                                    <span class="px-2.5 py-1 inline-flex text-[10px] leading-5 font-bold rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-400 border border-purple-200 dark:border-purple-900/40">
                                          {{ $announcement->targetClassroom->name }}
                                     </span>
                                 </div>
@@ -117,7 +117,7 @@
                         <!-- Aksi -->
                         <td class="py-4 px-6 whitespace-nowrap text-right text-xs font-bold tracking-wider">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('announcements.show', $announcement) }}" class="px-2.5 py-1.5 bg-gray-100 dark:bg-slate-700 text-gray-750 dark:text-slate-300 rounded-lg hover:bg-gray-250 dark:hover:bg-slate-655 transition-colors shadow-xs">
+                                <a href="{{ route('announcements.show', $announcement) }}" class="px-2.5 py-1.5 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-xs">
                                     Lihat
                                 </a>
                                 
@@ -132,7 +132,7 @@
                                     Penerima
                                 </a>
 
-                                <a href="{{ route('announcements.edit', $announcement) }}" class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-450 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors shadow-xs">
+                                <a href="{{ route('announcements.edit', $announcement) }}" class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors shadow-xs">
                                     Edit
                                 </a>
 

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-xl mx-auto space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
         <h1 class="text-xl font-black text-gray-900 dark:text-white mb-2">Pencairan Dana Beasiswa</h1>
         <p class="text-xs text-gray-500 mb-4">Penerima: <strong class="text-indigo-600">{{ $application->student->name }}</strong> | Program: {{ $application->program->name }}</p>
 

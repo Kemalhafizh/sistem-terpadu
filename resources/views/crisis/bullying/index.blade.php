@@ -8,7 +8,7 @@
         </h1>
         <a href="{{ route('crisis.bullying.statistics') }}" class="text-indigo-600 hover:text-indigo-900 font-bold">Lihat Statistik</a>
     </div>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-150 dark:border-gray-700 shadow-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead>

@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Kelola Galeri Foto Sekolah') }}
             </h2>
-            <a href="{{ route('cms.dashboard') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-250 text-gray-700 text-sm font-semibold rounded-xl transition-all flex items-center space-x-1">
+            <a href="{{ route('cms.dashboard') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-xl transition-all flex items-center space-x-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 <span>Dashboard CMS</span>
             </a>
@@ -22,7 +22,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- List Column (2/3 width) -->
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-white shadow-sm border border-gray-150 rounded-xl overflow-hidden">
+                    <div class="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
                         <div class="p-6 border-b border-gray-100">
                             <h3 class="text-base font-bold text-gray-800">Daftar Foto Galeri</h3>
                         </div>
@@ -48,7 +48,7 @@
                                             <td class="px-6 py-4">
                                                 <div class="text-sm font-bold text-gray-900">{{ $gallery->title }}</div>
                                                 <div class="text-xs text-gray-400 mt-0.5 max-w-xs truncate">{{ $gallery->caption ?? 'Tanpa deskripsi' }}</div>
-                                                <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded text-[10px] font-bold bg-primary-55 text-primary-700">
+                                                <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded text-[10px] font-bold bg-primary-50 text-primary-700">
                                                     {{ $gallery->category ?? 'Umum' }}
                                                 </span>
                                             </td>
@@ -104,7 +104,7 @@
 
                 <!-- Add Form Column (1/3 width) -->
                 <div>
-                    <div class="bg-white shadow-sm border border-gray-150 rounded-xl p-6 space-y-6 h-fit sticky top-6">
+                    <div class="bg-white shadow-sm border border-gray-200 rounded-xl p-6 space-y-6 h-fit sticky top-6">
                         <h3 class="text-base font-bold text-gray-800 pb-3 border-b border-gray-100">Tambah Foto Galeri</h3>
                         <form action="{{ route('cms.galleries.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                             @csrf
@@ -184,7 +184,7 @@
             
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-150">
+            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-200">
                 <div class="p-6 space-y-6">
                     <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                         <h3 class="text-base font-bold text-gray-800" id="modal-title">Edit Foto Galeri</h3>

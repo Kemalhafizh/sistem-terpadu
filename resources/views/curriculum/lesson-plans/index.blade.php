@@ -85,7 +85,7 @@
             <form action="{{ route('curriculum.lesson-plans.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Mata Pelajaran</label>
-                    <select name="subject_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-emerald-500 focus:outline-none">
+                    <select name="subject_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-emerald-500 focus:outline-none">
                         <option value="">Semua Mapel</option>
                         @foreach($subjects as $subject)
                             <option value="{{ $subject->id }}" {{ request('subject_id') == $subject->id ? 'selected' : '' }}>{{ $subject->name }}</option>
@@ -95,7 +95,7 @@
 
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Status RPP</label>
-                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-emerald-500 focus:outline-none">
+                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-emerald-500 focus:outline-none">
                         <option value="">Semua Status</option>
                         <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="submitted" {{ request('status') === 'submitted' ? 'selected' : '' }}>Diajukan (Submitted)</option>
@@ -129,7 +129,7 @@
                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-150/40 dark:divide-gray-700/40">
+                    <tbody class="divide-y divide-gray-200/40 dark:divide-gray-700/40">
                         @forelse($lessonPlans as $plan)
                         <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-900/20 transition-colors">
                             <td class="px-6 py-4">
@@ -149,7 +149,7 @@
                                 @elseif($plan->status === 'submitted')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">DIAJUKAN</span>
                                 @elseif($plan->status === 'approved')
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-450 border border-emerald-200 dark:border-emerald-900/50">DISETUJUI</span>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">DISETUJUI</span>
                                 @elseif($plan->status === 'revision_needed')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-red-100 text-red-800 dark:bg-red-950/30 dark:text-red-400 border border-red-200 dark:border-red-900/50">REVISI</span>
                                 @endif
@@ -217,7 +217,7 @@
             </div>
 
             @if($lessonPlans->hasPages())
-            <div class="px-6 py-4 border-t border-gray-150 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-900/50">
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-900/50">
                 {{ $lessonPlans->appends(request()->query())->links() }}
             </div>
             @endif

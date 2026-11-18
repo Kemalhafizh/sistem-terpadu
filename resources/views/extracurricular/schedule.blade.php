@@ -25,7 +25,7 @@
                     $dayEkskuls = $extracurriculars->where('schedule_day', $day);
                 @endphp
                 <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
-                    <div class="flex justify-between items-center pb-2 border-b border-gray-150 dark:border-gray-700/50">
+                    <div class="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-700/50">
                         <h3 class="font-black text-sm text-gray-800 dark:text-white">{{ $day }}</h3>
                         <span class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 font-extrabold text-[9px] rounded-lg">
                             {{ $dayEkskuls->count() }} Kegiatan
@@ -34,7 +34,7 @@
 
                     <div class="space-y-3">
                         @forelse($dayEkskuls as $ek)
-                            <div class="p-3 bg-gray-55/50 dark:bg-gray-900/50 rounded-2xl border border-gray-150 dark:border-gray-700/50 text-xs space-y-1.5 hover:border-indigo-400 transition-all">
+                            <div class="p-3 bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-700/50 text-xs space-y-1.5 hover:border-indigo-400 transition-all">
                                 <div class="font-bold text-gray-800 dark:text-white">{{ $ek->name }}</div>
                                 <div class="text-[10px] text-gray-400">
                                      {{ $ek->schedule_time }}

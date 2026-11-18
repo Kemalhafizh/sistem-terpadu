@@ -80,7 +80,7 @@
             </div>
 
             <!-- 2. Billings Ledger List -->
-            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-150/60 overflow-hidden">
+            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-200/60 overflow-hidden">
                 <div class="px-8 py-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h4 class="text-lg font-black text-gray-800 tracking-tight">Daftar Tagihan Siswa</h4>
@@ -167,7 +167,7 @@
             </div>
 
             <!-- 3. Riwayat Transaksi / Payments Ledger -->
-            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-150/60 overflow-hidden">
+            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-200/60 overflow-hidden">
                 <div class="px-8 py-6 border-b border-gray-100">
                     <h4 class="text-lg font-black text-gray-800 tracking-tight">Riwayat Pembayaran Berhasil</h4>
                     <p class="text-xs text-gray-400 font-semibold mt-0.5">Daftar transaksi pembayaran yang sukses divalidasi oleh sistem</p>

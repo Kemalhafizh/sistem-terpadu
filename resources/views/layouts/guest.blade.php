@@ -16,7 +16,7 @@
     @if(app()->getLocale() === 'ar')
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     @else
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;850;900&family=Inter:wght@300;400;500;600;750;800&family={{ str_replace(' ', '+', $appearance->font_family) }}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&family={{ str_replace(' ', '+', $appearance->font_family) }}:wght@400;500;600;700&display=swap" rel="stylesheet">
     @endif
 
     <!-- Scripts -->
@@ -48,19 +48,19 @@
         {!! '<' . 'style>' . $appearance->custom_css . '</' . 'style>' !!}
     @endif
 </head>
-<body class="font-sans text-slate-800 antialiased min-h-screen bg-slate-50/40 flex items-center justify-center p-4 sm:p-6 md:p-8 relative">
+<body class="font-sans text-slate-800 dark:text-slate-100 antialiased min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4 sm:p-6 md:p-8 relative">
     
     <!-- Language Switcher Bar (Top Float) -->
     <div class="fixed top-4 end-4 z-50" x-data="{ langOpen: false }">
         <div class="relative">
-            <button @click="langOpen = !langOpen" class="px-3 py-1.5 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-md border border-slate-200/80 dark:border-gray-700 text-xs font-bold text-slate-700 dark:text-gray-200 hover:bg-white flex items-center gap-1.5 transition-all duration-200">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5c-.006 2.16-.452 4.28-1.313 6.25L9.302 6.83a17.965 17.965 0 002.39-2.203H12.75z"/></svg>
+            <button @click="langOpen = !langOpen" class="px-3 py-1.5 rounded-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-md shadow-md border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-white flex items-center gap-1.5 transition-all duration-200">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5c-.006 2.16-.452 4.28-1.313 6.25L9.302 6.83a17.965 17.965 0 002.39-2.203H12.75z"/></svg>
                 <span class="uppercase tracking-wider">{{ app()->getLocale() }}</span>
             </button>
-            <div x-show="langOpen" @click.away="langOpen = false" class="absolute end-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-slate-100 dark:border-gray-700 py-1.5 z-50 overflow-hidden" style="display:none;">
+            <div x-show="langOpen" @click.away="langOpen = false" class="absolute end-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 py-1.5 z-50 overflow-hidden" style="display:none;">
                 <form action="{{ route('preferences.locale', 'id') }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 flex items-center justify-between {{ app()->getLocale() === 'id' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-gray-300' }}">
+                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between {{ app()->getLocale() === 'id' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-slate-300' }}">
                         <span>Indonesia</span>
                         @if(app()->getLocale() === 'id')
                             <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -69,7 +69,7 @@
                 </form>
                 <form action="{{ route('preferences.locale', 'en') }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 flex items-center justify-between {{ app()->getLocale() === 'en' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-gray-300' }}">
+                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between {{ app()->getLocale() === 'en' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-slate-300' }}">
                         <span>English</span>
                         @if(app()->getLocale() === 'en')
                             <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -78,7 +78,7 @@
                 </form>
                 <form action="{{ route('preferences.locale', 'ar') }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-gray-700 flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-gray-300' }}">
+                    <button type="submit" class="w-full text-start px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'text-emerald-600 font-bold' : 'text-slate-600 dark:text-slate-300' }}">
                         <span>العربية</span>
                         @if(app()->getLocale() === 'ar')
                             <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -92,104 +92,87 @@
     <!-- Background Islamic pattern overlay -->
     <div class="absolute inset-0 islamic-pattern opacity-[0.06] pointer-events-none"></div>
 
-    <!-- Soft glowing background orbs -->
-    <div class="absolute top-[-10%] left-[-10%] w-112.5 h-112.5 bg-emerald-100/40 rounded-full blur-[130px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-100 h-100 bg-teal-100/30 rounded-full blur-[120px] pointer-events-none"></div>
-
-    <!-- Main Centered Floating Container Card -->
-    <div class="relative z-10 w-full max-w-5xl bg-white shadow-2xl rounded-4xl overflow-hidden flex flex-col lg:flex-row min-h-155 border border-slate-100/80">
+    <!-- Main Centered Container Card -->
+    <div class="relative z-10 w-full max-w-5xl bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden flex flex-col lg:flex-row min-h-[600px] border border-slate-200/80 dark:border-slate-800">
         
         <!-- Left Side: Image Panel (Hidden on Mobile) -->
         <div class="hidden lg:flex lg:w-[48%] relative overflow-hidden flex-col justify-between p-10 select-none bg-slate-900">
             <!-- Full bleed background hero image -->
             @if($appearance->login_background_path)
-                <img src="{{ asset('storage/' . $appearance->login_background_path) }}" class="absolute inset-0 w-full h-full object-cover pointer-events-none" alt="Custom Background">
+                <img src="{{ asset('storage/' . $appearance->login_background_path) }}" class="absolute inset-0 w-full h-full object-cover pointer-events-none" alt="Latar Belakang Portal">
             @else
-                <img src="{{ asset('images/login-hero.png') }}" class="absolute inset-0 w-full h-full object-cover opacity-85 pointer-events-none" alt="Hero Background">
+                <img src="{{ asset('images/login-hero.jpg') }}" class="absolute inset-0 w-full h-full object-cover opacity-85 pointer-events-none" alt="Lingkungan Sekolah {{ school_short_name() }}">
             @endif
             
             <!-- Dark gradient overlay to ensure text readability -->
-            <div class="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-900/30 to-slate-950/45"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/55 to-slate-950/60"></div>
 
             <!-- Content overlay -->
             <div class="relative z-10 h-full flex flex-col justify-between">
                 
-                <!-- Floating Glass Brand Badge -->
-                <div class="self-start inline-flex items-center gap-3 p-2 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-white/8 shadow-md">
-                    <div class="p-1 bg-white/10 rounded-xl">
-                        <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-8 h-8 object-contain" alt="Logo SISTA">
+                <!-- Institutional Brand Badge -->
+                <div class="self-start inline-flex items-center gap-3 p-2 bg-slate-900/85 backdrop-blur-md rounded-2xl border border-white/10 shadow-md">
+                    <div class="p-1 bg-white rounded-xl">
+                        <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-8 h-8 object-contain" alt="Logo {{ school_short_name() }}">
                     </div>
-                    <div class="flex flex-col pr-3">
-                        <span class="text-[9px] font-black uppercase tracking-widest text-emerald-400 leading-none mb-1">Portal Akademik</span>
-                        <span class="text-xs font-bold text-white leading-none">{{ $appearance->app_name }}</span>
+                    <div class="flex flex-col pe-3">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300 leading-none mb-1">SISTA</span>
+                        <span class="text-xs font-bold text-white leading-none">Sulaone &bull; {{ school_short_name() }}</span>
                     </div>
                 </div>
 
                 <!-- Headline & Value Points -->
                 <div class="space-y-6">
                     <div class="space-y-3">
-                        <span class="inline-flex px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest bg-emerald-500/20 text-emerald-350 border border-emerald-500/30">
-                            Enterprise Portal Gate
+                        <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-200 border border-emerald-400/30">
+                            Portal Akademik Sekolah
                         </span>
                         <h1 class="text-3xl font-extrabold text-white leading-tight tracking-tight">
-                            @if(str_starts_with(strtolower($appearance->app_name), 'sistem terpadu'))
-                                Sistem Terpadu <br> 
-                                <span class="bg-linear-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                                    {{ trim(substr($appearance->app_name, strlen('sistem terpadu'))) }}
-                                </span>
-                            @else
-                                Sistem Terpadu <br> 
-                                <span class="bg-linear-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                                    {{ $appearance->app_name }}
-                                </span>
-                            @endif
+                            Sulaone <br>
+                            <span class="text-emerald-300">{{ school_short_name() }}</span>
                         </h1>
-                        <p class="text-xs font-inter text-slate-300 leading-relaxed max-w-sm">
-                            Gerbang administrasi digital sekolah berstandar enterprise. Efisiensi, akuntabilitas, dan transparansi pelayanan kependidikan dalam satu platform terintegrasi.
+                        <p class="text-xs font-inter text-slate-200 leading-relaxed max-w-sm">
+                            Sistem Informasi Sekolah Terpadu (SISTA) untuk layanan akademik, presensi, administrasi keuangan, dan laporan pembinaan siswa.
                         </p>
                     </div>
 
-                    <!-- Point of Value Checkmarks -->
+                    <!-- Value Checkmarks -->
                     <div class="space-y-3 font-inter">
-                        <div class="flex items-center gap-3 text-white/90">
-                            <div class="shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 border border-emerald-500/30">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                        <div class="flex items-center gap-3 text-white/95">
+                            <div class="shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300 border border-emerald-400/30">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
                             </div>
-                            <span class="text-xs font-medium tracking-wide">Smart Academic System (Real-time & Akurat)</span>
+                            <span class="text-xs font-medium">Akademik, jadwal, dan presensi harian dalam satu akun</span>
                         </div>
-                        <div class="flex items-center gap-3 text-white/90">
-                            <div class="shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 border border-emerald-500/30">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                        <div class="flex items-center gap-3 text-white/95">
+                            <div class="shrink-0 w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300 border border-emerald-400/30">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
                             </div>
-                            <span class="text-xs font-medium tracking-wide">Otomatisasi & Rekonsiliasi Transaksi SPP</span>
+                            <span class="text-xs font-medium">Pemantauan SPP dan laporan Mutaba'ah Yaumiyah</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer Tag Box -->
-                <div class="flex justify-between items-center text-[8px] font-black text-slate-400 uppercase tracking-widest gap-4">
-                    <span>{{ $appearance->app_name }}</span>
-                    <span>v2.1</span>
+                <div class="flex justify-between items-center text-[10px] font-bold text-slate-300 uppercase tracking-widest gap-4">
+                    <span>{{ school_short_name() }}</span>
+                    <span>SISTA</span>
                 </div>
 
             </div>
         </div>
  
-        <!-- Right Side: Clean White Login Gate -->
-        <div class="w-full lg:w-[52%] flex flex-col justify-between p-8 sm:p-12 md:p-14 bg-white relative">
+        <!-- Right Side: Login Gate -->
+        <div class="w-full lg:w-[52%] flex flex-col justify-between p-8 sm:p-12 md:p-14 bg-white dark:bg-slate-900 relative">
             
             <!-- Mobile Logo Header (Hidden on Desktop) -->
             <div class="lg:hidden mb-8 flex flex-col items-center text-center">
-                <div class="inline-flex p-3 bg-slate-50 border border-slate-100 rounded-2xl shadow-sm mb-4">
-                    <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-12 h-12 object-contain" alt="Logo SISTA">
+                <div class="inline-flex p-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl shadow-sm mb-4">
+                    <img src="{{ $appearance->logo_path ? asset('storage/' . $appearance->logo_path) : asset('images/logo-kotak.png') }}" class="w-12 h-12 object-contain" alt="Logo {{ school_short_name() }}">
                 </div>
-                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight leading-none mb-1.5">Sistem Terpadu</h2>
-                <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
-                    @if(str_starts_with(strtolower($appearance->app_name), 'sistem terpadu'))
-                        {{ trim(substr($appearance->app_name, strlen('sistem terpadu'))) }}
-                    @else
-                        {{ $appearance->app_name }}
-                    @endif
+                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none mb-1.5">Sulaone</h2>
+                <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                    SISTA &bull; {{ school_short_name() }}
                 </p>
             </div>
  
@@ -197,8 +180,8 @@
             <div class="my-auto space-y-6">
                 <!-- Greeting Header (Desktop) -->
                 <div class="hidden lg:block text-start mb-6">
-                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">{{ __('Masuk Akun') }}</h2>
-                    <p class="text-xs text-slate-400 font-medium leading-normal">{{ __('Silakan masuk untuk mengakses layanan portal akademik.') }}</p>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">{{ __('Masuk Akun') }}</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium leading-normal">{{ __('Silakan masuk untuk mengakses layanan portal akademik.') }}</p>
                 </div>
  
                 <!-- Slot containing the login form -->
@@ -208,8 +191,8 @@
             </div>
  
             <!-- Footer Copyright -->
-            <div class="mt-8 text-center lg:text-left">
-                <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">
+            <div class="mt-8 text-center lg:text-start">
+                <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-none">
                     @if(str_contains($appearance->footer_text, '©') || str_contains($appearance->footer_text, '&copy;') || preg_match('/\b\d{4}\b/', $appearance->footer_text))
                         {{ $appearance->footer_text }}
                     @else
@@ -221,5 +204,4 @@
  
     </div>
 </body>
-</html>>
-
+</html>

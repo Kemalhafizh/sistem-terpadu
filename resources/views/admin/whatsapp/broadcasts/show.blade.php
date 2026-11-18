@@ -53,7 +53,7 @@
                     <div>
                         <span class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Progres Pengiriman</span>
                         <div class="flex items-end justify-between mb-2">
-                            <span class="text-3xl font-black text-teal-650 dark:text-teal-400">{{ $progressPercent }}%</span>
+                            <span class="text-3xl font-black text-teal-700 dark:text-teal-400">{{ $progressPercent }}%</span>
                             <span class="text-xs font-bold text-gray-500 dark:text-gray-400">{{ $processed }} / {{ $broadcast->total_recipients }}</span>
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                             </div>
                             <div class="flex justify-between py-1 border-b border-gray-50 dark:border-gray-700/50">
                                 <span class="font-bold text-gray-400 dark:text-gray-500 uppercase">Template</span>
-                                <span class="font-bold text-teal-650 dark:text-teal-400">
+                                <span class="font-bold text-teal-700 dark:text-teal-400">
                                     {{ $broadcast->template ? $broadcast->template->name : 'Tanpa Template' }}
                                 </span>
                             </div>
@@ -144,11 +144,11 @@
                             </div>
                             <div class="flex justify-between py-1 border-b border-gray-50 dark:border-gray-700/50">
                                 <span class="font-bold text-gray-400 dark:text-gray-500 uppercase">Pembuat</span>
-                                <span class="font-bold text-gray-955 dark:text-white">{{ $broadcast->creator ? $broadcast->creator->name : 'System' }}</span>
+                                <span class="font-bold text-gray-950 dark:text-white">{{ $broadcast->creator ? $broadcast->creator->name : 'System' }}</span>
                             </div>
                             <div class="flex justify-between py-1">
                                 <span class="font-bold text-gray-400 dark:text-gray-500 uppercase">Tanggal Kirim</span>
-                                <span class="font-bold text-gray-955 dark:text-white">
+                                <span class="font-bold text-gray-950 dark:text-white">
                                     {{ $broadcast->scheduled_at ? $broadcast->scheduled_at->translatedFormat('d M Y H:i') : $broadcast->created_at->translatedFormat('d M Y H:i') }}
                                 </span>
                             </div>

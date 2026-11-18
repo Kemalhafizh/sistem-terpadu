@@ -70,7 +70,7 @@
         <div class="p-8 space-y-6">
             <div class="text-center">
                 <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">{{ __('spmb.label_reg_number_your') }}</p>
-                <div class="bg-slate-50 border-2 border-dashed border-slate-350 rounded-2xl py-5">
+                <div class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl py-5">
                     <span class="text-3xl font-black text-slate-900 tracking-tighter">{{ session('registration_number') }}</span>
                 </div>
                 <p class="mt-2 text-[10px] text-red-500 font-bold bg-red-50 py-1.5 px-3 rounded-lg inline-block uppercase tracking-wider no-print">
@@ -99,7 +99,7 @@
             <!-- Steps Next -->
             <div class="text-xs text-blue-900 leading-relaxed bg-blue-50/60 p-5 rounded-2xl border border-blue-200/50 text-left rtl:text-right font-inter font-medium">
                 <h4 class="font-bold text-blue-900 mb-2 uppercase tracking-wide text-[10px]">{{ __('spmb.next_steps_header') }}</h4>
-                <ul class="list-decimal list-inside space-y-1.5 text-blue-850">
+                <ul class="list-decimal list-inside space-y-1.5 text-blue-900">
                     <li>{{ __('spmb.next_steps_1') }}</li>
                     <li>{{ __('spmb.next_steps_2') }}</li>
                     <li>{{ __('spmb.next_steps_3') }}</li>

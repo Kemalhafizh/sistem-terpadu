@@ -10,7 +10,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ school_name() }} - Pemantauan Progres</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
         <p class="text-gray-600 dark:text-gray-300">Memantau progres siswa: {{ $iep->student->name ?? 'Siswa' }}</p>
         <div class="mt-4">
             <h3 class="font-bold text-gray-900 dark:text-white">Tujuan Tahunan:</h3>

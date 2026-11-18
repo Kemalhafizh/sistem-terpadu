@@ -34,7 +34,7 @@
                 </div>
                 <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm text-center">
                     <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block leading-none">Skor Tertinggi</span>
-                    <span class="text-2xl font-black text-primary-650 mt-2 block leading-none">{{ $maxScore }}</span>
+                    <span class="text-2xl font-black text-primary-700 mt-2 block leading-none">{{ $maxScore }}</span>
                 </div>
                 <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm text-center">
                     <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest block leading-none">Skor Terendah</span>

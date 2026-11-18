@@ -110,7 +110,7 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <a href="{{ route('elearning.class.student-progress', [$elearningClass->uuid, $s->id]) }}" class="inline-flex px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-800 transition-all">
+                                            <a href="{{ route('elearning.class.student-progress', [$elearningClass->uuid, $s->id]) }}" class="inline-flex px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-800 transition-all">
                                                 Detail Checklist
                                             </a>
                                         </td>

@@ -97,7 +97,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             <!-- Academic Widget -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
               <div>
                 <div class="flex justify-between items-center mb-6">
                   <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">Akademik & Perkembangan</h4>
@@ -132,7 +132,7 @@
             </div>
 
             <!-- Attendance Widget -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
               <div>
                 <div class="flex justify-between items-center mb-6">
                   <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">Persentase Kehadiran</h4>
@@ -177,14 +177,14 @@
 
           <!-- ApexCharts running grades trend -->
           @if(count($chartData) > 0)
-            <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-150/60">
+            <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-200/60">
               <h4 class="text-sm font-black text-gray-800 mb-6 uppercase tracking-wider">Grafik Tren Nilai Mata Pelajaran</h4>
               <div id="gradesTrendChart" class="w-full h-72"></div>
             </div>
           @endif
 
           <!-- 4. Finance Widget -->
-          <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-150/60">
+          <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-200/60">
             <div class="flex justify-between items-center mb-6">
               <div>
                 <h4 class="text-sm font-black text-gray-800 uppercase tracking-wider">Keuangan & SPP Siswa</h4>
@@ -229,7 +229,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             <!-- BK Points Behavior Widget -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
               <div>
                 <div class="flex justify-between items-center mb-6">
                   <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">Catatan Perilaku & BK</h4>
@@ -257,7 +257,7 @@
             </div>
 
             <!-- UKS Health logs Widget -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
               <div>
                 <div class="flex justify-between items-center mb-6">
                   <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">Catatan Kesehatan UKS</h4>
@@ -306,7 +306,7 @@
           </div>
 
           <!-- Counseling Sessions (BK Terjadwal/Selesai) -->
-          <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-150/60">
+          <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-200/60">
             <div class="flex justify-between items-center mb-6">
               <div>
                 <h4 class="text-sm font-black text-gray-800 uppercase tracking-wider">Jadwal Bimbingan Konseling</h4>
@@ -350,7 +350,7 @@
 
         <!-- Right 1 Column: Integrated Chronological Activity Timeline Feed -->
         <div class="xl:col-span-1">
-          <div class="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-150/60 sticky top-6">
+          <div class="bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-200/60 sticky top-6">
             <h4 class="text-lg font-black text-gray-800 tracking-tight flex items-center gap-2.5">
               <span class="w-2.5 h-6 bg-primary-600 rounded-full"></span>
               Feed Aktivitas Siswa

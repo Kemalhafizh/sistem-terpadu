@@ -28,11 +28,11 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Judul Laporan</label>
-                        <input type="text" x-model="title" class="w-full border-slate-850 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-sm text-slate-200 placeholder-slate-650">
+                        <input type="text" x-model="title" class="w-full border-slate-700 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-sm text-slate-200 placeholder-slate-500">
                     </div>
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Sub-Judul Laporan</label>
-                        <input type="text" x-model="subtitle" class="w-full border-slate-850 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-sm text-slate-200 placeholder-slate-650">
+                        <input type="text" x-model="subtitle" class="w-full border-slate-700 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-sm text-slate-200 placeholder-slate-500">
                     </div>
                 </div>
 
@@ -73,7 +73,7 @@
                                     class="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 transition duration-150" title="Navy Blue"></button>
                             <button type="button" @click="theme = 'slate'" 
                                     :class="theme === 'slate' ? 'ring-2 ring-slate-400 scale-110' : 'hover:scale-105'"
-                                    class="w-6 h-6 rounded-full bg-slate-650 border border-slate-700 transition duration-150" title="Slate Gray"></button>
+                                    class="w-6 h-6 rounded-full bg-slate-600 border border-slate-700 transition duration-150" title="Slate Gray"></button>
                         </div>
                     </div>
                 </div>
@@ -123,11 +123,11 @@
                     <div x-show="showSignature" class="space-y-3 pl-6" x-transition>
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Jabatan Penandatangan</label>
-                            <input type="text" x-model="signatureRole" class="w-full border-slate-800 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs text-slate-200 placeholder-slate-650">
+                            <input type="text" x-model="signatureRole" class="w-full border-slate-700 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs text-slate-200 placeholder-slate-500">
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Nama Lengkap</label>
-                            <input type="text" x-model="signatureName" class="w-full border-slate-800 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs text-slate-200 placeholder-slate-650">
+                            <input type="text" x-model="signatureName" class="w-full border-slate-700 bg-slate-950/50 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-xs text-slate-200 placeholder-slate-500">
                         </div>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
                 
                 <button type="button" 
                         @click="closeHub()" 
-                        class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition duration-155 w-full text-center">
+                        class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition duration-150 w-full text-center">
                     Tutup
                 </button>
             </div>
@@ -172,12 +172,10 @@
                         <!-- Document Kop Surat / Header -->
                         <div class="flex justify-between items-center border-b-4 border-double border-slate-900 pb-5 mb-8">
                             <div class="flex items-center space-x-4">
-                                <div class="w-14 h-14 rounded-full bg-slate-950 flex items-center justify-center text-white font-black text-2xl tracking-tighter shadow-md">
-                                    ST
-                                </div>
+                                <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="w-12 h-12 rounded-xl object-contain">
                                 <div class="text-left">
                                     <h4 class="font-black text-base tracking-tight leading-none text-slate-950">{{ mb_strtoupper(school_short_name()) }}</h4>
-                                    <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Sistem Terpadu Manajemen Akademik</p>
+                                    <p class="text-[9px] text-slate-500 font-bold mt-1 uppercase tracking-wider">Sulaone — SISTA {{ school_short_name() }}</p>
                                     <p class="text-[8px] text-slate-400 mt-0.5 leading-none">{{ school_address() }}</p>
                                 </div>
                             </div>
@@ -238,10 +236,10 @@
                                             <p class="text-[9px] text-slate-400 font-bold" x-text="b.student?.nis + ' • ' + (b.student?.classroom?.name || 'N/A')"></p>
                                         </td>
                                         <td x-show="columns.kategori" class="p-3 border border-slate-200">
-                                            <span class="inline-block text-[10px] font-bold text-slate-650" x-text="b.category?.name + (b.month ? ' - ' + b.month : '')"></span>
+                                            <span class="inline-block text-[10px] font-bold text-slate-600" x-text="b.category?.name + (b.month ? ' - ' + b.month : '')"></span>
                                         </td>
                                         <td x-show="columns.tagihan" class="p-3 border border-slate-200 text-right font-bold text-slate-700" x-text="formatCurrency(b.amount)"></td>
-                                        <td x-show="columns.hutang" class="p-3 border border-slate-200 text-right font-black" :class="parseFloat(b.remaining_balance) > 0 ? 'text-red-650' : 'text-emerald-700'" x-text="formatCurrency(b.remaining_balance)"></td>
+                                        <td x-show="columns.hutang" class="p-3 border border-slate-200 text-right font-black" :class="parseFloat(b.remaining_balance) > 0 ? 'text-red-600' : 'text-emerald-700'" x-text="formatCurrency(b.remaining_balance)"></td>
                                         <td x-show="columns.status" class="p-3 border border-slate-200 text-center">
                                             <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider"
                                                   :class="{
@@ -259,7 +257,7 @@
                                 <tr class="bg-slate-50 font-black text-slate-900 border-t-2 border-slate-400">
                                     <td :colspan="(columns.no ? 1 : 0) + (columns.siswa ? 1 : 0) + (columns.kategori ? 1 : 0)" class="p-3 text-right">TOTAL LAPORAN:</td>
                                     <td x-show="columns.tagihan" class="p-3 text-right text-slate-800" x-text="formatCurrency(billings.reduce((sum, b) => sum + parseFloat(b.amount), 0))"></td>
-                                    <td x-show="columns.hutang" class="p-3 text-right text-red-650" x-text="formatCurrency(billings.reduce((sum, b) => sum + parseFloat(b.remaining_balance), 0))"></td>
+                                    <td x-show="columns.hutang" class="p-3 text-right text-red-600" x-text="formatCurrency(billings.reduce((sum, b) => sum + parseFloat(b.remaining_balance), 0))"></td>
                                     <td x-show="columns.status" class="p-3"></td>
                                 </tr>
                             </tbody>

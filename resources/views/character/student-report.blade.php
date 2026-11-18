@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex justify-between items-center">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-gray-900 dark:text-white">Character Report Card P5: {{ $student->name }}</h1>
             <p class="text-xs text-gray-500 mt-1">Total Merit Points Karakter: <strong class="text-amber-500 text-sm">{{ $radar['total_merit_points'] }} Poin</strong></p>
@@ -13,7 +13,7 @@
     <!-- Dimensions Radar / List View -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @foreach($radar['dimensions'] as $dim)
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-2">
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-2">
             <div class="flex justify-between items-center">
                 <span class="text-xs font-bold uppercase text-amber-500">{{ $dim['category'] }}</span>
                 <span class="px-2.5 py-1 text-xs font-black rounded-lg bg-amber-100 text-amber-700">

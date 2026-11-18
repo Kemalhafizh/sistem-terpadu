@@ -55,7 +55,7 @@
                 <div class="{{ $netIncome >= 0 ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white' }} p-6 rounded-[2rem] shadow-xl">
                     <p class="text-[10px] font-black {{ $netIncome >= 0 ? 'text-emerald-100' : 'text-rose-100' }} uppercase tracking-widest mb-1">Selisih Bersih (Laba/Rugi)</p>
                     <h3 class="text-2xl font-black">Rp {{ number_format($netIncome, 0, ',', '.') }}</h3>
-                    <p class="text-[10px] {{ $netIncome >= 0 ? 'text-emerald-150' : 'text-rose-150' }} mt-2 font-bold italic">Hasil selisih bersih operasional</p>
+                    <p class="text-[10px] {{ $netIncome >= 0 ? 'text-emerald-100' : 'text-rose-100' }} mt-2 font-bold italic">Hasil selisih bersih operasional</p>
                 </div>
             </div>
 

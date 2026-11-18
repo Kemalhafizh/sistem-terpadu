@@ -35,7 +35,7 @@
                 <!-- Aktivitas Utama -->
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Aktivitas Anda Saat Ini</label>
-                    <select name="current_activity" id="activity-select" required onchange="toggleFormFields(this.value)" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select name="current_activity" id="activity-select" required onchange="toggleFormFields(this.value)" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="study" {{ old('current_activity', $alumni->current_activity) == 'study' ? 'selected' : '' }}>Melanjutkan Kuliah / Pendidikan</option>
                         <option value="work" {{ old('current_activity', $alumni->current_activity) == 'work' ? 'selected' : '' }}>Bekerja (Karyawan / PNS / Swasta)</option>
                         <option value="entrepreneur" {{ old('current_activity', $alumni->current_activity) == 'entrepreneur' ? 'selected' : '' }}>Berwirausaha / Buka Usaha Mandiri</option>
@@ -50,11 +50,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Perguruan Tinggi</label>
-                            <input type="text" name="institution_name" value="{{ old('institution_name', $alumni->institution_name) }}" placeholder="Universitas Diponegoro..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="institution_name" value="{{ old('institution_name', $alumni->institution_name) }}" placeholder="Universitas Diponegoro..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Program Studi / Jurusan</label>
-                            <input type="text" name="study_major" value="{{ old('study_major', $existingResponse->study_major ?? '') }}" placeholder="S1 Teknik Informatika..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="study_major" value="{{ old('study_major', $existingResponse->study_major ?? '') }}" placeholder="S1 Teknik Informatika..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
@@ -65,22 +65,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Perusahaan / Usaha</label>
-                            <input type="text" name="employer_name" value="{{ old('employer_name', $existingResponse->employer_name ?? '') }}" placeholder="PT Astra Internasional..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="employer_name" value="{{ old('employer_name', $existingResponse->employer_name ?? '') }}" placeholder="PT Astra Internasional..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Posisi / Jabatan</label>
-                            <input type="text" name="job_title" value="{{ old('job_title', $existingResponse->job_title ?? '') }}" placeholder="Staf Admin / Software Engineer..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="job_title" value="{{ old('job_title', $existingResponse->job_title ?? '') }}" placeholder="Staf Admin / Software Engineer..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Tahun Mulai</label>
-                            <input type="number" name="entry_year" value="{{ old('entry_year', $existingResponse->entry_year ?? date('Y')) }}" placeholder="2025" min="2000" max="{{ date('Y') + 1 }}" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="number" name="entry_year" value="{{ old('entry_year', $existingResponse->entry_year ?? date('Y')) }}" placeholder="2025" min="2000" max="{{ date('Y') + 1 }}" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Kisaran Pendapatan (Gaji Bulanan)</label>
-                            <select name="salary_range" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select name="salary_range" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">-- Pilih Gaji --</option>
                                 <option value="< 3M" {{ old('salary_range', $existingResponse->salary_range ?? '') == '< 3M' ? 'selected' : '' }}>< Rp 3.000.000</option>
                                 <option value="3M - 5M" {{ old('salary_range', $existingResponse->salary_range ?? '') == '3M - 5M' ? 'selected' : '' }}>Rp 3.000.000 - Rp 5.000.000</option>
@@ -122,7 +122,7 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Saran / Masukan untuk Kurikulum Sekolah</label>
-                        <textarea name="suggestions" rows="4" placeholder="Tuliskan saran perbaikan materi pembelajaran atau program sekolah agar lebih relevan dengan kebutuhan alumni..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('suggestions', $existingResponse->suggestions ?? '') }}</textarea>
+                        <textarea name="suggestions" rows="4" placeholder="Tuliskan saran perbaikan materi pembelajaran atau program sekolah agar lebih relevan dengan kebutuhan alumni..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('suggestions', $existingResponse->suggestions ?? '') }}</textarea>
                     </div>
                 </div>
 

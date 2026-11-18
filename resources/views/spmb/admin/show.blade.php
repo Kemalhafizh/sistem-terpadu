@@ -182,7 +182,7 @@
                                                 {{ strtoupper($doc->verification_status) }}
                                             </span>
                                         </div>
-                                        <button @click="modalOpen = true; modalImgSrc = '{{ Storage::url($doc->file_path) }}'; modalTitle = 'Preview {{ ucfirst($doc->document_type) }}'" class="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-250 text-[10px] font-bold rounded-lg shadow-sm">Preview</button>
+                                        <button @click="modalOpen = true; modalImgSrc = '{{ Storage::url($doc->file_path) }}'; modalTitle = 'Preview {{ ucfirst($doc->document_type) }}'" class="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-lg shadow-sm">Preview</button>
                                     </div>
 
                                     @if($doc->verification_status === 'pending')
@@ -190,8 +190,8 @@
                                             @csrf
                                             <input type="text" name="rejection_reason" placeholder="Alasan jika ditolak..." class="block w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-[10px] focus:outline-none">
                                             <div class="flex gap-1.5">
-                                                <button type="submit" name="verification_status" value="rejected" class="flex-1 py-1 bg-red-50 hover:bg-red-100 border border-red-200 text-red-650 font-bold rounded-lg text-[10px] uppercase">Tolak</button>
-                                                <button type="submit" name="verification_status" value="verified" class="flex-1 py-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-650 font-bold rounded-lg text-[10px] uppercase">Setuju</button>
+                                                <button type="submit" name="verification_status" value="rejected" class="flex-1 py-1 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold rounded-lg text-[10px] uppercase">Tolak</button>
+                                                <button type="submit" name="verification_status" value="verified" class="flex-1 py-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold rounded-lg text-[10px] uppercase">Setuju</button>
                                             </div>
                                         </form>
                                     @elseif($doc->rejection_reason)

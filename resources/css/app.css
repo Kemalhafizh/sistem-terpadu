@@ -113,8 +113,8 @@
   }
 
   /* Form Element Corrections */
-  input, 
-  select, 
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
   textarea {
     background-color: #0f172a !important;
     color: #f8fafc !important;
@@ -230,11 +230,11 @@
 
 /* 10. Sidebar menu item: indent animation saat hover */
 .sidebar-item {
-  transition: padding-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s;
+  transition: padding-inline-start 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s;
 }
 
 .sidebar-item:hover {
-  padding-left: 1.25rem !important;
+  padding-inline-start: 1.25rem !important;
 }
 
 /* ==========================================
@@ -249,8 +249,7 @@
   [role="button"],
   iframe,
   .fixed,
-  .absolute,
-  .animate-blob {
+  .absolute {
     display: none !important;
   }
 
@@ -297,11 +296,10 @@
    Modul 20.2: PWA & Responsive Polish
    ========================================== */
 
-/* Ensure touch-friendly tap targets on mobile screen sizes */
+/* Ensure touch-friendly tap targets for controls on mobile screens without blowing up inline links or checkboxes */
 @media (max-width: 768px) {
-  a, button, select, input, [role="button"] {
+  button, select, input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), [role="button"] {
     min-height: 42px;
-    min-width: 42px;
   }
   .btn, .button {
     padding-top: 0.75rem !important;

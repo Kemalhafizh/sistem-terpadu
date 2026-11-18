@@ -23,7 +23,7 @@
 
     <div class="py-6">
         <div class="w-full px-4 sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
 
                 <!-- Conversations List Sidebar (4 Cols) -->
                 <div class="lg:col-span-4 border-r border-gray-100 dark:border-gray-700 flex flex-col">

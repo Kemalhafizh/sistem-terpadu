@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECURITY ALERT - ACCESS TERMINATED | SISTA Cyber Command</title>
-    <x-vendor.script lib="tailwind-browser" />
+    <title>SECURITY ALERT - ACCESS TERMINATED | Sulaone — SISTA Security</title>
+    @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -81,7 +81,7 @@
             <a href="{{ route('home') }}" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-all border border-slate-700 inline-flex items-center gap-2">
                 &larr; Return to Public Portal
             </a>
-            <span class="text-[10px] text-slate-500 mono">SISTA CYBER COMMAND v3.5</span>
+            <span class="text-[10px] text-slate-500 mono">SULAONE — SISTA SECURITY</span>
         </div>
 
     </div>

@@ -94,7 +94,9 @@
                                 <div class="flex items-start gap-3 {{ $idx > 0 ? 'pt-6' : '' }}">
                                     @php
                                         $initial = substr($comment->user?->name ?? 'U', 0, 1);
-                                        $isStaff = in_array($comment->user?->role, ['guru', 'staf_tu', 'admin', 'superadmin']);
+                                        $commentRoles = $comment->user?->effectiveRoles() ?? [];
+                                        $isStaff = array_intersect($commentRoles, [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, 'staf_tu', 'admin', 'superadmin']) !== [];
+                                        $isStudentComment = array_intersect($commentRoles, \App\Support\Access\StudentDataAccess::STUDENT_ROLES) !== [];
                                         $avatarColor = $isStaff ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' : 'bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-400';
                                     @endphp
                                     <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-xs shrink-0 {{ $avatarColor }} uppercase">
@@ -105,15 +107,15 @@
                                             <div class="flex items-baseline gap-1.5 flex-wrap">
                                                 <span class="text-xs font-black text-gray-900 dark:text-white">{{ $comment->user?->name }}</span>
                                                 <span class="px-1.5 py-0.2 bg-slate-50 dark:bg-slate-950 text-slate-500 rounded text-[8px] font-bold uppercase border border-slate-200/50 dark:border-slate-800">
-                                                    {{ $comment->user?->role === 'student' ? 'Siswa' : 'Pengajar' }}
+                                                    {{ $isStudentComment ? 'Siswa' : 'Pengajar' }}
                                                 </span>
                                             </div>
                                             <div class="flex items-center gap-2">
                                                 <span class="text-[9px] font-bold text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
                                                 
                                                 @php
-                                                    $isTeacher = in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']) && auth()->id() === $elearningClass->teacher_id;
-                                                    $isAdmin = in_array(auth()->user()->role, ['admin', 'superadmin']);
+                                                    $isTeacher = \App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, 'staf_tu']) && auth()->id() === $elearningClass->teacher_id;
+                                                    $isAdmin = \App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), ['admin', 'superadmin']);
                                                 @endphp
                                                 @if(auth()->id() === $comment->user_id || $isTeacher || $isAdmin)
                                                     <form action="{{ route('elearning.comment.destroy', [$material->uuid, $comment->uuid]) }}" method="POST" onsubmit="return confirm('Hapus komentar ini?')">

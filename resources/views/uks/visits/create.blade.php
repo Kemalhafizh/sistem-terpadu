@@ -239,7 +239,7 @@
 
                             <div class="space-y-3">
                                 <template x-for="(row, index) in rows" :key="index">
-                                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-850">
+                                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
                                         
                                         <!-- Medicine dropdown -->
                                         <div class="flex-grow space-y-1">
@@ -278,7 +278,7 @@
 
                         <!-- Form submission bar -->
                         <div class="flex justify-end gap-3 pt-4">
-                            <a href="{{ route('uks.visits.index') }}" class="px-6 py-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+                            <a href="{{ route('uks.visits.index') }}" class="px-6 py-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                                 Batal
                             </a>
                             <button type="submit" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-teal-600/15">

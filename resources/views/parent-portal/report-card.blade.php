@@ -16,7 +16,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- Child Profile Summary -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col md:flex-row justify-between gap-6">
+            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col md:flex-row justify-between gap-6">
                 <div class="flex items-center gap-5">
                     <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-black text-2xl">
                         {{ substr($student->user->name, 0, 1) }}
@@ -42,7 +42,7 @@
             </div>
 
             <!-- Subject Grades Ledger -->
-            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-150/60 overflow-hidden">
+            <div class="bg-white rounded-[2rem] shadow-sm border border-gray-200/60 overflow-hidden">
                 <div class="p-6 border-b border-gray-100 flex justify-between items-center">
                     <h4 class="text-sm font-black text-gray-800 uppercase tracking-wider">Ledger Nilai Mata Pelajaran</h4>
                     <span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-xs font-black uppercase tracking-wider">
@@ -139,7 +139,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
                 <!-- Homeroom Notes Widget (2/3 Columns) -->
-                <div class="lg:col-span-2 bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-150/60">
+                <div class="lg:col-span-2 bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-200/60">
                     <h4 class="text-sm font-black text-gray-800 uppercase tracking-wider mb-6">Catatan & Masukan Wali Kelas</h4>
                     @if($reportCard)
                         <div class="space-y-6">
@@ -171,7 +171,7 @@
                 </div>
 
                 <!-- PDF Print Widget (1/3 Column) -->
-                <div class="lg:col-span-1 bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-150/60 flex flex-col justify-between">
+                <div class="lg:col-span-1 bg-white rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-200/60 flex flex-col justify-between">
                     <div>
                         <h4 class="text-sm font-black text-gray-800 uppercase tracking-wider mb-4">Unduh Dokumen Rapor</h4>
                         <p class="text-xs text-gray-400 font-semibold leading-relaxed">

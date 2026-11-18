@@ -136,7 +136,7 @@
                                     <div class="flex items-center space-x-3">
                                         {{-- Rank Badge --}}
                                         <div class="w-6 h-6 rounded-full font-black text-xs flex items-center justify-center 
-                                            {{ $index === 0 ? 'bg-amber-100 text-amber-800' : ($index === 1 ? 'bg-slate-100 text-slate-800' : ($index === 2 ? 'bg-orange-100 text-orange-800' : 'bg-gray-100 text-gray-650')) }}">
+                                            {{ $index === 0 ? 'bg-amber-100 text-amber-800' : ($index === 1 ? 'bg-slate-100 text-slate-800' : ($index === 2 ? 'bg-orange-100 text-orange-800' : 'bg-gray-100 text-gray-700')) }}">
                                             {{ $index + 1 }}
                                         </div>
                                         <div>

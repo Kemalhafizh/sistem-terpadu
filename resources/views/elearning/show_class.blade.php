@@ -10,6 +10,14 @@
         </div>
     </x-slot>
 
+    @php
+        $elearningUser = auth()->user();
+        $elearningRoles = $elearningUser->effectiveRoles();
+        $canManageClass = \App\Http\Middleware\RoleMiddleware::allowsUser($elearningUser, ['admin', 'superadmin'])
+            || (\App\Http\Middleware\RoleMiddleware::allowsUser($elearningUser, [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, 'staf_tu']) && $elearningUser->id === $elearningClass->teacher_id);
+        $isElearningStudent = array_intersect($elearningRoles, \App\Support\Access\StudentDataAccess::STUDENT_ROLES) !== [];
+        $canGradeClass = $canManageClass || \App\Http\Middleware\RoleMiddleware::allowsUser($elearningUser, \App\Support\Access\Roles::PRINCIPAL);
+    @endphp
     <div class="py-6 sm:py-10" x-data="{ activeTab: 'stream' }">
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in">
 
@@ -59,7 +67,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Left Sidebar (Informasi & Pembuat Konten) -->
                     <div class="space-y-6">
-                        @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']))
+                        @if($canManageClass)
                             <!-- Quick Action Panel for Teachers -->
                             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-4">
                                 <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Aksi Pengajar</h4>
@@ -91,7 +99,7 @@
                                             @csrf
                                             <button type="submit" class="w-full px-4 py-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center space-x-2">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path></svg>
-                                                <span>Puluhkan Kelas</span>
+                                                <span>Pulihkan Kelas</span>
                                             </button>
                                         </form>
                                     @else
@@ -107,7 +115,7 @@
                             </div>
                         @endif
 
-                        @if(auth()->user()->role === 'student' && $studentProgress)
+                        @if($isElearningStudent && $studentProgress)
                             <!-- Student Progress Card -->
                             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-4">
                                 <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Progres Belajar Anda</h4>
@@ -153,7 +161,7 @@
                         <!-- Announcements Section -->
                         <div class="space-y-4">
                             <h4 class="text-base font-extrabold text-gray-900 dark:text-white">Pengumuman Kelas</h4>
-                            @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']))
+                            @if($canManageClass)
                                 <form action="{{ route('elearning.announcement.store', $elearningClass->uuid) }}" method="POST" class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-4 shadow-sm flex gap-3 items-end">
                                     @csrf
                                     <div class="flex-1 space-y-1">
@@ -183,7 +191,7 @@
                                                         <p class="text-[9px] font-bold text-gray-400">{{ $ann->created_at->diffForHumans() }}</p>
                                                     </div>
                                                 </div>
-                                                @if(auth()->id() === $ann->user_id || in_array(auth()->user()->role, ['admin', 'superadmin']))
+                                                @if(auth()->id() === $ann->user_id || \App\Http\Middleware\RoleMiddleware::allowsUser($elearningUser, ['admin', 'superadmin']))
                                                     <form action="{{ route('elearning.announcement.destroy', [$elearningClass->uuid, $ann->uuid]) }}" method="POST" onsubmit="return confirm('Hapus pengumuman ini?')">
                                                         @csrf
                                                         @method('DELETE')
@@ -231,8 +239,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center gap-1.5">
-                                                    @if(auth()->user()->role === 'student' && auth()->user()->student)
-                                                        @php $isViewed = $item->isViewedBy(auth()->user()->student); @endphp
+                                                    @if($isElearningStudent && $elearningUser->student)
+                                                        @php $isViewed = $item->isViewedBy($elearningUser->student); @endphp
                                                         @if($isViewed)
                                                             <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20">Dibaca </span>
                                                         @else
@@ -286,11 +294,11 @@
                                                     Batas Waktu: <strong class="text-gray-600 dark:text-slate-300">{{ \Carbon\Carbon::parse($item->due_at)->format('d M Y, H:i') }}</strong>
                                                 </span>
                                                 
-                                                @if(auth()->user()->role === 'student')
+                                                @if($isElearningStudent)
                                                     <a href="{{ route('elearning.assignment.show', $item->uuid) }}" class="inline-flex px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md">
                                                         Kerjakan Tugas
                                                     </a>
-                                                @else
+                                                @elseif($canGradeClass)
                                                     <a href="{{ route('elearning.assignment.submissions', $item->uuid) }}" class="inline-flex px-4 py-2 bg-gray-100 hover:bg-gray-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-slate-800">
                                                         Nilai Siswa ({{ $item->submissions->count() }})
                                                     </a>
@@ -308,7 +316,7 @@
             <!-- MATERIALS TAB -->
             <div x-show="activeTab === 'materials'" class="space-y-6">
                 <!-- Create Material Form for Teachers -->
-                @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']))
+                @if($canManageClass)
                     <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
                         <h4 class="text-base font-black text-gray-900 dark:text-white mb-4">Bagikan Materi Belajar Baru</h4>
                         <form action="{{ route('elearning.material.store', $elearningClass->uuid) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -362,8 +370,8 @@
                                                     <p class="text-[10px] font-bold text-gray-400">Dibuat {{ $material->created_at->diffForHumans() }}</p>
                                                 </div>
                                             </div>
-                                            @if(auth()->user()->role === 'student' && auth()->user()->student)
-                                                @php $isViewed = $material->isViewedBy(auth()->user()->student); @endphp
+                                            @if($isElearningStudent && $elearningUser->student)
+                                                @php $isViewed = $material->isViewedBy($elearningUser->student); @endphp
                                                 @if($isViewed)
                                                     <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded text-[9px] font-black uppercase border border-emerald-500/20 shrink-0">Dibaca </span>
                                                 @else
@@ -394,7 +402,7 @@
             <!-- ASSIGNMENTS TAB -->
             <div x-show="activeTab === 'assignments'" class="space-y-6">
                 <!-- Create Assignment Form for Teachers -->
-                @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']))
+                @if($canManageClass)
                     <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
                         <h4 class="text-base font-black text-gray-900 dark:text-white mb-4">Terbitkan Tugas / Ujian Baru</h4>
                         <form action="{{ route('elearning.assignment.store', $elearningClass->uuid) }}" method="POST" class="space-y-4" x-data="{ isSecure: false }">
@@ -482,11 +490,11 @@
                                     </div>
 
                                     <div>
-                                        @if(auth()->user()->role === 'student')
+                                        @if($isElearningStudent)
                                             <a href="{{ route('elearning.assignment.show', $assignment->uuid) }}" class="inline-flex px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-900/10">
                                                 Kerjakan Tugas
                                             </a>
-                                        @else
+                                        @elseif($canGradeClass)
                                             <a href="{{ route('elearning.assignment.submissions', $assignment->uuid) }}" class="inline-flex px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-slate-700 dark:bg-slate-900 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-gray-200 dark:border-slate-800">
                                                 Daftar Pengumpulan ({{ $assignment->submissions->count() }})
                                             </a>

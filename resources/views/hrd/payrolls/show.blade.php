@@ -234,7 +234,7 @@
                                 </span>
                             </div>
 
-                            <div class="border-t border-b border-gray-800/80 py-4 divide-y divide-gray-850">
+                            <div class="border-t border-b border-gray-800/80 py-4 divide-y divide-gray-900">
                                 <!-- Gaji Pokok -->
                                 <div class="flex justify-between py-3">
                                     <span class="text-xs font-semibold text-gray-400">Gaji Pokok Karyawan</span>
@@ -267,7 +267,7 @@
 
                             <!-- Meta info payment -->
                             @if($payroll->status === 'paid' && $payroll->payment_date)
-                                <div class="p-4 bg-gray-850 rounded-2xl border border-gray-800 text-center">
+                                <div class="p-4 bg-gray-800 rounded-2xl border border-gray-800 text-center">
                                     <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">DIBAYARKAN PADA TANGGAL</p>
                                     <p class="text-sm font-black text-gray-100 font-mono mt-1">{{ $payroll->payment_date->format('d F Y') }}</p>
                                 </div>
@@ -296,7 +296,7 @@
                                 @endif
 
                                 @if(in_array($payroll->status, ['approved', 'paid']))
-                                    <a href="{{ route('my-hrd.payslips.pdf', $payroll->id) }}" class="w-full py-4 bg-gray-800 hover:bg-gray-750 text-gray-200 border border-gray-750 rounded-2xl text-xs font-black tracking-widest uppercase transition-all flex items-center justify-center">
+                                    <a href="{{ route('my-hrd.payslips.pdf', $payroll->id) }}" class="w-full py-4 bg-gray-800 hover:bg-gray-800 text-gray-200 border border-gray-800 rounded-2xl text-xs font-black tracking-widest uppercase transition-all flex items-center justify-center">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                         CETAK SLIP (PDF)
                                     </a>

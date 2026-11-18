@@ -27,8 +27,8 @@
                 @forelse($expiringTrainings as $tr)
                     <div class="pt-3 first:pt-0 flex justify-between items-center text-xs">
                         <div>
-                            <span class="font-bold text-gray-850 dark:text-white">{{ $tr->employee->user->name }}</span>
-                            <span class="text-[10px] text-gray-450 ml-1">({{ $tr->employee->position }})</span>
+                            <span class="font-bold text-gray-900 dark:text-white">{{ $tr->employee->user->name }}</span>
+                            <span class="text-[10px] text-gray-500 ml-1">({{ $tr->employee->position }})</span>
                             <p class="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-1">
                                  {{ $tr->title }} (No: {{ $tr->certificate_number ?? '-' }})
                             </p>
@@ -55,8 +55,8 @@
                 @forelse($expiringDocuments as $doc)
                     <div class="pt-3 first:pt-0 flex justify-between items-center text-xs">
                         <div>
-                            <span class="font-bold text-gray-850 dark:text-white">{{ $doc->employee->user->name }}</span>
-                            <span class="text-[10px] text-gray-450 ml-1">({{ $doc->employee->position }})</span>
+                            <span class="font-bold text-gray-900 dark:text-white">{{ $doc->employee->user->name }}</span>
+                            <span class="text-[10px] text-gray-500 ml-1">({{ $doc->employee->position }})</span>
                             <p class="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-1">
                                  {{ $doc->title }} (Tipe: {{ strtoupper($doc->type) }})
                             </p>

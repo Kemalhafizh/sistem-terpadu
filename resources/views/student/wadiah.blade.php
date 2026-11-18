@@ -37,12 +37,6 @@
                 <div class="lg:col-span-7 space-y-8">
                     <!-- Premium Physical Card Design -->
                     <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 rounded-[2.5rem] p-8 md:p-10 shadow-2xl text-white relative overflow-hidden group border border-white/10">
-                        <div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
-                        <div class="absolute -left-20 -top-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
-                        
-                        <!-- Floating Glassmorphic blobs -->
-                        <div class="absolute top-1/2 left-1/3 w-32 h-32 bg-primary-500/5 rounded-full blur-2xl animate-float"></div>
-                        
                         <div class="relative z-10 flex flex-col justify-between h-full min-h-[300px]">
                             <!-- Card Header -->
                             <div class="flex justify-between items-start">
@@ -205,13 +199,13 @@
             </div>
 
             <!-- Full Width Bottom Grid: Recent Transactions -->
-            <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-150/60 dark:border-gray-700/60">
+            <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-200/60 dark:border-gray-700/60">
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Mutasi Rekening</span>
                         <h3 class="text-xl font-black text-gray-900 dark:text-white mt-1">Transaksi Terakhir</h3>
                     </div>
-                    <span class="px-4 py-1.5 bg-slate-50 dark:bg-gray-900 text-gray-500 dark:text-slate-400 rounded-xl text-xs font-bold border border-slate-100 dark:border-gray-850">
+                    <span class="px-4 py-1.5 bg-slate-50 dark:bg-gray-900 text-gray-500 dark:text-slate-400 rounded-xl text-xs font-bold border border-slate-100 dark:border-gray-800">
                         {{ count($transactions) }} Transaksi Terbaru
                     </span>
                 </div>

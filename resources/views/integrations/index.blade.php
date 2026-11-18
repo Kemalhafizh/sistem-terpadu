@@ -129,7 +129,7 @@
                 <div class="backdrop-blur-xl bg-gray-900/60 border border-gray-800/80 rounded-3xl p-8 shadow-xl flex flex-col justify-between opacity-80 hover:opacity-100 transition-all duration-300">
                     <div>
                         <div class="flex items-center justify-between mb-6">
-                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-gray-850 text-gray-400 border border-gray-800">Sultan Agung</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-full bg-gray-800 text-gray-300 border border-gray-700">Yayasan</span>
                             <span class="w-3 h-3 rounded-full bg-gray-600"></span>
                         </div>
                         <h4 class="text-xl font-bold text-gray-100">{{ $yayasan->name }}</h4>

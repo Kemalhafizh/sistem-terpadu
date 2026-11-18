@@ -18,7 +18,7 @@ return [
     'nav_contact' => 'Contact Us',
 
     // Hero Section
-    'hero_badge' => 'Integrated System V2.0',
+    'hero_badge' => 'Sulaone — SISTA',
     'hero_title_1' => 'Building the Best',
     'hero_title_2' => 'Khaira Ummah.',
     'hero_desc' => 'Digital platform for modern educational management at :school. Seamless integration between academic, financial systems, and daily student worship monitoring.',
@@ -30,7 +30,7 @@ return [
     'stats_teachers' => 'Teachers & Staff',
     'stats_classes' => 'Virtual Classrooms',
     'stats_alumni' => 'Successful Alumni',
-    'stats_accreditation' => 'Accreditation A',
+    'stats_accreditation' => 'Accredited',
 
     // Footer
     'footer_tagline' => 'Nurturing an outstanding generation, smart in science & technology and solid in faith & devotion. A trusted Islamic educational institution.',

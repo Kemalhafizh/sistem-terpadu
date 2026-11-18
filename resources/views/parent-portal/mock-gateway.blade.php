@@ -71,7 +71,7 @@
                         </button>
                     </form>
 
-                    <a href="{{ route('parent-portal.billings', $student->id) }}" class="block w-full bg-slate-850 hover:bg-slate-800 border border-slate-700/50 text-slate-300 text-center py-4 rounded-xl font-black text-xs tracking-wider active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
+                    <a href="{{ route('parent-portal.billings', $student->id) }}" class="block w-full bg-slate-800 hover:bg-slate-800 border border-slate-700/50 text-slate-300 text-center py-4 rounded-xl font-black text-xs tracking-wider active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>

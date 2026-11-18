@@ -8,11 +8,11 @@
     </div>
     @include('treasury.partials.alerts')
     @if($accounts->isEmpty())
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">Belum ada rekening bank.</div>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">Belum ada rekening bank.</div>
     @endif
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         @foreach($accounts as $acc)
-        <a href="{{ route('treasury.accounts.show', $acc) }}" class="block bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 hover:border-indigo-300 {{ $acc->is_active ? '' : 'opacity-60' }}">
+        <a href="{{ route('treasury.accounts.show', $acc) }}" class="block bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 hover:border-indigo-300 {{ $acc->is_active ? '' : 'opacity-60' }}">
             <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ $acc->bank_name }} - {{ $acc->account_name }}</h3>
             <p class="text-gray-500 text-sm mt-1">{{ $acc->account_number }}</p>
             @if($acc->latestPosition)

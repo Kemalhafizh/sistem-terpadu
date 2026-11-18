@@ -1,18 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800 leading-tight tracking-tight">
-            {{ __('Pasang Aplikasi E-Learning') }}
+        <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
+            {{ __('Pasang Aplikasi E-Learning Sulaone') }}
         </h2>
     </x-slot>
 
     <div class="py-6 sm:py-12 max-w-4xl mx-auto px-4">
         <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 sm:p-10 shadow-xl border border-gray-100 dark:border-slate-700 relative overflow-hidden group">
-            <!-- Glassmorphism Background Shapes -->
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
-            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-all duration-700"></div>
+            <!-- Soft Background Accents -->
+            <div class="absolute -top-24 -end-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+            <div class="absolute -bottom-24 -start-24 w-48 h-48 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-all duration-700"></div>
 
             <div class="relative z-10 text-center space-y-6">
-                <!-- App Icon Mockup -->
+                <!-- App Icon -->
                 <div class="mx-auto w-24 h-24 sm:w-28 sm:h-28 bg-emerald-600 dark:bg-emerald-700 rounded-3xl shadow-xl shadow-emerald-900/20 flex items-center justify-center text-white transform hover:scale-105 transition-transform duration-300">
                     <svg class="w-12 h-12 sm:w-16 sm:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"></path>
@@ -21,8 +21,8 @@
                 </div>
 
                 <div class="space-y-2">
-                    <h3 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">E-Learning SMA Terpadu</h3>
-                    <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 tracking-wider uppercase">Mobile App PWA Edition</p>
+                    <h3 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">E-Learning Sulaone</h3>
+                    <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400 tracking-wider uppercase">SISTA • {{ school_short_name() }}</p>
                 </div>
 
                 <p class="text-sm sm:text-base text-gray-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">

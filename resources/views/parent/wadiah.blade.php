@@ -17,7 +17,7 @@
           @foreach($children as $child)
             <a href="{{ route('parent-portal.wallet', ['student' => $child->id]) }}" 
               class="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-2 {{ $student->id === $child->id ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-              <span class="w-2.5 h-2.5 rounded-full {{ $student->id === $child->id ? 'bg-white' : 'bg-primary-505' }}"></span>
+              <span class="w-2.5 h-2.5 rounded-full {{ $student->id === $child->id ? 'bg-white' : 'bg-primary-500' }}"></span>
               {{ $child->user->name }}
             </a>
           @endforeach
@@ -242,7 +242,7 @@
       </div>
 
       <!-- Full Width Bottom Grid: Transaction Table with Order Breakdown -->
-      <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-150/60 dark:border-gray-700/60 animate-fade-in-up">
+      <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-200/60 dark:border-gray-700/60 animate-fade-in-up">
         <div class="flex justify-between items-center mb-6">
           <div>
             <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Mutasi Rekening Anak</span>
