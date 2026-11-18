@@ -26,12 +26,12 @@ class EnrollmentService
         Student $student,
         Classroom $classroom,
         SchoolYear $schoolYear,
-        ?CarbonInterface $startedOn = null,
+        CarbonInterface|string|null $startedOn = null,
         ?User $decidedBy = null,
         ?int $promotionDecisionId = null,
     ): ClassEnrollment {
         return DB::transaction(function () use ($student, $classroom, $schoolYear, $startedOn, $decidedBy, $promotionDecisionId) {
-            $startDate = ($startedOn ? CarbonImmutable::instance($startedOn) : CarbonImmutable::today())->toDateString();
+            $startDate = ($startedOn !== null ? CarbonImmutable::parse($startedOn) : CarbonImmutable::today())->toDateString();
 
             $existingActive = ClassEnrollment::query()
                 ->where('student_id', $student->id)
@@ -82,12 +82,12 @@ class EnrollmentService
     public function closeActiveEnrollment(
         Student $student,
         string $status,
-        ?CarbonInterface $endedOn = null,
+        CarbonInterface|string|null $endedOn = null,
         ?string $reason = null,
         ?User $decidedBy = null,
     ): ?ClassEnrollment {
         return DB::transaction(function () use ($student, $status, $endedOn, $reason, $decidedBy) {
-            $endDate = ($endedOn ? CarbonImmutable::instance($endedOn) : CarbonImmutable::today())->toDateString();
+            $endDate = ($endedOn !== null ? CarbonImmutable::parse($endedOn) : CarbonImmutable::today())->toDateString();
 
             $active = ClassEnrollment::query()
                 ->where('student_id', $student->id)
@@ -246,6 +246,7 @@ class EnrollmentService
         foreach ($decisions as $d) {
             if ($d->decision === null) {
                 $undecided[] = $d->student?->user?->name ?? "Siswa #{$d->student_id}";
+
                 continue;
             }
 

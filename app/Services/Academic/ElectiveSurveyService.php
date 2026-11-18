@@ -237,6 +237,7 @@ class ElectiveSurveyService
                     'match_percent' => null,
                     'label' => __('Belum mengisi survei'),
                 ];
+
                 continue;
             }
 
@@ -261,6 +262,30 @@ class ElectiveSurveyService
         }
 
         return $suggestions;
+    }
+
+    /**
+     * Compute match suggestion for a single classroom, returning null ratio if student has not submitted choices.
+     *
+     * @return array{
+     *     classroom_id: int,
+     *     classroom_name: string,
+     *     matched_count: int|null,
+     *     chosen_count: int,
+     *     match_percent: float|null,
+     *     ratio: float|null,
+     *     label: string
+     * }
+     */
+    public function classroomMatch(
+        ElectiveSurvey $survey,
+        Student $student,
+        Classroom $classroom,
+    ): array {
+        $suggestion = $this->matchSuggestionsForStudent($survey, $student, collect([$classroom]))[0];
+        $suggestion['ratio'] = $suggestion['match_percent'];
+
+        return $suggestion;
     }
 
     /**

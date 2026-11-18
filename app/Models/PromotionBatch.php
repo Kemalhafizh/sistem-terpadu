@@ -16,6 +16,8 @@ class PromotionBatch extends Model
 
     public const STATUS_HOMEROOM_REVIEW = 'ditinjau_wali';
 
+    public const STATUS_REVIEWED = 'ditinjau_wali';
+
     public const STATUS_DECIDED = 'ditetapkan';
 
     public const STATUS_EXECUTED = 'dieksekusi';
