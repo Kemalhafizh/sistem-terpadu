@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * FASE 77.7.1 — "starts in 5 minutes" / "ends in 5 minutes" pushes to the
+ * "starts in 5 minutes" / "ends in 5 minutes" pushes to the
  * teacher. The timestamps make each reminder go out exactly once even though
  * the scheduler checks every minute (claimed with a conditional UPDATE).
  */

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Achievement;
-use App\Models\BlockchainCredential;
+use App\Models\IssuedCertificate;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -87,25 +87,19 @@ class AchievementMobileDataSeeder extends Seeder
                 );
             }
 
-            // 2. Sertifikat Digital Blockchain Sinkron dengan Android Mockup
+            // 2. Sertifikat Digital Sekolah
             $certs = [
                 [
-                    'credential_type' => 'Sertifikat Kepanitiaan Sultan Agung Fest 2026',
-                    'certificate_number' => 'CERT/SA1/2026/089',
-                    'recipient_name' => $student->user?->name ?: 'Ahmad Kemal Hafiz',
-                    'transaction_hash' => '0x7f8a9b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a',
-                    'metadata_json' => [
+                    'verification_code' => 'CERT/SA1/2026/089',
+                    'metadata' => [
                         'title' => 'Sertifikat Kepanitiaan Sultan Agung Fest 2026',
                         'role' => 'Koordinator Divisi IT & Publikasi',
                     ],
                     'issued_at' => '2026-08-20',
                 ],
                 [
-                    'credential_type' => 'Sertifikat Peserta Terbaik LDK OSIS',
-                    'certificate_number' => 'CERT/SA1/2026/042',
-                    'recipient_name' => $student->user?->name ?: 'Ahmad Kemal Hafiz',
-                    'transaction_hash' => '0x3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f',
-                    'metadata_json' => [
+                    'verification_code' => 'CERT/SA1/2026/042',
+                    'metadata' => [
                         'title' => 'Sertifikat Peserta Terbaik LDK OSIS',
                         'role' => 'Peserta Terbaik Jenjang Kelas XI',
                     ],
@@ -114,15 +108,12 @@ class AchievementMobileDataSeeder extends Seeder
             ];
 
             foreach ($certs as $c) {
-                BlockchainCredential::updateOrCreate(
+                IssuedCertificate::updateOrCreate(
                     [
-                        'certificate_number' => $c['certificate_number'],
+                        'verification_code' => $c['verification_code'],
                     ],
                     array_merge($c, [
                         'student_id' => $student->user_id,
-                        'merkle_root' => '0x'.hash('sha256', $c['certificate_number']),
-                        'contract_address' => '0x1234567890abcdef1234567890abcdef12345678',
-                        'block_number' => 128456,
                     ])
                 );
             }

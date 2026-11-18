@@ -35,13 +35,13 @@ class ExamAttempt extends Model
         'violation_count',
         'violation_logs',
         'is_auto_submitted',
-        // Fase 87: Token-Gated Mobile-Only
+        // Token-Gated Mobile-Only
         'access_platform',
         'used_token',
         'token_validated_at',
         'force_closed',
         'force_close_reason',
-        // Fase 72.2: Live Proctoring
+        // Live Proctoring
         'last_heartbeat_at',
     ];
 

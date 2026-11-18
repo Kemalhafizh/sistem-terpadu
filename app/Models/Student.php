@@ -44,7 +44,7 @@ class Student extends Model
     }
 
     /**
-     * The students [user] may see, per CLAUDE.md rule 3: school-wide roles
+     * The students [user] may see: school-wide roles
      * see everyone, a teacher the classes they teach (schedule) or lead
      * (homeroom) this academic year, a student themself, a parent their own
      * children, anyone else no one.

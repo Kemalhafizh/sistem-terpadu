@@ -59,7 +59,7 @@ Broadcast::channel('cbt.exam.{examId}', function (User $user, int $examId) {
            in_array($user->role, ['admin', 'superadmin', 'waka_kurikulum', 'kepala_sekolah']);
 });
 
-// FASE 72.2: per-student proctor-intervention channel. Distinct from
+// per-student proctor-intervention channel. Distinct from
 // cbt.exam.{examId} above (proctor/admin only, also carries StudentCheatedEvent)
 // — this is what lets the exam-taker themselves receive ProctorInterventionEvent
 // (warnings, force-submit, extend-time, and per-student "broadcast to all"

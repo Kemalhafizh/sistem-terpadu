@@ -19,23 +19,10 @@ return new class extends Migration
             $table->decimal('cost', 12, 2)->default(0);
             $table->timestamps();
         });
-
-        Schema::create('maintenance_logs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('asset_id')->constrained('facility_assets')->cascadeOnDelete();
-            $table->foreignId('technician_id')->constrained('users');
-            $table->string('service_type');
-            $table->text('findings')->nullable();
-            $table->decimal('cost', 10, 2)->default(0);
-            $table->date('service_date');
-            $table->date('next_service_due')->nullable();
-            $table->timestamps();
-        });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('maintenance_logs');
         Schema::dropIfExists('facility_assets');
     }
 };

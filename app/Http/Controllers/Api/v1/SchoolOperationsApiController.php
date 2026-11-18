@@ -23,12 +23,12 @@ use Illuminate\Support\Facades\Storage;
 class SchoolOperationsApiController extends Controller
 {
     // ==========================================
-    // FASE 93: KALENDER AKADEMIK & EVENT SEKOLAH
+    // KALENDER AKADEMIK & EVENT SEKOLAH
     // ==========================================
 
     /**
      * The shape the Android app's AcademicCalendarEventItem reads
-     * (category/start_time/end_time/location/is_holiday). FASE 119: the app
+     * (category/start_time/end_time/location/is_holiday). : the app
      * now reads the same calendar as the web (AcademicEvent) instead of the
      * removed second "enterprise" calendar. Events have no location column,
      * so `location` is null rather than made up.
@@ -94,7 +94,7 @@ class SchoolOperationsApiController extends Controller
     }
 
     // ==========================================
-    // FASE 94: SPMB / PPDB MOBILE
+    // SPMB / PPDB MOBILE
     // ==========================================
 
     public function spmbWaves(): JsonResponse
@@ -285,7 +285,7 @@ class SchoolOperationsApiController extends Controller
     }
 
     // ==========================================
-    // FASE 96: REKAM MEDIS UKS & SKRINING
+    // REKAM MEDIS UKS & SKRINING
     // ==========================================
 
     /**

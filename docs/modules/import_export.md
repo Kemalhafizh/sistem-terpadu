@@ -1,10 +1,10 @@
-# 📥 Modul Universal Data Import/Export Hub SISTA
+# Modul Universal Data Import/Export Hub SISTA
 
 Universal Import/Export Hub SISTA dirancang untuk memberikan kemudahan bagi administrator TU dan operator sekolah dalam melakukan migrasi data massal (bulk import) secara aman dari berkas Excel/CSV ke database platform, serta penarikan laporan dinamis dalam berbagai format.
 
 ---
 
-## 📚 1. Komponen Utama & Database Schema
+## 1. Komponen Utama & Database Schema
 
 ### A. Model Log Impor (`ImportLog`)
 *   **`ImportLog`**: Menyimpan metadata penting sesi impor.
@@ -21,7 +21,7 @@ Universal Import/Export Hub SISTA dirancang untuk memberikan kemudahan bagi admi
 
 ---
 
-## ⚙️ 2. Arsitektur Mapping & Alur Transaksi Aman
+## 2. Arsitektur Mapping & Alur Transaksi Aman
 
 Sistem impor SISTA menjamin keandalan data (*data integrity*) dengan menerapkan alur verifikasi berlapis dan mekanisme rollback kaskade:
 
@@ -65,7 +65,7 @@ Jika terdeteksi bahwa berkas yang diimpor salah format atau berisi duplikasi dat
 
 ---
 
-## 📝 3. Pest Feature Test Scenarios
+## 3. Pest Feature Test Scenarios
 
 Logika parsing, validasi, transaksi, dan rollback diuji melalui Pest PHP pada [ImportExportTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/ImportExportTest.php):
 

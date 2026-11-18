@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
- * FASE 117 — one live lesson: a Schedule entry held on a given date.
+ * one live lesson: a Schedule entry held on a given date.
  *
  * session_date is kept as a plain 'Y-m-d' string (no date cast): a date cast
  * is stored as 'Y-m-d 00:00:00' on SQLite, which silently breaks equality

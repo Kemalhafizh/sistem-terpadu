@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
- * FASE 119: bullying reports from the app ("Lapor Perundungan", Android FASE 78).
+ * bullying reports from the app ("Lapor Perundungan", Android FASE 78).
  * Anyone signed in may file one; only BullyingReport::READER_ROLES may read them.
  */
 class BullyingReportApiController extends Controller

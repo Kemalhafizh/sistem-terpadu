@@ -1,12 +1,12 @@
-# 👥 Modul Kepegawaian & Penggajian (HRD) SISTA
+# Modul Kepegawaian & Penggajian (HRD) SISTA
 
 Modul HRD mengelola seluruh administrasi staf pendidik (guru) dan kependidikan (TU/Karyawan), presensi dari mesin sidik jari, serta sistem kalkulasi penggajian bulanan otomatis.
 
 ---
 
-## 📍 1. Presensi dari Mesin Sidik Jari (`FingerprintImportTest`)
+## 1. Presensi dari Mesin Sidik Jari (`FingerprintImportTest`)
 
-Guru dan karyawan presensi di **mesin sidik jari** sekolah; aplikasi tidak menyediakan check-in pegawai (FASE 119). Tata Usaha mengimpor log yang diekspor mesin di menu **Administrasi → Impor Sidik Jari** (`hrd/fingerprint-import`):
+Guru dan karyawan presensi di **mesin sidik jari** sekolah; aplikasi tidak menyediakan check-in pegawai. Tata Usaha mengimpor log yang diekspor mesin di menu **Administrasi → Impor Sidik Jari** (`hrd/fingerprint-import`):
 *   **Format fleksibel:** CSV, TXT, DAT, atau Excel. Nama kolom (ID mesin, tanggal/jam, atau tanggal dan jam terpisah), pemisah, dan format tanggal diatur di `config/fingerprint.php`, jadi tidak terikat satu merek mesin.
 *   **Pemetaan ID:** setiap pegawai diisi "ID di Mesin Sidik Jari" pada data pegawainya. ID mesin yang belum dipetakan dilaporkan beserta jumlah scan-nya, bukan diabaikan diam-diam.
 *   **Idempoten:** scan pertama sehari menjadi jam masuk, scan terakhir menjadi jam pulang, digabung dengan data yang sudah ada. Mengimpor file yang sama dua kali tidak menggandakan apa pun. Hari yang sudah tercatat izin, sakit, atau cuti tidak ditimpa.
@@ -18,7 +18,7 @@ Guru dan karyawan presensi di **mesin sidik jari** sekolah; aplikasi tidak menye
 
 ---
 
-## 💵 2. Penggajian Karyawan (`PayrollController`)
+## 2. Penggajian Karyawan (`PayrollController`)
 
 Menu **Kepegawaian → Payroll** (admin dan kepala sekolah):
 *   **Komponen slip:** gaji pokok pegawai, tunjangan dan potongan lain (kasbon, BPJS, dll.) yang diisi per slip, serta potongan kehadiran yang dihitung dari rekap presensi.
@@ -27,13 +27,13 @@ Menu **Kepegawaian → Payroll** (admin dan kepala sekolah):
 *   **Terbitkan & bayar** bisa per slip atau sekaligus satu bulan. Slip yang sudah dibayar terkunci.
 *   **Slip Gaji:** pegawai mengunduh slip yang sudah diterbitkan dalam format PDF dari portal pegawai.
 
-## 🗓️ Pengajuan Izin/Cuti
+## Pengajuan Izin/Cuti
 
 Pegawai mengajukan izin, sakit, cuti, umroh/haji, atau dinas luar dari **Portal Pegawai** (lampiran opsional). Pengajuan langsung masuk alur persetujuan `leave_approval` (bawaan: Waka Kurikulum lalu Kepala Sekolah, bisa diubah di *Workflow → Definisi*). Persetujuan terakhir menandai pengajuan disetujui, sehingga hari-harinya tidak dihitung tidak hadir di rekap dan payroll. Pegawai melihat statusnya ("Menunggu Kepala Sekolah", "Disetujui", "Ditolak") di portal.
 
 ---
 
-## 📝 3. Jurnal Mengajar Guru (`TeachingJournalController`)
+## 3. Jurnal Mengajar Guru (`TeachingJournalController`)
 
 Setiap guru diwajibkan mengisi jurnal mengajar harian kelas setelah selesai jam pelajaran:
 *   Jurnal mencatat hari/tanggal, kelas target, mata pelajaran, topik materi yang diajarkan, aktivitas siswa, serta kendala belajar mengajar.

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 
 /*
- * FASE 77.7.1 — teacher reminders 5 minutes before a lesson starts / ends,
+ * teacher reminders 5 minutes before a lesson starts / ends,
  * and the daily per-child attendance digest for parents.
  * Fixture: Monday 2026-10-05, schedule "jam 1–2" = 07:00–08:30.
  */

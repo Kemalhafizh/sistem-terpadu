@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * FASE 117 / Android FASE 77 `SessionAttendanceResponse`.
+ * / Android FASE 77 `SessionAttendanceResponse`.
  *
  * @mixin SessionAttendance
  */

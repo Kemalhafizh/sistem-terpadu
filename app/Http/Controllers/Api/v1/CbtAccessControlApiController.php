@@ -68,7 +68,7 @@ class CbtAccessControlApiController extends Controller
             'message' => $result['message'],
             'exam_id' => $exam->id,
             'attempt_status' => $result['attempt']->status,
-            // FASE 72.2: lets the app subscribe to its own
+            // lets the app subscribe to its own
             // private-cbt.exam.{examId}.student.{studentId} channel for live
             // proctor interventions — nothing else surfaces this numeric id.
             'student_id' => $student->id,

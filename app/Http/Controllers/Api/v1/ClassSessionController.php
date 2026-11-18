@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
- * @group Sesi Kelas — Guru (FASE 117)
+ * @group Sesi Kelas — Guru
  *
  * Memulai/mengakhiri sesi kelas hidup, menampilkan QR berputar, dan absensi manual per sesi.
  *

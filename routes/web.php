@@ -66,9 +66,6 @@ use App\Http\Controllers\MeetingNoteController;
 use App\Http\Controllers\MpkController;
 use App\Http\Controllers\MutabaahController;
 use App\Http\Controllers\MutationController;
-use App\Http\Controllers\Operations\BusRoutingController;
-use App\Http\Controllers\Operations\IotFacilityController;
-use App\Http\Controllers\Operations\UtilityTrackerController;
 use App\Http\Controllers\OsisController;
 use App\Http\Controllers\ParentPortalController;
 use App\Http\Controllers\PointCategoryController;
@@ -237,7 +234,7 @@ Route::middleware('auth')->group(function () {
     Route::post('messages/{conversation}/reply', [MessagingController::class, 'reply'])->name('messages.reply');
     Route::get('messages/search-users', [MessagingController::class, 'searchUsers'])->name('messages.search_users');
 
-    // Resource booking (rooms and equipment). FASE 119 removed the second
+    // Resource booking (rooms and equipment). removed the second
     // "enterprise" calendar that used to live here: the school has one
     // calendar, `calendar` (AcademicEvent), which the app reads too.
     Route::get('resource-bookings', [ResourceBookingController::class, 'index'])->name('resource_bookings.index');
@@ -246,7 +243,7 @@ Route::middleware('auth')->group(function () {
     Route::post('resource-bookings/{id}/reject', [ResourceBookingController::class, 'rejectBooking'])->name('resource_bookings.reject');
     Route::get('resource-bookings/check', [ResourceBookingController::class, 'checkAvailability'])->name('resource_bookings.check');
 
-    // RKAS / RAPBS (FASE 33, 119.9): TU drafts, the principal approves. These
+    // RKAS / RAPBS: TU drafts, the principal approves. These
     // routes carried no role, so any account could approve the budget.
     Route::middleware(Roles::only(BudgetPlan::READER_ROLES))->group(function () {
         Route::get('financial/budget', [BudgetPlanningController::class, 'dashboard'])->name('financial.budget.dashboard');
@@ -263,7 +260,7 @@ Route::middleware('auth')->group(function () {
     Route::post('financial/budget/{id}/approve', [BudgetPlanningController::class, 'approve'])
         ->middleware(Roles::only(BudgetPlan::APPROVER_ROLES))->name('financial.budget.approve');
 
-    // 33.3: Scholarships. FASE 119: part of the Keuangan menu, and no longer open to
+    // 33.3: Scholarships. : part of the Keuangan menu, and no longer open to
     // every account: staff enter applications (the form takes the student), the
     // principal may approve, and only TU and admin create programmes or pay out.
     $scholarshipReaders = Roles::only('staf_tu', Roles::PRINCIPAL, 'admin');
@@ -304,7 +301,7 @@ Route::middleware('auth')->group(function () {
     Route::get('growth/ptc/teacher-schedule', [PtcSchedulerController::class, 'teacherSchedule'])
         ->middleware(Roles::only(PtcSession::HOST_ROLES))->name('growth.ptc.teacher_schedule');
 
-    // FASE 36: Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
+    // Enterprise Human Capital Excellence -- 360 Evaluation, CPD & Leadership Pipeline
     // 36.1: 360-Degree Teacher Evaluation & EDOM
     // Teacher 360° evaluation (119.9). These routes carried no role: anyone could open a
     // cycle, rate as "supervisor", and read any teacher's results and the ranking.
@@ -320,28 +317,15 @@ Route::middleware('auth')->group(function () {
         Route::get('hc/evaluation/ranking', [Evaluation360Controller::class, 'ranking'])->name('hc.evaluation.ranking');
     });
 
-    // FASE 40: Advanced Student Experience Platform
+    // Advanced Student Experience Platform
     // 40.1: Student Self-Service Portal
     Route::get('student/portal/dashboard', [StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
     Route::get('student/portal/request', [StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
     Route::post('student/portal/request', [StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
 
-    // 40.3: Student Achievement Certificate Generator
+    // Student Achievement Certificate Generator
     Route::get('certificates/templates', [CertificateController::class, 'index'])->name('certificates.templates');
     Route::get('certificates/verify/{code}', [CertificateController::class, 'verifyPage'])->name('certificates.verify');
-
-    // FASE 42: Advanced Facility & Operations Management
-    // 42.1: IoT Smart Facility & Energy Monitor Hub
-    Route::get('facility/iot/dashboard', [IotFacilityController::class, 'dashboard'])->name('facility.iot.dashboard');
-
-    // 42.2: Utility Expense & Carbon Footprint Tracker
-    Route::get('facility/utility/dashboard', [UtilityTrackerController::class, 'dashboard'])->name('facility.utility.dashboard');
-
-    // 42.3: Transportation & Bus Routing System
-    Route::get('facility/transport/routes', [BusRoutingController::class, 'routes'])->name('facility.transport.routes');
-
-    // 42.4: Asset Maintenance & Preventive Service Scheduler
-    Route::get('facility/maintenance/schedule', [App\Http\Controllers\Operations\AssetMaintenanceController::class, 'schedule'])->name('facility.maintenance.schedule');
 
     // Multi-Format Export Engine & Data Interoperability
     Route::middleware('role:staf_tu,waka_kurikulum,waka_sarpras,kepala_sekolah,admin,superadmin')->group(function () {
@@ -451,7 +435,7 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // STUDENT SELF-SERVICE
     // =========================================================
-    // Both spellings of the student role (FASE 119: `siswa` accounts were locked out of their own bills).
+    // Both spellings of the student role.
     Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
         Route::get('my-billings', [StudentFinanceController::class, 'index'])->name('finance.student.index');
         Route::get('my-academic', [StudentAcademicController::class, 'index'])->name('student.academic');
@@ -873,7 +857,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('payrolls', PayrollController::class)->except(['store', 'edit']);
     });
 
-    // FASE 119.6.1: staff attendance comes from the fingerprint machine; TU uploads its log.
+    // staff attendance comes from the fingerprint machine; TU uploads its log.
     Route::middleware(['auth', Roles::only('staf_tu', Roles::PRINCIPAL, 'admin')])->prefix('hrd/fingerprint-import')->name('hrd.fingerprint-import.')->group(function () {
         Route::get('/', [FingerprintImportController::class, 'index'])->name('index');
         Route::post('/', [FingerprintImportController::class, 'store'])->name('store');
@@ -1329,10 +1313,10 @@ Route::middleware(['auth'])->group(function () {
 
 require __DIR__.'/treasury.php';
 
-require __DIR__.'/islamic_tech.php';
+require __DIR__.'/tahsin.php';
 require __DIR__.'/auth.php';
 
-require __DIR__.'/crisis.php';
+require __DIR__.'/bullying.php';
 
 require __DIR__.'/inclusive_education.php';
 
@@ -1340,7 +1324,7 @@ require __DIR__.'/inclusive_education.php';
 Route::get('/.well-known/assetlinks.json', [WellKnownController::class, 'assetLinks'])->name('well-known.assetlinks');
 Route::get('/.well-known/apple-app-site-association', [WellKnownController::class, 'appleAppSiteAssociation'])->name('well-known.apple-app-site-association');
 
-// --- FASE 107: PWA (Progressive Web App) Routes ---
+// --- PWA (Progressive Web App) Routes ---
 Route::get('/manifest.json', [PwaController::class, 'manifest'])->name('pwa.manifest');
 Route::get('/sw.js', [PwaController::class, 'serviceWorker'])->name('pwa.service-worker');
 Route::post('/pwa/subscribe', [PwaController::class, 'subscribe'])->middleware('auth')->name('pwa.subscribe');

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Achievement;
-use App\Models\BlockchainCredential;
 use App\Models\ExtracurricularMember;
 use App\Models\Grade;
 use App\Models\IssuedCertificate;
@@ -102,31 +101,13 @@ class AchievementService
     }
 
     /**
-     * Mengambil daftar e-sertifikat digital ber-blockchain siswa.
+     * Mengambil daftar e-sertifikat digital siswa.
      */
     public function getCertificates(Student $student): array
     {
         $certificates = [];
 
-        // 1. Ambil dari BlockchainCredential jika ada
-        $blockchainItems = BlockchainCredential::where('student_id', $student->user_id)
-            ->orWhere('student_id', $student->id)
-            ->latest()
-            ->get();
-
-        foreach ($blockchainItems as $item) {
-            $metadata = is_array($item->metadata_json) ? $item->metadata_json : [];
-            $certificates[] = [
-                'id' => (int) $item->id,
-                'certificate_number' => (string) ($item->certificate_number ?: 'CERT/SA1/'.date('Y')."/{$item->id}"),
-                'title' => (string) ($metadata['title'] ?? $item->credential_type ?: 'Sertifikat Resmi'),
-                'role' => (string) ($metadata['role'] ?? 'Penerima Sertifikat'),
-                'issued_date' => $item->issued_at ? $item->issued_at->format('Y-m-d') : now()->format('Y-m-d'),
-                'blockchain_hash' => (string) ($item->transaction_hash ?: '0x'.hash('sha256', (string) $item->id)),
-            ];
-        }
-
-        // 2. Ambil dari IssuedCertificate jika ada
+        // 1. Ambil dari IssuedCertificate jika ada
         $issuedItems = IssuedCertificate::where('student_id', $student->user_id)
             ->orWhere('student_id', $student->id)
             ->with('template')
@@ -134,17 +115,18 @@ class AchievementService
             ->get();
 
         foreach ($issuedItems as $issued) {
+            $metadata = is_array($issued->metadata) ? $issued->metadata : [];
             $certificates[] = [
                 'id' => (int) ($issued->id + 1000),
                 'certificate_number' => (string) ($issued->verification_code ?: 'CERT/SA1/'.date('Y')."/{$issued->id}"),
-                'title' => (string) ($issued->template?->name ?: 'Sertifikat Digital Sekolah'),
-                'role' => 'Peserta Berprestasi',
+                'title' => (string) ($metadata['title'] ?? $issued->template?->name ?: 'Sertifikat Digital Sekolah'),
+                'role' => (string) ($metadata['role'] ?? 'Peserta Berprestasi'),
                 'issued_date' => $issued->issued_at ? $issued->issued_at->format('Y-m-d') : now()->format('Y-m-d'),
                 'blockchain_hash' => '0x'.hash('sha256', 'issued_'.$issued->id),
             ];
         }
 
-        // 3. Sertakan sertifikat dari prestasi yang telah tervalidasi (VALIDATED)
+        // 2. Sertakan sertifikat dari prestasi yang telah tervalidasi (VALIDATED)
         $validatedAchievements = Achievement::where('student_id', $student->id)
             ->validated()
             ->whereNotNull('certificate_path')

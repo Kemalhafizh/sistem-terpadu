@@ -9,7 +9,7 @@ use App\Services\HRD\FingerprintAttendanceImporter;
 use App\Services\HRD\FingerprintImportException;
 use Illuminate\Http\Request;
 
-/** Upload the fingerprint machine's log; staff attendance is built from it (FASE 119.6.1). */
+/** Upload the fingerprint machine's log; staff attendance is built from it. */
 class FingerprintImportController extends Controller
 {
     public function index()

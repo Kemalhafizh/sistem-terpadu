@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
 /*
- * FASE 119: "Lapor Perundungan" in the app (Android FASE 78). Anyone signed in
+ * "Lapor Perundungan" in the app (Android FASE 78). Anyone signed in
  * may file a report; only counselling, student affairs and leadership read them.
  */
 

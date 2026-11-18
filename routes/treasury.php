@@ -8,7 +8,7 @@ use App\Http\Controllers\Treasury\VendorPaymentController;
 use App\Support\Access\Roles;
 use Illuminate\Support\Facades\Route;
 
-// FASE 118: treasury was open to every signed-in account. View: finance staff
+// treasury was open to every signed-in account. View: finance staff
 // and the principal. Change: finance staff (staf_tu) and admin; petty-cash
 // approval also by the principal (the requester can never approve their own).
 $treasuryChange = Roles::only('staf_tu', 'admin');

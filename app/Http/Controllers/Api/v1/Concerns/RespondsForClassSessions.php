@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
- * FASE 117: every class-session endpoint answers in the { success, message,
+ * every class-session endpoint answers in the { success, message,
  * data } envelope Android's ApiEnvelope<T> deserialises — validation errors
  * and business-rule rejections included (plus "errors" for field messages).
  */

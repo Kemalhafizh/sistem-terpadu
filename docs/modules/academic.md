@@ -1,10 +1,10 @@
-# 🎓 Modul Akademik SISTA
+# Modul Akademik SISTA
 
 Modul Akademik merupakan jantung operasional pembelajaran harian sekolah pada platform **SISTA**. Modul ini mengotomasi administrasi kelas, penjadwalan pelajaran, serta evaluasi belajar siswa.
 
 ---
 
-## 📚 1. Komponen Utama
+## 1. Komponen Utama
 
 ### A. Pengelolaan Tahun Akademik (`AcademicYearController`)
 *   Mengatur status aktif tahun ajaran (contoh: `2025/2026`) beserta semester aktif (`Ganjil` atau `Genap`).
@@ -20,7 +20,7 @@ Modul Akademik merupakan jantung operasional pembelajaran harian sekolah pada pl
 
 ---
 
-## 📝 2. Rapor Digital & Penilaian (E-Rapor)
+## 2. Rapor Digital & Penilaian (E-Rapor)
 
 ### A. Lembar Penilaian (`GradeController`)
 *   Guru dapat menginput nilai tugas, ulangan harian, Penilaian Tengah Semester (PTS), dan Penilaian Akhir Semester (PAS) per siswa berdasarkan mata pelajaran yang diampu.

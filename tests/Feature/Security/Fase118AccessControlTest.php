@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 /*
- * FASE 118: the FASE 45-62 modules were guarded by `auth` alone, so any
+ * the modules were guarded by `auth` alone, so any
  * signed-in account (students and parents included) could open and change
  * treasury, crisis, HR and data-engineering pages; records were looked up by
  * id without checking whose they were; and some forms answered "saved"
@@ -105,7 +105,7 @@ test('sidebar siswa dan orang tua tidak memuat menu internal', function (string 
     expect($html)->not->toContain(url('/treasury/'))
         ->not->toContain(route('iep.index'))
         ->not->toContain('href="'.route('crisis.bullying.index').'"')
-        // Reporting is open to everyone, and the menu says so (FASE 119).
+        // Reporting is open to everyone, and the menu says so.
         ->toContain('href="'.route('crisis.bullying.report').'"');
 })->with(['siswa', 'orang_tua', 'student', 'parent']);
 

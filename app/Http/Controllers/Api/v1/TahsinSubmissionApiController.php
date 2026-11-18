@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * FASE 72.1: Audio Recorder & Live Waveform Canvas untuk Tahsin/Tahfidz.
+ * Audio Recorder & Live Waveform Canvas untuk Tahsin/Tahfidz.
  * Students submit a recitation recording; it's routed to their homeroom
  * teacher, who listens and pins timestamped tajwid feedback on the waveform.
  */

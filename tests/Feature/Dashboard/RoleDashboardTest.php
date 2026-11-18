@@ -7,8 +7,8 @@ use App\Models\Student;
 use App\Models\User;
 
 /*
- * FASE 119 (119.2): one dashboard per role, whatever the spelling of the
- * role, and no made-up figures when there is no data (CLAUDE.md rule 1).
+ * One dashboard per role, whatever the spelling of the
+ * role, and no made-up figures when there is no data.
  */
 
 test('setiap ejaan peran mendapat dashboard perannya', function (string $role, string $dashboard, string $viewKey) {

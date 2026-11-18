@@ -1,4 +1,4 @@
-name: 🚀 SISTA Automated Deployment
+name: SISTA Automated Deployment
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: 🚀 Deploy to Production Server
+    name: Deploy to Production Server
     runs-on: ubuntu-latest
 
     steps:

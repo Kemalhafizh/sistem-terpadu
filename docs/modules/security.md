@@ -1,10 +1,10 @@
-# 🛡️ Modul Monitoring Keamanan SIEM & Sesi Aktif SISTA
+# Modul Monitoring Keamanan SIEM & Sesi Aktif SISTA
 
 Modul Keamanan SISTA bertindak sebagai Security Information and Event Management (SIEM) mini terintegrasi yang memantau keamanan platform dari serangan siber (seperti brute-force), melacak sesi login aktif pengguna, serta memberikan wewenang pemutusan sesi mencurigakan secara paksa (*active session termination*).
 
 ---
 
-## 📚 1. Komponen Utama & Database Schema
+## 1. Komponen Utama & Database Schema
 
 Keamanan tingkat tinggi ini dikendalikan oleh struktur audit trail real-time:
 
@@ -25,7 +25,7 @@ Keamanan tingkat tinggi ini dikendalikan oleh struktur audit trail real-time:
 
 ---
 
-## 🔒 2. Sistem Proteksi SIEM & Pemutus Sesi Paksa
+## 2. Sistem Proteksi SIEM & Pemutus Sesi Paksa
 
 Sistem perlindungan SISTA memantau lalu lintas otentikasi secara dinamis untuk mencegah pengambilalihan akun:
 
@@ -52,7 +52,7 @@ graph TD
 
 ---
 
-## 📝 3. Pest Feature Test Scenarios
+## 3. Pest Feature Test Scenarios
 
 Skenario proteksi login dan manajemen sesi aktif divalidasi penuh oleh suite pengujian otomatis pada [SecurityMonitorTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Security/SecurityMonitorTest.php):
 

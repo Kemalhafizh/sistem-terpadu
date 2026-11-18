@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /*
- * FASE 119.6.1: staff sign in on the fingerprint machine and TU imports its
+ * staff sign in on the fingerprint machine and TU imports its
  * log. Importing is idempotent, unknown machine IDs are reported instead of
  * silently dropped, and a month with no data recaps as null, not 0.
  */

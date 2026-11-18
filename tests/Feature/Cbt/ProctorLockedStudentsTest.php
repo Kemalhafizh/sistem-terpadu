@@ -18,7 +18,7 @@ use Tests\TestCase;
  * to unlock them after an anti-cheat force-close; nobody in the exam room knows
  * that id. teacher/cbt/exams/{id}/locked-students lists who is locked out, from
  * the attempts themselves. canViewToken() also let `admin` bypass the operator
- * rule, which CLAUDE.md reserves for superadmin.
+ * rule, which is reserved for superadmin.
  */
 
 beforeEach(function () {

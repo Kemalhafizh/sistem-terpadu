@@ -8,7 +8,7 @@ use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
 use Illuminate\Support\Facades\Route;
 
-// FASE 118: data on students with special needs. View: counselling, teachers
+// data on students with special needs. View: counselling, teachers
 // and leadership (a teacher only for the classes they teach, see the
 // controllers); change: counselling, student affairs and admin.
 $inclusiveChange = Roles::only('bk', 'waka_kesiswaan', 'admin');

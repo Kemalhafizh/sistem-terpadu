@@ -6,10 +6,10 @@ use App\Models\Student;
 use App\Models\User;
 
 /*
- * FASE 119: the pretend gateway used to be live everywhere. Without a working
+ * the pretend gateway used to be live everywhere. Without a working
  * Midtrans key, checkout handed out a page whose button marked the bill paid,
  * and a student or parent could POST the callback for their own bill and have
- * it settled with no money received (CLAUDE.md rule 2). The simulator is now
+ * it settled with no money received. The simulator is now
  * off unless switched on for a local demo, and never on in production.
  */
 

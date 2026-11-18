@@ -1,10 +1,10 @@
-# ⛓️ Modul Polymorphic Approval Workflow Engine SISTA
+# Modul Polymorphic Approval Workflow Engine SISTA
 
 Workflow Engine SISTA adalah sistem approval dinamis berjenjang berbasis hubungan polimorfik (*polymorphic relationship*) yang memungkinkan dokumen atau pengajuan apa pun (seperti surat digital, pengajuan cuti guru, proposal anggaran OSIS) melewati rantai persetujuan kustom yang ditentukan oleh administrator sekolah.
 
 ---
 
-## 📚 1. Komponen Utama & Database Schema
+## 1. Komponen Utama & Database Schema
 
 Workflow Engine menggunakan tiga tabel utama untuk mengelola definisi dan eksekusi persetujuan:
 
@@ -35,7 +35,7 @@ Workflow Engine menggunakan tiga tabel utama untuk mengelola definisi dan ekseku
 
 ---
 
-## ⚙️ 2. Arsitektur Polimorfik & Rantai Eksekusi
+## 2. Arsitektur Polimorfik & Rantai Eksekusi
 
 Kemampuan utama dari engine ini terletak pada integrasi polimorfik yang tidak terikat pada struktur data model tunggal:
 
@@ -62,7 +62,7 @@ graph TD
 
 ---
 
-## 📝 3. Pest Feature Test Scenarios
+## 3. Pest Feature Test Scenarios
 
 Logika alur persetujuan dijamin oleh suite pengujian unit dan integrasi pada [WorkflowEngineTest.php](file:///c:/project/portofolio/project-super-web/sistem-terpadu/tests/Feature/Workflow/WorkflowEngineTest.php):
 

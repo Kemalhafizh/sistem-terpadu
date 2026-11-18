@@ -58,7 +58,7 @@ class AdminMobileDashboardController extends Controller
     /**
      * Detailed KPI list for executive view.
      *
-     * FASE 71.4 follow-up: this used to return only 3 fields with a comment
+     * follow-up: this used to return only 3 fields with a comment
      * literally saying "Dummy or expanded KPI details" for the other three
      * the roadmap named (teacher attendance %, SPP payment ratio per
      * cohort, CBT server usage). Those three are now computed from real
@@ -130,7 +130,7 @@ class AdminMobileDashboardController extends Controller
     }
 
     /**
-     * FASE 71.4: broadcast an emergency alert to every connected mobile app
+     * broadcast an emergency alert to every connected mobile app
      * (students, teachers, parents) in real time over the `campus.emergency`
      * public channel.
      */

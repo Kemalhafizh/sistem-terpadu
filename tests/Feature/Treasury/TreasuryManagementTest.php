@@ -13,7 +13,7 @@ class TreasuryManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // FASE 118: treasury is for TU staff, the principal and admin.
+        // treasury is for TU staff, the principal and admin.
         $this->user = User::factory()->create(['role' => 'staf_tu']);
         $this->actingAs($this->user);
     }
@@ -42,7 +42,7 @@ class TreasuryManagementTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** FASE 118: treasury used to open for any signed-in account, bank accounts included. */
+    /** treasury used to open for any signed-in account, bank accounts included. */
     public function test_other_roles_are_refused()
     {
         foreach (['siswa', 'orang_tua', 'guru', 'bk'] as $role) {

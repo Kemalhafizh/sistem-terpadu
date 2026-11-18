@@ -32,7 +32,7 @@ trait ApiResponseTrait
     }
 
     /**
-     * FASE 74.2: same shape as successResponse(), plus ETag (a hash of the
+     * same shape as successResponse(), plus ETag (a hash of the
      * actual payload — changes iff the data changes) and, when the caller
      * has a real "as of" timestamp for the data, Last-Modified. Only for
      * read endpoints where a client needs a conditional-request validator

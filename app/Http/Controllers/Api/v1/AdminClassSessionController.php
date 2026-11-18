@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
- * @group Sesi Kelas — Admin/Waka Kurikulum/TU (FASE 117)
+ * @group Sesi Kelas — Admin/Waka Kurikulum/TU
  *
  * Monitoring sesi kelas, koreksi presensi beralasan, dan rekap kehadiran per-mapel.
  *

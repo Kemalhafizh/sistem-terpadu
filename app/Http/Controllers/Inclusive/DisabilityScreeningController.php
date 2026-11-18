@@ -21,17 +21,17 @@ class DisabilityScreeningController extends Controller
     {
         $results = ScreeningResult::with('student', 'evaluator')->whereHas('student', fn ($q) => $q->visibleTo(request()->user()))->latest()->take(10)->get();
 
-        return view('fase58.screening.dashboard', compact('results'));
+        return view('inclusive.screening.dashboard', compact('results'));
     }
 
     public function index()
     {
-        return view('fase58.screening.dashboard');
+        return view('inclusive.screening.dashboard');
     }
 
     public function conductScreening()
     {
-        return view('fase58.screening.instrument');
+        return view('inclusive.screening.instrument');
     }
 
     public function storeResult(Request $request)
@@ -67,6 +67,6 @@ class DisabilityScreeningController extends Controller
 
         $result->load('student', 'evaluator');
 
-        return view('fase58.screening.report', compact('result'));
+        return view('inclusive.screening.report', compact('result'));
     }
 }

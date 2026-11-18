@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations for CBT Enterprise Maximization (Fase 86).
+     * Run the migrations for CBT Enterprise Maximization.
      */
     public function up(): void
     {

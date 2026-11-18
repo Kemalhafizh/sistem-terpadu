@@ -4,7 +4,7 @@ use App\Models\User;
 use App\Services\Financial\ScholarshipService;
 
 /*
- * FASE 119: scholarships joined the Keuangan menu. Their routes used to carry
+ * scholarships joined the Keuangan menu. Their routes used to carry
  * no role at all, so any signed-in account (a student included) could create
  * programmes, approve applications and pay them out.
  */

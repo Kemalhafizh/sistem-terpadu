@@ -5,7 +5,7 @@ use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
 use Illuminate\Support\Facades\Route;
 
-// Tahsin records are for teachers and leadership (FASE 118). FASE 119 removed
+// Tahsin records are for teachers and leadership. removed
 // the rest of this file (Islamic events, dawah hub, spiritual portfolio).
 $islamicStaff = Roles::only(StudentDataAccess::TEACHER_ROLES, Roles::LEADERSHIP, 'admin');
 

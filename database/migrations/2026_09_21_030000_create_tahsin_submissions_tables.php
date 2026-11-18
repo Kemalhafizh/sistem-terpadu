@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * FASE 72.1: Audio Recorder & Live Waveform Canvas untuk Tahsin/Tahfidz.
+     * Audio Recorder & Live Waveform Canvas untuk Tahsin/Tahfidz.
      * A student's recitation recording, routed to their homeroom teacher for
      * review, plus timestamp-pinned tajwid feedback notes on that recording.
      */

@@ -6,8 +6,8 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 /*
- * FASE 118.5.1: every signed-in web route carries `role:` or `can:`, or is
- * listed in config/route_access.php. Before FASE 118, 17 route files were
+ * every signed-in web route carries `role:` or `can:`, or is
+ * listed in config/route_access.php. 17 route files were
  * guarded by `auth` alone, so students and parents could open (and change)
  * treasury, crisis and HR pages, and the menus showed them those links.
  */
@@ -36,14 +36,14 @@ test('daftar whitelist dan utang hanya berisi route yang masih ada dan masih tan
 });
 
 /**
- * "METHODS uri" of every route the FASE 45-62 route files register, loaded
- * into a router of their own. FASE 119 deletes some of these files outright
+ * "METHODS uri" of every route the route files register, loaded
+ * into a router of their own. deletes some of these files outright
  * (recruitment, omnichannel, adaptive, extended_diamond, ...); they leave this
  * list with them.
  */
 function fase45to62RouteKeys(): array
 {
-    $files = ['treasury', 'crisis', 'inclusive_education', 'islamic_tech'];
+    $files = ['treasury', 'bullying', 'inclusive_education', 'tahsin'];
     $router = new Router(app('events'), app());
     $original = Route::getFacadeRoot();
     Route::swap($router);
@@ -58,7 +58,7 @@ function fase45to62RouteKeys(): array
     return collect($router->getRoutes()->getRoutes())->map(fn ($route) => RouteAccess::key($route))->all();
 }
 
-test('route modul FASE 45-62 semuanya berperan, hanya form lapor bullying yang terbuka', function () {
+test('route modul semuanya berperan, hanya form lapor bullying yang terbuka', function () {
     $modules = fase45to62RouteKeys();
 
     expect(count($modules))->toBeGreaterThan(50)

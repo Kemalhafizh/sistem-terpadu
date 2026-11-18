@@ -1,10 +1,10 @@
-# 📊 Modul 8: Scheduled Reporting & Email Digest SISTA
+# Modul 8: Scheduled Reporting & Email Digest SISTA
 
 Modul Scheduled Reporting & Email Digest merupakan mesin pelaporan otomatis (*automated reporting engine*) pada platform **SISTA** yang mengompilasi statistik operasional, finansial, dan akademik sekolah untuk dikirimkan secara berkala kepada pemangku kepentingan (Admin, Kepala Sekolah, Divisi Keuangan, dan Orang Tua Siswa) melalui saluran **Email** dan **WhatsApp**.
 
 ---
 
-## 🛠️ 1. Komponen Utama & Arsitektur
+## 1. Komponen Utama & Arsitektur
 
 ### A. Model Data & Migrasi (`ScheduledReport`)
 *   **Tabel Database (`scheduled_reports`)**: Menyimpan konfigurasi jadwal laporan.
@@ -29,7 +29,7 @@ Modul Scheduled Reporting & Email Digest merupakan mesin pelaporan otomatis (*au
 
 ---
 
-## 🚀 2. Mekanisme Pengiriman Otomatis
+## 2. Mekanisme Pengiriman Otomatis
 
 ### A. Console Command (`sista:send-digests`)
 *   Perintah Artisan `php artisan sista:send-digests` berjalan secara otomatis di latar belakang (melalui Scheduler Laravel).
@@ -41,7 +41,7 @@ Modul Scheduled Reporting & Email Digest merupakan mesin pelaporan otomatis (*au
 
 ---
 
-## 🖥️ 3. Dashboard Admin CRUD
+## 3. Dashboard Admin CRUD
 
 *   **Antarmuka Pengguna (`ScheduledReportController` & `scheduled-reports/index.blade.php`)**:
     *   Menggunakan desain **glassmorphic dark-mode** premium yang responsif dengan aksen warna Emerald/Indigo.
@@ -50,7 +50,7 @@ Modul Scheduled Reporting & Email Digest merupakan mesin pelaporan otomatis (*au
 
 ---
 
-## 🧪 4. Pengujian & Verifikasi
+## 4. Pengujian & Verifikasi
 
 Pengujian dilakukan secara otomatis menggunakan **Pest PHP** untuk menjamin kestabilan modul:
 ```bash

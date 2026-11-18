@@ -1,33 +1,34 @@
-# 🛡️ Kebijakan Keamanan & SIEM SISTA
+# Kebijakan Keamanan Sistem SISTA
 
-Keamanan data adalah prioritas utama di **SISTA**. Dokumen ini merangkum lapisan proteksi enkripsi, otentikasi multi-faktor, kebijakan isolasi data, serta sistem deteksi dini keamanan terintegrasi (SIEM).
-
----
-
-## 🔒 1. Otentikasi & Otorisasi Ketat
-
-### A. Two-Factor Authentication (2FA)
-SISTA mendukung pengamanan autentikasi ganda menggunakan One-Time Password (OTP) yang dikirim ke email terdaftar sesaat setelah pengguna memasukkan kata sandi utama. Kode OTP hanya valid selama 5 menit.
-
-### B. Enkripsi Berkas BK & Konseling
-Konseling BK bersifat sensitif dan dilindungi undang-undang privasi. 
-*   **Implementasi:** Setiap deskripsi permasalahan siswa dan solusi konseling yang diunggah oleh guru BK disimpan di database menggunakan enkripsi **AES-256-CBC** (`Crypt::encryptString`).
-*   **Keamanan:** Data mentah di database tidak dapat dibaca secara langsung oleh Administrator Database (DBA) pusat sekalipun tanpa kunci dekripsi `APP_KEY` aplikasi.
+Dokumen ini menjelaskan mekanisme autentikasi, otorisasi, perlindungan data sensitif, dan pencatatan audit pada **SISTA**.
 
 ---
 
-## 🚨 2. SIEM Ringan (Sistem Keamanan & Audit Terintegrasi)
+## 1. Autentikasi dan Manajemen Sesi
 
-SISTA dilengkapi dengan sistem monitoring keamanan mandiri untuk mendeteksi ancaman secara proaktif:
+### A. Web & Two-Factor Authentication (2FA)
+- Autentikasi sesi web dilengkapi perlindungan pembatasan percobaan login (*rate limiting*) dan pemeriksaan risiko login (`AdaptiveRiskEngine`).
+- Pengguna dapat mengaktifkan autentikasi dua faktor (2FA) berbasis OTP untuk mengamankan akses akun.
 
-### A. Pencatatan Audit Trail Login
-Setiap aktivitas login sukses, kegagalan login (salah password), dan tindakan logout dicatat di tabel `login_attempts` beserta data alamat IP, tipe peramban (*user agent*), dan alasan kegagalan.
+### B. REST API (Laravel Sanctum)
+- Aplikasi Android berkomunikasi menggunakan Bearer Token Laravel Sanctum (`/api/v1/login`).
+- Saat pengguna login ulang menggunakan `device_name` yang sama, token lama untuk perangkat tersebut dicabut agar tidak terjadi penumpukan token aktif.
 
-### B. Deteksi Serangan Brute-Force
-*   **Metode:** Service `SecurityMonitorService::detectBruteForce()` memantau log kegagalan login.
-*   **Threshold:** Jika terdeteksi lebih dari atau sama dengan **5 kegagalan login** dari satu alamat IP yang sama dalam kurun waktu **10 menit**, sistem akan langsung menerbitkan tanda bahaya (*Critical Security Alert*) di dashboard Super-Admin.
+### C. Pelacakan Sesi Aktif (`ActiveSession`)
+- Setiap sesi perangkat dicatat pada tabel `active_sessions` dan diperbarui melalui middleware `UpdateActiveSession`.
+- Administrator dapat mencabut sesi perangkat yang mencurigakan sehingga pengguna pada sesi tersebut langsung dikeluarkan pada permintaan berikutnya.
 
-### C. Pelacakan & Terminasi Sesi Aktif (Remote Force Logout)
-Sistem melacak setiap sesi aktif perangkat pengguna di tabel `active_sessions`. 
-*   **Remote Termination:** Admin memiliki kuasa penuh untuk menekan tombol **"Putuskan Sesi"** dari dashboard keamanan untuk memutuskan koneksi perangkat mencurigakan.
-*   **Middleware Action:** Melalui middleware `UpdateActiveSession`, setiap request halaman web divalidasi keberadaannya di tabel sesi aktif. Jika sesi telah dihapus oleh admin, pengguna akan langsung didepak keluar (*forced logout*), sesi dihancurkan, dan diarahkan kembali ke layar login dengan pesan peringatan keamanan.
+---
+
+## 2. Otorisasi dan Isolasi Data (Anti-IDOR)
+
+- **Fail-Closed Route Access:** Setiap route web yang memerlukan login wajib memiliki aturan `role:` atau `can:`. Route tanpa aturan yang tidak terdaftar di `config/route_access.php` ditolak secara bawaan untuk seluruh peran selain `superadmin`.
+- **Isolasi Data Siswa & Keluarga:** Melalui `Student::visibleTo($user)` dan `StudentDataAccess::authorizeStudentRecord()`, orang tua hanya dapat mengakses data anaknya sendiri, siswa hanya datanya sendiri, dan guru hanya siswa pada kelas yang diajar atau diwalikannya pada tahun ajaran berjalan.
+
+---
+
+## 3. Enkripsi Data Sensitif dan Audit Log
+
+- **Enkripsi Catatan Konseling BK:** Catatan permasalahan dan hasil konseling siswa serta rincian laporan perundungan disimpan dalam keadaan terenkripsi menggunakan AES-256 (`Crypt::encryptString` / cast `encrypted`) di database.
+- **Audit Log & Rantai Integritas:** Perubahan data penting, aktivitas login (`login_attempts`), serta mutasi nilai dan transaksi keuangan dicatat pada tabel `audit_logs` dan `immutable_audit_chains` (`AuditLogChainService`).
+- **Content Security Policy (CSP):** Header keamanan HTTP dan kebijakan CSP diterapkan melalui `SecurityHeadersMiddleware`.

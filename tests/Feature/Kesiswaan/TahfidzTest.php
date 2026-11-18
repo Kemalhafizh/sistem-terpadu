@@ -214,7 +214,7 @@ test('setoran memperbarui capaian target tanpa poin XP', function () {
         'achieved_pages' => 0,
     ]);
 
-    // 2. Submit a Ziyadah setoran (FASE 119: no XP is awarded any more)
+    // 2. Submit a Ziyadah setoran
     $response = $this->actingAs($this->guru)->post(route('tahfidz.store'), [
         'student_id' => $this->student->id,
         'surah_number' => 78,

@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Fingerprint machine log import (FASE 119.6.1)
+| Fingerprint machine log import
 |--------------------------------------------------------------------------
 |
 | Staff sign in on the school's fingerprint machine; TU uploads the log the

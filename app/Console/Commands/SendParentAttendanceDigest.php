@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /**
- * FASE 77.7.1 — daily per-child lesson attendance summary pushed to parents.
+ * daily per-child lesson attendance summary pushed to parents.
  * Scheduled at config('class_sessions.parent_digest_time'); a day's digest is
  * sent once unless --force.
  */

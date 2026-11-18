@@ -80,7 +80,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     Route::post('mobile/auth/biometric/verify', [MobileAuthController::class, 'biometricVerify'])->middleware('throttle:login');
     Route::get('rapor/verify/{hash}', [ERaporApiController::class, 'verify']);
 
-    // === FASE 94: SPMB / PPDB MOBILE (PUBLIC) ===
+    // === SPMB / PPDB MOBILE (PUBLIC) ===
     Route::prefix('spmb')->group(function () {
         Route::get('waves', [SchoolOperationsApiController::class, 'spmbWaves']);
         Route::post('register', [SchoolOperationsApiController::class, 'spmbRegister']);
@@ -129,13 +129,13 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('cbt/exams/{id}/questions', [ApiStudentController::class, 'cbtExamQuestions']);
             Route::post('cbt/exams/{id}/submit', [ApiStudentController::class, 'cbtSubmitExam']);
 
-            // FASE 86: CBT Enterprise Maximization
+            // CBT Enterprise Maximization
             Route::get('cbt/exams/{id}/encrypted-payload', [CbtEnterpriseApiController::class, 'encryptedPayload']);
             Route::get('cbt/exams/{id}/decryption-key', [CbtEnterpriseApiController::class, 'decryptionKey']);
             Route::post('cbt/exams/{id}/micro-sync', [CbtEnterpriseApiController::class, 'microSync']);
             Route::post('cbt/exams/{id}/upload-essay', [CbtEnterpriseApiController::class, 'uploadEssay']);
 
-            // FASE 87: CBT Token-Gated & Force-Close
+            // CBT Token-Gated & Force-Close
             Route::post('cbt/exams/{id}/validate-token', [CbtAccessControlApiController::class, 'validateToken']);
             Route::post('cbt/exams/{id}/force-close', [CbtAccessControlApiController::class, 'forceClose']);
             Route::post('cbt/exams/{id}/heartbeat', [CbtAccessControlApiController::class, 'heartbeat']);
@@ -144,7 +144,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('notifications', [ApiStudentController::class, 'notifications']);
             Route::post('notifications/{id}/read', [ApiStudentController::class, 'markNotificationRead']);
 
-            // FASE 117: presensi per-sesi kelas via QR berputar dari layar guru
+            // presensi per-sesi kelas via QR berputar dari layar guru
             Route::prefix('class-session')->group(function () {
                 Route::post('scan-qr', [StudentSessionAttendanceController::class, 'scanQr'])->middleware('throttle:20,1');
                 Route::get('active', [StudentSessionAttendanceController::class, 'activeSession']);
@@ -177,12 +177,12 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('messages', [ApiTeacherController::class, 'messages']);
             Route::post('messages', [ApiTeacherController::class, 'sendMessage']);
 
-            // FASE 86: Proctor Live Interventions
+            // Proctor Live Interventions
             Route::post('cbt/exams/{id}/proctor/warning', [CbtEnterpriseApiController::class, 'proctorWarning']);
             Route::post('cbt/exams/{id}/proctor/force-submit', [CbtEnterpriseApiController::class, 'proctorForceSubmit']);
             Route::post('cbt/exams/{id}/proctor/extend-time', [CbtEnterpriseApiController::class, 'proctorExtendTime']);
 
-            // FASE 87: CBT Token Distribution & Student Reset
+            // CBT Token Distribution & Student Reset
             Route::get('cbt/exams', [CbtAccessControlApiController::class, 'teacherExams']);
             Route::get('cbt/exams/{id}/token', [CbtAccessControlApiController::class, 'getToken']);
             Route::post('cbt/exams/{id}/token/regenerate', [CbtAccessControlApiController::class, 'regenerateToken']);
@@ -193,7 +193,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('cbt/exams', [ApiTeacherController::class, 'storeExamWithQuestions']);
             Route::post('cbt/upload-image', [ApiTeacherController::class, 'uploadExamImage']);
 
-            // FASE 117: sesi kelas hidup (mulai/akhiri kelas, QR berputar, absensi manual)
+            // sesi kelas hidup (mulai/akhiri kelas, QR berputar, absensi manual)
             Route::prefix('class-sessions')->group(function () {
                 Route::get('today', [ClassSessionController::class, 'todaySessions']);
                 Route::post('{scheduleId}/start', [ClassSessionController::class, 'startSession'])->whereNumber('scheduleId');
@@ -205,7 +205,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             });
         });
 
-        // === FASE 117: KOREKSI & REKAP PRESENSI SESI KELAS (WAKA KURIKULUM / TU / ADMIN) ===
+        // === KOREKSI & REKAP PRESENSI SESI KELAS (WAKA KURIKULUM / TU / ADMIN) ===
         Route::prefix('admin/class-sessions')->group(function () {
             // Monitoring & rekap: kepala sekolah boleh membaca.
             Route::middleware('role:admin,superadmin,waka_kurikulum,staf_tu,kepala_sekolah')->group(function () {
@@ -219,7 +219,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 ->whereNumber('attendanceId');
         });
 
-        // === FASE 88: BANK SOAL TERPUSAT & AUTO-GENERATE UJIAN CBT ===
+        // === BANK SOAL TERPUSAT & AUTO-GENERATE UJIAN CBT ===
         // Bank soal: guru & waka kurikulum (sebelumnya terbuka untuk semua akun, termasuk siswa).
         Route::prefix('question-bank')->middleware('role:guru,teacher,waka_kurikulum')->group(function () {
             Route::get('categories', [QuestionBankApiController::class, 'getCategories']);
@@ -228,7 +228,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('auto-generate', [QuestionBankApiController::class, 'autoGenerate']);
         });
 
-        // === FASE 89: E-RAPOR KURIKULUM MERDEKA ===
+        // === E-RAPOR KURIKULUM MERDEKA ===
         Route::prefix('rapor')->group(function () {
             Route::get('current', [ERaporApiController::class, 'getCurrentRapor'])->middleware('role:student,siswa');
             // Pemilik data dicek di controller (StudentDataAccess): ortu hanya anaknya.
@@ -238,7 +238,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 ->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin');
         });
 
-        // === FASE 91: PENILAIAN HARIAN & REMEDIAL WORKFLOW ===
+        // === PENILAIAN HARIAN & REMEDIAL WORKFLOW ===
         Route::prefix('assessments')->group(function () {
             // Guru: hanya penilaian miliknya (dicek di controller).
             Route::middleware('role:guru,teacher')->group(function () {
@@ -255,7 +255,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             });
         });
 
-        // === FASE 90: E-LEARNING MOBILE LMS TERPADU ===
+        // === E-LEARNING MOBILE LMS TERPADU ===
         Route::prefix('elearning')->group(function () {
             // Keanggotaan kelas & kepemilikan dicek di controller (StudentDataAccess).
             Route::middleware('role:student,siswa')->group(function () {
@@ -275,7 +275,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             });
         });
 
-        // === FASE 92: BIMBINGAN KONSELING (BK) MOBILE & AT-RISK MONITORING ===
+        // === BIMBINGAN KONSELING (BK) MOBILE & AT-RISK MONITORING ===
         Route::prefix('counseling')->group(function () {
             Route::middleware('role:student,siswa')->group(function () {
                 Route::post('appointments/request', [CounselingMobileApiController::class, 'requestAppointment']);
@@ -289,7 +289,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
                 Route::post('sessions/{id}/follow-up', [CounselingMobileApiController::class, 'addFollowUp']);
             });
 
-            // FASE 119: anyone signed in may report bullying; reading the reports follows the web rule.
+            // anyone signed in may report bullying; reading the reports follows the web rule.
             Route::post('bullying-reports', [BullyingReportApiController::class, 'store']);
             Route::middleware(Roles::only(BullyingReport::READER_ROLES))->group(function () {
                 Route::get('bullying-reports', [BullyingReportApiController::class, 'index']);
@@ -297,7 +297,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             });
         });
 
-        // === FASE 95: PROFIL KOMPREHENSIF SISWA 360 DERAJAT ===
+        // === PROFIL KOMPREHENSIF SISWA 360 DERAJAT ===
         Route::prefix('profile/student')->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,guru,teacher,bk,wali_kelas,kepala_sekolah,waka_kurikulum,waka_kesiswaan,staf_tu,admin')->group(function () {
             Route::get('me', [StudentProfileApiController::class, 'myProfile'])->middleware('role:student,siswa');
             Route::get('{id?}', [StudentProfileApiController::class, 'show']);
@@ -307,13 +307,13 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('{id?}/health', [StudentProfileApiController::class, 'health']);
         });
 
-        // === FASE 93: KALENDER AKADEMIK & SYNC ICAL ===
+        // === KALENDER AKADEMIK & SYNC ICAL ===
         Route::prefix('academic-calendar')->group(function () {
             Route::get('/', [SchoolOperationsApiController::class, 'calendarEvents']);
             Route::get('export-ical', [SchoolOperationsApiController::class, 'exportIcal']);
         });
 
-        // === FASE 96: REKAM MEDIS UKS & SKRINING KESEHATAN ===
+        // === REKAM MEDIS UKS & SKRINING KESEHATAN ===
         Route::prefix('uks')->group(function () {
             Route::get('visits/my', [SchoolOperationsApiController::class, 'uksVisits'])->middleware('role:student,siswa,parent,orang_tua,orangtua,wali_murid,petugas_uks,staf_tu,guru,bk,wali_kelas,kepala_sekolah,waka_kesiswaan,admin');
             Route::post('visits', [SchoolOperationsApiController::class, 'recordUksVisit'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru');
@@ -323,7 +323,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 108: PERPUSTAKAAN DIGITAL MOBILE API
+        // PERPUSTAKAAN DIGITAL MOBILE API
         // =====================================================================
         Route::prefix('library')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
             Route::get('books', [LibraryMobileApiController::class, 'index']);
@@ -333,7 +333,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 109: EKSTRAKURIKULER & OSIS MOBILE API
+        // EKSTRAKURIKULER & OSIS MOBILE API
         // =====================================================================
         Route::prefix('extracurricular')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
             Route::get('list', [ExtracurricularMobileApiController::class, 'index']);
@@ -343,7 +343,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 110: PRESTASI & PORTOFOLIO MOBILE API
+        // PRESTASI & PORTOFOLIO MOBILE API
         // =====================================================================
         Route::prefix('achievements')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
             Route::get('list', [AchievementMobileApiController::class, 'index']);
@@ -354,7 +354,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 72.1: PEREKAM TAHSIN/TAHFIDZ & EVALUASI GURU MOBILE API
+        // PEREKAM TAHSIN/TAHFIDZ & EVALUASI GURU MOBILE API
         // =====================================================================
         Route::prefix('tahsin')->middleware('role:student,siswa,guru,teacher,bk,admin,superadmin')->group(function () {
             Route::post('submissions', [TahsinSubmissionApiController::class, 'store']);
@@ -367,7 +367,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('submissions/{id}/mark-reviewed', [TahsinSubmissionApiController::class, 'markReviewed']);
         });
 
-        // FASE 111: EVALUASI GURU & E-VOTING OSIS MOBILE API
+        // EVALUASI GURU & E-VOTING OSIS MOBILE API
         Route::prefix('evaluations')->middleware(['auth:sanctum', 'role:student,siswa'])->group(function () {
             Route::get('teachers', [EvaluationMobileApiController::class, 'teacherList']);
             Route::post('teachers/submit', [EvaluationMobileApiController::class, 'submitTeacherEval']);
@@ -377,7 +377,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('osis-election/vote', [EvaluationMobileApiController::class, 'castVote']);
         });
 
-        // FASE 113: KEDISIPLINAN LENGKAP MOBILE API
+        // KEDISIPLINAN LENGKAP MOBILE API
         Route::prefix('discipline')->middleware(['auth:sanctum', 'role:student,siswa,parent,orang_tua,orangtua,wali_murid'])->group(function () {
             Route::get('/summary', [DisciplineMobileApiController::class, 'summary']);
             Route::get('/history', [DisciplineMobileApiController::class, 'history']);
@@ -385,7 +385,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('/warning-letters/{id}/sign', [DisciplineMobileApiController::class, 'signLetter']);
         });
 
-        // FASE 114: ADMIN DASHBOARD & DOCUMENT MANAGEMENT MOBILE API
+        // ADMIN DASHBOARD & DOCUMENT MANAGEMENT MOBILE API
         Route::prefix('mobile/admin')->middleware(['role:admin,superadmin,kepsek,kepala_sekolah'])->group(function () {
             Route::get('/dashboard', [AdminMobileDashboardController::class, 'dashboard']);
             Route::get('/kpi', [AdminMobileDashboardController::class, 'kpiDetail']);
@@ -400,7 +400,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 99: CONTEXTUAL & PREDICTIVE HOME API
+        // CONTEXTUAL & PREDICTIVE HOME API
         // =====================================================================
         Route::prefix('home')->group(function () {
             Route::get('contextual', [ContextualHomeController::class, 'index']);
@@ -410,7 +410,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 100: MICRO-INTERACTION & ANIMATION CONFIG API
+        // MICRO-INTERACTION & ANIMATION CONFIG API
         // =====================================================================
         Route::prefix('config/animations')->group(function () {
             Route::get('/', [ConfigController::class, 'getAnimations']);
@@ -418,7 +418,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 102: SMART NOTIFICATION SYSTEM — PRIORITY INBOX
+        // SMART NOTIFICATION SYSTEM — PRIORITY INBOX
         // =====================================================================
         Route::prefix('notifications')->group(function () {
             Route::get('preferences', [SmartNotificationController::class, 'getPreferences']);
@@ -431,7 +431,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 104: ADVANCED DATA VISUALIZATION WEB & API
+        // ADVANCED DATA VISUALIZATION WEB & API
         // =====================================================================
         Route::prefix('viz')->group(function () {
             Route::get('heatmap/attendance', [VizController::class, 'attendanceHeatmap']);
@@ -443,7 +443,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 105: OFFLINE-FIRST SYNC ENGINE 2.0 API
+        // OFFLINE-FIRST SYNC ENGINE 2.0 API
         // =====================================================================
         Route::prefix('sync')->group(function () {
             Route::get('delta', [SyncController::class, 'getDelta']);
@@ -453,7 +453,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 106: PARENT EXPERIENCE OVERHAUL API
+        // PARENT EXPERIENCE OVERHAUL API
         // =====================================================================
         Route::prefix('parent')->middleware('role:parent,orang_tua,orangtua,wali_murid,student,siswa')->group(function () {
             Route::get('child/{childId}/feed', [ParentPortalController::class, 'activityFeed']);
@@ -498,7 +498,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         });
 
         // =====================================================================
-        // FASE 73: BIG DATA PREDICTIVE ANALYTICS
+        // BIG DATA PREDICTIVE ANALYTICS
         // =====================================================================
         Route::prefix('analytics')->group(function () {
 

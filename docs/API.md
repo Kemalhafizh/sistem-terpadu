@@ -1,34 +1,33 @@
-# 🔌 REST API v1 Mobile-Ready SISTA
+# Dokumentasi REST API v1 SISTA
 
-SISTA menyediakan antarmuka pemrograman aplikasi (REST API v1) yang lengkap, aman, terstandardisasi, dan terdokumentasi untuk mendukung integrasi aplikasi mobile (Siswa, Orang Tua, dan Guru).
+SISTA menyediakan endpoint REST API (`/api/v1`) untuk melayani aplikasi Android **SISTA (`sista-android`)** bagi siswa, orang tua, guru, konselor BK, petugas UKS, dan pimpinan.
 
 ---
 
-## 🔒 1. Mekanisme Otentikasi & Keamanan
+## 1. Autentikasi dan Header
 
-### A. Laravel Sanctum Token
-Seluruh permintaan API yang terproteksi wajib menyertakan token akses di dalam Header HTTP:
+### A. Token Laravel Sanctum
+Permintaan ke endpoint terproteksi wajib menyertakan header berikut:
 ```http
-Authorization: Bearer {YOUR_ACCESS_TOKEN}
+Authorization: Bearer {ACCESS_TOKEN}
 Accept: application/json
+Accept-Language: id
 ```
-*Catatan:* Header `Accept: application/json` wajib disertakan agar penolakan kesalahan (*validation errors* atau *unauthorized exceptions*) terlempar sebagai JSON (bukan HTML redirect).
 
-### B. Rotasi Token
-Setiap kali pengguna melakukan login dari perangkat mobile dengan parameter `device_name` yang sama, sistem akan menghapus token lama dengan nama perangkat tersebut dari database sebelum menerbitkan token baru. Ini mencegah penumpukan token sesi tidak aktif di database.
+### B. Rotasi Token Perangkat
+Saat login melalui `POST /api/v1/login` dengan parameter `device_name`, token lama pada perangkat yang sama dicabut secara otomatis sebelum token baru diterbitkan.
 
-### C. Rate Limiting Ketat
-Untuk mencegah penyalahgunaan API, pembatasan ketat diterapkan di tingkat middleware:
-*   **Rute Otentikasi (`/login`):** Dibatasi maksimal 5 kali percobaan per menit.
-*   **Rute API Umum:** Dibatasi maksimal 60 kali permintaan per menit per akun/IP.
+### C. Pembatasan Permintaan (Rate Limiting)
+- Endpoint autentikasi (`/api/v1/login`): maksimal 5 percobaan per menit.
+- Endpoint API terautentikasi: maksimal 60 permintaan per menit per akun/IP.
 
 ---
 
-## ✉️ 2. Standar Struktur Respon JSON
+## 2. Format Respons JSON
 
-SISTA mengembalikan struktur data amplop (*envelope*) JSON yang konsisten:
+Seluruh endpoint utama menggunakan format amplop JSON standar (`ApiResponseTrait`):
 
-### Respon Sukses (HTTP 200 OK)
+### Respons Berhasil (HTTP 200 / 201)
 ```json
 {
     "success": true,
@@ -41,13 +40,13 @@ SISTA mengembalikan struktur data amplop (*envelope*) JSON yang konsisten:
             "start_time": "07:30",
             "end_time": "09:00",
             "teacher": "Budi Santoso, S.Pd",
-            "classroom": "X-MIPA-1"
+            "classroom": "X-1"
         }
     ]
 }
 ```
 
-### Respon Gagal Validasi (HTTP 422 Unprocessable Entity)
+### Respons Gagal Validasi (HTTP 422)
 ```json
 {
     "success": false,
@@ -60,47 +59,53 @@ SISTA mengembalikan struktur data amplop (*envelope*) JSON yang konsisten:
 }
 ```
 
+Catatan konvensi data:
+- Nilai yang belum tersedia dikirimkan sebagai `null`, bukan angka karangan.
+- Waktu dikirimkan dalam format ISO-8601 (`Asia/Jakarta`).
+- Nilai status atau kategori dilengkapi kode stabil (`status_code`, `category_code`) di samping label terjemahan.
+
 ---
 
-## 🛣️ 3. Daftar Endpoint Inti API v1
+## 3. Ringkasan Kelompok Endpoint (`/api/v1`)
 
-### A. Otentikasi Publik
-*   `POST /api/v1/login`
-    *   **Deskripsi:** Masuk ke sistem dan terbitkan token Sanctum.
-    *   **Body:** `email` (string, email), `password` (string), `device_name` (string).
-*   `POST /api/v1/logout` (Auth Required)
-    *   **Deskripsi:** Cabut token akses aktif saat ini dari database.
-*   `GET /api/v1/me` (Auth Required)
-    *   **Deskripsi:** Mengambil ringkasan profil akun pengguna aktif beserta role.
+### A. Autentikasi, Profil & Konfigurasi Sesi
+- `POST /api/v1/login` — Autentikasi pengguna dan penerbitan token Sanctum.
+- `POST /api/v1/logout` — Pencabutan token sesi aktif.
+- `GET /api/v1/me` — Ringkasan profil pengguna yang sedang login.
+- `PUT /api/v1/me/locale` — Pembaruan bahasa pilihan pengguna (`id`, `en`, `ar`).
+- `GET /api/v1/mobile/config` — Konfigurasi aplikasi dan daftar kapabilitas fitur (`capabilities`) sesuai peran pengguna.
 
-### B. Fitur Khusus Siswa (`/api/v1/student/*`)
-Semua endpoint ini dilindungi middleware `role:student`:
-*   `GET /api/v1/student/profile` : Profil akademis siswa.
-*   `GET /api/v1/student/schedule` : Jadwal pelajaran siswa pada tahun akademik aktif.
-*   `GET /api/v1/student/grades` : Transkrip nilai tugas, PTS, dan PAS siswa.
-*   `GET /api/v1/student/attendance` : Rekap absensi kehadiran harian (Hadir/Sakit/Izin/Alpa).
-*   `GET /api/v1/student/billings` : Daftar tagihan SPP dan status keuangannya.
-*   `GET /api/v1/student/points` : Catatan pelanggaran BK dan prestasi.
-*   `GET /api/v1/student/notifications` : Daftar notifikasi masuk khusus siswa.
+### B. Sesi Kelas & Presensi QR per Mata Pelajaran
+Kontrak lengkap tersedia di [`docs/modules/class_sessions.md`](modules/class_sessions.md).
+- `GET /api/v1/teacher/class-sessions/today` — Daftar sesi mengajar guru hari ini.
+- `POST /api/v1/teacher/class-sessions/{scheduleId}/start` & `POST .../end` — Memulai dan mengakhiri sesi kelas.
+- `GET /api/v1/teacher/class-sessions/{sessionId}/qr` — Token QR berputar setiap 30 detik.
+- `GET /api/v1/teacher/class-sessions/{sessionId}/students` & `POST .../attendance/manual` — Daftar hadir dan koreksi manual guru.
+- `POST /api/v1/student/class-session/scan-qr` & `GET /api/v1/student/class-session/active` — Pemindaian QR oleh siswa dan sesi aktif.
+- `GET /api/v1/student/class-session/attendance` & `GET /api/v1/parent/child/{uuid}/class-session-attendance` — Ringkasan kehadiran per mata pelajaran hari ini untuk siswa, orang tua, dan widget Android.
 
-### C. Fitur Khusus Orang Tua (`/api/v1/parent/*`)
-Semua endpoint ini dilindungi middleware `role:parent` dengan validasi otorisasi relasi anak-orangtua:
-*   `GET /api/v1/parent/children` : Daftar seluruh anak (siswa) yang terikat dengan akun ortu.
-*   `GET /api/v1/parent/child/{studentUuid}/summary` : Ringkasan performa anak (kehadiran, rata-rata nilai, tagihan aktif).
-*   `GET /api/v1/parent/messages` : Riwayat pesan obrolan dengan wali kelas/guru.
-*   `POST /api/v1/parent/messages` : Kirim pesan baru ke guru (memicu real-time websocket broadcast).
+### C. Fitur Siswa (`/api/v1/student/*`)
+- `GET /api/v1/student/profile` — Profil akademik siswa.
+- `GET /api/v1/student/schedule` — Jadwal pelajaran pada tahun ajaran aktif.
+- `GET /api/v1/student/grades` — Daftar nilai akademik.
+- `GET /api/v1/student/remedials` — Daftar jadwal dan nilai remedial siswa.
+- `GET /api/v1/student/billings` — Daftar tagihan SPP/biaya pendidikan dan riwayat pembayaran.
+- `GET /api/v1/student/points` — Catatan poin kedisiplinan dan prestasi.
 
-### D. Fitur Khusus Guru (`/api/v1/teacher/*`)
-Semua endpoint ini dilindungi middleware `role:guru,bk`:
-*   `GET /api/v1/teacher/schedule` : Jadwal mengajar guru.
-*   `GET /api/v1/teacher/classes` : Daftar kelas yang diampu guru.
-*   `POST /api/v1/teacher/attendance` : Input absensi harian kelas secara massal (*bulk*).
-*   `POST /api/v1/teacher/journals` : Entri jurnal mengajar baru harian kelas.
-### E. Sesi Kelas Hidup & Presensi Per-Mapel (FASE 117)
-Kontrak lengkap (bentuk JSON, pesan error, aturan waktu): [`docs/modules/class_sessions.md`](modules/class_sessions.md).
-*   `GET /api/v1/teacher/class-sessions/today` : Sesi kelas guru hari ini (dimaterialisasi dari jadwal).
-*   `POST /api/v1/teacher/class-sessions/{scheduleId}/start` / `POST …/{sessionId}/end` : Mulai / akhiri kelas.
-*   `GET /api/v1/teacher/class-sessions/{sessionId}/qr` : QR berputar 30 detik untuk ditampilkan guru.
-*   `GET …/{sessionId}/students`, `POST …/{sessionId}/attendance/manual`, `POST …/{sessionId}/attendance/bulk` : Daftar hadir & absensi manual.
-*   `POST /api/v1/student/class-session/scan-qr`, `GET /api/v1/student/class-session/active` : Scan QR & banner sesi aktif siswa.
-*   `GET /api/v1/admin/class-sessions`, `GET …/{sessionId}/attendances`, `PUT …/attendances/{attendanceId}/override`, `GET …/reports` : Monitoring, koreksi beralasan, dan rekap (role `admin,superadmin,waka_kurikulum,staf_tu`; `kepala_sekolah` baca saja).
+### D. Fitur Orang Tua (`/api/v1/parent/*`)
+Seluruh endpoint memvalidasi kepemilikan relasi orang tua–anak (`StudentDataAccess`):
+- `GET /api/v1/parent/children` — Daftar anak yang terhubung dengan akun orang tua.
+- `GET /api/v1/parent/child/{studentUuid}/summary` — Ringkasan perkembangan akademik, kehadiran, dan tagihan anak.
+- `GET /api/v1/parent/messages` & `POST /api/v1/parent/messages` — Obrolan dengan wali kelas.
+
+### E. Fitur Guru (`/api/v1/teacher/*`)
+- `GET /api/v1/teacher/schedule` & `GET /api/v1/teacher/classes` — Jadwal mengajar dan daftar kelas yang diampu.
+- `GET /api/v1/teacher/journals` & `POST /api/v1/teacher/journals` — Jurnal mengajar harian.
+- `GET /api/v1/teacher/daily-assessments` & `POST .../scores` — Penilaian harian dan input nilai.
+- `GET /api/v1/teacher/cbt/exams` — Pengawasan ujian CBT dan pembukaan kunci peserta.
+
+### F. Bimbingan Konseling, UKS & Keislaman
+- `POST /api/v1/counseling/bullying-reports` — Pelaporan perundungan (termasuk opsi anonim).
+- `GET /api/v1/counseling/sessions` & `POST /api/v1/counseling/sessions` — Sesi konseling BK.
+- `GET /api/v1/uks/visits` & `POST /api/v1/uks/visits` — Riwayat dan pencatatan kunjungan UKS.
+- `GET /api/v1/mutabaah/*` & `GET /api/v1/tahsin/*` — Pencatatan ibadah harian dan setoran Tahsin.

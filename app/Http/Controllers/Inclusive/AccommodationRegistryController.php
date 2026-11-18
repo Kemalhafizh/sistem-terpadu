@@ -14,7 +14,7 @@ class AccommodationRegistryController extends Controller
     {
         $registries = AccommodationRegistry::with('student')->whereHas('student', fn ($q) => $q->visibleTo(request()->user()))->get();
 
-        return view('fase58.accommodations.registry', compact('registries'));
+        return view('inclusive.accommodations.registry', compact('registries'));
     }
 
     public function store(Request $request)
@@ -67,6 +67,6 @@ class AccommodationRegistryController extends Controller
 
         $accommodations = AccommodationRegistry::where('student_id', $student->id)->get();
 
-        return view('fase58.accommodations.student-profile', compact('student', 'accommodations'));
+        return view('inclusive.accommodations.student-profile', compact('student', 'accommodations'));
     }
 }

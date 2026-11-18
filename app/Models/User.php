@@ -181,7 +181,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Which dashboard this account gets (FASE 119: one dashboard per role).
+     * Which dashboard this account gets.
      * Every spelling of a role lands on the same one, so a `siswa` account
      * sees the student dashboard and `orang_tua` the parent one. Staff with
      * no dashboard of their own (UKS, library) get the general one, not the

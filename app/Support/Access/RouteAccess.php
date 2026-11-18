@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * sidebar) and the mobile capability list use this instead of keeping their
  * own role lists, so what a user sees is exactly what they can open.
  *
- * Fail-closed (FASE 118.4): a signed-in web route with neither `role:` nor
+ * Fail-closed: a signed-in web route with neither `role:` nor
  * `can:` is closed to everyone but superadmin, unless config/route_access.php
  * lists it as open to every signed-in user or as unguarded debt.
  */

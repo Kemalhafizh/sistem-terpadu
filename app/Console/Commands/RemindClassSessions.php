@@ -6,7 +6,7 @@ use App\Services\Academic\ClassSessionService;
 use Illuminate\Console\Command;
 
 /**
- * FASE 77.7.1 — push the teacher 5 minutes before a lesson starts and before
+ * push the teacher 5 minutes before a lesson starts and before
  * an active lesson ends. Scheduled every minute; each reminder is sent once.
  */
 class RemindClassSessions extends Command

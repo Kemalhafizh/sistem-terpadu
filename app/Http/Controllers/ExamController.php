@@ -241,7 +241,7 @@ class ExamController extends Controller
             abort(403, 'Data siswa tidak ditemukan.');
         }
 
-        // FASE 87: Blokir akses ujian dari browser jika mobile_only = true
+        // Blokir akses ujian dari browser jika mobile_only = true
         if ($exam->mobile_only) {
             return redirect()->route('cbt.exams.index')
                 ->with('error', 'Ujian ini hanya dapat dikerjakan melalui Aplikasi SISTA di HP Anda. Silakan buka aplikasi SISTA di ponsel Anda.');
