@@ -51,16 +51,18 @@ class Student extends Model
      */
     public function scopeVisibleTo(Builder $query, User $user): Builder
     {
-        if (in_array($user->role, self::SCHOOL_WIDE_ROLES, true)) {
+        $effectiveRoles = $user->effectiveRoles();
+
+        if (array_intersect($effectiveRoles, self::SCHOOL_WIDE_ROLES) !== []) {
             return $query;
         }
-        if (in_array($user->role, StudentDataAccess::STUDENT_ROLES, true)) {
+        if (array_intersect($effectiveRoles, StudentDataAccess::STUDENT_ROLES) !== []) {
             return $query->where('user_id', $user->id);
         }
-        if (in_array($user->role, StudentDataAccess::PARENT_ROLES, true)) {
+        if (array_intersect($effectiveRoles, StudentDataAccess::PARENT_ROLES) !== []) {
             return $query->where('parent_id', $user->id);
         }
-        if (in_array($user->role, StudentDataAccess::TEACHER_ROLES, true)) {
+        if (array_intersect($effectiveRoles, StudentDataAccess::TEACHER_ROLES) !== []) {
             $year = AcademicYear::current();
             if (! $year) {
                 return $query->whereRaw('1 = 0');
@@ -115,6 +117,24 @@ class Student extends Model
     public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
+    }
+
+    /** @return HasMany<ClassEnrollment, $this> */
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(ClassEnrollment::class);
+    }
+
+    /** @return HasMany<ElectiveChoice, $this> */
+    public function electiveChoices(): HasMany
+    {
+        return $this->hasMany(ElectiveChoice::class);
+    }
+
+    /** @return HasMany<ClassPlacement, $this> */
+    public function classPlacements(): HasMany
+    {
+        return $this->hasMany(ClassPlacement::class);
     }
 
     public function pointLogs()

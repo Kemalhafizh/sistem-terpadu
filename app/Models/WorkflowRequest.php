@@ -63,11 +63,14 @@ class WorkflowRequest extends Model
      */
     public function scopeAwaitingDecisionBy(Builder $query, User $user): Builder
     {
+        $effectiveRoles = $user->effectiveRoles();
+
         return $query->whereIn('status', ['pending', 'in_review'])
-            ->whereHas('approvals', function ($q) use ($user) {
+            ->where('requester_id', '!=', $user->id)
+            ->whereHas('approvals', function ($q) use ($user, $effectiveRoles) {
                 $q->whereColumn('workflow_approvals.step_order', 'workflow_requests.current_step')
-                    ->where(function ($q) use ($user) {
-                        $q->where(fn ($q) => $q->where('role', $user->role)->whereNull('delegated_to_id'))
+                    ->where(function ($q) use ($user, $effectiveRoles) {
+                        $q->where(fn ($q) => $q->whereIn('role', $effectiveRoles)->whereNull('delegated_to_id'))
                             ->orWhere('delegated_to_id', $user->id);
                     });
             });

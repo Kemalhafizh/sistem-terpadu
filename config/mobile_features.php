@@ -40,6 +40,7 @@ return [
         'student.cbt' => ['title' => 'Ujian CBT', 'group' => 'akademik', 'endpoint' => 'GET student/cbt/exams'],
         'student.elearning' => ['title' => 'Kelas Online', 'group' => 'akademik', 'endpoint' => 'GET elearning/classes/student'],
         'student.analytics' => ['title' => 'Analitik Belajar', 'group' => 'akademik', 'endpoint' => 'GET analytics/student/summary'],
+        'student.elective_survey' => ['title' => 'Survei Peminatan', 'group' => 'akademik', 'endpoint' => 'GET student/elective-survey'],
         'library' => ['title' => 'Perpustakaan', 'group' => 'akademik', 'endpoint' => 'GET library/books', 'hardware' => ['camera']],
         'calendar' => ['title' => 'Kalender Akademik', 'group' => 'akademik', 'endpoint' => 'GET academic-calendar'],
 
@@ -49,6 +50,7 @@ return [
         'scanner.event' => ['title' => 'Pindai Tiket & Tamu', 'group' => 'presensi', 'endpoint' => 'POST mobile/scanner/event-ticket', 'hardware' => ['camera']],
 
         // ── Ibadah ───────────────────────────────────────────────────────
+        'prayer_times' => ['title' => 'Jadwal Sholat', 'group' => 'ibadah', 'endpoint' => 'GET prayer-times'],
         'student.mutabaah' => ['title' => "Mutaba'ah", 'group' => 'ibadah', 'endpoint' => 'GET student/mutabaah'],
         'student.tahfidz' => ['title' => 'Tahfidz', 'group' => 'ibadah', 'endpoint' => 'GET student/tahfidz'],
         'tahsin.record' => ['title' => 'Setor Tahsin', 'group' => 'ibadah', 'endpoint' => 'POST tahsin/submissions', 'hardware' => ['microphone']],
@@ -85,6 +87,7 @@ return [
         // ── Anak saya (orang tua) ────────────────────────────────────────
         'parent.children' => ['title' => 'Ringkasan Anak', 'group' => 'keluarga', 'endpoint' => 'GET parent/children'],
         'parent.progress' => ['title' => 'Perkembangan Anak', 'group' => 'keluarga', 'endpoint' => 'GET analytics/parent/child-progress'],
+        'parent.elective_survey' => ['title' => 'Peminatan Anak', 'group' => 'keluarga', 'endpoint' => 'GET parent/child/{student}/elective-survey'],
         'activity.feed' => ['title' => 'Linimasa Aktivitas', 'group' => 'kesiswaan', 'endpoint' => 'GET parent/feed'],
         'parent.messages' => ['title' => 'Pesan Guru', 'group' => 'keluarga', 'endpoint' => 'GET parent/messages'],
 

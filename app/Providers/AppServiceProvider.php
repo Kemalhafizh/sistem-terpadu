@@ -72,6 +72,9 @@ class AppServiceProvider extends ServiceProvider
             if ($user->role === 'superadmin') {
                 return true;
             }
+            if (is_string($ability) && array_key_exists($ability, config('permissions.catalog', []))) {
+                return $user->hasPermission($ability);
+            }
         });
 
         // Register UKS Policy

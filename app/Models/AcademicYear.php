@@ -6,6 +6,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Cache;
 
 class AcademicYear extends Model
@@ -13,12 +14,19 @@ class AcademicYear extends Model
     use HasFactory, HasUuid;
 
     protected $fillable = [
+        'school_year_id',
         'year',
         'semester',
         'is_active',
         'start_date',
         'end_date',
     ];
+
+    /** @return BelongsTo<SchoolYear, $this> */
+    public function schoolYear(): BelongsTo
+    {
+        return $this->belongsTo(SchoolYear::class);
+    }
 
     /**
      * Scope for active academic year.

@@ -7,11 +7,14 @@ use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
 use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
+use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -25,6 +28,9 @@ class User extends Authenticatable
         'phone_number',
         'password',
         'role',
+        'account_type',
+        'account_status',
+        'deactivated_reason',
         'must_change_password',
         'two_factor_code',
         'two_factor_expires_at',
@@ -111,16 +117,164 @@ class User extends Authenticatable
         return $this->hasMany(Student::class, 'parent_id');
     }
 
-    /**
-     * Check if user has specific role.
-     */
+    /** @return HasMany<PositionAssignment, $this> */
+    public function positionAssignments(): HasMany
+    {
+        return $this->hasMany(PositionAssignment::class);
+    }
 
     /**
-     * Check if user has specific role.
+     * Resolve static Layer-1 account type (`siswa`, `orang_tua`, `guru`, `karyawan`).
+     */
+    public function resolvedAccountType(): ?string
+    {
+        if (! empty($this->account_type)) {
+            return $this->account_type;
+        }
+
+        if ($this->role === 'superadmin') {
+            return null;
+        }
+
+        return config("permissions.role_to_account_type.{$this->role}");
+    }
+
+    /**
+     * Active position codes held by this user on the given date.
+     *
+     * @return list<string>
+     */
+    public function activePositionCodes(?CarbonInterface $onDate = null): array
+    {
+        if (! $this->exists || ! Schema::hasTable('position_assignments')) {
+            return [];
+        }
+
+        return $this->positionAssignments()
+            ->activeOn($onDate)
+            ->with('position')
+            ->get()
+            ->map(fn (PositionAssignment $assignment) => $assignment->position?->code)
+            ->filter()
+            ->values()
+            ->unique()
+            ->all();
+    }
+
+    /**
+     * All effective role tokens for this user (combining base account_type/role,
+     * active position assignments, and role equivalents of active permissions).
+     *
+     * @return list<string>
+     */
+    public function effectiveRoles(?CarbonInterface $onDate = null): array
+    {
+        $roles = [];
+
+        if (! empty($this->role)) {
+            $roles[$this->role] = true;
+        }
+
+        if (! empty($this->account_type)) {
+            if ($this->account_type === 'guru') {
+                $roles['guru'] = true;
+            } elseif ($this->account_type === 'siswa') {
+                $roles['siswa'] = true;
+            } elseif ($this->account_type === 'orang_tua') {
+                $roles['orang_tua'] = true;
+            }
+        }
+
+        if ($this->exists && Schema::hasTable('position_assignments')) {
+            $assignments = $this->positionAssignments()
+                ->activeOn($onDate)
+                ->with('position.permissions')
+                ->get();
+
+            $catalog = config('permissions.catalog', []);
+            foreach ($assignments as $assignment) {
+                $position = $assignment->position;
+                if (! $position || ! $position->is_active) {
+                    continue;
+                }
+                $roles[$position->code] = true;
+                if ($position->code === 'kepala_sekolah') {
+                    $roles['kepsek'] = true;
+                }
+                foreach ($position->permissions as $perm) {
+                    foreach ($catalog[$perm->permission]['implies_roles'] ?? [] as $impliedRole) {
+                        $roles[$impliedRole] = true;
+                    }
+                }
+            }
+        }
+
+        return array_keys($roles);
+    }
+
+    /**
+     * Check whether this user holds the given permission key (`kurikulum.kelola`, etc.).
+     */
+    public function hasPermission(string $permission, ?CarbonInterface $onDate = null): bool
+    {
+        if (($this->account_status ?? 'aktif') === 'nonaktif') {
+            return false;
+        }
+
+        if ($this->role === 'superadmin') {
+            return true;
+        }
+
+        $catalog = config('permissions.catalog', []);
+        $definition = $catalog[$permission] ?? null;
+
+        if ($this->role === 'admin') {
+            if ($permission === 'sistem.kelola_jabatan') {
+                return true;
+            }
+
+            return $definition !== null && empty($definition['sensitive']);
+        }
+
+        // Check active position assignments first
+        if ($this->exists && Schema::hasTable('position_assignments')) {
+            $hasViaAssignment = $this->positionAssignments()
+                ->activeOn($onDate)
+                ->whereHas('position.permissions', fn ($q) => $q->where('permission', $permission))
+                ->exists();
+
+            if ($hasViaAssignment) {
+                return true;
+            }
+        }
+
+        // Fallback to position matching the user's legacy `role` code if that position is active
+        if (! empty($this->role) && Schema::hasTable('positions')) {
+            $roleCode = $this->role === 'kepsek' ? 'kepala_sekolah' : $this->role;
+            $hasViaLegacyRolePosition = Position::query()
+                ->where('code', $roleCode)
+                ->where('is_active', true)
+                ->whereHas('permissions', fn ($q) => $q->where('permission', $permission))
+                ->exists();
+
+            if ($hasViaLegacyRolePosition) {
+                return true;
+            }
+        }
+
+        if ($definition !== null && in_array($this->role, $definition['implies_roles'] ?? [], true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if user has specific role (or active position).
      */
     public function hasRole(string $role): bool
     {
-        return $this->role === $role;
+        return in_array($role, $this->effectiveRoles(), true);
     }
 
     /**
@@ -128,7 +282,8 @@ class User extends Authenticatable
      */
     public function isParent(): bool
     {
-        return in_array($this->role, ['parent', 'orang_tua'], true);
+        return $this->resolvedAccountType() === 'orang_tua'
+            || in_array($this->role, ['parent', 'orang_tua'], true);
     }
 
     /**
@@ -136,7 +291,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return in_array($this->role, [
+        return array_intersect($this->effectiveRoles(), [
             'admin',
             'superadmin',
             'kepala_sekolah',
@@ -144,7 +299,7 @@ class User extends Authenticatable
             'waka_kesiswaan',
             'waka_sarpras',
             'waka_humas',
-        ]);
+        ]) !== [];
     }
 
     public function generateTwoFactorCode()

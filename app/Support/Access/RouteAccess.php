@@ -53,7 +53,7 @@ class RouteAccess
             return $user->role === 'superadmin';
         }
         foreach (self::roleRules($route) as $roles) {
-            if (! RoleMiddleware::allows($user->role, $roles)) {
+            if (! RoleMiddleware::allowsUser($user, $roles)) {
                 return false;
             }
         }

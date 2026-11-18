@@ -18,6 +18,6 @@ class WorkflowPolicy
         }
 
         // Approvers assigned to any step in the workflow can view it
-        return $request->approvals()->where('role', $user->role)->exists();
+        return $request->approvals()->whereIn('role', $user->effectiveRoles())->exists();
     }
 }

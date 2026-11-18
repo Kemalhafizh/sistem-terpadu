@@ -10,10 +10,19 @@ class Subject extends Model
 {
     use HasFactory;
 
+    public const CATEGORY_UMUM = 'umum';
+
+    public const CATEGORY_PILIHAN = 'pilihan';
+
+    public const CATEGORY_MUATAN_LOKAL = 'muatan_lokal';
+
+    public const CATEGORY_CIRI_KHAS = 'ciri_khas';
+
     protected $fillable = [
         'name',
         'code',
         'category',
+        'display_group',
         'kkm',
         'description',
     ];
