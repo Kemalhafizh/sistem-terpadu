@@ -106,7 +106,7 @@
                                 <th class="pb-3">Rekomendasi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-55/30 dark:divide-gray-700/30">
+                        <tbody class="divide-y divide-gray-50/30 dark:divide-gray-700/30">
                             @forelse($results as $res)
                                 <tr class="group hover:bg-gray-50/55 dark:hover:bg-gray-900/10 transition-all">
                                     <td class="py-4">
@@ -136,7 +136,7 @@
                                     <td class="py-4 text-center text-xs font-semibold text-gray-600 dark:text-gray-400">
                                         {{ $res->dental_status ?? '-' }}
                                     </td>
-                                    <td class="py-4 text-xs text-gray-650 dark:text-gray-450">
+                                    <td class="py-4 text-xs text-gray-700 dark:text-gray-400">
                                         {{ $res->findings ?? '-' }}
                                     </td>
                                     <td class="py-4 text-xs font-bold text-teal-600 dark:text-teal-400">

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex justify-between items-center">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-gray-900 dark:text-white">Laporan Analisis Variansi RAPBS</h1>
             <p class="text-xs text-gray-500 mt-1">{{ $plan->title }} ({{ $plan->fiscal_year }})</p>
@@ -13,7 +13,7 @@
     <!-- Variance Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Revenue Card -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
             <div class="flex justify-between items-center border-b pb-3 border-gray-100 dark:border-gray-700">
                 <h3 class="text-sm font-black uppercase text-emerald-600">Realisasi Pendapatan (Revenue)</h3>
                 <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-black">
@@ -37,7 +37,7 @@
         </div>
 
         <!-- Expense Card -->
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm space-y-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
             <div class="flex justify-between items-center border-b pb-3 border-gray-100 dark:border-gray-700">
                 <h3 class="text-sm font-black uppercase text-rose-600">Penyerapan Anggaran (Expense)</h3>
                 <span class="px-3 py-1 bg-rose-100 text-rose-800 rounded-full text-xs font-black">

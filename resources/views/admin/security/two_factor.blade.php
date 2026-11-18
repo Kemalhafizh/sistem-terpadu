@@ -21,7 +21,7 @@
             <!-- Status Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- 2FA Status -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Status TOTP 2FA</span>
                     <div class="mt-3">
                         @if($is2faEnabled)
@@ -39,7 +39,7 @@
                 </div>
 
                 <!-- Session Binding Status -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Session Fingerprint Safeguard</span>
                     <div class="mt-3">
                         <span class="px-3.5 py-1.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 rounded-xl text-xs font-bold uppercase inline-flex items-center gap-2">
@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Step-Up Elevation Status -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Status Step-Up Elevation</span>
                     <div class="mt-3">
                         @if($isElevated)
@@ -68,7 +68,7 @@
 
             @if(! $is2faEnabled)
                 <!-- 2FA Activation Setup Wizard -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-6">
                     <div class="border-b border-gray-100 dark:border-gray-700 pb-4">
                         <h3 class="text-base font-black text-gray-900 dark:text-white">Aktivasi Autentikasi Dua Faktor (TOTP 2FA)</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400">Pindai kode QR atau salin kunci rahasia ke aplikasi Authenticator (Google Authenticator, Authy, Microsoft Authenticator).</p>
@@ -110,7 +110,7 @@
                 </div>
             @else
                 <!-- Active 2FA Enabled State & Recovery Codes -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-6">
                     <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-4">
                         <div>
                             <h3 class="text-base font-black text-gray-900 dark:text-white">Kode Pemulihan Darurat (Emergency Recovery Codes)</h3>
@@ -137,7 +137,7 @@
             @endif
 
             <!-- Active Session & Fingerprint Safeguard Info -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-4">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-4">
                 <div class="border-b border-gray-100 dark:border-gray-700 pb-4">
                     <h3 class="text-base font-black text-gray-900 dark:text-white">Informasi Sesi Aktif & Fingerprint Safeguard</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Sistem mengikat sesi Anda dengan kombinasi Subnet IP dan Perangkat User-Agent untuk mencegah Session Hijacking.</p>

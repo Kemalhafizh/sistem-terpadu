@@ -30,18 +30,19 @@ class PwaTest extends TestCase
     }
 
     /**
-     * Test that service-worker.js exists in the public directory and contains proper logic.
+     * Test that /sw.js serves valid Service Worker logic without caching API routes.
      */
     public function test_service_worker_file_exists_and_is_valid()
     {
-        $path = public_path('service-worker.js');
+        $response = $this->get('/sw.js');
 
-        $this->assertFileExists($path);
-
-        $content = file_get_contents($path);
-        $this->assertStringContainsString('const CACHE_VERSION = \'sista-v1\';', $content);
+        $response->assertOk();
+        $content = $response->getContent();
+        $this->assertStringContainsString('const CACHE_NAME =', $content);
         $this->assertStringContainsString('self.addEventListener(\'install\'', $content);
         $this->assertStringContainsString('self.addEventListener(\'fetch\'', $content);
+        $this->assertStringContainsString('/api/', $content);
+        $this->assertStringContainsString('/offline.html', $content);
     }
 
     /**
@@ -70,7 +71,7 @@ class PwaTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('<link rel="manifest" href="/manifest.json">', false);
         $response->assertSee('<meta name="theme-color" content="#0d9488">', false);
-        $response->assertSee('navigator.serviceWorker.register(\'/service-worker.js\')', false);
+        $response->assertSee('navigator.serviceWorker.register(\'/sw.js\')', false);
         $response->assertSee('showPwaBanner', false);
     }
 }

@@ -57,7 +57,7 @@
                                 <th class="pb-3 text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-55/30 dark:divide-gray-700/30">
+                        <tbody class="divide-y divide-gray-50/30 dark:divide-gray-700/30">
                             @forelse($screenings as $scr)
                                 <tr class="group hover:bg-gray-50/55 dark:hover:bg-gray-900/10 transition-all">
                                     <td class="py-4">
@@ -159,8 +159,8 @@
                     <x-input-label value="Target Kelas *" class="text-xs font-black uppercase text-gray-400 dark:text-gray-500" />
                     <div class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-900">
                         @foreach($classrooms as $cls)
-                            <label class="inline-flex items-center text-xs text-gray-650 dark:text-gray-300">
-                                <input type="checkbox" name="target_classrooms[]" value="{{ $cls->id }}" class="rounded text-teal-600 focus:ring-teal-500 mr-2 border-gray-350 dark:border-gray-700">
+                            <label class="inline-flex items-center text-xs text-gray-700 dark:text-gray-300">
+                                <input type="checkbox" name="target_classrooms[]" value="{{ $cls->id }}" class="rounded text-teal-600 focus:ring-teal-500 mr-2 border-gray-300 dark:border-gray-700">
                                 {{ $cls->name }}
                             </label>
                         @endforeach
@@ -169,7 +169,7 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-6">
-                <button type="button" @click="$dispatch('close-modal', 'create-screening-modal')" class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black uppercase hover:bg-gray-50 dark:hover:bg-gray-750 transition-all text-gray-700 dark:text-gray-300">
+                <button type="button" @click="$dispatch('close-modal', 'create-screening-modal')" class="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black uppercase hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-gray-700 dark:text-gray-300">
                     Batal
                 </button>
                 <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase transition-all shadow-md shadow-teal-600/10">

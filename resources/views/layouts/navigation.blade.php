@@ -4,7 +4,7 @@
     <div class="flex justify-between h-16">
       <div class="flex items-center">
         <!-- Hamburger for Sidebar -->
-        <button @click="sidebarOpen = !sidebarOpen" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out mr-2" aria-label="Buka Sidebar Mobile">
+        <button @click="sidebarOpen = !sidebarOpen" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out me-2" aria-label="Buka Sidebar Mobile">
           <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Navigation Links -->
-        <div class="hidden space-x-4 sm:-my-px sm:ms-3 sm:flex">
+        <div class="hidden gap-4 sm:-my-px sm:ms-3 sm:flex">
           <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
             {{ __('navigation.dashboard') }}
           </x-nav-link>
@@ -36,7 +36,7 @@
       </div>
 
       <!-- Notifications & Theme Toggle & Settings Dropdown -->
-      <div class="flex items-center ms-6 space-x-2 sm:space-x-4">
+      <div class="flex items-center ms-6 gap-2 sm:gap-4">
         <!-- Notification Bell -->
         <div class="relative" x-data="{ 
           open: false,
@@ -55,7 +55,7 @@
                   // Show custom toast if dispatchEvent / Alpine toast exists
                   window.dispatchEvent(new CustomEvent('toast', { 
                     detail: { 
-                      title: ' Notifikasi Baru', 
+                      title: 'Notifikasi Baru', 
                       message: e.notification.message, 
                       type: 'info' 
                     } 
@@ -64,11 +64,11 @@
             }
           }
         }">
-          <button @click="open = !open" :class="unreadCount > 0 ? 'notif-shake' : ''" class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 relative" aria-label="Buka Notifikasi">
+          <button @click="open = !open" :class="unreadCount > 0 ? 'notif-shake' : ''" class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 relative" aria-label="Buka Notifikasi">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
             </svg>
-            <span x-show="unreadCount > 0" class="absolute top-2 right-2 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800" style="display: none;"></span>
+            <span x-show="unreadCount > 0" class="absolute top-2 end-2 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800" style="display: none;"></span>
           </button>
 
           <!-- Dropdown Panel -->
@@ -101,7 +101,7 @@
         <!-- Language Switcher Dropdown -->
         <div class="relative" x-data="{ open: false }">
           <button @click="open = !open" 
-              class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 flex items-center space-x-1" 
+              class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 flex items-center gap-1" 
               title="{{ __('navigation.language') }}"
               aria-label="{{ __('navigation.language') }}">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -124,7 +124,7 @@
             <div class="p-1.5 space-y-1">
               <form action="{{ route('preferences.locale', 'id') }}" method="POST" class="block">
                 @csrf
-                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'id' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
+                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'id' ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
                   <span>Indonesia</span>
                   @if(app()->getLocale() === 'id')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
@@ -133,7 +133,7 @@
               </form>
               <form action="{{ route('preferences.locale', 'en') }}" method="POST" class="block">
                 @csrf
-                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
+                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'en' ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
                   <span>English (US)</span>
                   @if(app()->getLocale() === 'en')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
@@ -142,7 +142,7 @@
               </form>
               <form action="{{ route('preferences.locale', 'ar') }}" method="POST" class="block">
                 @csrf
-                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
+                <button type="submit" class="w-full text-start px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between {{ app()->getLocale() === 'ar' ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900' }}">
                   <span>العربية (Arabic)</span>
                   @if(app()->getLocale() === 'ar')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
@@ -158,7 +158,7 @@
           onclick="toggleTheme()"
           x-data="{ isDark: document.documentElement.classList.contains('dark') }"
           @theme-changed.window="isDark = $event.detail"
-          class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+          class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200"
           title="{{ __('navigation.theme') }}"
           aria-label="{{ __('navigation.theme') }}"
         >
@@ -174,7 +174,7 @@
 
         <x-dropdown align="right" width="48">
           <x-slot name="trigger">
-            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-150">
+            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 transition ease-in-out duration-150">
               <div class="hidden sm:block text-gray-700 dark:text-gray-300">{{ Auth::user()->name }}</div>
               <div class="sm:hidden">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -218,15 +218,15 @@
     </div>
 
     <!-- Responsive Settings Options -->
-    <div class="pt-4 pb-1 border-t border-gray-200">
+    <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-700">
       <div class="px-4">
-        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+        <div class="font-medium text-base text-gray-800 dark:text-gray-100">{{ Auth::user()->name }}</div>
+        <div class="font-medium text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</div>
       </div>
 
       <div class="mt-3 space-y-1">
         <x-responsive-nav-link :href="route('profile.edit')">
-          {{ __('Profile') }}
+          {{ __('navigation.profile') }}
         </x-responsive-nav-link>
 
         <!-- Authentication -->
@@ -236,7 +236,7 @@
           <x-responsive-nav-link :href="route('logout')"
               onclick="event.preventDefault();
                     this.closest('form').submit();">
-            {{ __('Log Out') }}
+            {{ __('navigation.logout') }}
           </x-responsive-nav-link>
         </form>
       </div>

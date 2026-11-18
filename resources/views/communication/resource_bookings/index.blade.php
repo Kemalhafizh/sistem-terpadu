@@ -25,7 +25,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Resource Reservation Form Card -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-4">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-4">
                 <div class="border-b border-gray-100 dark:border-gray-700 pb-3">
                     <h3 class="text-base font-black text-gray-900 dark:text-white">Formulir Pengajuan Booking Ruangan / Aset</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Sistem otomatis memverifikasi ketersediaan dan mencegah bentrok waktu secara real-time.</p>
@@ -66,7 +66,7 @@
             </div>
 
             <!-- Recent Booking Log Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm overflow-hidden">
                 <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
                     <div>
                         <h3 class="text-base font-black text-gray-900 dark:text-white">Daftar Pengajuan Reservasi Terbaru</h3>

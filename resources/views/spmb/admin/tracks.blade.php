@@ -55,19 +55,19 @@
                             <div class="grid grid-cols-2 gap-2 text-xs">
                                 <div>
                                     <label class="block font-bold text-slate-400 mb-1">Bobot Rapor</label>
-                                    <input type="number" name="scoring_weights[rapor]" x-model.number="weights.rapor" required min="0" max="100" class="block w-full bg-white border border-slate-250 rounded-lg px-3 py-1.5 text-center font-bold">
+                                    <input type="number" name="scoring_weights[rapor]" x-model.number="weights.rapor" required min="0" max="100" class="block w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-center font-bold">
                                 </div>
                                 <div>
                                     <label class="block font-bold text-slate-400 mb-1">Bobot Ujian/Tes</label>
-                                    <input type="number" name="scoring_weights[tes]" x-model.number="weights.tes" required min="0" max="100" class="block w-full bg-white border border-slate-250 rounded-lg px-3 py-1.5 text-center font-bold">
+                                    <input type="number" name="scoring_weights[tes]" x-model.number="weights.tes" required min="0" max="100" class="block w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-center font-bold">
                                 </div>
                                 <div>
                                     <label class="block font-bold text-slate-400 mb-1">Bobot Prestasi</label>
-                                    <input type="number" name="scoring_weights[prestasi]" x-model.number="weights.prestasi" required min="0" max="100" class="block w-full bg-white border border-slate-250 rounded-lg px-3 py-1.5 text-center font-bold">
+                                    <input type="number" name="scoring_weights[prestasi]" x-model.number="weights.prestasi" required min="0" max="100" class="block w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-center font-bold">
                                 </div>
                                 <div>
                                     <label class="block font-bold text-slate-400 mb-1">Bobot Tahfidz</label>
-                                    <input type="number" name="scoring_weights[tahfidz]" x-model.number="weights.tahfidz" required min="0" max="100" class="block w-full bg-white border border-slate-250 rounded-lg px-3 py-1.5 text-center font-bold">
+                                    <input type="number" name="scoring_weights[tahfidz]" x-model.number="weights.tahfidz" required min="0" max="100" class="block w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-center font-bold">
                                 </div>
                             </div>
                             <div class="mt-3 text-[10px] font-black text-center" :class="totalWeight() === 100 ? 'text-emerald-600' : 'text-red-500'">
@@ -93,7 +93,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                                <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                                     <th class="p-4">Nama Jalur</th>
                                     <th class="p-4">Periode</th>
                                     <th class="p-4">Kuota</th>
@@ -107,7 +107,7 @@
                                         <td class="p-4 font-black text-slate-900">{{ $track->name }}</td>
                                         <td class="p-4 font-bold text-slate-500">{{ $track->period->name ?? '-' }}</td>
                                         <td class="p-4 font-inter font-semibold text-slate-700">{{ $track->quota }} Kursi</td>
-                                        <td class="p-4 font-inter text-slate-650">
+                                        <td class="p-4 font-inter text-slate-700">
                                             @if($track->scoring_weights)
                                                 Rapor: {{ $track->scoring_weights['rapor'] ?? 0 }}%, 
                                                 Tes: {{ $track->scoring_weights['tes'] ?? 0 }}%, 

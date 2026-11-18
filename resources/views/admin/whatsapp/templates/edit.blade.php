@@ -207,7 +207,7 @@
                     escaped = escaped.replace(/```(.*?)```/g, '<code class="font-mono bg-emerald-900/50 dark:bg-emerald-950 px-1 py-0.5 rounded text-[10px]">$1</code>');
                     
                     // Highlight custom template placeholders like {nama_siswa}
-                    escaped = escaped.replace(/\{([a-zA-Z0-9_]+)\}/g, '<span class="inline-block px-1.5 py-0.5 rounded bg-teal-550 dark:bg-teal-900 text-white dark:text-teal-300 font-mono text-[9px] font-bold border border-teal-400 dark:border-teal-800 shadow-sm">$1</span>');
+                    escaped = escaped.replace(/\{([a-zA-Z0-9_]+)\}/g, '<span class="inline-block px-1.5 py-0.5 rounded bg-teal-600 dark:bg-teal-900 text-white dark:text-teal-300 font-mono text-[9px] font-bold border border-teal-400 dark:border-teal-800 shadow-sm">$1</span>');
                     
                     preview.innerHTML = escaped;
                     preview.className = "whitespace-pre-line leading-relaxed text-gray-800 dark:text-slate-100 font-medium";

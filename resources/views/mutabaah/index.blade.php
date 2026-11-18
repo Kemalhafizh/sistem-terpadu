@@ -27,7 +27,7 @@
                 </a>
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'kepala_sekolah', 'guru']) && $student->classroom_id)
                     <a href="{{ route('mutabaah.rekap-kelas', ['classroom' => $student->classroom_id]) }}" 
-                       class="px-4 py-2 bg-primary-600 hover:bg-primary-750 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-md shadow-primary-900/10 transition-all">
+                       class="px-4 py-2 bg-primary-600 hover:bg-primary-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-md shadow-primary-900/10 transition-all">
                         Rekap Kelas
                     </a>
                 @endif

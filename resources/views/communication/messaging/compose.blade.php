@@ -23,7 +23,7 @@
 
     <div class="py-6">
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6 max-w-4xl mx-auto">
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-6">
 
                 <form action="{{ route('messages.store') }}" method="POST" class="space-y-4">
                     @csrf

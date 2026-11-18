@@ -136,7 +136,7 @@
                     <!-- Header -->
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-200/50 dark:border-slate-700/50 space-y-2 sm:space-y-0">
                         <div>
-                            <span class="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-750 text-slate-600 dark:text-slate-300 border border-slate-200/50 rounded-md">
+                            <span class="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/50 rounded-md">
                                 Tipe: {{ $question->type }}
                             </span>
                             <h3 class="text-base font-extrabold text-slate-800 dark:text-white mt-1 leading-snug">
@@ -207,7 +207,7 @@
                     @elseif(in_array($question->type, ['text', 'textarea', 'date']))
                         <div class="max-h-60 overflow-y-auto border border-slate-100 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900/30 p-4 space-y-3">
                             @forelse($analytics[$question->id]['data'] as $ansText)
-                                <div class="p-3 bg-white dark:bg-slate-850 rounded-xl border border-slate-200/40 dark:border-slate-700/30 text-xs font-bold text-slate-700 dark:text-slate-300 leading-normal flex items-start">
+                                <div class="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200/40 dark:border-slate-700/30 text-xs font-bold text-slate-700 dark:text-slate-300 leading-normal flex items-start">
                                     <svg class="w-4 h-4 text-slate-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                                     <p>{{ $ansText }}</p>
                                 </div>
@@ -244,7 +244,7 @@
                     </thead>
                     <tbody class="divide-y divide-slate-200/30 dark:divide-slate-800/30">
                         @forelse($rawResponses as $response)
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-750/30 transition-all">
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-all">
                                 <td class="px-6 py-4">{{ ($rawResponses->currentPage() - 1) * $rawResponses->perPage() + $loop->iteration }}</td>
                                 <td class="px-6 py-4 font-black">
                                     @if($survey->is_anonymous)

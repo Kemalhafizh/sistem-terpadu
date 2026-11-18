@@ -26,13 +26,13 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nama Penghargaan / Lomba</label>
-                    <input type="text" name="title" required placeholder="Juara 1 Turnamen Futsal Walikota..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <input type="text" name="title" required placeholder="Juara 1 Turnamen Futsal Walikota..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Tingkat Lomba</label>
-                        <select name="level" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                        <select name="level" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                             <option value="sekolah">Sekolah</option>
                             <option value="kecamatan">Kecamatan</option>
                             <option value="kota">Kota / Kabupaten</option>
@@ -43,14 +43,14 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Penyelenggara</label>
-                        <input type="text" name="organizer" required placeholder="Dinas Pendidikan Kota..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                        <input type="text" name="organizer" required placeholder="Dinas Pendidikan Kota..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Tanggal Lomba</label>
-                        <input type="date" name="event_date" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
+                        <input type="date" name="event_date" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Sertifikat (PDF/JPG)</label>
@@ -66,7 +66,7 @@
                 <!-- Select Siswa Berpartisipasi -->
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Siswa Berpartisipasi (Tahan Ctrl/Cmd untuk multi-select)</label>
-                    <select name="participants[]" required multiple class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none min-h-[120px]">
+                    <select name="participants[]" required multiple class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none min-h-[120px]">
                         @foreach($students as $st)
                             <option value="{{ $st->id }}">{{ $st->name }} (Class: {{ $st->classroom->name ?? '-' }})</option>
                         @endforeach
@@ -75,7 +75,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Catatan Tambahan</label>
-                    <textarea name="notes" rows="3" placeholder="Tulis rincian perolehan medali atau keterangan tambahan..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                    <textarea name="notes" rows="3" placeholder="Tulis rincian perolehan medali atau keterangan tambahan..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
@@ -93,7 +93,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-55 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
+                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nama Lomba / Penyelenggara</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Tingkat</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Anggota Terlibat</th>

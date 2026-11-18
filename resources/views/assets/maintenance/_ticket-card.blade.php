@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 p-4 rounded-3xl shadow-sm border border-gray-150 dark:border-gray-700/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-4">
+<div class="bg-white dark:bg-gray-800 p-4 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-700/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-4">
     <div class="flex items-center justify-between">
         <!-- Priority Badge -->
         <span class="inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider {{ $ticket->priority_color }}">
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Divider -->
-    <div class="border-t border-gray-100 dark:border-gray-750"></div>
+    <div class="border-t border-gray-100 dark:border-gray-700"></div>
 
     <!-- Reporter & Timestamp info -->
     <div class="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500 font-medium">

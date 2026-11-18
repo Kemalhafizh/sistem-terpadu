@@ -26,7 +26,7 @@
                 <!-- Periode Penilaian -->
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Periode Penilaian Kinerja</label>
-                    <select name="period" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="period" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         <option value="Semester Ganjil 2025/2026">Semester Ganjil 2025/2026</option>
                         <option value="Semester Genap 2025/2026">Semester Genap 2025/2026</option>
                         <option value="Semester Ganjil 2026/2027">Semester Ganjil 2026/2027</option>
@@ -35,7 +35,7 @@
                 </div>
 
                 <!-- Sliders Kompetensi -->
-                <div class="space-y-5 pt-4 border-t border-gray-150 dark:border-gray-700">
+                <div class="space-y-5 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Kriteria Kompetensi Kinerja</h3>
 
                     <!-- Pedagogik -->
@@ -76,26 +76,26 @@
                 </div>
 
                 <!-- Evaluasi Kualitatif -->
-                <div class="space-y-4 pt-4 border-t border-gray-150 dark:border-gray-700">
+                <div class="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <h3 class="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider"> Ulasan Kualitatif</h3>
 
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Kekuatan Utama (Strengths)</label>
-                        <textarea name="strengths" rows="3" placeholder="Sebutkan hal-hal positif atau prestasi kerja pegawai..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                        <textarea name="strengths" rows="3" placeholder="Sebutkan hal-hal positif atau prestasi kerja pegawai..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Area Perbaikan (Improvements)</label>
-                        <textarea name="improvements" rows="3" placeholder="Sebutkan kompetensi yang perlu ditingkatkan..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                        <textarea name="improvements" rows="3" placeholder="Sebutkan kompetensi yang perlu ditingkatkan..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Sasaran / Target Semester Depan (Goals)</label>
-                        <textarea name="goals" rows="3" placeholder="Tulis target peningkatan kinerja yang harus dicapai..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                        <textarea name="goals" rows="3" placeholder="Tulis target peningkatan kinerja yang harus dicapai..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                     </div>
                 </div>
 
-                <div class="pt-6 border-t border-gray-150 dark:border-gray-700 flex justify-end">
+                <div class="pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2.5 px-8 text-xs font-bold transition-all shadow-md">
                          Simpan Hasil Evaluasi
                     </button>

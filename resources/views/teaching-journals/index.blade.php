@@ -71,17 +71,17 @@
                 </h4>
                 @if(in_array(auth()->user()->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']))
                 <form action="{{ route('teaching-journals.export-pdf') }}" method="GET" class="flex flex-wrap items-center gap-2 bg-gray-50 dark:bg-gray-900/50 p-2 rounded-2xl border border-gray-200/40 dark:border-gray-700/30">
-                    <select name="month" required class="bg-white dark:bg-gray-850 border border-gray-200 dark:border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:outline-none">
+                    <select name="month" required class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:outline-none">
                         <option value="">Pilih Bulan</option>
                         @for($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}" {{ date('n') == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
                         @endfor
                     </select>
-                    <select name="year" required class="bg-white dark:bg-gray-850 border border-gray-200 dark:border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:outline-none">
+                    <select name="year" required class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:outline-none">
                         <option value="2026" selected>2026</option>
                         <option value="2025">2025</option>
                     </select>
-                    <select name="teacher_id" class="bg-white dark:bg-gray-850 border border-gray-200 dark:border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:outline-none max-w-[150px]">
+                    <select name="teacher_id" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-2.5 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:outline-none max-w-[150px]">
                         <option value="">Semua Guru</option>
                         @foreach($teachers as $t)
                             <option value="{{ $t->id }}">{{ $t->name }}</option>
@@ -99,7 +99,7 @@
                 @if(auth()->user()->role !== 'guru')
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Guru Pengajar</label>
-                    <select name="teacher_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                    <select name="teacher_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">Semua Guru</option>
                         @foreach($teachers as $t)
                             <option value="{{ $t->id }}" {{ request('teacher_id') == $t->id ? 'selected' : '' }}>{{ $t->name }}</option>
@@ -109,7 +109,7 @@
                 @endif
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Kelas</label>
-                    <select name="classroom_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                    <select name="classroom_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">Semua Kelas</option>
                         @foreach($classrooms as $c)
                             <option value="{{ $c->id }}" {{ request('classroom_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -118,7 +118,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Status Jurnal</label>
-                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">Semua Status</option>
                         <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft (Selesai Disimpan)</option>
                         <option value="submitted" {{ request('status') === 'submitted' ? 'selected' : '' }}>Menunggu Review</option>
@@ -128,7 +128,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Bulan</label>
-                        <select name="month" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-2 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                        <select name="month" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-2 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                             <option value="">Bulan</option>
                             @for($m = 1; $m <= 12; $m++)
                                 <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
@@ -137,7 +137,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Tahun</label>
-                        <select name="year" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-2 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                        <select name="year" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-2 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                             <option value="">Tahun</option>
                             <option value="2026" {{ request('year') == 2026 ? 'selected' : '' }}>2026</option>
                             <option value="2025" {{ request('year') == 2025 ? 'selected' : '' }}>2025</option>
@@ -171,10 +171,10 @@
                             <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-150/40 dark:divide-gray-700/40">
+                    <tbody class="divide-y divide-gray-200/40 dark:divide-gray-700/40">
                         @forelse($journals as $j)
                         <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-900/20 transition-colors">
-                            <td class="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-250">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">
                                 <div>{{ $j->teaching_date->format('d M Y') }}</div>
                                 <div class="text-xs text-gray-400 mt-0.5">Jam Ke-{{ $j->jam_ke ?: '-' }}</div>
                             </td>
@@ -185,7 +185,7 @@
                             @endif
                             <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
                                 <span class="font-bold text-gray-900 dark:text-white">{{ $j->classroom->name }}</span>
-                                <div class="text-xs font-medium text-gray-450 mt-0.5">{{ $j->subject->name }}</div>
+                                <div class="text-xs font-medium text-gray-500 mt-0.5">{{ $j->subject->name }}</div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300 font-medium max-w-[200px] truncate">
                                 {{ Str::limit($j->topic, 45) }}
@@ -196,18 +196,18 @@
                                 @elseif($j->status === 'submitted')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-800 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">MENUNGGU REVIEW</span>
                                 @else
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-450 border border-emerald-200 dark:border-emerald-900/50">REVIEWED</span>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">REVIEWED</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center text-sm">
                                 <div class="flex items-center justify-center space-x-2">
                                     <a href="{{ route('teaching-journals.show', $j->uuid) }}" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 font-bold transition-all">Detail</a>
                                     @if($j->status === 'draft' && auth()->user()->role === 'guru')
-                                    <a href="{{ route('teaching-journals.edit', $j->uuid) }}" class="text-yellow-600 dark:text-yellow-450 hover:text-yellow-800 dark:hover:text-yellow-350 font-bold transition-all">Edit</a>
+                                    <a href="{{ route('teaching-journals.edit', $j->uuid) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300 font-bold transition-all">Edit</a>
                                     <form action="{{ route('teaching-journals.destroy', $j->uuid) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus draf ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 dark:text-red-405 hover:text-red-800 dark:hover:text-red-305 font-bold transition-all">Hapus</button>
+                                        <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-bold transition-all">Hapus</button>
                                     </form>
                                     @endif
                                 </div>
@@ -223,7 +223,7 @@
             </div>
 
             @if($journals->hasPages())
-            <div class="px-6 py-4 border-t border-gray-150 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-900/50">
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700/60 bg-gray-50/50 dark:bg-gray-900/50">
                 {{ $journals->appends(request()->query())->links() }}
             </div>
             @endif

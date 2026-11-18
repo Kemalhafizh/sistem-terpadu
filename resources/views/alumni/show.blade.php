@@ -145,7 +145,7 @@
                     @if($alumni->current_position)
                     <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 md:col-span-2">
                         <span class="block text-[10px] font-bold text-gray-400 uppercase">Jabatan Pekerjaan / Program Studi</span>
-                        <p class="font-extrabold text-gray-850 dark:text-gray-150 mt-1">{{ $alumni->current_position }}</p>
+                        <p class="font-extrabold text-gray-900 dark:text-gray-100 mt-1">{{ $alumni->current_position }}</p>
                     </div>
                     @endif
                 </div>
@@ -184,9 +184,9 @@
                         </div>
 
                         @if($alumni->tracerResponse->suggestions)
-                            <div class="p-4 bg-gray-55/50 dark:bg-gray-900/50 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 text-xs">
+                            <div class="p-4 bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 text-xs">
                                 <span class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Saran untuk Peningkatan Sekolah</span>
-                                <p class="italic text-gray-750 dark:text-gray-350 leading-relaxed">"{{ $alumni->tracerResponse->suggestions }}"</p>
+                                <p class="italic text-gray-800 dark:text-gray-300 leading-relaxed">"{{ $alumni->tracerResponse->suggestions }}"</p>
                             </div>
                         @endif
                     </div>

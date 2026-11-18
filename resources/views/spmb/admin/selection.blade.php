@@ -34,7 +34,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                            <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                                 <th class="p-4">Rank</th>
                                 <th class="p-4">No. Pendaftaran</th>
                                 <th class="p-4">Nama Lengkap</th>
@@ -52,7 +52,7 @@
                                         @if($app->rank)
                                             <span class="inline-flex h-6 w-6 items-center justify-center rounded-full font-black {{ $app->rank <= ($app->spmbTrack->quota ?? 30) ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' }}">#{{ $app->rank }}</span>
                                         @else
-                                            <span class="text-slate-350">-</span>
+                                            <span class="text-slate-300">-</span>
                                         @endif
                                     </td>
                                     <td class="p-4 font-bold text-slate-500">{{ $app->registration_number }}</td>
@@ -74,11 +74,11 @@
                                     <td class="p-4 text-center font-inter font-black text-slate-800">{{ $app->total_score ?: '-' }}</td>
                                     <td class="p-4">
                                         @if($app->status === 'accepted')
-                                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-150">DITERIMA</span>
+                                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-200">DITERIMA</span>
                                         @elseif($app->status === 'rejected')
-                                            <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-150">TIDAK LOLOS</span>
+                                            <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-200">TIDAK LOLOS</span>
                                         @else
-                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-150">PENDING</span>
+                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-200">PENDING</span>
                                         @endif
                                     </td>
                                 </tr>

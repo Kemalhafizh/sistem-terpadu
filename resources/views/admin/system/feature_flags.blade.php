@@ -20,7 +20,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @forelse($flags as $flag)
-                    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                         <div class="flex items-start justify-between">
                             <div>
                                 <span class="px-2.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded font-mono text-[10px] font-bold">
@@ -71,7 +71,7 @@
                         </form>
                     </div>
                 @empty
-                    <div class="col-span-2 p-12 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 text-center text-gray-400 text-xs">
+                    <div class="col-span-2 p-12 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 text-center text-gray-400 text-xs">
                         Belum ada Feature Flag terdaftar dalam sistem.
                     </div>
                 @endforelse

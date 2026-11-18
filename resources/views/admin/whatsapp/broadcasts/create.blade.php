@@ -86,7 +86,7 @@
                             <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Pilih Rombongan Belajar (Kelas)</label>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2">
                                 @foreach($classrooms as $classroom)
-                                    <label class="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-150 dark:border-gray-700 hover:border-teal-500 dark:hover:border-teal-500 cursor-pointer transition-all">
+                                    <label class="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-teal-500 dark:hover:border-teal-500 cursor-pointer transition-all">
                                         <input type="checkbox" name="target_ids[]" value="{{ $classroom->id }}" class="h-4.5 w-4.5 rounded border-gray-300 text-teal-600 focus:ring-teal-500">
                                         <div>
                                             <span class="text-xs font-bold text-gray-700 dark:text-gray-300 block">{{ $classroom->name }}</span>
@@ -110,7 +110,7 @@
                                     <input type="text" x-model="search" placeholder="Ketik nama atau nomor telepon..."
                                            class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-800 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all">
                                     
-                                    <div x-show="filteredUsers.length > 0" class="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-60 overflow-y-auto divide-y divide-gray-150 dark:divide-gray-700">
+                                    <div x-show="filteredUsers.length > 0" class="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-60 overflow-y-auto divide-y divide-gray-200 dark:divide-gray-700">
                                         <template x-for="user in filteredUsers" :key="user.id">
                                             <button type="button" @click="addUser(user)" class="w-full text-left px-4 py-2.5 hover:bg-teal-50 dark:hover:bg-teal-950/20 text-xs font-semibold text-gray-700 dark:text-gray-200 flex justify-between items-center transition-colors">
                                                 <div>
@@ -126,7 +126,7 @@
                                 <!-- Selected Users Chips -->
                                 <div class="flex flex-wrap gap-2 mt-3">
                                     <template x-for="user in selectedUsers" :key="user.id">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 border border-teal-150 dark:border-teal-800/30 rounded-xl text-xs font-bold transition-all">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800/30 rounded-xl text-xs font-bold transition-all">
                                             <span x-text="user.name"></span>
                                             <button type="button" @click="removeUser(user.id)" class="text-teal-600 hover:text-teal-800 dark:hover:text-teal-300 font-bold">&times;</button>
                                             <input type="hidden" name="target_ids[]" :value="user.id">
@@ -232,7 +232,7 @@
                                     </div>
                                     
                                     <!-- Main Message Bubble -->
-                                    <div class="self-start bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs py-2.5 px-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%] relative border border-gray-150 dark:border-gray-750/30">
+                                    <div class="self-start bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs py-2.5 px-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%] relative border border-gray-200 dark:border-gray-700/30">
                                         <div class="whitespace-pre-line font-medium leading-relaxed" x-text="messageText || 'Tulis pesan atau pilih template untuk melihat pratinjau...' "></div>
                                         <span class="block text-[8px] text-gray-400 text-right mt-1.5 font-bold uppercase tracking-wider">
                                             <span x-show="scheduledAt">Terjadwal</span>
@@ -243,7 +243,7 @@
                             </div>
                         </div>
                         
-                        <div class="mt-4 pt-4 border-t border-gray-150 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-500 font-medium">
+                        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-500 font-medium">
                             <p class="leading-relaxed"> Catatan: Variabel dynamic placeholder seperti <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-teal-600 dark:text-teal-400 font-bold">{nama_siswa}</code> akan otomatis diubah menjadi data riil saat dikirim.</p>
                         </div>
                     </div>

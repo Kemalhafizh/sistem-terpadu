@@ -59,7 +59,7 @@
                     <div>
                         <span class="block text-[9px] font-black text-gray-400 uppercase tracking-wider">STATUS</span>
                         <div class="mt-1">
-                            <span class="inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-black bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-650">
+                            <span class="inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-black bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700">
                                 {{ strtoupper($asset->status) }}
                             </span>
                         </div>
@@ -123,7 +123,7 @@
                 <div>
                     <label for="issue_description" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">DESKRIPSI KERUSAKAN</label>
                     <textarea id="issue_description" name="issue_description" rows="4" minlength="10" required 
-                        class="w-full rounded-2xl border-gray-250 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm focus:border-teal-500 focus:ring-teal-500 text-gray-800 dark:text-gray-200 placeholder-gray-400"
+                        class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm focus:border-teal-500 focus:ring-teal-500 text-gray-800 dark:text-gray-200 placeholder-gray-400"
                         placeholder="Jelaskan detail kerusakan sarana prasarana yang Anda temukan (min. 10 karakter)...">{{ old('issue_description') }}</textarea>
                     @error('issue_description')
                         <span class="text-xs text-rose-500 font-bold mt-1 block">{{ $message }}</span>
@@ -135,7 +135,7 @@
                     <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">FOTO BUKTI KERUSAKAN (OPSIONAL)</label>
                     
                     <div x-data="{ fileName: '' }" class="relative">
-                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-250 dark:border-gray-700 rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg class="w-8 h-8 mb-2 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>

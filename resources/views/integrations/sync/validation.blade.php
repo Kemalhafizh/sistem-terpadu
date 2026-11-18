@@ -2,13 +2,13 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-teal-655 dark:text-teal-400">Audit Integritas Data</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-teal-700 dark:text-teal-400">Audit Integritas Data</span>
                 <h2 class="font-black text-3xl text-gray-800 dark:text-white leading-tight tracking-tight mt-1">
                     Audit Data Pra-Ekspor: {{ ucfirst($target) }} ({{ ucfirst($table === 'students' ? 'Siswa' : 'Guru') }})
                 </h2>
             </div>
             <a href="{{ route('admin.integration.sync.dashboard') }}" 
-               class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-150 flex items-center gap-1.5 shadow-sm">
+               class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 flex items-center gap-1.5 shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 <span>Kembali</span>
             </a>
@@ -70,7 +70,7 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                 <span>Ekspor Dinonaktifkan</span>
                             </button>
-                            <span class="text-[10px] text-rose-600 dark:text-rose-450 font-black uppercase tracking-widest text-center md:text-right block">Perbaiki semua ERROR untuk membuka kunci ekspor</span>
+                            <span class="text-[10px] text-rose-600 dark:text-rose-400 font-black uppercase tracking-widest text-center md:text-right block">Perbaiki semua ERROR untuk membuka kunci ekspor</span>
                         </div>
                     </div>
                 @else
@@ -89,7 +89,7 @@
                         </div>
                         
                         <a href="{{ route('admin.integration.sync.export', [$target, $table]) }}" 
-                           class="w-full md:w-auto px-6 py-3 bg-teal-650 hover:bg-teal-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider text-center transition-all duration-200 active:scale-95 shadow-lg shadow-teal-600/25 flex items-center justify-center gap-2">
+                           class="w-full md:w-auto px-6 py-3 bg-teal-700 hover:bg-teal-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider text-center transition-all duration-200 active:scale-95 shadow-lg shadow-teal-600/25 flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                             <span>Lanjutkan Ekspor JSON</span>
                         </a>
@@ -110,12 +110,12 @@
                             <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-900/50">
                                     <tr>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Nama Lengkap</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">ID / NIS / NIP</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Kolom Bermasalah</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Deskripsi Kesalahan</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-455 dark:text-gray-500">Tingkat Keparahan</th>
-                                        <th scope="col" class="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Aksi Perbaikan</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Nama Lengkap</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">ID / NIS / NIP</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Kolom Bermasalah</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Deskripsi Kesalahan</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Tingkat Keparahan</th>
+                                        <th scope="col" class="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Aksi Perbaikan</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
@@ -124,25 +124,25 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-white">
                                                 {{ $issue['name'] }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-450 font-medium">
+                                            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400 font-medium">
                                                 {{ $issue['identifier'] }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <code class="px-2 py-1 bg-slate-100 dark:bg-gray-900 rounded-lg text-xs font-mono text-teal-650 dark:text-teal-400 font-semibold">
+                                                <code class="px-2 py-1 bg-slate-100 dark:bg-gray-900 rounded-lg text-xs font-mono text-teal-700 dark:text-teal-400 font-semibold">
                                                     {{ $issue['field'] }}
                                                 </code>
                                             </td>
-                                            <td class="px-6 py-4 text-xs text-gray-650 dark:text-gray-300 max-w-xs truncate font-medium">
+                                            <td class="px-6 py-4 text-xs text-gray-700 dark:text-gray-300 max-w-xs truncate font-medium">
                                                 {{ $issue['issue'] }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                 @if($issue['severity'] === 'error')
-                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-350 border border-rose-100 dark:border-rose-900/30">
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-100 dark:border-rose-900/30">
                                                         <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
                                                         Error
                                                     </span>
                                                 @else
-                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-350 border border-amber-100 dark:border-amber-900/30">
+                                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">
                                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                                                         Warning
                                                     </span>

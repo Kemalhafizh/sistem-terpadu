@@ -28,7 +28,7 @@
         Periode {{ $statement->period_start->format('d/m/Y') }} s.d. {{ $statement->period_end->format('d/m/Y') }} &middot;
         {{ $statement->total_transactions }} transaksi, {{ $statement->matched_count }} cocok, {{ $statement->unmatched_count }} belum cocok
     </p>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>

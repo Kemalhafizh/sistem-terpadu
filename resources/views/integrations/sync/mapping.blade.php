@@ -2,13 +2,13 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-teal-650 dark:text-teal-400">Konfigurasi Sinkronisasi</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-teal-700 dark:text-teal-400">Konfigurasi Sinkronisasi</span>
                 <h2 class="font-black text-3xl text-gray-800 dark:text-white leading-tight tracking-tight mt-1">
                     Pemetaan Kolom Ekspor - {{ ucfirst($target) }} ({{ ucfirst($table === 'students' ? 'Siswa' : 'Guru') }})
                 </h2>
             </div>
             <a href="{{ route('admin.integration.sync.dashboard') }}" 
-               class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-150 flex items-center gap-1.5 shadow-sm">
+               class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 flex items-center gap-1.5 shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 <span>Kembali</span>
             </a>
@@ -95,20 +95,20 @@
                                 <div class="md:col-span-5 flex flex-col justify-center">
                                     <div class="flex items-center gap-2">
                                         <span class="text-xs font-bold text-gray-900 dark:text-white">{{ $tLabel }}</span>
-                                        <span x-show="targetMapping['{{ $tKey }}']" class="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-450 border border-emerald-100 dark:border-emerald-900/30 text-[9px] font-black uppercase tracking-wider rounded-md">
+                                        <span x-show="targetMapping['{{ $tKey }}']" class="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30 text-[9px] font-black uppercase tracking-wider rounded-md">
                                             Terpetakan
                                         </span>
-                                        <span x-show="!targetMapping['{{ $tKey }}']" class="px-2 py-0.5 bg-slate-100 dark:bg-gray-900 text-slate-400 dark:text-gray-650 text-[9px] font-black uppercase tracking-wider rounded-md">
+                                        <span x-show="!targetMapping['{{ $tKey }}']" class="px-2 py-0.5 bg-slate-100 dark:bg-gray-900 text-slate-400 dark:text-gray-600 text-[9px] font-black uppercase tracking-wider rounded-md">
                                             Kosong
                                         </span>
                                     </div>
-                                    <code class="text-[10px] text-teal-650 dark:text-teal-400 mt-1.5 font-bold uppercase tracking-wider">Target: {{ $tKey }}</code>
+                                    <code class="text-[10px] text-teal-700 dark:text-teal-400 mt-1.5 font-bold uppercase tracking-wider">Target: {{ $tKey }}</code>
                                 </div>
 
                                 <!-- Arrow Indicator (Center) -->
                                 <div class="hidden md:flex md:col-span-2 justify-center items-center">
-                                    <div class="p-2 bg-white dark:bg-gray-850 rounded-full border border-gray-150 dark:border-gray-700 shadow-sm flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-teal-555 dark:text-teal-450 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="p-2 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                         </svg>
                                     </div>
@@ -118,7 +118,7 @@
                                 <div class="md:col-span-5">
                                     <div class="relative">
                                         <select x-model="targetMapping['{{ $tKey }}']" 
-                                                class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-750 text-xs font-semibold text-gray-800 dark:text-gray-200 rounded-2xl py-3 pl-4 pr-10 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all shadow-sm appearance-none">
+                                                class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-800 dark:text-gray-200 rounded-2xl py-3 pl-4 pr-10 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all shadow-sm appearance-none">
                                             <option value="">-- Lewati Kolom Ini (Kosong) --</option>
                                             @foreach($localFields as $localKey => $localLabel)
                                                 <option value="{{ $localKey }}">{{ $localLabel }} ({{ $localKey }})</option>
@@ -138,7 +138,7 @@
                 {{-- Action Buttons --}}
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-4">
                     <a href="{{ route('admin.integration.sync.dashboard') }}" 
-                       class="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 border border-gray-250 dark:border-gray-700 hover:border-gray-300 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-wider text-center transition-all shadow-sm">
+                       class="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-wider text-center transition-all shadow-sm">
                         Batalkan
                     </a>
                     <button type="submit" 

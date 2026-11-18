@@ -28,7 +28,7 @@
             <form method="GET" action="{{ route('hrd.attendance-report') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Bulan</label>
-                    <select name="month" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="month" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         @for($m = 1; $m <= 12; $m++)
                             <option value="{{ sprintf('%02d', $m) }}" {{ $month == sprintf('%02d', $m) ? 'selected' : '' }}>
                                 {{ date('F', mktime(0, 0, 0, $m, 1)) }}
@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Tahun</label>
-                    <select name="year" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="year" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         @for($y = date('Y') - 2; $y <= date('Y') + 1; $y++)
                             <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
                         @endfor
@@ -68,7 +68,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-55 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
+                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nama Pegawai & NIY</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Jabatan</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Hadir</th>

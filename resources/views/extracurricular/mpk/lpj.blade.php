@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-3">
-            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-xl dark:bg-emerald-950 dark:text-emerald-350"></span>
+            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-xl dark:bg-emerald-950 dark:text-emerald-300"></span>
             Repositori LPJ & Sidang Kesiswaan
         </h2>
     </x-slot>
@@ -19,13 +19,13 @@
         
         <!-- Tab Navigation -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-            <a href="{{ route('mpk.index') }}" class="px-4 py-2 bg-white text-slate-650 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+            <a href="{{ route('mpk.index') }}" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                  Audit Keuangan
             </a>
             <a href="{{ route('mpk.lpj.index') }}" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all">
                  Repositori LPJ OSIS
             </a>
-            <a href="{{ route('mpk.aspirations.index') }}" class="px-4 py-2 bg-white text-slate-650 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+            <a href="{{ route('mpk.aspirations.index') }}" class="px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                  Kotak Suara Aspirasi
             </a>
         </div>
@@ -53,17 +53,17 @@
 
                     <div class="space-y-4">
                         @forelse($lpjs as $lpj)
-                            <div class="bg-slate-50/50 dark:bg-gray-700/20 border border-slate-150/40 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden group">
+                            <div class="bg-slate-50/50 dark:bg-gray-700/20 border border-slate-200/40 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden group">
                                 <div class="space-y-2">
                                     <div class="flex flex-wrap items-center gap-2">
                                         <h4 class="text-sm font-black text-slate-900 dark:text-white">
                                             {{ $lpj->title }}
                                         </h4>
-                                        <span class="px-2.5 py-0.5 bg-slate-200/60 dark:bg-gray-700 text-slate-650 dark:text-gray-300 rounded-md text-[9px] font-bold uppercase tracking-wider">
+                                        <span class="px-2.5 py-0.5 bg-slate-200/60 dark:bg-gray-700 text-slate-700 dark:text-gray-300 rounded-md text-[9px] font-bold uppercase tracking-wider">
                                             TA {{ $lpj->academicYear->year }}
                                         </span>
                                     </div>
-                                    <p class="text-xs text-slate-555 dark:text-slate-400 font-medium leading-relaxed max-w-lg">
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 font-medium leading-relaxed max-w-lg">
                                         {{ $lpj->description ?? 'Tidak ada rincian keterangan.' }}
                                     </p>
                                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
@@ -75,7 +75,7 @@
                                     </div>
 
                                     @if($lpj->reviewer_notes)
-                                        <div class="mt-2 p-3 bg-white dark:bg-gray-800 rounded-xl border border-slate-200/50 text-[11px] leading-relaxed text-slate-600 dark:text-slate-350">
+                                        <div class="mt-2 p-3 bg-white dark:bg-gray-800 rounded-xl border border-slate-200/50 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
                                             <span class="font-extrabold text-slate-700 dark:text-white block uppercase text-[9px] tracking-wider mb-1">Nota Sidang MPK:</span>
                                             "{{ $lpj->reviewer_notes }}"
                                         </div>
@@ -106,13 +106,13 @@
 
                                     <!-- Actions -->
                                     <div class="flex gap-2 justify-end mt-2 sm:mt-0">
-                                        <a href="{{ asset('storage/' . $lpj->file_path) }}" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-gray-650 text-slate-800 dark:text-gray-250 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5" title="Buka Dokumen PDF">
+                                        <a href="{{ asset('storage/' . $lpj->file_path) }}" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-slate-800 dark:text-gray-200 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5" title="Buka Dokumen PDF">
                                              Dokumen
                                         </a>
                                         @if($canReview && $lpj->status === 'submitted')
                                             <button 
                                                 @click="openReviewModal({{ json_encode($lpj) }})" 
-                                                class="px-3 py-2 bg-emerald-650 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all"
+                                                class="px-3 py-2 bg-emerald-700 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all"
                                             >
                                                  Keputusan
                                             </button>
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="py-12 text-center text-slate-450 italic">
+                            <div class="py-12 text-center text-slate-500 italic">
                                 Belum ada berkas Laporan Pertanggungjawaban (LPJ) yang diajukan.
                             </div>
                         @endforelse
@@ -141,7 +141,7 @@
                     style="display: none;"
                 >
                     <div 
-                        class="bg-white dark:bg-gray-800 border border-slate-150 dark:border-gray-700 w-full max-w-md rounded-3xl shadow-2xl p-6 relative overflow-hidden"
+                        class="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 w-full max-w-md rounded-3xl shadow-2xl p-6 relative overflow-hidden"
                         @click.away="selectedLpj = null"
                     >
                         <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
@@ -156,44 +156,44 @@
                                 @csrf
 
                                 <!-- LPJ Title -->
-                                <div class="bg-slate-50 dark:bg-gray-700/30 p-4 rounded-2xl border border-slate-150/40 text-xs">
+                                <div class="bg-slate-50 dark:bg-gray-700/30 p-4 rounded-2xl border border-slate-200/40 text-xs">
                                     <div class="flex justify-between mb-1">
                                         <span class="text-slate-400 font-bold">Judul LPJ:</span>
                                         <span class="font-extrabold text-slate-800 dark:text-slate-200" x-text="selectedLpj.title"></span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-slate-400 font-bold">Tahun Ajaran:</span>
-                                        <span class="font-extrabold text-slate-850 dark:text-slate-250" x-text="selectedLpj.academic_year.year"></span>
+                                        <span class="font-extrabold text-slate-900 dark:text-slate-200" x-text="selectedLpj.academic_year.year"></span>
                                     </div>
                                 </div>
 
                                 <!-- Review Decision -->
                                 <div class="space-y-2">
-                                    <label class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Putusan Sidang</label>
+                                    <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Putusan Sidang</label>
                                     <div class="grid grid-cols-1 gap-2">
-                                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-250 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
+                                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
                                             <input type="radio" name="status" value="approved" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500/10" required>
-                                            <span class="text-xs font-bold text-slate-700 dark:text-slate-350">Disetujui Sepenuhnya</span>
+                                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Disetujui Sepenuhnya</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-250 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
+                                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
                                             <input type="radio" name="status" value="approved_with_notes" class="w-4 h-4 text-teal-600 focus:ring-teal-500/10" required>
-                                            <span class="text-xs font-bold text-slate-700 dark:text-slate-350">Disetujui Dengan Catatan</span>
+                                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Disetujui Dengan Catatan</span>
                                         </label>
-                                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-250 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
+                                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 dark:bg-gray-800 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-slate-50/50 transition-colors">
                                             <input type="radio" name="status" value="rejected" class="w-4 h-4 text-rose-600 focus:ring-rose-500/10" required>
-                                            <span class="text-xs font-bold text-slate-700 dark:text-slate-350">Ditolak / Butuh Revisi</span>
+                                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Ditolak / Butuh Revisi</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 <!-- Reviewer Notes -->
                                 <div class="space-y-2">
-                                    <label for="reviewer_notes" class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Nota/Catatan Evaluasi Sidang</label>
+                                    <label for="reviewer_notes" class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Nota/Catatan Evaluasi Sidang</label>
                                     <textarea 
                                         id="reviewer_notes" 
                                         name="reviewer_notes" 
                                         rows="4" 
-                                        class="block w-full border border-slate-250 rounded-2xl text-xs text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none p-3.5"
+                                        class="block w-full border border-slate-200 rounded-2xl text-xs text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none p-3.5"
                                         placeholder="Masukkan rekomendasi perbaikan, masukan atau nota putusan formal hasil persidangan..."
                                     ></textarea>
                                 </div>
@@ -203,7 +203,7 @@
                                     <button type="button" @click="selectedLpj = null" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-black uppercase tracking-wider transition-colors">
                                         Batal
                                     </button>
-                                    <button type="submit" class="px-5 py-2 bg-emerald-650 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-650/10 transition-colors">
+                                    <button type="submit" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-700/10 transition-colors">
                                         Ketuk Putusan
                                     </button>
                                 </div>
@@ -225,7 +225,7 @@
 
                         <!-- Academic Year -->
                         <div class="space-y-2">
-                            <label for="academic_year_id" class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Tahun Ajaran Aktif</label>
+                            <label for="academic_year_id" class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Tahun Ajaran Aktif</label>
                             <select 
                                 id="academic_year_id" 
                                 name="academic_year_id" 
@@ -242,7 +242,7 @@
 
                         <!-- Title -->
                         <div class="space-y-2">
-                            <label for="title" class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Judul Laporan</label>
+                            <label for="title" class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Judul Laporan</label>
                             <input 
                                 id="title" 
                                 type="text" 
@@ -255,7 +255,7 @@
 
                         <!-- Description -->
                         <div class="space-y-2">
-                            <label for="description" class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Rincian Laporan (Deskripsi)</label>
+                            <label for="description" class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Rincian Laporan (Deskripsi)</label>
                             <textarea 
                                 id="description" 
                                 name="description" 
@@ -267,7 +267,7 @@
 
                         <!-- PDF Upload Area -->
                         <div class="space-y-2">
-                            <label class="block text-[10px] font-black text-emerald-850 uppercase tracking-widest">Dokumen LPJ Resmi (Format PDF)</label>
+                            <label class="block text-[10px] font-black text-emerald-900 uppercase tracking-widest">Dokumen LPJ Resmi (Format PDF)</label>
                             <input 
                                 id="file" 
                                 type="file" 

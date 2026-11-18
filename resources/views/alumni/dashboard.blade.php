@@ -80,7 +80,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Doughnut Chart: Aktivitas -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-1 flex flex-col justify-between">
-                <h3 class="font-bold text-gray-850 dark:text-gray-150 text-sm mb-4"> Distribusi Aktivitas Alumni</h3>
+                <h3 class="font-bold text-gray-900 dark:text-gray-100 text-sm mb-4"> Distribusi Aktivitas Alumni</h3>
                 <div class="relative w-full aspect-square flex items-center justify-center">
                     <canvas id="activityChart"></canvas>
                 </div>
@@ -88,7 +88,7 @@
 
             <!-- Bar Chart: Top 5 Perusahaan/Instansi -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl lg:col-span-2 flex flex-col justify-between">
-                <h3 class="font-bold text-gray-850 dark:text-gray-150 text-sm mb-4"> Top 5 Instansi / Tempat Kerja Alumni</h3>
+                <h3 class="font-bold text-gray-900 dark:text-gray-100 text-sm mb-4"> Top 5 Instansi / Tempat Kerja Alumni</h3>
                 <div class="relative w-full aspect-[2/1] min-h-[220px]">
                     <canvas id="institutionChart"></canvas>
                 </div>

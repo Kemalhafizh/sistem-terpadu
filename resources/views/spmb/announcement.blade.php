@@ -65,7 +65,7 @@
                 value="{{ request('search') }}"
                 required
                 placeholder="Misal: SPMB-2026-0001 atau NISN Anda"
-                class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
               >
               <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all">Cari</button>
             </div>
@@ -78,7 +78,7 @@
         @if($registration)
           <div class="bg-white p-6 shadow-xl rounded-3xl border border-slate-200/60 transition-all">
             <div class="text-center pb-6 border-b border-slate-100">
-              <div class="h-16 w-16 mx-auto rounded-full bg-slate-50 border border-slate-150 flex items-center justify-center mb-3">
+              <div class="h-16 w-16 mx-auto rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center mb-3">
                 @if($registration->photo_path)
                   <img src="{{ asset('storage/' . $registration->photo_path) }}" alt="Foto" class="h-full w-full object-cover rounded-full">
                 @else
@@ -125,7 +125,7 @@
                        Status: Belum Daftar Ulang. Silakan menghubungi panitia SPMB untuk pembayaran uang pangkal.
                     </div>
                   @else
-                    <div class="mt-4 p-4 bg-emerald-50 border border-emerald-250 rounded-2xl text-xs font-semibold text-emerald-800 text-center">
+                    <div class="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs font-semibold text-emerald-800 text-center">
                        Daftar Ulang Selesai. Akun siswa Anda sedang diproses.
                     </div>
                   @endif

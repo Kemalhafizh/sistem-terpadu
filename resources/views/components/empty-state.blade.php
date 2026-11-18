@@ -10,7 +10,7 @@
 
 <div class="flex flex-col items-center justify-center text-center p-8 md:p-12 animate-fade-in">
     {{-- Icon Wrapper --}}
-    <div class="w-16 h-16 bg-gray-100 dark:bg-slate-750 text-gray-400 dark:text-slate-400 rounded-2xl flex items-center justify-center mb-5 border border-gray-200/50 dark:border-slate-700/50 shadow-xs relative group">
+    <div class="w-16 h-16 bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-slate-400 rounded-2xl flex items-center justify-center mb-5 border border-gray-200/50 dark:border-slate-700/50 shadow-xs relative group">
         <div class="absolute inset-0 bg-primary-500/5 dark:bg-primary-500/10 rounded-2xl scale-0 group-hover:scale-110 transition-transform duration-300"></div>
         
         @if($icon === 'search')

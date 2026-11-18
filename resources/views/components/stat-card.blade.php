@@ -51,21 +51,22 @@
             'border' => 'border-slate-100 dark:border-slate-700/30',
             'text' => 'text-slate-600 dark:text-slate-400',
             'iconBg' => 'bg-slate-100 dark:bg-slate-800/80',
-            'iconText' => 'text-slate-700 dark:text-slate-350'
+            'iconText' => 'text-slate-700 dark:text-slate-300'
         ]
     ];
 
     $style = $colorMap[$color] ?? $colorMap['primary'];
 
-    // Clean and parse numeric value for Alpine.js count-up animation
+    // Clean and parse strictly numeric/currency/percent values for Alpine.js count-up animation
     $numericValue = 0;
     $isNumericOnly = false;
-    $hasPrefix = str_contains($value, 'Rp');
-    $hasPercent = str_contains($value, '%');
-    
-    $clean = preg_replace('/[^0-9.,]/', '', $value);
-    if (!empty($clean)) {
-        if (substr_count($clean, '.') > 1 || (substr_count($clean, '.') == 1 && strlen(substr($clean, strpos($clean, '.') + 1)) > 2)) {
+    $rawValue = trim((string) $value);
+    $hasPrefix = str_starts_with($rawValue, 'Rp');
+    $hasPercent = str_ends_with($rawValue, '%');
+
+    if (preg_match('/^(?:Rp\s*)?([0-9]+(?:[.,][0-9]+)*)(?:\s*%)?$/u', $rawValue, $matches)) {
+        $clean = $matches[1];
+        if (substr_count($clean, '.') > 1 || (substr_count($clean, '.') === 1 && strlen(substr($clean, strpos($clean, '.') + 1)) > 2)) {
             $clean = str_replace('.', '', $clean);
         }
         if (substr_count($clean, ',') > 1) {
@@ -73,7 +74,7 @@
         }
         $clean = str_replace(',', '.', $clean);
         if (is_numeric($clean)) {
-            $numericValue = (float)$clean;
+            $numericValue = (float) $clean;
             $isNumericOnly = true;
         }
     }
@@ -94,7 +95,7 @@
         
         {{-- Trend Indicator (Right) --}}
         @if($trendValue)
-            <div class="flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-semibold {{ $trendDirection === 'up' ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400' }}">
+            <div class="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold {{ $trendDirection === 'up' ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400' }}">
                 @if($trendDirection === 'up')
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>

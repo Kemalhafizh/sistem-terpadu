@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
-            {{ __('LMS E-Learning Ringan') }}
+            {{ __('LMS Sulaone') }}
         </h2>
     </x-slot>
 
@@ -11,22 +11,22 @@
             <!-- Welcome Info Box / Install Banner -->
             <div class="bg-gray-900 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden shadow-xl">
                 <!-- Decorative Circle -->
-                <div class="absolute right-0 bottom-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute end-0 bottom-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
                 
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div class="space-y-2">
                         <span class="inline-flex px-3 py-1 bg-emerald-600/30 text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest">
-                            Portal Akademik Seluler
+                            E-Learning Sulaone
                         </span>
-                        <h3 class="text-xl sm:text-2xl font-black tracking-tight">Selamat Datang di Portal E-Learning</h3>
+                        <h3 class="text-xl sm:text-2xl font-black tracking-tight">Selamat Datang di Portal E-Learning Sulaone</h3>
                         <p class="text-xs sm:text-sm text-gray-300 max-w-xl">
-                            Ruang kelas digital yang dioptimalkan untuk perangkat mobile. Baca materi belajar dan selesaikan kuis/ujian mandiri Anda dengan mudah di mana saja.
+                            Ruang kelas digital untuk mempelajari materi dan menyelesaikan kuis/tugas Anda dengan mudah di mana saja.
                         </p>
                     </div>
                     
                     <!-- PWA Installer link if not standalone -->
                     <div id="pwa-badge-container">
-                        <a href="{{ route('elearning.install') }}" class="inline-flex px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md items-center space-x-2">
+                        <a href="{{ route('elearning.install') }}" class="inline-flex px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md items-center gap-2">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path><path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L10.414 13H15v3a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
                             <span>Unduh Aplikasi PWA</span>
                         </a>
@@ -38,7 +38,7 @@
             @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin']))
                 <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
                     <h4 class="text-lg font-black text-gray-900 dark:text-white mb-4 flex items-center">
-                        <span class="w-8 h-8 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center mr-3">
+                        <span class="w-8 h-8 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center me-3">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         </span>
                         Buat Kelas Virtual Baru
@@ -69,7 +69,7 @@
                             </select>
                         </div>
                         <div>
-                            <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2">
+                            <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                 <span>Buat Kelas</span>
                             </button>
@@ -82,12 +82,12 @@
             <div class="space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <h3 class="text-xl font-extrabold text-gray-900 dark:text-white flex items-center">
-                        <span class="w-8 h-8 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center mr-3">
+                        <span class="w-8 h-8 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center me-3">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
                         </span>
                         {{ $showArchived ? 'Daftar Arsip Kelas Virtual' : 'Daftar Kelas Virtual Aktif' }}
                     </h3>
-                    @if(in_array(auth()->user()->role, ['guru', 'staf_tu', 'admin', 'superadmin', 'siswa']))
+                    @if(in_array(auth()->user()->role, ['guru', 'teacher', 'staf_tu', 'admin', 'superadmin', 'student', 'siswa']))
                         <div class="flex gap-2">
                             @if($showArchived)
                                 <a href="{{ route('elearning.index', ['show_archived' => 0]) }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
@@ -95,7 +95,7 @@
                                 </a>
                             @else
                                 <a href="{{ route('elearning.index', ['show_archived' => 1]) }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
-                                    <svg class="w-4.5 h-4.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
                                     <span>Lihat Arsip Kelas</span>
                                 </a>
                             @endif

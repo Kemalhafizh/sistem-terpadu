@@ -4,20 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartu Perpustakaan | {{ $student->user->name }}</title>
-    <!-- Tailwind CSS (standalone page, compiled in the browser) -->
-    <x-vendor.script lib="tailwind-browser" />
-    <style type="text/tailwindcss">
-        /* Designed on Tailwind v3: keep its default border color. */
-        @layer base {
-            *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
-        }
-        @theme {
-            /* Same primary palette as resources/css/app.css */
-            --color-primary-200: #a7f3d0;
-            --color-primary-600: #059669;
-            --color-primary-700: #047857;
-        }
-    </style>
+    <!-- Compiled Tailwind CSS -->
+    @vite(['resources/css/app.css'])
     <style>
         /* Gaya Khusus Cetak Kartu */
         @media print {
@@ -84,8 +72,8 @@
         <div class="card-container glass-card w-[350px] h-[220px] rounded-[1.5rem] shadow-xl border border-emerald-100 flex flex-col justify-between p-5 relative select-none">
             <!-- Kop Sekolah -->
             <div class="flex items-center gap-2.5 border-b border-emerald-100/50 pb-2.5 z-10">
-                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center font-black text-white text-base shadow-xs">
-                    A
+                <div class="w-8 h-8 bg-white rounded-lg border border-emerald-100 flex items-center justify-center p-1 shadow-xs shrink-0">
+                    <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <h2 class="text-[9px] font-black text-gray-800 uppercase tracking-widest leading-none">{{ school_short_name() }}</h2>

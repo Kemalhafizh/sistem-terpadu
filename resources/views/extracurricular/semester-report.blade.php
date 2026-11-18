@@ -25,21 +25,21 @@
     <div class="space-y-6">
         <!-- Rincian Pembina & Info Ekskul -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-6 rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl space-y-4">
-            <h3 class="font-black text-sm text-gray-850 dark:text-white"> Profil & Agenda Latihan</h3>
+            <h3 class="font-black text-sm text-gray-900 dark:text-white"> Profil & Agenda Latihan</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                <div class="p-3 bg-gray-55/50 dark:bg-gray-900/50 rounded-2xl">
+                <div class="p-3 bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl">
                     <span class="block text-[9px] text-gray-400 font-bold uppercase">Nama Ekskul</span>
                     <p class="font-extrabold text-gray-800 dark:text-white mt-1">{{ $extracurricular->name }}</p>
                 </div>
-                <div class="p-3 bg-gray-55/50 dark:bg-gray-900/50 rounded-2xl">
+                <div class="p-3 bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl">
                     <span class="block text-[9px] text-gray-400 font-bold uppercase">Guru Pembina</span>
                     <p class="font-extrabold text-gray-800 dark:text-white mt-1">{{ $extracurricular->advisor->name ?? '-' }}</p>
                 </div>
-                <div class="p-3 bg-gray-55/50 dark:bg-gray-900/50 rounded-2xl">
+                <div class="p-3 bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl">
                     <span class="block text-[9px] text-gray-400 font-bold uppercase">Hari & Waktu</span>
                     <p class="font-extrabold text-gray-800 dark:text-white mt-1">{{ $extracurricular->schedule_day }}, {{ $extracurricular->schedule_time }}</p>
                 </div>
-                <div class="p-3 bg-gray-55/50 dark:bg-gray-900/50 rounded-2xl">
+                <div class="p-3 bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl">
                     <span class="block text-[9px] text-gray-400 font-bold uppercase">Tempat Latihan</span>
                     <p class="font-extrabold text-gray-800 dark:text-white mt-1">{{ $extracurricular->location }}</p>
                 </div>

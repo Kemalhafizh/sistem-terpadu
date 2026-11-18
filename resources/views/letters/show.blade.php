@@ -101,12 +101,12 @@
 
                 <div>
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Tipe Template</span>
-                    <p class="font-bold text-gray-850 dark:text-gray-150 mt-0.5">{{ $letter->template->name }}</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 mt-0.5">{{ $letter->template->name }}</p>
                 </div>
 
                 <div>
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Tanggal Terbit</span>
-                    <p class="font-bold text-gray-850 dark:text-gray-150 mt-0.5">{{ $letter->issue_date->translatedFormat('d F Y') }}</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 mt-0.5">{{ $letter->issue_date->translatedFormat('d F Y') }}</p>
                 </div>
 
                 <div>
@@ -128,14 +128,14 @@
 
                 <div>
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Dibuat Oleh</span>
-                    <p class="font-bold text-gray-850 dark:text-gray-150 mt-0.5"> {{ $letter->creator->name }}</p>
+                    <p class="font-bold text-gray-900 dark:text-gray-100 mt-0.5"> {{ $letter->creator->name }}</p>
                     <p class="text-[11px] text-gray-400">Tanggal Pengarsipan: {{ $letter->created_at->translatedFormat('d M Y H:i') }} WIB</p>
                 </div>
 
                 @if($letter->notes)
                 <div>
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Catatan Internal</span>
-                    <p class="text-gray-650 dark:text-gray-350 italic mt-0.5 p-2 bg-gray-100/50 dark:bg-gray-900/30 rounded-xl border border-gray-200/30 text-xs">{{ $letter->notes }}</p>
+                    <p class="text-gray-700 dark:text-gray-300 italic mt-0.5 p-2 bg-gray-100/50 dark:bg-gray-900/30 rounded-xl border border-gray-200/30 text-xs">{{ $letter->notes }}</p>
                 </div>
                 @endif
             </div>
@@ -190,7 +190,7 @@
                                 @if($letter->template->signature_path)
                                     <span class="text-[10px] font-sans bg-emerald-500/20 text-emerald-700 px-2.5 py-1 rounded font-bold border border-emerald-500/30 uppercase tracking-widest no-print">TTD DIGITAL TERSEMAT</span>
                                 @else
-                                    <span class="text-[10px] font-sans bg-gray-150 text-gray-500 px-2 py-1 rounded font-semibold border border-gray-300 uppercase tracking-widest no-print">TTD MANUAL</span>
+                                    <span class="text-[10px] font-sans bg-gray-100 text-gray-500 px-2 py-1 rounded font-semibold border border-gray-300 uppercase tracking-widest no-print">TTD MANUAL</span>
                                 @endif
                             </div>
                         </div>

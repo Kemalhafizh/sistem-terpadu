@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
             <h1 class="text-xl font-black text-gray-900 dark:text-white">Seleksi & Penyaluran: {{ $program->name }}</h1>
             <p class="text-xs text-gray-500 mt-1">Total Kuota: {{ $summary['total_quota'] }} Siswa | Sisa Kuota: {{ $summary['quota_remaining'] }} | Total Dicairkan: <strong class="text-emerald-600">Rp {{ number_format($summary['total_disbursed_amount'], 0, ',', '.') }}</strong></p>
@@ -16,7 +16,7 @@
     </div>
     @endif
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
         <h3 class="text-base font-black text-gray-900 dark:text-white mb-4">Daftar Pemohon Beasiswa</h3>
 
         <table class="w-full text-left text-sm text-gray-600 dark:text-gray-300">

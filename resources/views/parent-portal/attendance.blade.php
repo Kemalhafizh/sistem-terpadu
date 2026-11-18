@@ -18,7 +18,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Attendance Stats Widget (1/3 Column) -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-150/60 flex flex-col items-center justify-center text-center">
+                    <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-200/60 flex flex-col items-center justify-center text-center">
                         <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-6">Persentase Kehadiran Berjalan</p>
                         
                         <div class="relative w-40 h-40 flex items-center justify-center mb-8">
@@ -77,7 +77,7 @@
                             ];
                             $colorClass = $statusColors[$att->status] ?? 'bg-gray-100 text-gray-700 border-gray-200';
                         @endphp
-                        <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-150/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-all duration-300">
+                        <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-all duration-300">
                             <div class="flex items-center gap-4">
                                 <span class="px-4 py-2 border rounded-xl text-xs font-black uppercase tracking-wider {{ $colorClass }}">
                                     {{ $att->status }}

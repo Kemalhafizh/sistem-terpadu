@@ -28,7 +28,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                                <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                                     <th class="p-4">No. Pendaftaran</th>
                                     <th class="p-4">Nama Lengkap</th>
                                     <th class="p-4">Sekolah Asal</th>
@@ -52,7 +52,7 @@
                                                 min="0" 
                                                 max="100" 
                                                 required
-                                                class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-1.5 text-center font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                                                class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-center font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                                             >
                                         </td>
                                     </tr>

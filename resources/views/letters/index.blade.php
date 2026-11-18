@@ -11,7 +11,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 @if(in_array(auth()->user()->role, ['superadmin', 'admin', 'staf_tu']))
-                <a href="{{ route('letters.templates.index') }}" class="inline-flex items-center justify-center bg-gray-250 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-850 dark:text-gray-150 rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300">
+                <a href="{{ route('letters.templates.index') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300">
                      Kelola Template
                 </a>
                 <a href="{{ route('letters.bulk') }}" class="inline-flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300 shadow-md">
@@ -70,7 +70,7 @@
             <form action="{{ route('letters.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Tipe/Template Surat</label>
-                    <select name="template_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                    <select name="template_id" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">Semua Tipe</option>
                         @foreach($templates as $t)
                             <option value="{{ $t->id }}" {{ request('template_id') == $t->id ? 'selected' : '' }}>{{ $t->name }}</option>
@@ -79,7 +79,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Status Penerbitan</label>
-                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                    <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">Semua Status</option>
                         <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft (Belum Bernomor)</option>
                         <option value="issued" {{ request('status') === 'issued' ? 'selected' : '' }}>Diterbitkan (Issued)</option>
@@ -89,7 +89,7 @@
                 <div class="md:col-span-2 flex gap-2 items-end">
                     <div class="flex-grow">
                         <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Pencarian Kata Kunci</label>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor surat atau nama penerima..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-250 focus:ring-1 focus:ring-primary-500">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nomor surat atau nama penerima..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                     </div>
                     <button type="submit" class="bg-gray-800 dark:bg-gray-200 hover:bg-gray-900 dark:hover:bg-white text-white dark:text-gray-950 font-bold py-2.5 px-6 rounded-xl text-sm transition-all text-center">
                         Cari
@@ -214,7 +214,7 @@
             <form action="{{ route('letters.create') }}" method="GET" class="mt-6 space-y-4">
                 <div>
                     <label for="template_id" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Template Surat</label>
-                    <select name="template_id" id="template_id" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <select name="template_id" id="template_id" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">-- Pilih Template --</option>
                         @foreach($templates as $t)
                             <option value="{{ $t->id }}">{{ $t->name }} ({{ $t->code }})</option>

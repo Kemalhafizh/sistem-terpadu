@@ -84,7 +84,7 @@
                 </div>
                 <div class="flex gap-2">
                   <a href="{{ route('spmb.admin.scoring', $wave->id) }}" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all"> Input Nilai</a>
-                  <a href="{{ route('spmb.admin.selection', $wave->id) }}" class="px-3 py-1.5 bg-emerald-650 text-emerald-800 bg-emerald-50 border border-emerald-250 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-all"> Jalankan Seleksi</a>
+                  <a href="{{ route('spmb.admin.selection', $wave->id) }}" class="px-3 py-1.5 bg-emerald-700 text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-all"> Jalankan Seleksi</a>
                   <a href="{{ route('spmb.admin.reregistration', $wave->id) }}" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all"> Daftar Ulang</a>
                 </div>
               </div>
@@ -101,7 +101,7 @@
               <h3 class="font-black text-slate-800 text-sm">Periode Tahun Ajaran Aktif</h3>
             </div>
             <div class="p-6 text-center">
-              <span class="text-4xl bg-emerald-50 p-4 rounded-full border border-emerald-150 inline-block mb-3"></span>
+              <span class="text-4xl bg-emerald-50 p-4 rounded-full border border-emerald-200 inline-block mb-3"></span>
               @if($activeYear)
                 <h4 class="font-black text-slate-800 text-lg leading-tight">{{ $activeYear->year }}</h4>
                 <p class="text-xs text-slate-400 font-semibold uppercase mt-1">Semester {{ $activeYear->semester }}</p>
@@ -130,7 +130,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+              <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                 <th class="p-4">No. Pendaftaran</th>
                 <th class="p-4">Nama Lengkap</th>
                 <th class="p-4">Sekolah Asal</th>
@@ -167,11 +167,11 @@
                   </td>
                   <td class="p-4">
                     @if($app->status === 'accepted')
-                      <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-150">DITERIMA</span>
+                      <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-200">DITERIMA</span>
                     @elseif($app->status === 'rejected')
-                      <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-150">DITOLAK</span>
+                      <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-200">DITOLAK</span>
                     @else
-                      <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-150">{{ strtoupper($app->status) }}</span>
+                      <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-200">{{ strtoupper($app->status) }}</span>
                     @endif
                   </td>
                   <td class="p-4 text-center">

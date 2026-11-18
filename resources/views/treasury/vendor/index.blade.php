@@ -14,20 +14,20 @@
     </div>
     @include('treasury.partials.alerts')
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Terjadwal (belum jatuh tempo)</p>
             <div class="mt-2 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($summary['scheduled'], 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Terlambat (lewat jatuh tempo)</p>
             <div class="mt-2 text-2xl font-black text-rose-700">Rp {{ number_format($summary['overdue'], 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Dibayar bulan ini</p>
             <div class="mt-2 text-2xl font-black text-emerald-700">Rp {{ number_format($summary['paid_this_month'], 0, ',', '.') }}</div>
         </div>
     </div>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>

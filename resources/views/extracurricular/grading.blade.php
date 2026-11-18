@@ -31,7 +31,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-55 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
+                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider" style="width: 25%;">Nama Siswa / NISN</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider" style="width: 15%;">Kelas</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider" style="width: 15%;">Nilai Predikat</th>
@@ -46,14 +46,14 @@
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/10 transition-all">
                                 <td class="px-6 py-4">
                                     <input type="hidden" name="grades[{{ $index }}][member_id]" value="{{ $member->id }}">
-                                    <div class="font-bold text-gray-850 dark:text-white">{{ $member->student->name }}</div>
+                                    <div class="font-bold text-gray-900 dark:text-white">{{ $member->student->name }}</div>
                                     <p class="text-[10px] text-gray-400 mt-0.5">NISN: {{ $member->student->nisn ?? '-' }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-xs text-gray-500">
                                     {{ $member->student->classroom->name ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <select name="grades[{{ $index }}][grade]" class="bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-805 dark:text-white focus:outline-none w-32">
+                                    <select name="grades[{{ $index }}][grade]" class="bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white focus:outline-none w-32">
                                         <option value="">-- Predikat --</option>
                                         <option value="A" {{ old("grades.{$index}.grade", $existing->grade ?? '') === 'A' ? 'selected' : '' }}>A (Sangat Baik)</option>
                                         <option value="B" {{ old("grades.{$index}.grade", $existing->grade ?? '') === 'B' ? 'selected' : '' }}>B (Baik)</option>
@@ -62,7 +62,7 @@
                                     </select>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <input type="text" name="grades[{{ $index }}][description]" value="{{ old("grades.{$index}.description", $existing->description ?? '') }}" placeholder="Siswa aktif dan menguasai teknik dasar dengan sangat baik..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-805 dark:text-white focus:outline-none">
+                                    <input type="text" name="grades[{{ $index }}][description]" value="{{ old("grades.{$index}.description", $existing->description ?? '') }}" placeholder="Siswa aktif dan menguasai teknik dasar dengan sangat baik..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white focus:outline-none">
                                 </td>
                             </tr>
                         @empty

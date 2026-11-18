@@ -34,7 +34,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                            <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                                 <th class="p-4">No. Pendaftaran</th>
                                 <th class="p-4">Nama Lengkap</th>
                                 <th class="p-4">Jalur Seleksi</th>
@@ -51,9 +51,9 @@
                                     <td class="p-4 font-semibold text-slate-700">{{ $app->spmbTrack->name ?? 'Reguler' }}</td>
                                     <td class="p-4 text-center">
                                         @if($app->has_reregistered)
-                                            <span class="px-2.5 py-1 bg-emerald-550 text-emerald-700 bg-emerald-50 border border-emerald-200 text-[10px] font-black rounded-lg">SUDAH BAYAR / DAFTAR ULANG</span>
+                                            <span class="px-2.5 py-1 bg-emerald-600 text-emerald-700 bg-emerald-50 border border-emerald-200 text-[10px] font-black rounded-lg">SUDAH BAYAR / DAFTAR ULANG</span>
                                         @else
-                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-150">BELUM DAFTAR ULANG</span>
+                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-200">BELUM DAFTAR ULANG</span>
                                         @endif
                                     </td>
                                     <td class="p-4 text-center font-inter font-semibold">
@@ -70,7 +70,7 @@
                                                 <button type="submit" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg transition-all">Konfirmasi Bayar</button>
                                             </form>
                                         @else
-                                            <span class="text-slate-350 text-[11px] font-bold">Terkonfirmasi</span>
+                                            <span class="text-slate-300 text-[11px] font-bold">Terkonfirmasi</span>
                                         @endif
                                     </td>
                                 </tr>

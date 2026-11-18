@@ -98,7 +98,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                                <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                                     <th class="p-4">Nama Gelombang</th>
                                     <th class="p-4">Periode</th>
                                     <th class="p-4">Tanggal Pendaftaran</th>
@@ -120,9 +120,9 @@
                                         </td>
                                         <td class="p-4">
                                             @if($wave->status === 'open')
-                                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-150">OPEN</span>
+                                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-200">OPEN</span>
                                             @elseif($wave->status === 'closed')
-                                                <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-150">CLOSED</span>
+                                                <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-200">CLOSED</span>
                                             @else
                                                 <span class="px-2.5 py-1 bg-slate-100 text-slate-700 text-[10px] font-black rounded-lg border border-slate-200">{{ strtoupper($wave->status) }}</span>
                                             @endif

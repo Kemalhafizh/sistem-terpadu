@@ -20,12 +20,12 @@
         </div>
     @endif
     @if($funds->isEmpty())
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">Belum ada dana kas kecil.</div>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">Belum ada dana kas kecil.</div>
     @endif
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach($funds as $fund)
         @php($usage = $fund->imprest_amount > 0 ? min(100, round($fund->current_balance / $fund->imprest_amount * 100)) : 0)
-        <a href="{{ route('treasury.petty-cash.show', $fund->id) }}" class="block bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 hover:border-indigo-300 {{ $fund->is_active ? '' : 'opacity-60' }}">
+        <a href="{{ route('treasury.petty-cash.show', $fund->id) }}" class="block bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 hover:border-indigo-300 {{ $fund->is_active ? '' : 'opacity-60' }}">
             <h3 class="font-bold text-lg text-gray-900 dark:text-white">{{ $fund->fund_name }}</h3>
             <p class="text-gray-500 text-sm">Pemegang: {{ $fund->custodian?->name ?? '-' }}</p>
             <div class="mt-4 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($fund->current_balance, 0, ',', '.') }}</div>

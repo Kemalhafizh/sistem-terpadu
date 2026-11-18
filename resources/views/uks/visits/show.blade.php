@@ -28,7 +28,7 @@
                 <form action="{{ route('uks.visits.destroy', $visit->uuid) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan/menghapus catatan kunjungan ini? Stok obat yang diberikan akan dikembalikan otomatis.');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/20 dark:hover:bg-red-900/30 rounded-xl text-xs font-black uppercase tracking-wider transition-all border border-red-150 dark:border-red-900/30 shadow-sm">
+                    <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-950/20 dark:hover:bg-red-900/30 rounded-xl text-xs font-black uppercase tracking-wider transition-all border border-red-200 dark:border-red-900/30 shadow-sm">
                         <svg class="w-4 h-4 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
@@ -94,7 +94,7 @@
                             <!-- Treatment Section -->
                             <div class="space-y-1 md:col-span-2">
                                 <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Tindakan Medis / Penanganan</span>
-                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-850">
+                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800">
                                     {{ $visit->treatment ?: 'Tidak ada catatan tindakan penanganan.' }}
                                 </p>
                             </div>
@@ -102,14 +102,14 @@
                             <!-- Handler Info -->
                             <div class="space-y-1">
                                 <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Ditangani Oleh (Petugas)</span>
-                                <p class="text-sm font-extrabold text-gray-850 dark:text-gray-100">{{ $visit->handler->name ?? '-' }}</p>
+                                <p class="text-sm font-extrabold text-gray-900 dark:text-gray-100">{{ $visit->handler->name ?? '-' }}</p>
                                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wide">Pendidik / Tenaga Kependidikan</p>
                             </div>
 
                             <!-- Timing Info -->
                             <div class="space-y-1">
                                 <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Durasi Penanganan</span>
-                                <p class="text-sm font-extrabold text-gray-850 dark:text-gray-100">
+                                <p class="text-sm font-extrabold text-gray-900 dark:text-gray-100">
                                     {{ $visit->visit_time->translatedFormat('d M Y, H:i') }} WIB
                                 </p>
                                 @if($visit->leave_time)
@@ -158,7 +158,7 @@
                                                 <td class="p-4 text-sm font-extrabold text-gray-900 dark:text-white">
                                                     {{ $medicine->name }}
                                                 </td>
-                                                <td class="p-4 text-xs font-semibold text-gray-450 dark:text-gray-400 uppercase tracking-wider">
+                                                <td class="p-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                     {{ $medicine->category }}
                                                 </td>
                                                 <td class="p-4 text-sm font-extrabold text-gray-900 dark:text-white text-center">
@@ -170,7 +170,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="flex flex-col items-center justify-center py-6 text-center opacity-50 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-850">
+                            <div class="flex flex-col items-center justify-center py-6 text-center opacity-50 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-800">
                                 <svg class="w-10 h-10 text-gray-300 dark:text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                                 </svg>
@@ -196,7 +196,7 @@
                         <div class="space-y-4">
                             <!-- Blood Type -->
                             <div class="flex justify-between items-center">
-                                <span class="text-xs font-bold text-gray-450 dark:text-gray-450 uppercase tracking-wider">Gol. Darah</span>
+                                <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Gol. Darah</span>
                                 <span class="px-3 py-1 bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 rounded-xl text-xs font-black">
                                     {{ $visit->student->blood_type ?: 'Tidak Diketahui' }}
                                 </span>
@@ -204,8 +204,8 @@
 
                             <!-- Allergies -->
                             <div class="space-y-1">
-                                <span class="text-xs font-bold text-gray-450 dark:text-gray-450 uppercase tracking-wider block">Riwayat Alergi</span>
-                                <div class="p-3 bg-red-50/50 dark:bg-red-950/10 border border-red-100/50 dark:border-red-950/30 rounded-xl text-xs text-red-650 dark:text-red-400 font-bold leading-relaxed">
+                                <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider block">Riwayat Alergi</span>
+                                <div class="p-3 bg-red-50/50 dark:bg-red-950/10 border border-red-100/50 dark:border-red-950/30 rounded-xl text-xs text-red-700 dark:text-red-400 font-bold leading-relaxed">
                                     {{ $visit->student->allergies ?: 'Tidak ada riwayat alergi terdaftar.' }}
                                 </div>
                             </div>
@@ -215,7 +215,7 @@
                     <!-- WhatsApp Parent Alert Status Card -->
                     <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-700/50 space-y-6">
                         <h4 class="text-base font-black text-gray-900 dark:text-white flex items-center">
-                            <span class="w-2 h-5 bg-teal-650 rounded-full mr-3"></span>
+                            <span class="w-2 h-5 bg-teal-700 rounded-full mr-3"></span>
                             Notifikasi Orang Tua
                         </h4>
 
@@ -238,7 +238,7 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="text-xs font-black text-gray-550 dark:text-gray-400 uppercase tracking-widest">Tidak Dikirim</h5>
+                                        <h5 class="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Tidak Dikirim</h5>
                                         <p class="text-[10px] text-gray-400 dark:text-gray-500 font-bold mt-0.5">Kasus ringan / normal.</p>
                                     </div>
                                 @endif

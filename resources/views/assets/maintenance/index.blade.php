@@ -30,11 +30,11 @@
         @endif
 
         <!-- Filter Toolbar -->
-        <div class="bg-white dark:bg-gray-800 p-4 rounded-3xl shadow-sm border border-gray-150 dark:border-gray-700/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-700/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <form action="{{ route('admin.assets.maintenance.index') }}" method="GET" class="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div class="min-w-[200px]">
                     <label class="block text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">Saring Prioritas</label>
-                    <select name="priority" onchange="this.form.submit()" class="w-full rounded-xl border-gray-200 dark:border-gray-750 bg-gray-50 dark:bg-gray-900/50 text-xs font-bold focus:border-teal-500 focus:ring-teal-500 text-gray-700 dark:text-gray-300">
+                    <select name="priority" onchange="this.form.submit()" class="w-full rounded-xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-xs font-bold focus:border-teal-500 focus:ring-teal-500 text-gray-700 dark:text-gray-300">
                         <option value="">Semua Prioritas</option>
                         <option value="low" {{ $priorityFilter == 'low' ? 'selected' : '' }}>Low (Rendah)</option>
                         <option value="medium" {{ $priorityFilter == 'medium' ? 'selected' : '' }}>Medium (Sedang)</option>
@@ -44,7 +44,7 @@
                 </div>
                 @if($priorityFilter)
                     <div class="flex items-end">
-                        <a href="{{ route('admin.assets.maintenance.index') }}" class="px-4 py-2.5 bg-gray-100 dark:bg-gray-750 text-gray-600 dark:text-gray-400 rounded-xl text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all flex items-center space-x-1 self-end mt-5 sm:mt-0">
+                        <a href="{{ route('admin.assets.maintenance.index') }}" class="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-xl text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all flex items-center space-x-1 self-end mt-5 sm:mt-0">
                             <span>Hapus Filter</span>
                         </a>
                     </div>
@@ -60,8 +60,8 @@
             <div class="flex space-x-6 min-w-[1250px] lg:min-w-0 lg:grid lg:grid-cols-5 lg:space-x-0 lg:gap-4 items-start">
                 
                 <!-- 1. BARU (PENDING) -->
-                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-150 dark:border-gray-800/80 flex flex-col space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 pb-3">
+                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-200 dark:border-gray-800/80 flex flex-col space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
                             <h3 class="font-black text-sm text-gray-800 dark:text-gray-200 uppercase tracking-wider">Baru</h3>
@@ -81,8 +81,8 @@
                 </div>
 
                 <!-- 2. INVESTIGASI (INVESTIGATING) -->
-                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-150 dark:border-gray-800/80 flex flex-col space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 pb-3">
+                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-200 dark:border-gray-800/80 flex flex-col space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
                             <h3 class="font-black text-sm text-gray-800 dark:text-gray-200 uppercase tracking-wider">Investigasi</h3>
@@ -102,8 +102,8 @@
                 </div>
 
                 <!-- 3. PERBAIKAN (REPAIRING) -->
-                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-150 dark:border-gray-800/80 flex flex-col space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 pb-3">
+                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-200 dark:border-gray-800/80 flex flex-col space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                             <h3 class="font-black text-sm text-gray-800 dark:text-gray-200 uppercase tracking-wider">Perbaikan</h3>
@@ -123,8 +123,8 @@
                 </div>
 
                 <!-- 4. SELESAI (RESOLVED) -->
-                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-150 dark:border-gray-800/80 flex flex-col space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 pb-3">
+                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-200 dark:border-gray-800/80 flex flex-col space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                             <h3 class="font-black text-sm text-gray-800 dark:text-gray-200 uppercase tracking-wider">Selesai</h3>
@@ -144,8 +144,8 @@
                 </div>
 
                 <!-- 5. AFKIR (SCRAPPED) -->
-                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-150 dark:border-gray-800/80 flex flex-col space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 pb-3">
+                <div class="flex-1 min-w-[240px] bg-slate-50/50 dark:bg-gray-900/20 p-4 rounded-[2rem] border border-gray-200 dark:border-gray-800/80 flex flex-col space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                             <h3 class="font-black text-sm text-gray-800 dark:text-gray-200 uppercase tracking-wider">Afkir</h3>

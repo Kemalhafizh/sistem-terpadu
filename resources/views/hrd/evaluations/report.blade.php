@@ -25,7 +25,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-55 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
+                    <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
                         <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nama Pegawai & Periode</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Skor Kriteria (P | Pr | S | K)</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Rata-rata Skor</th>
@@ -44,12 +44,12 @@
                                 @php
                                     $scores = is_string($ev->criteria_scores) ? json_decode($ev->criteria_scores, true) : $ev->criteria_scores;
                                 @endphp
-                                <span class="font-mono text-gray-650 dark:text-gray-300">
+                                <span class="font-mono text-gray-700 dark:text-gray-300">
                                     {{ $scores['pedagogik'] ?? 0 }} | {{ $scores['profesional'] ?? 0 }} | {{ $scores['sosial'] ?? 0 }} | {{ $scores['kepribadian'] ?? 0 }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-xs font-bold">
-                                <span class="text-indigo-650 dark:text-indigo-400 text-sm font-black">{{ $ev->total_score }}</span>
+                                <span class="text-indigo-700 dark:text-indigo-400 text-sm font-black">{{ $ev->total_score }}</span>
                             </td>
                             <td class="px-6 py-4 text-xs font-black">
                                 <span class="px-2.5 py-1 text-[10px] rounded-lg {{ $ev->grade === 'A' ? 'bg-emerald-50 text-emerald-700' : ($ev->grade === 'B' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700') }}">

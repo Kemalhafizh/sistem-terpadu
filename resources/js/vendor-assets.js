@@ -23,5 +23,4 @@ import.meta.glob([
     '../../node_modules/marked/lib/marked.umd.js',
     '../../node_modules/qrcodejs/qrcode.min.js',
     '../../node_modules/sweetalert2/dist/sweetalert2.all.min.js',
-    '../../node_modules/@tailwindcss/browser/dist/index.global.js',
 ], { query: '?url', import: 'default', eager: true });

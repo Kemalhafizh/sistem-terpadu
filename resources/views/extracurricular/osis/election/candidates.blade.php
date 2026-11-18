@@ -26,7 +26,7 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Siswa Calon</label>
-                    <select name="student_id" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="student_id" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         @foreach($students as $st)
                             <option value="{{ $st->id }}">{{ $st->name }} (Class: {{ $st->classroom->name ?? '-' }})</option>
                         @endforeach
@@ -36,22 +36,22 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nomor Urut</label>
-                        <input type="number" name="candidate_number" min="1" required placeholder="e.g. 1" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
+                        <input type="number" name="candidate_number" min="1" required placeholder="e.g. 1" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-xs text-gray-800 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Foto Paslon</label>
-                        <input type="file" name="photo" class="w-full text-[10px] text-gray-450 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-750">
+                        <input type="file" name="photo" class="w-full text-[10px] text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-800">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Visi Pasangan Calon</label>
-                    <textarea name="vision" rows="2" placeholder="Visi paslon..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                    <textarea name="vision" rows="2" placeholder="Visi paslon..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Misi Pasangan Calon</label>
-                    <textarea name="mission" rows="3" placeholder="Misi paslon..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
+                    <textarea name="mission" rows="3" placeholder="Misi paslon..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-3 text-xs text-gray-800 dark:text-white focus:outline-none"></textarea>
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shadow-md">
@@ -78,7 +78,7 @@
                                 <span class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 font-extrabold text-[9px] rounded-lg">
                                     No Urut: {{ $cand->candidate_number }}
                                 </span>
-                                <h3 class="font-extrabold text-gray-850 dark:text-white text-base mt-1.5">{{ $cand->student->name }}</h3>
+                                <h3 class="font-extrabold text-gray-900 dark:text-white text-base mt-1.5">{{ $cand->student->name }}</h3>
                             </div>
                         </div>
 

@@ -18,7 +18,7 @@ return [
     'nav_contact' => 'Hubungi Kami',
 
     // Hero Section
-    'hero_badge' => 'Sistem Terpadu V2.0',
+    'hero_badge' => 'Sulaone — SISTA',
     'hero_title_1' => 'Membangun Generasi',
     'hero_title_2' => 'Khaira Ummah.',
     'hero_desc' => 'Platform digital manajemen pendidikan modern :school. Integrasi mulus antara sistem akademik, keuangan, hingga pemantauan ibadah harian siswa.',
@@ -30,7 +30,7 @@ return [
     'stats_teachers' => 'Guru & Staff',
     'stats_classes' => 'Kelas Virtual',
     'stats_alumni' => 'Alumni Sukses',
-    'stats_accreditation' => 'Akreditasi A',
+    'stats_accreditation' => 'Terakreditasi',
 
     // Footer
     'footer_tagline' => 'Mencetak generasi unggul yang cerdas dalam Iptek dan kokoh dalam Imtaq. Institusi pendidikan Islam terpercaya.',

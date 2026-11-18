@@ -10,7 +10,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ school_name() }}</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Profil: {{ $student->name ?? 'Siswa' }}</h2>
         <ul class="list-disc pl-5 text-sm text-gray-600 dark:text-gray-300">
             @forelse($accommodations ?? [] as $acc)

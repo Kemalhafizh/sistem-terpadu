@@ -54,7 +54,7 @@
                                 <th class="pb-3 text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-55/30 dark:divide-gray-700/30">
+                        <tbody class="divide-y divide-gray-50/30 dark:divide-gray-700/30">
                             @forelse($records as $rec)
                                 <tr class="group hover:bg-gray-50/55 dark:hover:bg-gray-900/10 transition-all">
                                     <td class="py-4">
@@ -77,22 +77,22 @@
                                             {{ $rec->blood_type === 'unknown' ? '?' : $rec->blood_type }}
                                         </span>
                                     </td>
-                                    <td class="py-4 max-w-xs text-xs font-semibold text-gray-650 dark:text-gray-400">
+                                    <td class="py-4 max-w-xs text-xs font-semibold text-gray-700 dark:text-gray-400">
                                         @if(!empty($rec->allergies))
                                             <div class="flex flex-wrap gap-1">
                                                 @foreach($rec->allergies as $alg)
-                                                    <span class="px-2 py-0.5 bg-red-50 dark:bg-red-950/20 text-red-650 dark:text-red-400 rounded text-[10px] font-bold">{{ $alg }}</span>
+                                                    <span class="px-2 py-0.5 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 rounded text-[10px] font-bold">{{ $alg }}</span>
                                                 @endforeach
                                             </div>
                                         @else
                                             <span class="text-gray-300 dark:text-gray-600">-</span>
                                         @endif
                                     </td>
-                                    <td class="py-4 max-w-xs text-xs font-semibold text-gray-650 dark:text-gray-400">
+                                    <td class="py-4 max-w-xs text-xs font-semibold text-gray-700 dark:text-gray-400">
                                         @if(!empty($rec->chronic_conditions))
                                             <div class="flex flex-wrap gap-1">
                                                 @foreach($rec->chronic_conditions as $cond)
-                                                    <span class="px-2 py-0.5 bg-amber-50 dark:bg-amber-950/20 text-amber-650 dark:text-amber-400 rounded text-[10px] font-bold">{{ $cond }}</span>
+                                                    <span class="px-2 py-0.5 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 rounded text-[10px] font-bold">{{ $cond }}</span>
                                                 @endforeach
                                             </div>
                                         @else

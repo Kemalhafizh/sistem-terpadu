@@ -28,7 +28,7 @@
             <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-2xl p-4 shadow-xs flex items-center justify-between group hover:shadow-md transition-all">
                 <div class="space-y-1">
                     <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Total Tiket</p>
-                    <h3 class="text-xl font-black text-slate-850 dark:text-white">{{ $total }}</h3>
+                    <h3 class="text-xl font-black text-slate-900 dark:text-white">{{ $total }}</h3>
                 </div>
                 <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
                     <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

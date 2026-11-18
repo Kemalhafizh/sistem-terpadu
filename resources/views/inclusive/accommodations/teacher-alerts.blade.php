@@ -10,7 +10,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ school_name() }}</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">
         <!-- Alerts output loop -->
         <p>Memuat peringatan terkait akomodasi siswa yang memerlukan perhatian khusus di kelas...</p>
     </div>

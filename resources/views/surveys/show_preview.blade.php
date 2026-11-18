@@ -17,7 +17,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
                 <div>
-                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-750 text-slate-600 dark:text-slate-300 border border-slate-200/50 rounded-full inline-block mb-1">
+                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/50 rounded-full inline-block mb-1">
                         Draf Survei & Kuesioner
                     </span>
                     <h1 class="text-3xl font-black tracking-tight text-slate-800 dark:text-white leading-tight">
@@ -172,7 +172,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 @foreach($question->options as $option)
                                     <div class="flex items-center p-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
-                                        <div class="w-4.5 h-4.5 rounded-full border-2 border-slate-350 dark:border-slate-650 mr-2 flex-shrink-0"></div>
+                                        <div class="w-4.5 h-4.5 rounded-full border-2 border-slate-300 dark:border-slate-700 mr-2 flex-shrink-0"></div>
                                         <span class="text-xs font-bold text-slate-600 dark:text-slate-400">{{ $option }}</span>
                                     </div>
                                 @endforeach
@@ -189,7 +189,7 @@
                                 <div class="flex items-center justify-between gap-2">
                                     @for($rating = $question->scale_min; $rating <= $question->scale_max; $rating++)
                                         <div class="flex-1 flex flex-col items-center justify-center py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
-                                            <div class="w-4 h-4 rounded-full border border-slate-350 dark:border-slate-650 mb-1"></div>
+                                            <div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 mb-1"></div>
                                             <span class="text-xs font-extrabold text-slate-500">{{ $rating }}</span>
                                         </div>
                                     @endfor

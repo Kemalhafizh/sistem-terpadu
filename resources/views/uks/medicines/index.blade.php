@@ -78,9 +78,9 @@
                         $stockPct = $med->stock > 0 ? min(100, max(0, ($med->stock / ($med->min_stock * 2)) * 100)) : 0;
                         
                         $catColors = [
-                            'P3K' => 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-250',
-                            'Vitamin' => 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-250',
-                            'Obat Umum' => 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-250'
+                            'P3K' => 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200',
+                            'Vitamin' => 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200',
+                            'Obat Umum' => 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-200'
                         ];
                         $catColor = $catColors[$med->category] ?? 'bg-gray-50 text-gray-700';
                     @endphp
@@ -96,7 +96,7 @@
                             <div class="flex items-center gap-1">
                                 <!-- Edit button (Alpine) -->
                                 <button type="button" @click="openEditModal({{ $med->toJson() }})" title="Edit Detail"
-                                        class="p-1.5 bg-gray-50 dark:bg-gray-900 border border-gray-150 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-750 text-gray-500 dark:text-gray-400 transition-all">
+                                        class="p-1.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-all">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                                     </svg>
@@ -107,7 +107,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" title="Hapus Obat" 
-                                            class="p-1.5 bg-gray-50 dark:bg-gray-900 border border-gray-150 dark:border-gray-700 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 text-red-600 transition-all">
+                                            class="p-1.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 text-red-600 transition-all">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
@@ -123,7 +123,7 @@
                             </h4>
                             
                             @if($med->notes)
-                                <p class="text-xs text-gray-450 dark:text-gray-400 leading-normal line-clamp-2 italic" title="{{ $med->notes }}">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 leading-normal line-clamp-2 italic" title="{{ $med->notes }}">
                                     "{{ $med->notes }}"
                                 </p>
                             @else
@@ -139,7 +139,7 @@
                                     {{ $med->stock }} Pcs
                                 </span>
                             </div>
-                            <div class="w-full bg-gray-150 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                                 <div class="h-full rounded-full {{ $isLowStock ? 'bg-red-500' : 'bg-teal-500' }}" style="width: {{ $stockPct }}%"></div>
                             </div>
                             <div class="flex justify-between text-[10px] font-bold text-gray-400 dark:text-gray-500">
@@ -161,12 +161,12 @@
                                         EXP SOON ({{ $med->expiry_date->translatedFormat('d/m/y') }})
                                     </span>
                                 @else
-                                    <span class="text-gray-650 dark:text-gray-350">
+                                    <span class="text-gray-700 dark:text-gray-300">
                                         {{ $med->expiry_date->translatedFormat('d M Y') }}
                                     </span>
                                 @endif
                             @else
-                                <span class="italic text-gray-300 dark:text-gray-650">Tidak Terdaftar</span>
+                                <span class="italic text-gray-300 dark:text-gray-600">Tidak Terdaftar</span>
                             @endif
                         </div>
                     </div>
@@ -191,9 +191,9 @@
         <x-modal name="add-medicine-modal" focusable>
             <form method="POST" action="{{ route('uks.medicines.store') }}" class="p-6 sm:p-8 space-y-6">
                 @csrf
-                <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-750">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
                     <h3 class="text-lg font-black text-gray-900 dark:text-white">Tambah Obat Inventaris Baru</h3>
-                    <button type="button" @click="$dispatch('close')" class="text-gray-400 hover:text-gray-650 transition-colors">
+                    <button type="button" @click="$dispatch('close')" class="text-gray-400 hover:text-gray-700 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -242,8 +242,8 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-750">
-                    <button type="button" @click="$dispatch('close')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-755 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <button type="button" @click="$dispatch('close')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                         Batal
                     </button>
                     <button type="submit" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-teal-600/10">
@@ -258,9 +258,9 @@
             <form method="POST" :action="`{{ route('uks.medicines.index') }}/${editMedicineId}`" class="p-6 sm:p-8 space-y-6">
                 @csrf
                 @method('PUT')
-                <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-750">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
                     <h3 class="text-lg font-black text-gray-900 dark:text-white">Edit Detail Obat</h3>
-                    <button type="button" @click="$dispatch('close')" class="text-gray-400 hover:text-gray-650 transition-colors">
+                    <button type="button" @click="$dispatch('close')" class="text-gray-400 hover:text-gray-700 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -309,8 +309,8 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-750">
-                    <button type="button" @click="$dispatch('close')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-755 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <button type="button" @click="$dispatch('close')" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                         Batal
                     </button>
                     <button type="submit" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-teal-600/10">

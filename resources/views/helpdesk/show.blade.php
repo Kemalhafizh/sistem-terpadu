@@ -13,12 +13,12 @@
           <h2 class="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
             Tiket #{{ $ticket->ticket_number }}
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Dibuat pada {{ $ticket->created_at->format('d F Y H:i') }} oleh <span class="font-extrabold text-slate-700 dark:text-slate-355">{{ $ticket->reporter?->name }}</span></p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Dibuat pada {{ $ticket->created_at->format('d F Y H:i') }} oleh <span class="font-extrabold text-slate-700 dark:text-slate-300">{{ $ticket->reporter?->name }}</span></p>
         </div>
       </div>
       <div class="flex items-center gap-2">
         <a href="{{ route('helpdesk.tickets.index') }}"
-          class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 transition-all duration-200">
+          class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200">
           Kembali
         </a>
       </div>
@@ -107,7 +107,7 @@
                 
                 // Color Scheme
                 if ($isInternalNote) {
-                  $bubbleBg = 'bg-amber-500/5 dark:bg-amber-500/10 border-amber-300/40 dark:border-amber-500/30 text-slate-800 dark:text-slate-250';
+                  $bubbleBg = 'bg-amber-500/5 dark:bg-amber-500/10 border-amber-300/40 dark:border-amber-500/30 text-slate-800 dark:text-slate-200';
                   $labelColor = 'text-amber-600 dark:text-amber-400';
                   $alignment = 'justify-start';
                 } elseif ($isReporter) {
@@ -175,7 +175,7 @@
               <div class="space-y-2">
                 <label for="body" class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ketik Tanggapan / Jawaban</label>
                 <textarea name="body" id="body" rows="4" required placeholder="Tuliskan respon, jawaban pemecahan masalah, atau update perkembangan di sini..."
-                     class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-850 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 resize-none"></textarea>
+                     class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-900 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 resize-none"></textarea>
               </div>
 
               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -240,7 +240,7 @@
             </span>
           </div>
 
-          <div class="pt-4 border-t border-gray-150 dark:border-slate-800/80">
+          <div class="pt-4 border-t border-gray-200 dark:border-slate-800/80">
             <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1">Batas Waktu Resolusi (SLA)</span>
             @if(in_array($ticket->status, ['resolved', 'closed']))
               <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
@@ -274,7 +274,7 @@
           <div class="space-y-3 text-xs">
             <div class="flex justify-between py-1 border-b border-gray-50 dark:border-slate-800/60">
               <span class="text-slate-400 font-bold">Kategori</span>
-              <span class="font-black text-slate-850 dark:text-slate-200 capitalize">{{ $ticket->category }}</span>
+              <span class="font-black text-slate-900 dark:text-slate-200 capitalize">{{ $ticket->category }}</span>
             </div>
             <div class="flex justify-between py-1 border-b border-gray-50 dark:border-slate-800/60">
               <span class="text-slate-400 font-bold">Prioritas</span>
@@ -291,7 +291,7 @@
             </div>
             <div class="flex justify-between py-1 border-b border-gray-50 dark:border-slate-800/60">
               <span class="text-slate-400 font-bold">Reporter</span>
-              <span class="font-black text-slate-850 dark:text-slate-200">{{ $ticket->reporter?->name }}</span>
+              <span class="font-black text-slate-900 dark:text-slate-200">{{ $ticket->reporter?->name }}</span>
             </div>
             <div class="flex justify-between py-1 border-b border-gray-50 dark:border-slate-800/60">
               <span class="text-slate-400 font-bold">Role Reporter</span>
@@ -299,7 +299,7 @@
             </div>
             <div class="flex justify-between py-1">
               <span class="text-slate-400 font-bold">Petugas Teknis</span>
-              <span class="font-black text-slate-850 dark:text-slate-200">{{ $ticket->assignee?->name ?? 'Belum Ditugaskan' }}</span>
+              <span class="font-black text-slate-900 dark:text-slate-200">{{ $ticket->assignee?->name ?? 'Belum Ditugaskan' }}</span>
             </div>
           </div>
         </div>
@@ -317,7 +317,7 @@
             <form action="{{ route('helpdesk.tickets.assign', $ticket->uuid) }}" method="POST" class="space-y-3">
               @csrf
               <div>
-                <select name="assignee_id" required class="w-full text-xs font-semibold rounded-xl border-gray-250 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-850 dark:text-white py-2.5 focus:border-indigo-500 transition-all">
+                <select name="assignee_id" required class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-900 dark:text-white py-2.5 focus:border-indigo-500 transition-all">
                   <option value="">-- Pilih Petugas / Teknisi --</option>
                   @foreach($staffList as $staff)
                     <option value="{{ $staff->id }}" {{ $ticket->assignee_id === $staff->id ? 'selected' : '' }}>
@@ -371,7 +371,7 @@
                       <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Catatan Resolusi Laporan</label>
                         <textarea name="resolution" rows="3" required placeholder="Tuliskan detail perbaikan yang telah dilakukan dan solusi penyelesaian masalah..."
-                             class="w-full text-xs font-semibold rounded-xl border-gray-250 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-850 dark:text-white px-3 py-2.5 focus:border-emerald-500 focus:ring-emerald-500/20 transition-all duration-200 resize-none"></textarea>
+                             class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-900 dark:text-white px-3 py-2.5 focus:border-emerald-500 focus:ring-emerald-500/20 transition-all duration-200 resize-none"></textarea>
                       </div>
                       <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black text-[9px] uppercase tracking-widest transition-all">
                         Simpan & Selesaikan Tiket

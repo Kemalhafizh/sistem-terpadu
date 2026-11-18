@@ -10,7 +10,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ school_name() }}</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 text-gray-600 dark:text-gray-300">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Tipe Diferensiasi: {{ ucfirst($plan->differentiation_type ?? '') }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">

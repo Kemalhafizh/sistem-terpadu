@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Label Barcode Buku Perpustakaan - SISTA</title>
+    <title>Cetak Label Barcode Buku Perpustakaan - Sulaone</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Libre+Barcode+128&display=swap" rel="stylesheet">
-    <x-vendor.script lib="tailwind-browser" />
-    <style type="text/tailwindcss">
-        /* Designed on Tailwind v3: keep its default border color. */
-        @layer base {
-            *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
-        }
-    </style>
+    @vite(['resources/css/app.css'])
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -69,7 +63,7 @@
                     <div class="border-b border-gray-200 pb-2 flex items-center justify-between">
                         <div>
                             <span class="text-[8px] font-black uppercase tracking-widest text-teal-700 block">{{ mb_strtoupper(school_short_name()) }}</span>
-                            <span class="text-[9px] font-bold text-gray-500 uppercase">Perpustakaan Digital SISTA</span>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase">Perpustakaan Sulaone — SISTA</span>
                         </div>
                         <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[9px] font-mono font-bold">
                             {{ $book->category->name ?? 'BUKU' }}

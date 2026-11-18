@@ -170,7 +170,7 @@
                     id="spmb_wave_id" 
                     x-model="formData.spmb_wave_id" 
                     required 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
                   >
                     <option value="">-- Pilih Gelombang --</option>
                     @foreach($openWaves ?? [] as $wave)
@@ -186,7 +186,7 @@
                     id="spmb_track_id" 
                     x-model="formData.spmb_track_id" 
                     required 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
                   >
                     <option value="">-- Pilih Jalur --</option>
                     @foreach($tracks ?? [] as $track)
@@ -209,7 +209,7 @@
                   id="full_name" 
                   x-model="formData.full_name" 
                   required 
-                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                   placeholder="{{ __('spmb.placeholder_name') }}"
                 >
                 <span class="text-xs text-red-500 font-medium" x-show="errors.full_name" x-text="errors.full_name"></span>
@@ -223,7 +223,7 @@
                     name="nisn" 
                     id="nisn" 
                     x-model="formData.nisn" 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                     placeholder="{{ __('spmb.placeholder_nisn') }}"
                   >
                   <span class="text-xs text-red-500 font-medium" x-show="errors.nisn" x-text="errors.nisn"></span>
@@ -235,7 +235,7 @@
                     id="gender" 
                     x-model="formData.gender" 
                     required 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
                   >
                     <option value="L">Laki-laki</option>
                     <option value="P">Perempuan</option>
@@ -253,7 +253,7 @@
                     id="birth_place" 
                     x-model="formData.birth_place" 
                     required 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                     placeholder="Kota tempat lahir"
                   >
                   <span class="text-xs text-red-500 font-medium" x-show="errors.birth_place" x-text="errors.birth_place"></span>
@@ -266,7 +266,7 @@
                     id="birth_date" 
                     x-model="formData.birth_date" 
                     required 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
                   >
                   <span class="text-xs text-red-500 font-medium" x-show="errors.birth_date" x-text="errors.birth_date"></span>
                 </div>
@@ -280,7 +280,7 @@
                   id="previous_school" 
                   x-model="formData.previous_school" 
                   required 
-                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                   placeholder="{{ __('spmb.placeholder_school') }}"
                 >
                 <span class="text-xs text-red-500 font-medium" x-show="errors.previous_school" x-text="errors.previous_school"></span>
@@ -299,7 +299,7 @@
                   id="parent_name" 
                   x-model="formData.parent_name" 
                   required 
-                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                   placeholder="Nama lengkap Ayah/Ibu/Wali"
                 >
                 <span class="text-xs text-red-500 font-medium" x-show="errors.parent_name" x-text="errors.parent_name"></span>
@@ -313,7 +313,7 @@
                   id="email" 
                   x-model="formData.email" 
                   required 
-                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                   placeholder="{{ __('spmb.placeholder_email') }}"
                 >
                 <p class="mt-1 text-[10px] text-slate-400">{{ __('spmb.email_info') }}</p>
@@ -328,7 +328,7 @@
                   id="parent_phone" 
                   x-model="formData.parent_phone" 
                   required 
-                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                   placeholder="{{ __('spmb.placeholder_phone') }}"
                 >
                 <p class="mt-1 text-[10px] text-slate-400">{{ __('spmb.phone_info') }}</p>
@@ -343,7 +343,7 @@
                   x-model="formData.address" 
                   required 
                   rows="3"
-                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                  class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                   placeholder="Alamat lengkap beserta RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
                 ></textarea>
                 <span class="text-xs text-red-500 font-medium" x-show="errors.address" x-text="errors.address"></span>
@@ -359,23 +359,23 @@
               <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div>
                   <label class="block font-bold text-xs text-slate-400 mb-1">Matematika <span class="text-red-500">*</span></label>
-                  <input type="number" step="0.01" name="rapor_scores[matematika]" x-model="formData.rapor_scores.matematika" required class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
+                  <input type="number" step="0.01" name="rapor_scores[matematika]" x-model="formData.rapor_scores.matematika" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
                 </div>
                 <div>
                   <label class="block font-bold text-xs text-slate-400 mb-1">IPA <span class="text-red-500">*</span></label>
-                  <input type="number" step="0.01" name="rapor_scores[ipa]" x-model="formData.rapor_scores.ipa" required class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
+                  <input type="number" step="0.01" name="rapor_scores[ipa]" x-model="formData.rapor_scores.ipa" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
                 </div>
                 <div>
                   <label class="block font-bold text-xs text-slate-400 mb-1">IPS <span class="text-red-500">*</span></label>
-                  <input type="number" step="0.01" name="rapor_scores[ips]" x-model="formData.rapor_scores.ips" required class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
+                  <input type="number" step="0.01" name="rapor_scores[ips]" x-model="formData.rapor_scores.ips" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
                 </div>
                 <div>
                   <label class="block font-bold text-xs text-slate-400 mb-1">B. Indo <span class="text-red-500">*</span></label>
-                  <input type="number" step="0.01" name="rapor_scores[indonesia]" x-model="formData.rapor_scores.indonesia" required class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
+                  <input type="number" step="0.01" name="rapor_scores[indonesia]" x-model="formData.rapor_scores.indonesia" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
                 </div>
                 <div>
                   <label class="block font-bold text-xs text-slate-400 mb-1">B. Inggris <span class="text-red-500">*</span></label>
-                  <input type="number" step="0.01" name="rapor_scores[inggris]" x-model="formData.rapor_scores.inggris" required class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
+                  <input type="number" step="0.01" name="rapor_scores[inggris]" x-model="formData.rapor_scores.inggris" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-center" placeholder="85">
                 </div>
               </div>
               <span class="text-xs text-red-500 font-medium" x-show="errors.rapor_scores" x-text="errors.rapor_scores"></span>
@@ -390,7 +390,7 @@
                     name="tahfidz_data[juz_count]" 
                     id="tahfidz_count" 
                     x-model="formData.tahfidz_data.juz_count" 
-                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                    class="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                     placeholder="Contoh: 2"
                   >
                 </div>
@@ -402,13 +402,13 @@
                       name="achievement_data[0][title]" 
                       id="achievement_title" 
                       x-model="formData.achievement_data[0].title" 
-                      class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary-500 focus:outline-none" 
+                      class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary-500 focus:outline-none" 
                       placeholder="Nama lomba/prestasi"
                     >
                     <select 
                       name="achievement_data[0][level]" 
                       x-model="formData.achievement_data[0].level" 
-                      class="block w-full bg-slate-50 border border-slate-250 rounded-xl px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                      class="block w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary-500 focus:outline-none"
                     >
                       <option value="">-- Tingkat --</option>
                       <option value="sekolah">Sekolah</option>
@@ -437,7 +437,7 @@
                     accept=".pdf,.jpg,.jpeg,.png" 
                     required 
                     @change="handleFileChange($event, 'document_kk')"
-                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-250 bg-white rounded-xl shadow-sm cursor-pointer"
+                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-200 bg-white rounded-xl shadow-sm cursor-pointer"
                   >
                   <span class="text-xs text-red-500 font-medium mt-1 block" x-show="errors.document_kk" x-text="errors.document_kk"></span>
                 </div>
@@ -452,7 +452,7 @@
                     accept=".pdf,.jpg,.jpeg,.png" 
                     required 
                     @change="handleFileChange($event, 'document_certificate')"
-                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-250 bg-white rounded-xl shadow-sm cursor-pointer"
+                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-200 bg-white rounded-xl shadow-sm cursor-pointer"
                   >
                   <span class="text-xs text-red-500 font-medium mt-1 block" x-show="errors.document_certificate" x-text="errors.document_certificate"></span>
                 </div>
@@ -466,7 +466,7 @@
                     id="document_skhun" 
                     accept=".pdf,.jpg,.jpeg,.png" 
                     @change="handleFileChange($event, 'document_skhun')"
-                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-250 bg-white rounded-xl shadow-sm cursor-pointer"
+                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-200 bg-white rounded-xl shadow-sm cursor-pointer"
                   >
                   <span class="text-xs text-red-500 font-medium mt-1 block" x-show="errors.document_skhun" x-text="errors.document_skhun"></span>
                 </div>
@@ -480,7 +480,7 @@
                     id="document_akta" 
                     accept=".pdf,.jpg,.jpeg,.png" 
                     @change="handleFileChange($event, 'document_akta')"
-                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-250 bg-white rounded-xl shadow-sm cursor-pointer"
+                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-200 bg-white rounded-xl shadow-sm cursor-pointer"
                   >
                   <span class="text-xs text-red-500 font-medium mt-1 block" x-show="errors.document_akta" x-text="errors.document_akta"></span>
                 </div>
@@ -495,7 +495,7 @@
                     accept=".jpg,.jpeg,.png" 
                     required 
                     @change="handleFileChange($event, 'photo')"
-                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-250 bg-white rounded-xl shadow-sm cursor-pointer"
+                    class="file-input block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-white file:text-slate-700 hover:file:bg-slate-50 border border-slate-200 bg-white rounded-xl shadow-sm cursor-pointer"
                   >
                   <span class="text-xs text-red-500 font-medium mt-1 block" x-show="errors.photo" x-text="errors.photo"></span>
                 </div>

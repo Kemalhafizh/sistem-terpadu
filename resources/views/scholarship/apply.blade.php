@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
         @if(isset($program))
         <h1 class="text-xl font-black text-gray-900 dark:text-white mb-1">Pendaftaran Beasiswa: {{ $program->name }}</h1>
         <p class="text-xs text-gray-500 mb-6">Besaran Bantuan: <strong class="text-emerald-600">Rp {{ number_format($program->amount_per_student, 0, ',', '.') }}</strong></p>

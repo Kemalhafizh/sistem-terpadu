@@ -27,7 +27,7 @@
                     </button>
                 @endif
                 
-                <button type="button" @click="$dispatch('open-modal', 'export-pdf-modal')" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-750 transition-all shadow-sm">
+                <button type="button" @click="$dispatch('open-modal', 'export-pdf-modal')" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm">
                      Cetak Laporan PDF
                 </button>
             </div>
@@ -215,7 +215,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Jenis Transaksi</label>
-                    <select id="type" name="type" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
+                    <select id="type" name="type" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
                         <option value="income">Kas Masuk (Pemasukan)</option>
                         <option value="expense">Kas Keluar (Pengeluaran)</option>
                     </select>
@@ -223,7 +223,7 @@
                 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kategori Kas</label>
-                    <select id="category" name="category" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
+                    <select id="category" name="category" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
                         <option value="Iuran">Iuran Bulanan Siswa</option>
                         <option value="Sponsor">Sponsorship / Sponsor</option>
                         <option value="Kegiatan">Pendanaan Kegiatan</option>
@@ -236,21 +236,21 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Nominal (Rupiah)</label>
-                    <input name="amount" type="number" min="1" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required />
+                    <input name="amount" type="number" min="1" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required />
                 </div>
                 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Tanggal Transaksi</label>
-                    <input name="transaction_date" type="date" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" value="{{ now()->toDateString() }}" required />
+                    <input name="transaction_date" type="date" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" value="{{ now()->toDateString() }}" required />
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Deskripsi / Catatan</label>
-                <input name="description" type="text" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required />
+                <input name="description" type="text" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required />
             </div>
 
-            <div class="flex justify-end gap-3 pt-4 border-t border-gray-150 dark:border-gray-700">
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button type="button" @click="$dispatch('close')" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white rounded-xl text-xs font-bold">Batal</button>
                 <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md">Simpan Transaksi</button>
             </div>
@@ -265,16 +265,16 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Tanggal Mulai</label>
-                    <input name="start_date" type="date" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" value="{{ now()->startOfMonth()->toDateString() }}" required />
+                    <input name="start_date" type="date" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" value="{{ now()->startOfMonth()->toDateString() }}" required />
                 </div>
                 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Tanggal Selesai</label>
-                    <input name="end_date" type="date" class="w-full bg-gray-55 dark:bg-gray-900 text-gray-850 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" value="{{ now()->toDateString() }}" required />
+                    <input name="end_date" type="date" class="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" value="{{ now()->toDateString() }}" required />
                 </div>
             </div>
 
-            <div class="flex justify-end gap-3 pt-4 border-t border-gray-150 dark:border-gray-700">
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button type="button" @click="$dispatch('close')" class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white rounded-xl text-xs font-bold">Batal</button>
                 <button type="submit" @click="$dispatch('close')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md">Ekspor Unduh PDF</button>
             </div>

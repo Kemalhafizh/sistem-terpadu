@@ -89,7 +89,7 @@
                     <!-- Filter Actions -->
                     <div class="md:col-span-4 flex justify-end gap-2 mt-2">
                         @if(request()->anyFilled(['search', 'severity', 'disposition']))
-                            <a href="{{ route('uks.visits.index') }}" class="px-4 py-2 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+                            <a href="{{ route('uks.visits.index') }}" class="px-4 py-2 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                                 Reset Filter
                             </a>
                         @endif
@@ -209,7 +209,7 @@
                                         <div class="flex items-center justify-end gap-1">
                                             <!-- Timeline History link -->
                                             <a href="{{ route('uks.student-history', $visit->student->id) }}" title="Riwayat Kesehatan Murid"
-                                               class="p-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-750 text-gray-500 dark:text-gray-400 transition-all">
+                                               class="p-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-all">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
@@ -226,7 +226,7 @@
 
                                             <!-- Edit Visit -->
                                             <a href="{{ route('uks.visits.edit', $visit->id) }}" title="Edit Kunjungan"
-                                               class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-amber-650 dark:text-amber-400 transition-all">
+                                               class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-amber-700 dark:text-amber-400 transition-all">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>

@@ -2,13 +2,13 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-teal-655 dark:text-teal-400">Log & Audit Trace</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-teal-700 dark:text-teal-400">Log & Audit Trace</span>
                 <h2 class="font-black text-3xl text-gray-800 dark:text-white leading-tight tracking-tight mt-1">
                     Riwayat Sinkronisasi Eksternal
                 </h2>
             </div>
             <a href="{{ route('admin.integration.sync.dashboard') }}" 
-               class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-150 flex items-center gap-1.5 shadow-sm">
+               class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 flex items-center gap-1.5 shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 <span>Dashboard Integrasi</span>
             </a>
@@ -31,14 +31,14 @@
                             <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-900/50">
                                     <tr>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Sistem Target</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Tabel Lokal</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Waktu Eksekusi</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Total Diproses</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Sukses</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Gagal</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Operator</th>
-                                        <th scope="col" class="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Log Audit</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Sistem Target</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Tabel Lokal</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Waktu Eksekusi</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Total Diproses</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Sukses</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Gagal</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Operator</th>
+                                        <th scope="col" class="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Log Audit</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
@@ -74,17 +74,17 @@
                                                 {{ $report->records_processed }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                <span class="text-xs font-bold text-emerald-650 dark:text-emerald-450 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-1 rounded-lg">
+                                                <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-1 rounded-lg">
                                                     {{ $report->records_success }}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                 @if($report->records_failed > 0)
-                                                    <span class="text-xs font-bold text-rose-650 dark:text-rose-455 bg-rose-50 dark:bg-rose-950/20 px-2.5 py-1 rounded-lg animate-pulse">
+                                                    <span class="text-xs font-bold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20 px-2.5 py-1 rounded-lg animate-pulse">
                                                         {{ $report->records_failed }}
                                                     </span>
                                                 @else
-                                                    <span class="text-xs font-bold text-gray-400 dark:text-gray-650 px-2.5 py-1">
+                                                    <span class="text-xs font-bold text-gray-400 dark:text-gray-600 px-2.5 py-1">
                                                         0
                                                     </span>
                                                 @endif
@@ -162,21 +162,21 @@
                                 <div class="p-4 bg-slate-50 dark:bg-gray-900/50 border border-slate-100 dark:border-gray-800 rounded-3xl">
                                     <div class="flex justify-between items-start gap-3">
                                         <div>
-                                            <p class="text-sm font-bold text-gray-905 dark:text-white" x-text="item.name"></p>
-                                            <p class="text-xs text-gray-405 mt-0.5 font-semibold" x-text="item.identifier"></p>
+                                            <p class="text-sm font-bold text-gray-900 dark:text-white" x-text="item.name"></p>
+                                            <p class="text-xs text-gray-500 mt-0.5 font-semibold" x-text="item.identifier"></p>
                                         </div>
                                         <span :class="item.severity === 'error' ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-100 dark:border-rose-900/30' : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-100 dark:border-amber-900/30'"
                                               class="px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider rounded-md border"
                                               x-text="item.severity">
                                         </span>
                                     </div>
-                                    <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs border-t border-gray-150/40 dark:border-gray-700/50 pt-2">
+                                    <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs border-t border-gray-200/40 dark:border-gray-700/50 pt-2">
                                         <div>
-                                            <span class="font-bold text-teal-650 dark:text-teal-400">Kolom Bermasalah:</span> 
+                                            <span class="font-bold text-teal-700 dark:text-teal-400">Kolom Bermasalah:</span> 
                                             <code class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-[10px] font-semibold ml-1" x-text="item.field"></code>
                                         </div>
                                         <div>
-                                            <span class="font-bold text-rose-650 dark:text-rose-455">Masalah:</span> 
+                                            <span class="font-bold text-rose-700 dark:text-rose-400">Masalah:</span> 
                                             <span class="text-gray-600 dark:text-gray-300 font-medium ml-1" x-text="item.issue"></span>
                                         </div>
                                     </div>
@@ -187,7 +187,7 @@
                 </div>
                 
                 <div class="pt-4 border-t border-gray-100 dark:border-gray-700 mt-4 flex justify-end">
-                    <button @click="showModal = false" class="px-6 py-2.5 bg-teal-655 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all">
+                    <button @click="showModal = false" class="px-6 py-2.5 bg-teal-700 hover:bg-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all">
                         Tutup Log
                     </button>
                 </div>

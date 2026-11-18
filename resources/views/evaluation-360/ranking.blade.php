@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm flex justify-between items-center">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-gray-900 dark:text-white">Peringkat Evaluasi Kinerja Guru (Teacher Leaderboard)</h1>
             <p class="text-xs text-gray-500 mt-1">Ranking Kinerja Guru Teratas Berdasarkan Konsolidasi 360° & EDOM</p>
@@ -10,7 +10,7 @@
         <a href="{{ route('hc.evaluation.cycles') }}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-bold text-xs">Kembali</a>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 overflow-x-auto">
         <table class="w-full text-left text-sm text-gray-600 dark:text-gray-300">
             <thead class="bg-gray-50 dark:bg-gray-900 text-xs font-bold text-gray-400 uppercase">
                 <tr>

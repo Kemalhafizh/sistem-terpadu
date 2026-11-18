@@ -28,7 +28,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Ledger Integrity Status Banner -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-4">
                     <div class="p-4 rounded-2xl {{ $integrity['is_valid'] ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500' }}">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@
             </div>
 
             <!-- Cryptographic Audit Log Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
                         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Immutable Audit Trail (Rantai Log Kriptografi)</h3>
@@ -71,7 +71,7 @@
                                 <th class="p-3 text-right rounded-r-xl">Waktu Transaksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-750 font-medium">
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700 font-medium">
                             @forelse($logs as $log)
                                 <tr>
                                     <td class="p-3 font-mono font-bold text-gray-900 dark:text-white">#{{ $log->id }}</td>
@@ -108,7 +108,7 @@
             </div>
 
             <!-- Enterprise Role-Permission Matrix Section -->
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                 <div>
                     <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Matriks Peran & Hak Akses Enterprise (RBAC Matrix)</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Pemetaan hak akses granular per peran pengguna pada {{ school_name() }}.</p>

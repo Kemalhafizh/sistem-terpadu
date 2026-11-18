@@ -111,7 +111,7 @@
                                 <td class="px-6 py-6 text-center">
                                     @switch($donation->status)
                                         @case('pending')
-                                            <span class="inline-block px-3 py-1 bg-amber-100 text-amber-750 dark:bg-amber-950/30 dark:text-amber-400 rounded-full text-[9px] font-black tracking-widest uppercase">
+                                            <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 dark:bg-amber-950/30 dark:text-amber-400 rounded-full text-[9px] font-black tracking-widest uppercase">
                                                 Pending
                                             </span>
                                             @break

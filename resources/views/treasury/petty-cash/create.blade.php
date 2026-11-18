@@ -4,7 +4,7 @@
     @include('treasury.partials.nav')
     <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6">{{ school_name() }} - Tambah Kas Kecil</h1>
     @include('treasury.partials.alerts')
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
         @if($funds->isEmpty())
             <p class="text-gray-600 dark:text-gray-300">Belum ada dana kas kecil yang aktif. <a href="{{ route('treasury.petty-cash.funds.create') }}" class="text-indigo-600 font-bold">Buat dana</a> terlebih dahulu.</p>
         @else

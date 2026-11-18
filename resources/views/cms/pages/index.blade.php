@@ -5,7 +5,7 @@
                 {{ __('Kelola Halaman Statis') }}
             </h2>
             <div class="flex space-x-2">
-                <a href="{{ route('cms.dashboard') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-250 text-gray-700 text-sm font-semibold rounded-xl transition-all flex items-center space-x-1">
+                <a href="{{ route('cms.dashboard') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-xl transition-all flex items-center space-x-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     <span>Dashboard CMS</span>
                 </a>
@@ -25,7 +25,7 @@
                 </div>
             @endif
 
-            <div class="bg-white shadow-sm border border-gray-150 rounded-xl overflow-hidden">
+            <div class="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">

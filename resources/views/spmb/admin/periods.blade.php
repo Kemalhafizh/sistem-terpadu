@@ -72,7 +72,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-150 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                                <tr class="bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-wider">
                                     <th class="p-4">Nama Periode</th>
                                     <th class="p-4">Tahun Ajaran</th>
                                     <th class="p-4">Kuota</th>
@@ -88,9 +88,9 @@
                                         <td class="p-4 font-inter font-semibold text-slate-700">{{ $period->total_quota }} Siswa</td>
                                         <td class="p-4">
                                             @if($period->status === 'open')
-                                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-150">ACTIVE / OPEN</span>
+                                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-lg border border-emerald-200">ACTIVE / OPEN</span>
                                             @elseif($period->status === 'closed')
-                                                <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-150">CLOSED</span>
+                                                <span class="px-2.5 py-1 bg-red-50 text-red-700 text-[10px] font-black rounded-lg border border-red-200">CLOSED</span>
                                             @else
                                                 <span class="px-2.5 py-1 bg-slate-100 text-slate-700 text-[10px] font-black rounded-lg border border-slate-200">{{ strtoupper($period->status) }}</span>
                                             @endif

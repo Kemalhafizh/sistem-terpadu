@@ -53,7 +53,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-55 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
+                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nama Siswa / NISN</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Hadir (H)</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Sakit (S)</th>

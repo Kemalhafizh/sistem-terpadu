@@ -11,18 +11,18 @@
     </div>
     @include('treasury.partials.alerts')
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">{{ $account->account_name }} &middot; {{ ['giro' => 'Giro', 'tabungan' => 'Tabungan', 'virtual_account' => 'Virtual Account'][$account->account_type] ?? $account->account_type }}</p>
             <div class="mt-2 flex flex-wrap gap-2">
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-medium {{ $account->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700' }}">{{ $account->is_active ? 'Aktif' : 'Nonaktif' }}</span>
                 @if($account->is_primary)<span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">Utama</span>@endif
             </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             <p class="text-sm text-gray-500">Saldo awal yang diinput</p>
             <div class="mt-2 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($account->current_balance, 0, ',', '.') }}</div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
             @if($account->latestPosition)
                 <p class="text-sm text-gray-500">Saldo akhir posisi kas {{ $account->latestPosition->position_date->format('d/m/Y') }}</p>
                 <div class="mt-2 text-2xl font-black text-gray-900 dark:text-white">Rp {{ number_format($account->latestPosition->closing_balance, 0, ',', '.') }}</div>
@@ -34,7 +34,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
             <h3 class="px-6 pt-6 font-bold text-lg text-gray-900 dark:text-white">Rekening Koran Terakhir</h3>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4 text-sm">
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">
@@ -51,7 +51,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm">
             <h3 class="px-6 pt-6 font-bold text-lg text-gray-900 dark:text-white">Posisi Kas Harian</h3>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4 text-sm">
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">
@@ -68,7 +68,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm lg:col-span-2">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm lg:col-span-2">
             <h3 class="px-6 pt-6 font-bold text-lg text-gray-900 dark:text-white">Pembayaran Vendor dari Rekening Ini</h3>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4 text-sm">
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600 dark:text-gray-300">

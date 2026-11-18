@@ -25,7 +25,7 @@
                 <form method="GET" action="{{ route('alumni.tracer-study.invitation') }}" class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Angkatan Alumni</label>
-                        <select name="year" onchange="this.form.submit()" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                        <select name="year" onchange="this.form.submit()" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                             @foreach($graduationYears as $yr)
                                 <option value="{{ $yr }}" {{ $selectedYear == $yr ? 'selected' : '' }}>Angkatan {{ $yr }}</option>
                             @endforeach
@@ -65,7 +65,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-150 dark:border-gray-700/50">
+                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700/50">
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nama Alumni</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Kontak Terdaftar</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Draf Teks Undangan</th>
@@ -76,8 +76,8 @@
                         @forelse($unresponsiveAlumni as $al)
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/10 transition-all">
                                 <td class="px-6 py-4">
-                                    <div class="font-bold text-gray-850 dark:text-white">{{ $al->student->name }}</div>
-                                    <p class="text-[10px] text-gray-450 mt-0.5">NISN: {{ $al->student->nisn ?? '-' }}</p>
+                                    <div class="font-bold text-gray-900 dark:text-white">{{ $al->student->name }}</div>
+                                    <p class="text-[10px] text-gray-500 mt-0.5">NISN: {{ $al->student->nisn ?? '-' }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-xs text-gray-500">
                                     <p class="font-medium">{{ $al->email ?? $al->student->user->email }}</p>

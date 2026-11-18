@@ -38,7 +38,7 @@
                                 <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
                             <input type="text" name="search" id="global-search" value="{{ request('search') }}" 
-                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-slate-650 rounded-lg leading-5 bg-gray-50 dark:bg-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm transition duration-150 ease-in-out" 
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-slate-700 rounded-lg leading-5 bg-gray-50 dark:bg-slate-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm transition duration-150 ease-in-out" 
                                 placeholder="Cari Nama atau Email...">
                         </div>
                     </form>
@@ -49,7 +49,7 @@
                         @if(request('search'))
                             <input type="hidden" name="search" value="{{ request('search') }}">
                         @endif
-                        <select name="role" class="block w-40 md:w-48 py-2 px-3 border border-gray-300 dark:border-slate-650 bg-gray-50 dark:bg-slate-900 rounded-lg focus:outline-none focus:ring-primary-500 sm:text-sm text-gray-700 dark:text-slate-350">
+                        <select name="role" class="block w-40 md:w-48 py-2 px-3 border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 rounded-lg focus:outline-none focus:ring-primary-500 sm:text-sm text-gray-700 dark:text-slate-300">
                             <option value="">Semua Peran</option>
                             <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="guru" {{ request('role') == 'guru' ? 'selected' : '' }}>Guru</option>
@@ -69,7 +69,7 @@
                 </x-slot>
 
                 @foreach ($users as $user)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-750/30 transition-colors">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
                         <td class="py-4 px-6">
                             <div class="flex items-center">
                                 <div class="h-10 w-10 shrink-0 bg-primary-100 dark:bg-primary-950/60 rounded-full flex items-center justify-center border border-primary-200/50 dark:border-primary-900/40">
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="py-4 px-6 text-sm text-gray-550 dark:text-slate-350">
+                        <td class="py-4 px-6 text-sm text-gray-600 dark:text-slate-300">
                             {{ $user->email }}
                         </td>
                         <td class="py-4 px-6 text-sm">

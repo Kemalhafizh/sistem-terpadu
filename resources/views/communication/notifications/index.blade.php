@@ -62,7 +62,7 @@
             </div>
 
             <!-- Notifications List Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm overflow-hidden divide-y divide-gray-100 dark:divide-gray-700">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm overflow-hidden divide-y divide-gray-100 dark:divide-gray-700">
                 @forelse($notifications as $notif)
                     <div class="p-6 transition-colors flex flex-col md:flex-row items-start justify-between gap-4 {{ $notif->isRead() ? 'bg-white dark:bg-gray-800 opacity-80' : 'bg-indigo-50/40 dark:bg-indigo-950/20' }}">
                         <div class="flex items-start gap-4">
@@ -123,7 +123,7 @@
 
             <!-- Admin Test Notification Trigger Card -->
             @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin')
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm space-y-4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm space-y-4">
                     <div class="border-b border-gray-100 dark:border-gray-700 pb-3">
                         <h3 class="text-base font-black text-gray-900 dark:text-white">Uji Coba Pancaran Notifikasi Terpadu (Admin Panel)</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400">Pancarkan notifikasi simulasi untuk menguji sistem multi-channel delivery.</p>

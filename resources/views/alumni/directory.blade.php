@@ -30,11 +30,11 @@
             <form method="GET" action="{{ route('alumni.directory') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Cari Nama/Instansi</label>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, universitas, profesi..." class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, universitas, profesi..." class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Tahun Angkatan</label>
-                    <select name="year" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select name="year" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Semua Angkatan</option>
                         @foreach($graduationYears as $yr)
                             <option value="{{ $yr }}" {{ request('year') == $yr ? 'selected' : '' }}>Angkatan {{ $yr }}</option>
@@ -43,7 +43,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Aktivitas</label>
-                    <select name="activity" class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select name="activity" class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Semua Aktivitas</option>
                         <option value="study" {{ request('activity') == 'study' ? 'selected' : '' }}>Kuliah</option>
                         <option value="work" {{ request('activity') == 'work' ? 'selected' : '' }}>Bekerja</option>

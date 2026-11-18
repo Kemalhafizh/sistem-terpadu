@@ -41,7 +41,7 @@
                         <span>Ketuntasan Belajar</span>
                         <span class="text-emerald-600 dark:text-emerald-400 font-extrabold">{{ $progressData['completion_percentage'] }}%</span>
                     </div>
-                    <div class="w-full h-2 bg-gray-150 dark:bg-slate-900 rounded-full overflow-hidden">
+                    <div class="w-full h-2 bg-gray-100 dark:bg-slate-900 rounded-full overflow-hidden">
                         <div class="h-full bg-emerald-500 rounded-full" style="width: {{ $progressData['completion_percentage'] }}%"></div>
                     </div>
                     <div class="flex justify-between text-[9px] text-gray-400 font-bold uppercase tracking-wider">

@@ -36,7 +36,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- System Lockdown Banner -->
-            <div class="rounded-3xl p-6 border shadow-lg relative overflow-hidden transition-all duration-500 {{ $isLockdown ? 'bg-gradient-to-r from-rose-950 via-rose-900 to-rose-950 border-rose-500/50 text-white' : 'bg-gradient-to-r from-gray-900 via-gray-850 to-gray-900 border-gray-800 text-white' }}">
+            <div class="rounded-3xl p-6 border shadow-lg relative overflow-hidden transition-all duration-500 {{ $isLockdown ? 'bg-gradient-to-r from-rose-950 via-rose-900 to-rose-950 border-rose-500/50 text-white' : 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-gray-800 text-white' }}">
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div class="space-y-2 max-w-2xl">
                         <div class="flex items-center gap-3">
@@ -67,7 +67,7 @@
 
             <!-- Stats Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Status Lockdown</span>
                         <h4 class="text-xl font-black mt-1 {{ $isLockdown ? 'text-rose-500' : 'text-emerald-500' }}">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Ancaman Unresolved</span>
                         <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-1">{{ number_format($unresolvedCount) }} Event</h4>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-rose-500 uppercase tracking-wider">IP Terblokir</span>
                         <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-1">{{ number_format($blockedIpsCount) }} IP</h4>
@@ -105,7 +105,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-blue-500 uppercase tracking-wider">Log Hari Ini</span>
                         <h4 class="text-2xl font-black text-gray-900 dark:text-white mt-1">{{ number_format($todayThreatsCount) }} Event</h4>
@@ -122,7 +122,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 <!-- Left: Recent Threat Logs Table -->
-                <div class="lg:col-span-7 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                <div class="lg:col-span-7 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
@@ -141,7 +141,7 @@
                                     <th class="p-3 text-right rounded-r-xl">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100 dark:divide-gray-750 font-medium">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700 font-medium">
                                 @forelse($recentThreats as $threat)
                                     <tr>
                                         <td class="p-3">
@@ -181,7 +181,7 @@
                 </div>
 
                 <!-- Right: Blocked IPs Panel -->
-                <div class="lg:col-span-5 bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+                <div class="lg:col-span-5 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Daftar IP Address Terblokir</h3>
                         <button @click="blockIpModalOpen = true" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-[10px] uppercase transition-all shadow-md">
@@ -191,7 +191,7 @@
 
                     <div class="space-y-3">
                         @forelse($blockedIps as $bIp)
-                            <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-750 flex items-center justify-between text-xs">
+                            <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-700 flex items-center justify-between text-xs">
                                 <div>
                                     <strong class="font-mono text-rose-600 dark:text-rose-400 block font-bold">{{ $bIp->ip_address }}</strong>
                                     <span class="text-[10px] text-gray-500 italic block">{{ $bIp->reason ?? 'Tidak ada alasan' }}</span>

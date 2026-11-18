@@ -3,17 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIAKAD Secure Payment Gateway</title>
-    <x-vendor.script lib="tailwind-browser" />
-    <style type="text/tailwindcss">
-        @theme {
-            /* Same primary palette as resources/css/app.css */
-            --color-primary-50: #ecfdf5;
-            --color-primary-500: #10b981;
-            --color-primary-600: #059669;
-            --color-primary-900: #064e3b;
-        }
-    </style>
+    <title>Simulasi Pembayaran — Sulaone</title>
+    @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Outfit', sans-serif; }
@@ -27,8 +18,8 @@
                 <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse mr-2"></div>
                 <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Secure Session Active</span>
             </div>
-            <h1 class="text-xl font-black mt-2 tracking-tight">Sultan Agung Payment Hub</h1>
-            <p class="text-[10px] uppercase font-bold opacity-60 tracking-widest mt-1">Payment Gateway Simulation</p>
+            <h1 class="text-xl font-black mt-2 tracking-tight">Sulaone Payment Simulator</h1>
+            <p class="text-[10px] uppercase font-bold opacity-60 tracking-widest mt-1">{{ school_short_name() }} • SISTA</p>
         </div>
 
         <!-- Order Summary -->

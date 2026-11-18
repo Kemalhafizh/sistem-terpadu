@@ -121,7 +121,7 @@
                             @if($loan->return_notes)
                                 <div class="border-t border-emerald-100 pt-3">
                                     <span class="block text-[10px] font-black text-emerald-600 uppercase tracking-wider mb-1">Catatan Pengembalian</span>
-                                    <div class="text-sm text-emerald-850 italic">"{{ $loan->return_notes }}"</div>
+                                    <div class="text-sm text-emerald-900 italic">"{{ $loan->return_notes }}"</div>
                                 </div>
                             @endif
                         </div>

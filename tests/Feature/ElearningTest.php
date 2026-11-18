@@ -31,7 +31,7 @@ beforeEach(function () {
 
 test('pwa assets exist on disk', function () {
     $this->assertFileExists(public_path('manifest.json'));
-    $this->assertFileExists(public_path('service-worker.js'));
+    $this->get('/sw.js')->assertOk();
 });
 
 test('teacher can create virtual class', function () {

@@ -18,7 +18,7 @@
         belum dibayar Rp {{ number_format($totals['due'], 0, ',', '.') }} &middot;
         sudah dibayar Rp {{ number_format($totals['paid'], 0, ',', '.') }}
     </p>
-    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700 shadow-sm overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-x-auto">
         <table class="min-w-full table-fixed border-collapse text-sm">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>

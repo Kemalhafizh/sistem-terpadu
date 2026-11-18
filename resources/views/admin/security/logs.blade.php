@@ -24,7 +24,7 @@
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Filter Toolbar -->
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
                 <form action="{{ route('admin.security.logs') }}" method="GET" class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                     <div>
                         <select name="severity" onchange="this.form.submit()" class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-xs font-semibold rounded-xl px-3 py-2 focus:ring-2 focus:ring-rose-500">
@@ -51,7 +51,7 @@
             </div>
 
             <!-- Logs Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
+            <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-gray-50 dark:bg-gray-900/50 text-gray-400 uppercase text-[9px] font-bold">
@@ -64,7 +64,7 @@
                                 <th class="p-3 text-right rounded-r-xl">Status & Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-750 font-medium">
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700 font-medium">
                             @forelse($logs as $log)
                                 <tr>
                                     <td class="p-3">

@@ -91,7 +91,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Popular Posts Table -->
-                <div class="bg-white shadow-sm border border-gray-150 sm:rounded-xl overflow-hidden">
+                <div class="bg-white shadow-sm border border-gray-200 sm:rounded-xl overflow-hidden">
                     <div class="p-6 border-b border-gray-100">
                         <h3 class="text-base font-bold text-gray-800">Artikel Terpopuler</h3>
                     </div>
@@ -122,7 +122,7 @@
                 </div>
 
                 <!-- Recent Posts Table -->
-                <div class="bg-white shadow-sm border border-gray-150 sm:rounded-xl overflow-hidden">
+                <div class="bg-white shadow-sm border border-gray-200 sm:rounded-xl overflow-hidden">
                     <div class="p-6 border-b border-gray-100">
                         <h3 class="text-base font-bold text-gray-800">Artikel Terbaru</h3>
                     </div>

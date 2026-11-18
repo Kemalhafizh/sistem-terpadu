@@ -23,7 +23,7 @@
 
             <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <!-- Top Header banner -->
-                <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-750 flex flex-wrap items-center justify-between gap-4">
+                <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700 flex flex-wrap items-center justify-between gap-4">
                     <div class="flex flex-wrap items-center gap-2">
                         <!-- Category -->
                         <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider {{ 
@@ -60,9 +60,9 @@
                         <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">
                             {{ $announcement->title }}
                         </h1>
-                        <div class="mt-3 flex items-center text-sm font-bold text-gray-500 dark:text-gray-450">
-                            <span class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-750 flex items-center justify-center mr-2 text-base"></span>
-                            {{ __('Diterbitkan oleh') }} <span class="text-gray-800 dark:text-gray-250 ml-1">{{ $announcement->creator->name }}</span>
+                        <div class="mt-3 flex items-center text-sm font-bold text-gray-500 dark:text-gray-400">
+                            <span class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-2 text-base"></span>
+                            {{ __('Diterbitkan oleh') }} <span class="text-gray-800 dark:text-gray-200 ml-1">{{ $announcement->creator->name }}</span>
                         </div>
                     </div>
 
@@ -87,7 +87,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-sm font-bold text-gray-900 dark:text-white">Dokumen Lampiran Pengumuman</h4>
-                                    <p class="text-xs text-gray-500 dark:text-gray-450 mt-0.5">Silakan unduh berkas pendukung di bawah ini.</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Silakan unduh berkas pendukung di bawah ini.</p>
                                 </div>
                             </div>
                             <a href="{{ Storage::url($announcement->attachment_path) }}" target="_blank" download class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-indigo-600/10">

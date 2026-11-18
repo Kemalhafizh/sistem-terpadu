@@ -26,7 +26,7 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Pilih Siswa</label>
-                    <select name="student_id" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="student_id" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         @foreach($students as $st)
                             <option value="{{ $st->id }}">{{ $st->name }} (Class: {{ $st->classroom->name ?? '-' }})</option>
                         @endforeach
@@ -35,7 +35,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Jabatan Kepengurusan</label>
-                    <select name="position" required class="w-full bg-gray-55/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
+                    <select name="position" required class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-white focus:outline-none">
                         <option value="Ketua Umum">Ketua Umum</option>
                         <option value="Wakil Ketua">Wakil Ketua</option>
                         <option value="Sekretaris I">Sekretaris I</option>
@@ -69,7 +69,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-55 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
+                        <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200/50 dark:border-gray-700/50">
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nama Pengurus</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Jabatan</th>
                             <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-center">Status</th>
@@ -83,7 +83,7 @@
                                     <div class="font-bold text-gray-800 dark:text-white">{{ $mb->student->name }}</div>
                                     <p class="text-[10px] text-gray-400 mt-0.5">NISN: {{ $mb->student->nisn ?? '-' }}</p>
                                 </td>
-                                <td class="px-6 py-4 text-xs font-bold text-gray-750 dark:text-gray-300">
+                                <td class="px-6 py-4 text-xs font-bold text-gray-800 dark:text-gray-300">
                                     {{ $mb->position }}
                                 </td>
                                 <td class="px-6 py-4 text-center text-xs">

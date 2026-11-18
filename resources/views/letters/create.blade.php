@@ -104,14 +104,14 @@
                 <!-- issue_date -->
                 <div>
                     <label for="issue_date" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Tanggal Surat</label>
-                    <input type="date" name="issue_date" id="issue_date" x-model="issue_date" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <input type="date" name="issue_date" id="issue_date" x-model="issue_date" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                 </div>
 
                 <!-- student_id -->
                 @if(in_array('student_id', $template->required_fields))
                 <div>
                     <label for="student_id" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Pilih Siswa</label>
-                    <select name="student_id" id="student_id" x-model="student_id" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <select name="student_id" id="student_id" x-model="student_id" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">-- Pilih Siswa --</option>
                         @foreach($students as $s)
                             <option value="{{ $s->id }}">{{ $s->name }} (Kelas: {{ $s->classroom?->name ?? '-' }})</option>
@@ -124,7 +124,7 @@
                 @if(in_array('employee_id', $template->required_fields))
                 <div>
                     <label for="employee_id" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Pilih Pegawai / Guru</label>
-                    <select name="employee_id" id="employee_id" x-model="employee_id" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                    <select name="employee_id" id="employee_id" x-model="employee_id" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">-- Pilih Pegawai --</option>
                         @foreach($employees as $e)
                             <option value="{{ $e->id }}">{{ $e->name }} (NIP: {{ $e->nip ?? '-' }})</option>
@@ -139,9 +139,9 @@
                         <div>
                             <label for="field_{{ $field }}" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">{{ ucwords(str_replace('_', ' ', $field)) }}</label>
                             @if(str_contains($field, 'date') || str_contains($field, 'tanggal'))
-                                <input type="date" name="field_values[{{ $field }}]" id="field_{{ $field }}" x-model="field_values['{{ $field }}']" required class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                                <input type="date" name="field_values[{{ $field }}]" id="field_{{ $field }}" x-model="field_values['{{ $field }}']" required class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                             @else
-                                <input type="text" name="field_values[{{ $field }}]" id="field_{{ $field }}" x-model="field_values['{{ $field }}']" required placeholder="Masukkan data untuk {{ $field }}..." class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
+                                <input type="text" name="field_values[{{ $field }}]" id="field_{{ $field }}" x-model="field_values['{{ $field }}']" required placeholder="Masukkan data untuk {{ $field }}..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                             @endif
                         </div>
                     @endif
@@ -150,7 +150,7 @@
                 <!-- Notes / Keterangan Tambahan -->
                 <div>
                     <label for="notes" class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Catatan Internal (Opsional)</label>
-                    <textarea name="notes" id="notes" x-model="notes" rows="3" placeholder="Misal: Draf dibuat atas permohonan wali kelas..." class="w-full bg-gray-55 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500"></textarea>
+                    <textarea name="notes" id="notes" x-model="notes" rows="3" placeholder="Misal: Draf dibuat atas permohonan wali kelas..." class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500"></textarea>
                 </div>
 
                 <div class="pt-4 border-t border-gray-100 dark:border-gray-700/50 flex gap-2">
@@ -171,7 +171,7 @@
                 <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">Asinkron & Aktif</span>
             </div>
             
-            <div class="flex-grow bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-750 rounded-3xl shadow-inner overflow-y-auto p-8 flex justify-center items-start">
+            <div class="flex-grow bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-inner overflow-y-auto p-8 flex justify-center items-start">
                 <div class="w-[21cm] min-h-[29.7cm] bg-white text-black p-[2cm] shadow-2xl border border-gray-300 rounded font-serif text-[12pt] leading-relaxed relative flex flex-col justify-between">
                     
                     <!-- Paper Content Top -->
@@ -183,7 +183,7 @@
                             <div class="flex border-b-4 border-double border-black pb-3 mb-6 items-center">
                                 <div class="w-[80px] text-center pr-4">
                                     <!-- Embedded system logo -->
-                                    <div class="w-[60px] h-[60px] bg-gray-150 border border-gray-400 rounded-full flex items-center justify-center text-[10px] font-sans font-bold">LOGO</div>
+                                    <div class="w-[60px] h-[60px] bg-gray-100 border border-gray-400 rounded-full flex items-center justify-center text-[10px] font-sans font-bold">LOGO</div>
                                 </div>
                                 <div class="flex-grow text-center">
                                     <h2 class="m-0 text-[14pt] uppercase font-bold">{{ school_foundation_name(false) }}</h2>

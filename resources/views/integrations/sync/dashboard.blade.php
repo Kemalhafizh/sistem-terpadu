@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-teal-650 dark:text-teal-400">Integrasi Data Eksternal</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-teal-700 dark:text-teal-400">Integrasi Data Eksternal</span>
                 <h2 class="font-black text-3xl text-gray-800 dark:text-white leading-tight tracking-tight mt-1">
                     Dapodik & EMIS Sync Mapper
                 </h2>
@@ -60,11 +60,11 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-3 shrink-0">
-                            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-455 flex items-center gap-1.5 shadow-sm">
+                            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1.5 shadow-sm">
                                 <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                                 Dapodik: {{ $dapodikStudentIssuesCount + $dapodikTeacherIssuesCount }} Masalah
                             </span>
-                            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-amber-200 dark:border-amber-900/50 rounded-2xl text-xs font-bold text-amber-600 dark:text-amber-455 flex items-center gap-1.5 shadow-sm">
+                            <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-amber-200 dark:border-amber-900/50 rounded-2xl text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5 shadow-sm">
                                 <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
                                 EMIS: {{ $emisStudentIssuesCount + $emisTeacherIssuesCount }} Masalah
                             </span>
@@ -272,7 +272,7 @@
                         <span class="text-[10px] font-black uppercase tracking-widest text-teal-600 dark:text-teal-400">Log Aktivitas</span>
                         <h3 class="text-xl font-black text-gray-900 dark:text-white mt-1">10 Aktivitas Sinkronisasi Terakhir</h3>
                     </div>
-                    <a href="{{ route('admin.integration.sync.history') }}" class="text-xs font-black uppercase tracking-widest text-teal-655 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 flex items-center gap-1">
+                    <a href="{{ route('admin.integration.sync.history') }}" class="text-xs font-black uppercase tracking-widest text-teal-700 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 flex items-center gap-1">
                         <span>Riwayat Selengkapnya</span>
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
@@ -284,13 +284,13 @@
                             <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-900/50">
                                     <tr>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Sistem Target</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Tabel Lokal</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Tanggal Run</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Total Data</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Sukses</th>
-                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-450 dark:text-gray-500">Gagal</th>
-                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-405 dark:text-gray-500">Operator</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Sistem Target</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Tabel Lokal</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Tanggal Run</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Total Data</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Sukses</th>
+                                        <th scope="col" class="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Gagal</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-500">Operator</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
@@ -326,17 +326,17 @@
                                                 {{ $report->records_processed }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                <span class="text-xs font-bold text-emerald-600 dark:text-emerald-450 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-1 rounded-lg">
+                                                <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 px-2.5 py-1 rounded-lg">
                                                     {{ $report->records_success }}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                 @if($report->records_failed > 0)
-                                                    <span class="text-xs font-bold text-rose-650 dark:text-rose-455 bg-rose-50 dark:bg-rose-950/20 px-2.5 py-1 rounded-lg animate-pulse">
+                                                    <span class="text-xs font-bold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20 px-2.5 py-1 rounded-lg animate-pulse">
                                                         {{ $report->records_failed }}
                                                     </span>
                                                 @else
-                                                    <span class="text-xs font-bold text-gray-400 dark:text-gray-650 px-2.5 py-1">
+                                                    <span class="text-xs font-bold text-gray-400 dark:text-gray-600 px-2.5 py-1">
                                                         0
                                                     </span>
                                                 @endif
