@@ -92,7 +92,7 @@ test('sidebar exposes newly wired fase 2b links per role without 403s or duplica
 
     // Student role sees profile change requests and UUID tahfidz link
     $studentPage = $this->actingAs($this->studentUser)
-        ->get(route('academic.student.index'))
+        ->get(route('student.academic'))
         ->assertOk();
 
     $studentHtml = $studentPage->getContent();
@@ -142,7 +142,7 @@ test('sidebar exposes newly wired fase 2b links per role without 403s or duplica
 });
 
 test('parent portal dashboard and student academic views use uuid routes real grade columns and clean ui', function () {
-    $subject = Subject::factory()->create(['name' => 'Matematika Wajib', 'code' => 'MTK', 'category' => 'Umum', 'kkm' => 76]);
+    $subject = Subject::factory()->create(['name' => 'Matematika Wajib', 'code' => 'MTK', 'category' => 'Nasional', 'kkm' => 76]);
     Grade::create([
         'student_id' => $this->student->id,
         'subject_id' => $subject->id,
@@ -167,7 +167,7 @@ test('parent portal dashboard and student academic views use uuid routes real gr
         ->assertDontSee('Portal Orang Tua <span', false);
 
     $this->actingAs($this->studentUser)
-        ->get(route('academic.student.index'))
+        ->get(route('student.academic'))
         ->assertOk()
         ->assertSee('Matematika Wajib')
         ->assertSee('Evaluasi Trigonometri')
@@ -242,12 +242,17 @@ test('un-slopped integration views report cards profile change and whatsapp rese
         ->assertOk()
         ->assertDontSee('bg-gray-950');
 
+    $this->actingAs($this->studentUser)
+        ->get(route('students.ledger', $this->student))
+        ->assertOk()
+        ->assertSee(route('student.academic'), false);
+
     $this->actingAs($this->stafTu)
         ->get(route('admin.integrations.webhooks.index'))
         ->assertOk()
         ->assertDontSee('bg-gray-950')
         ->assertSee(route('admin.integrations.webhooks.destroy', $webhook), false)
-        ->assertSee(route('admin.integrations.webhooks.test', $webhook), false)
+        ->assertSee(json_encode(route('admin.integrations.webhooks.test', $webhook)), false)
         ->assertSee($webhook->uuid);
 
     $this->actingAs($this->stafTu)

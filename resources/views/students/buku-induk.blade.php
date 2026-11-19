@@ -16,8 +16,8 @@
                     <a href="{{ route('students.index') }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors">
                         Daftar Siswa
                     </a>
-                @elseif(auth()->user()->hasRole('siswa') && Route::has('academic.student.index'))
-                    <a href="{{ route('academic.student.index') }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors">
+                @elseif(auth()->user()->hasRole('siswa') && Route::has('student.academic'))
+                    <a href="{{ route('student.academic') }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors">
                         Kembali ke Akademik
                     </a>
                 @elseif(auth()->user()->isParent() && Route::has('parent-portal.dashboard'))
