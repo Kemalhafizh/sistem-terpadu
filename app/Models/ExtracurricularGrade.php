@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ExtracurricularGrade extends Model
 {
@@ -13,12 +14,14 @@ class ExtracurricularGrade extends Model
         'description',
     ];
 
-    public function member()
+    /** @return BelongsTo<ExtracurricularMember, $this> */
+    public function member(): BelongsTo
     {
         return $this->belongsTo(ExtracurricularMember::class, 'extracurricular_member_id');
     }
 
-    public function academicYear()
+    /** @return BelongsTo<AcademicYear, $this> */
+    public function academicYear(): BelongsTo
     {
         return $this->belongsTo(AcademicYear::class);
     }

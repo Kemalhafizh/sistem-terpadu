@@ -32,7 +32,8 @@ class Grade extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function academicYear()
+    /** @return BelongsTo<AcademicYear, $this> */
+    public function academicYear(): BelongsTo
     {
         return $this->belongsTo(AcademicYear::class);
     }

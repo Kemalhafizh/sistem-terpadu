@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\User;
 use App\Models\WorkflowRequest;
+use App\Services\ApprovalInboxService;
 use App\Services\WorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -202,7 +203,7 @@ class AdminMobileDashboardController extends Controller
     /**
      * Unified cross-module approval inbox for authenticated staff, teachers, and leadership.
      */
-    public function unifiedPendingApprovals(Request $request, \App\Services\ApprovalInboxService $inbox)
+    public function unifiedPendingApprovals(Request $request, ApprovalInboxService $inbox)
     {
         $user = $request->user();
         $moduleFilter = $request->query('module');

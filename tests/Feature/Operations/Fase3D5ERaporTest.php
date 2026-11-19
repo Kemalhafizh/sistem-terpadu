@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicEvent;
 use App\Models\AcademicYear;
 use App\Models\Attendance;

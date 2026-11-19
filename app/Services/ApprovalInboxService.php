@@ -16,7 +16,6 @@ use App\Models\StudentLeaveRequest;
 use App\Models\Syllabus;
 use App\Models\TeachingJournal;
 use App\Models\User;
-use App\Models\WorkflowRequest;
 use App\Services\Academic\StudentLeaveService;
 use App\Support\Access\Roles;
 use App\Support\Access\StudentDataAccess;
@@ -312,7 +311,7 @@ class ApprovalInboxService
         }
 
         if ($user->can('review', TeachingJournal::class)) {
-            $journals = TeachingJournal::with(['user', 'subject', 'classroom'])
+            $journals = TeachingJournal::with(['teacher', 'subject', 'classroom'])
                 ->where('status', 'submitted')
                 ->where('user_id', '!=', $user->id)
                 ->latest('id')
@@ -325,7 +324,7 @@ class ApprovalInboxService
                     'module_label' => 'Verifikasi Jurnal Mengajar',
                     'title' => ($journal->subject?->name ?? 'Jurnal').' — '.($journal->topic ?? '-'),
                     'subtitle' => ($journal->classroom?->name ?? '-').' • '.$journal->teaching_date?->translatedFormat('d M Y'),
-                    'requester_name' => $journal->user?->name ?? '-',
+                    'requester_name' => $journal->teacher?->name ?? '-',
                     'submitted_at' => $journal->created_at,
                     'due_at' => null,
                     'is_overdue' => false,

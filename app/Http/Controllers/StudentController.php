@@ -9,6 +9,7 @@ use App\Models\Classroom;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\StudentLedgerService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -115,7 +116,7 @@ class StudentController extends Controller
         return $pdf->stream('Biodata_'.$student->nis.'_'.str_replace(' ', '_', $student->user->name).'.pdf');
     }
 
-    public function bukuInduk(Student $student, \App\Services\StudentLedgerService $ledgerService)
+    public function bukuInduk(Student $student, StudentLedgerService $ledgerService)
     {
         abort_unless($student->isVisibleTo(auth()->user()), 403, 'Anda tidak berwenang melihat Buku Induk siswa ini.');
 
@@ -124,7 +125,7 @@ class StudentController extends Controller
         return view('students.buku-induk', $ledger);
     }
 
-    public function bukuIndukPdf(Student $student, \App\Services\StudentLedgerService $ledgerService)
+    public function bukuIndukPdf(Student $student, StudentLedgerService $ledgerService)
     {
         abort_unless($student->isVisibleTo(auth()->user()), 403, 'Anda tidak berwenang mencetak Buku Induk siswa ini.');
 

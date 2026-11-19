@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\WorkflowApproval;
 use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
+use App\Services\ApprovalInboxService;
 use App\Services\WorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -186,7 +187,7 @@ class WorkflowController extends Controller
     /**
      * Tampilkan daftar pengajuan yang sedang menunggu persetujuan pengguna saat ini.
      */
-    public function pending(Request $request, \App\Services\ApprovalInboxService $inbox)
+    public function pending(Request $request, ApprovalInboxService $inbox)
     {
         $user = auth()->user();
         $requests = $this->service->getPendingForUser($user);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AssetLoan extends Model
 {
@@ -60,12 +61,14 @@ class AssetLoan extends Model
         });
     }
 
-    public function asset()
+    /** @return BelongsTo<Asset, $this> */
+    public function asset(): BelongsTo
     {
         return $this->belongsTo(Asset::class);
     }
 
-    public function borrower()
+    /** @return BelongsTo<User, $this> */
+    public function borrower(): BelongsTo
     {
         return $this->belongsTo(User::class, 'borrower_id');
     }

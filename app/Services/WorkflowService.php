@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\NewNotificationEvent;
+use App\Models\Letter;
 use App\Models\User;
 use App\Models\WorkflowApproval;
 use App\Models\WorkflowDefinition;
@@ -98,7 +99,7 @@ class WorkflowService
                     'status' => 'approved',
                     'approved_by' => $approver->id,
                 ];
-                if ($request->requestable instanceof \App\Models\Letter) {
+                if ($request->requestable instanceof Letter) {
                     $requestableUpdates['approved_at'] = now();
                 }
                 $request->requestable->update($requestableUpdates);

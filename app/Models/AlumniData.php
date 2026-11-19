@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AlumniData extends Model
 {
@@ -25,12 +27,14 @@ class AlumniData extends Model
         'current_position',
     ];
 
-    public function student()
+    /** @return BelongsTo<Student, $this> */
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
     }
 
-    public function tracerResponse()
+    /** @return HasOne<TracerResponse, $this> */
+    public function tracerResponse(): HasOne
     {
         return $this->hasOne(TracerResponse::class, 'alumni_data_id');
     }
