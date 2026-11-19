@@ -73,6 +73,7 @@
         @endcanVisit
 
         @if(! $isStudentOrParent)
+        <x-sidebar-link route="workflows.pending" :label="__('navigation.approval_inbox')" icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" active="workflows.*" />
         @canVisit('teaching-journals.index')
         <a href="{{ route('teaching-journals.index') }}" class="{{ $linkClass }} {{ request()->routeIs('teaching-journals.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.journal') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
@@ -552,6 +553,7 @@
         </a>
         @endcanVisit
         @endif
+        <x-sidebar-link route="incoming-letters.index" :label="__('navigation.incoming_letters')" icon="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" active="incoming-letters.*" />
         @endif
 
         {{-- Modul HRD: Admin, Superadmin, Kepala Sekolah --}}

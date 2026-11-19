@@ -99,4 +99,6 @@ return [
     'school_identity' => 'Identitas Sekolah',
     'school_appearance' => 'Tampilan',
     'fingerprint_import' => 'Impor Sidik Jari',
+    'incoming_letters' => 'Surat Masuk & Disposisi',
+    'approval_inbox' => 'Menunggu Persetujuan Saya',
 ];

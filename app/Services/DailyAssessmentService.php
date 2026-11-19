@@ -35,6 +35,7 @@ class DailyAssessmentService
                 'max_score' => $data['max_score'] ?? 100,
                 'kkm' => $data['kkm'] ?? null,
                 'description' => $data['description'] ?? null,
+                'learning_objective' => $data['learning_objective'] ?? null,
             ]);
 
             // Fetch all students in the classroom

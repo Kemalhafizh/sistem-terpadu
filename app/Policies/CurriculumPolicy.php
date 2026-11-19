@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\LessonPlan;
 use App\Models\User;
 
@@ -9,59 +10,59 @@ class CurriculumPolicy
 {
     public function viewDashboard(User $user): bool
     {
-        return in_array($user->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['guru', 'teacher', 'waka_kurikulum', 'kepala_sekolah', 'kepsek', 'admin', 'superadmin']);
     }
 
     public function manageSyllabus(User $user): bool
     {
-        return in_array($user->role, ['guru', 'waka_kurikulum', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['guru', 'teacher', 'waka_kurikulum', 'admin', 'superadmin']);
     }
 
     public function reviewSyllabus(User $user): bool
     {
-        return in_array($user->role, ['waka_kurikulum', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['waka_kurikulum', 'admin', 'superadmin']);
     }
 
     public function viewLessonPlanList(User $user): bool
     {
-        return in_array($user->role, ['guru', 'waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['guru', 'teacher', 'waka_kurikulum', 'kepala_sekolah', 'kepsek', 'admin', 'superadmin']);
     }
 
     public function viewLessonPlan(User $user, LessonPlan $rpp): bool
     {
-        if (in_array($user->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['waka_kurikulum', 'kepala_sekolah', 'kepsek', 'admin', 'superadmin'])) {
             return true;
         }
 
-        return $user->role === 'guru' && $rpp->user_id === $user->id;
+        return RoleMiddleware::allowsUser($user, ['guru', 'teacher']) && (int) $rpp->user_id === (int) $user->id;
     }
 
     public function createLessonPlan(User $user): bool
     {
-        return $user->role === 'guru';
+        return array_intersect($user->effectiveRoles(), ['guru', 'teacher']) !== [];
     }
 
     public function updateLessonPlan(User $user, LessonPlan $rpp): bool
     {
-        return $user->role === 'guru' &&
-               $rpp->user_id === $user->id &&
-               in_array($rpp->status, ['draft', 'revision_needed']);
+        return array_intersect($user->effectiveRoles(), ['guru', 'teacher']) !== []
+            && (int) $rpp->user_id === (int) $user->id
+            && in_array($rpp->status, ['draft', 'revision_needed'], true);
     }
 
     public function deleteLessonPlan(User $user, LessonPlan $rpp): bool
     {
-        return $user->role === 'guru' &&
-               $rpp->user_id === $user->id &&
-               $rpp->status === 'draft';
+        return array_intersect($user->effectiveRoles(), ['guru', 'teacher']) !== []
+            && (int) $rpp->user_id === (int) $user->id
+            && $rpp->status === 'draft';
     }
 
     public function reviewLessonPlan(User $user): bool
     {
-        return in_array($user->role, ['waka_kurikulum', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['waka_kurikulum', 'admin', 'superadmin']);
     }
 
     public function downloadReport(User $user): bool
     {
-        return in_array($user->role, ['waka_kurikulum', 'kepala_sekolah', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['waka_kurikulum', 'kepala_sekolah', 'kepsek', 'admin', 'superadmin']);
     }
 }

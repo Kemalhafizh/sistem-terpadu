@@ -62,7 +62,7 @@ class Student extends Model
         if (array_intersect($effectiveRoles, StudentDataAccess::PARENT_ROLES) !== []) {
             return $query->where('parent_id', $user->id);
         }
-        if (array_intersect($effectiveRoles, StudentDataAccess::TEACHER_ROLES) !== []) {
+        if (array_intersect($effectiveRoles, [...StudentDataAccess::TEACHER_ROLES, 'wali_kelas']) !== []) {
             $year = AcademicYear::current();
             if (! $year) {
                 return $query->whereRaw('1 = 0');

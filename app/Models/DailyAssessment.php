@@ -23,6 +23,7 @@ class DailyAssessment extends Model
         'max_score',
         'kkm',
         'description',
+        'learning_objective',
     ];
 
     protected $casts = [

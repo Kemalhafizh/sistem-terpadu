@@ -86,6 +86,9 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
     Route::post('mobile/auth/biometric/challenge', [MobileAuthController::class, 'biometricChallenge'])->middleware('throttle:login');
     Route::post('mobile/auth/biometric/verify', [MobileAuthController::class, 'biometricVerify'])->middleware('throttle:login');
     Route::get('rapor/verify/{hash}', [ERaporApiController::class, 'verify']);
+    Route::get('rapor/files/{pdf}', [ERaporApiController::class, 'downloadPdf'])
+        ->middleware('signed')
+        ->name('api.v1.rapor.files.show');
 
     // === SPMB / PPDB MOBILE (PUBLIC) ===
     Route::prefix('spmb')->group(function () {
@@ -442,6 +445,10 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('/approvals/{id}/action', [AdminMobileDashboardController::class, 'processApproval']);
             Route::post('/emergency-broadcast', [AdminMobileDashboardController::class, 'broadcastEmergency']);
         });
+
+        // Priority 6 Unified Cross-Module Approval Inbox for all authorized staff/teachers
+        Route::get('approvals/pending', [AdminMobileDashboardController::class, 'unifiedPendingApprovals'])
+            ->middleware('role:admin,superadmin,kepsek,kepala_sekolah,waka_kurikulum,waka_kesiswaan,waka_sarpras,waka_humas,staf_tu,bendahara,pustakawan,petugas_uks,bk,guru,teacher,wali_kelas');
 
         Route::prefix('documents')->middleware('auth:sanctum')->group(function () {
             Route::get('/reports', [DocumentMobileApiController::class, 'reportList'])->middleware('role:student,siswa');

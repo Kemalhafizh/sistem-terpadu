@@ -99,4 +99,6 @@ return [
     'school_identity' => 'School Identity',
     'school_appearance' => 'Appearance',
     'fingerprint_import' => 'Fingerprint Import',
+    'incoming_letters' => 'Incoming Letters & Dispositions',
+    'approval_inbox' => 'Pending My Approval',
 ];

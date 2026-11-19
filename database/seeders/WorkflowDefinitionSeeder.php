@@ -26,10 +26,9 @@ class WorkflowDefinitionSeeder extends Seeder
             [
                 'name' => 'Persetujuan Surat Resmi',
                 'code' => 'letter_approval',
-                'description' => 'Alur persetujuan surat keluar sekolah. Diperiksa oleh Staf TU sebelum disetujui oleh Kepala Sekolah.',
+                'description' => 'Alur persetujuan surat keluar sekolah oleh Kepala Sekolah sebelum diterbitkan Staf TU.',
                 'steps' => [
-                    ['order' => 1, 'role' => 'staf_tu'],
-                    ['order' => 2, 'role' => 'kepala_sekolah'],
+                    ['order' => 1, 'role' => 'kepala_sekolah', 'sla_hours' => 48],
                 ],
                 'is_active' => true,
             ],

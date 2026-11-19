@@ -94,10 +94,14 @@ class WorkflowService
                 $request->update(['status' => 'approved']);
 
                 // Perbarui status model induk menjadi approved
-                $request->requestable->update([
+                $requestableUpdates = [
                     'status' => 'approved',
                     'approved_by' => $approver->id,
-                ]);
+                ];
+                if ($request->requestable instanceof \App\Models\Letter) {
+                    $requestableUpdates['approved_at'] = now();
+                }
+                $request->requestable->update($requestableUpdates);
 
                 // Beri notifikasi sukses ke pengaju
                 $this->notifyRequester($request, 'disetujui');
@@ -278,7 +282,12 @@ class WorkflowService
         if ($currentApproval->delegated_to_id) {
             $approvers = User::where('id', $currentApproval->delegated_to_id)->get();
         } else {
-            $approvers = User::where('role', $currentApproval->role)->get();
+            $role = $currentApproval->role;
+            $approvers = User::where('role', $role)
+                ->orWhereHas('positionAssignments', function ($q) use ($role) {
+                    $q->activeOn()->whereHas('position', fn ($pq) => $pq->where('code', $role));
+                })
+                ->get();
         }
 
         foreach ($approvers as $app) {

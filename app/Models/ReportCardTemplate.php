@@ -20,6 +20,20 @@ class ReportCardTemplate extends Model
         });
     }
 
+    public const REPORT_TYPE_PTS = 'pts';
+
+    public const REPORT_TYPE_PAS = 'pas';
+
+    public const STATUS_NILAI_DISUSUN = 'nilai_disusun';
+
+    public const STATUS_NILAI_LENGKAP = 'nilai_lengkap';
+
+    public const STATUS_DIEKSPOR = 'diekspor';
+
+    public const STATUS_RAPOR_RESMI_DIUNGGAH = 'rapor_resmi_diunggah';
+
+    public const STATUS_TERBIT = 'terbit';
+
     protected $guarded = [];
 
     protected $casts = [
@@ -28,6 +42,9 @@ class ReportCardTemplate extends Model
         'grade_descriptors' => 'array',
         'character_dimensions' => 'array',
         'is_published' => 'boolean',
+        'semester_number' => 'integer',
+        'issued_date' => 'date',
+        'published_at' => 'datetime',
     ];
 
     public function academicYear()
@@ -38,6 +55,11 @@ class ReportCardTemplate extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function publisher()
+    {
+        return $this->belongsTo(User::class, 'published_by');
     }
 
     public function entries()
