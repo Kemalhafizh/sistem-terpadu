@@ -469,7 +469,7 @@ class StudentLeaveService
                 $dateStr = $cursor->toDateString();
                 $existing = Attendance::query()
                     ->where('student_id', $leave->student_id)
-                    ->where('date', $dateStr)
+                    ->whereDate('date', $dateStr)
                     ->whereNull('schedule_id')
                     ->first();
 

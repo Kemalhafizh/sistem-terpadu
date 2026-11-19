@@ -112,13 +112,16 @@ test('multi-identifier login works on web and api v1 for email, phone, nis, nisn
         'email' => '1234567890123456',
         'password' => 'Password123!',
         'device_id' => 'device-teacher-1',
+        'platform' => 'android',
+        'fcm_token' => 'mock-fcm-token-1',
     ])->assertOk()
-        ->assertJsonPath('data.user.id', $homeroomTeacher->id);
+        ->assertJsonPath('user.id', $homeroomTeacher->id);
 
     // 5. API v1 login for parent via 628... phone variant
     $this->postJson('/api/v1/login', [
         'email' => '6285712345678',
         'password' => 'ParentPass1!',
+        'device_name' => 'Android Device',
     ])->assertOk()
         ->assertJsonPath('data.user.uuid', $parentUser->uuid);
 });
@@ -278,7 +281,7 @@ test('homeroom teacher can reset own classroom student password and print creden
 });
 
 test('whatsapp otp password reset and api put me/password clear must_change_password flag', function () {
-    Setting::set('whatsapp_gateway_enabled', '1');
+    Setting::set('whatsapp_otp_enabled', '1');
 
     $user = User::factory()->create([
         'name' => 'Budi Santoso',
@@ -295,7 +298,7 @@ test('whatsapp otp password reset and api put me/password clear must_change_pass
     ])->assertOk()
         ->assertJsonPath('success', true);
 
-    $log = WhatsappLog::where('recipient_phone', '081277778888')->latest('id')->firstOrFail();
+    $log = WhatsappLog::where('recipient', '6281277778888')->latest('id')->firstOrFail();
     preg_match('/\*(\d{6})\*/', $log->message, $matches);
     $otp = $matches[1] ?? '';
     expect($otp)->toHaveLength(6);

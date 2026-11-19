@@ -35,7 +35,8 @@ class MobileAuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email' => 'required|string|max:255',
+            'email' => 'required_without:identifier|nullable|string|max:255',
+            'identifier' => 'nullable|string|max:255',
             'password' => 'required|string',
             'device_id' => 'required|string|max:191',
             'device_name' => 'nullable|string|max:191',
@@ -47,7 +48,8 @@ class MobileAuthController extends Controller
         ]);
 
         try {
-            $user = app(UserIdentifierResolver::class)->findByIdentifier((string) $validated['email']);
+            $identifier = trim((string) ($validated['email'] ?? $validated['identifier'] ?? ''));
+            $user = app(UserIdentifierResolver::class)->findByIdentifier($identifier);
 
             if (! $user || ! Hash::check($validated['password'], $user->password)) {
                 return response()->json([

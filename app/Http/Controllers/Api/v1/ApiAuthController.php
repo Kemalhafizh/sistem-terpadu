@@ -37,12 +37,13 @@ class ApiAuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|max:255',
+            'email' => 'required_without:identifier|nullable|string|max:255',
+            'identifier' => 'nullable|string|max:255',
             'password' => 'required',
             'device_name' => 'required|string|max:255',
         ]);
 
-        $identifier = trim((string) $request->email);
+        $identifier = trim((string) ($request->input('email') ?: $request->input('identifier')));
         $deviceName = $request->input('device_name', 'Android Device');
         $user = app(UserIdentifierResolver::class)->findByIdentifier($identifier);
 

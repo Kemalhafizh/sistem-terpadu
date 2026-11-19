@@ -268,7 +268,7 @@ class ClassSessionService
 
         $dailyExcused = Attendance::query()
             ->whereIn('student_id', $studentIds)
-            ->where('date', $sessionDate)
+            ->whereDate('date', $sessionDate)
             ->whereNull('schedule_id')
             ->whereIn('status', ['S', 'I'])
             ->get()
