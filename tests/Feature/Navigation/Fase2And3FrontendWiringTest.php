@@ -274,8 +274,11 @@ test('un-slopped integration views report cards profile change and whatsapp rese
         ->get(route('report-cards.index', ['classroom_id' => $this->classroom->id]))
         ->assertOk()
         ->assertSee('Dasbor Kelengkapan Input Nilai');
+});
 
+test('guest whatsapp password reset view renders step 1 and step 2 cleanly', function () {
     Setting::set('whatsapp_otp_enabled', '1');
+
     $this->get(route('password.whatsapp.request'))
         ->assertOk()
         ->assertSee('Langkah 1')
