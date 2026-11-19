@@ -462,7 +462,7 @@ test('parent portal and report card pdf scope attendance to active academic year
 });
 
 test('cbt proctor extend time adds persistent extra minutes and server rejects expired submissions after grace window', function () {
-    Event::fake();
+    Event::fake([ProctorInterventionEvent::class]);
     Storage::fake('local');
 
     $startMoment = Carbon::create(2026, 11, 20, 8, 0, 0);

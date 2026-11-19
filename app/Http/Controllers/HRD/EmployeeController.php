@@ -191,9 +191,9 @@ class EmployeeController extends Controller
                 'title' => $validated['title'],
                 'type' => $validated['type'],
                 'file_path' => $path,
-                'issue_date' => $validated['issue_date'],
-                'expiry_date' => $validated['expiry_date'],
-                'notes' => $validated['notes'],
+                'issue_date' => $validated['issue_date'] ?? null,
+                'expiry_date' => $validated['expiry_date'] ?? null,
+                'notes' => $validated['notes'] ?? null,
             ]);
 
             return back()->with('success', 'Dokumen berhasil diunggah.');
