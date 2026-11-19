@@ -25,10 +25,67 @@ class PaymentGatewayService
     public function __construct()
     {
         $this->serverKey = config('services.midtrans.server_key');
-        $this->isProduction = config('services.midtrans.is_production', false);
-        $this->snapUrl = $this->isProduction
+        $this->isProduction = filter_var(config('services.midtrans.is_production', false), FILTER_VALIDATE_BOOLEAN);
+        $this->snapUrl = $this->snapApiUrl();
+    }
+
+    public function snapApiUrl(): string
+    {
+        return filter_var(config('services.midtrans.is_production', false), FILTER_VALIDATE_BOOLEAN)
             ? 'https://app.midtrans.com/snap/v1/transactions'
             : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+    }
+
+    /**
+     * Request a Snap transaction payload (token + redirect_url) from Midtrans.
+     *
+     * @return array{token: string, redirect_url: string|null}|null
+     */
+    public function createSnapTransaction(Billing $billing, string $customerName, string $customerEmail, int $timeout = 5): ?array
+    {
+        $serverKey = (string) config('services.midtrans.server_key', '');
+        $grossAmount = (int) $billing->remaining_balance;
+
+        if ($serverKey === '' || $grossAmount <= 0) {
+            return null;
+        }
+
+        $payload = [
+            'transaction_details' => [
+                'order_id' => 'BILL-'.$billing->id.'-'.time(),
+                'gross_amount' => $grossAmount,
+            ],
+            'customer_details' => [
+                'first_name' => $customerName,
+                'email' => $customerEmail,
+            ],
+            'item_details' => [
+                [
+                    'id' => 'BILL-'.$billing->id,
+                    'price' => $grossAmount,
+                    'quantity' => 1,
+                    'name' => $billing->category->name ?? 'Iuran Sekolah',
+                ],
+            ],
+        ];
+
+        $response = Http::withBasicAuth($serverKey, '')
+            ->timeout($timeout)
+            ->post($this->snapApiUrl(), $payload);
+
+        if ($response->successful()) {
+            $result = $response->json();
+            if (is_array($result) && ! empty($result['token'])) {
+                return [
+                    'token' => (string) $result['token'],
+                    'redirect_url' => $result['redirect_url'] ?? null,
+                ];
+            }
+        }
+
+        \Log::warning('Midtrans Snap API error: '.$response->body());
+
+        return null;
     }
 
     /**
@@ -63,8 +120,9 @@ class PaymentGatewayService
         ];
 
         try {
-            $response = Http::withBasicAuth($this->serverKey, '')
-                ->post($this->snapUrl, $payload);
+            $serverKey = (string) (config('services.midtrans.server_key') ?? $this->serverKey);
+            $response = Http::withBasicAuth($serverKey, '')
+                ->post($this->snapApiUrl(), $payload);
 
             if ($response->successful()) {
                 return $response->json()['token'];

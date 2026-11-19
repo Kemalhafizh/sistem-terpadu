@@ -19,6 +19,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class SchoolOperationsApiController extends Controller
 {
@@ -254,7 +255,7 @@ class SchoolOperationsApiController extends Controller
             return response()->json(['success' => false, 'message' => 'Nomor pendaftaran tidak ditemukan.'], 404);
         }
 
-        $path = $request->file('file')->store('spmb/mobile_documents', 'public');
+        $path = $request->file('file')->store('spmb/mobile_documents', 'local');
 
         $document = SpmbDocument::create([
             'registration_id' => $registration->id,
@@ -279,9 +280,31 @@ class SchoolOperationsApiController extends Controller
             'data' => [
                 'id' => $document->id,
                 'document_type' => $document->document_type,
-                'file_url' => Storage::url($path),
+                'file_url' => URL::temporarySignedRoute(
+                    'api.v1.spmb.documents.download',
+                    now()->addMinutes(60),
+                    ['document' => $document->id]
+                ),
             ],
         ], 201);
+    }
+
+    public function spmbDownloadDocument(SpmbDocument $document)
+    {
+        $path = $document->file_path;
+        if (! $path) {
+            abort(404);
+        }
+
+        if (Storage::disk('local')->exists($path)) {
+            return Storage::disk('local')->response($path);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->response($path);
+        }
+
+        abort(404);
     }
 
     // ==========================================

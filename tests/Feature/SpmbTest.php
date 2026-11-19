@@ -18,7 +18,7 @@ use Tests\TestCase;
 
 beforeEach(function () {
     Mail::fake();
-    Storage::fake('public');
+    Storage::fake('local');
     $this->academicYear = AcademicYear::factory()->create([
         'is_active' => true,
         'year' => '2026/2027',

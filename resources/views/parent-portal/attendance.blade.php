@@ -68,19 +68,23 @@
                     <h3 class="font-black text-gray-800 uppercase text-xs tracking-widest px-2">Log Riwayat Harian Presensi</h3>
                     
                     @forelse($attendances as $att)
-                        @php 
-                            $statusColors = [
-                                'Hadir' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
-                                'Sakit' => 'bg-amber-100 text-amber-700 border-amber-200',
-                                'Izin' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                'Alpa' => 'bg-red-100 text-red-700 border-red-200'
+                        @php
+                            $statusMap = [
+                                'H' => ['label' => 'Hadir', 'class' => 'bg-emerald-100 text-emerald-700 border-emerald-200'],
+                                'Hadir' => ['label' => 'Hadir', 'class' => 'bg-emerald-100 text-emerald-700 border-emerald-200'],
+                                'S' => ['label' => 'Sakit', 'class' => 'bg-amber-100 text-amber-700 border-amber-200'],
+                                'Sakit' => ['label' => 'Sakit', 'class' => 'bg-amber-100 text-amber-700 border-amber-200'],
+                                'I' => ['label' => 'Izin', 'class' => 'bg-blue-100 text-blue-700 border-blue-200'],
+                                'Izin' => ['label' => 'Izin', 'class' => 'bg-blue-100 text-blue-700 border-blue-200'],
+                                'A' => ['label' => 'Alpa', 'class' => 'bg-red-100 text-red-700 border-red-200'],
+                                'Alpa' => ['label' => 'Alpa', 'class' => 'bg-red-100 text-red-700 border-red-200'],
                             ];
-                            $colorClass = $statusColors[$att->status] ?? 'bg-gray-100 text-gray-700 border-gray-200';
+                            $statusMeta = $statusMap[$att->status] ?? ['label' => $att->status, 'class' => 'bg-gray-100 text-gray-700 border-gray-200'];
                         @endphp
                         <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:shadow-md transition-all duration-300">
                             <div class="flex items-center gap-4">
-                                <span class="px-4 py-2 border rounded-xl text-xs font-black uppercase tracking-wider {{ $colorClass }}">
-                                    {{ $att->status }}
+                                <span class="px-4 py-2 border rounded-xl text-xs font-black uppercase tracking-wider {{ $statusMeta['class'] }}">
+                                    {{ $statusMeta['label'] }}
                                 </span>
                                 <div>
                                     <h4 class="font-extrabold text-gray-900 text-base">

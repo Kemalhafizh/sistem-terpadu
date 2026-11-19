@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\CbtEssaySubmission;
 use App\Models\Exam;
 use App\Services\CbtEnterpriseService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CbtEnterpriseApiController extends Controller
 {
@@ -119,10 +122,49 @@ class CbtEnterpriseApiController extends Controller
 
         return $this->successResponse([
             'submission_id' => $submission->id,
-            'file_url' => url($submission->file_path),
+            'file_url' => route('api.v1.cbt.essays.show', $submission),
             'file_size' => $submission->file_size,
             'question_id' => $submission->question_id,
         ], __('Lembar esai berhasil diunggah'));
+    }
+
+    /**
+     * Download or preview a private handwritten essay submission.
+     */
+    public function showEssay(Request $request, CbtEssaySubmission $submission)
+    {
+        $attempt = $submission->examAttempt()->with('exam')->first();
+        $exam = $attempt?->exam;
+        $user = $request->user();
+
+        if (! $attempt || ! $exam) {
+            abort(404);
+        }
+
+        $isOwnerStudent = $user->student && (int) $attempt->student_id === (int) $user->student->id;
+        if (! $isOwnerStudent && Gate::denies('monitor', $exam)) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $path = $submission->file_path;
+        if (! $path) {
+            abort(404);
+        }
+
+        if (Storage::disk('local')->exists($path)) {
+            return Storage::disk('local')->response($path);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->response($path);
+        }
+
+        $legacyPublicPath = Str::after($path, 'uploads/');
+        if ($legacyPublicPath !== $path && Storage::disk('public')->exists($legacyPublicPath)) {
+            return Storage::disk('public')->response($legacyPublicPath);
+        }
+
+        abort(404);
     }
 
     /**

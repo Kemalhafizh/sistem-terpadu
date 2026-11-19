@@ -107,7 +107,7 @@ class ERaporPdfService
     {
         $hashString = "SISTA-RAPOR-{$reportCardId}-{$studentId}-".time();
         $sha256 = hash('sha256', $hashString);
-        $fileName = "rapor_smk_sultan_agung_1_{$studentId}_".time().'.pdf';
+        $fileName = "rapor_sulaone_sista_{$studentId}_".time().'.pdf';
         $filePath = "uploads/rapor/{$fileName}";
 
         return ReportCardPdf::updateOrCreate(

@@ -25,6 +25,7 @@ uses(EntersCbtExam::class);
 
 beforeEach(function () {
     Storage::fake('public');
+    Storage::fake('local');
 
     $this->subject = Subject::factory()->create();
     $this->classroom = Classroom::factory()->create();

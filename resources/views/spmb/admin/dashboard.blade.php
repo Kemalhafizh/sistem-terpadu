@@ -147,7 +147,7 @@
                   <td class="p-4 font-black text-slate-900">
                     <div class="flex items-center gap-2">
                       @if($app->photo_path)
-                        <img src="{{ asset('storage/' . $app->photo_path) }}" alt="Photo" class="h-6 w-6 rounded-full object-cover">
+                        <img src="{{ route('spmb.admin.photo', $app) }}" alt="Photo" class="h-6 w-6 rounded-full object-cover">
                       @endif
                       {{ $app->full_name }}
                     </div>

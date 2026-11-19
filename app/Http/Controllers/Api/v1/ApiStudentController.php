@@ -317,6 +317,17 @@ class ApiStudentController extends Controller
             return $this->errorResponse(__('Masukkan token ujian dari pengawas terlebih dahulu.'), 403);
         }
 
+        $deadline = $attempt->deadline();
+        if ($deadline && now()->gt($deadline->copy()->addSeconds(60))) {
+            $attempt->update([
+                'status' => 'timeout',
+                'is_auto_submitted' => true,
+                'submitted_at' => $attempt->submitted_at ?? $deadline,
+            ]);
+
+            return $this->errorResponse(__('Waktu ujian telah berakhir dan sesi otomatis ditutup.'), 403);
+        }
+
         $answers = $request->input('answers', []); // [question_id => selected_option_index]
         $totalQuestions = $exam->questions->count();
         $correctCount = 0;

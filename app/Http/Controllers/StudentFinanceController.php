@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Billing;
 use App\Models\Payment;
 use App\Models\Student;
+use App\Services\PaymentGatewayService;
 use App\Services\WadiahService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -62,36 +62,16 @@ class StudentFinanceController extends Controller
         if (! $billing->snap_token || $billing->snap_token == '' || str_starts_with($billing->snap_token, 'TKN-DEMO-')) {
             if (! empty($serverKey)) {
                 try {
-                    // Buat payload untuk request ke Midtrans Snap API
-                    $orderId = 'BILL-'.$billing->id.'-'.time();
-                    $payload = [
-                        'transaction_details' => [
-                            'order_id' => $orderId,
-                            'gross_amount' => $grossAmount,
-                        ],
-                        'customer_details' => [
-                            'first_name' => $student->user->name ?? 'Siswa',
-                            'email' => $student->user->email ?? 'siswa@sekolah.sch.id',
-                        ],
-                        'item_details' => [
-                            [
-                                'id' => 'BILL-'.$billing->id,
-                                'price' => $grossAmount,
-                                'quantity' => 1,
-                                'name' => $billing->category->name ?? 'Iuran Sekolah',
-                            ],
-                        ],
-                    ];
+                    $snap = app(PaymentGatewayService::class)->createSnapTransaction(
+                        $billing,
+                        $student->user->name ?? 'Siswa',
+                        $student->user->email ?? 'siswa@sekolah.sch.id'
+                    );
 
-                    $response = Http::withBasicAuth($serverKey, '')
-                        ->timeout(5)
-                        ->post('https://app.sandbox.midtrans.com/snap/v1/transactions', $payload);
-
-                    if ($response->successful()) {
-                        $result = $response->json();
+                    if ($snap) {
                         $billing->update([
-                            'snap_token' => $result['token'],
-                            'payment_url' => $result['redirect_url'],
+                            'snap_token' => $snap['token'],
+                            'payment_url' => $snap['redirect_url'],
                         ]);
                     }
                 } catch (\Exception $e) {

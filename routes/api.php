@@ -88,6 +88,9 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::post('register', [SchoolOperationsApiController::class, 'spmbRegister']);
         Route::get('status/{registrationNo}', [SchoolOperationsApiController::class, 'spmbCheckStatus']);
         Route::post('registrations/{registrationNo}/documents', [SchoolOperationsApiController::class, 'spmbUploadDocument']);
+        Route::get('documents/{document}/download', [SchoolOperationsApiController::class, 'spmbDownloadDocument'])
+            ->middleware('signed')
+            ->name('api.v1.spmb.documents.download');
     });
 
     // === PROTECTED ENDPOINTS ===
@@ -115,6 +118,11 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
         // General Profile (Backward Compatibility)
         Route::get('profile', [AuthController::class, 'profile'])->middleware('throttle:30,1');
+
+        // Protected CBT handwritten essay submission download (student owner or exam proctor)
+        Route::get('cbt/essay-submissions/{submission}', [CbtEnterpriseApiController::class, 'showEssay'])
+            ->middleware('role:student,siswa,guru,teacher,waka_kurikulum,admin,superadmin,kepala_sekolah')
+            ->name('api.v1.cbt.essays.show');
 
         // === NEW SISWA SCOPED ===
         Route::prefix('student')->middleware('role:student,siswa')->group(function () {

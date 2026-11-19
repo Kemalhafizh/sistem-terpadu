@@ -33,7 +33,7 @@ test('admin can access documents page for employee', function () {
 });
 
 test('admin can upload employee document successfully', function () {
-    Storage::fake('public');
+    Storage::fake('local');
 
     $file = UploadedFile::fake()->create('contract.pdf', 500);
 

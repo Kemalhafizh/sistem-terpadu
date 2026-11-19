@@ -110,7 +110,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-right flex justify-end gap-2">
-                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-1.5 px-3 text-xs font-bold transition-all">
+                                    <a href="{{ route('hrd.employees.documents.show', [$employee->id, $doc->id]) }}" target="_blank" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl py-1.5 px-3 text-xs font-bold transition-all">
                                          Buka
                                     </a>
                                     <form action="{{ route('hrd.employees.documents.destroy', [$employee->id, $doc->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berkas ini?')">

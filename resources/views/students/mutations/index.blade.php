@@ -44,7 +44,7 @@
                                 </td>
                                 <td class="px-8 py-5 text-right">
                                     @if($mut?->document_path)
-                                        <a href="{{ Storage::url($mut?->document_path) }}" target="_blank" class="text-primary-600 hover:text-primary-800 font-black text-[10px] uppercase underline tracking-widest">Lihat Berkas</a>
+                                        <a href="{{ route('mutations.document', $mut) }}" target="_blank" class="text-primary-600 hover:text-primary-800 font-black text-[10px] uppercase underline tracking-widest">Lihat Berkas</a>
                                     @else
                                         <span class="text-[10px] font-bold text-gray-300 uppercase">Tidak Ada</span>
                                     @endif

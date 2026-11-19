@@ -6,6 +6,7 @@ use App\Http\Requests\StoreMutationRequest;
 use App\Models\Student;
 use App\Models\StudentMutation;
 use App\Services\StudentMutationService;
+use Illuminate\Support\Facades\Storage;
 
 class MutationController extends Controller
 {
@@ -38,5 +39,23 @@ class MutationController extends Controller
         );
 
         return redirect()->route('mutations.index')->with('success', 'Data mutasi berhasil dicatat.');
+    }
+
+    public function downloadDocument(StudentMutation $mutation)
+    {
+        $path = $mutation->document_path;
+        if (! $path) {
+            abort(404);
+        }
+
+        if (Storage::disk('local')->exists($path)) {
+            return Storage::disk('local')->response($path);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->response($path);
+        }
+
+        abort(404);
     }
 }

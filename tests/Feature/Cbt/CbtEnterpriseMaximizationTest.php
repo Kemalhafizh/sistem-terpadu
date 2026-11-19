@@ -166,7 +166,7 @@ test('siswa dapat melakukan micro-sync jawaban ke backend', function () {
 });
 
 test('siswa dapat mengunggah foto lembar jawaban esai tulis tangan', function () {
-    Storage::fake('public');
+    Storage::fake('local');
     $this->enterCbtExam($this->studentUser, $this->exam);
 
     $fakeImage = UploadedFile::fake()->image('coretan_fisika.jpg', 800, 600);

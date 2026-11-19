@@ -182,7 +182,7 @@
                                                 {{ strtoupper($doc->verification_status) }}
                                             </span>
                                         </div>
-                                        <button @click="modalOpen = true; modalImgSrc = '{{ Storage::url($doc->file_path) }}'; modalTitle = 'Preview {{ ucfirst($doc->document_type) }}'" class="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-lg shadow-sm">Preview</button>
+                                        <button @click="modalOpen = true; modalImgSrc = '{{ route('spmb.admin.documents.file', $doc->id) }}'; modalTitle = 'Preview {{ ucfirst($doc->document_type) }}'" class="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-lg shadow-sm">Preview</button>
                                     </div>
 
                                     @if($doc->verification_status === 'pending')

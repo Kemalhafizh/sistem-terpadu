@@ -56,7 +56,7 @@ test('public registration page is accessible', function () {
 });
 
 test('applicant can submit registration successfully', function () {
-    Storage::fake('public');
+    Storage::fake('local');
     $kk = UploadedFile::fake()->create('kk.pdf', 500);
     $cert = UploadedFile::fake()->create('certificate.pdf', 500);
     $photo = UploadedFile::fake()->image('photo.jpg');

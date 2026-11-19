@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class SpmbController extends Controller
 {
@@ -93,18 +94,18 @@ class SpmbController extends Controller
             return back()->with('error', 'Pendaftaran saat ini sedang ditutup.');
         }
 
-        $kkPath = $request->file('document_kk')->store('spmb/kk', 'public');
-        $certPath = $request->file('document_certificate')->store('spmb/certificates', 'public');
-        $photoPath = $request->file('photo')->store('spmb/photos', 'public');
+        $kkPath = $request->file('document_kk')->store('spmb/kk', 'local');
+        $certPath = $request->file('document_certificate')->store('spmb/certificates', 'local');
+        $photoPath = $request->file('photo')->store('spmb/photos', 'local');
 
         $skhunPath = null;
         if ($request->hasFile('document_skhun')) {
-            $skhunPath = $request->file('document_skhun')->store('spmb/skhun', 'public');
+            $skhunPath = $request->file('document_skhun')->store('spmb/skhun', 'local');
         }
 
         $aktaPath = null;
         if ($request->hasFile('document_akta')) {
-            $aktaPath = $request->file('document_akta')->store('spmb/akta', 'public');
+            $aktaPath = $request->file('document_akta')->store('spmb/akta', 'local');
         }
 
         $registration = DB::transaction(function () use ($validated, $activeYear, $kkPath, $certPath, $photoPath, $skhunPath, $aktaPath) {
@@ -227,24 +228,62 @@ class SpmbController extends Controller
     // Cetak Kartu Peserta
     public function printCard(Registration $registration)
     {
-        $isAuthorized = false;
-
-        if (auth()->check()) {
-            $user = auth()->user();
-            if (in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'kepala_sekolah'])) {
-                $isAuthorized = true;
-            }
-        }
-
-        if (! $isAuthorized && session('registration_number') === $registration->registration_number) {
-            $isAuthorized = true;
-        }
-
-        if (! $isAuthorized) {
+        if (! $this->canViewPrintCard($registration)) {
             abort(403, 'Akses ditolak. Anda tidak berwenang mencetak kartu peserta ini.');
         }
 
         return view('spmb.print-card', compact('registration'));
+    }
+
+    // Pas foto peserta pada kartu peserta yang sah
+    public function printCardPhoto(Registration $registration)
+    {
+        if (! $this->canViewPrintCard($registration)) {
+            abort(403, 'Akses ditolak. Anda tidak berwenang melihat foto peserta ini.');
+        }
+
+        return $this->servePrivateFile($registration->photo_path);
+    }
+
+    // Pas foto peserta untuk admin SPMB
+    public function adminPhoto(Registration $registration)
+    {
+        return $this->servePrivateFile($registration->photo_path);
+    }
+
+    // Dokumen pendaftar untuk admin SPMB
+    public function showDocumentFile(SpmbDocument $document)
+    {
+        return $this->servePrivateFile($document->file_path);
+    }
+
+    private function canViewPrintCard(Registration $registration): bool
+    {
+        if (auth()->check()) {
+            $user = auth()->user();
+            if (in_array($user->role, ['admin', 'superadmin', 'staf_tu', 'kepala_sekolah'], true)) {
+                return true;
+            }
+        }
+
+        return session('registration_number') === $registration->registration_number;
+    }
+
+    private function servePrivateFile(?string $path)
+    {
+        if (! $path) {
+            abort(404);
+        }
+
+        if (Storage::disk('local')->exists($path)) {
+            return Storage::disk('local')->response($path);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->response($path);
+        }
+
+        abort(404);
     }
 
     // --- AREA ADMIN (DASHBOARD) ---
