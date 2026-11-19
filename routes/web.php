@@ -147,6 +147,7 @@ Route::prefix('spmb')->middleware('throttle:spmb')->group(function () {
     Route::get('/status', [SpmbController::class, 'checkStatus'])->name('spmb.status');
     Route::get('/announcement', [SpmbController::class, 'publicAnnouncement'])->name('spmb.announcement');
     Route::get('/print-card/{registration}', [SpmbController::class, 'printCard'])->name('spmb.print-card');
+    Route::get('/print-card/{registration}/photo', [SpmbController::class, 'printCardPhoto'])->name('spmb.print-card.photo');
 });
 
 // ============================================================
@@ -726,6 +727,7 @@ Route::middleware('auth')->group(function () {
 
         // Mutasi & Alumni
         Route::resource('mutations', MutationController::class)->only(['index', 'create', 'store']);
+        Route::get('mutations/{mutation}/document', [MutationController::class, 'downloadDocument'])->name('mutations.document');
     });
 
     // =========================================================
@@ -848,6 +850,7 @@ Route::middleware('auth')->group(function () {
 
         // Manage Employee Documents
         Route::get('employees/{employee}/documents', [EmployeeController::class, 'documents'])->name('employees.documents');
+        Route::get('employees/{employee}/documents/{document}/file', [EmployeeController::class, 'downloadDocument'])->name('employees.documents.show');
         Route::post('employees/{employee}/documents', [EmployeeController::class, 'storeDocument'])->name('employees.documents.store');
         Route::delete('employees/{employee}/documents/{document}', [EmployeeController::class, 'deleteDocument'])->name('employees.documents.destroy');
 
@@ -973,6 +976,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/spmb-admin/tracks', [SpmbController::class, 'tracks'])->name('spmb.admin.tracks');
         Route::post('/spmb-admin/tracks', [SpmbController::class, 'storeTrack'])->name('spmb.admin.tracks.store');
         Route::post('/spmb-admin/documents/{document}/verify', [SpmbController::class, 'verifyDocument'])->name('spmb.admin.documents.verify');
+        Route::get('/spmb-admin/documents/{document}/file', [SpmbController::class, 'showDocumentFile'])->name('spmb.admin.documents.file');
         Route::get('/spmb-admin/scoring/{wave}', [SpmbController::class, 'scoring'])->name('spmb.admin.scoring');
         Route::post('/spmb-admin/scoring/{wave}', [SpmbController::class, 'storeScoring'])->name('spmb.admin.scoring.store');
         Route::get('/spmb-admin/selection/{wave}', [SpmbController::class, 'selection'])->name('spmb.admin.selection');
@@ -982,6 +986,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/spmb-admin/bulk-convert/{wave}', [SpmbController::class, 'bulkConvert'])->name('spmb.admin.bulk-convert');
 
         Route::get('/spmb-admin', [SpmbController::class, 'index'])->name('spmb.admin.index');
+        Route::get('/spmb-admin/{registration}/photo', [SpmbController::class, 'adminPhoto'])->name('spmb.admin.photo');
         Route::get('/spmb-admin/{registration}', [SpmbController::class, 'show'])->name('spmb.admin.show');
         Route::post('/spmb-admin/{registration}/status', [SpmbController::class, 'updateStatus'])->name('spmb.admin.status');
 

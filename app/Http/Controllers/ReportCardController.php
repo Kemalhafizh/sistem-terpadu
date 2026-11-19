@@ -157,6 +157,7 @@ class ReportCardController extends Controller
 
         // Ambil Absensi
         $attendanceSum = Attendance::where('student_id', $student->id)
+            ->where('academic_year_id', $activeYear->id)
             ->selectRaw("
                                     SUM(CASE WHEN status = 'H' THEN 1 ELSE 0 END) as hadir,
                                     SUM(CASE WHEN status = 'S' THEN 1 ELSE 0 END) as sakit,

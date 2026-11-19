@@ -36,7 +36,7 @@ class StudentMutationService
 
             $docPath = null;
             if ($document) {
-                $docPath = $document->store('mutations', 'public');
+                $docPath = $document->store('mutations', 'local');
             }
 
             $mutation = StudentMutation::create(array_merge($validatedData, [

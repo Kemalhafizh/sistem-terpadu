@@ -28,10 +28,10 @@ class MobileConfigController extends Controller
         if (! $config) {
             $config = MobileAppConfig::create([
                 'app_name' => 'Hanyakra '.school_short_name(),
-                'min_android_build' => 100,
-                'latest_android_build' => 105,
-                'min_ios_build' => 100,
-                'latest_ios_build' => 105,
+                'min_android_build' => 1,
+                'latest_android_build' => 1,
+                'min_ios_build' => 1,
+                'latest_ios_build' => 1,
                 'force_update' => false,
                 'maintenance_mode' => false,
                 'maintenance_message' => 'Sistem sedang dalam peningkatan performa rutin.',
@@ -50,7 +50,7 @@ class MobileConfigController extends Controller
         }
 
         $platform = strtolower((string) $request->query('platform', 'android'));
-        $currentBuild = (int) $request->query('build', 105);
+        $currentBuild = (int) $request->query('build', 1);
 
         $minBuild = $platform === 'ios' ? $config->min_ios_build : $config->min_android_build;
         $latestBuild = $platform === 'ios' ? $config->latest_ios_build : $config->latest_android_build;

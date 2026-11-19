@@ -277,8 +277,8 @@ class ExamController extends Controller
             ['started_at' => now(), 'status' => 'in_progress']
         );
 
-        // Check if already submitted or blocked
-        if (in_array($attempt->status, ['submitted', 'graded', 'blocked_violation', 'timeout'])) {
+        // Check if already submitted, timed out, or locked
+        if ($attempt->isFinished()) {
             return redirect()->route('cbt.exams.results', $exam)
                 ->with('info', 'Anda sudah menyelesaikan ujian ini.');
         }
@@ -349,6 +349,17 @@ class ExamController extends Controller
 
         if (! $attempt) {
             return response()->json(['error' => 'Attempt not found or already submitted'], 404);
+        }
+
+        $deadline = $attempt->deadline();
+        if ($deadline && now()->gt($deadline->copy()->addSeconds(60))) {
+            $attempt->update([
+                'status' => 'timeout',
+                'is_auto_submitted' => true,
+                'submitted_at' => $attempt->submitted_at ?? $deadline,
+            ]);
+
+            return response()->json(['error' => __('Waktu ujian telah berakhir dan sesi otomatis ditutup.')], 403);
         }
 
         $answers = $request->input('answers', []);
@@ -431,13 +442,29 @@ class ExamController extends Controller
             ->where('student_id', $student->id)
             ->first();
 
-        if (! $attempt || in_array($attempt->status, ['submitted', 'graded', 'blocked_violation'])) {
+        if (! $attempt || $attempt->isFinished()) {
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Already submitted'], 409);
             }
 
             return redirect()->route('cbt.exams.index')
                 ->with('info', 'Ujian sudah disubmit sebelumnya.');
+        }
+
+        $deadline = $attempt->deadline();
+        if ($deadline && now()->gt($deadline->copy()->addSeconds(60))) {
+            $attempt->update([
+                'status' => 'timeout',
+                'is_auto_submitted' => true,
+                'submitted_at' => $attempt->submitted_at ?? $deadline,
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json(['error' => __('Waktu ujian telah berakhir dan sesi otomatis ditutup.')], 403);
+            }
+
+            return redirect()->route('cbt.exams.results', $exam)
+                ->with('error', __('Waktu ujian telah berakhir dan sesi otomatis ditutup.'));
         }
 
         // Save final answers

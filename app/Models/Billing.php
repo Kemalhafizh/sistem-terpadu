@@ -25,6 +25,13 @@ class Billing extends Model
         static::created(function ($billing) {
             AccountingService::recordBillingRelease($billing);
         });
+
+        static::saving(function ($billing) {
+            if ($billing->exists && $billing->isDirty('remaining_balance') && ! $billing->isDirty('snap_token')) {
+                $billing->snap_token = null;
+                $billing->payment_url = null;
+            }
+        });
     }
 
     protected $fillable = [

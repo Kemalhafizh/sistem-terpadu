@@ -35,6 +35,7 @@ class ExamAttempt extends Model
         'violation_count',
         'violation_logs',
         'is_auto_submitted',
+        'extra_minutes',
         // Token-Gated Mobile-Only
         'access_platform',
         'used_token',
@@ -57,6 +58,7 @@ class ExamAttempt extends Model
         'submitted_at' => 'datetime',
         'token_validated_at' => 'datetime',
         'is_auto_submitted' => 'boolean',
+        'extra_minutes' => 'integer',
         'force_closed' => 'boolean',
         'violation_count' => 'integer',
         'last_heartbeat_at' => 'datetime',
@@ -79,7 +81,8 @@ class ExamAttempt extends Model
 
     /**
      * When this attempt's time runs out: the exam's duration counted from the
-     * moment the student started, cut off by the exam's own end time.
+     * moment the student started (plus any proctor extension), cut off by the
+     * exam's end time plus that extension.
      */
     public function deadline(): ?Carbon
     {
@@ -89,8 +92,14 @@ class ExamAttempt extends Model
         }
 
         $startTime = $this->started_at ?? $this->created_at ?? now();
+        $extraMinutes = max(0, (int) ($this->extra_minutes ?? 0));
+        $durationDeadline = $startTime->copy()->addMinutes((int) $exam->duration_minutes + $extraMinutes);
 
-        return $startTime->copy()->addMinutes($exam->duration_minutes)->min($exam->end_time);
+        if ($exam->end_time) {
+            return $durationDeadline->min($exam->end_time->copy()->addMinutes($extraMinutes));
+        }
+
+        return $durationDeadline;
     }
 
     /**

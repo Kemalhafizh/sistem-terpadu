@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\HRD\EmployeeAttendanceRecap;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -183,7 +184,7 @@ class EmployeeController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('hrd/documents', 'public');
+            $path = $request->file('file')->store('hrd/documents', 'local');
 
             EmployeeDocument::create([
                 'employee_id' => $employee->id,
@@ -202,10 +203,44 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Serve private employee document.
+     */
+    public function downloadDocument(Employee $employee, EmployeeDocument $document)
+    {
+        if ((int) $document->employee_id !== (int) $employee->id) {
+            abort(404);
+        }
+
+        $path = $document->file_path;
+        if (! $path) {
+            abort(404);
+        }
+
+        if (Storage::disk('local')->exists($path)) {
+            return Storage::disk('local')->response($path);
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->response($path);
+        }
+
+        abort(404);
+    }
+
+    /**
      * Delete document.
      */
     public function deleteDocument(Employee $employee, EmployeeDocument $document)
     {
+        if ((int) $document->employee_id !== (int) $employee->id) {
+            abort(404);
+        }
+
+        if ($document->file_path) {
+            Storage::disk('local')->delete($document->file_path);
+            Storage::disk('public')->delete($document->file_path);
+        }
+
         $document->delete();
 
         return back()->with('success', 'Dokumen berhasil dihapus.');

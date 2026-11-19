@@ -17,12 +17,12 @@ use App\Models\Student;
 use App\Models\UksVisit;
 use App\Models\User;
 use App\Models\WadiahAccount;
+use App\Services\PaymentGatewayService;
 use App\Services\WadiahService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -95,16 +95,19 @@ class ParentPortalController extends Controller
         $chartData = $gradesForChart->map(fn ($g) => (int) $g->score)->toArray();
 
         // 3. Attendance Widget
+        $activeYearId = AcademicYear::current()?->id;
+
         $attendanceStats = $student->attendances()
+            ->when($activeYearId, fn ($q) => $q->where('academic_year_id', $activeYearId))
             ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
         $totalAttendance = array_sum($attendanceStats);
-        $hadir = $attendanceStats['Hadir'] ?? 0;
-        $sakit = $attendanceStats['Sakit'] ?? 0;
-        $izin = $attendanceStats['Izin'] ?? 0;
-        $alpa = $attendanceStats['Alpa'] ?? 0;
+        $hadir = ($attendanceStats['H'] ?? 0) + ($attendanceStats['Hadir'] ?? 0);
+        $sakit = ($attendanceStats['S'] ?? 0) + ($attendanceStats['Sakit'] ?? 0);
+        $izin = ($attendanceStats['I'] ?? 0) + ($attendanceStats['Izin'] ?? 0);
+        $alpa = ($attendanceStats['A'] ?? 0) + ($attendanceStats['Alpa'] ?? 0);
         $hadirPercentage = $totalAttendance > 0 ? round(($hadir / $totalAttendance) * 100, 1) : 100;
 
         // 4. Finance Widget
@@ -180,23 +183,35 @@ class ParentPortalController extends Controller
         });
 
         // Add Attendances
-        $student->attendances()->latest()->take(5)->get()->each(function ($att) use ($timeline) {
-            $statusColors = [
-                'Hadir' => 'emerald',
-                'Sakit' => 'amber',
-                'Izin' => 'blue',
-                'Alpa' => 'red',
-            ];
-            $color = $statusColors[$att->status] ?? 'gray';
-            $timeline->push([
-                'type' => 'attendance',
-                'date' => Carbon::parse($att->date.' 07:00:00'),
-                'title' => "Presensi: {$att->status}",
-                'description' => "Siswa dicatat {$att->status} pada tanggal ".Carbon::parse($att->date)->isoFormat('D MMMM YYYY').($att->notes ? " dengan keterangan: {$att->notes}" : ''),
-                'color' => $color,
-                'icon' => '<svg class="w-4 h-4 text-'.$color.'-600 dark:text-'.$color.'-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>',
-            ]);
-        });
+        $student->attendances()
+            ->when($activeYearId, fn ($q) => $q->where('academic_year_id', $activeYearId))
+            ->latest()
+            ->take(5)
+            ->get()
+            ->each(function ($att) use ($timeline) {
+                $statusMeta = [
+                    'H' => ['label' => 'Hadir', 'color' => 'emerald'],
+                    'Hadir' => ['label' => 'Hadir', 'color' => 'emerald'],
+                    'S' => ['label' => 'Sakit', 'color' => 'amber'],
+                    'Sakit' => ['label' => 'Sakit', 'color' => 'amber'],
+                    'I' => ['label' => 'Izin', 'color' => 'blue'],
+                    'Izin' => ['label' => 'Izin', 'color' => 'blue'],
+                    'A' => ['label' => 'Alpa', 'color' => 'red'],
+                    'Alpa' => ['label' => 'Alpa', 'color' => 'red'],
+                ];
+                $meta = $statusMeta[$att->status] ?? ['label' => (string) $att->status, 'color' => 'gray'];
+                $color = $meta['color'];
+                $label = $meta['label'];
+                $dateStr = Carbon::parse($att->date)->toDateString();
+                $timeline->push([
+                    'type' => 'attendance',
+                    'date' => Carbon::parse($dateStr.' 07:00:00'),
+                    'title' => "Presensi: {$label}",
+                    'description' => "Siswa dicatat {$label} pada tanggal ".Carbon::parse($dateStr)->isoFormat('D MMMM YYYY').($att->notes ? " dengan keterangan: {$att->notes}" : ''),
+                    'color' => $color,
+                    'icon' => '<svg class="w-4 h-4 text-'.$color.'-600 dark:text-'.$color.'-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>',
+                ]);
+            });
 
         // Add Billings
         $student->billings()->latest()->take(3)->get()->each(function ($bill) use ($timeline) {
@@ -298,22 +313,26 @@ class ParentPortalController extends Controller
     {
         $this->validateChild($student);
 
+        $activeYearId = AcademicYear::current()?->id;
+
         $attendances = $student->attendances()
-            ->where('academic_year_id', AcademicYear::current()?->id)
+            ->when($activeYearId, fn ($q) => $q->where('academic_year_id', $activeYearId))
+            ->with('recorder')
             ->orderBy('date', 'desc')
             ->get();
 
         // Calculate statistics
         $attendanceStats = $student->attendances()
+            ->when($activeYearId, fn ($q) => $q->where('academic_year_id', $activeYearId))
             ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
         $totalAttendance = array_sum($attendanceStats);
-        $hadir = $attendanceStats['Hadir'] ?? 0;
-        $sakit = $attendanceStats['Sakit'] ?? 0;
-        $izin = $attendanceStats['Izin'] ?? 0;
-        $alpa = $attendanceStats['Alpa'] ?? 0;
+        $hadir = ($attendanceStats['H'] ?? 0) + ($attendanceStats['Hadir'] ?? 0);
+        $sakit = ($attendanceStats['S'] ?? 0) + ($attendanceStats['Sakit'] ?? 0);
+        $izin = ($attendanceStats['I'] ?? 0) + ($attendanceStats['Izin'] ?? 0);
+        $alpa = ($attendanceStats['A'] ?? 0) + ($attendanceStats['Alpa'] ?? 0);
         $hadirPercentage = $totalAttendance > 0 ? round(($hadir / $totalAttendance) * 100, 1) : 100;
 
         return view('parent-portal.attendance', compact('student', 'attendances', 'hadir', 'sakit', 'izin', 'alpa', 'hadirPercentage'));
@@ -347,45 +366,22 @@ class ParentPortalController extends Controller
             return redirect()->route('parent-portal.billings', $student->id)->with('error', 'Tagihan ini sudah lunas.');
         }
 
-        $serverKey = config('services.midtrans.server_key');
-
         if (! $billing->snap_token || $billing->snap_token == '' || str_starts_with($billing->snap_token, 'TKN-DEMO-')) {
-            if (! empty($serverKey)) {
-                try {
-                    $orderId = 'BILL-'.$billing->id.'-'.time();
-                    $payload = [
-                        'transaction_details' => [
-                            'order_id' => $orderId,
-                            'gross_amount' => $grossAmount,
-                        ],
-                        'customer_details' => [
-                            'first_name' => auth()->user()->name ?? 'Orang Tua',
-                            'email' => auth()->user()->email ?? 'parent@sekolah.sch.id',
-                        ],
-                        'item_details' => [
-                            [
-                                'id' => 'BILL-'.$billing->id,
-                                'price' => $grossAmount,
-                                'quantity' => 1,
-                                'name' => $billing->category->name ?? 'Iuran Sekolah',
-                            ],
-                        ],
-                    ];
+            try {
+                $result = app(PaymentGatewayService::class)->createSnapTransaction(
+                    $billing,
+                    (string) (auth()->user()->name ?? 'Orang Tua'),
+                    (string) (auth()->user()->email ?? 'parent@sekolah.sch.id')
+                );
 
-                    $response = Http::withBasicAuth($serverKey, '')
-                        ->timeout(5)
-                        ->post('https://app.sandbox.midtrans.com/snap/v1/transactions', $payload);
-
-                    if ($response->successful()) {
-                        $result = $response->json();
-                        $billing->update([
-                            'snap_token' => $result['token'],
-                            'payment_url' => $result['redirect_url'],
-                        ]);
-                    }
-                } catch (\Exception $e) {
-                    Log::warning('Gagal terhubung ke Midtrans API via Portal Orang Tua: '.$e->getMessage());
+                if ($result) {
+                    $billing->update([
+                        'snap_token' => $result['token'],
+                        'payment_url' => $result['redirect_url'],
+                    ]);
                 }
+            } catch (\Exception $e) {
+                Log::warning('Gagal terhubung ke Midtrans API via Portal Orang Tua: '.$e->getMessage());
             }
 
             // No working Midtrans: the local simulator if it is switched on, otherwise

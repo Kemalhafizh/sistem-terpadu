@@ -10,6 +10,7 @@ use App\Models\ExamAttempt;
 use App\Models\Student;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class CbtEnterpriseService
 {
@@ -127,6 +128,16 @@ class CbtEnterpriseService
             abort(403, __('Masukkan token ujian dari pengawas terlebih dahulu.'));
         }
 
+        $deadline = $attempt->deadline();
+        if ($deadline && now()->gt($deadline->copy()->addSeconds(60))) {
+            $attempt->update([
+                'status' => 'timeout',
+                'is_auto_submitted' => true,
+                'submitted_at' => $attempt->submitted_at ?? $deadline,
+            ]);
+            abort(403, __('Waktu ujian telah berakhir dan sesi otomatis ditutup.'));
+        }
+
         $cacheKey = "cbt_answers_{$exam->id}_{$student->id}";
         $existing = Cache::get($cacheKey, []);
         foreach ($answers as $qId => $ans) {
@@ -171,26 +182,32 @@ class CbtEnterpriseService
             abort(403, __('Masukkan token ujian dari pengawas terlebih dahulu.'));
         }
 
+        $deadline = $attempt->deadline();
+        if ($deadline && now()->gt($deadline->copy()->addSeconds(60))) {
+            $attempt->update([
+                'status' => 'timeout',
+                'is_auto_submitted' => true,
+                'submitted_at' => $attempt->submitted_at ?? $deadline,
+            ]);
+            abort(403, __('Waktu ujian telah berakhir dan sesi otomatis ditutup.'));
+        }
+
         $questionBelongsToExam = $exam->questions()->where('question_banks.id', $questionId)->exists();
         if (! $questionBelongsToExam) {
             abort(422, __('Soal tidak terdaftar dalam paket ujian ini.'));
         }
 
+        $directory = 'cbt/essays/'.$exam->id;
         $filename = 'essay_'.$exam->id.'_'.$student->id.'_'.$questionId.'_'.time().'.jpg';
-        $destinationPath = storage_path('app/public/cbt/essays/'.$exam->id);
-        if (! file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
-        }
-
-        $targetFile = $destinationPath.'/'.$filename;
-        $fileSize = $file->getSize();
+        $relativePath = $directory.'/'.$filename;
+        $fileSize = (int) ($file->getSize() ?? 0);
+        $stored = false;
 
         // Compress image using GD if available
         if (function_exists('imagecreatefromstring') && function_exists('imagejpeg')) {
             $sourceData = file_get_contents($file->getRealPath());
-            $image = @imagecreatefromstring($sourceData);
+            $image = $sourceData !== false ? @imagecreatefromstring($sourceData) : false;
             if ($image !== false) {
-                // Resize if width > 1200
                 $origWidth = imagesx($image);
                 $origHeight = imagesy($image);
                 if ($origWidth > 1200) {
@@ -201,18 +218,22 @@ class CbtEnterpriseService
                     imagedestroy($image);
                     $image = $resized;
                 }
-                // Save compressed with quality 75
-                imagejpeg($image, $targetFile, 75);
+                ob_start();
+                imagejpeg($image, null, 75);
+                $compressedData = ob_get_clean();
                 imagedestroy($image);
-                $fileSize = file_exists($targetFile) ? filesize($targetFile) : $fileSize;
-            } else {
-                $file->move($destinationPath, $filename);
+
+                if (is_string($compressedData) && $compressedData !== '') {
+                    Storage::disk('local')->put($relativePath, $compressedData);
+                    $fileSize = strlen($compressedData);
+                    $stored = true;
+                }
             }
-        } else {
-            $file->move($destinationPath, $filename);
         }
 
-        $relativePath = 'uploads/cbt/essays/'.$exam->id.'/'.$filename;
+        if (! $stored) {
+            $relativePath = $file->storeAs($directory, $filename, 'local');
+        }
 
         return CbtEssaySubmission::updateOrCreate(
             [
@@ -299,6 +320,16 @@ class CbtEnterpriseService
      */
     public function proctorExtendTime(int $examId, int $studentId, int $minutes, int $proctorId): CbtProctorLog
     {
+        $attempt = ExamAttempt::where('exam_id', $examId)
+            ->where('student_id', $studentId)
+            ->where('status', 'in_progress')
+            ->latest()
+            ->first();
+
+        if ($attempt) {
+            $attempt->increment('extra_minutes', $minutes);
+        }
+
         $log = CbtProctorLog::create([
             'exam_id' => $examId,
             'student_id' => $studentId,

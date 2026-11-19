@@ -79,11 +79,7 @@
           <div class="bg-white p-6 shadow-xl rounded-3xl border border-slate-200/60 transition-all">
             <div class="text-center pb-6 border-b border-slate-100">
               <div class="h-16 w-16 mx-auto rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center mb-3">
-                @if($registration->photo_path)
-                  <img src="{{ asset('storage/' . $registration->photo_path) }}" alt="Foto" class="h-full w-full object-cover rounded-full">
-                @else
-                  <span class="text-2xl"></span>
-                @endif
+                <span class="text-xl font-black text-slate-500">{{ strtoupper(mb_substr($registration->full_name, 0, 1)) }}</span>
               </div>
               <h3 class="text-base font-black text-slate-800 leading-none">{{ $registration->full_name }}</h3>
               <p class="text-[10px] text-slate-400 font-bold uppercase mt-1.5">{{ $registration->registration_number }}</p>

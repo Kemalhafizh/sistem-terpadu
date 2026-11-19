@@ -34,7 +34,7 @@ class SpmbComprehensiveTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('public');
+        Storage::fake('local');
 
         // Create Admin
         $this->admin = User::factory()->create([

@@ -25,6 +25,7 @@ class MidtransWebhookController extends Controller
         $grossAmount = $payload['gross_amount'] ?? null;
         $signatureKey = $payload['signature_key'] ?? null;
         $transactionStatus = $payload['transaction_status'] ?? null;
+        $fraudStatus = $payload['fraud_status'] ?? null;
         $paymentType = $payload['payment_type'] ?? 'bank_transfer';
 
         if (! $orderId || ! $statusCode || ! $grossAmount || (float) $grossAmount <= 0) {
@@ -76,11 +77,28 @@ class MidtransWebhookController extends Controller
         }
 
         $success = false;
+        $isCapturedAccepted = $transactionStatus === 'settlement'
+            || ($transactionStatus === 'capture' && in_array((string) $fraudStatus, ['', 'accept'], true));
 
-        if ($transactionStatus === 'settlement' || $transactionStatus === 'capture') {
+        if ($isCapturedAccepted) {
             DB::transaction(function () use ($billing, $grossAmount, $paymentType, $orderId, &$success) {
                 // Kunci data untuk transaksi aman
                 $billingLock = Billing::lockForUpdate()->find($billing->id);
+                if (! $billingLock) {
+                    return;
+                }
+
+                if ($billingLock->status === 'paid' && $billingLock->remaining_balance <= 0) {
+                    return;
+                }
+
+                $alreadyRecorded = Payment::where('billing_id', $billingLock->id)
+                    ->where('note', 'like', '%Order ID: '.$orderId.'%')
+                    ->exists();
+
+                if ($alreadyRecorded) {
+                    return;
+                }
 
                 // Tambahkan entri pembayaran baru
                 Payment::create([
@@ -97,13 +115,13 @@ class MidtransWebhookController extends Controller
                 $billingLock->updateStatus();
                 $success = true;
             });
-        } elseif (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
-            // Hapus token kadaluwarsa agar siswa bisa checkout ulang
+        } elseif (($transactionStatus === 'capture' && $fraudStatus === 'deny') || in_array($transactionStatus, ['expire', 'cancel', 'deny'], true)) {
+            // Hapus token kadaluwarsa / ditolak FDS agar siswa bisa checkout ulang
             $billing->update([
                 'snap_token' => null,
                 'payment_url' => null,
             ]);
-            $success = true;
+            $success = in_array($transactionStatus, ['expire', 'cancel', 'deny'], true);
         }
 
         return response()->json([

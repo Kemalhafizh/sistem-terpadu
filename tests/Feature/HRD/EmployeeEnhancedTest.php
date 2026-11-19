@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 beforeEach(function () {
-    Storage::fake('public');
+    Storage::fake('local');
 
     // Setup Users
     $this->admin = User::factory()->create(['role' => 'admin', 'name' => 'Agus Admin']);

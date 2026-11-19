@@ -116,7 +116,7 @@
         <div class="content">
             <div class="photo-container">
                 @if($registration->photo_path)
-                    <img src="{{ asset('storage/' . $registration->photo_path) }}" alt="Foto" class="photo">
+                    <img src="{{ route('spmb.print-card.photo', $registration) }}" alt="Foto" class="photo">
                 @else
                     <div class="photo">Pas Foto<br>3x4</div>
                 @endif
