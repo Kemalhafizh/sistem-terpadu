@@ -25,12 +25,12 @@ beforeEach(function () {
         'is_active' => true,
     ]);
 
-    $this->stafTu = User::factory()->create(['role' => 'staf_tu', 'name' => 'Staf TU Uji']);
-    $this->wakaKurikulum = User::factory()->create(['role' => 'waka_kurikulum', 'name' => 'Waka Kurikulum Uji']);
-    $this->homeroomTeacher = User::factory()->create(['role' => 'guru', 'name' => 'Wali Kelas X-A']);
-    $this->waliKelasRoleUser = User::factory()->create(['role' => 'wali_kelas', 'name' => 'User Wali Kelas']);
-    $this->parentUser = User::factory()->create(['role' => 'parent', 'name' => 'Orang Tua Uji']);
-    $this->studentUser = User::factory()->create(['role' => 'student', 'name' => 'Siswa Uji']);
+    $this->stafTu = User::factory()->create(['role' => 'staf_tu', 'name' => 'Staf TU Uji'])->fresh();
+    $this->wakaKurikulum = User::factory()->create(['role' => 'waka_kurikulum', 'name' => 'Waka Kurikulum Uji'])->fresh();
+    $this->homeroomTeacher = User::factory()->create(['role' => 'guru', 'name' => 'Wali Kelas X-A'])->fresh();
+    $this->waliKelasRoleUser = User::factory()->create(['role' => 'wali_kelas', 'name' => 'User Wali Kelas'])->fresh();
+    $this->parentUser = User::factory()->create(['role' => 'parent', 'name' => 'Orang Tua Uji'])->fresh();
+    $this->studentUser = User::factory()->create(['role' => 'student', 'name' => 'Siswa Uji'])->fresh();
 
     $this->classroom = Classroom::factory()->create([
         'name' => 'X-A',

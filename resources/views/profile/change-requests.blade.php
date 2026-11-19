@@ -47,12 +47,12 @@
 
                     <div>
                         <label for="phone_number" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Nomor HP / WhatsApp</label>
-                        <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" placeholder="0812xxxxxxxx" class="mt-1 block w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 text-sm">
+                        <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number', $user->getAttributes()['phone_number'] ?? '') }}" placeholder="0812xxxxxxxx" class="mt-1 block w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 text-sm">
                     </div>
 
                     <div>
                         <label for="contact_email" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Email</label>
-                        <input type="email" id="contact_email" name="email" value="{{ old('email', $user->email) }}" placeholder="nama@email.com" class="mt-1 block w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 text-sm">
+                        <input type="email" id="contact_email" name="email" value="{{ old('email', $user->getAttributes()['email'] ?? '') }}" placeholder="nama@email.com" class="mt-1 block w-full rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 text-sm">
                     </div>
 
                     <button type="submit" class="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors">
