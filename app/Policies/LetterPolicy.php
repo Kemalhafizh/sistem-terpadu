@@ -4,12 +4,14 @@ namespace App\Policies;
 
 use App\Models\Letter;
 use App\Models\User;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 
 class LetterPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if (in_array($user->role, ['superadmin', 'admin'])) {
+        if ($this->hasAnyRole($user, ['superadmin', 'admin'])) {
             return true;
         }
 
@@ -18,33 +20,53 @@ class LetterPolicy
 
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['staf_tu', 'kepala_sekolah']);
+        return $this->hasAnyRole($user, ['staf_tu', ...Roles::PRINCIPAL]);
     }
 
     public function view(User $user, Letter $letter): bool
     {
-        return in_array($user->role, ['staf_tu', 'kepala_sekolah']) ||
-               ($user->role === 'guru' && $letter->employee_id === $user->employee?->id);
+        return $this->hasAnyRole($user, ['staf_tu', ...Roles::PRINCIPAL])
+            || ($this->hasAnyRole($user, StudentDataAccess::TEACHER_ROLES)
+                && $letter->employee_id !== null
+                && $letter->employee_id === $user->employee?->id);
     }
 
     public function create(User $user): bool
     {
-        return $user->role === 'staf_tu';
+        return $this->hasAnyRole($user, ['staf_tu']);
     }
 
     public function update(User $user, Letter $letter): bool
     {
-        // Hanya draf yang dapat diedit oleh TU pembuat atau TU mana saja
-        return $user->role === 'staf_tu' && $letter->status === 'draft';
+        return $this->hasAnyRole($user, ['staf_tu'])
+            && in_array($letter->status, [Letter::STATUS_DRAFT, Letter::STATUS_REVISION], true);
     }
 
     public function delete(User $user, Letter $letter): bool
     {
-        return $user->role === 'staf_tu' && $letter->status === 'draft';
+        return $this->hasAnyRole($user, ['staf_tu'])
+            && in_array($letter->status, [Letter::STATUS_DRAFT, Letter::STATUS_REVISION], true);
+    }
+
+    public function submit(User $user, Letter $letter): bool
+    {
+        return $this->hasAnyRole($user, ['staf_tu'])
+            && in_array($letter->status, [Letter::STATUS_DRAFT, Letter::STATUS_REVISION], true);
     }
 
     public function issue(User $user): bool
     {
-        return $user->role === 'staf_tu';
+        return $this->hasAnyRole($user, ['staf_tu']);
+    }
+
+    public function revoke(User $user, Letter $letter): bool
+    {
+        return $this->hasAnyRole($user, ['staf_tu', ...Roles::PRINCIPAL])
+            && $letter->status === Letter::STATUS_ISSUED;
+    }
+
+    private function hasAnyRole(User $user, array $roles): bool
+    {
+        return array_intersect($user->effectiveRoles(), $roles) !== [];
     }
 }

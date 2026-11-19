@@ -2,15 +2,23 @@
 
 namespace App\Services;
 
+use App\Models\Grade;
+use App\Models\ReportCard;
 use App\Models\ReportCardCharacter;
 use App\Models\ReportCardEntry;
 use App\Models\ReportCardPdf;
 use App\Models\ReportCardTemplate;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\Academic\ERaporService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class ERaporPdfService
 {
+    public function __construct(private readonly ?ERaporService $eRaporService = null) {}
+
     public function calculatePredikat(float $score): string
     {
         if ($score >= 90) {
@@ -39,6 +47,17 @@ class ERaporPdfService
         }
     }
 
+    public function signedFileUrl(ReportCardPdf $pdf): ?string
+    {
+        if (! $pdf->file_path) {
+            return null;
+        }
+
+        return URL::temporarySignedRoute('api.v1.rapor.files.show', now()->addHours(6), [
+            'pdf' => $pdf->id,
+        ]);
+    }
+
     public function getStudentReport(int $studentId, ?int $templateId = null): array
     {
         $template = $templateId
@@ -49,19 +68,16 @@ class ERaporPdfService
             $template = ReportCardTemplate::with('academicYear')->latest()->first();
         }
 
-        // report_card_entries/characters/pdfs.student_id genuinely
-        // references users.id (see migration), so $studentId is correct
-        // there — but nisn/class_name live on the linked Student record,
-        // not on User, so they need a separate real lookup instead of the
-        // hardcoded literals this used to silently fall back to for
-        // every single student.
         $student = User::find($studentId);
         $studentProfile = Student::with('classroom')->where('user_id', $studentId)->first();
 
         $entries = ReportCardEntry::with('subject')
             ->where('student_id', $studentId)
             ->when($template, fn ($q) => $q->where('report_card_id', $template->id))
-            ->get();
+            ->get()
+            ->each(function (ReportCardEntry $entry): void {
+                $entry->setAttribute('subject_name', $entry->subject?->name);
+            });
 
         $characters = ReportCardCharacter::where('student_id', $studentId)
             ->when($template, fn ($q) => $q->where('report_card_id', $template->id))
@@ -91,11 +107,13 @@ class ERaporPdfService
             'characters' => $characters,
             'pdf_status' => $latestPdf ? [
                 'is_ready' => true,
-                'file_path' => $latestPdf->file_path,
+                'is_official' => (bool) $latestPdf->is_official,
+                'file_path' => $this->signedFileUrl($latestPdf),
                 'sha256_hash' => $latestPdf->sha256_hash,
                 'generated_at' => $latestPdf->generated_at ? $latestPdf->generated_at->toIso8601String() : null,
             ] : [
                 'is_ready' => false,
+                'is_official' => false,
                 'file_path' => null,
                 'sha256_hash' => null,
                 'generated_at' => null,
@@ -105,10 +123,63 @@ class ERaporPdfService
 
     public function generateSinglePdf(int $reportCardId, int $studentId, int $generatedBy): ReportCardPdf
     {
-        $hashString = "SISTA-RAPOR-{$reportCardId}-{$studentId}-".time();
-        $sha256 = hash('sha256', $hashString);
-        $fileName = "rapor_sulaone_sista_{$studentId}_".time().'.pdf';
-        $filePath = "uploads/rapor/{$fileName}";
+        $existingOfficial = ReportCardPdf::where('report_card_id', $reportCardId)
+            ->where('student_id', $studentId)
+            ->where('is_official', true)
+            ->first();
+
+        if ($existingOfficial && $existingOfficial->file_path && Storage::disk('local')->exists($existingOfficial->file_path)) {
+            return $existingOfficial;
+        }
+
+        $template = ReportCardTemplate::with('academicYear')->find($reportCardId);
+        $studentProfile = Student::with(['user', 'classroom.teacher'])->where('user_id', $studentId)->first();
+        $academicYear = $template?->academicYear;
+
+        $eRapor = $this->eRaporService ?? app(ERaporService::class);
+        $grades = ($studentProfile && $academicYear)
+            ? Grade::with('subject')
+                ->where('student_id', $studentProfile->id)
+                ->where('academic_year_id', $academicYear->id)
+                ->get()
+            : collect();
+
+        $reportCard = ($studentProfile && $academicYear)
+            ? ReportCard::where('student_id', $studentProfile->id)
+                ->where('academic_year_id', $academicYear->id)
+                ->first()
+            : null;
+
+        $attendance = ($studentProfile && $academicYear)
+            ? (object) $eRapor->calculateDayLevelAttendance($studentProfile, $academicYear)
+            : (object) ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpa' => 0];
+
+        $officials = $studentProfile?->classroom
+            ? $eRapor->resolveOfficials($studentProfile->classroom, $template?->issued_date)
+            : ['wali_kelas' => null, 'principal' => null, 'principal_name' => null, 'principal_nip' => null];
+
+        $studentForView = $studentProfile ?? new Student(['nis' => '-', 'nisn' => '-']);
+        if (! $studentProfile) {
+            $user = User::find($studentId);
+            $studentForView->setRelation('user', $user);
+        }
+
+        $pdfBinary = Pdf::loadView('report-cards.pdf', [
+            'student' => $studentForView,
+            'academicYear' => $academicYear ?? (object) ['name' => '-'],
+            'reportCard' => $reportCard,
+            'grades' => $grades,
+            'attendance' => $attendance,
+            'waliKelas' => $officials['wali_kelas'],
+            'kepalaSekolah' => $officials['principal'] ?? (object) ['name' => $officials['principal_name'] ?? '............................................'],
+            'template' => $template,
+            'isPreview' => true,
+        ])->setPaper('A4', 'portrait')->output();
+
+        $relativePath = "erapor-pdfs/{$reportCardId}/preview_{$studentId}.pdf";
+        Storage::disk('local')->put($relativePath, $pdfBinary);
+
+        $sha256 = hash('sha256', $pdfBinary);
 
         return ReportCardPdf::updateOrCreate(
             [
@@ -116,9 +187,10 @@ class ERaporPdfService
                 'student_id' => $studentId,
             ],
             [
-                'file_path' => $filePath,
+                'file_path' => $relativePath,
                 'sha256_hash' => $sha256,
                 'qr_verification_url' => url("/api/v1/rapor/verify/{$sha256}"),
+                'is_official' => false,
                 'generated_at' => now(),
                 'generated_by' => $generatedBy,
             ]

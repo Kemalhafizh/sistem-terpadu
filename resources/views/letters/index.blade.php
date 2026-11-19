@@ -5,17 +5,22 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-gray-800 dark:text-white leading-tight flex items-center gap-2">
-                    <span></span> Manajemen Dokumen & Surat Digital
+                    Manajemen Dokumen & Surat Keluar
                 </h2>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pembuatan, penerbitan, pencetakan, dan pengarsipan surat-surat resmi sekolah.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Penyusunan draf, persetujuan Kepala Sekolah, penerbitan nomor otomatis, dan verifikasi surat resmi sekolah.</p>
             </div>
             <div class="flex flex-wrap gap-2">
-                @if(in_array(auth()->user()->role, ['superadmin', 'admin', 'staf_tu']))
+                @canVisit('incoming-letters.index')
+                <a href="{{ route('incoming-letters.index') }}" class="inline-flex items-center justify-center bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300">
+                    Surat Masuk
+                </a>
+                @endcanVisit
+                @if(\App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), ['superadmin', 'admin', 'staf_tu']))
                 <a href="{{ route('letters.templates.index') }}" class="inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300">
-                     Kelola Template
+                    Kelola Template
                 </a>
                 <a href="{{ route('letters.bulk') }}" class="inline-flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white rounded-xl py-2.5 px-4 text-sm font-black uppercase tracking-wider transition-all duration-300 shadow-md">
-                     Cetak Massal
+                    Cetak Massal
                 </a>
                 <button @click="$dispatch('open-modal', 'create-letter-modal')" class="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-2.5 px-5 text-sm font-black uppercase tracking-wider shadow-lg shadow-primary-500/20 hover:shadow-primary-500/35 transition-all duration-300 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
@@ -28,14 +33,14 @@
 
     <div class="space-y-6">
         <!-- Panel Ringkasan KPI -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-5 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg flex items-center space-x-4">
                 <div class="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl text-blue-600 dark:text-blue-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l8-5.333a2 2 0 012.22 0l8 5.333A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-2.25-1.5a2 2 0 00-2.22 0l-2.25 1.5"></path></svg>
                 </div>
                 <div>
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Surat Resmi</p>
-                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $letters->total() }}</h3>
+                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $stats['total'] ?? $letters->total() }}</h3>
                 </div>
             </div>
 
@@ -44,8 +49,18 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                 </div>
                 <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Draft Disimpan</p>
-                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $letters->where('status', 'draft')->count() }}</h3>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Draf / Revisi</p>
+                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $stats['draft'] ?? 0 }}</h3>
+                </div>
+            </div>
+
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-5 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg flex items-center space-x-4">
+                <div class="p-3 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl text-indigo-600 dark:text-indigo-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Menunggu / Siap Terbit</p>
+                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ ($stats['pending'] ?? 0) + ($stats['approved'] ?? 0) }}</h3>
                 </div>
             </div>
 
@@ -55,7 +70,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Diterbitkan (Issued)</p>
-                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $letters->where('status', 'issued')->count() }}</h3>
+                    <h3 class="text-xl font-extrabold text-gray-800 dark:text-white mt-0.5">{{ $stats['issued'] ?? 0 }}</h3>
                 </div>
             </div>
         </div>
@@ -78,12 +93,16 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Status Penerbitan</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1.5">Status Persetujuan</label>
                     <select name="status" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-primary-500">
                         <option value="">Semua Status</option>
-                        <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft (Belum Bernomor)</option>
+                        <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft (Belum Diajukan)</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Menunggu Persetujuan Kepsek</option>
+                        <option value="revision" {{ request('status') === 'revision' ? 'selected' : '' }}>Perlu Revisi</option>
+                        <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Disetujui (Siap Terbit)</option>
                         <option value="issued" {{ request('status') === 'issued' ? 'selected' : '' }}>Diterbitkan (Issued)</option>
-                        <option value="revoked" {{ request('status') === 'revoked' ? 'selected' : '' }}>Dibatalkan (Revoked)</option>
+                        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="revoked" {{ request('status') === 'revoked' ? 'selected' : '' }}>Dicabut (Revoked)</option>
                     </select>
                 </div>
                 <div class="md:col-span-2 flex gap-2 items-end">
@@ -129,12 +148,12 @@
                                 <td class="px-6 py-4">
                                     @if($letter->student)
                                         <span class="font-bold text-sm text-gray-800 dark:text-white flex items-center gap-1.5">
-                                             {{ $letter->student->name }}
+                                            {{ $letter->student->user?->name ?? '-' }}
                                         </span>
                                         <p class="text-[11px] text-gray-400 mt-0.5">NISN: {{ $letter->student->nisn }} | Kelas: {{ $letter->student->classroom?->name ?? '-' }}</p>
                                     @elseif($letter->employee)
                                         <span class="font-bold text-sm text-gray-800 dark:text-white flex items-center gap-1.5">
-                                             {{ $letter->employee->name }}
+                                            {{ $letter->employee->user?->name ?? '-' }}
                                         </span>
                                         <p class="text-[11px] text-gray-400 mt-0.5">NIP: {{ $letter->employee->nip ?? '-' }}</p>
                                     @else
@@ -147,39 +166,51 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    @if($letter->status === 'draft')
-                                        <span class="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 rounded-lg text-xs font-bold border border-amber-100 dark:border-amber-900/30">
-                                            DRAF
-                                        </span>
-                                    @elseif($letter->status === 'issued')
-                                        <span class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg text-xs font-bold border border-emerald-100 dark:border-emerald-900/30">
-                                            DITERBITKAN
-                                        </span>
-                                    @else
-                                        <span class="px-2.5 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-xs font-bold border border-red-100 dark:border-red-900/30">
-                                            DIBATALKAN
-                                        </span>
-                                    @endif
+                                    @php
+                                        $badge = match ($letter->status) {
+                                            'draft' => ['bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/30', 'DRAF'],
+                                            'pending' => ['bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-900/30', 'MENUNGGU KEPSEK'],
+                                            'revision' => ['bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-900/30', 'PERLU REVISI'],
+                                            'approved' => ['bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 border-cyan-100 dark:border-cyan-900/30', 'SIAP TERBIT'],
+                                            'issued' => ['bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30', 'DITERBITKAN'],
+                                            default => ['bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30', strtoupper($letter->status)],
+                                        };
+                                    @endphp
+                                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold border {{ $badge[0] }}">
+                                        {{ $badge[1] }}
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-1 whitespace-nowrap">
                                     <a href="{{ route('letters.show', $letter->id) }}" class="inline-flex items-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg px-3 py-1.5 text-xs font-bold transition-all">
-                                         Detail
+                                        Detail
                                     </a>
-                                    @if($letter->status === 'draft' && in_array(auth()->user()->role, ['staf_tu', 'admin', 'superadmin']))
-                                        <form action="{{ route('letters.issue', $letter->id) }}" method="POST" class="inline">
+                                    @can('submit', $letter)
+                                        <form action="{{ route('letters.submit-approval', $letter->id) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menerbitkan surat ini? Setelah diterbitkan, nomor surat akan otomatis dihasilkan dan surat tidak dapat diubah lagi.')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold transition-all">
-                                                 Terbitkan
+                                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold transition-all">
+                                                Ajukan Kepsek
                                             </button>
                                         </form>
+                                    @endcan
+                                    @if($letter->status === 'approved')
+                                        @can('issue', \App\Models\Letter::class)
+                                            <form action="{{ route('letters.issue', $letter->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menerbitkan surat ini? Nomor surat dan kode QR verifikasi akan dibuat otomatis.')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold transition-all">
+                                                    Terbitkan
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    @endif
+                                    @can('delete', $letter)
                                         <form action="{{ route('letters.destroy', $letter->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('Hapus draf surat ini?')" class="bg-red-100 hover:bg-red-200 text-red-600 rounded-lg p-1.5 text-xs font-bold transition-all">
-                                                
+                                            <button type="submit" onclick="return confirm('Hapus draf surat ini?')" class="inline-flex items-center bg-red-100 hover:bg-red-200 text-red-600 rounded-lg p-1.5 text-xs font-bold transition-all" title="Hapus Draf">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             </button>
                                         </form>
-                                    @endif
+                                    @endcan
                                 </td>
                             </tr>
                         @empty

@@ -75,6 +75,7 @@ class DailyAssessmentController extends Controller
             'max_score' => 'required|numeric|min:0|max:100',
             'kkm' => 'nullable|numeric|min:0|max:100',
             'description' => 'nullable|string|max:1000',
+            'learning_objective' => 'nullable|string|max:255',
         ]);
 
         $data = $request->all();

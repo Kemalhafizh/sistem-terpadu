@@ -27,7 +27,7 @@ class Classroom extends Model
         if (array_intersect($user->effectiveRoles(), Student::SCHOOL_WIDE_ROLES) !== []) {
             return true;
         }
-        if (array_intersect($user->effectiveRoles(), StudentDataAccess::TEACHER_ROLES) === [] || ! ($year = AcademicYear::current())) {
+        if (array_intersect($user->effectiveRoles(), [...StudentDataAccess::TEACHER_ROLES, 'wali_kelas']) === [] || ! ($year = AcademicYear::current())) {
             return false;
         }
 

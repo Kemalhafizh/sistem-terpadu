@@ -36,9 +36,9 @@ class AlumniController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('student', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('nisn', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('student.user', fn ($uq) => $uq->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('student', fn ($sq) => $sq->where('nisn', 'like', "%{$search}%"));
             });
         }
 
@@ -66,8 +66,8 @@ class AlumniController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('student', function ($sq) use ($search) {
-                    $sq->where('name', 'like', "%{$search}%");
+                $q->whereHas('student.user', function ($uq) use ($search) {
+                    $uq->where('name', 'like', "%{$search}%");
                 })->orWhere('institution_name', 'like', "%{$search}%")
                     ->orWhere('current_position', 'like', "%{$search}%");
             });

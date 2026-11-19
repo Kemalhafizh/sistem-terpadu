@@ -19,21 +19,27 @@ class LetterService
     {
         $date = new \DateTime($issueDate);
         $year = $date->format('Y');
-        $month = $date->format('n');
+        $month = (int) $date->format('n');
 
         // Konversi bulan ke romawi
         $romans = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         $romanMonth = $romans[$month] ?? 'I';
 
-        // Hitung total surat yang diterbitkan pada tahun tersebut untuk template berkode ini
-        $count = Letter::where('template_id', $template->id)
+        // Hitung total surat yang pernah bernomor resmi pada tahun tersebut untuk template ini
+        $count = Letter::withTrashed()
+            ->where('template_id', $template->id)
             ->whereYear('issue_date', $year)
-            ->where('status', 'issued')
+            ->whereNotNull('letter_number')
             ->count();
 
-        $seq = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+        $sequence = $count + 1;
+        do {
+            $seq = str_pad((string) $sequence, 3, '0', STR_PAD_LEFT);
+            $candidate = "{$seq}/{$template->code}/SMA-ISA/{$romanMonth}/{$year}";
+            $sequence++;
+        } while (Letter::withTrashed()->where('letter_number', $candidate)->exists());
 
-        return "{$seq}/{$template->code}/SMA-ISA/{$romanMonth}/{$year}";
+        return $candidate;
     }
 
     /**
@@ -41,6 +47,7 @@ class LetterService
      */
     public function renderLetterBody(Letter $letter): string
     {
+        $letter->loadMissing(['template', 'student.user', 'student.classroom', 'employee.user']);
         $template = $letter->template;
         $body = $template->body_template;
 
@@ -69,12 +76,10 @@ class LetterService
         // Masukkan data dinamis kustom dari form JSON
         if (is_array($letter->field_values)) {
             foreach ($letter->field_values as $key => $val) {
-                // Contoh: {{purpose}} -> 'Mengikuti Lomba'
-                $replacements['{{'.$key.'}}'] = $val;
+                $replacements['{{'.$key.'}}'] = is_scalar($val) ? (string) $val : '';
             }
         }
 
-        // Ganti placeholders
         return str_replace(array_keys($replacements), array_values($replacements), $body);
     }
 
@@ -83,6 +88,7 @@ class LetterService
      */
     public function generatePdf(Letter $letter): \Barryvdh\DomPDF\PDF
     {
+        $letter->loadMissing(['template', 'student.user', 'student.classroom', 'employee.user', 'approver']);
         $renderedBody = $this->renderLetterBody($letter);
         $template = $letter->template;
 
@@ -94,7 +100,17 @@ class LetterService
             $signatureBase64 = 'data:'.$mimeType.';base64,'.base64_encode($fileData);
         }
 
-        $pdf = Pdf::loadView('letters.pdf', compact('letter', 'renderedBody', 'template', 'signatureBase64'));
+        $verificationUrl = filled($letter->verification_token)
+            ? route('letters.verify', $letter->verification_token)
+            : null;
+
+        $pdf = Pdf::loadView('letters.pdf', compact(
+            'letter',
+            'renderedBody',
+            'template',
+            'signatureBase64',
+            'verificationUrl'
+        ));
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf;

@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Models\StudentPointLog;
 use App\Models\User;
 use App\Models\WorkflowRequest;
+use App\Services\ApprovalInboxService;
 use App\Services\WorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -22,8 +23,10 @@ class AdminMobileDashboardController extends Controller
 
     private function authorizeAdmin(Request $request): void
     {
-        $role = $request->user()?->role;
-        if (! in_array($role, ['admin', 'superadmin', 'kepsek', 'kepala_sekolah'], true)) {
+        $user = $request->user();
+        $allowed = ['admin', 'superadmin', 'kepsek', 'kepala_sekolah'];
+
+        if (! $user || array_intersect($user->effectiveRoles(), $allowed) === []) {
             abort(403, 'Akses ditolak. Hanya administrator dan pimpinan sekolah yang berwenang.');
         }
     }
@@ -194,6 +197,28 @@ class AdminMobileDashboardController extends Controller
         return response()->json([
             'success' => true,
             'data' => $requests,
+        ]);
+    }
+
+    /**
+     * Unified cross-module approval inbox for authenticated staff, teachers, and leadership.
+     */
+    public function unifiedPendingApprovals(Request $request, ApprovalInboxService $inbox)
+    {
+        $user = $request->user();
+        $moduleFilter = $request->query('module');
+
+        $allItems = $inbox->forUser($user);
+        $filtered = $moduleFilter && $moduleFilter !== 'all'
+            ? $allItems->where('module_group', (string) $moduleFilter)->values()
+            : $allItems;
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'summary' => $inbox->summaryByGroup($allItems),
+                'items' => $inbox->serializeForApi($filtered),
+            ],
         ]);
     }
 

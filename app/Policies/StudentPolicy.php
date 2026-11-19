@@ -2,67 +2,60 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\Access\StudentDataAccess;
 
 class StudentPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     * Staff roles can view the full student list.
-     */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah',
-            'waka_kurikulum', 'waka_kesiswaan', 'staf_tu', 'guru', 'bk',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', 'kepala_sekolah', 'kepsek',
+            'waka_kurikulum', 'waka_kesiswaan', 'staf_tu', 'guru', 'teacher', 'bk', 'wali_kelas',
         ]);
     }
 
-    /**
-     * Determine whether the user can view a specific student.
-     * Students can only view their own data.
-     * Parents can only view their own children.
-     */
     public function view(User $user, Student $student): bool
     {
-        if ($user->role === 'student') {
-            return $student->user_id === $user->id;
+        $roles = $user->effectiveRoles();
+
+        if (array_intersect($roles, StudentDataAccess::STUDENT_ROLES) !== []) {
+            return (int) $student->user_id === (int) $user->id;
         }
 
-        if ($user->role === 'parent') {
-            return $student->parent_id === $user->id;
+        if (array_intersect($roles, StudentDataAccess::PARENT_ROLES) !== []) {
+            return (int) $student->parent_id === (int) $user->id;
         }
 
-        // All staff roles can view any student
-        return true;
+        if (array_intersect($roles, Student::SCHOOL_WIDE_ROLES) !== []) {
+            return true;
+        }
+
+        if (array_intersect($roles, [...StudentDataAccess::TEACHER_ROLES, 'wali_kelas']) !== []) {
+            return $student->isVisibleTo($user);
+        }
+
+        return false;
     }
 
-    /**
-     * Determine whether the user can create students.
-     */
     public function create(User $user): bool
     {
-        return in_array($user->role, [
+        return RoleMiddleware::allowsUser($user, [
             'admin', 'superadmin', 'waka_kurikulum', 'staf_tu',
         ]);
     }
 
-    /**
-     * Determine whether the user can update the student.
-     */
     public function update(User $user, Student $student): bool
     {
-        return in_array($user->role, [
+        return RoleMiddleware::allowsUser($user, [
             'admin', 'superadmin', 'waka_kurikulum', 'staf_tu',
         ]);
     }
 
-    /**
-     * Determine whether the user can delete the student.
-     */
     public function delete(User $user, Student $student): bool
     {
-        return in_array($user->role, ['admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin']);
     }
 }

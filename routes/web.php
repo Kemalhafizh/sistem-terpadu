@@ -62,6 +62,7 @@ use App\Http\Controllers\HRD\PayrollController;
 use App\Http\Controllers\HumanCapital\Evaluation360Controller;
 use App\Http\Controllers\ImpersonateController;
 use App\Http\Controllers\ImportExportController;
+use App\Http\Controllers\IncomingLetterController;
 use App\Http\Controllers\LetterController;
 use App\Http\Controllers\LibraryCirculationController;
 use App\Http\Controllers\LibraryController;
@@ -152,6 +153,9 @@ Route::prefix('spmb')->middleware('throttle:spmb')->group(function () {
     Route::get('/print-card/{registration}', [SpmbController::class, 'printCard'])->name('spmb.print-card');
     Route::get('/print-card/{registration}/photo', [SpmbController::class, 'printCardPhoto'])->name('spmb.print-card.photo');
 });
+
+// Verifikasi QR Surat Keluar Resmi (Publik, Non-PII)
+Route::get('letters/verify/{token}', [LetterController::class, 'verify'])->name('letters.verify');
 
 // ============================================================
 // AUTHENTICATED ROUTES
@@ -522,9 +526,20 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))->group(function () {
         Route::get('report-cards', [ReportCardController::class, 'index'])->name('report-cards.index');
+        Route::get('report-cards/completeness', [ReportCardController::class, 'completeness'])->name('report-cards.completeness');
+        Route::get('report-cards/export-erapor', [ReportCardController::class, 'exportERapor'])->name('report-cards.export-erapor');
+        Route::post('report-cards/upload-official-pdfs', [ReportCardController::class, 'uploadOfficialPdfs'])->name('report-cards.upload-official-pdfs');
         Route::post('report-cards/sync', [ReportCardController::class, 'sync'])->name('report-cards.sync');
         Route::post('report-cards/notes', [ReportCardController::class, 'storeNotes'])->name('report-cards.store-notes');
     });
+
+    Route::post('report-cards/publish-batch', [ReportCardController::class, 'publishBatch'])
+        ->middleware(Roles::only('waka_kurikulum', Roles::PRINCIPAL, 'admin'))
+        ->name('report-cards.publish-batch');
+
+    Route::get('report-cards/files/{pdf}', [ReportCardController::class, 'downloadFile'])
+        ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))
+        ->name('report-cards.files.show');
 
     Route::get('report-cards/{student}/pdf', [ReportCardController::class, 'printPdf'])
         ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))
@@ -629,7 +644,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ADMINISTRASI â€” Manajemen Surat & Dokumen Digital
+    // ADMINISTRASI — Manajemen Surat Keluar, Surat Masuk & Disposisi
     // =========================================================
     Route::middleware('role:staf_tu,admin,superadmin,kepala_sekolah')->group(function () {
         // Halaman Kelola Template
@@ -640,10 +655,30 @@ Route::middleware('auth')->group(function () {
         Route::get('letters/bulk', [LetterController::class, 'showBulkForm'])->name('letters.bulk');
         Route::post('letters/bulk', [LetterController::class, 'bulkStore'])->name('letters.bulk.store');
 
-        // Operasi CRUD & Transisi Status Surat
-        Route::resource('letters', LetterController::class)->except(['edit', 'update']);
+        // Operasi CRUD & Transisi Status Surat Keluar (J1)
+        Route::resource('letters', LetterController::class);
+        Route::post('letters/{letter}/submit-approval', [LetterController::class, 'submitApproval'])->name('letters.submit-approval');
         Route::post('letters/{letter}/issue', [LetterController::class, 'issue'])->name('letters.issue');
+        Route::post('letters/{letter}/revoke', [LetterController::class, 'revoke'])->name('letters.revoke');
         Route::get('letters/{letter}/pdf', [LetterController::class, 'downloadPdf'])->name('letters.pdf');
+    });
+
+    // Surat Masuk & Disposisi (J2)
+    Route::middleware(Roles::only('staf_tu', 'admin'))->group(function () {
+        Route::get('incoming-letters/create', [IncomingLetterController::class, 'create'])->name('incoming-letters.create');
+        Route::post('incoming-letters', [IncomingLetterController::class, 'store'])->name('incoming-letters.store');
+    });
+    Route::middleware(Roles::only('staf_tu', Roles::PRINCIPAL, 'admin'))->group(function () {
+        Route::post('incoming-letters/{incomingLetter}/archive', [IncomingLetterController::class, 'archive'])->name('incoming-letters.archive');
+    });
+    Route::middleware(Roles::only(Roles::PRINCIPAL, 'admin'))->group(function () {
+        Route::post('incoming-letters/{incomingLetter}/dispose', [IncomingLetterController::class, 'dispose'])->name('incoming-letters.dispose');
+    });
+    Route::middleware(Roles::only('staf_tu', Roles::LEADERSHIP, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'bk', 'bendahara', 'pustakawan', 'petugas_uks', 'admin'))->group(function () {
+        Route::get('incoming-letters', [IncomingLetterController::class, 'index'])->name('incoming-letters.index');
+        Route::get('incoming-letters/{incomingLetter}', [IncomingLetterController::class, 'show'])->name('incoming-letters.show');
+        Route::get('incoming-letters/{incomingLetter}/attachment', [IncomingLetterController::class, 'downloadAttachment'])->name('incoming-letters.attachment');
+        Route::post('letter-dispositions/{disposition}/follow-up', [IncomingLetterController::class, 'updateDisposition'])->name('letter-dispositions.follow-up');
     });
 
     // =========================================================
@@ -760,6 +795,23 @@ Route::middleware('auth')->group(function () {
         // Mutasi & Alumni
         Route::resource('mutations', MutationController::class)->only(['index', 'create', 'store']);
         Route::get('mutations/{mutation}/document', [MutationController::class, 'downloadDocument'])->name('mutations.document');
+    });
+
+    // K2: Buku Induk Siswa (Visibilitas diperiksa via Student::isVisibleTo di StudentController)
+    Route::middleware(Roles::only(
+        StudentDataAccess::STUDENT_ROLES,
+        StudentDataAccess::PARENT_ROLES,
+        StudentDataAccess::TEACHER_ROLES,
+        'wali_kelas',
+        'bk',
+        'waka_kurikulum',
+        'waka_kesiswaan',
+        'staf_tu',
+        Roles::PRINCIPAL,
+        'admin'
+    ))->group(function () {
+        Route::get('students/{student}/ledger', [StudentController::class, 'bukuInduk'])->name('students.ledger');
+        Route::get('students/{student}/ledger/pdf', [StudentController::class, 'bukuIndukPdf'])->name('students.ledger.pdf');
     });
 
     // =========================================================
@@ -1197,9 +1249,9 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ðŸ“‹ DIGITAL APPROVAL WORKFLOW ENGINE
+    // DIGITAL APPROVAL WORKFLOW ENGINE & UNIFIED INBOX
     // =========================================================
-    Route::middleware('auth')
+    Route::middleware(Roles::only(Roles::LEADERSHIP, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'bk', 'staf_tu', 'bendahara', 'pustakawan', 'petugas_uks', 'admin'))
         ->prefix('workflows')
         ->name('workflows.')
         ->group(function () {

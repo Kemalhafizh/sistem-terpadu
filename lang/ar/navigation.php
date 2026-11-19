@@ -99,4 +99,6 @@ return [
     'school_identity' => 'هوية المدرسة',
     'school_appearance' => 'المظهر',
     'fingerprint_import' => 'استيراد البصمة',
+    'incoming_letters' => 'الوارد والتوجيهات',
+    'approval_inbox' => 'بانتظار موافقتي',
 ];

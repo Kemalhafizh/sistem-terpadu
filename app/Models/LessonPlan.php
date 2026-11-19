@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LessonPlan extends Model
@@ -36,17 +37,20 @@ class LessonPlan extends Model
         'reviewed_at' => 'datetime',
     ];
 
-    public function user()
+    /** @return BelongsTo<User, $this> */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function subject()
+    /** @return BelongsTo<Subject, $this> */
+    public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
 
-    public function classroom()
+    /** @return BelongsTo<Classroom, $this> */
+    public function classroom(): BelongsTo
     {
         return $this->belongsTo(Classroom::class);
     }

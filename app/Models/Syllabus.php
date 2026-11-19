@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Syllabus extends Model
 {
@@ -26,7 +27,8 @@ class Syllabus extends Model
         'approved_at' => 'datetime',
     ];
 
-    public function subject()
+    /** @return BelongsTo<Subject, $this> */
+    public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
@@ -36,7 +38,8 @@ class Syllabus extends Model
         return $this->belongsTo(AcademicYear::class);
     }
 
-    public function uploader()
+    /** @return BelongsTo<User, $this> */
+    public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }

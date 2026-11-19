@@ -310,7 +310,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   3. Nilai masuk ke rapor P5.
 - **Kini:** tabel karakter/P5 ada. Alur ujung ke ujung sampai rapor perlu diverifikasi.
 
-#### D5. Rapor Semester (e-Rapor resmi Kemendikdasmen) · `[Sebagian]`
+#### D5. Rapor Semester (e-Rapor resmi Kemendikdasmen) · `[Tersedia]`
 - **Prinsip integrasi:** sekolah tetap memakai **aplikasi e-Rapor resmi**. SISTA **tidak** membuat rapor resmi kedua, dan **tidak ada input nilai dua kali**.
 - **Pemilik:** Waka Kurikulum (penerbitan). Wali kelas memeriksa kelengkapan. Operator e-Rapor mengimpor. Pengesahan dan tanda tangan kepala sekolah terjadi di e-Rapor atau di dokumen fisik, bukan di SISTA.
 - **Langkah:**
@@ -348,7 +348,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   - Kata awal ("Sangat baik", "Baik", "Perlu bimbingan") mengikuti **ambang nilai yang diatur sekolah**.
   - Bila format impor e-Rapor ternyata meminta TP terkuat/terlemah, bukan kalimat jadi, SISTA mengekspor pilihan TP itu dan kalimatnya disusun e-Rapor.
 - **Nama pejabat menurut tanggal.** Pada contoh rapor, Kepala Sekolah berganti **tiga kali dalam tiga tahun** (semester 1 dan semester 2 TA 2023/2024 pun berbeda). Nama Kepala Sekolah dan wali kelas yang dicetak atau diekspor diambil dari pemegang jabatan **pada tanggal rapor**, bukan pejabat sekarang.
-- **Kini:** ada `ERaporPdfService` yang membuat PDF rapor sendiri. Ini **harus dialihkan** menjadi pratinjau nilai untuk wali kelas, atau dihapus, supaya tidak ada dua rapor berbeda di tangan orang tua.
+- **Kini:** dasbor kelengkapan wali kelas, draf capaian kompetensi berbasis TP, hitung kehadiran harian C2/C3, ekspor CSV e-Rapor, unggah massal PDF resmi berdasar NISN, serta penerbitan massal per angkatan telah tersedia. `ERaporPdfService` menandai pratinjau PDF dengan banner `PRATINJAU - BUKAN RAPOR RESMI` apabila PDF resmi belum diunggah, sedangkan PDF resmi ditandai `is_official`.
 
 ### E. Kesiswaan, BK & Layanan Siswa
 
@@ -481,13 +481,13 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### J. Administrasi & Komunikasi
 
-#### J1. Surat Keluar · `[Sebagian]`
+#### J1. Surat Keluar · `[Tersedia]`
 - **Pemilik:** Staf TU. **Menandatangani:** Kepala Sekolah.
 - **Langkah:** pilih template → isi → persetujuan kepala sekolah → nomor surat otomatis → terbit (PDF dengan QR verifikasi).
-- **Status:** `draft → issued / revoked`.
-- **Lubang:** definisi `letter_approval` sudah ada di seeder tetapi **belum dipakai**, sehingga surat bisa terbit tanpa persetujuan kepala sekolah.
+- **Status:** `draft → pending → approved / revision → issued / revoked`.
+- **Alur persetujuan:** pengajuan melalui definisi workflow `letter_approval` (Kepala Sekolah); surat tidak dapat diterbitkan sebelum berstatus `approved` dan dibekali token QR verifikasi publik (`/letters/verify/{token}`).
 
-#### J2. Surat Masuk & Disposisi · `[Terjadwal]`
+#### J2. Surat Masuk & Disposisi · `[Tersedia]`
 - **Pemilik:** Staf TU.
 - **Langkah:**
   1. TU mencatat dan memindai surat masuk.
@@ -550,7 +550,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
   - password awal lewat lembar akun anak;
   - OTP WA menyusul bila WA gateway aktif.
 
-#### K2. Buku Induk Siswa · `[Terjadwal]`
+#### K2. Buku Induk Siswa · `[Tersedia]`
 - **Isi:** identitas, riwayat rombel per TA, mutasi, nilai rapor per semester, prestasi, kelulusan. Dicetak per siswa sesuai format dinas.
 
 #### K3. Alumni & Tracer Study · `[Tersedia]`

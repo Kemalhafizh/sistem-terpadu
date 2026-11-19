@@ -36,7 +36,7 @@
                     <div class="bg-primary-900 p-6 rounded-2xl shadow-lg border border-primary-800 flex flex-col items-center justify-center text-center text-white">
                         <svg class="w-8 h-8 mb-3 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                         <h4 class="text-sm font-bold mb-3 uppercase tracking-wider">E-Rapor PDF</h4>
-                        <a href="{{ route('report-cards.pdf', $student->id) }}" target="_blank" class="px-4 py-2 bg-white text-primary-900 rounded-lg text-xs font-black hover:bg-primary-50 transition-colors shadow-sm">
+                        <a href="{{ route('report-cards.pdf', $student) }}" target="_blank" class="px-4 py-2 bg-white text-primary-900 rounded-lg text-xs font-black hover:bg-primary-50 transition-colors shadow-sm">
                             UNDUH SEKARANG
                         </a>
                     </div>

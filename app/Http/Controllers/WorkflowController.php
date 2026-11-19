@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\WorkflowApproval;
 use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
+use App\Services\ApprovalInboxService;
 use App\Services\WorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -186,11 +187,20 @@ class WorkflowController extends Controller
     /**
      * Tampilkan daftar pengajuan yang sedang menunggu persetujuan pengguna saat ini.
      */
-    public function pending()
+    public function pending(Request $request, ApprovalInboxService $inbox)
     {
-        $requests = $this->service->getPendingForUser(auth()->user());
+        $user = auth()->user();
+        $requests = $this->service->getPendingForUser($user);
+        $requests->loadMissing(['definition', 'requester', 'requestable', 'approvals']);
 
-        return view('workflows.pending', compact('requests'));
+        $allUnifiedItems = $inbox->forUser($user);
+        $moduleSummary = $inbox->summaryByGroup($allUnifiedItems);
+        $activeModule = (string) $request->input('module', 'all');
+        $unifiedItems = $activeModule !== '' && $activeModule !== 'all'
+            ? $allUnifiedItems->where('module_group', $activeModule)->values()
+            : $allUnifiedItems;
+
+        return view('workflows.pending', compact('requests', 'unifiedItems', 'moduleSummary', 'activeModule'));
     }
 
     /**
@@ -215,8 +225,11 @@ class WorkflowController extends Controller
 
         $workflowRequest->load(['definition', 'requester', 'approvals.approver', 'approvals.delegatedTo', 'requestable']);
 
-        // Dapatkan semua user staff untuk opsi delegasi
-        $staffUsers = User::whereIn('role', ['admin', 'superadmin', 'kepala_sekolah', 'waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras', 'waka_humas', 'staf_tu', 'bk', 'guru'])
+        // Dapatkan semua user staff (termasuk pemegang jabatan aktif) untuk opsi delegasi
+        $staffUsers = User::where(function ($q) {
+            $q->whereIn('role', ['admin', 'superadmin', 'kepala_sekolah', 'kepsek', 'waka_kurikulum', 'waka_kesiswaan', 'waka_sarpras', 'waka_humas', 'staf_tu', 'bk', 'guru', 'teacher', 'wali_kelas'])
+                ->orWhereHas('positionAssignments', fn ($pq) => $pq->activeOn());
+        })
             ->where('id', '!=', auth()->id())
             ->orderBy('name')
             ->get();
@@ -237,8 +250,8 @@ class WorkflowController extends Controller
             abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
         }
 
-        $isAuthorized = ($currentApproval->role === auth()->user()->role && $currentApproval->delegated_to_id === null)
-            || $currentApproval->delegated_to_id === auth()->id();
+        $isAuthorized = (in_array($currentApproval->role, auth()->user()->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
+            || (int) $currentApproval->delegated_to_id === (int) auth()->id();
 
         if (! $isAuthorized) {
             abort(403, 'Anda tidak berwenang memberikan persetujuan pada langkah ini.');
@@ -260,8 +273,8 @@ class WorkflowController extends Controller
             abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
         }
 
-        $isAuthorized = ($currentApproval->role === auth()->user()->role && $currentApproval->delegated_to_id === null)
-            || $currentApproval->delegated_to_id === auth()->id();
+        $isAuthorized = (in_array($currentApproval->role, auth()->user()->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
+            || (int) $currentApproval->delegated_to_id === (int) auth()->id();
 
         if (! $isAuthorized) {
             abort(403, 'Anda tidak berwenang memberikan tindakan pada langkah ini.');
@@ -287,8 +300,8 @@ class WorkflowController extends Controller
             abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
         }
 
-        $isAuthorized = ($currentApproval->role === auth()->user()->role && $currentApproval->delegated_to_id === null)
-            || $currentApproval->delegated_to_id === auth()->id();
+        $isAuthorized = (in_array($currentApproval->role, auth()->user()->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
+            || (int) $currentApproval->delegated_to_id === (int) auth()->id();
 
         if (! $isAuthorized) {
             abort(403, 'Anda tidak berwenang meminta revisi.');
@@ -309,7 +322,7 @@ class WorkflowController extends Controller
      */
     public function resubmit(WorkflowRequest $workflowRequest, Request $request)
     {
-        if ($workflowRequest->requester_id !== auth()->id()) {
+        if ((int) $workflowRequest->requester_id !== (int) auth()->id()) {
             abort(403, 'Hanya pengaju yang dapat melakukan resubmit.');
         }
 
@@ -333,8 +346,8 @@ class WorkflowController extends Controller
             abort(400, 'Langkah persetujuan aktif tidak ditemukan.');
         }
 
-        $isAuthorized = ($currentApproval->role === auth()->user()->role && $currentApproval->delegated_to_id === null)
-            || $currentApproval->delegated_to_id === auth()->id();
+        $isAuthorized = (in_array($currentApproval->role, auth()->user()->effectiveRoles(), true) && $currentApproval->delegated_to_id === null)
+            || (int) $currentApproval->delegated_to_id === (int) auth()->id();
 
         if (! $isAuthorized) {
             abort(403, 'Anda tidak berwenang mendelegasikan langkah persetujuan ini.');

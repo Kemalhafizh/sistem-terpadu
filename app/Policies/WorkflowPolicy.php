@@ -12,12 +12,15 @@ class WorkflowPolicy
      */
     public function view(User $user, WorkflowRequest $request): bool
     {
-        // Requester can view their own requests
-        if ($user->id === $request->requester_id) {
+        if ((int) $user->id === (int) $request->requester_id) {
             return true;
         }
 
-        // Approvers assigned to any step in the workflow can view it
-        return $request->approvals()->whereIn('role', $user->effectiveRoles())->exists();
+        return $request->approvals()
+            ->where(function ($query) use ($user) {
+                $query->whereIn('role', $user->effectiveRoles())
+                    ->orWhere('delegated_to_id', $user->id);
+            })
+            ->exists();
     }
 }

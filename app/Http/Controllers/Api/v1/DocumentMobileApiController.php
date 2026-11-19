@@ -8,6 +8,7 @@ use App\Models\ReportCardPdf;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class DocumentMobileApiController extends Controller
 {
@@ -41,10 +42,13 @@ class DocumentMobileApiController extends Controller
                 'type' => 'academic_report',
                 'semester' => $template?->semester,
                 'academic_year' => $year?->year,
+                'is_official' => (bool) $pdf->is_official,
                 'date' => optional($pdf->generated_at)->format('Y-m-d'),
                 'sha256_hash' => $pdf->sha256_hash,
                 'verification_url' => $pdf->qr_verification_url,
-                'file_url' => $pdf->file_path ? Storage::url($pdf->file_path) : null,
+                'file_url' => $pdf->file_path
+                    ? URL::temporarySignedRoute('api.v1.rapor.files.show', now()->addHours(6), ['pdf' => $pdf->id])
+                    : null,
             ];
         });
 

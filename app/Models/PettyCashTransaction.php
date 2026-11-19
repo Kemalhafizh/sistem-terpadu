@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PettyCashTransaction extends Model
 {
@@ -22,12 +23,14 @@ class PettyCashTransaction extends Model
 
     protected $casts = ['transaction_date' => 'date', 'amount' => 'decimal:2', 'balance_applied_at' => 'datetime'];
 
-    public function fund()
+    /** @return BelongsTo<PettyCashFund, $this> */
+    public function fund(): BelongsTo
     {
         return $this->belongsTo(PettyCashFund::class, 'fund_id');
     }
 
-    public function requester()
+    /** @return BelongsTo<User, $this> */
+    public function requester(): BelongsTo
     {
         return $this->belongsTo(User::class, 'requested_by');
     }

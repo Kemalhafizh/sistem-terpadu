@@ -171,8 +171,8 @@ test('letter body replaces placeholders correctly with student and custom values
 
 // ── AUTO-NUMBERING & ISSUING WORKFLOWS ───────────────────────────────────────
 
-test('issuing a draft letter generates correct sequential number and roman month', function () {
-    // Letter 1 issued in May 2026
+test('draft letters cannot bypass principal approval, and issuing approved letters generates sequential numbers and qr verify token', function () {
+    // Letter 1 starts as draft in May 2026
     $letter1 = Letter::factory()->create([
         'template_id' => $this->template->id,
         'student_id' => $this->student1->id,
@@ -182,16 +182,43 @@ test('issuing a draft letter generates correct sequential number and roman month
         'status' => 'draft',
     ]);
 
+    // Direct issue on draft must be blocked
+    $this->actingAs($this->tu)->post(route('letters.issue', $letter1->id))
+        ->assertRedirect()
+        ->assertSessionHas('error');
+    expect($letter1->fresh()->status)->toBe('draft')
+        ->and($letter1->fresh()->letter_number)->toBeNull();
+
+    // Submit for Principal approval & approve via Workflow Engine
+    $this->actingAs($this->tu)->post(route('letters.submit-approval', $letter1->id))
+        ->assertRedirect(route('letters.show', $letter1->id));
+    $letter1->refresh();
+    expect($letter1->status)->toBe('pending')
+        ->and($letter1->workflowRequest)->not->toBeNull();
+
+    $this->actingAs($this->kepsek)->post(route('workflows.approve', $letter1->workflowRequest))
+        ->assertRedirect(route('workflows.pending'));
+    $letter1->refresh();
+    expect($letter1->status)->toBe('approved')
+        ->and($letter1->approved_by)->toBe($this->kepsek->id);
+
+    // Issue approved Letter 1
     $response = $this->actingAs($this->tu)->post(route('letters.issue', $letter1->id));
     $response->assertRedirect(route('letters.show', $letter1->id));
     $response->assertSessionHas('success');
 
     $letter1->refresh();
-    expect($letter1->status)->toBe('issued');
-    // Sequence should be 001, code SKA, school SMA-ISA, month V (May = 5 = V), year 2026
-    expect($letter1->letter_number)->toBe('001/SKA/SMA-ISA/V/2026');
+    expect($letter1->status)->toBe('issued')
+        ->and($letter1->letter_number)->toBe('001/SKA/SMA-ISA/V/2026')
+        ->and($letter1->verification_token)->not->toBeEmpty();
 
-    // Letter 2 issued in May 2026 (same template)
+    // Public verification renders non-PII valid status
+    $this->get(route('letters.verify', $letter1->verification_token))
+        ->assertOk()
+        ->assertSee('001/SKA/SMA-ISA/V/2026')
+        ->assertDontSee('0012345678');
+
+    // Letter 2 submitted, approved, and issued in May 2026 (same template)
     $letter2 = Letter::factory()->create([
         'template_id' => $this->template->id,
         'student_id' => $this->student2->id,
@@ -201,9 +228,11 @@ test('issuing a draft letter generates correct sequential number and roman month
         'status' => 'draft',
     ]);
 
+    $this->actingAs($this->tu)->post(route('letters.submit-approval', $letter2->id));
+    $this->actingAs($this->kepsek)->post(route('workflows.approve', $letter2->fresh()->workflowRequest));
     $this->actingAs($this->tu)->post(route('letters.issue', $letter2->id));
+
     $letter2->refresh();
-    // Sequence incremented to 002
     expect($letter2->letter_number)->toBe('002/SKA/SMA-ISA/V/2026');
 });
 

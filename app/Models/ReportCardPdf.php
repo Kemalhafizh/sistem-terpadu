@@ -13,6 +13,7 @@ class ReportCardPdf extends Model
 
     protected $casts = [
         'generated_at' => 'datetime',
+        'is_official' => 'boolean',
     ];
 
     public function template()

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\ReportCardPdf;
 use App\Models\ReportCardTemplate;
 use App\Services\ERaporPdfService;
 use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ERaporApiController extends Controller
 {
@@ -67,10 +70,26 @@ class ERaporApiController extends Controller
             (int) $request->user()->id
         );
 
+        $pdf->setAttribute('signed_url', $this->service->signedFileUrl($pdf));
+
         return response()->json([
             'success' => true,
             'message' => 'PDF Rapor berhasil digenerate',
             'data' => $pdf,
+        ]);
+    }
+
+    public function downloadPdf(Request $request, ReportCardPdf $pdf): StreamedResponse
+    {
+        abort_unless($request->hasValidSignature(), 403);
+
+        $path = $pdf->file_path;
+        abort_unless($path && Storage::disk('local')->exists($path), 404);
+
+        $downloadName = $pdf->original_filename ?: ('rapor_'.$pdf->student_id.'.pdf');
+
+        return Storage::disk('local')->response($path, $downloadName, [
+            'Content-Type' => 'application/pdf',
         ]);
     }
 

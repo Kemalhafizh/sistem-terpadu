@@ -110,6 +110,9 @@
                                     {{ $student->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}
                                 </td>
                                 <td class="py-4 px-6 text-sm font-medium text-right flex items-center justify-end space-x-2">
+                                    <a href="{{ route('students.ledger', $student) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all" title="Buku Induk Siswa">
+                                        Buku Induk
+                                    </a>
                                     <a href="{{ route('students.pdf', $student->id) }}" target="_blank" class="text-emerald-600 hover:text-emerald-900 bg-emerald-50 p-1.5 rounded-lg transition-all" title="Cetak Biodata PDF">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 012-2H5a2 2 0 012 2v4a2 2 0 002 2m8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                     </a>

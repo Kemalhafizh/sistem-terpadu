@@ -85,18 +85,6 @@ parameters:
 			path: app/Http/Controllers/Admin/SyncController.php
 
 		-
-			message: '#^Relation ''student'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 7
-			path: app/Http/Controllers/AlumniController.php
-
-		-
-			message: '#^Relation ''tracerResponse'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AlumniController.php
-
-		-
 			message: '#^Relation ''children'' is not found in App\\Models\\User model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -139,12 +127,6 @@ parameters:
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
 
 		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\TeachingJournal model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
 			message: '#^Relation ''recipient'' is not found in App\\Models\\ParentMessage model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -158,12 +140,6 @@ parameters:
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\ParentMessage model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\TeachingJournal model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/Api/v1/ApiTeacherController.php
@@ -235,18 +211,6 @@ parameters:
 			path: app/Http/Controllers/AssetLoanController.php
 
 		-
-			message: '#^Relation ''asset'' is not found in App\\Models\\AssetLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/AssetLoanController.php
-
-		-
-			message: '#^Relation ''borrower'' is not found in App\\Models\\AssetLoan model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/AssetLoanController.php
-
-		-
 			message: '#^Relation ''asset'' is not found in App\\Models\\AssetMaintenance model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
@@ -289,39 +253,9 @@ parameters:
 			path: app/Http/Controllers/CurriculumController.php
 
 		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\LessonPlan model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/CurriculumController.php
-
-		-
 			message: '#^Relation ''reviewer'' is not found in App\\Models\\LessonPlan model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/CurriculumController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\LessonPlan model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Http/Controllers/CurriculumController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\Syllabus model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/CurriculumController.php
-
-		-
-			message: '#^Relation ''uploader'' is not found in App\\Models\\Syllabus model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/CurriculumController.php
-
-		-
-			message: '#^Relation ''user'' is not found in App\\Models\\LessonPlan model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
 			path: app/Http/Controllers/CurriculumController.php
 
 		-
@@ -782,24 +716,6 @@ parameters:
 			path: app/Http/Controllers/TeachingJournalController.php
 
 		-
-			message: '#^Relation ''classroom'' is not found in App\\Models\\TeachingJournal model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/TeachingJournalController.php
-
-		-
-			message: '#^Relation ''subject'' is not found in App\\Models\\TeachingJournal model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/TeachingJournalController.php
-
-		-
-			message: '#^Relation ''teacher'' is not found in App\\Models\\TeachingJournal model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/TeachingJournalController.php
-
-		-
 			message: '#^Relation ''assignee'' is not found in App\\Models\\Ticket model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -818,12 +734,6 @@ parameters:
 			path: app/Http/Controllers/TracerStudyController.php
 
 		-
-			message: '#^Relation ''student'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/TracerStudyController.php
-
-		-
 			message: '#^Relation ''latestPosition'' is not found in App\\Models\\BankAccount model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -833,18 +743,6 @@ parameters:
 			message: '#^Relation ''custodian'' is not found in App\\Models\\PettyCashFund model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
-			path: app/Http/Controllers/Treasury/PettyCashController.php
-
-		-
-			message: '#^Relation ''fund'' is not found in App\\Models\\PettyCashTransaction model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Treasury/PettyCashController.php
-
-		-
-			message: '#^Relation ''requester'' is not found in App\\Models\\PettyCashTransaction model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
 			path: app/Http/Controllers/Treasury/PettyCashController.php
 
 		-
@@ -944,34 +842,10 @@ parameters:
 			path: app/Notifications/Channels/WhatsappChannel.php
 
 		-
-			message: '#^Relation ''extracurricular'' is not found in App\\Models\\ExtracurricularMember model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/AchievementService.php
-
-		-
 			message: '#^Relation ''alumni'' is not found in App\\Models\\TracerResponse model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/AlumniEnhancedService.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/AlumniEnhancedService.php
-
-		-
-			message: '#^Relation ''tracerResponse'' is not found in App\\Models\\AlumniData model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Services/AlumniEnhancedService.php
-
-		-
-			message: '#^Relation ''academicYear'' is not found in App\\Models\\ReportCard model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/Analytics/MobileAnalyticsService.php
 
 		-
 			message: '#^Relation ''billing'' is not found in App\\Models\\Payment model\.$#'
@@ -1008,12 +882,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/DisciplineService.php
-
-		-
-			message: '#^Relation ''academicYear'' is not found in App\\Models\\ReportCardTemplate model\.$#'
-			identifier: larastan.relationExistence
-			count: 3
-			path: app/Services/ERaporPdfService.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\ReportCardPdf model\.$#'
@@ -1146,12 +1014,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Services/SpmbService.php
-
-		-
-			message: '#^Relation ''extracurricular'' is not found in App\\Models\\ExtracurricularMember model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/StudentProfile360Service.php
 
 		-
 			message: '#^Relation ''healthRecord'' is not found in App\\Models\\Student model\.$#'

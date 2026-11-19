@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
 
@@ -62,7 +63,7 @@ class Student extends Model
         if (array_intersect($effectiveRoles, StudentDataAccess::PARENT_ROLES) !== []) {
             return $query->where('parent_id', $user->id);
         }
-        if (array_intersect($effectiveRoles, StudentDataAccess::TEACHER_ROLES) !== []) {
+        if (array_intersect($effectiveRoles, [...StudentDataAccess::TEACHER_ROLES, 'wali_kelas']) !== []) {
             $year = AcademicYear::current();
             if (! $year) {
                 return $query->whereRaw('1 = 0');
@@ -167,7 +168,8 @@ class Student extends Model
         return $this->hasMany(StudentMutation::class);
     }
 
-    public function alumniData()
+    /** @return HasOne<AlumniData, $this> */
+    public function alumniData(): HasOne
     {
         return $this->hasOne(AlumniData::class);
     }
