@@ -547,27 +547,27 @@ test('cbt proctor extend time adds persistent extra minutes and server rejects e
         ->assertStatus(409);
 
     // Test fresh in-progress expired attempt directly against web submit & API endpoints
-    $attempt->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
+    $attempt->refresh()->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
     $this->actingAs($studentUser)
         ->postJson(route('cbt.exams.submit', $exam), ['answers' => [$question->id => 'A']])
         ->assertForbidden();
     expect($attempt->fresh()->status)->toBe('timeout');
 
-    $attempt->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
+    $attempt->refresh()->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
     Sanctum::actingAs($studentUser);
     $this->postJson("/api/v1/student/cbt/exams/{$exam->id}/micro-sync", [
         'answers' => [$question->id => 'A'],
     ])->assertForbidden();
     expect($attempt->fresh()->status)->toBe('timeout');
 
-    $attempt->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
+    $attempt->refresh()->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
     $this->postJson("/api/v1/student/cbt/exams/{$exam->id}/upload-essay", [
         'question_id' => $question->id,
         'file' => UploadedFile::fake()->image('late-essay.jpg', 100, 100),
     ])->assertForbidden();
     expect($attempt->fresh()->status)->toBe('timeout');
 
-    $attempt->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
+    $attempt->refresh()->update(['status' => 'in_progress', 'is_auto_submitted' => false, 'submitted_at' => null]);
     $this->postJson("/api/v1/student/cbt/exams/{$exam->id}/submit", [
         'answers' => [$question->id => 'A'],
     ])->assertForbidden();
