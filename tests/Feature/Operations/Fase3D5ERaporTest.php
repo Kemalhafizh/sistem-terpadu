@@ -93,13 +93,13 @@ test('phase inference, semester numbering, and grade X vs XI subject grouping fo
         ->and($service->inferSemesterNumber('XI', 'ganjil'))->toBe(3)
         ->and($service->inferSemesterNumber('XII', 'genap'))->toBe(6);
 
-    $matematika = Subject::factory()->create(['name' => 'Matematika', 'code' => 'MTK', 'category' => 'umum']);
-    $fisika = Subject::factory()->create(['name' => 'Fisika', 'code' => 'FSK', 'category' => 'umum']);
-    $sosiologi = Subject::factory()->create(['name' => 'Sosiologi', 'code' => 'SOS', 'category' => 'umum']);
-    $jawa = Subject::factory()->create(['name' => 'Bahasa Jawa', 'code' => 'BJW', 'category' => 'muatan_lokal']);
-    $fiqih = Subject::factory()->create(['name' => 'Fiqih', 'code' => 'FQH', 'category' => 'ciri_khas']);
-    $informatika = Subject::factory()->create(['name' => 'Informatika', 'code' => 'INF', 'category' => 'pilihan']);
-    $psb = Subject::factory()->create(['name' => 'Pembiasaan Sikap Baik', 'code' => 'PSB', 'category' => 'ciri_khas']);
+    $matematika = Subject::factory()->create(['name' => 'Matematika', 'code' => 'MTK', 'category' => 'Nasional']);
+    $fisika = Subject::factory()->create(['name' => 'Fisika', 'code' => 'FSK', 'category' => 'Nasional']);
+    $sosiologi = Subject::factory()->create(['name' => 'Sosiologi', 'code' => 'SOS', 'category' => 'Nasional']);
+    $jawa = Subject::factory()->create(['name' => 'Bahasa Jawa', 'code' => 'BJW', 'category' => 'Lokal']);
+    $fiqih = Subject::factory()->create(['name' => 'Fiqih', 'code' => 'FQH', 'category' => 'Ciri Khas']);
+    $informatika = Subject::factory()->create(['name' => 'Informatika', 'code' => 'INF', 'category' => 'Nasional']);
+    $psb = Subject::factory()->create(['name' => 'Pembiasaan Sikap Baik', 'code' => 'PSB', 'category' => 'Ciri Khas']);
 
     $allSubjects = collect([$matematika, $fisika, $sosiologi, $jawa, $fiqih, $informatika, $psb]);
 
@@ -168,7 +168,7 @@ test('TP capaian draft never outputs FALSE, handles single TP without duplicatio
         'daily_assessment_id' => $uh2->id,
         'student_id' => $this->student->id,
         'score' => 68,
-        'remedial_status' => 'none',
+        'remedial_status' => 'not_needed',
     ]);
 
     $multiResult = $service->generateTpCapaian($this->student, $subject, $this->academicYear);
@@ -261,6 +261,7 @@ test('day-level attendance counts C3 leave, full-day alpha, daily I, and ignores
     // Hari 5 (2026-10-09): Presensi harian Izin (I)
     Attendance::create([
         'student_id' => $this->student->id,
+        'classroom_id' => $this->classroomX->id,
         'academic_year_id' => $this->academicYear->id,
         'date' => '2026-10-09',
         'status' => 'I',
@@ -278,8 +279,8 @@ test('day-level attendance counts C3 leave, full-day alpha, daily I, and ignores
 });
 
 test('completeness endpoint, CSV export with historical principal and blank missing grades, bulk NISN PDF/ZIP upload, publish, and signed mobile download work securely', function () {
-    $subjectScored = Subject::factory()->create(['name' => 'Kimia', 'code' => 'KMA', 'category' => 'umum']);
-    $subjectMissing = Subject::factory()->create(['name' => 'Ekonomi', 'code' => 'EKO', 'category' => 'umum']);
+    $subjectScored = Subject::factory()->create(['name' => 'Kimia', 'code' => 'KMA', 'category' => 'Nasional']);
+    $subjectMissing = Subject::factory()->create(['name' => 'Ekonomi', 'code' => 'EKO', 'category' => 'Nasional']);
 
     Grade::create([
         'student_id' => $this->student->id,

@@ -167,7 +167,7 @@ class ERaporService
                 continue;
             }
 
-            if (in_array($grade, ['XI', 'XII'], true) && ($category === Subject::CATEGORY_PILIHAN || $electiveIds->contains($subject->id))) {
+            if (in_array($grade, ['XI', 'XII'], true) && ($category === Subject::CATEGORY_PILIHAN || $category === 'kejuruan' || $electiveIds->contains($subject->id))) {
                 $kelompokB->push($subject);
 
                 continue;

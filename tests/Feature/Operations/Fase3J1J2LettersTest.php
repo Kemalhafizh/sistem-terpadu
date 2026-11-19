@@ -135,7 +135,7 @@ test('J1 letter edit, revision resubmission, Plt principal PositionAssignment ap
     ]);
 
     $this->actingAs($this->tu)->get(route('letters.index', ['search' => 'Fadlan']))->assertOk()->assertSee('001/SKBB/SMA-ISA/VIII/2026');
-    $this->actingAs($this->tu)->get(route('alumni.index', ['search' => 'Fadlan']))->assertOk()->assertSee('Fadlan Alumni Putra');
+    $this->actingAs($this->kepsek)->get(route('alumni.index', ['search' => 'Fadlan']))->assertOk()->assertSee('Fadlan Alumni Putra');
 
     // Pencabutan surat mengubah status halaman verifikasi publik menjadi revoked
     $this->actingAs($this->tu)->post(route('letters.revoke', $letter->id), [

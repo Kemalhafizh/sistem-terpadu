@@ -371,7 +371,7 @@ test('K2 student ledger compiles chronological history, excludes unvalidated ach
         'target_school' => 'SMP Islam Sultan Agung 1',
     ]);
 
-    $subject = Subject::factory()->create(['name' => 'Pendidikan Agama Islam', 'code' => 'PAI', 'category' => 'ciri_khas', 'kkm' => 78]);
+    $subject = Subject::factory()->create(['name' => 'Pendidikan Agama Islam', 'code' => 'PAI', 'category' => 'Ciri Khas', 'kkm' => 78]);
     Grade::create([
         'student_id' => $this->student->id,
         'subject_id' => $subject->id,
@@ -390,8 +390,8 @@ test('K2 student ledger compiles chronological history, excludes unvalidated ach
         'homeroom_notes' => 'Aktif dan berakhlak baik.',
     ]);
 
-    Attendance::create(['student_id' => $this->student->id, 'academic_year_id' => $this->academicYear->id, 'date' => '2026-08-01', 'status' => 'H', 'recorded_by' => $this->waliX1->id]);
-    Attendance::create(['student_id' => $this->student->id, 'academic_year_id' => $this->academicYear->id, 'date' => '2026-08-02', 'status' => 'S', 'recorded_by' => $this->waliX1->id]);
+    Attendance::create(['student_id' => $this->student->id, 'classroom_id' => $this->classroomX1->id, 'academic_year_id' => $this->academicYear->id, 'date' => '2026-08-01', 'status' => 'H', 'recorded_by' => $this->waliX1->id]);
+    Attendance::create(['student_id' => $this->student->id, 'classroom_id' => $this->classroomX1->id, 'academic_year_id' => $this->academicYear->id, 'date' => '2026-08-02', 'status' => 'S', 'recorded_by' => $this->waliX1->id]);
 
     Achievement::create([
         'student_id' => $this->student->id,

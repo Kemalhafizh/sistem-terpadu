@@ -78,11 +78,11 @@ class StudentLedgerService
                 $subjectRows = $grades->groupBy('subject_id')
                     ->map(function ($subjectGrades) {
                         $subject = $subjectGrades->first()?->subject;
-                        $category = match ($subject?->category) {
-                            'umum' => 'Kelompok A (Umum)',
-                            'muatan_lokal' => 'Kelompok A (Muatan Lokal)',
-                            'pilihan' => 'Kelompok B (Pilihan)',
-                            'ciri_khas' => 'Kelompok C (Ciri Khas)',
+                        $category = match (strtolower(trim((string) $subject?->category))) {
+                            'umum', 'nasional' => 'Kelompok A (Umum)',
+                            'muatan_lokal', 'lokal' => 'Kelompok A (Muatan Lokal)',
+                            'pilihan', 'kejuruan' => 'Kelompok B (Pilihan)',
+                            'ciri_khas', 'ciri khas' => 'Kelompok C (Ciri Khas)',
                             default => $subject?->category ? ucfirst((string) $subject->category) : '-',
                         };
 
