@@ -129,7 +129,7 @@ test('sidebar exposes newly wired fase 2b links per role without 403s or duplica
     $sidebarHtml = $dom->saveHTML($sidebarNode);
 
     foreach ([
-        route('admin.import-export.index'),
+        route('import-export.index'),
         route('admin.scheduled-reports.index'),
         route('admin.integrations.index'),
         route('admin.integrations.dapodik.sync-queue'),
@@ -252,7 +252,7 @@ test('un-slopped integration views report cards profile change and whatsapp rese
         ->assertOk()
         ->assertDontSee('bg-gray-950')
         ->assertSee(route('admin.integrations.webhooks.destroy', $webhook), false)
-        ->assertSee(json_encode(route('admin.integrations.webhooks.test', $webhook)), false)
+        ->assertSee(route('admin.integrations.webhooks.test', $webhook), false)
         ->assertSee($webhook->uuid);
 
     $this->actingAs($this->stafTu)

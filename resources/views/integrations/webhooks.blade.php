@@ -91,13 +91,13 @@
                                 </form>
                             </div>
 
-                            <button type="button" @click="
+                            <button type="button" data-test-url="{{ route('admin.integrations.webhooks.test', $wh) }}" @click="
                                 testResult.loading = true;
                                 showTestResultModal = true;
-                                fetch(@js(route('admin.integrations.webhooks.test', $wh)), {
+                                fetch($el.dataset.testUrl, {
                                     method: 'POST',
                                     headers: {
-                                        'X-CSRF-TOKEN': @js(csrf_token()),
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content || @js(csrf_token()),
                                         'Accept': 'application/json',
                                         'Content-Type': 'application/json'
                                     }
