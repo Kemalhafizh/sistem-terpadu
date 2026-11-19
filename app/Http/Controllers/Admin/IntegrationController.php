@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\AccountProvisioningController;
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Classroom;
+use App\Models\DapodikSyncItem;
 use App\Models\IntegrationConfig;
 use App\Models\IntegrationLog;
 use App\Models\Webhook;
@@ -12,6 +15,7 @@ use App\Services\Integration\EmisService;
 use App\Services\Security\SsrfGuardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
 class IntegrationController extends Controller
@@ -86,7 +90,9 @@ class IntegrationController extends Controller
             $previewData = array_slice($allData, 0, 10);
         }
 
-        return view('integrations.dapodik', compact('type', 'classroomId', 'classrooms', 'previewData', 'validationWarnings'));
+        $pendingSyncCount = DapodikSyncItem::where('status', DapodikSyncItem::STATUS_PENDING)->count();
+
+        return view('integrations.dapodik', compact('type', 'classroomId', 'classrooms', 'previewData', 'validationWarnings', 'pendingSyncCount'));
     }
 
     /**
@@ -355,6 +361,177 @@ class IntegrationController extends Controller
     }
 
     /**
+     * K1: Import initial/delta data from Dapodik Excel/CSV export.
+     */
+    public function importDapodik(Request $request)
+    {
+        $validated = $request->validate([
+            'type' => ['required', Rule::in(['students', 'teachers', 'classrooms'])],
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv,txt', 'extensions:xlsx,xls,csv', 'max:10240'],
+            'create_accounts' => ['nullable', 'boolean'],
+        ]);
+
+        $file = $request->file('file');
+        $type = (string) $validated['type'];
+        $createAccounts = $request->boolean('create_accounts', true);
+
+        try {
+            $result = $this->dapodikService->importDapodik(
+                $type,
+                $file->getRealPath(),
+                $createAccounts,
+                $request->user(),
+                $file->getClientOriginalExtension(),
+            );
+        } catch (\InvalidArgumentException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            return back()->withInput()->with('error', __('Gagal mengimpor file Dapodik: :msg', ['msg' => $e->getMessage()]));
+        }
+
+        $batchToken = null;
+        if ($result['credentials'] !== []) {
+            $batchToken = AccountProvisioningController::storeBatchCredentials(
+                $request->user()->id,
+                'Impor Dapodik '.ucfirst($type),
+                $result['credentials'],
+            );
+        }
+
+        $summary = [
+            'type' => $result['type'],
+            'total_rows' => $result['total_rows'],
+            'processed' => $result['processed'],
+            'created' => $result['created'],
+            'updated' => $result['updated'],
+            'failed_count' => $result['failed_count'],
+            'failed_rows' => $result['failed_rows'],
+            'credentials_count' => count($result['credentials']),
+        ];
+
+        $message = __('Impor Dapodik :type selesai: :created baru, :updated diperbarui, :failed gagal.', [
+            'type' => $type,
+            'created' => $result['created'],
+            'updated' => $result['updated'],
+            'failed' => $result['failed_count'],
+        ]);
+
+        return redirect()
+            ->route('admin.integrations.dapodik', ['type' => $type])
+            ->with($result['failed_count'] > 0 && $result['processed'] === 0 ? 'error' : 'success', $message)
+            ->with('import_result', $summary)
+            ->with('batch_credentials_token', $batchToken);
+    }
+
+    /**
+     * K1/K4: View queue of verified identity updates waiting to be copied into Dapodik.
+     */
+    public function dapodikSyncQueue(Request $request)
+    {
+        $status = (string) $request->input('status', DapodikSyncItem::STATUS_PENDING);
+        $entityType = (string) $request->input('entity_type', '');
+
+        $items = DapodikSyncItem::with(['profileChangeRequest', 'syncer', 'student.user', 'employee.user'])
+            ->when($status !== '' && $status !== 'all', fn ($q) => $q->where('status', $status))
+            ->when($entityType !== '', fn ($q) => $q->where('entity_type', $entityType))
+            ->latest('id')
+            ->paginate(25)
+            ->withQueryString();
+
+        $pendingCount = DapodikSyncItem::where('status', DapodikSyncItem::STATUS_PENDING)->count();
+
+        return view('integrations.dapodik-sync-queue', compact('items', 'status', 'entityType', 'pendingCount'));
+    }
+
+    public function markDapodikSyncItem(Request $request, string $item)
+    {
+        $syncItem = $this->resolveSyncItem($item);
+        $validated = $request->validate([
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $oldStatus = $syncItem->status;
+        $syncItem->update([
+            'status' => DapodikSyncItem::STATUS_SYNCED,
+            'synced_by' => $request->user()->id,
+            'synced_at' => now(),
+            'notes' => $validated['notes'] ?? $syncItem->notes,
+        ]);
+
+        ActivityLog::create([
+            'user_id' => $request->user()->id,
+            'event' => 'dapodik_sync_item.synced',
+            'auditable_type' => DapodikSyncItem::class,
+            'auditable_id' => $syncItem->id,
+            'old_values' => ['status' => $oldStatus],
+            'new_values' => ['status' => DapodikSyncItem::STATUS_SYNCED],
+        ]);
+
+        return back()->with('success', __('Item ditandai sudah disalin ke Dapodik.'));
+    }
+
+    public function dismissDapodikSyncItem(Request $request, string $item)
+    {
+        $syncItem = $this->resolveSyncItem($item);
+        $validated = $request->validate([
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $oldStatus = $syncItem->status;
+        $syncItem->update([
+            'status' => DapodikSyncItem::STATUS_DISMISSED,
+            'synced_by' => $request->user()->id,
+            'synced_at' => now(),
+            'notes' => $validated['notes'] ?? $syncItem->notes,
+        ]);
+
+        ActivityLog::create([
+            'user_id' => $request->user()->id,
+            'event' => 'dapodik_sync_item.dismissed',
+            'auditable_type' => DapodikSyncItem::class,
+            'auditable_id' => $syncItem->id,
+            'old_values' => ['status' => $oldStatus],
+            'new_values' => ['status' => DapodikSyncItem::STATUS_DISMISSED],
+        ]);
+
+        return back()->with('success', __('Item dilewati dari antrean sinkronisasi Dapodik.'));
+    }
+
+    public function bulkSyncDapodikItems(Request $request)
+    {
+        $validated = $request->validate([
+            'item_ids' => ['required', 'array', 'min:1'],
+            'item_ids.*' => ['integer'],
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $actor = $request->user();
+        $items = DapodikSyncItem::whereIn('id', $validated['item_ids'])
+            ->where('status', DapodikSyncItem::STATUS_PENDING)
+            ->get();
+
+        foreach ($items as $syncItem) {
+            $syncItem->update([
+                'status' => DapodikSyncItem::STATUS_SYNCED,
+                'synced_by' => $actor->id,
+                'synced_at' => now(),
+                'notes' => $validated['notes'] ?? $syncItem->notes,
+            ]);
+
+            ActivityLog::create([
+                'user_id' => $actor->id,
+                'event' => 'dapodik_sync_item.bulk_synced',
+                'auditable_type' => DapodikSyncItem::class,
+                'auditable_id' => $syncItem->id,
+                'old_values' => ['status' => DapodikSyncItem::STATUS_PENDING],
+                'new_values' => ['status' => DapodikSyncItem::STATUS_SYNCED],
+            ]);
+        }
+
+        return back()->with('success', __(':count item ditandai selesai disalin ke Dapodik.', ['count' => $items->count()]));
+    }
+
+    /**
      * View Audit Logs.
      */
     public function logs()
@@ -362,5 +539,12 @@ class IntegrationController extends Controller
         $logs = IntegrationLog::with('config')->latest()->paginate(15);
 
         return view('integrations.logs', compact('logs'));
+    }
+
+    private function resolveSyncItem(string $param): DapodikSyncItem
+    {
+        return is_numeric($param)
+            ? DapodikSyncItem::findOrFail((int) $param)
+            : DapodikSyncItem::where('uuid', $param)->firstOrFail();
     }
 }

@@ -4,11 +4,13 @@ namespace App\Services\Academic;
 
 use App\Models\AcademicYear;
 use App\Models\ActivityLog;
+use App\Models\Attendance;
 use App\Models\ClassSession;
 use App\Models\Schedule;
 use App\Models\SchedulePreset;
 use App\Models\SessionAttendance;
 use App\Models\Student;
+use App\Models\StudentLeaveRequest;
 use App\Models\TeachingJournal;
 use App\Models\User;
 use App\Services\Mobile\FcmNotificationService;
@@ -241,21 +243,75 @@ class ClassSessionService
 
     /**
      * Snapshot the classroom roster as "alpha" (rule 6): anyone who doesn't
-     * check in before the session closes stays alpha.
+     * check in before the session closes stays alpha. Approved student leaves
+     * (C3) or daily S/I entries are pre-marked as "sakit"/"izin" automatically.
      */
     private function populateRoster(ClassSession $session, Carbon $now): void
     {
-        $rows = Student::where('classroom_id', $session->classroom_id)
+        $studentIds = Student::where('classroom_id', $session->classroom_id)
             ->where('status', 'active')
-            ->pluck('id')
-            ->map(fn ($studentId) => [
+            ->pluck('id');
+
+        if ($studentIds->isEmpty()) {
+            return;
+        }
+
+        $sessionDate = (string) $session->session_date;
+
+        $approvedLeaves = StudentLeaveRequest::query()
+            ->whereIn('student_id', $studentIds)
+            ->whereIn('status', StudentLeaveRequest::APPROVED_STATUSES)
+            ->whereDate('start_date', '<=', $sessionDate)
+            ->whereDate('end_date', '>=', $sessionDate)
+            ->get()
+            ->keyBy('student_id');
+
+        $dailyExcused = Attendance::query()
+            ->whereIn('student_id', $studentIds)
+            ->where('date', $sessionDate)
+            ->whereNull('schedule_id')
+            ->whereIn('status', ['S', 'I'])
+            ->get()
+            ->keyBy('student_id');
+
+        $rows = $studentIds->map(function ($studentId) use ($session, $now, $approvedLeaves, $dailyExcused) {
+            /** @var StudentLeaveRequest|null $leave */
+            $leave = $approvedLeaves->get($studentId);
+            /** @var Attendance|null $daily */
+            $daily = $dailyExcused->get($studentId);
+
+            if ($leave) {
+                $status = $leave->sessionAttendanceStatus();
+                $method = SessionAttendance::METHOD_MANUAL_TEACHER;
+                $recordedBy = $leave->decided_by ?? $leave->submitted_by;
+                $leaveRequestId = $leave->id;
+                $notes = 'Izin disetujui ('.strtoupper($leave->type).'): '.$leave->reason;
+            } elseif ($daily) {
+                $status = $daily->status === 'S' ? SessionAttendance::STATUS_SAKIT : SessionAttendance::STATUS_IZIN;
+                $method = SessionAttendance::METHOD_MANUAL_TEACHER;
+                $recordedBy = $daily->recorded_by;
+                $leaveRequestId = $daily->student_leave_request_id;
+                $notes = $daily->notes ?: ($daily->status === 'S' ? 'Sakit (Presensi Harian)' : 'Izin (Presensi Harian)');
+            } else {
+                $status = SessionAttendance::STATUS_ALPHA;
+                $method = SessionAttendance::METHOD_AUTO_ALPHA;
+                $recordedBy = null;
+                $leaveRequestId = null;
+                $notes = null;
+            }
+
+            return [
                 'class_session_id' => $session->id,
                 'student_id' => $studentId,
-                'status' => SessionAttendance::STATUS_ALPHA,
-                'check_in_method' => SessionAttendance::METHOD_AUTO_ALPHA,
+                'status' => $status,
+                'check_in_method' => $method,
+                'recorded_by' => $recordedBy,
+                'student_leave_request_id' => $leaveRequestId,
+                'notes' => $notes,
                 'created_at' => $now,
                 'updated_at' => $now,
-            ]);
+            ];
+        });
 
         foreach ($rows->chunk(500) as $chunk) {
             SessionAttendance::insertOrIgnore($chunk->values()->all());
@@ -505,6 +561,7 @@ class ClassSessionService
                 'check_in_method' => SessionAttendance::METHOD_QR_SCAN,
                 'checked_in_at' => $now,
                 'recorded_by' => $user->id,
+                'student_leave_request_id' => null,
             ];
 
             // A student moved into the class after the session started has no roster row yet.
@@ -717,6 +774,7 @@ class ClassSessionService
             'check_in_method' => SessionAttendance::METHOD_MANUAL_TEACHER,
             'checked_in_at' => $present ? ($attendance->checked_in_at ?? now()) : null,
             'recorded_by' => $teacher->id,
+            'student_leave_request_id' => null,
             'notes' => $notes !== null ? (trim($notes) ?: null) : $attendance->notes,
         ])->save();
 

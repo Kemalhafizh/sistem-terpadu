@@ -24,3 +24,6 @@ Schedule::command('class-sessions:parent-digest')->dailyAt(config('class_session
 // WhatsApp Broadcast & Automation Triggers
 Schedule::command('whatsapp:process-broadcasts')->everyMinute();
 Schedule::command('whatsapp:process-broadcasts --run-triggers')->dailyAt('06:00');
+
+// C3 & K4: Materialisasi izin/sakit harian siswa & eskalasi antrean melewati tenggat
+Schedule::command('student-leaves:process')->hourly()->withoutOverlapping();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Classroom;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone_number', 'like', "%{$search}%");
             });
         }
 
@@ -30,8 +32,9 @@ class UserController extends Controller
         }
 
         $users = $query->latest()->paginate(15)->withQueryString();
+        $classrooms = Classroom::orderBy('name')->get(['id', 'uuid', 'name', 'academic_year']);
 
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users', 'classrooms'));
     }
 
     /**
@@ -50,9 +53,12 @@ class UserController extends Controller
 
         $user = User::create([
             'name' => $validated['name'],
-            'email' => $validated['email'],
+            'email' => $validated['email'] ?? null,
+            'phone_number' => $validated['phone_number'] ?? null,
             'password' => bcrypt($validated['password']),
             'role' => $validated['role'],
+            'account_type' => config("permissions.role_to_account_type.{$validated['role']}"),
+            'must_change_password' => true,
         ]);
 
         if (in_array($validated['role'], ['guru', 'bk'])) {
@@ -64,7 +70,7 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = $this->resolveUser($id);
         if ($user->role === 'superadmin' && auth()->user()?->role !== 'superadmin') {
             abort(403, 'Hanya Superadmin yang dapat mengelola akun Superadmin.');
         }
@@ -77,12 +83,14 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, string $id)
     {
-        $user = User::findOrFail($id);
+        $user = $this->resolveUser($id);
         $validated = $request->validated();
 
         $user->name = $validated['name'];
-        $user->email = $validated['email'];
+        $user->email = $validated['email'] ?? null;
+        $user->phone_number = $validated['phone_number'] ?? null;
         $user->role = $validated['role'];
+        $user->account_type = config("permissions.role_to_account_type.{$validated['role']}") ?? $user->account_type;
 
         if (! empty($validated['password'])) {
             $user->password = bcrypt($validated['password']);
@@ -101,7 +109,7 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = $this->resolveUser($id);
 
         if ($user->id === auth()->id()) {
             abort(403, 'Anda tidak dapat menghapus akun Anda sendiri.');
@@ -114,5 +122,12 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Pengguna berhasil dihapus');
+    }
+
+    private function resolveUser(string $identifier): User
+    {
+        return is_numeric($identifier)
+            ? User::findOrFail((int) $identifier)
+            : User::where('uuid', $identifier)->firstOrFail();
     }
 }

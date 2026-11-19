@@ -1,17 +1,113 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-tight leading-tight">
-                 Sinkronisasi Ekspor Dapodik
+                Sinkronisasi & Impor Dapodik
             </h2>
-            <a href="{{ route('admin.integrations.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-800 rounded-xl text-sm font-semibold text-gray-300 bg-gray-900 hover:bg-gray-800 hover:text-white transition-all duration-200">
-                &larr; Kembali
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.integrations.dapodik.sync-queue') }}" class="inline-flex items-center px-4 py-2 border border-amber-700/60 rounded-xl text-sm font-semibold text-amber-300 bg-amber-950/40 hover:bg-amber-900/50 transition-all duration-200">
+                    Antrean Update Dapodik ({{ $pendingSyncCount ?? 0 }})
+                </a>
+                <a href="{{ route('admin.integrations.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-800 rounded-xl text-sm font-semibold text-gray-300 bg-gray-900 hover:bg-gray-800 hover:text-white transition-all duration-200">
+                    &larr; Kembali
+                </a>
+            </div>
         </div>
     </x-slot>
 
     <div class="py-12 bg-gray-950 text-gray-100 min-h-screen">
         <div class="w-full sm:px-6 lg:px-8 space-y-8">
+            @if(session('success'))
+                <div class="p-4 rounded-2xl bg-emerald-950/60 border border-emerald-700 text-emerald-200 text-sm">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="p-4 rounded-2xl bg-rose-950/60 border border-rose-700 text-rose-200 text-sm">
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="p-4 rounded-2xl bg-rose-950/60 border border-rose-700 text-rose-200 text-sm">
+                    <ul class="list-disc list-inside space-y-1">
+                        @foreach($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('batch_credentials_token'))
+                <div class="p-5 rounded-2xl bg-indigo-950/50 border border-indigo-700 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <p class="font-bold text-indigo-200 text-sm">Akun pengguna baru berhasil dibuat dari impor Dapodik.</p>
+                        <p class="text-xs text-indigo-300 mt-1">Unduh lembar kredensial PDF untuk dibagikan melalui wali kelas atau TU. Pengguna wajib mengganti kata sandi pada login pertama.</p>
+                    </div>
+                    <a href="{{ route('users.import-credentials.download', session('batch_credentials_token')) }}" class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl">
+                        Unduh Lembar Akun (PDF)
+                    </a>
+                </div>
+            @endif
+
+            @if(session('import_result') && ! empty(session('import_result')['failed_rows']))
+                @php $failedRows = session('import_result')['failed_rows']; @endphp
+                <div class="p-5 rounded-2xl bg-amber-950/40 border border-amber-700 space-y-3">
+                    <p class="font-bold text-amber-300 text-sm">Daftar Baris Gagal Diimpor ({{ count($failedRows) }})</p>
+                    <div class="overflow-x-auto max-h-60 overflow-y-auto">
+                        <table class="w-full text-left text-xs text-amber-100">
+                            <thead>
+                                <tr class="border-b border-amber-800/60">
+                                    <th class="pb-2">Baris</th>
+                                    <th class="pb-2">Identitas</th>
+                                    <th class="pb-2">Penyebab</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-amber-900/40">
+                                @foreach($failedRows as $failed)
+                                    <tr>
+                                        <td class="py-2 pr-4 font-mono">#{{ $failed['row'] }}</td>
+                                        <td class="py-2 pr-4 font-semibold">{{ $failed['identifier'] }}</td>
+                                        <td class="py-2 text-rose-300">{{ implode('; ', $failed['errors']) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Impor Awal / Pembaruan Dapodik -->
+            <div class="backdrop-blur-xl bg-gray-900/40 border border-gray-800/80 rounded-3xl p-6 shadow-xl">
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-emerald-300">Impor File Excel / CSV Dapodik</h3>
+                    <p class="text-xs text-gray-400 mt-1">Urutan impor disarankan saat go-live: Rombel &rarr; PTK/Guru &rarr; Siswa. Baris yang gagal dicocokkan akan dilaporkan lengkap beserta alasannya.</p>
+                </div>
+                <form method="POST" action="{{ route('admin.integrations.dapodik.import') }}" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    @csrf
+                    <div>
+                        <label for="import_type" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Jenis Data</label>
+                        <select name="type" id="import_type" class="w-full bg-gray-950 border border-gray-800 rounded-2xl py-3 px-4 text-sm text-gray-200 focus:outline-none focus:border-emerald-500">
+                            <option value="students" {{ $type === 'students' ? 'selected' : '' }}>Peserta Didik (Siswa)</option>
+                            <option value="teachers" {{ $type === 'teachers' ? 'selected' : '' }}>PTK / Guru &amp; Staf</option>
+                            <option value="classrooms" {{ $type === 'classrooms' ? 'selected' : '' }}>Rombongan Belajar (Rombel)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="import_file" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">File (.xlsx / .xls / .csv)</label>
+                        <input type="file" name="file" id="import_file" accept=".xlsx,.xls,.csv" required class="w-full bg-gray-950 border border-gray-800 rounded-2xl py-2.5 px-3 text-sm text-gray-300">
+                    </div>
+                    <div class="flex items-center gap-2 py-3">
+                        <input type="hidden" name="create_accounts" value="0">
+                        <input type="checkbox" name="create_accounts" id="create_accounts" value="1" checked class="rounded border-gray-700 bg-gray-950 text-emerald-500">
+                        <label for="create_accounts" class="text-xs text-gray-300">Buat akun otomatis (siswa, PTK &amp; ortu)</label>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full py-3 px-5 bg-emerald-600 hover:bg-emerald-500 font-bold text-sm text-white rounded-2xl transition-colors">
+                            Mulai Impor Dapodik
+                        </button>
+                    </div>
+                </form>
+            </div>
             
             <!-- Tab Selectors -->
             <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-px">

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Services\Auth\UserIdentifierResolver;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,8 +22,8 @@ class AuthController extends Controller
      *
      * Authenticate user dan kembalikan Bearer token.
      *
-     * @bodyParam email string required Email terdaftar. Example: siswa@sekolah.com
-     * @bodyParam password string required Password akun. Example: password
+     * @bodyParam email string required Email, NIS, NISN, atau No. HP. Example: siswa@sekolah.com
+     * @bodyParam password string required Password akun.
      * @bodyParam device_name string required Nama device untuk token. Example: iPhone 13
      *
      * @unauthenticated
@@ -44,12 +44,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|string|max:255',
             'password' => 'required',
             'device_name' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = app(UserIdentifierResolver::class)->findByIdentifier((string) $request->email);
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return $this->errorResponse('Kredensial tidak valid', 401);
@@ -71,6 +71,7 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
+                'must_change_password' => (bool) $user->must_change_password,
             ],
         ], 'Login berhasil');
     }

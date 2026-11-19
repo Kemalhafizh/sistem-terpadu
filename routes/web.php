@@ -3,6 +3,7 @@
 use App\Http\Controllers\Academic\AcademicCycleController;
 use App\Http\Controllers\AcademicEventController;
 use App\Http\Controllers\AcademicYearController;
+use App\Http\Controllers\AccountProvisioningController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Admin\AppearanceController;
 use App\Http\Controllers\Admin\AssetMaintenanceTicketController;
@@ -72,6 +73,7 @@ use App\Http\Controllers\OsisController;
 use App\Http\Controllers\ParentPortalController;
 use App\Http\Controllers\PointCategoryController;
 use App\Http\Controllers\PointController;
+use App\Http\Controllers\ProfileChangeRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicSiteController;
 use App\Http\Controllers\PwaController;
@@ -86,6 +88,7 @@ use App\Http\Controllers\Student\StudentPortalController;
 use App\Http\Controllers\StudentAcademicController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentFinanceController;
+use App\Http\Controllers\StudentLeaveController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TahfidzController;
@@ -161,6 +164,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // K4: Pembaruan kontak langsung & pengajuan perubahan data identitas terverifikasi
+    Route::middleware(Roles::only(Roles::MEMBERS, 'bendahara', 'pustakawan', 'petugas_uks', 'alumni', 'merchant'))->group(function () {
+        Route::patch('/profile/contact', [ProfileChangeRequestController::class, 'updateContact'])->name('profile.contact.update');
+        Route::get('/profile/change-requests', [ProfileChangeRequestController::class, 'index'])->name('profile.change-requests.index');
+        Route::post('/profile/change-requests', [ProfileChangeRequestController::class, 'store'])->name('profile.change-requests.store');
+        Route::post('/profile/change-requests/{changeRequest}/cancel', [ProfileChangeRequestController::class, 'cancel'])->name('profile.change-requests.cancel');
+        Route::get('/profile/change-requests/{changeRequest}/evidence', [ProfileChangeRequestController::class, 'downloadEvidence'])->name('profile.change-requests.evidence');
+    });
 
     // Rute Kalender Universal & Endpoint JSON FullCalendar API
     Route::get('calendar', [AcademicEventController::class, 'index'])->name('calendar.index');
@@ -483,7 +495,27 @@ Route::middleware('auth')->group(function () {
 
         // Rute warisan mutaba'ah
         Route::post('mutabaah/{student}/verify', [MutabaahController::class, 'verify'])->name('mutabaah.verify');
+
+        // C3: Izin / Sakit Siswa dari Orang Tua
+        Route::get('leave-requests', [StudentLeaveController::class, 'parentIndex'])->name('leave-requests.index');
+        Route::post('leave-requests', [StudentLeaveController::class, 'store'])->name('leave-requests.store');
+        Route::post('leave-requests/{leaveRequest}/cancel', [StudentLeaveController::class, 'cancel'])->name('leave-requests.cancel');
     });
+
+    // C3: Persetujuan Izin / Sakit Siswa oleh Wali Kelas / Waka Kesiswaan & Lampiran Privat
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kesiswaan', 'admin'))
+        ->prefix('teacher/leave-requests')
+        ->name('teacher.leave-requests.')
+        ->group(function () {
+            Route::get('/', [StudentLeaveController::class, 'teacherIndex'])->name('index');
+            Route::post('{leaveRequest}/approve', [StudentLeaveController::class, 'approve'])->name('approve');
+            Route::post('{leaveRequest}/reject', [StudentLeaveController::class, 'reject'])->name('reject');
+            Route::post('{leaveRequest}/revoke', [StudentLeaveController::class, 'revoke'])->name('revoke');
+        });
+
+    Route::get('student-leave-requests/{leaveRequest}/attachment', [StudentLeaveController::class, 'downloadAttachment'])
+        ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kesiswaan', Roles::PRINCIPAL, 'staf_tu', 'bk', 'petugas_uks', 'admin'))
+        ->name('student-leave-requests.attachment');
 
     // =========================================================
     // E-RAPOR & LEDGER NILAI
@@ -1201,7 +1233,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin,superadmin,staf_tu')->prefix('admin/integrations')->name('admin.integrations.')->group(function () {
         Route::get('/', [IntegrationController::class, 'index'])->name('index');
         Route::get('/dapodik', [IntegrationController::class, 'configDapodik'])->name('dapodik');
+        Route::post('/dapodik/import', [IntegrationController::class, 'importDapodik'])->name('dapodik.import');
         Route::post('/dapodik/export', [IntegrationController::class, 'exportDapodik'])->name('dapodik.export');
+        Route::get('/dapodik/sync-queue', [IntegrationController::class, 'dapodikSyncQueue'])->name('dapodik.sync-queue');
+        Route::post('/dapodik/sync-queue/bulk-sync', [IntegrationController::class, 'bulkSyncDapodikItems'])->name('dapodik.sync-queue.bulk');
+        Route::post('/dapodik/sync-queue/{item}/synced', [IntegrationController::class, 'markDapodikSyncItem'])->name('dapodik.sync-queue.mark');
+        Route::post('/dapodik/sync-queue/{item}/dismiss', [IntegrationController::class, 'dismissDapodikSyncItem'])->name('dapodik.sync-queue.dismiss');
         Route::get('/emis', [IntegrationController::class, 'configEmis'])->name('emis');
         Route::post('/emis/export', [IntegrationController::class, 'exportEmis'])->name('emis.export');
         Route::get('/webhooks', [IntegrationController::class, 'webhooks'])->name('webhooks.index');

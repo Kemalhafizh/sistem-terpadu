@@ -8,6 +8,7 @@ use App\Models\Classroom;
 use App\Models\Employee;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\Auth\UserIdentifierResolver;
 use App\Support\Access\RoleLabel;
 use App\Support\Access\StudentDataAccess;
 use App\Support\Locale;
@@ -31,48 +32,24 @@ class ApiAuthController extends Controller
      * Autentikasi kredensial pengguna dan dapatkan token.
      * Menerapkan rotasi token berbasis nama perangkat (device_name).
      *
-     * @bodyParam email string required Email pengguna. Example: siswa@sekolah.com
-     * @bodyParam password string required Kata sandi pengguna. Example: password123
+     * @bodyParam email string required Email, NIS, NISN, No. HP, atau NIY/NUPTK. Example: siswa@sekolah.com
+     * @bodyParam password string required Kata sandi pengguna.
      * @bodyParam device_name string required Nama perangkat penelusuran. Example: Android Phone
      */
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string',
+            'email' => 'required|string|max:255',
             'password' => 'required',
             'device_name' => 'required|string|max:255',
         ]);
 
-        $identifier = trim($request->email);
+        $identifier = trim((string) $request->email);
         $deviceName = $request->input('device_name', 'Android Device');
-
-        // 1. Try finding by email
-        $user = User::where('email', $identifier)->first();
-
-        // 2. If not found, try finding by phone_number
-        if (! $user) {
-            $user = User::where('phone_number', $identifier)->first();
-        }
-
-        // 3. If not found, try finding by student NIS / NISN
-        if (! $user) {
-            $student = Student::where('nis', $identifier)->orWhere('nisn', $identifier)->first();
-            if ($student && $student->user) {
-                $user = $student->user;
-            }
-        }
-
-        // 4. If not found, try finding by employee NIP. employees has no `nip`
-        // column; the NIP is kept in employee_number.
-        if (! $user) {
-            $employee = Employee::where('employee_number', $identifier)->first();
-            if ($employee && $employee->user) {
-                $user = $employee->user;
-            }
-        }
+        $user = app(UserIdentifierResolver::class)->findByIdentifier($identifier);
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return $this->errorResponse(__('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.'), 401);
+            return $this->errorResponse(__('Kredensial tidak valid. Silakan periksa kembali identitas login dan password Anda.'), 401);
         }
 
         if (($user->account_status ?? 'aktif') === 'nonaktif') {
@@ -94,6 +71,7 @@ class ApiAuthController extends Controller
                 'role' => $user->role,
                 'phone_number' => $user->phone_number,
                 'preferred_locale' => $user->preferred_locale,
+                'must_change_password' => (bool) $user->must_change_password,
             ],
         ], __('Login berhasil'));
     }
@@ -210,6 +188,7 @@ class ApiAuthController extends Controller
             'role_label' => RoleLabel::of($role),
             // id/en/ar, saved by the web or the app (defaults to id).
             'preferred_locale' => Locale::isSupported($user->preferred_locale) ? $user->preferred_locale : config('app.fallback_locale'),
+            'must_change_password' => (bool) $user->must_change_password,
             'student_data' => $studentData,
             'employee_data' => $employeeData,
             'children' => $children,
@@ -220,6 +199,36 @@ class ApiAuthController extends Controller
                 'semester' => $year->semester,
             ] : null,
         ], __('Profil berhasil diambil'));
+    }
+
+    /**
+     * Update Password
+     *
+     * Mengubah kata sandi akun aktif dan membersihkan flag wajib ganti sandi (`must_change_password`).
+     *
+     * @authenticated
+     */
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = $request->user();
+        $user->forceFill([
+            'password' => Hash::make($validated['password']),
+            'must_change_password' => false,
+        ])->save();
+
+        $currentTokenId = $user->currentAccessToken()?->id;
+        if ($currentTokenId !== null) {
+            $user->tokens()->where('id', '!=', $currentTokenId)->delete();
+        }
+
+        return $this->successResponse([
+            'must_change_password' => false,
+        ], __('Kata sandi berhasil diperbarui.'));
     }
 
     /**

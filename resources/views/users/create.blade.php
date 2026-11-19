@@ -22,8 +22,13 @@
                     </x-form-group>
 
                     <!-- Email Address -->
-                    <x-form-group name="email" label="Email Sekolah" required>
-                        <input id="email" class="block w-full rounded-lg shadow-xs border-gray-300 dark:border-slate-700 focus:border-primary-500 focus:ring-primary-500 bg-white dark:bg-slate-900 text-sm py-2.5 px-3.5" type="email" name="email" value="{{ old('email') }}" required />
+                    <x-form-group name="email" label="Email Sekolah (Opsional bila No. HP diisi)" helperText="Untuk akun siswa/orang tua tanpa email, kosongkan email dan isi No. HP atau gunakan impor Dapodik (login via NIS/NISN/HP).">
+                        <input id="email" class="block w-full rounded-lg shadow-xs border-gray-300 dark:border-slate-700 focus:border-primary-500 focus:ring-primary-500 bg-white dark:bg-slate-900 text-sm py-2.5 px-3.5" type="email" name="email" value="{{ old('email') }}" />
+                    </x-form-group>
+
+                    <!-- Phone Number -->
+                    <x-form-group name="phone_number" label="Nomor HP / WhatsApp (Opsional)" helperText="Wajib diisi bila email kosong. Format 08xxx (dipakai orang tua untuk login &amp; OTP WhatsApp).">
+                        <input id="phone_number" class="block w-full rounded-lg shadow-xs border-gray-300 dark:border-slate-700 focus:border-primary-500 focus:ring-primary-500 bg-white dark:bg-slate-900 text-sm py-2.5 px-3.5" type="text" name="phone_number" value="{{ old('phone_number') }}" placeholder="081234567890" />
                     </x-form-group>
 
                     <!-- Password -->
