@@ -34,6 +34,12 @@ class NoFabricatedRandomnessTest extends TestCase
         'app/Models/User.php' => [
             'random_int' => 'Kode 2FA dari CSPRNG.',
         ],
+        'app/Services/Auth/AccountProvisioningService.php' => [
+            'random_int' => 'Kata sandi sementara awal/reset akun dari CSPRNG.',
+        ],
+        'app/Services/Auth/WhatsappPasswordResetService.php' => [
+            'random_int' => 'Kode OTP reset kata sandi WhatsApp 6 digit dari CSPRNG.',
+        ],
     ];
 
     /** @var array<string, array<string, int>> file => call => how many remain */

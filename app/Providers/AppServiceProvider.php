@@ -196,9 +196,14 @@ class AppServiceProvider extends ServiceProvider
         // A. Successful Login Listener
         Event::listen(Login::class, function (Login $event) {
             $request = request();
+            $user = $event->user;
+            $fallbackId = $user->getAuthIdentifier();
+            $loginIdentifier = $user instanceof User
+                ? ($user->email ?: ($user->phone_number ?: 'user#'.$user->id))
+                : (is_scalar($fallbackId) && (string) $fallbackId !== '' ? (string) $fallbackId : 'unknown');
 
             LoginAttempt::create([
-                'email' => $event->user->email,
+                'email' => $loginIdentifier,
                 'ip_address' => $request->ip() ?: '127.0.0.1',
                 'user_agent' => $request->userAgent(),
                 'successful' => true,
@@ -232,8 +237,17 @@ class AppServiceProvider extends ServiceProvider
         // B. Failed Login Listener
         Event::listen(Failed::class, function (Failed $event) {
             $request = request();
+            $rawIdentifier = $event->credentials['email']
+                ?? $event->credentials['identifier']
+                ?? $request->input('email')
+                ?? $request->input('identifier')
+                ?? 'unknown';
+            $emailIdentifier = is_string($rawIdentifier) && trim($rawIdentifier) !== ''
+                ? trim($rawIdentifier)
+                : 'unknown';
+
             LoginAttempt::create([
-                'email' => $event->credentials['email'] ?? 'unknown',
+                'email' => $emailIdentifier,
                 'ip_address' => $request->ip() ?: '127.0.0.1',
                 'user_agent' => $request->userAgent(),
                 'successful' => false,

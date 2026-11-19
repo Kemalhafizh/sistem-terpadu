@@ -48,7 +48,7 @@ class ApiAuthController extends Controller
         $user = app(UserIdentifierResolver::class)->findByIdentifier($identifier);
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return $this->errorResponse(__('Kredensial tidak valid. Silakan periksa kembali identitas login dan password Anda.'), 401);
+            return $this->errorResponse(__('Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.'), 401);
         }
 
         if (($user->account_status ?? 'aktif') === 'nonaktif') {

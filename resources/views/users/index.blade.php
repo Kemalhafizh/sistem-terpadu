@@ -20,7 +20,9 @@
     <div class="py-6">
         <div class="w-full sm:px-6 lg:px-8 space-y-4">
             @if (session('reset_credentials'))
-                @php($cred = session('reset_credentials'))
+                @php
+                    $cred = session('reset_credentials');
+                @endphp
                 <div class="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
                     <p class="font-bold">Kata Sandi Sementara Baru Diterbitkan</p>
                     <p class="mt-1">
