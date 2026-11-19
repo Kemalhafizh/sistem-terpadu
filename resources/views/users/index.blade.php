@@ -156,14 +156,14 @@
                         </td>
                         <td class="py-4 px-6 text-sm font-medium text-right flex items-center justify-end space-x-3">
                             @if(auth()->user()->isAdmin() && $user->id !== auth()->id() && !$user->isAdmin())
-                                <a href="{{ route('admin.impersonate.take', $user->id) }}" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-lg transition-all flex items-center text-xs font-bold" title="Login Sebagai User Ini">
+                                <a href="{{ route('admin.impersonate.take', $user) }}" class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-lg transition-all flex items-center text-xs font-bold" title="Login Sebagai User Ini">
                                     <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
                                     Masuk
                                 </a>
                             @endif
 
                             @if($provisioningService->canResetPasswordFor(auth()->user(), $user))
-                                <form method="POST" action="{{ route('users.reset-password', $user->id) }}" class="inline">
+                                <form method="POST" action="{{ route('users.reset-password', $user) }}" class="inline" onsubmit="return confirm('Terbitkan password sementara baru untuk {{ addslashes($user->name) }}?')">
                                     @csrf
                                     <button type="submit" class="text-amber-600 dark:text-amber-400 hover:underline">Reset Sandi</button>
                                 </form>

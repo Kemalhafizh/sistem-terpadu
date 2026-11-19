@@ -2,16 +2,16 @@
     <x-slot name="header">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h2 class="font-black text-3xl text-gray-900 leading-tight tracking-tight">
-                    Rincian Keuangan & <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Tagihan</span>
+                <h2 class="font-black text-3xl text-slate-900 dark:text-white leading-tight tracking-tight">
+                    Rincian Keuangan &amp; <span class="text-primary-600 dark:text-primary-400">Tagihan</span>
                 </h2>
-                <p class="text-sm font-semibold text-gray-500 mt-1">{{ school_name() }}</p>
+                <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-1">{{ school_name() }}</p>
             </div>
             
             <!-- Child Switcher Tab -->
             <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-1.5 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 flex gap-2 shadow-sm">
                 @foreach(auth()->user()->children as $child)
-                    <a href="{{ route('parent-portal.billings', $child->id) }}" 
+                    <a href="{{ route('parent-portal.billings', $child) }}" 
                        class="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-2 {{ $student->id === $child->id ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <span class="w-2.5 h-2.5 rounded-full {{ $student->id === $child->id ? 'bg-white' : 'bg-primary-500' }}"></span>
                         {{ $child->user->name }}
@@ -40,8 +40,8 @@
             @endif
 
             <!-- 1. Student Summary Banner -->
-            <div class="bg-gradient-to-r from-gray-900 via-indigo-950 to-slate-900 rounded-[2.5rem] p-8 shadow-2xl text-white relative overflow-hidden group">
-                <div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-lg text-white relative overflow-hidden">
+                <!-- Subtle accent bar omitted in favor of clean card border -->
                 
                 <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div class="flex items-center gap-6">

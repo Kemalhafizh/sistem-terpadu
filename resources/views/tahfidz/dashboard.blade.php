@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="mt-8 border-t border-white/10 pt-4 flex items-center justify-between">
-                                <a href="{{ route('tahfidz.export-pdf', $student->id) }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
+                                <a href="{{ route('tahfidz.export-pdf', $student) }}" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">
                                      PDF RAPOR
                                 </a>
                             </div>
@@ -150,7 +150,7 @@
 
                             <div class="mt-6 flex justify-between items-center bg-gray-50 p-4 rounded-2xl">
                                 <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Detail Terakhir</span>
-                                <a href="{{ route('tahfidz.show', $student->id) }}" class="text-xs font-black text-primary-600 hover:underline">
+                                <a href="{{ route('tahfidz.show', $student) }}" class="text-xs font-black text-primary-600 hover:underline">
                                     LIHAT JURNAL LENGKAP →
                                 </a>
                             </div>
@@ -378,7 +378,7 @@
                                                 @endif
                                             </td>
                                             <td class="py-4 text-right">
-                                                <a href="{{ route('tahfidz.show', $st->id) }}" class="px-3 py-1 bg-gray-50 hover:bg-gray-100 border border-gray-100 rounded-lg text-[10px] font-black uppercase tracking-wider text-gray-600 transition-all">
+                                                <a href="{{ route('tahfidz.show', $st) }}" class="px-3 py-1 bg-gray-50 hover:bg-gray-100 border border-gray-100 rounded-lg text-[10px] font-black uppercase tracking-wider text-gray-600 transition-all">
                                                      DETAIL
                                                 </a>
                                             </td>

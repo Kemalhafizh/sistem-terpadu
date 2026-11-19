@@ -197,7 +197,7 @@
                                                     <p class="text-[10px] font-bold text-amber-600">Tekan tombol di bawah untuk verifikasi</p>
                                                 </div>
                                             </div>
-                                            <form action="{{ route('mutabaah.verify', $student->id) }}" method="POST">
+                                            <form action="{{ route('mutabaah.verify', $student) }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="date" value="{{ $date }}">
                                                 <button type="submit" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">

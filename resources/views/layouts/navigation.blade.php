@@ -192,6 +192,11 @@
             <x-dropdown-link :href="route('profile.edit')">
               {{ __('navigation.profile') }}
             </x-dropdown-link>
+            @canVisit('profile.change-requests.index')
+            <x-dropdown-link :href="route('profile.change-requests.index')">
+              {{ __('navigation.profile_change_requests') }}
+            </x-dropdown-link>
+            @endcanVisit
 
             <!-- Authentication -->
             <form method="POST" action="{{ route('logout') }}">
@@ -228,6 +233,11 @@
         <x-responsive-nav-link :href="route('profile.edit')">
           {{ __('navigation.profile') }}
         </x-responsive-nav-link>
+        @canVisit('profile.change-requests.index')
+        <x-responsive-nav-link :href="route('profile.change-requests.index')">
+          {{ __('navigation.profile_change_requests') }}
+        </x-responsive-nav-link>
+        @endcanVisit
 
         <!-- Authentication -->
         <form method="POST" action="{{ route('logout') }}">

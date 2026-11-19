@@ -11,7 +11,7 @@
             <div class="mb-6 flex justify-between items-center">
                 <a href="{{ route('spmb.admin.dashboard') }}" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition-all">&larr; Kembali ke Dashboard</a>
                 
-                <form action="{{ route('spmb.admin.bulk-convert', $wave->id) }}" method="POST">
+                <form action="{{ route('spmb.admin.bulk-convert', $wave) }}" method="POST">
                     @csrf
                     <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-1.5">
                          Konversi Massal ke Akun Siswa Baru
@@ -51,7 +51,7 @@
                                     <td class="p-4 font-semibold text-slate-700">{{ $app->spmbTrack->name ?? 'Reguler' }}</td>
                                     <td class="p-4 text-center">
                                         @if($app->has_reregistered)
-                                            <span class="px-2.5 py-1 bg-emerald-600 text-emerald-700 bg-emerald-50 border border-emerald-200 text-[10px] font-black rounded-lg">SUDAH BAYAR / DAFTAR ULANG</span>
+                                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-black rounded-lg">SUDAH BAYAR / DAFTAR ULANG</span>
                                         @else
                                             <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded-lg border border-amber-200">BELUM DAFTAR ULANG</span>
                                         @endif
@@ -65,7 +65,7 @@
                                     </td>
                                     <td class="p-4 text-center">
                                         @if(!$app->has_reregistered)
-                                            <form action="{{ route('spmb.admin.reregistration.confirm', $app->id) }}" method="POST" class="inline">
+                                            <form action="{{ route('spmb.admin.reregistration.confirm', $app) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg transition-all">Konfirmasi Bayar</button>
                                             </form>

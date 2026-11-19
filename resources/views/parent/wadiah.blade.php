@@ -2,8 +2,8 @@
   <x-slot name="header">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h2 class="font-black text-3xl text-gray-900 dark:text-white leading-tight tracking-tight">
-          Portal Orang Tua <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Premium</span>
+        <h2 class="font-black text-3xl text-slate-900 dark:text-white leading-tight tracking-tight">
+          Portal <span class="text-primary-600 dark:text-primary-400">Orang Tua</span>
         </h2>
         <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">{{ school_name() }}</p>
       </div>
@@ -15,7 +15,7 @@
       @if(count($children) > 0)
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-1.5 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 flex gap-2 shadow-sm">
           @foreach($children as $child)
-            <a href="{{ route('parent-portal.wallet', ['student' => $child->id]) }}" 
+            <a href="{{ route('parent-portal.wallet', $child) }}" 
               class="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-2 {{ $student->id === $child->id ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
               <span class="w-2.5 h-2.5 rounded-full {{ $student->id === $child->id ? 'bg-white' : 'bg-primary-500' }}"></span>
               {{ $child->user->name }}
@@ -53,9 +53,7 @@
         $classroom = $student->classroom;
         $teacher = $classroom?->teacher;
       @endphp
-      <div class="bg-gradient-to-r from-gray-900 via-indigo-950 to-slate-900 rounded-[2.5rem] p-8 md:p-10 shadow-2xl text-white relative overflow-hidden group">
-        <div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
-        <div class="absolute -left-20 -top-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-lg text-white relative overflow-hidden">
         
         <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
           <!-- Profile Widget -->
@@ -84,28 +82,28 @@
           
           <!-- Quick Menu Buttons -->
           <div class="flex flex-wrap gap-3 w-full lg:w-auto">
-            <a href="{{ route('parent-portal.dashboard', ['child_id' => $student->id]) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.dashboard', ['child_id' => $student->id]) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Dashboard
             </a>
-            <a href="{{ route('parent-portal.report-card', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.report-card', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Rapor Detail
             </a>
-            <a href="{{ route('parent-portal.daily-assessments', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.daily-assessments', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Nilai Harian
             </a>
-            <a href="{{ route('parent-portal.schedule', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.schedule', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Jadwal Mingguan
             </a>
-            <a href="{{ route('parent-portal.attendance', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.attendance', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Log Presensi
             </a>
-            <a href="{{ route('parent-portal.billings', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.billings', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Tagihan SPP
             </a>
-            <a href="{{ route('parent-portal.wallet', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-primary-600 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.wallet', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-primary-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Wadiah Wallet
             </a>
-            <a href="{{ route('parent-portal.messages', ['child_id' => $student->id]) }}" class="w-full lg:w-auto text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2">
+            <a href="{{ route('parent-portal.messages', ['child_id' => $student->id]) }}" class="w-full lg:w-auto text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2">
                Chat Wali Kelas
             </a>
           </div>
@@ -119,9 +117,7 @@
         <div class="lg:col-span-7 space-y-8">
           
           <!-- Wallet Display -->
-          <div class="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-[2.5rem] p-8 md:p-10 shadow-2xl text-white relative overflow-hidden group border border-white/10">
-            <div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
-            <div class="absolute -left-20 -top-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-lg text-white relative overflow-hidden">
             
             <div class="relative z-10 flex flex-col justify-between h-full min-h-[220px]">
               <div class="flex justify-between items-start">
@@ -211,7 +207,7 @@
               </div>
 
               <!-- Limit Update Form -->
-              <form action="{{ route('parent-portal.wallet.limit', $student->id) }}" method="POST" class="space-y-4">
+              <form action="{{ route('parent-portal.wallet.limit', $student) }}" method="POST" class="space-y-4">
                 @csrf
                 <div>
                   <label for="daily_spending_limit" class="block text-[10px] font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Atur Limit Baru</label>

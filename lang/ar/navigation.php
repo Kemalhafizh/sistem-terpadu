@@ -101,4 +101,13 @@ return [
     'fingerprint_import' => 'استيراد البصمة',
     'incoming_letters' => 'الوارد والتوجيهات',
     'approval_inbox' => 'بانتظار موافقتي',
+    'import_export_hub' => 'مركز الاستيراد والتصدير',
+    'scheduled_reports' => 'التقارير المجدولة',
+    'gov_integrations' => 'التكامل الحكومي',
+    'student_accounts' => 'حسابات الطلاب وأولياء الأمور',
+    'leave_requests_parent' => 'طلبات استئذان الطلاب',
+    'leave_requests_teacher' => 'اعتماد استئذان الطلاب',
+    'profile_change_requests' => 'تحديث الاتصال وتصحيح البيانات',
+    'admin_profile_changes' => 'التحقق من تعديل البيانات',
+    'dapodik_sync_queue' => 'قائمة مزامنة دابوديك',
 ];

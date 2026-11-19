@@ -11,7 +11,7 @@
             <div class="mb-6 flex justify-between items-center">
                 <a href="{{ route('spmb.admin.dashboard') }}" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl transition-all">&larr; Kembali ke Dashboard</a>
                 
-                <form action="{{ route('spmb.admin.selection.run', $wave->id) }}" method="POST">
+                <form action="{{ route('spmb.admin.selection.run', $wave) }}" method="POST">
                     @csrf
                     <button type="submit" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center gap-1.5">
                          Jalankan Perangkingan & Umumkan Kelulusan

@@ -2,17 +2,17 @@
   <x-slot name="header">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h2 class="font-black text-3xl text-gray-900 leading-tight tracking-tight">
-          Portal Orang Tua <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Premium</span>
+        <h2 class="font-black text-3xl text-slate-900 dark:text-white leading-tight tracking-tight">
+          Portal <span class="text-primary-600 dark:text-primary-400">Orang Tua</span>
         </h2>
-        <p class="text-sm font-semibold text-gray-500 mt-1">{{ school_name() }}</p>
+        <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-1">{{ school_name() }}</p>
       </div>
       
       <!-- Child Switcher Tab -->
-      <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-1.5 rounded-2xl border border-gray-200/60 dark:border-gray-700/60 flex gap-2 shadow-sm">
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex flex-wrap gap-2 shadow-sm">
         @foreach($children as $child)
           <a href="{{ route('parent-portal.dashboard', ['child_id' => $child->id]) }}" 
-            class="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-2 {{ $student->id === $child->id ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/10' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+            class="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center gap-2 {{ $student->id === $child->id ? 'bg-primary-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700' }}">
             <span class="w-2.5 h-2.5 rounded-full {{ $student->id === $child->id ? 'bg-white' : 'bg-primary-500' }}"></span>
             {{ $child->user->name }}
           </a>
@@ -22,7 +22,7 @@
   </x-slot>
 
   <!-- Content Area -->
-  <div class="py-8 bg-gray-50/50 min-h-screen">
+  <div class="py-8 bg-slate-50/70 dark:bg-slate-950/30 min-h-screen">
     <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">
       
       <!-- Welcome Alert & Info -->
@@ -34,9 +34,7 @@
       @endif
 
       <!-- 1. Profile & Quick Links Header Section -->
-      <div class="bg-gradient-to-r from-gray-900 via-indigo-950 to-slate-900 rounded-[2.5rem] p-8 md:p-10 shadow-2xl text-white relative overflow-hidden group">
-        <div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
-        <div class="absolute -left-20 -top-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-10 shadow-lg text-white relative overflow-hidden">
         
         <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
           <!-- Profile Widget -->
@@ -65,22 +63,32 @@
           
           <!-- Quick Menu Buttons -->
           <div class="flex flex-wrap gap-3 w-full lg:w-auto">
-            <a href="{{ route('parent-portal.report-card', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.report-card', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Rapor Akademik
             </a>
-            <a href="{{ route('parent-portal.daily-assessments', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.daily-assessments', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Nilai Harian
             </a>
-            <a href="{{ route('parent-portal.schedule', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.schedule', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Jadwal Mingguan
             </a>
-            <a href="{{ route('parent-portal.attendance', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.attendance', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Log Presensi
             </a>
-            <a href="{{ route('parent-portal.billings', $student->id) }}" class="flex-1 lg:flex-none text-center px-6 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/10 hover:border-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300">
+            <a href="{{ route('parent-portal.billings', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
                Tagihan SPP
             </a>
-            <a href="{{ route('parent-portal.messages', ['child_id' => $student->id]) }}" class="w-full lg:w-auto text-center px-6 py-3.5 bg-primary-600 hover:bg-primary-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg shadow-primary-900/20 transition-all duration-300 flex items-center justify-center gap-2">
+            @if(Route::has('parent-portal.leave-requests.index'))
+              <a href="{{ route('parent-portal.leave-requests.index') }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
+                 Ajukan Izin/Sakit
+              </a>
+            @endif
+            @if(Route::has('students.ledger'))
+              <a href="{{ route('students.ledger', $student) }}" class="flex-1 lg:flex-none text-center px-5 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 hover:border-white/25 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200">
+                 Buku Induk
+              </a>
+            @endif
+            <a href="{{ route('parent-portal.messages', ['child_id' => $student->id]) }}" class="w-full lg:w-auto text-center px-5 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition-all duration-200 flex items-center justify-center gap-2">
                Chat Wali Kelas
             </a>
           </div>
@@ -106,25 +114,25 @@
                   </span>
                 </div>
                 <div class="flex items-baseline gap-2 mb-2">
-                  <span class="text-5xl font-black text-gray-900 tracking-tight">{{ $avgScore }}</span>
-                  <span class="text-sm font-bold text-gray-400">/ 100</span>
+                  <span class="text-5xl font-black text-slate-900 dark:text-white tracking-tight">{{ $avgScore }}</span>
+                  <span class="text-sm font-bold text-slate-400">/ 100</span>
                 </div>
-                <p class="text-xs font-bold text-gray-500">Nilai Rata-Rata Akademik Siswa</p>
+                <p class="text-xs font-bold text-slate-500 dark:text-slate-400">Nilai Rata-Rata Akademik Siswa</p>
                 
-                <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center text-sm">
-                  <span class="font-bold text-gray-600">Peringkat Kelas</span>
-                  <span class="font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg text-xs">
+                <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-sm">
+                  <span class="font-bold text-slate-600 dark:text-slate-300">Peringkat Kelas</span>
+                  <span class="font-black text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-1 rounded-lg text-xs">
                     Rangking {{ $rank }} dari {{ $totalClassStudents }} Siswa
                   </span>
                 </div>
               </div>
               <div class="mt-6 flex flex-wrap gap-4 items-center">
-                <a href="{{ route('parent-portal.report-card', $student->id) }}" class="text-xs font-black uppercase text-indigo-600 hover:text-indigo-700 tracking-wider flex items-center gap-1">
+                <a href="{{ route('parent-portal.report-card', $student) }}" class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 tracking-wider flex items-center gap-1">
                   Lihat Rapor Detail
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
-                <span class="text-gray-300">|</span>
-                <a href="{{ route('parent-portal.daily-assessments', $student->id) }}" class="text-xs font-black uppercase text-indigo-600 hover:text-indigo-700 tracking-wider flex items-center gap-1">
+                <span class="text-slate-300 dark:text-slate-600">|</span>
+                <a href="{{ route('parent-portal.daily-assessments', $student) }}" class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 tracking-wider flex items-center gap-1">
                   Nilai Harian & Remedial
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
@@ -132,11 +140,11 @@
             </div>
 
             <!-- Attendance Widget -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-200/70 dark:border-slate-700 flex flex-col justify-between group hover:shadow-md transition-all duration-300">
               <div>
                 <div class="flex justify-between items-center mb-6">
-                  <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest">Persentase Kehadiran</h4>
-                  <span class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Persentase Kehadiran</h4>
+                  <span class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                   </span>
                 </div>
@@ -144,12 +152,12 @@
                   <div class="relative w-24 h-24 flex items-center justify-center">
                     <!-- Ring Donut Visual -->
                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                      <path class="text-gray-100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path class="text-slate-100 dark:text-slate-700" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                       <path class="text-emerald-500" stroke-dasharray="{{ $hadirPercentage }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                     </svg>
-                    <span class="absolute text-lg font-black text-gray-800">{{ $hadirPercentage }}%</span>
+                    <span class="absolute text-lg font-black text-slate-800 dark:text-white">{{ $hadirPercentage }}%</span>
                   </div>
-                  <div class="space-y-1.5 text-xs text-gray-600">
+                  <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
                     <div class="flex items-center gap-2">
                       <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
                       <span>Hadir: <strong>{{ $hadir }} Hari</strong></span>
@@ -160,13 +168,13 @@
                     </div>
                     <div class="flex items-center gap-2">
                       <span class="w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-                      <span>Alpa: <strong class="{{ $alpa > 0 ? 'text-red-600 font-black' : '' }}">{{ $alpa }} Hari</strong></span>
+                      <span>Alpa: <strong class="{{ $alpa > 0 ? 'text-red-600 dark:text-red-400 font-black' : '' }}">{{ $alpa }} Hari</strong></span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="mt-6">
-                <a href="{{ route('parent-portal.attendance', $student->id) }}" class="text-xs font-black uppercase text-emerald-600 hover:text-emerald-700 tracking-wider flex items-center gap-1">
+                <a href="{{ route('parent-portal.attendance', $student) }}" class="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 tracking-wider flex items-center gap-1">
                   Detail Kalender Kehadiran
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
@@ -177,8 +185,8 @@
 
           <!-- ApexCharts running grades trend -->
           @if(count($chartData) > 0)
-            <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-200/60">
-              <h4 class="text-sm font-black text-gray-800 mb-6 uppercase tracking-wider">Grafik Tren Nilai Mata Pelajaran</h4>
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-200/70 dark:border-slate-700">
+              <h4 class="text-sm font-black text-slate-800 dark:text-white mb-6 uppercase tracking-wider">Grafik Tren Nilai Mata Pelajaran</h4>
               <div id="gradesTrendChart" class="w-full h-72"></div>
             </div>
           @endif

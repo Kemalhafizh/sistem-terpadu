@@ -208,7 +208,7 @@
                                     <td class="py-4 text-right">
                                         <div class="flex items-center justify-end gap-1">
                                             <!-- Timeline History link -->
-                                            <a href="{{ route('uks.student-history', $visit->student->id) }}" title="Riwayat Kesehatan Murid"
+                                            <a href="{{ route('uks.student-history', $visit->student) }}" title="Riwayat Kesehatan Murid"
                                                class="p-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-all">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>

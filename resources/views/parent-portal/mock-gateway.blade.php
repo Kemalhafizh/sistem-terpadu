@@ -7,15 +7,11 @@
 
     <div class="py-12 bg-slate-950 text-white min-h-[calc(100vh-4rem)] flex items-center">
         <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8 animate-fade-in relative z-10">
-            <!-- Neon glow accents -->
-            <div class="absolute -right-24 -top-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl -z-10"></div>
-            <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl -z-10"></div>
-
-            <div class="bg-slate-900 border border-slate-800/80 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div class="bg-slate-900 border border-slate-800/80 rounded-3xl p-8 shadow-xl relative overflow-hidden">
                 <!-- Status Badge -->
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center space-x-2">
-                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></span>
+                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full"></span>
                         <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-950/40 border border-emerald-900/40 px-3 py-1 rounded-full">SANDBOX ACTIVE</span>
                     </div>
                     <span class="text-[10px] font-black text-slate-500 tracking-wider">SECURE ID: #{{ strtoupper(Str::random(6)) }}</span>
@@ -71,7 +67,7 @@
                         </button>
                     </form>
 
-                    <a href="{{ route('parent-portal.billings', $student->id) }}" class="block w-full bg-slate-800 hover:bg-slate-800 border border-slate-700/50 text-slate-300 text-center py-4 rounded-xl font-black text-xs tracking-wider active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
+                    <a href="{{ route('parent-portal.billings', $student) }}" class="block w-full bg-slate-800 hover:bg-slate-700 border border-slate-700/50 text-slate-300 text-center py-4 rounded-xl font-black text-xs tracking-wider active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>

@@ -23,7 +23,7 @@
                     <h3 class="font-black text-slate-800 text-sm">Lembar Input Nilai Seleksi</h3>
                 </div>
 
-                <form action="{{ route('spmb.admin.scoring.store', $wave->id) }}" method="POST">
+                <form action="{{ route('spmb.admin.scoring.store', $wave) }}" method="POST">
                     @csrf
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">

@@ -83,9 +83,9 @@
                   <p class="text-xs text-slate-500 font-medium mt-1">Sisa Kuota: {{ $wave->quota - $applicants->where('spmb_wave_id', $wave->id)->count() }} dari {{ $wave->quota }} kursi</p>
                 </div>
                 <div class="flex gap-2">
-                  <a href="{{ route('spmb.admin.scoring', $wave->id) }}" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all"> Input Nilai</a>
-                  <a href="{{ route('spmb.admin.selection', $wave->id) }}" class="px-3 py-1.5 bg-emerald-700 text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-all"> Jalankan Seleksi</a>
-                  <a href="{{ route('spmb.admin.reregistration', $wave->id) }}" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all"> Daftar Ulang</a>
+                  <a href="{{ route('spmb.admin.scoring', $wave) }}" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-black transition-all"> Input Nilai</a>
+                  <a href="{{ route('spmb.admin.selection', $wave) }}" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-all"> Jalankan Seleksi</a>
+                  <a href="{{ route('spmb.admin.reregistration', $wave) }}" class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all"> Daftar Ulang</a>
                 </div>
               </div>
             @empty
@@ -175,7 +175,7 @@
                     @endif
                   </td>
                   <td class="p-4 text-center">
-                    <a href="{{ route('spmb.admin.show', $app->id) }}" class="px-3 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-[11px] font-bold rounded-lg transition-all">Detail</a>
+                    <a href="{{ route('spmb.admin.show', $app) }}" class="px-3 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-[11px] font-bold rounded-lg transition-all">Detail</a>
                   </td>
                 </tr>
               @empty
