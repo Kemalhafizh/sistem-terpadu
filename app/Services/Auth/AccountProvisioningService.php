@@ -297,7 +297,7 @@ class AccountProvisioningService
         $resetCount = 0;
         $processedParentPasswords = [];
 
-        DB::transaction(function () use ($actor, $students, $resetUnactivatedOnly, &$rows, &$resetCount, &$processedParentPasswords) {
+        DB::transaction(function () use ($actor, $classroom, $students, $resetUnactivatedOnly, &$rows, &$resetCount, &$processedParentPasswords) {
             foreach ($students as $student) {
                 $studentUser = $student->user;
                 $studentTempPassword = null;

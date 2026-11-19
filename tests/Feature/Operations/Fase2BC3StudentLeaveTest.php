@@ -5,6 +5,8 @@ use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\ClassSession;
 use App\Models\Schedule;
+use App\Models\SchedulePreset;
+use App\Models\ScheduleTime;
 use App\Models\SessionAttendance;
 use App\Models\Setting;
 use App\Models\Student;
@@ -93,28 +95,28 @@ test('1-day sick leave auto-approves by default and syncs today daily attendance
         ->and($daily->student_leave_request_id)->toBe($leave->id);
 
     // When a subject teacher starts a ClassSession today, roster pre-fills 'sakit' instead of 'alpha'
+    $preset = SchedulePreset::create(['name' => 'Reguler', 'is_active' => true]);
+    ScheduleTime::create([
+        'schedule_preset_id' => $preset->id,
+        'session_number' => 1,
+        'start_time' => '07:30',
+        'end_time' => '09:00',
+    ]);
+
     $subject = Subject::factory()->create(['name' => 'Fisika']);
     $schedule = Schedule::create([
         'academic_year_id' => $this->academicYear->id,
         'classroom_id' => $this->classroom->id,
         'subject_id' => $subject->id,
         'teacher_id' => $this->homeroom->id,
-        'day_of_week' => Carbon::now()->dayOfWeekIso,
-        'start_time' => '07:30:00',
-        'end_time' => '09:00:00',
+        'day' => 'Rabu',
+        'session_start' => 1,
+        'session_end' => 1,
     ]);
 
-    $session = ClassSession::create([
-        'schedule_id' => $schedule->id,
-        'classroom_id' => $this->classroom->id,
-        'subject_id' => $subject->id,
-        'teacher_id' => $this->homeroom->id,
-        'session_date' => '2026-10-14',
-        'started_at' => now(),
-        'status' => ClassSession::STATUS_ACTIVE,
-    ]);
+    $session = app(ClassSessionService::class)->start($this->homeroom, $schedule->id, 'Hukum Newton');
 
-    app(ClassSessionService::class)->populateRoster($session);
+    expect($session->status)->toBe(ClassSession::STATUS_ACTIVE);
 
     $sessionAtt = SessionAttendance::where('class_session_id', $session->id)
         ->where('student_id', $this->student->id)

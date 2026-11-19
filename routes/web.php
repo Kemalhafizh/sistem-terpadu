@@ -954,8 +954,28 @@ Route::middleware('auth')->group(function () {
 
     });
 
+    // K5: Manajemen Akun Siswa/Wali per Rombel, Reset Password & Lembar Kredensial PDF
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'staf_tu', Roles::PRINCIPAL, 'admin'))->group(function () {
+        Route::get('student-accounts', [AccountProvisioningController::class, 'studentAccounts'])->name('student-accounts.index');
+        Route::post('users/{user}/reset-password', [AccountProvisioningController::class, 'resetPassword'])->name('users.reset-password');
+        Route::get('classrooms/{classroom}/credentials-pdf', [AccountProvisioningController::class, 'classroomCredentialSheet'])->name('classrooms.credentials-pdf');
+    });
+
+    // K5 & K4 Operator Routes (TU & Admin)
+    Route::middleware('role:admin,superadmin,staf_tu')->group(function () {
+        Route::post('users/bulk-provision-parents', [AccountProvisioningController::class, 'bulkProvisionParents'])->name('users.bulk-provision-parents');
+        Route::get('users/import-credentials/{token}', [AccountProvisioningController::class, 'downloadBatchCredentials'])->name('users.import-credentials.download');
+
+        Route::prefix('admin/profile-change-requests')->name('admin.profile-change-requests.')->group(function () {
+            Route::get('/', [ProfileChangeRequestController::class, 'adminIndex'])->name('index');
+            Route::post('/bulk-approve', [ProfileChangeRequestController::class, 'bulkApprove'])->name('bulk-approve');
+            Route::post('/{changeRequest}/approve', [ProfileChangeRequestController::class, 'approve'])->name('approve');
+            Route::post('/{changeRequest}/reject', [ProfileChangeRequestController::class, 'reject'])->name('reject');
+        });
+    });
+
     // =========================================================
-    // ADMIN & SUPERADMIN ONLY â€” Manajemen Sistem
+    // ADMIN & SUPERADMIN ONLY — Manajemen Sistem
     // =========================================================
     Route::middleware('role:admin,superadmin,kepala_sekolah')->group(function () {
         // User Management

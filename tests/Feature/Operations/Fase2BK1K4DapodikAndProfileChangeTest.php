@@ -1,13 +1,13 @@
 <?php
 
 use App\Models\AcademicYear;
+use App\Models\ClassEnrollment;
 use App\Models\Classroom;
 use App\Models\DapodikSyncItem;
 use App\Models\Employee;
 use App\Models\ProfileChangeRequest;
 use App\Models\SchoolYear;
 use App\Models\Student;
-use App\Models\StudentEnrollment;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
@@ -61,7 +61,7 @@ test('k1 dapodik csv import creates classrooms, teachers, students, enrollments,
     $teachersCsv = implode("\n", [
         'Nama Lengkap;NUPTK;NIY;NIK;No HP;Jabatan;Status Kepegawaian',
         'Drs. Ahmad Subarjo;1234567890123456;NIY-901;3374010101800001;081234500001;Guru Fisika;GTY',
-        'Tanpa Identitas;;;;081234500002;Guru;GTT', // invalid: missing NUPTK/NIY/NIK
+        'Tanpa Identitas;;;;;Guru;GTT', // invalid: missing NUPTK/NIY/NIK/HP
     ]);
 
     $this->actingAs($this->tu)
@@ -71,6 +71,9 @@ test('k1 dapodik csv import creates classrooms, teachers, students, enrollments,
             'create_accounts' => '1',
         ])->assertRedirect(route('admin.integrations.dapodik', ['type' => 'teachers']))
         ->assertSessionHas('batch_credentials_token');
+
+    expect(session('import_result')['created'])->toBe(1)
+        ->and(session('import_result')['failed_count'])->toBe(1);
 
     $emp = Employee::where('nuptk', '1234567890123456')->firstOrFail();
     expect($emp->employee_number)->toBe('NIY-901')
@@ -106,7 +109,7 @@ test('k1 dapodik csv import creates classrooms, teachers, students, enrollments,
         ->and($s1->mother_name)->toBe('Siti Rahmah')
         ->and($s1->parent_id)->not->toBeNull()
         ->and($s1->parent_id)->toBe($s2->parent_id)
-        ->and(StudentEnrollment::where('student_id', $s1->id)->where('school_year_id', $this->schoolYear->id)->exists())->toBeTrue();
+        ->and(ClassEnrollment::where('student_id', $s1->id)->where('school_year_id', $this->schoolYear->id)->exists())->toBeTrue();
 
     // Download batch credentials PDF using the session token
     $batchToken = (string) session('batch_credentials_token');
