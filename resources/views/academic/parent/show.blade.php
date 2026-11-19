@@ -32,7 +32,7 @@
                     <div class="bg-emerald-600 p-6 rounded-2xl shadow-lg border border-emerald-500 flex flex-col items-center justify-center text-center text-white">
                         <svg class="w-8 h-8 mb-3 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <h4 class="text-sm font-bold mb-3 uppercase tracking-wider">Download Rapor</h4>
-                        <a href="{{ route('report-cards.pdf', $student->id) }}" target="_blank" class="px-4 py-2 bg-white text-emerald-700 rounded-lg text-xs font-black hover:bg-emerald-50 transition-colors shadow-sm">
+                        <a href="{{ route('report-cards.pdf', $student) }}" target="_blank" class="px-4 py-2 bg-white text-emerald-700 rounded-lg text-xs font-black hover:bg-emerald-50 transition-colors shadow-sm">
                             UNDUH PDF
                         </a>
                     </div>

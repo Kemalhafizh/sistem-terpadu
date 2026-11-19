@@ -14,7 +14,7 @@
                     ⬅ PLOTTING JADWAL
                 </a>
                 @if($selectedTeacher)
-                    <a href="{{ route('schedules.print.teacher', $selectedTeacher->id) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-all">
+                    <a href="{{ route('schedules.print.teacher', $selectedTeacher) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-all">
                          CETAK JADWAL GURU
                     </a>
                 @endif

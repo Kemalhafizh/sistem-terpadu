@@ -101,4 +101,13 @@ return [
     'fingerprint_import' => 'Impor Sidik Jari',
     'incoming_letters' => 'Surat Masuk & Disposisi',
     'approval_inbox' => 'Menunggu Persetujuan Saya',
+    'import_export_hub' => 'Import/Export Hub',
+    'scheduled_reports' => 'Laporan Terjadwal',
+    'gov_integrations' => 'Integrasi Pemerintah',
+    'student_accounts' => 'Akun Siswa & Ortu',
+    'leave_requests_parent' => 'Izin & Sakit Siswa',
+    'leave_requests_teacher' => 'Persetujuan Izin Siswa',
+    'profile_change_requests' => 'Kontak & Koreksi Data',
+    'admin_profile_changes' => 'Verifikasi Perubahan Data',
+    'dapodik_sync_queue' => 'Antrean Sinkron Dapodik',
 ];

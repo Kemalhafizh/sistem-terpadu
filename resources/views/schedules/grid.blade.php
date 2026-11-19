@@ -20,7 +20,7 @@
                      AUDIT BENTROK
                 </a>
                 @if($selectedClassroom)
-                    <a href="{{ route('schedules.print.class', $selectedClassroom->id) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.03] transition-all">
+                    <a href="{{ route('schedules.print.class', $selectedClassroom) }}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.03] transition-all">
                          CETAK KELAS
                     </a>
                 @endif

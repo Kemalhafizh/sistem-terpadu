@@ -36,9 +36,16 @@
                     <div class="bg-primary-900 p-6 rounded-2xl shadow-lg border border-primary-800 flex flex-col items-center justify-center text-center text-white">
                         <svg class="w-8 h-8 mb-3 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                         <h4 class="text-sm font-bold mb-3 uppercase tracking-wider">E-Rapor PDF</h4>
-                        <a href="{{ route('report-cards.pdf', $student) }}" target="_blank" class="px-4 py-2 bg-white text-primary-900 rounded-lg text-xs font-black hover:bg-primary-50 transition-colors shadow-sm">
-                            UNDUH SEKARANG
-                        </a>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <a href="{{ route('report-cards.pdf', $student) }}" target="_blank" class="px-4 py-2 bg-white text-primary-900 rounded-lg text-xs font-black hover:bg-primary-50 transition-colors shadow-sm">
+                                UNDUH SEKARANG
+                            </a>
+                            @if(Route::has('students.ledger'))
+                                <a href="{{ route('students.ledger', $student) }}" class="px-4 py-2 bg-white/15 hover:bg-white/25 text-white border border-white/25 rounded-lg text-xs font-bold transition-colors">
+                                    Buku Induk Saya
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -79,44 +86,53 @@
                     </a>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                        <thead class="bg-slate-50 dark:bg-slate-900/60">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Mata Pelajaran</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Tugas</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">UTS</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">UAS</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Nilai Akhir</th>
-                                <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Predikat</th>
+                                <th class="px-6 py-4 text-start text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Mata Pelajaran</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Jenis Penilaian</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">KKM</th>
+                                <th class="px-6 py-4 text-start text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Catatan</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nilai</th>
+                                <th class="px-6 py-4 text-center text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Predikat</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-100">
+                        <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-100 dark:divide-slate-700">
                             @forelse($grades ?? [] as $grade)
-                                <tr class="hover:bg-primary-50/30 transition-colors">
+                                @php
+                                    $score = (float) ($grade->score ?? 0);
+                                    $kkm = (float) ($grade->subject?->kkm ?? 75);
+                                    $predikat = $grade->predikat ?? ($score >= 90 ? 'A' : ($score >= 80 ? 'B' : ($score >= 75 ? 'C' : 'D')));
+                                    $color = $score >= $kkm ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+                                @endphp
+                                <tr class="hover:bg-primary-50/30 dark:hover:bg-slate-700/40 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-bold text-gray-900">{{ $grade?->subject?->name }}</div>
-                                        <div class="text-[10px] text-gray-400 font-medium tracking-tight">{{ $grade->subject->category }}</div>
+                                        <div class="text-sm font-bold text-slate-900 dark:text-white">{{ $grade->subject?->name ?? '-' }}</div>
+                                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium tracking-tight">{{ $grade->subject?->category ?? 'Umum' }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">80</td> <!-- Mock component values -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">85</td> <!-- PTS -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">90</td> <!-- PAS -->
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <span class="inline-flex px-3 py-1 rounded-full text-xs font-black bg-primary-50 text-primary-700 border border-primary-100">
-                                            {{ number_format($grade->score, 0) }}
+                                        <span class="inline-flex px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">
+                                            {{ strtoupper((string) ($grade->type ?? 'UH')) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-slate-600 dark:text-slate-300">
+                                        {{ number_format($kkm, 0) }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 max-w-xs truncate">
+                                        {{ $grade->description ?: '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="inline-flex px-3 py-1 rounded-full text-xs font-black bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-100 dark:border-primary-800">
+                                            {{ number_format($score, 0) }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        @php
-                                            $score = $grade->score;
-                                            $predikat = $score >= 90 ? 'A' : ($score >= 80 ? 'B' : ($score >= 75 ? 'C' : 'D'));
-                                            $color = $score >= 75 ? 'text-emerald-600' : 'text-rose-600';
-                                        @endphp
                                         <span class="text-sm font-black {{ $color }}">{{ $predikat }}</span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-400 italic">
+                                    <td colspan="6" class="px-6 py-12 text-center text-sm text-slate-400 dark:text-slate-500 italic">
                                         Data nilai belum tersedia untuk semester ini.
                                     </td>
                                 </tr>
@@ -128,12 +144,12 @@
 
             <!-- Notes Section -->
             @if($reportCard && $reportCard->homeroom_notes)
-                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6">
-                    <h4 class="text-sm font-black text-blue-800 uppercase tracking-widest mb-3 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-2xl p-6">
+                    <h4 class="text-sm font-black text-blue-800 dark:text-blue-300 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
                         Catatan Wali Kelas
                     </h4>
-                    <p class="text-sm text-blue-700 leading-relaxed italic">"{{ $reportCard->homeroom_notes }}"</p>
+                    <p class="text-sm text-blue-700 dark:text-blue-200 leading-relaxed italic">"{{ $reportCard->homeroom_notes }}"</p>
                 </div>
             @endif
 

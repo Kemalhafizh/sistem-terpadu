@@ -68,18 +68,20 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        @if(!$period?->is_active)
-                                            <form action="{{ route('academic-years.activate', $period?->id) }}" method="POST" class="inline">
+                                        @if($period && !$period->is_active)
+                                            <form action="{{ route('academic-years.activate', $period) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="text-primary-600 hover:text-primary-900 font-bold mr-3" onclick="return confirm('Aktifkan periode ini dan matikan periode lainnya?')">Set Aktif</button>
                                             </form>
                                         @endif
-                                        <a href="{{ route('academic-years.edit', $period?->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                        <form action="{{ route('academic-years.destroy', $period?->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Hapus periode ini?')">Hapus</button>
-                                        </form>
+                                        @if($period)
+                                            <a href="{{ route('academic-years.edit', $period) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                            <form action="{{ route('academic-years.destroy', $period) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Hapus periode ini?')">Hapus</button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

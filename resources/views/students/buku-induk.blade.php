@@ -13,11 +13,19 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 @if(\App\Http\Middleware\RoleMiddleware::allowsUser(auth()->user(), ['superadmin', 'admin', 'waka_kurikulum', 'staf_tu', 'kepala_sekolah', 'kepsek']))
-                    <a href="{{ route('students.index') }}" class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-xs font-bold">
+                    <a href="{{ route('students.index') }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors">
                         Daftar Siswa
                     </a>
+                @elseif(auth()->user()->hasRole('siswa') && Route::has('academic.student.index'))
+                    <a href="{{ route('academic.student.index') }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors">
+                        Kembali ke Akademik
+                    </a>
+                @elseif(auth()->user()->isParent() && Route::has('parent-portal.dashboard'))
+                    <a href="{{ route('parent-portal.dashboard', ['child_id' => $student->id]) }}" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-bold transition-colors">
+                        Kembali ke Portal Orang Tua
+                    </a>
                 @endif
-                <a href="{{ route('students.ledger.pdf', $student) }}" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow">
+                <a href="{{ route('students.ledger.pdf', $student) }}" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition-colors">
                     Unduh PDF Format Dinas
                 </a>
             </div>

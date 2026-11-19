@@ -895,7 +895,7 @@
                         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Skor Amalan Minggu Ini: <strong class="text-emerald-600">{{ $ch['childMutabaahScore'] === null ? '–' : $ch['childMutabaahScore'].'%' }}</strong> • Grade: <strong>{{ $ch['childMutabaahGrade'] ?? '–' }}</strong></p>
                       </div>
                       @if($ch['latestUnverifiedDate'])
-                        <form action="{{ route('mutabaah.verify', $ch['profile']->id) }}" method="POST" class="shrink-0">
+                        <form action="{{ route('mutabaah.verify', $ch['profile']) }}" method="POST" class="shrink-0">
                           @csrf
                           <input type="hidden" name="date" value="{{ $ch['latestUnverifiedDate'] }}">
                           <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-900/15">

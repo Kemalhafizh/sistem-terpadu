@@ -85,14 +85,11 @@
         </div>
 
         <!-- Guide / Billing Status Card -->
-        <div class="md:col-span-2 bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl border border-slate-800 flex flex-col justify-between relative overflow-hidden">
-          <div class="absolute -right-16 -top-16 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
-          <div class="absolute -left-16 -bottom-16 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl"></div>
-          
+        <div class="md:col-span-2 bg-slate-900 text-white rounded-3xl p-8 shadow-lg border border-slate-800 flex flex-col justify-between relative overflow-hidden">
           <div class="relative z-10 space-y-6">
             <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 bg-indigo-400 rounded-full animate-pulse"></span>
-              <span class="text-[9px] font-black text-indigo-400 uppercase tracking-widest bg-indigo-950/50 border border-indigo-800/30 px-3 py-1 rounded-full">INFO TRANSAKSI</span>
+              <span class="w-2.5 h-2.5 bg-indigo-400 rounded-full"></span>
+              <span class="text-[10px] font-black text-indigo-300 uppercase tracking-widest bg-indigo-950/60 border border-indigo-800/40 px-3 py-1 rounded-full">INFO TRANSAKSI</span>
             </div>
 
             <div>
@@ -129,7 +126,7 @@
       </div>
 
       <div class="text-center">
-        <a href="{{ route('parent-portal.billings', $student->id) }}" class="text-xs font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-widest transition-colors">← Kembali ke Rincian Keuangan</a>
+        <a href="{{ route('parent-portal.billings', $student) }}" class="text-xs font-bold text-gray-400 hover:text-indigo-600 uppercase tracking-widest transition-colors">← Kembali ke Rincian Keuangan</a>
       </div>
     </div>
   </div>
@@ -151,7 +148,7 @@
         if (isDemoToken) {
           Swal.fire({
             title: 'Mode Simulasi Pembayaran ',
-            html: `Anda berada dalam mode pengembangan lokal offline.<br><br>Sistem akan mengalihkan Anda ke **Mock Payment Gateway** premium kami untuk merampungkan transaksi simulasi.`,
+            html: `Anda berada dalam mode pengembangan lokal offline.<br><br>Sistem akan mengalihkan Anda ke <strong>Mock Payment Gateway</strong> untuk merampungkan transaksi simulasi.`,
             icon: 'info',
             confirmButtonText: 'Lanjutkan ke Mock Gateway',
             confirmButtonColor: '#4f46e5',
@@ -181,7 +178,7 @@
               timer: 2000,
               customClass: { popup: 'rounded-[2rem]' }
             }).then(() => {
-              window.location.href = "{{ route('parent-portal.billings', $student->id) }}";
+              window.location.href = "{{ route('parent-portal.billings', $student) }}";
             });
           },
           onPending: function (result) {

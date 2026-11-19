@@ -72,6 +72,8 @@
         </a>
         @endcanVisit
 
+        <x-sidebar-link route="profile.change-requests.index" :label="__('navigation.profile_change_requests')" icon="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" active="profile.change-requests.*" />
+
         @if(! $isStudentOrParent)
         <x-sidebar-link route="workflows.pending" :label="__('navigation.approval_inbox')" icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" active="workflows.*" />
         @canVisit('teaching-journals.index')
@@ -180,9 +182,9 @@
         @php
             $tahfidzRoute = '#';
             if(array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::STUDENT_ROLES) !== [] && $sidebarUser->student) {
-                $tahfidzRoute = route('tahfidz.show', $sidebarUser->student->id);
+                $tahfidzRoute = route('tahfidz.show', $sidebarUser->student);
             } elseif(array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::PARENT_ROLES) !== [] && $sidebarUser->children->first()) {
-                $tahfidzRoute = route('tahfidz.show', $sidebarUser->children->first()->id);
+                $tahfidzRoute = route('tahfidz.show', $sidebarUser->children->first());
             } elseif(\App\Support\Access\RouteAccess::allowsRoute($sidebarUser, 'tahfidz.dashboard')) {
                 // Staff get the Tahfidz overview, not an arbitrary "first student".
                 $tahfidzRoute = route('tahfidz.dashboard');
@@ -221,12 +223,23 @@
         </a>
         @endcanVisit
 
+        @php
+            $personnelOpsVisible = \App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, ['admin', 'superadmin', 'staf_tu'])
+                && collect(['import-export.index', 'admin.scheduled-reports.index', 'admin.integrations.index', 'admin.integrations.dapodik.sync-queue', 'admin.school.branding.index'])
+                    ->contains(fn (string $r) => \App\Support\Access\RouteAccess::allowsRoute($sidebarUser, $r));
+            $personnelSectionVisible = (($sidebarUser->isAdmin() || $sidebarUser->hasRole('kepala_sekolah') || $sidebarUser->hasRole('kepsek'))
+                && collect(['users.index', 'admin.logs', 'admin.settings.index'])->contains(fn (string $r) => \App\Support\Access\RouteAccess::allowsRoute($sidebarUser, $r)))
+                || \App\Support\Access\RouteAccess::allowsRoute($sidebarUser, 'student-accounts.index')
+                || $personnelOpsVisible;
+        @endphp
+        @if($personnelSectionVisible)
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_personnel') }}</p>
         </div>
         <div class="pt-4 pb-2 text-center" x-show="sidebarCollapsed" style="display:none;">
             <p class="text-[10px] font-bold text-primary-300 uppercase tracking-widest" title="{{ __('navigation.header_personnel') }}">•</p>
         </div>
+        @endif
         @if($sidebarUser->isAdmin() || $sidebarUser->hasRole('kepala_sekolah') || $sidebarUser->hasRole('kepsek'))
         @canVisit('users.index')
         <a href="{{ route('users.index') }}" class="{{ $linkClass }} {{ request()->routeIs('users.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.users') }}">
@@ -255,47 +268,51 @@
             <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.system_settings') }}</div>
         </a>
         @endcanVisit
+        @endif
+
+        <x-sidebar-link route="student-accounts.index" :label="__('navigation.student_accounts')" icon="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" active="student-accounts.*" />
 
         @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, ['admin', 'superadmin', 'staf_tu']))
         @canVisit('import-export.index')
-        <a href="{{ route('import-export.index') }}" class="{{ $linkClass }} {{ request()->routeIs('import-export.*') ? $activeClass : $inactiveClass }}" title="Import / Export Hub">
+        <a href="{{ route('import-export.index') }}" class="{{ $linkClass }} {{ request()->routeIs('import-export.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.import_export_hub') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'me-3' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Import/Export Hub</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.import_export_hub') }}</span>
             </div>
-            <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Import/Export Hub</div>
+            <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.import_export_hub') }}</div>
         </a>
         @endcanVisit
 
         @canVisit('admin.scheduled-reports.index')
-        <a href="{{ route('admin.scheduled-reports.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.scheduled-reports.*') ? $activeClass : $inactiveClass }}" title="Laporan Terjadwal">
+        <a href="{{ route('admin.scheduled-reports.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.scheduled-reports.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.scheduled_reports') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'me-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Laporan Terjadwal</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.scheduled_reports') }}</span>
             </div>
-            <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Laporan Terjadwal</div>
+            <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.scheduled_reports') }}</div>
         </a>
         @endcanVisit
 
         @canVisit('admin.integrations.index')
-        <a href="{{ route('admin.integrations.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.integrations.*') ? $activeClass : $inactiveClass }}" title="Integrasi Pemerintah">
+        <a href="{{ route('admin.integrations.index') }}" class="{{ $linkClass }} {{ request()->routeIs('admin.integrations.*') && !request()->routeIs('admin.integrations.dapodik.sync-queue*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.gov_integrations') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <svg class="w-5 h-5 shrink-0" :class="!sidebarCollapsed ? 'me-3' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                 </svg>
-                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">Integrasi Pemerintah</span>
+                <span x-show="!sidebarCollapsed" class="whitespace-nowrap">{{ __('navigation.gov_integrations') }}</span>
             </div>
-            <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">Integrasi Pemerintah</div>
+            <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.gov_integrations') }}</div>
         </a>
         @endcanVisit
 
+        <x-sidebar-link route="admin.integrations.dapodik.sync-queue" :label="__('navigation.dapodik_sync_queue')" icon="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" active="admin.integrations.dapodik.sync-queue*" />
+
         {{-- School identity (letterhead, NPSN, principal) and appearance are one menu with two tabs (FASE 119). --}}
         <x-sidebar-link route="admin.school.branding.index" :label="__('navigation.school_settings')" icon="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" :active="['admin.school.branding.*', 'admin.appearance.*']" />
-        @endif
         @endif
         
         {{-- Modul Akademik: Admin, Kepsek, Waka Kurikulum, Staf TU --}}
@@ -421,7 +438,7 @@
                 : (array_intersect($sidebarRoles, \App\Support\Access\StudentDataAccess::STUDENT_ROLES) !== [] ? route('mpk.aspirations.index') : null));
             $pointsMenu = $sidebarUser->hasRole('waka_kesiswaan') || $sidebarUser->hasRole('bk') || $sidebarUser->isAdmin();
             $counselingMenu = ($pointsMenu && $visible('points.index')) || collect(['counseling.dashboard', 'crisis.bullying.index', 'iep.index'])->contains($visible);
-            $studentAffairsMenu = $osisMpkHref || collect(['uks.dashboard', 'ekskul.manage', 'growth.ptc.sessions'])->contains($visible);
+            $studentAffairsMenu = $osisMpkHref || collect(['uks.dashboard', 'ekskul.manage', 'growth.ptc.sessions', 'parent-portal.leave-requests.index'])->contains($visible);
         @endphp
 
         @if($counselingMenu)
@@ -437,6 +454,7 @@
 
         @if($studentAffairsMenu)
         <x-sidebar-header :label="__('navigation.header_student')" />
+        <x-sidebar-link route="parent-portal.leave-requests.index" :label="__('navigation.leave_requests_parent')" icon="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" active="parent-portal.leave-requests.*" />
         <x-sidebar-link route="uks.dashboard" :label="__('navigation.uks')" icon="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" active="uks.*" />
         <x-sidebar-link route="ekskul.manage" :label="__('navigation.ekskul')" icon="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" active="ekskul.manage" />
         <x-sidebar-link route="growth.ptc.sessions" :label="__('navigation.ptc')" icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" active="growth.ptc.*" />
@@ -554,6 +572,7 @@
         @endcanVisit
         @endif
         <x-sidebar-link route="incoming-letters.index" :label="__('navigation.incoming_letters')" icon="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" active="incoming-letters.*" />
+        <x-sidebar-link route="admin.profile-change-requests.index" :label="__('navigation.admin_profile_changes')" icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" active="admin.profile-change-requests.*" />
         @endif
 
         {{-- Modul HRD: Admin, Superadmin, Kepala Sekolah --}}
@@ -576,7 +595,7 @@
         @endif
 
         {{-- Modul Guru: Guru, Admin --}}
-        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, \App\Support\Access\StudentDataAccess::TEACHER_ROLES) || $sidebarUser->isAdmin())
+        @if(\App\Http\Middleware\RoleMiddleware::allowsUser($sidebarUser, [...\App\Support\Access\StudentDataAccess::TEACHER_ROLES, 'wali_kelas']) || $sidebarUser->isAdmin())
         <div class="pt-4 pb-2" x-show="!sidebarCollapsed">
             <p class="px-3 text-xs font-semibold text-primary-300 uppercase tracking-wider whitespace-nowrap">{{ __('navigation.header_teacher') }}</p>
         </div>
@@ -601,6 +620,7 @@
             <div x-show="sidebarCollapsed" class="absolute start-14 top-1/2 -translate-y-1/2 ms-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap transition-opacity duration-200" style="display:none;">{{ __('navigation.attendance_recap') }}</div>
         </a>
         @endcanVisit
+        <x-sidebar-link route="teacher.leave-requests.index" :label="__('navigation.leave_requests_teacher')" icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" active="teacher.leave-requests.*" />
         @canVisit('grades.create')
         <a href="{{ route('grades.create') }}" class="{{ $linkClass }} {{ request()->routeIs('grades.create') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.grade_input') }}">
             <div class="flex items-center" :class="sidebarCollapsed ? 'justify-center' : ''">

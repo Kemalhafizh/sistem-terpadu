@@ -55,30 +55,30 @@
 
     {{-- Overview Stats --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="bg-white/80 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+      <div class="bg-white/90 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-sm">
         <div>
-          <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest block">Total Tugas Aktif</span>
+          <span class="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest block">Total Tugas Aktif</span>
           <span class="text-3xl font-black text-gray-900 dark:text-gray-100 mt-1 block">{{ $moduleSummary['all'] ?? $unifiedItems->count() }}</span>
         </div>
-        <span class="px-3 py-1 rounded-xl bg-amber-50 text-amber-700 text-xs font-bold">Lintas Modul</span>
+        <span class="px-3 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200/70 dark:border-amber-800/60 text-xs font-bold">Lintas Modul</span>
       </div>
 
-      <div class="bg-white/80 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+      <div class="bg-white/90 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-sm">
         <div>
-          <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest block">Peran &amp; Jabatan Aktif</span>
+          <span class="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest block">Peran &amp; Jabatan Aktif</span>
           <span class="text-xs font-black text-gray-800 dark:text-gray-200 mt-1.5 block uppercase tracking-wider">
             {{ collect(auth()->user()->effectiveRoles())->map(fn ($r) => str_replace('_', ' ', $r))->implode(', ') }}
           </span>
         </div>
-        <span class="px-3 py-1 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold">Berwenang</span>
+        <span class="px-3 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800/60 text-xs font-bold">Berwenang</span>
       </div>
 
-      <div class="bg-white/80 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+      <div class="bg-white/90 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-sm">
         <div>
-          <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest block">Menunggu di Alur Kerja</span>
+          <span class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block">Menunggu di Alur Kerja</span>
           <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 block">{{ $requests->count() }}</span>
         </div>
-        <span class="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold">Inline Action</span>
+        <span class="px-3 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/60 text-xs font-bold">Inline Action</span>
       </div>
     </div>
 
@@ -91,7 +91,7 @@
         @endphp
         @if($groupKey === 'all' || $count > 0 || $isSelected)
           <a href="{{ route('workflows.pending', ['module' => $groupKey]) }}"
-             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border transition {{ $isSelected ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50' }}">
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border transition {{ $isSelected ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800' }}">
             <span>{{ $groupLabel }}</span>
             <span class="px-1.5 py-0.5 rounded-md text-[10px] {{ $isSelected ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300' }}">{{ $count }}</span>
           </a>
@@ -106,18 +106,18 @@
           $isWorkflow = ($item['model_type'] ?? '') === 'WorkflowRequest';
           $wfReq = $isWorkflow ? $requests->firstWhere('id', $item['model_id']) : null;
         @endphp
-        <div class="bg-white/80 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-6 transition-all flex flex-col md:flex-row justify-between gap-6 shadow-sm border-l-4 {{ ($item['urgency'] ?? 'normal') === 'high' ? 'border-l-rose-500' : 'border-l-amber-500' }}">
+        <div class="bg-white/90 dark:bg-slate-900/70 border border-gray-100 dark:border-slate-800 rounded-2xl p-6 transition-all flex flex-col md:flex-row justify-between gap-6 shadow-sm border-s-4 {{ ($item['urgency'] ?? 'normal') === 'high' ? 'border-s-rose-500' : 'border-s-amber-500' }}">
           <div class="space-y-2.5 flex-grow max-w-4xl">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-900/50">
+              <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-900/50">
                 {{ $item['module_label'] }}
               </span>
               @if(($item['is_overdue'] ?? false))
-                <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60">
                   Melewati Tenggat
                 </span>
               @elseif(($item['urgency'] ?? 'normal') === 'high')
-                <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
                   Prioritas Tinggi
                 </span>
               @endif
@@ -168,12 +168,18 @@
             </a>
 
             @if($wfReq && $item['can_decide_inline'])
-              <button @click="showActionModal = true; modalType = 'approve'; activeRequestId = '{{ $wfReq->getRouteKey() }}'; activeRequestTitle = '{{ addslashes($item['title']) }}'; activeRequester = '{{ addslashes($item['requester_name']) }}'; remarks = ''"
+              <button type="button"
+                data-title="{{ $item['title'] }}"
+                data-requester="{{ $item['requester_name'] }}"
+                @click="showActionModal = true; modalType = 'approve'; activeRequestId = '{{ $wfReq->getRouteKey() }}'; activeRequestTitle = $el.dataset.title; activeRequester = $el.dataset.requester; remarks = ''"
                   class="flex-grow md:w-full px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition">
                 Setujui
               </button>
 
-              <button @click="showActionModal = true; modalType = 'reject'; activeRequestId = '{{ $wfReq->getRouteKey() }}'; activeRequestTitle = '{{ addslashes($item['title']) }}'; activeRequester = '{{ addslashes($item['requester_name']) }}'; remarks = ''"
+              <button type="button"
+                data-title="{{ $item['title'] }}"
+                data-requester="{{ $item['requester_name'] }}"
+                @click="showActionModal = true; modalType = 'reject'; activeRequestId = '{{ $wfReq->getRouteKey() }}'; activeRequestTitle = $el.dataset.title; activeRequester = $el.dataset.requester; remarks = ''"
                   class="flex-grow md:w-full px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition">
                 Tolak
               </button>

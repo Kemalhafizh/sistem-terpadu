@@ -27,7 +27,7 @@
                     </div>
                     <div class="p-4 overflow-y-auto flex-1 space-y-4">
                         @forelse($pending ?? [] as $reg)
-                            <a href="{{ route('spmb.admin.show', $reg->id) }}" class="block bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-primary-300 hover:shadow-md transition-all cursor-pointer">
+                            <a href="{{ route('spmb.admin.show', $reg) }}" class="block bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-primary-300 hover:shadow-md transition-all cursor-pointer">
                                 <div class="text-xs font-bold text-gray-400 mb-1">{{ $reg->registration_number }}</div>
                                 <div class="font-black text-gray-900 mb-2">{{ $reg->full_name }}</div>
                                 <div class="text-xs text-gray-500 mb-3 flex items-center">
@@ -52,7 +52,7 @@
                     </div>
                     <div class="p-4 overflow-y-auto flex-1 space-y-4">
                         @forelse($reviewing ?? [] as $reg)
-                            <a href="{{ route('spmb.admin.show', $reg->id) }}" class="block bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-primary-300 hover:shadow-md transition-all cursor-pointer">
+                            <a href="{{ route('spmb.admin.show', $reg) }}" class="block bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-primary-300 hover:shadow-md transition-all cursor-pointer">
                                 <div class="text-xs font-bold text-gray-400 mb-1">{{ $reg->registration_number }}</div>
                                 <div class="font-black text-gray-900 mb-2">{{ $reg->full_name }}</div>
                                 <div class="text-xs text-gray-500 mb-3 flex items-center">
@@ -76,7 +76,7 @@
                     </div>
                     <div class="p-4 overflow-y-auto flex-1 space-y-4">
                         @forelse($accepted ?? [] as $reg)
-                            <a href="{{ route('spmb.admin.show', $reg->id) }}" class="block bg-white p-4 rounded-xl shadow-sm border border-emerald-100 hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer">
+                            <a href="{{ route('spmb.admin.show', $reg) }}" class="block bg-white p-4 rounded-xl shadow-sm border border-emerald-100 hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer">
                                 <div class="text-xs font-bold text-emerald-500 mb-1">{{ $reg->registration_number }}</div>
                                 <div class="font-black text-gray-900 mb-2">{{ $reg->full_name }}</div>
                                 @if($reg->user_id)

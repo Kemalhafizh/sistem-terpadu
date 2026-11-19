@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="flex space-x-2 mt-6">
-                            <a href="{{ route('points.show', $student->id) }}" class="flex-1 py-2.5 bg-gray-50 text-gray-700 rounded-xl text-center text-xs font-bold border border-gray-100 hover:bg-gray-100 transition-colors">Lihat Riwayat</a>
+                            <a href="{{ route('points.show', $student) }}" class="flex-1 py-2.5 bg-gray-50 text-gray-700 rounded-xl text-center text-xs font-bold border border-gray-100 hover:bg-gray-100 transition-colors">Lihat Riwayat</a>
                             <button onclick="openPointModal({{ $student->id }}, '{{ $student?->user?->name }}')" class="flex-1 py-2.5 bg-primary-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-primary-900/10 hover:bg-primary-700 transition-all">Input Poin</button>
                         </div>
                     </div>

@@ -8,7 +8,7 @@
     <div class="py-6">
         <div class="max-w-3xl mx-auto bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
             <div class="p-8 bg-white">
-                <form method="POST" action="{{ route('academic-years.update', $academicYear->id) }}">
+                <form method="POST" action="{{ route('academic-years.update', $academicYear) }}">
                     @csrf
                     @method('PUT')
 

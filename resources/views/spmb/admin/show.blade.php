@@ -41,17 +41,17 @@
 
                 <div class="flex gap-2">
                     @if($registration->status == 'pending' || $registration->status == 'reviewing')
-                        <form action="{{ route('spmb.admin.status', $registration->id) }}" method="POST">
+                        <form action="{{ route('spmb.admin.status', $registration) }}" method="POST">
                             @csrf
                             <input type="hidden" name="status" value="reviewing">
                             <button type="submit" class="px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-lg border border-blue-200 text-xs transition-all">Tandai Review</button>
                         </form>
-                        <form action="{{ route('spmb.admin.status', $registration->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin MENOLAK pendaftar ini?');">
+                        <form action="{{ route('spmb.admin.status', $registration) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin MENOLAK pendaftar ini?');">
                             @csrf
                             <input type="hidden" name="status" value="rejected">
                             <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-lg border border-red-200 text-xs transition-all">Tolak Manual</button>
                         </form>
-                        <form action="{{ route('spmb.admin.status', $registration->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin menerima anak ini dan membuatkan akun Siswa untuknya secara otomatis?');">
+                        <form action="{{ route('spmb.admin.status', $registration) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin menerima anak ini dan membuatkan akun Siswa untuknya secara otomatis?');">
                             @csrf
                             <input type="hidden" name="status" value="accepted">
                             <button type="submit" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-lg text-xs uppercase tracking-wider shadow-md transition-all">Terima & Buat Akun</button>

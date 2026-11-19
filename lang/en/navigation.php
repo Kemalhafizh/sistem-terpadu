@@ -101,4 +101,13 @@ return [
     'fingerprint_import' => 'Fingerprint Import',
     'incoming_letters' => 'Incoming Letters & Dispositions',
     'approval_inbox' => 'Pending My Approval',
+    'import_export_hub' => 'Import/Export Hub',
+    'scheduled_reports' => 'Scheduled Reports',
+    'gov_integrations' => 'Government Integrations',
+    'student_accounts' => 'Student & Parent Accounts',
+    'leave_requests_parent' => 'Student Leave Requests',
+    'leave_requests_teacher' => 'Leave Approvals',
+    'profile_change_requests' => 'Contact & Identity Changes',
+    'admin_profile_changes' => 'Identity Change Verification',
+    'dapodik_sync_queue' => 'Dapodik Sync Queue',
 ];
