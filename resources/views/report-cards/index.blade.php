@@ -228,7 +228,7 @@
                                             </td>
 
                                             <td class="px-6 py-4 whitespace-nowrap text-center space-x-1">
-                                                <a href="{{ route('report-cards.pdf', ['student' => $student->id, 'report_type' => $selectedReportType ?? 'pas']) }}" target="_blank" class="inline-flex items-center px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
+                                                <a href="{{ route('report-cards.pdf', ['student' => $student, 'report_type' => $selectedReportType ?? 'pas']) }}" target="_blank" class="inline-flex items-center px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
                                                     Pratinjau PDF
                                                 </a>
                                                 @if($officialPdf)

@@ -168,12 +168,12 @@
             </a>
 
             @if($wfReq && $item['can_decide_inline'])
-              <button @click="showActionModal = true; modalType = 'approve'; activeRequestId = {{ $wfReq->id }}; activeRequestTitle = '{{ addslashes($item['title']) }}'; activeRequester = '{{ addslashes($item['requester_name']) }}'; remarks = ''"
+              <button @click="showActionModal = true; modalType = 'approve'; activeRequestId = '{{ $wfReq->getRouteKey() }}'; activeRequestTitle = '{{ addslashes($item['title']) }}'; activeRequester = '{{ addslashes($item['requester_name']) }}'; remarks = ''"
                   class="flex-grow md:w-full px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition">
                 Setujui
               </button>
 
-              <button @click="showActionModal = true; modalType = 'reject'; activeRequestId = {{ $wfReq->id }}; activeRequestTitle = '{{ addslashes($item['title']) }}'; activeRequester = '{{ addslashes($item['requester_name']) }}'; remarks = ''"
+              <button @click="showActionModal = true; modalType = 'reject'; activeRequestId = '{{ $wfReq->getRouteKey() }}'; activeRequestTitle = '{{ addslashes($item['title']) }}'; activeRequester = '{{ addslashes($item['requester_name']) }}'; remarks = ''"
                   class="flex-grow md:w-full px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition">
                 Tolak
               </button>

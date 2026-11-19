@@ -452,7 +452,7 @@ test('completeness endpoint, CSV export with historical principal and blank miss
         'rank_in_class' => 1,
     ]);
     $previewResp = $this->actingAs($this->homeroom)->get(route('report-cards.pdf', [
-        'student' => $this->student->id,
+        'student' => $this->student,
         'report_type' => 'pts',
     ]));
     $previewResp->assertOk();

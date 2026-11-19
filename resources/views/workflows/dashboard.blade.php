@@ -254,7 +254,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <a href="{{ route('workflows.show', $req->id) }}" class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-lg shadow-teal-500/10">
+                                    <a href="{{ route('workflows.show', $req) }}" class="inline-flex items-center px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-lg shadow-teal-500/10">
                                         Detail
                                     </a>
                                 </div>

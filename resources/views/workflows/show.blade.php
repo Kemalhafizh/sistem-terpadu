@@ -314,7 +314,7 @@
               @endif
             </div>
 
-            <form :action="'/workflows/{{ $request->id }}/' + activeAction" method="POST" class="space-y-4">
+            <form :action="'/workflows/{{ $request->getRouteKey() }}/' + activeAction" method="POST" class="space-y-4">
               @csrf
               
               {{-- Dropdown Pilihan Delegasi --}}
@@ -357,7 +357,7 @@
             <span class="text-[9px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest block mb-1">Pengajuan Perlu Diperbaiki</span>
             <h4 class="text-sm font-black text-gray-900 dark:text-gray-100 mb-4">Kirim Ulang Setelah Revisi</h4>
 
-            <form action="{{ route('workflows.resubmit', $request->id) }}" method="POST" class="space-y-4">
+            <form action="{{ route('workflows.resubmit', $request) }}" method="POST" class="space-y-4">
               @csrf
               <div class="space-y-1.5">
                 <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">

@@ -160,7 +160,7 @@
                 @if($letter->workflowRequest)
                 <div>
                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Alur Persetujuan</span>
-                    <a href="{{ route('workflows.show', $letter->workflowRequest->id) }}" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+                    <a href="{{ route('workflows.show', $letter->workflowRequest) }}" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
                         Lihat Audit Trail Persetujuan
                     </a>
                 </div>
