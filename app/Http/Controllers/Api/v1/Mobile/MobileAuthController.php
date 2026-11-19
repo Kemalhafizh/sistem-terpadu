@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\v1\Mobile;
 use App\Http\Controllers\Controller;
 use App\Models\MobileBiometricCredential;
 use App\Models\User;
+use App\Services\Auth\UserIdentifierResolver;
 use App\Services\Mobile\PushNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,7 +35,8 @@ class MobileAuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required_without:identifier|nullable|string|max:255',
+            'identifier' => 'nullable|string|max:255',
             'password' => 'required|string',
             'device_id' => 'required|string|max:191',
             'device_name' => 'nullable|string|max:191',
@@ -46,13 +48,14 @@ class MobileAuthController extends Controller
         ]);
 
         try {
-            $user = User::where('email', $validated['email'])->first();
+            $identifier = trim((string) ($validated['email'] ?? $validated['identifier'] ?? ''));
+            $user = app(UserIdentifierResolver::class)->findByIdentifier($identifier);
 
             if (! $user || ! Hash::check($validated['password'], $user->password)) {
                 return response()->json([
                     'success' => false,
                     'code' => 'INVALID_CREDENTIALS',
-                    'message' => 'Email atau kata sandi tidak sesuai.',
+                    'message' => 'Identitas login atau kata sandi tidak sesuai.',
                 ], 401);
             }
 
@@ -79,7 +82,9 @@ class MobileAuthController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'phone_number' => $user->phone_number,
                     'role' => $user->role,
+                    'must_change_password' => (bool) $user->must_change_password,
                     'preferred_locale' => $user->preferred_locale ?? 'id',
                     'preferred_theme' => $user->preferred_theme ?? 'system',
                 ],

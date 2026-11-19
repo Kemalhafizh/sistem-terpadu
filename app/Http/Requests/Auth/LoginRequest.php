@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Services\Auth\UserIdentifierResolver;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -28,7 +30,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string'],
         ];
     }
@@ -42,7 +44,10 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $identifier = trim((string) $this->input('email'));
+        $user = app(UserIdentifierResolver::class)->findByIdentifier($identifier);
+
+        if (! $user || ! Hash::check((string) $this->input('password'), $user->password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -50,14 +55,13 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        $user = Auth::user();
-        if ($user && ($user->account_status ?? 'aktif') === 'nonaktif') {
-            Auth::logout();
-
+        if (($user->account_status ?? 'aktif') === 'nonaktif') {
             throw ValidationException::withMessages([
                 'email' => 'Akun Anda telah dinonaktifkan. Hubungi administrator sekolah.',
             ]);
         }
+
+        Auth::login($user, $this->boolean('remember'));
 
         RateLimiter::clear($this->throttleKey());
     }

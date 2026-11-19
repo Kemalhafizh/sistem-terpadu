@@ -61,4 +61,13 @@
             @endif
         </div>
     </form>
+
+    <div class="mt-6 pt-5 border-t border-gray-200 flex flex-wrap items-center justify-between gap-3">
+        <p class="text-xs text-gray-600">
+            Perlu memperbarui Nomor HP langsung atau mengajukan koreksi identitas Dapodik (NISN/NIK/Tanggal Lahir/Nama Ibu/Alamat KK)?
+        </p>
+        <a href="{{ route('profile.change-requests.index') }}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-semibold">
+            Kelola Kontak &amp; Pengajuan Data Diri &rarr;
+        </a>
+    </div>
 </section>

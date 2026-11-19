@@ -5,22 +5,22 @@
     <form method="POST" action="{{ route('login') }}" class="space-y-5" x-data="{ showPass: false }">
         @csrf
 
-        <!-- Email Address -->
+        <!-- Login Identifier (Email / NIS / NISN / No. HP / NIY) -->
         <div class="group">
-            <label for="email" class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 group-focus-within:text-emerald-600 transition-colors">Alamat Email Resmi</label>
+            <label for="email" class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 group-focus-within:text-emerald-600 transition-colors">Email / NIS / NISN / No. HP / NIY</label>
             <div class="relative">
                 <span class="absolute inset-y-0 start-0 ps-3.5 flex items-center text-slate-400 group-focus-within:text-emerald-500 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
                     </svg>
                 </span>
                 <input 
                     id="email" 
                     class="block w-full ps-10 pe-4 py-3.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-slate-800 text-sm font-medium placeholder-slate-400 focus:bg-white focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none transition-all duration-200 shadow-sm" 
-                    type="email" 
+                    type="text" 
                     name="email" 
                     value="{{ old('email') }}" 
-                    placeholder="nama@sekolah.sch.id"
+                    placeholder="email@sekolah.sch.id / NISN / 0812..."
                     required 
                     autofocus 
                     autocomplete="username" 
@@ -31,13 +31,20 @@
 
         <!-- Password -->
         <div class="group">
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex justify-between items-center mb-2 gap-2">
                 <label for="password" class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest group-focus-within:text-emerald-600 transition-colors">Kata Sandi</label>
-                @if (Route::has('password.request'))
-                    <a class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 uppercase tracking-widest transition-colors" href="{{ route('password.request') }}">
-                        Lupa Sandi?
-                    </a>
-                @endif
+                <div class="flex items-center gap-3">
+                    @if (Route::has('password.whatsapp.request'))
+                        <a class="text-[10px] font-bold text-slate-500 hover:text-emerald-600 uppercase tracking-widest transition-colors" href="{{ route('password.whatsapp.request') }}">
+                            OTP WhatsApp
+                        </a>
+                    @endif
+                    @if (Route::has('password.request'))
+                        <a class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 uppercase tracking-widest transition-colors" href="{{ route('password.request') }}">
+                            Lupa Sandi?
+                        </a>
+                    @endif
+                </div>
             </div>
             <div class="relative">
                 <span class="absolute inset-y-0 start-0 ps-3.5 flex items-center text-slate-400 group-focus-within:text-emerald-500 transition-colors">

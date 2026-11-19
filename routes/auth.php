@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\WhatsappPasswordResetController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -22,6 +23,17 @@ Route::middleware('guest')->group(function () {
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
         ->name('password.email');
+
+    Route::get('forgot-password/whatsapp', [WhatsappPasswordResetController::class, 'showForm'])
+        ->name('password.whatsapp.request');
+
+    Route::post('forgot-password/whatsapp/otp', [WhatsappPasswordResetController::class, 'requestOtp'])
+        ->middleware('throttle:6,1')
+        ->name('password.whatsapp.send');
+
+    Route::post('forgot-password/whatsapp/reset', [WhatsappPasswordResetController::class, 'resetWithOtp'])
+        ->middleware('throttle:10,1')
+        ->name('password.whatsapp.reset');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');

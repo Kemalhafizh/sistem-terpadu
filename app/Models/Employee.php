@@ -16,6 +16,7 @@ class Employee extends Model
         'user_id',
         'employee_number',
         'nuptk',
+        'nik',
         'fingerprint_id',
         'position',
         'employment_status',

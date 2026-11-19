@@ -518,13 +518,13 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### K. Data & Pelaporan
 
-#### K1. Dapodik / EMIS: Impor Awal, Ekspor, dan Selisih · `[Sebagian]`
+#### K1. Dapodik / EMIS: Impor Awal, Ekspor, dan Selisih · `[Tersedia]`
 - **Prinsip:** **Dapodik tetap sumber resmi identitas** (siswa, PTK, rombel). e-Rapor juga menarik data dari Dapodik, jadi NISN, NIS, dan nama rombel di SISTA harus sama dengan Dapodik.
 - **Impor awal (sekali saat go-live):** file ekspor Excel dari aplikasi Dapodik (peserta didik, PTK, rombel) diimpor ke SISTA. Siswa yang sudah bersekolah **tidak diketik ulang**. Baris yang gagal dicocokkan dilaporkan, tidak diabaikan diam-diam.
 - **Selama berjalan:** Dapodik tidak punya API tulis. Setiap perubahan identitas yang disetujui di SISTA (K4) masuk ke daftar **"Perlu diperbarui di Dapodik"** untuk operator. Operator menandai selesai setelah menyalinnya.
 - **Ekspor:** kolom yang kosong dilaporkan sebagai "data belum lengkap", tidak diisi karangan (sudah tersedia).
 
-#### K4. Pengajuan Perubahan Data Diri · `[Terjadwal]`
+#### K4. Pengajuan Perubahan Data Diri · `[Tersedia]`
 - **Pemilik:** Staf TU (verifikasi). **Pengaju:** siswa, orang tua, guru, karyawan.
 - **Langkah:**
   1. Pengguna membuka profilnya dan mengajukan perubahan: kolom, nilai baru, dan **bukti** (foto KK, akta, atau ijazah) untuk data identitas.
@@ -534,7 +534,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Status:** `diajukan → disetujui / ditolak` (dibatalkan oleh pengaju sebelum diputuskan).
 - **Kegunaan saat go-live:** setelah impor dari Dapodik, siswa dan orang tua diminta **memeriksa data dirinya sendiri** dan mengajukan koreksi. TU tidak perlu memeriksa ribuan data satu per satu.
 
-#### K5. Akun Pengguna Massal & Reset Password · `[Terjadwal]`
+#### K5. Akun Pengguna Massal & Reset Password · `[Tersedia]`
 - **Konteks:** sekolah **tidak punya Google Workspace for Education**, jadi login memakai akun SISTA sendiri.
 - **Langkah:**
   1. Akun dibuat massal dari data impor (K1) dan dari konversi SPMB (B1).

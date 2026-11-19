@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Services\Auth\UserIdentifierResolver;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -19,6 +21,19 @@ class StoreUserRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $email = trim((string) $this->input('email', ''));
+        $phone = trim((string) $this->input('phone_number', ''));
+
+        $this->merge([
+            'email' => $email === '' ? null : strtolower($email),
+            'phone_number' => $phone === ''
+                ? null
+                : (app(UserIdentifierResolver::class)->normalizeLocalPhone($phone) ?? $phone),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,7 +43,8 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => ['required_without:phone_number', 'nullable', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
+            'phone_number' => ['required_without:email', 'nullable', 'string', 'max:30'],
             'password' => 'required|string|min:8',
             'role' => 'required|string|in:student,parent,guru,bk,staf_tu,waka_kurikulum,waka_kesiswaan,waka_sarpras,waka_humas,kepala_sekolah,admin,superadmin',
             'subjects' => 'nullable|array',

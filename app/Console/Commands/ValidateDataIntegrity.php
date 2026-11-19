@@ -95,9 +95,11 @@ class ValidateDataIntegrity extends Command
     {
         $checks = [];
 
-        // Check 1: Duplicate Emails
+        // Check 1: Duplicate non-empty emails
         $duplicates = DB::table('users')
             ->select('email', DB::raw('count(*) as count'))
+            ->whereNotNull('email')
+            ->where('email', '!=', '')
             ->groupBy('email')
             ->having('count', '>', 1)
             ->get();
@@ -111,10 +113,10 @@ class ValidateDataIntegrity extends Command
             ];
         }
 
-        // Check 2: Invalid Email Formats
+        // Check 2: Invalid Email Formats (only when email is provided)
         $users = DB::table('users')->get();
         $invalidEmails = $users->filter(function ($user) {
-            return ! filter_var($user->email, FILTER_VALIDATE_EMAIL);
+            return ! blank($user->email) && ! filter_var($user->email, FILTER_VALIDATE_EMAIL);
         });
         $invCount = $invalidEmails->count();
         $checks[] = ['users', 'Format Email Valid', $invCount == 0 ? 'OK' : 'FAIL', $invCount];
@@ -126,11 +128,18 @@ class ValidateDataIntegrity extends Command
             ];
         }
 
-        // Check 3: Empty Fields
+        // Check 3: Empty Fields (require name, role, and at least one login identifier)
         $emptyFields = DB::table('users')
-            ->whereNull('name')->orWhere('name', '')
-            ->orWhereNull('email')->orWhere('email', '')
-            ->orWhereNull('role')->orWhere('role', '')
+            ->where(function ($q) {
+                $q->whereNull('name')->orWhere('name', '')
+                    ->orWhereNull('role')->orWhere('role', '')
+                    ->orWhere(function ($ident) {
+                        $ident->where(fn ($e) => $e->whereNull('email')->orWhere('email', ''))
+                            ->where(fn ($p) => $p->whereNull('phone_number')->orWhere('phone_number', ''))
+                            ->whereNotExists(fn ($s) => $s->select(DB::raw(1))->from('students')->whereRaw('students.user_id = users.id'))
+                            ->whereNotExists(fn ($emp) => $emp->select(DB::raw(1))->from('employees')->whereRaw('employees.user_id = users.id'));
+                    });
+            })
             ->get();
         $emptyCount = $emptyFields->count();
         $checks[] = ['users', 'Kelengkapan Field Wajib', $emptyCount == 0 ? 'OK' : 'FAIL', $emptyCount];
@@ -138,7 +147,7 @@ class ValidateDataIntegrity extends Command
             $errors[] = [
                 'table' => 'users',
                 'id' => $u->id ?? 'N/A',
-                'message' => 'Nama, email, atau role kosong.',
+                'message' => 'Nama, role, atau identitas login (email/HP/NIS/NIY) kosong.',
             ];
         }
 

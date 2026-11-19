@@ -15,6 +15,7 @@ class Attendance extends Model
         'status',
         'notes',
         'recorded_by',
+        'student_leave_request_id',
     ];
 
     public function student()

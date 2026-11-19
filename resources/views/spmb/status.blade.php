@@ -194,41 +194,16 @@
             @endif
           </div>
 
-          <!-- Credential Box for Accepted Candidates -->
+          <!-- Safe Account Activation Instructions for Admitted Candidates -->
           @if($status == 'accepted' && $registration->user_id)
-            @php
-              $email = strtolower($registration->registration_number) . '@student.sch.id';
-              $password = 'password123'; // Default temporary password
-            @endphp
-            <div class="mt-6 pt-6 border-t border-slate-200 border-dashed text-left space-y-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
-              <div class="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
-              
-              <div class="relative z-10">
-                <div class="flex justify-between items-center mb-3">
-                  <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">{{ __('spmb.account_info_header') }}</span>
-                  <!-- Clipboard Click Copy -->
-                  <button 
-                    type="button"
-                    @click="navigator.clipboard.writeText('Email: {{ $email }}\nPassword: {{ $password }}'); copied = true; setTimeout(() => copied = false, 2000)"
-                    class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[9px] font-bold transition-all border border-slate-200 flex items-center gap-1 cursor-pointer"
-                  >
-                    <span x-text="copied ? ' ' + '{{ __('spmb.btn_copied') }}' : ' ' + '{{ __('spmb.btn_copy_account') }}'"></span>
-                  </button>
-                </div>
-                <div class="text-xs text-slate-700 space-y-1">
-                  <div class="flex justify-between">
-                    <span class="text-slate-400 font-medium">{{ __('spmb.label_email_address') }}</span>
-                    <strong class="text-slate-800">{{ $email }}</strong>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-slate-400 font-medium">{{ __('spmb.label_temp_password') }}</span>
-                    <strong class="text-slate-800">{{ $password }}</strong>
-                  </div>
-                </div>
-                <a href="{{ route('login') }}" class="mt-4 block text-center py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-md shadow-emerald-500/10 transition-all">
-                  {{ __('spmb.btn_login_dashboard') }} &rarr;
-                </a>
-              </div>
+            <div class="mt-6 pt-6 border-t border-slate-200 border-dashed text-left space-y-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest block">{{ __('spmb.account_info_header') }}</span>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Akun siswa &amp; orang tua telah aktif. Gunakan <strong>NISN ({{ $registration->nisn ?: $registration->registration_number }})</strong> atau email terdaftar untuk masuk, lalu ambil <strong>Lembar Akun Awal</strong> resmi dari Panitia SPMB / Wali Kelas / Tata Usaha.
+              </p>
+              <a href="{{ route('login') }}" class="mt-3 block text-center py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-sm transition-all">
+                {{ __('spmb.btn_login_dashboard') }} &rarr;
+              </a>
             </div>
           @endif
         </div>

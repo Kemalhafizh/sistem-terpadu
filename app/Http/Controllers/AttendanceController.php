@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\Student;
+use App\Models\StudentLeaveRequest;
 use App\Services\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -99,6 +100,27 @@ class AttendanceController extends Controller
                 ->whereNull('schedule_id') // Presensi harian
                 ->get()
                 ->keyBy('student_id');
+
+            $approvedLeaves = StudentLeaveRequest::query()
+                ->whereIn('student_id', $students->pluck('id'))
+                ->whereIn('status', StudentLeaveRequest::APPROVED_STATUSES)
+                ->whereDate('start_date', '<=', $date)
+                ->whereDate('end_date', '>=', $date)
+                ->get()
+                ->keyBy('student_id');
+
+            foreach ($approvedLeaves as $studentId => $leave) {
+                if (! $existingAttendances->has($studentId)) {
+                    $existingAttendances->put($studentId, new Attendance([
+                        'student_id' => $studentId,
+                        'classroom_id' => (int) $selectedClassroomId,
+                        'date' => $date,
+                        'status' => $leave->dailyAttendanceCode(),
+                        'notes' => __('Izin disetujui: :reason', ['reason' => $leave->reason]),
+                        'student_leave_request_id' => $leave->id,
+                    ]));
+                }
+            }
         }
 
         return view('attendances.create', compact('classrooms', 'selectedClassroomId', 'date', 'students', 'existingAttendances'));

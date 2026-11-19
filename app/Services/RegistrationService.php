@@ -8,11 +8,11 @@ use App\Models\PaymentCategory;
 use App\Models\Registration;
 use App\Models\Student;
 use App\Models\User;
+use App\Services\Auth\AccountProvisioningService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 /**
  * Class RegistrationService
@@ -28,7 +28,7 @@ class RegistrationService
      *
      * Proses ini dijalankan dalam satu transaksi database:
      * 1. Membuat akun User dengan role 'student'.
-     * 2. Membuat profil Student terkait.
+     * 2. Membuat profil Student terkait dan menautkan akun orang tua bersama berdasarkan no. HP.
      * 3. Mengaitkan Registration dengan User ID baru.
      * 4. Menerbitkan tagihan Uang Pangkal pertama untuk siswa tersebut.
      * 5. Mengirimkan email berisi kredensial ke email pendaftar.
@@ -51,15 +51,18 @@ class RegistrationService
         }
 
         return DB::transaction(function () use ($registration) {
+            $provisioning = app(AccountProvisioningService::class);
+
             // 1. Create User Account
             $email = strtolower($registration->registration_number).'@student.sch.id';
-            $password = Str::random(10);
+            $password = $provisioning->generateTemporaryPassword(10);
 
             $newUser = User::create([
                 'name' => $registration->full_name,
                 'email' => $email,
                 'password' => Hash::make($password),
                 'role' => 'student',
+                'account_type' => 'siswa',
                 'must_change_password' => true,
             ]);
 
@@ -78,6 +81,13 @@ class RegistrationService
                 'birth_date' => $registration->birth_date,
                 'address' => $registration->address,
             ]);
+
+            // 2b. K5: Link or create one shared parent account keyed by parent_phone.
+            $parentAccount = $provisioning->ensureParentForStudent(
+                $newStudent,
+                $registration->parent_name,
+                $registration->parent_phone
+            );
 
             // 3. Link User ID to Registration
             $registration->user_id = $newUser->id;
@@ -112,7 +122,7 @@ class RegistrationService
                 Log::error('Failed to send student account email: '.$e->getMessage());
             }
 
-            $message = "Berhasil! Pendaftar Diterima. Akun siswa otomatis dibuat dengan Email: {$email}, Password Sementara: {$password}. Siswa wajib ganti password saat login pertama.";
+            $message = "Berhasil! Pendaftar Diterima. Akun siswa otomatis dibuat dengan Email/NISN: {$email} ({$registration->nisn}). Siswa wajib ganti password saat login pertama.";
             if (! $paymentCategory) {
                 $message .= ' '.__('Tagihan uang pangkal belum dibuat karena kategori "Uang Pangkal" beserta nominalnya belum diatur di Keuangan.');
             }
@@ -121,6 +131,8 @@ class RegistrationService
                 'message' => $message,
                 'password' => $password,
                 'email' => $email,
+                'parent_created' => $parentAccount['created'] ?? false,
+                'parent_password' => $parentAccount['plain_password'] ?? null,
                 'billed' => (bool) $paymentCategory,
             ];
         });

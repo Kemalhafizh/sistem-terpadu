@@ -41,6 +41,7 @@ class SessionAttendance extends Model
         'check_in_method',
         'checked_in_at',
         'recorded_by',
+        'student_leave_request_id',
         'notes',
         'is_override',
         'override_by',

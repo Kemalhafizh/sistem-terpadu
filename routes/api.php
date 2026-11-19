@@ -37,15 +37,18 @@ use App\Http\Controllers\Api\v1\Mobile\MobileSyncController;
 use App\Http\Controllers\Api\v1\Mobile\ScannerMobileApiController;
 use App\Http\Controllers\Api\v1\ParentPortalController;
 use App\Http\Controllers\Api\v1\PrayerTimeApiController;
+use App\Http\Controllers\Api\v1\ProfileChangeRequestApiController;
 use App\Http\Controllers\Api\v1\QuestionBankApiController;
 use App\Http\Controllers\Api\v1\SchoolOperationsApiController;
 use App\Http\Controllers\Api\v1\SmartNotificationController;
 use App\Http\Controllers\Api\v1\StudentApiController;
+use App\Http\Controllers\Api\v1\StudentLeaveApiController;
 use App\Http\Controllers\Api\v1\StudentProfileApiController;
 use App\Http\Controllers\Api\v1\StudentSessionAttendanceController;
 use App\Http\Controllers\Api\v1\SyncController;
 use App\Http\Controllers\Api\v1\TahsinSubmissionApiController;
 use App\Http\Controllers\Api\v1\VizController;
+use App\Http\Controllers\Auth\WhatsappPasswordResetController;
 use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\RoleBasedRateLimiterMiddleware;
 use App\Models\BullyingReport;
@@ -76,6 +79,8 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
 
     // === PUBLIC AUTH & APP CONFIG ===
     Route::post('login', [ApiAuthController::class, 'login'])->middleware('throttle:login');
+    Route::post('auth/whatsapp-otp/request', [WhatsappPasswordResetController::class, 'requestOtp'])->middleware('throttle:login');
+    Route::post('auth/whatsapp-otp/reset', [WhatsappPasswordResetController::class, 'resetWithOtp'])->middleware('throttle:login');
     Route::get('mobile/config', [MobileConfigController::class, 'getConfig']);
     Route::post('mobile/auth/login', [MobileAuthController::class, 'login'])->middleware('throttle:login');
     Route::post('mobile/auth/biometric/challenge', [MobileAuthController::class, 'biometricChallenge'])->middleware('throttle:login');
@@ -100,8 +105,21 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::post('logout', [ApiAuthController::class, 'logout']);
         Route::post('refresh-token', [ApiAuthController::class, 'refreshToken']);
         Route::get('me', [ApiAuthController::class, 'me']);
+        Route::put('me/password', [ApiAuthController::class, 'updatePassword']);
+        Route::patch('me/contact', [ProfileChangeRequestApiController::class, 'updateContact']);
         Route::put('me/locale', [ApiAuthController::class, 'updateLocale']);
         Route::get('me/capabilities', CapabilitiesController::class);
+
+        // K4: Self-Service Identity Change Requests
+        Route::get('profile-change-requests', [ProfileChangeRequestApiController::class, 'index']);
+        Route::post('profile-change-requests', [ProfileChangeRequestApiController::class, 'store']);
+        Route::post('profile-change-requests/{changeRequest}/cancel', [ProfileChangeRequestApiController::class, 'cancel']);
+        Route::get('profile-change-requests/{changeRequest}/evidence', [ProfileChangeRequestApiController::class, 'downloadEvidence'])
+            ->name('api.v1.profile-change-requests.evidence');
+
+        // C3: Protected medical letter attachment download (IDOR-checked in service)
+        Route::get('student-leave-requests/{leaveRequest}/attachment', [StudentLeaveApiController::class, 'downloadAttachment'])
+            ->name('api.v1.student-leave-requests.attachment');
 
         // Mobile Multi-Device & Biometrics
         Route::post('mobile/auth/biometric/register', [MobileAuthController::class, 'registerBiometric']);
@@ -181,6 +199,19 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('child/{student}/enrollment-history', [ElectiveSurveyApiController::class, 'parentChildEnrollmentHistory']);
             Route::get('messages', [ApiParentController::class, 'messages']);
             Route::post('messages', [ApiParentController::class, 'sendMessage']);
+
+            // C3: Izin / Sakit Siswa dari Orang Tua
+            Route::get('leave-requests', [StudentLeaveApiController::class, 'parentIndex']);
+            Route::post('leave-requests', [StudentLeaveApiController::class, 'store']);
+            Route::post('leave-requests/{leaveRequest}/cancel', [StudentLeaveApiController::class, 'cancel']);
+        });
+
+        // C3: Persetujuan Izin / Sakit Siswa (Wali Kelas / Guru / Waka Kesiswaan / Admin)
+        Route::prefix('teacher/leave-requests')->middleware('role:guru,teacher,wali_kelas,waka_kesiswaan,admin,superadmin')->group(function () {
+            Route::get('/', [StudentLeaveApiController::class, 'teacherIndex']);
+            Route::post('{leaveRequest}/approve', [StudentLeaveApiController::class, 'approve']);
+            Route::post('{leaveRequest}/reject', [StudentLeaveApiController::class, 'reject']);
+            Route::post('{leaveRequest}/revoke', [StudentLeaveApiController::class, 'revoke']);
         });
 
         // === NEW GURU & BK SCOPED ===
