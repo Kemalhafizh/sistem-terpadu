@@ -6,6 +6,7 @@ use App\Models\Student;
 use App\Models\StudentMutation;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -39,9 +40,10 @@ class StudentMutationService
                 $docPath = $document->store('mutations', 'local');
             }
 
-            $mutation = StudentMutation::create(array_merge($validatedData, [
-                'document_path' => $docPath,
-            ]));
+            $mutation = StudentMutation::create(array_merge(
+                Arr::except($validatedData, ['document']),
+                ['document_path' => $docPath]
+            ));
 
             // Update status if mutated out
             if ($validatedData['type'] === 'out') {

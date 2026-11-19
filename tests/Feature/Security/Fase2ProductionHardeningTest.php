@@ -523,6 +523,12 @@ test('cbt proctor extend time adds persistent extra minutes and server rejects e
         'answers' => [$question->id => 'A'],
     ])->assertOk();
 
+    // Past nominal end_time (+40m) but within proctor-extended deadline (+45m), web take() stays accessible
+    Carbon::setTestNow($startMoment->copy()->addMinutes(42));
+    $this->actingAs($studentUser)
+        ->get(route('cbt.exams.take', $exam))
+        ->assertOk();
+
     // Past extended deadline + 60s grace (+46m05s), every CBT endpoint refuses and auto-marks timeout
     Carbon::setTestNow($startMoment->copy()->addMinutes(46)->addSeconds(5));
 

@@ -265,22 +265,37 @@ class ExamController extends Controller
                 ->with('error', 'Ujian ini hanya dapat dikerjakan melalui Aplikasi SISTA di HP Anda. Silakan buka aplikasi SISTA di ponsel Anda.');
         }
 
-        // Check if exam is ongoing
-        if (! $exam->isOngoing()) {
+        $attempt = ExamAttempt::where('exam_id', $exam->id)
+            ->where('student_id', $student->id)
+            ->first();
+
+        // Check if already submitted, timed out, or locked
+        if ($attempt && $attempt->isFinished()) {
+            return redirect()->route('cbt.exams.results', $exam)
+                ->with('info', 'Anda sudah menyelesaikan ujian ini.');
+        }
+
+        $deadline = $attempt?->deadline();
+        $hasExtendedTime = $attempt
+            && $exam->isPublished()
+            && (int) ($attempt->extra_minutes ?? 0) > 0
+            && $deadline !== null
+            && now()->lte($deadline);
+
+        // Check if exam is ongoing (or student has active proctor time extension)
+        if (! $exam->isOngoing() && ! $hasExtendedTime) {
             return redirect()->route('cbt.exams.index')
                 ->with('error', 'Ujian belum dimulai atau sudah berakhir.');
         }
 
-        // Get or create attempt
-        $attempt = ExamAttempt::firstOrCreate(
-            ['exam_id' => $exam->id, 'student_id' => $student->id],
-            ['started_at' => now(), 'status' => 'in_progress']
-        );
-
-        // Check if already submitted, timed out, or locked
-        if ($attempt->isFinished()) {
-            return redirect()->route('cbt.exams.results', $exam)
-                ->with('info', 'Anda sudah menyelesaikan ujian ini.');
+        // Initialize attempt when student enters for the first time
+        if (! $attempt) {
+            $attempt = ExamAttempt::create([
+                'exam_id' => $exam->id,
+                'student_id' => $student->id,
+                'started_at' => now(),
+                'status' => 'in_progress',
+            ]);
         }
 
         // Check if expired
