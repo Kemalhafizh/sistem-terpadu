@@ -22,9 +22,7 @@
         <p class="text-slate-500 text-lg font-medium">Kami menyediakan berbagai fasilitas modern dan lengkap untuk menunjang proses belajar mengajar yang optimal dan nyaman.</p>
     </div>
 
-    {{-- ═══════════════════════════════════════════════════════
-         FACILITIES GRID
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- FACILITIES GRID --}}
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate-fade-in-up" style="animation-delay: .1s">
 
         {{-- 1. Laboratorium IPA --}}

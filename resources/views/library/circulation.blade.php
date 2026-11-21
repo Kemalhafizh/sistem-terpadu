@@ -24,7 +24,7 @@
                     <!-- Scanner Kamera -->
                     <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden relative">
                         <div class="absolute top-4 right-4 flex items-center gap-1.5">
-                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
                             <span class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Kamera Aktif</span>
                         </div>
                         <h3 class="text-sm font-black text-gray-900 uppercase tracking-wider mb-4">Pemindai Kamera (QR/Barcode)</h3>

@@ -191,7 +191,6 @@
         <div class="relative">
             <div class="w-12 h-12 border-4 border-primary-200 dark:border-primary-900 rounded-full animate-spin border-t-primary-600"></div>
             <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-2 h-2 bg-primary-600 rounded-full animate-ping"></div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-{{-- Premium Reusable Confirmation Modal Component --}}
+{{-- Reusable Confirmation Modal Component --}}
 @props([
     'name', // Unique modal name used for Alpine trigger
     'title' => 'Konfirmasi Tindakan',

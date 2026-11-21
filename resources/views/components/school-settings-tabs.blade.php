@@ -1,4 +1,4 @@
-{{-- FASE 119: school identity and appearance are one menu with two tabs. --}}
+{{-- School identity and appearance share one menu with two tabs. --}}
 <nav class="flex gap-2 border-b border-gray-200 dark:border-gray-700 mb-6" aria-label="{{ __('navigation.school_settings') }}">
     @foreach (['admin.school.branding.index' => __('navigation.school_identity'), 'admin.appearance.index' => __('navigation.school_appearance')] as $tabRoute => $tabLabel)
         <a href="{{ route($tabRoute) }}"

@@ -157,14 +157,10 @@ Route::prefix('spmb')->middleware('throttle:spmb')->group(function () {
 // Verifikasi QR Surat Keluar Resmi (Publik, Non-PII)
 Route::get('letters/verify/{token}', [LetterController::class, 'verify'])->name('letters.verify');
 
-// ============================================================
 // AUTHENTICATED ROUTES
-// ============================================================
 Route::middleware('auth')->group(function () {
 
-    // =========================================================
-    // UNIVERSAL â€” Semua user yang login bisa akses
-    // =========================================================
+    // UNIVERSAL - Semua user yang login bisa akses
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -195,7 +191,7 @@ Route::middleware('auth')->group(function () {
     Route::get('alumni/network-map', [AlumniController::class, 'alumniNetworkMap'])->name('alumni.network-map');
     Route::get('alumni/profile/{alumni}', [AlumniController::class, 'show'])->name('alumni.show');
 
-    // Keislaman â€” baca data tahfidz & mutaba'ah (semua user)
+    // Keislaman - baca data tahfidz & mutaba'ah (semua user)
     Route::prefix('tahfidz')->name('tahfidz.')->group(function () {
         Route::get('/dashboard', [TahfidzController::class, 'dashboard'])->name('dashboard');
         Route::get('/leaderboard', [TahfidzController::class, 'leaderboard'])->name('leaderboard');
@@ -358,9 +354,7 @@ Route::middleware('auth')->group(function () {
         Route::get('exports/history', [ExportEngineController::class, 'exportHistory'])->name('exports.history');
     });
 
-    // =========================================================
-    // EKSTRAKURIKULER & OSIS â€” Pengembangan Non-Akademik
-    // =========================================================
+    // EKSTRAKURIKULER & OSIS - Pengembangan Non-Akademik
     Route::get('extracurriculars', [ExtracurricularController::class, 'index'])->name('ekskul.index');
     Route::get('extracurriculars/schedule', [ExtracurricularController::class, 'schedule'])->name('ekskul.schedule');
     Route::get('extracurriculars/{extracurricular}', [ExtracurricularController::class, 'show'])->name('ekskul.show');
@@ -431,9 +425,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
     // LEMBAGA LEGISLATIF MPK (MAJELIS PERWAKILAN KELAS)
-    // =========================================================
     Route::prefix('admin/mpk')->name('mpk.')->group(function () {
         Route::get('/', [MpkController::class, 'index'])->name('index');
         Route::post('audit', [MpkController::class, 'storeAudit'])->name('audit.store');
@@ -447,17 +439,13 @@ Route::middleware('auth')->group(function () {
         Route::post('aspirations/{aspiration}/resolve', [MpkController::class, 'resolveAspiration'])->name('aspirations.resolve');
     });
 
-    // =========================================================
     // JURNAL HARIAN GURU (TEACHING JOURNAL / CLASS DIARY)
-    // =========================================================
     Route::get('teaching-journals/export/pdf', [TeachingJournalController::class, 'exportPdf'])->name('teaching-journals.export-pdf');
     Route::post('teaching-journals/{teaching_journal}/review', [TeachingJournalController::class, 'review'])->name('teaching-journals.review');
     Route::resource('teaching-journals', TeachingJournalController::class)
         ->middlewareFor('index', 'can:viewAny,'.TeachingJournal::class);
 
-    // =========================================================
     // STUDENT SELF-SERVICE
-    // =========================================================
     // Both spellings of the student role.
     Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
         Route::get('my-billings', [StudentFinanceController::class, 'index'])->name('finance.student.index');
@@ -475,9 +463,7 @@ Route::middleware('auth')->group(function () {
         Route::put('alumni/tracer-study/update/{tracerResponse}', [TracerStudyController::class, 'updateResponse'])->name('alumni.tracer-study.update');
     });
 
-    // =========================================================
-    // PARENT PORTAL â€” Area Premium Wali Murid
-    // =========================================================
+    // PARENT PORTAL - Area Wali Murid
     Route::middleware(['role:parent,orang_tua,orangtua,wali_murid'])->prefix('parent-portal')->name('parent-portal.')->group(function () {
         Route::get('/', [ParentPortalController::class, 'dashboard'])->name('dashboard');
         Route::get('child/{student}/report-card', [ParentPortalController::class, 'viewReportCard'])->name('report-card');
@@ -521,9 +507,7 @@ Route::middleware('auth')->group(function () {
         ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kesiswaan', Roles::PRINCIPAL, 'staf_tu', 'bk', 'petugas_uks', 'admin'))
         ->name('student-leave-requests.attachment');
 
-    // =========================================================
     // E-RAPOR & LEDGER NILAI
-    // =========================================================
     Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))->group(function () {
         Route::get('report-cards', [ReportCardController::class, 'index'])->name('report-cards.index');
         Route::get('report-cards/completeness', [ReportCardController::class, 'completeness'])->name('report-cards.completeness');
@@ -545,9 +529,7 @@ Route::middleware('auth')->group(function () {
         ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', Roles::PRINCIPAL, 'staf_tu', 'admin'))
         ->name('report-cards.pdf');
 
-    // =========================================================
-    // GURU â€” Fitur Akademik Pengajar
-    // =========================================================
+    // GURU - Fitur Akademik Pengajar
     Route::middleware('role:guru,teacher,bk,admin,superadmin')->group(function () {
         // Absensi
         Route::get('attendances', [AttendanceController::class, 'index'])->name('attendances.index');
@@ -559,7 +541,7 @@ Route::middleware('auth')->group(function () {
         Route::get('grades/create', [GradeController::class, 'create'])->name('grades.create');
         Route::post('grades', [GradeController::class, 'store'])->name('grades.store');
 
-        // Tahfidz (store â€” guru input setoran)
+        // Tahfidz (store - guru input setoran)
         Route::post('tahfidz', [TahfidzController::class, 'store'])->name('tahfidz.store');
 
         // Penilaian Harian & Remedial
@@ -576,9 +558,7 @@ Route::middleware('auth')->group(function () {
         Route::get('daily-assessments/{daily_assessment}/export-pdf', [DailyAssessmentController::class, 'exportPdf'])->name('daily-assessments.pdf');
     });
 
-    // =========================================================
-    // KESISWAAN â€” BK & Poin Kedisiplinan
-    // =========================================================
+    // KESISWAAN - BK & Poin Kedisiplinan
     Route::middleware('role:bk,waka_kesiswaan,guru,admin,superadmin')->group(function () {
         Route::get('points', [PointController::class, 'index'])->name('points.index');
         Route::get('points/{student}', [PointController::class, 'show'])->name('points.show');
@@ -592,9 +572,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('point-categories/{pointCategory}', [PointCategoryController::class, 'destroy'])->name('point-categories.destroy');
     });
 
-    // =========================================================
-    // ADMINISTRASI â€” Keuangan (TU & Admin)
-    // =========================================================
+    // ADMINISTRASI - Keuangan (TU & Admin)
     Route::middleware('role:staf_tu,admin,superadmin')->group(function () {
         Route::get('finance/billings', [FinanceController::class, 'index'])->name('finance.billings.index');
         Route::get('finance/billings/export', [FinanceController::class, 'export'])->name('finance.billings.export');
@@ -609,9 +587,7 @@ Route::middleware('auth')->group(function () {
         Route::post('finance/billings/{billing}/whatsapp-reminder', [FinanceController::class, 'sendWhatsappReminder'])->name('finance.billings.whatsapp-reminder');
     });
 
-    // =========================================================
-    // EXECUTIVE â€” Laporan Keuangan (Kepsek & Admin)
-    // =========================================================
+    // EXECUTIVE - Laporan Keuangan (Kepsek & Admin)
     Route::middleware('role:staf_tu,kepala_sekolah,admin,superadmin')->group(function () {
         Route::get('finance/reports/executive', [FinancialReportController::class, 'index'])->name('finance.reports.executive');
         Route::get('finance/reports/income-statement', [FinancialReportController::class, 'incomeStatement'])->name('finance.reports.income');
@@ -643,9 +619,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
-    // ADMINISTRASI — Manajemen Surat Keluar, Surat Masuk & Disposisi
-    // =========================================================
+    // ADMINISTRASI - Manajemen Surat Keluar, Surat Masuk & Disposisi
     Route::middleware('role:staf_tu,admin,superadmin,kepala_sekolah')->group(function () {
         // Halaman Kelola Template
         Route::get('letter-templates', [LetterController::class, 'manageTemplates'])->name('letters.templates.index');
@@ -681,9 +655,7 @@ Route::middleware('auth')->group(function () {
         Route::post('letter-dispositions/{disposition}/follow-up', [IncomingLetterController::class, 'updateDisposition'])->name('letter-dispositions.follow-up');
     });
 
-    // =========================================================
-    // KESISWAAN â€” Unit Kesehatan Sekolah (UKS) Digital
-    // =========================================================
+    // KESISWAAN - Unit Kesehatan Sekolah (UKS) Digital
     Route::prefix('uks')->name('uks.')->group(function () {
         // Akses Terbuka (Policy Guard di Controller)
         Route::get('student/{student}/history', [UksController::class, 'studentHistory'])->name('student-history');
@@ -730,9 +702,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
-    // KESISWAAN â€” Bimbingan & Konseling (BK Online)
-    // =========================================================
+    // KESISWAAN - Bimbingan & Konseling (BK Online)
     Route::prefix('counseling')->name('counseling.')->group(function () {
         // Akses Terbuka (Policy Guard di Controller)
         Route::get('student/{student}/profile', [CounselingController::class, 'studentProfile'])->name('student-profile');
@@ -758,9 +728,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
-    // KURIKULUM â€” Master Data Akademik
-    // =========================================================
+    // KURIKULUM - Master Data Akademik
     Route::middleware('role:waka_kurikulum,staf_tu,admin,superadmin,kepala_sekolah')->group(function () {
         // Kalender Akademik CRUD
         // Events are created/edited from the calendar page itself (modal + JSON).
@@ -814,9 +782,7 @@ Route::middleware('auth')->group(function () {
         Route::get('students/{student}/ledger/pdf', [StudentController::class, 'bukuIndukPdf'])->name('students.ledger.pdf');
     });
 
-    // =========================================================
     // INVENTARIS & PEMINJAMAN ASET LANJUTAN (MODUL 3)
-    // =========================================================
     Route::middleware(['auth'])->prefix('assets')->name('assets.')->group(function () {
         // Peminjaman (Umum - Guru/Staf & Admin)
         Route::get('loans', [AssetLoanController::class, 'index'])->name('loans.index');
@@ -836,18 +802,14 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
-    // SARPRAS â€” Sarana Prasarana
-    // =========================================================
+    // SARPRAS - Sarana Prasarana
     Route::middleware('role:waka_sarpras,admin,superadmin')->group(function () {
         Route::resource('assets', AssetController::class);
         Route::resource('asset-categories', AssetCategoryController::class)->only(['index', 'store', 'destroy']);
         Route::resource('rooms', RoomController::class)->only(['index', 'store', 'destroy']);
     });
 
-    // =========================================================
-    // HUMAS â€” Pengumuman, Tracer Study Analytics & Career Management
-    // =========================================================
+    // HUMAS - Pengumuman, Tracer Study Analytics & Career Management
     Route::middleware('role:waka_humas,admin,superadmin,kepala_sekolah')->group(function () {
         Route::resource('announcements', AnnouncementController::class)->except(['show']);
         Route::post('announcements/{announcement}/pin', [AnnouncementController::class, 'pin'])->name('announcements.pin');
@@ -875,9 +837,7 @@ Route::middleware('auth')->group(function () {
     Route::get('announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
     Route::post('announcements/{announcement}/acknowledge', [AnnouncementController::class, 'acknowledge'])->name('announcements.acknowledge');
 
-    // =========================================================
-    // HUMAS â€” Content Management System (CMS)
-    // =========================================================
+    // HUMAS - Content Management System (CMS)
     Route::middleware('role:waka_humas,admin,superadmin')->prefix('cms')->name('cms.')->group(function () {
         Route::get('dashboard', [CmsController::class, 'dashboard'])->name('dashboard');
 
@@ -918,9 +878,7 @@ Route::middleware('auth')->group(function () {
         Route::match(['get', 'post'], 'seo', [CmsController::class, 'seoSettings'])->name('seo.index');
     });
 
-    // =========================================================
-    // HRD & KEPEGAWAIAN â€” Manajemen Staf dan Guru
-    // =========================================================
+    // HRD & KEPEGAWAIAN - Manajemen Staf dan Guru
     Route::middleware('role:admin,superadmin,kepala_sekolah')->prefix('hrd')->name('hrd.')->group(function () {
         // Dashboard & Reports
         Route::get('dashboard', [EmployeeController::class, 'dashboard'])->name('dashboard');
@@ -963,9 +921,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [FingerprintImportController::class, 'store'])->name('store');
     });
 
-    // =========================================================
     // SELF-SERVICE HRD (Semua Pegawai/Staf/Guru)
-    // =========================================================
     Route::middleware('auth')->prefix('my-hrd')->name('my-hrd.')->group(function () {
         Route::get('portal', [MyHRDController::class, 'index'])->name('portal');
         Route::post('leaves', [MyHRDController::class, 'storeLeaveRequest'])->name('leaves');
@@ -974,9 +930,7 @@ Route::middleware('auth')->group(function () {
         Route::get('payslips/{payroll}/pdf', [MyHRDController::class, 'downloadPayslipPdf'])->name('payslips.pdf');
     });
 
-    // =========================================================
-    // LIBRARY MANAGEMENT â€” Kelola Perpustakaan
-    // =========================================================
+    // LIBRARY MANAGEMENT - Kelola Perpustakaan
     Route::middleware('role:guru,staf_tu,admin,superadmin')->group(function () {
         Route::get('library/manage', [LibraryController::class, 'manage'])->name('library.manage');
         Route::get('library/create', [LibraryController::class, 'create'])->name('library.create');
@@ -1026,9 +980,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
-    // ADMIN & SUPERADMIN ONLY — Manajemen Sistem
-    // =========================================================
+    // ADMIN & SUPERADMIN ONLY - Manajemen Sistem
     Route::middleware('role:admin,superadmin,kepala_sekolah')->group(function () {
         // User Management
         Route::resource('users', UserController::class)->except('show');
@@ -1103,9 +1055,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
     // E-LEARNING PORTAL & PWA
-    // =========================================================
     Route::get('elearning/install', [ElearningController::class, 'install'])->name('elearning.install');
     Route::get('elearning', [ElearningController::class, 'index'])->name('elearning.index');
     Route::get('elearning/class/{elearningClass}', [ElearningController::class, 'showClass'])->name('elearning.class.show');
@@ -1143,9 +1093,7 @@ Route::middleware('auth')->group(function () {
         Route::get('elearning/class/{elearningClass}/progress/student/{student}', [ElearningController::class, 'studentProgress'])->name('elearning.class.student-progress');
     });
 
-    // =========================================================
     // SURVEI & KUESIONER DIGITAL (MODUL 2)
-    // =========================================================
     Route::get('surveys', [SurveyController::class, 'index'])->name('surveys.index');
     Route::get('surveys/fill/{survey}', [SurveyController::class, 'show'])->name('surveys.show');
     Route::post('surveys/fill/{survey}/respond', [SurveyController::class, 'respond'])->name('surveys.respond');
@@ -1161,9 +1109,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('surveys/{survey}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
     });
 
-    // =========================================================
-    // ðŸ“š MANAJEMEN KURIKULUM & SILABUS DIGITAL
-    // =========================================================
+    // MANAJEMEN KURIKULUM & SILABUS DIGITAL
     Route::prefix('curriculum')->name('curriculum.')->group(function () {
         // Dashboard & PDF Report
         Route::get('/', [CurriculumController::class, 'index'])->name('index');
@@ -1189,9 +1135,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/lesson-plans/{lessonPlan}/pdf', [CurriculumController::class, 'lessonPlanPdf'])->name('lesson-plans.pdf');
     });
 
-    // =========================================================
-    // ðŸŽ« SISTEM HELPDESK INTERNAL
-    // =========================================================
+    // SISTEM HELPDESK INTERNAL
     Route::prefix('helpdesk')->name('helpdesk.')->group(function () {
         // Universal support ticket routes
         Route::resource('tickets', TicketController::class)->only(['index', 'create', 'store', 'show']);
@@ -1206,11 +1150,9 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
-    // ðŸ“ UJIAN ONLINE / CBT (COMPUTER-BASED TEST)
-    // =========================================================
+    // UJIAN ONLINE / CBT (COMPUTER-BASED TEST)
     Route::prefix('cbt')->name('cbt.')->group(function () {
-        // Bank Soal — Guru, Waka Kurikulum, Staf TU & Admin
+        // Bank Soal - Guru, Waka Kurikulum, Staf TU & Admin
         Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', 'staf_tu', 'admin'))->group(function () {
             Route::resource('question-banks', QuestionBankController::class);
         });
@@ -1224,21 +1166,21 @@ Route::middleware('auth')->group(function () {
             Route::delete('exams/{exam}', [ExamController::class, 'destroy'])->name('exams.destroy');
         });
 
-        // Exam Listing & Results — Guru, Siswa, Waka Kurikulum, Kepala Sekolah & Admin
+        // Exam Listing & Results - Guru, Siswa, Waka Kurikulum, Kepala Sekolah & Admin
         Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STUDENT_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->group(function () {
             Route::get('exams', [ExamController::class, 'index'])->name('exams.index');
             Route::get('exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
             Route::get('exams/{exam}/results', [ExamController::class, 'results'])->name('exams.results');
         });
 
-        // Proctor Monitor & Item Analysis — Guru, Waka Kurikulum, Kepala Sekolah & Admin
+        // Proctor Monitor & Item Analysis - Guru, Waka Kurikulum, Kepala Sekolah & Admin
         Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->group(function () {
             Route::get('exams/{exam}/monitor', [ExamController::class, 'monitor'])->name('exams.monitor');
             Route::get('exams/{exam}/analysis', [ExamController::class, 'itemAnalysis'])->name('exams.analysis');
             Route::get('exams/{exam}/analysis/pdf', [ExamController::class, 'exportAnalysisPdf'])->name('exams.analysis.pdf');
         });
 
-        // Exam Taking — Siswa
+        // Exam Taking - Siswa
         Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
             Route::get('exams/{exam}/take', [ExamController::class, 'take'])->name('exams.take');
             Route::post('exams/{exam}/start', [ExamController::class, 'start'])->name('exams.start');
@@ -1248,9 +1190,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // =========================================================
     // DIGITAL APPROVAL WORKFLOW ENGINE & UNIFIED INBOX
-    // =========================================================
     Route::middleware(Roles::only(Roles::LEADERSHIP, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'bk', 'staf_tu', 'bendahara', 'pustakawan', 'petugas_uks', 'admin'))
         ->prefix('workflows')
         ->name('workflows.')
@@ -1276,9 +1216,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/{workflowRequest}/delegate', [WorkflowController::class, 'delegate'])->name('delegate');
         });
 
-    // =========================================================
-    // ðŸ“¥ DATA IMPORT/EXPORT HUB UNIVERSAL (MODUL 7)
-    // =========================================================
+    // DATA IMPORT/EXPORT HUB UNIVERSAL (MODUL 7)
     Route::middleware('role:admin,superadmin,staf_tu')->prefix('import-export')->name('import-export.')->group(function () {
         Route::get('/', [ImportExportController::class, 'index'])->name('index');
         Route::post('upload', [ImportExportController::class, 'upload'])->name('upload');
@@ -1288,9 +1226,7 @@ Route::middleware('auth')->group(function () {
         Route::post('rollback/{log}', [ImportExportController::class, 'rollback'])->name('rollback');
     });
 
-    // =========================================================
-    // ðŸ“§ SCHEDULED REPORTING & EMAIL DIGEST (MODUL 8)
-    // =========================================================
+    // SCHEDULED REPORTING & EMAIL DIGEST (MODUL 8)
     Route::middleware('role:admin,superadmin,staf_tu')->prefix('admin/scheduled-reports')->name('admin.scheduled-reports.')->group(function () {
         Route::get('/', [ScheduledReportController::class, 'index'])->name('index');
         Route::post('/', [ScheduledReportController::class, 'store'])->name('store');
@@ -1299,9 +1235,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{report}/trigger', [ScheduledReportController::class, 'triggerImmediate'])->name('trigger');
     });
 
-    // =========================================================
-    // ðŸ”— INTEGRASI DAPODIK & SISTEM PEMERINTAH (MODUL 2)
-    // =========================================================
+    // INTEGRASI DAPODIK & SISTEM PEMERINTAH (MODUL 2)
     Route::middleware('role:admin,superadmin,staf_tu')->prefix('admin/integrations')->name('admin.integrations.')->group(function () {
         Route::get('/', [IntegrationController::class, 'index'])->name('index');
         Route::get('/dapodik', [IntegrationController::class, 'configDapodik'])->name('dapodik');
@@ -1321,18 +1255,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/logs', [IntegrationController::class, 'logs'])->name('logs');
     });
 
-    // =========================================================
-    // ðŸŽ¨ KUSTOMISASI TAMPILAN SEKOLAH (MODUL 6)
-    // =========================================================
+    // KUSTOMISASI TAMPILAN SEKOLAH (MODUL 6)
     Route::middleware('role:admin,superadmin')->prefix('admin/appearance')->name('admin.appearance.')->group(function () {
         Route::get('/', [AppearanceController::class, 'index'])->name('index');
         Route::put('/', [AppearanceController::class, 'update'])->name('update');
         Route::post('/reset', [AppearanceController::class, 'reset'])->name('reset');
     });
 
-    // =========================================================
-    // ðŸ“‹ MEMO & NOTULENSI RAPAT DIGITAL (MODUL 15.1)
-    // =========================================================
+    // MEMO & NOTULENSI RAPAT DIGITAL (MODUL 15.1)
     Route::middleware('role:admin,superadmin,staf_tu,kepala_sekolah,guru')->group(function () {
         Route::get('meeting-notes', [MeetingNoteController::class, 'index'])->name('meeting-notes.index');
         Route::get('meeting-notes/create', [MeetingNoteController::class, 'create'])->name('meeting-notes.create');
@@ -1370,9 +1300,7 @@ Route::middleware('guest')->group(function () {
 Route::match(['get', 'post'], 'preferences/locale/{locale}', [UserPreferenceController::class, 'setLocale'])->name('preferences.locale');
 Route::match(['get', 'post'], 'preferences/theme/{theme}', [UserPreferenceController::class, 'setTheme'])->name('preferences.theme');
 
-// =========================================================
-// FINANCE â€” Tabungan Wadiah & Cashless Kantin (Admin/TU/Merchant)
-// =========================================================
+// FINANCE - Tabungan Wadiah & Cashless Kantin (Admin/TU/Merchant)
 Route::middleware(['auth'])->group(function () {
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/finance/charity')->name('admin.finance.charity.')->group(function () {

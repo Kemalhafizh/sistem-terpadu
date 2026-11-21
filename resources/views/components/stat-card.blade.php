@@ -1,4 +1,4 @@
-{{-- Premium Dashboard Stat Card Component --}}
+{{-- Dashboard Stat Card Component --}}
 @props([
     'title',
     'value',

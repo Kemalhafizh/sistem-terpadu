@@ -15,7 +15,6 @@
             
             <!-- Assignment Summary Card -->
             <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-700 relative overflow-hidden group">
-                <div class="absolute -right-24 -top-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
                 <div class="relative z-10 space-y-3">
                     <span class="inline-flex px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-black uppercase tracking-wider">
                         {{ $elearningAssignment->elearningClass->name }}

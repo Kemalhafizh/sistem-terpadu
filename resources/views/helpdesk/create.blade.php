@@ -149,7 +149,6 @@
                             <div @click="priority = 'critical'" 
                                  :class="priority === 'critical' ? 'border-red-500 bg-red-500/5 dark:bg-red-500/10 ring-2 ring-red-500/30' : 'border-gray-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-950/30'"
                                  class="p-4 rounded-2xl border text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-1 group relative overflow-hidden">
-                                <div class="absolute -right-2 -top-2 w-6 h-6 bg-red-500/20 rounded-full animate-ping"></div>
                                 <span class="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider text-rose-500">Critical</span>
                                 <span class="text-[10px] text-slate-400 font-semibold mt-1">Resolusi Maks. 4 Jam</span>
                             </div>
@@ -170,7 +169,7 @@
                                   class="w-full text-xs font-semibold rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 text-gray-900 dark:text-white px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 resize-none">{{ old('description') }}</textarea>
                     </div>
 
-                    <!-- Premium Upload Attachment Zone -->
+                    <!-- Upload Attachment Zone -->
                     <div x-data="{ fileName: '' }" class="space-y-2">
                         <label class="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Lampirkan Foto / Berkas Bukti (Opsional)</label>
                         

@@ -82,7 +82,7 @@ jobs:
       - name: Install NPM Dependencies
         run: npm ci --ignore-scripts
 
-      - name: Compile Premium Web Assets
+      - name: Build Frontend Assets
         run: npm run build
 
       - name: Generate Secure Application Key

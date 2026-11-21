@@ -44,7 +44,7 @@ Modul Scheduled Reporting & Email Digest merupakan mesin pelaporan otomatis (*au
 ## 3. Dashboard Admin CRUD
 
 *   **Antarmuka Pengguna (`ScheduledReportController` & `scheduled-reports/index.blade.php`)**:
-    *   Menggunakan desain **glassmorphic dark-mode** premium yang responsif dengan aksen warna Emerald/Indigo.
+    *   Tampilan manajemen jadwal responsif untuk mode terang dan gelap berbasis Tailwind.
     *   Menyediakan manajemen lengkap untuk membuat, melihat, memperbarui, dan menghapus jadwal pelaporan.
     *   Dilengkapi tombol interaktif untuk memicu pengiriman laporan langsung secara instan (*trigger manual*) guna keperluan pengujian/kebutuhan mendesak.
 

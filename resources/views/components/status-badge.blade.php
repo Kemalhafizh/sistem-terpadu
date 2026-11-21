@@ -1,4 +1,4 @@
-{{-- Premium Status Badge Component --}}
+{{-- Status Badge Component --}}
 @props([
     'status' => 'neutral', // default status category, or auto-detected label
     'showDot' => false

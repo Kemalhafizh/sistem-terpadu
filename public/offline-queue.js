@@ -270,7 +270,7 @@ document.addEventListener('submit', async (event) => {
                 if (submitBtn) {
                     submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
                     const origText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = `⚠️ Tersimpan Luring`;
+                    submitBtn.innerHTML = `Tersimpan Luring`;
                     setTimeout(() => {
                         submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         submitBtn.innerHTML = origText;

@@ -10,8 +10,6 @@
             
             <!-- Welcome Info Box / Install Banner -->
             <div class="bg-gray-900 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden shadow-xl">
-                <!-- Decorative Circle -->
-                <div class="absolute end-0 bottom-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
                 
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div class="space-y-2">

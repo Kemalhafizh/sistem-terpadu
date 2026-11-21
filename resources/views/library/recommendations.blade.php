@@ -29,7 +29,6 @@
                         Smart Engine v1.0
                     </span>
                 </div>
-                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
             </div>
 
             <!-- Recommendation Grid -->

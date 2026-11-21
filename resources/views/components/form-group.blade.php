@@ -1,4 +1,4 @@
-{{-- Premium Reusable Form Group Component --}}
+{{-- Reusable Form Group Component --}}
 @props([
     'name', // Name parameter (used to match @error and default ID)
     'label' => null, // Label text

@@ -125,7 +125,7 @@
                 <div class="lg:col-span-7 bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700/80 shadow-sm p-6 space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                             Aktivitas Ancaman Keamanan Terkini
                         </h3>
                         <a href="{{ route('admin.security.logs') }}" class="text-xs text-rose-600 dark:text-rose-400 font-bold hover:underline">Lihat Selengkapnya →</a>

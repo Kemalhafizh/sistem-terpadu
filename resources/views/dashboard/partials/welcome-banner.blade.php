@@ -1,9 +1,6 @@
-<div class="bg-linear-to-r from-primary-800 to-primary-600 rounded-4xl p-8 shadow-xl shadow-primary-900/20 text-white relative overflow-hidden">
-    <!-- Abstract Shape -->
-    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
-    
+<div class="bg-linear-to-r from-primary-800 to-primary-600 rounded-2xl p-6 sm:p-8 shadow-md text-white relative overflow-hidden">
     <div class="relative z-10">
-        <div class="inline-flex items-center px-3 py-1 bg-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 backdrop-blur-md">
+        <div class="inline-flex items-center px-3 py-1 bg-white/15 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4">
             {{ __('dashboard.system_info') }} • {{ now()->format('d F Y') }}
         </div>
         <h3 class="text-3xl font-extrabold mb-3 leading-tight tracking-tight">{{ __('dashboard.welcome') }},<br>{{ Auth::user()->name }}!</h3>

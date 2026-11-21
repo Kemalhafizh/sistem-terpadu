@@ -58,9 +58,6 @@
 
             <!-- Terminal Main Area -->
             <div class="bg-gray-900 text-white p-6 sm:p-8 rounded-3xl border border-gray-800 shadow-2xl space-y-6 relative overflow-hidden">
-                <!-- Decorative Blur Background -->
-                <div class="absolute -right-20 -top-20 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-20 -bottom-20 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <!-- Mode Switch Tabs -->
                 <div class="flex items-center justify-between border-b border-gray-800 pb-4">

@@ -51,7 +51,6 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {{-- Target & Completion status card --}}
                         <div class="bg-primary-900 rounded-[2.5rem] p-6 sm:p-8 text-white relative overflow-hidden shadow-xl flex flex-col justify-between min-h-[280px]">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
                             
                             <div>
                                 <h3 class="text-xs font-black uppercase tracking-[0.3em] mb-6 opacity-60">Status Target Semester</h3>

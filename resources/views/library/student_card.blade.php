@@ -31,7 +31,7 @@
             }
         }
 
-        /* Desain Holographic Premium */
+        /* Desain Kartu Anggota */
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.9) 100%);
             position: relative;

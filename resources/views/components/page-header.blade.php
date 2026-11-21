@@ -1,4 +1,4 @@
-{{-- Premium Page Header Component --}}
+{{-- Page Header Component --}}
 @props([
     'title' => null,
     'subtitle' => null,
