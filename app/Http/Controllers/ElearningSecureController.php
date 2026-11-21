@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\ElearningAssignment;
 use App\Models\ElearningSubmission;
 use App\Models\Student;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 
 class ElearningSecureController extends Controller
@@ -17,7 +19,7 @@ class ElearningSecureController extends Controller
         $user = auth()->user();
 
         // Admin / Maintenance Bypass
-        if (in_array($user->role, ['admin', 'superadmin', 'guru'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin', ...StudentDataAccess::TEACHER_ROLES])) {
             $student = Student::first(); // Grab first student for layout preview
             $submission = null;
 
@@ -57,7 +59,7 @@ class ElearningSecureController extends Controller
         $user = auth()->user();
 
         // Admin bypass
-        if (in_array($user->role, ['admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin'])) {
             return response()->json([
                 'success' => true,
                 'violation_count' => 1,

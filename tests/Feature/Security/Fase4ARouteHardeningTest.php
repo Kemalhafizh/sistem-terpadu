@@ -4,10 +4,14 @@ use App\Models\AcademicYear;
 use App\Models\Billing;
 use App\Models\CertificateTemplate;
 use App\Models\Classroom;
+use App\Models\Grade;
 use App\Models\IssuedCertificate;
 use App\Models\PaymentCategory;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Survey;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
 test('config route_access tidak lagi menyisakan unguarded_debt', function () {
     expect(config('route_access.unguarded_debt'))->toBe([]);
@@ -171,4 +175,90 @@ test('superadmin tidak salah diklasifikasikan sebagai student atau parent pada e
     $this->actingAs($superadmin)->get(route('library.student-card', $student))->assertOk();
     $this->actingAs($superadmin)->get(route('tahfidz.show', $student))->assertOk();
     $this->actingAs($superadmin)->get(route('uks.student-history', $student))->assertOk();
+});
+
+test('GradePolicy dan BillingPolicy menutup IDOR dan mendukung alias siswa, orang_tua, serta teacher', function () {
+    $year = AcademicYear::factory()->create(['is_active' => true, 'year' => '2026/2027']);
+    $subject = Subject::factory()->create();
+    $teacher = User::factory()->create(['role' => 'teacher']);
+    $otherTeacher = User::factory()->create(['role' => 'guru']);
+    $siswaUser = User::factory()->create(['role' => 'siswa']);
+    $orangTuaUser = User::factory()->create(['role' => 'orang_tua']);
+    $otherStudentUser = User::factory()->create(['role' => 'siswa']);
+    $alumni = User::factory()->create(['role' => 'alumni']);
+
+    $siswa = Student::factory()->create(['user_id' => $siswaUser->id, 'parent_id' => $orangTuaUser->id]);
+    $otherStudent = Student::factory()->create(['user_id' => $otherStudentUser->id]);
+
+    $ownGrade = Grade::create([
+        'student_id' => $siswa->id,
+        'subject_id' => $subject->id,
+        'academic_year_id' => $year->id,
+        'type' => 'uh',
+        'score' => 90,
+        'recorded_by' => $teacher->id,
+    ]);
+    $otherGrade = Grade::create([
+        'student_id' => $otherStudent->id,
+        'subject_id' => $subject->id,
+        'academic_year_id' => $year->id,
+        'type' => 'uh',
+        'score' => 85,
+        'recorded_by' => $otherTeacher->id,
+    ]);
+
+    expect(Gate::forUser($siswaUser)->allows('view', $ownGrade))->toBeTrue()
+        ->and(Gate::forUser($siswaUser)->allows('view', $otherGrade))->toBeFalse()
+        ->and(Gate::forUser($orangTuaUser)->allows('view', $ownGrade))->toBeTrue()
+        ->and(Gate::forUser($orangTuaUser)->allows('view', $otherGrade))->toBeFalse()
+        ->and(Gate::forUser($alumni)->allows('view', $ownGrade))->toBeFalse()
+        ->and(Gate::forUser($teacher)->allows('viewAny', Grade::class))->toBeTrue()
+        ->and(Gate::forUser($teacher)->allows('create', Grade::class))->toBeTrue()
+        ->and(Gate::forUser($teacher)->allows('update', $ownGrade))->toBeTrue()
+        ->and(Gate::forUser($teacher)->allows('update', $otherGrade))->toBeFalse();
+
+    $category = PaymentCategory::factory()->create(['default_amount' => 300000]);
+    $ownBilling = Billing::factory()->create([
+        'student_id' => $siswa->id,
+        'payment_category_id' => $category->id,
+        'academic_year_id' => $year->id,
+        'amount' => 300000,
+    ]);
+    $otherBilling = Billing::factory()->create([
+        'student_id' => $otherStudent->id,
+        'payment_category_id' => $category->id,
+        'academic_year_id' => $year->id,
+        'amount' => 300000,
+    ]);
+
+    expect(Gate::forUser($siswaUser)->allows('view', $ownBilling))->toBeTrue()
+        ->and(Gate::forUser($siswaUser)->allows('view', $otherBilling))->toBeFalse()
+        ->and(Gate::forUser($orangTuaUser)->allows('view', $ownBilling))->toBeTrue()
+        ->and(Gate::forUser($orangTuaUser)->allows('view', $otherBilling))->toBeFalse();
+});
+
+test('survei kelas dan endpoint pengajar mendukung alias siswa serta teacher', function () {
+    AcademicYear::factory()->create(['is_active' => true, 'year' => '2026/2027']);
+
+    $teacher = User::factory()->create(['role' => 'teacher']);
+    $classroomA = Classroom::factory()->create();
+    $classroomB = Classroom::factory()->create();
+    $siswaA = User::factory()->create(['role' => 'siswa']);
+    $siswaB = User::factory()->create(['role' => 'siswa']);
+    Student::factory()->create(['user_id' => $siswaA->id, 'classroom_id' => $classroomA->id]);
+    Student::factory()->create(['user_id' => $siswaB->id, 'classroom_id' => $classroomB->id]);
+
+    $survey = Survey::create([
+        'title' => 'Evaluasi Kelas A',
+        'created_by' => $teacher->id,
+        'status' => 'active',
+        'target_classroom_id' => $classroomA->id,
+    ]);
+
+    $this->actingAs($siswaA)->get(route('surveys.show', $survey))->assertOk();
+    $this->actingAs($siswaB)->get(route('surveys.show', $survey))->assertForbidden();
+
+    $this->actingAs($teacher)->get(route('teaching-journals.index'))->assertOk();
+    $this->actingAs($teacher)->get(route('teaching-journals.create'))->assertOk();
+    $this->actingAs($teacher)->get(route('curriculum.index'))->assertOk();
 });

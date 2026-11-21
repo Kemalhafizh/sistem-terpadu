@@ -2,8 +2,11 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Grade;
 use App\Models\User;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 
 class GradePolicy
 {
@@ -12,8 +15,8 @@ class GradePolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah', 'waka_kurikulum', 'guru', 'bk',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'waka_kurikulum', ...StudentDataAccess::TEACHER_ROLES, 'bk',
         ]);
     }
 
@@ -23,17 +26,19 @@ class GradePolicy
      */
     public function view(User $user, Grade $grade): bool
     {
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             $student = $user->student;
 
             return $student && $grade->student_id === $student->id;
         }
 
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             return $grade->student && $grade->student->parent_id === $user->id;
         }
 
-        return true;
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'waka_kurikulum', ...StudentDataAccess::TEACHER_ROLES, 'bk',
+        ]);
     }
 
     /**
@@ -42,7 +47,7 @@ class GradePolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'superadmin', 'guru']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin', ...StudentDataAccess::TEACHER_ROLES]);
     }
 
     /**
@@ -50,12 +55,16 @@ class GradePolicy
      */
     public function update(User $user, Grade $grade): bool
     {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin'])) {
+            return true;
+        }
+
         // Teachers can only update grades they recorded
-        if ($user->role === 'guru') {
+        if ($user->hasRole('guru')) {
             return $grade->recorded_by === $user->id;
         }
 
-        return in_array($user->role, ['admin', 'superadmin']);
+        return false;
     }
 
     /**
@@ -63,6 +72,6 @@ class GradePolicy
      */
     public function delete(User $user, Grade $grade): bool
     {
-        return in_array($user->role, ['admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin']);
     }
 }

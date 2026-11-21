@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Asset;
 use App\Models\AssetLoan;
+use App\Support\Access\Roles;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -17,7 +19,7 @@ class AssetLoanController extends Controller
         $query = AssetLoan::with(['asset', 'borrower', 'approver']);
 
         // Guru & staf hanya bisa melihat daftar milik mereka sendiri
-        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah', 'staf_tu'])) {
+        if (! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_sarpras', ...Roles::PRINCIPAL, 'staf_tu'])) {
             $query->where('borrower_id', $user->id);
         } else {
             if ($request->filled('status')) {
@@ -136,7 +138,7 @@ class AssetLoanController extends Controller
     public function depreciationReport()
     {
         $user = auth()->user();
-        if (! in_array($user->role, ['admin', 'superadmin', 'waka_sarpras', 'kepala_sekolah'])) {
+        if (! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_sarpras', ...Roles::PRINCIPAL])) {
             abort(403);
         }
 

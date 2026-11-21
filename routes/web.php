@@ -742,7 +742,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // KESISWAAN â€” Unit Kesehatan Sekolah (UKS) Digital
+    // KESISWAAN - Unit Kesehatan Sekolah (UKS) Digital
     // =========================================================
     Route::prefix('uks')->name('uks.')->group(function () {
         // Akses siswa/wali sendiri, Petugas UKS, Guru, BK, Staf TU, Waka, Pimpinan, Admin (Policy Guard di Controller)
@@ -793,7 +793,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // KESISWAAN â€” Bimbingan & Konseling (BK Online)
+    // KESISWAAN - Bimbingan & Konseling (BK Online)
     // =========================================================
     Route::prefix('counseling')->name('counseling.')->group(function () {
         // Akses siswa/wali terkait, BK, Waka Kesiswaan, Pimpinan, Admin (Policy Guard di Controller)
@@ -1230,7 +1230,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ðŸ“š MANAJEMEN KURIKULUM & SILABUS DIGITAL
+    // MANAJEMEN KURIKULUM & SILABUS DIGITAL
     // =========================================================
     Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->prefix('curriculum')->name('curriculum.')->group(function () {
         // Dashboard & PDF Report

@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Announcement;
 use App\Models\User;
+use App\Support\Access\Roles;
 
 class AnnouncementPolicy
 {
@@ -21,8 +23,8 @@ class AnnouncementPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah', 'waka_humas',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'waka_humas',
         ]);
     }
 
@@ -31,7 +33,7 @@ class AnnouncementPolicy
      */
     public function update(User $user, Announcement $announcement): bool
     {
-        if (in_array($user->role, ['admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin'])) {
             return true;
         }
 
@@ -44,7 +46,7 @@ class AnnouncementPolicy
      */
     public function delete(User $user, Announcement $announcement): bool
     {
-        if (in_array($user->role, ['admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin'])) {
             return true;
         }
 

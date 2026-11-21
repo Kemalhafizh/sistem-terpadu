@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Ticket;
 use App\Models\User;
 
@@ -21,7 +22,7 @@ class TicketPolicy
     public function view(User $user, Ticket $ticket): bool
     {
         // Admins, TU staff, and Sarpras staff can view all tickets
-        if (in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
             return true;
         }
 
@@ -42,7 +43,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket): bool
     {
-        if (in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
             return true;
         }
 
@@ -56,7 +57,7 @@ class TicketPolicy
     public function delete(User $user, Ticket $ticket): bool
     {
         // Only staff/admin can delete tickets
-        return in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
     }
 
     /**
@@ -64,7 +65,7 @@ class TicketPolicy
      */
     public function comment(User $user, Ticket $ticket): bool
     {
-        if (in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
             return true;
         }
 
@@ -78,7 +79,7 @@ class TicketPolicy
     public function viewInternalComments(User $user, Ticket $ticket): bool
     {
         // Only staff/admin can view/post internal comments
-        return in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
     }
 
     /**
@@ -86,7 +87,7 @@ class TicketPolicy
      */
     public function assign(User $user, Ticket $ticket): bool
     {
-        return in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
     }
 
     /**
@@ -94,7 +95,7 @@ class TicketPolicy
      */
     public function resolve(User $user, Ticket $ticket): bool
     {
-        return in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin']);
     }
 
     /**
@@ -102,7 +103,7 @@ class TicketPolicy
      */
     public function close(User $user, Ticket $ticket): bool
     {
-        if (in_array($user->role, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['staf_tu', 'waka_sarpras', 'admin', 'superadmin'])) {
             return true;
         }
 
