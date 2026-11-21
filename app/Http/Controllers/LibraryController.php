@@ -182,7 +182,7 @@ class LibraryController extends Controller
     {
         // Validasi otoritas: Guru, Pustakawan, Staf TU, Admin, Pimpinan, atau siswa/orang tua terkait
         $user = auth()->user();
-        if (RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES])
+        if (($user->hasRole('student') || $user->hasRole('parent'))
             && ! $student->isVisibleTo($user)) {
             abort(403, 'Anda tidak diizinkan melihat kartu perpustakaan siswa lain.');
         }
@@ -213,7 +213,7 @@ class LibraryController extends Controller
         $user = auth()->user();
 
         if (is_null($student)) {
-            if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
+            if ($user->hasRole('student') && $user->student) {
                 $student = $user->student;
             } else {
                 abort(400, 'Parameter Siswa diperlukan.');
@@ -221,7 +221,7 @@ class LibraryController extends Controller
         }
 
         // Security check: Students and parents can only view their own/children's history
-        if (RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES])
+        if (($user->hasRole('student') || $user->hasRole('parent'))
             && ! $student->isVisibleTo($user)) {
             abort(403, 'Anda tidak diizinkan mengakses riwayat baca siswa lain.');
         }
@@ -237,7 +237,7 @@ class LibraryController extends Controller
     public function recommendations()
     {
         $user = auth()->user();
-        if (! RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) || ! $user->student) {
+        if (! $user->hasRole('student') || ! $user->student) {
             abort(403, 'Hanya siswa yang dapat mengakses rekomendasi buku.');
         }
 

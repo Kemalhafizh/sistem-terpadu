@@ -158,3 +158,17 @@ test('callback pembayaran parent portal mengarahkan ke rute UUID siswa yang vali
 
     $this->actingAs($orangTuaUser)->get(route('parent-portal.billings', $student))->assertOk();
 });
+
+test('superadmin tidak salah diklasifikasikan sebagai student atau parent pada endpoint terguarded', function () {
+    $this->withoutVite();
+    AcademicYear::factory()->create(['is_active' => true, 'year' => '2026/2027']);
+
+    $superadmin = User::factory()->create(['role' => 'superadmin']);
+    $student = Student::factory()->create();
+
+    $this->actingAs($superadmin)->get(route('counseling.index'))->assertOk();
+    $this->actingAs($superadmin)->get(route('event-attendance.index'))->assertOk();
+    $this->actingAs($superadmin)->get(route('library.student-card', $student))->assertOk();
+    $this->actingAs($superadmin)->get(route('tahfidz.show', $student))->assertOk();
+    $this->actingAs($superadmin)->get(route('uks.student-history', $student))->assertOk();
+});

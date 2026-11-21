@@ -52,12 +52,12 @@ class UksPolicy
         }
 
         // 2. Siswa hanya boleh melihat riwayat miliknya sendiri
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             return $student->user_id === $user->id;
         }
 
         // 3. Orang Tua hanya boleh melihat data anak kandungnya sendiri
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        if ($user->hasRole('parent')) {
             return $student->parent_id === $user->id;
         }
 

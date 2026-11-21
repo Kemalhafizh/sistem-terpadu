@@ -1264,7 +1264,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // 🎫 SISTEM HELPDESK INTERNAL
+    // SISTEM HELPDESK INTERNAL
     // =========================================================
     Route::prefix('helpdesk')->name('helpdesk.')->group(function () {
         // Universal support ticket routes

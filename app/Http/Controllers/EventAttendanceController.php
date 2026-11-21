@@ -29,7 +29,7 @@ class EventAttendanceController extends Controller
         $user = auth()->user();
 
         // Redirect students and parents to personal rekap
-        if (RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES])) {
+        if ($user->hasRole('student') || $user->hasRole('parent')) {
             return redirect()->route('event-attendance.rekap');
         }
 
@@ -111,10 +111,10 @@ class EventAttendanceController extends Controller
     public function show(EventAttendanceEvent $event)
     {
         $user = auth()->user();
-        if (RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES])) {
+        if ($user->hasRole('student') || $user->hasRole('parent')) {
             // Check ownership/target constraints for security
             $hasAccess = false;
-            if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+            if ($user->hasRole('student')) {
                 $hasAccess = $event->records()->where('user_id', $user->id)->exists();
             } else {
                 $childrenIds = Student::where('parent_id', $user->id)->pluck('user_id')->toArray();
@@ -187,14 +187,14 @@ class EventAttendanceController extends Controller
     {
         $user = auth()->user();
 
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             $student = Student::where('user_id', $user->id)->firstOrFail();
             $summary = $this->attendanceService->getStudentEventAttendanceSummary($student);
 
             return view('event-attendance.rekap', compact('student', 'summary'));
         }
 
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        if ($user->hasRole('parent')) {
             $students = Student::where('parent_id', $user->id)->get();
             if ($students->isEmpty()) {
                 return view('event-attendance.rekap', ['student' => null, 'summary' => null, 'students' => $students]);
@@ -226,7 +226,7 @@ class EventAttendanceController extends Controller
     public function exportPdf(EventAttendanceEvent $event)
     {
         $user = auth()->user();
-        if (RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES])) {
+        if ($user->hasRole('student') || $user->hasRole('parent')) {
             abort(403, 'Akses ditolak.');
         }
 

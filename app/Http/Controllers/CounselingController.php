@@ -9,7 +9,6 @@ use App\Models\StudentPointLog;
 use App\Models\User;
 use App\Services\CounselingService;
 use App\Support\Access\Roles;
-use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -101,13 +100,13 @@ class CounselingController extends Controller
         $user = auth()->user();
 
         // Pembatasan hak akses berbasis role
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             $student = $user->student;
             if (! $student) {
                 abort(403, 'Anda tidak terdaftar sebagai Siswa.');
             }
             $query->where('student_id', $student->id);
-        } elseif (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        } elseif ($user->hasRole('parent')) {
             $query->whereHas('student', function ($q) use ($user) {
                 $q->where('parent_id', $user->id);
             });
@@ -152,9 +151,9 @@ class CounselingController extends Controller
         $user = auth()->user();
         $students = collect();
 
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             $students = collect([$user->student]);
-        } elseif (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        } elseif ($user->hasRole('parent')) {
             $students = Student::with(['user', 'classroom'])->where('parent_id', $user->id)->get();
         } elseif (RoleMiddleware::allowsUser($user, ['bk', 'admin', 'superadmin'])) {
             $students = Student::with(['user', 'classroom'])->where('status', 'active')->get()->sortBy('user.name');
@@ -187,10 +186,10 @@ class CounselingController extends Controller
 
         // Pastikan siswa yang dipilih valid jika user adalah siswa atau orang tua
         $user = auth()->user();
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) && $user->student?->id != $validated['student_id']) {
+        if ($user->hasRole('student') && $user->student?->id != $validated['student_id']) {
             abort(403, 'Aksi tidak diizinkan.');
         }
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        if ($user->hasRole('parent')) {
             $allowedStudentIds = Student::where('parent_id', $user->id)->pluck('id')->toArray();
             if (! in_array($validated['student_id'], $allowedStudentIds)) {
                 abort(403, 'Aksi tidak diizinkan.');
@@ -295,14 +294,14 @@ class CounselingController extends Controller
     {
         // Siswa/Parent hanya boleh membatalkan jika statusnya masih requested/scheduled
         $user = auth()->user();
-        if (RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES])) {
+        if ($user->hasRole('student') || $user->hasRole('parent')) {
             if ($session->status !== 'requested' && $session->status !== 'scheduled') {
                 return back()->with('error', 'Sesi tidak dapat dibatalkan pada tahap ini.');
             }
-            if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) && $session->student_id !== $user->student?->id) {
+            if ($user->hasRole('student') && $session->student_id !== $user->student?->id) {
                 abort(403);
             }
-            if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES) && $session->student?->parent_id !== $user->id) {
+            if ($user->hasRole('parent') && $session->student?->parent_id !== $user->id) {
                 abort(403);
             }
         } else {

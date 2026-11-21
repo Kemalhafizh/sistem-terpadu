@@ -27,7 +27,7 @@ class CertificateController extends Controller
         $query = IssuedCertificate::with(['student', 'template'])->latest();
 
         if (! $isStaffReader && $user !== null) {
-            if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+            if ($user->hasRole('parent')) {
                 $childUserIds = Student::where('parent_id', $user->id)->pluck('user_id');
                 $query->whereIn('student_id', $childUserIds);
             } else {

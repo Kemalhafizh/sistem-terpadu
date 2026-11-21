@@ -7,7 +7,6 @@ use App\Models\CounselingSession;
 use App\Models\Student;
 use App\Models\User;
 use App\Support\Access\Roles;
-use App\Support\Access\StudentDataAccess;
 
 class CounselingSessionPolicy
 {
@@ -31,7 +30,7 @@ class CounselingSessionPolicy
         }
 
         // Siswa dan orang tua memiliki hak akses terbatas
-        return RoleMiddleware::allowsUser($user, [...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES]);
+        return $user->hasRole('student') || $user->hasRole('parent');
     }
 
     /**
@@ -45,14 +44,14 @@ class CounselingSessionPolicy
         }
 
         // 2. Siswa yang bersangkutan
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             $student = $user->student;
 
             return $student && $session->student_id === $student->id;
         }
 
         // 3. Orang Tua dari siswa yang bersangkutan
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        if ($user->hasRole('parent')) {
             return $session->student && $session->student->parent_id === $user->id;
         }
 
@@ -64,7 +63,7 @@ class CounselingSessionPolicy
      */
     public function create(User $user): bool
     {
-        return RoleMiddleware::allowsUser($user, ['bk', ...StudentDataAccess::STUDENT_ROLES, ...StudentDataAccess::PARENT_ROLES]);
+        return RoleMiddleware::allowsUser($user, ['bk']) || $user->hasRole('student') || $user->hasRole('parent');
     }
 
     /**
@@ -104,12 +103,12 @@ class CounselingSessionPolicy
         }
 
         // Siswa boleh melihat miliknya sendiri
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             return $student->user_id === $user->id;
         }
 
         // Orang tua boleh melihat milik anaknya sendiri
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        if ($user->hasRole('parent')) {
             return $student->parent_id === $user->id;
         }
 
@@ -127,11 +126,11 @@ class CounselingSessionPolicy
         }
 
         // Siswa boleh mengunduh laporan mereka jika tidak dikategorikan super rahasia (opsional, tapi untuk kepatuhan policy)
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES)) {
+        if ($user->hasRole('student')) {
             return $session->student_id === $user->student?->id;
         }
 
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::PARENT_ROLES)) {
+        if ($user->hasRole('parent')) {
             return $session->student && $session->student->parent_id === $user->id;
         }
 

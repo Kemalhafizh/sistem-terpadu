@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Extracurricular;
 use App\Models\ExtracurricularAchievement;
@@ -12,7 +11,6 @@ use App\Models\ExtracurricularGrade;
 use App\Models\ExtracurricularMember;
 use App\Models\Student;
 use App\Models\User;
-use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +26,7 @@ class ExtracurricularController extends Controller
             ->where('is_active', true)
             ->get();
 
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
+        if ($user->hasRole('student') && $user->student) {
             $student = $user->student;
             $myEkskulIds = ExtracurricularMember::where('student_id', $student->id)
                 ->where('status', 'active')
@@ -48,7 +46,7 @@ class ExtracurricularController extends Controller
         // Cek Keikutsertaan Siswa
         $isMember = false;
         $user = auth()->user();
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) && $user->student) {
+        if ($user->hasRole('student') && $user->student) {
             $isMember = ExtracurricularMember::where('extracurricular_id', $extracurricular->id)
                 ->where('student_id', $user->student->id)
                 ->where('status', 'active')
@@ -61,7 +59,7 @@ class ExtracurricularController extends Controller
     public function register(Request $request, Extracurricular $extracurricular)
     {
         $user = auth()->user();
-        if (! RoleMiddleware::allowsUser($user, StudentDataAccess::STUDENT_ROLES) || ! $user->student) {
+        if (! $user->hasRole('student') || ! $user->student) {
             return back()->with('error', 'Hanya siswa yang dapat mendaftar ekstrakurikuler.');
         }
 
@@ -423,7 +421,7 @@ class ExtracurricularController extends Controller
         if ($user->isAdmin() || $user->role === 'waka_kesiswaan') {
             return;
         }
-        if (RoleMiddleware::allowsUser($user, StudentDataAccess::TEACHER_ROLES) && $ekskul->advisor_id === $user->id) {
+        if ($user->hasRole('guru') && $ekskul->advisor_id === $user->id) {
             return;
         }
         abort(403, 'Aksi tidak diotorisasi. Anda bukan pembina ekskul ini.');
