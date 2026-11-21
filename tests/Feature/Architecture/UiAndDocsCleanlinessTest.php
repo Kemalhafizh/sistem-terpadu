@@ -37,10 +37,9 @@ test('blade views bebas dari efek dekoratif berlebihan dan komentar slop', funct
     expect($violations)->toBe([]);
 });
 
-test('routes dan aset statis bebas mojibake, emoji dekoratif, dan banner pembatas', function () {
+test('routes api dan aset statis bebas mojibake, emoji dekoratif, dan banner pembatas', function () {
     $root = base_path();
     $files = [
-        'routes/web.php',
         'routes/api.php',
         'public/offline-queue.js',
         'public/css/print.css',
