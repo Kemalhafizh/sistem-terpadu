@@ -438,7 +438,7 @@ class ParentPortalController extends Controller
             $billing->updateStatus();
         });
 
-        return redirect()->route('parent-portal.billings', $student->id)->with('success', 'Pembayaran berhasil dikonfirmasi secara otomatis!');
+        return redirect()->route('parent-portal.billings', $student)->with('success', 'Pembayaran berhasil dikonfirmasi secara otomatis!');
     }
 
     /**

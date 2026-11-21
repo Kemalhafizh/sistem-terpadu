@@ -196,7 +196,7 @@ test('parent can checkout billing and successfully confirm via callback simulati
 
     // Trigger mock callback
     $callbackResponse = $this->post(route('parent-portal.billings.callback', $billing->id));
-    $callbackResponse->assertRedirect(route('parent-portal.billings', $student->id));
+    $callbackResponse->assertRedirect(route('parent-portal.billings', $student));
 
     $billing->refresh();
     expect((int) $billing->remaining_balance)->toBe(0);
