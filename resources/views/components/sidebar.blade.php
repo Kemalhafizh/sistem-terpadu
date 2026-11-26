@@ -115,6 +115,8 @@
         @endcanVisit
         @endif
 
+        <x-sidebar-link route="academic.cycle.index" :label="__('navigation.academic_cycle')" icon="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" active="academic.cycle.*" />
+
         
         @canVisit('my-hrd.portal')
         <a href="{{ route('my-hrd.portal') }}" class="{{ $linkClass }} {{ request()->routeIs('my-hrd.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.hrd_portal') }}">
