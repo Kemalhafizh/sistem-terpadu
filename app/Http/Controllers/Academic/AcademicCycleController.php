@@ -7,6 +7,9 @@ use App\Models\AcademicCalendar;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\ElectiveSurvey;
+use App\Models\GraduationBatch;
+use App\Models\GraduationDecision;
+use App\Models\MeetingNote;
 use App\Models\PromotionBatch;
 use App\Models\PromotionDecision;
 use App\Models\SchoolYear;
@@ -14,6 +17,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Services\Academic\ElectiveSurveyService;
 use App\Services\Academic\EnrollmentService;
+use App\Services\Academic\GraduationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +29,7 @@ class AcademicCycleController extends Controller
     public function __construct(
         private readonly EnrollmentService $enrollmentService,
         private readonly ElectiveSurveyService $surveyService,
+        private readonly GraduationService $graduationService,
     ) {}
 
     public function index(): View
@@ -47,6 +52,16 @@ class AcademicCycleController extends Controller
             ->latest('id')
             ->get();
 
+        $graduationBatches = GraduationBatch::query()
+            ->with(['schoolYear', 'meetingNote', 'decisions.student.user'])
+            ->latest('id')
+            ->get();
+
+        $finalizedMeetingNotes = MeetingNote::query()
+            ->where('status', 'finalized')
+            ->orderByDesc('meeting_date')
+            ->get();
+
         $subjects = Subject::orderBy('name')->get();
         $milestones = AcademicCalendar::MILESTONES;
 
@@ -56,6 +71,8 @@ class AcademicCycleController extends Controller
             'activeSurvey',
             'surveyStats',
             'promotionBatches',
+            'graduationBatches',
+            'finalizedMeetingNotes',
             'subjects',
             'milestones',
         ));
@@ -315,5 +332,102 @@ class AcademicCycleController extends Controller
 
         return redirect()->route('academic.cycle.index')
             ->with('success', __('Batch kenaikan kelas berhasil dieksekusi ke riwayat rombel.'));
+    }
+
+    public function createGraduationBatch(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'school_year_id' => ['required', 'exists:school_years,id'],
+            'graduation_year' => ['nullable', 'integer', 'min:2000', 'max:2100'],
+            'graduation_date' => ['nullable', 'date'],
+            'sk_number' => ['nullable', 'string', 'max:120'],
+            'sk_date' => ['nullable', 'date'],
+            'meeting_note_id' => ['nullable', 'exists:meeting_notes,id'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $schoolYear = SchoolYear::findOrFail($validated['school_year_id']);
+        $this->graduationService->createOrSyncBatch($schoolYear, $request->user(), $validated);
+
+        return redirect()->route('academic.cycle.index')
+            ->with('success', __('Draf batch kelulusan kelas XII berhasil disiapkan.'));
+    }
+
+    public function reviewGraduationDecision(Request $request, GraduationDecision $graduationDecision): RedirectResponse
+    {
+        $validated = $request->validate([
+            'decision' => ['required', Rule::in([
+                GraduationDecision::DECISION_GRADUATED,
+                GraduationDecision::DECISION_NOT_GRADUATED,
+            ])],
+            'note' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $this->graduationService->updateDecision(
+            $graduationDecision,
+            $request->user(),
+            $validated['decision'],
+            $validated['note'] ?? null
+        );
+
+        return redirect()->route('academic.cycle.index')
+            ->with('success', __('Keputusan kelulusan siswa berhasil diperbarui.'));
+    }
+
+    public function bulkGraduationDecisions(Request $request, GraduationBatch $graduationBatch): RedirectResponse
+    {
+        $validated = $request->validate([
+            'decisions' => ['required', 'array', 'min:1'],
+        ]);
+
+        $this->graduationService->bulkUpdateDecisions($graduationBatch, $request->user(), $validated['decisions']);
+
+        return redirect()->route('academic.cycle.index')
+            ->with('success', __('Keputusan kelulusan massal angkatan berhasil disimpan.'));
+    }
+
+    public function submitGraduationBatch(Request $request, GraduationBatch $graduationBatch): RedirectResponse
+    {
+        $validated = $request->validate([
+            'meeting_note_id' => ['nullable', 'exists:meeting_notes,id'],
+            'sk_number' => ['nullable', 'string', 'max:120'],
+            'sk_date' => ['nullable', 'date'],
+            'graduation_date' => ['nullable', 'date'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $this->graduationService->submitForApproval($graduationBatch, $request->user(), $validated);
+
+        return redirect()->route('academic.cycle.index')
+            ->with('success', __('Draf kelulusan kelas XII berhasil diajukan ke Kepala Sekolah untuk pengesahan SK.'));
+    }
+
+    public function approveGraduationBatch(Request $request, GraduationBatch $graduationBatch): RedirectResponse
+    {
+        $validated = $request->validate([
+            'sk_number' => ['nullable', 'string', 'max:120'],
+            'sk_date' => ['nullable', 'date'],
+            'graduation_date' => ['nullable', 'date'],
+            'remarks' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $this->graduationService->approveBatch($graduationBatch, $request->user(), $validated);
+
+        return redirect()->route('academic.cycle.index')
+            ->with('success', __('SK kelulusan angkatan kelas XII berhasil disahkan oleh Kepala Sekolah.'));
+    }
+
+    public function executeGraduationBatch(Request $request, GraduationBatch $graduationBatch): RedirectResponse
+    {
+        $validated = $request->validate([
+            'sk_number' => ['nullable', 'string', 'max:120'],
+            'sk_date' => ['nullable', 'date'],
+            'graduation_date' => ['nullable', 'date'],
+        ]);
+
+        $this->graduationService->executeAndAnnounce($graduationBatch, $request->user(), $validated);
+
+        return redirect()->route('academic.cycle.index')
+            ->with('success', __('Kelulusan kelas XII berhasil diumumkan, riwayat rombel ditutup, dan data alumni telah dibuat.'));
     }
 }

@@ -32,6 +32,24 @@ class WorkflowDefinitionSeeder extends Seeder
                 ],
                 'is_active' => true,
             ],
+            [
+                'name' => 'Pengesahan SK Kelulusan Kelas XII',
+                'code' => 'graduation_approval',
+                'description' => 'Alur pengesahan SK kelulusan massal satu angkatan kelas XII oleh Kepala Sekolah berdasarkan rapat pleno dewan guru.',
+                'steps' => [
+                    ['order' => 1, 'role' => 'kepala_sekolah', 'sla_hours' => 48],
+                ],
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Persetujuan Mutasi Siswa',
+                'code' => 'mutation_approval',
+                'description' => 'Alur persetujuan permohonan mutasi siswa masuk atau keluar oleh Kepala Sekolah.',
+                'steps' => [
+                    ['order' => 1, 'role' => 'kepala_sekolah', 'sla_hours' => 48],
+                ],
+                'is_active' => true,
+            ],
         ];
 
         foreach ($definitions as $def) {

@@ -197,24 +197,25 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Status batch:** `draf → ditinjau_wali → ditetapkan → dieksekusi` (atau `dibatalkan`).
 - **Keluaran:** enrollment TA lama ditutup dengan status `naik`/`tinggal`, dan enrollment TA baru dibuat.
 
-#### A5. Kelulusan Kelas XII → Alumni · `[Sebagian]`
+#### A5. Kelulusan Kelas XII → Alumni · `[Tersedia]`
 - **Pemilik:** Waka Kurikulum. **Mengesahkan:** Kepala Sekolah (SK kelulusan).
 - **Langkah:**
-  1. Disusun draf kelulusan.
-  2. Rapat dewan guru.
-  3. Kepala sekolah mengesahkan.
-  4. Pengumuman ke siswa dan orang tua.
-  5. Status siswa menjadi alumni, enrollment ditutup dengan status `lulus`.
-  6. Data alumni dan tracer study (K3) dibuat.
-- **Kini:** `AlumniController::bulkGraduate` sudah ada, tetapi belum terikat ke rapat atau pengesahan dan riwayat rombel.
+  1. Waka Kurikulum menyusun draf kelulusan angkatan Kelas XII (`GraduationBatch` per `SchoolYear`) beserta ringkasan nilai rapor dan kehadiran dari basis data nyata (`null` bila belum tersedia).
+  2. Wali kelas XII atau Waka Kurikulum menetapkan keputusan per siswa (`lulus` / `tidak_lulus`), lalu hasil rapat pleno dewan guru ditautkan ke Notulen Rapat yang telah difinalisasi (`J8`).
+  3. Waka Kurikulum mengajukan draf ke Kepala Sekolah melalui mesin persetujuan `WorkflowService` (`graduation_approval`), sehingga muncul di Kotak Masuk Terpadu. Kepala Sekolah mengesahkan SK kelulusan secara massal satu angkatan.
+  4. Pengumuman kelulusan dikirim ke siswa dan orang tua (`GraduationAnnouncedNotification`).
+  5. Secara atomik, status siswa yang lulus menjadi `alumni` dan riwayat `ClassEnrollment` aktif ditutup dengan status `lulus` beserta rujukan nomor SK.
+  6. Data `AlumniData` (termasuk nomor SK dan tanggal lulus untuk Buku Induk `K2` serta Tracer Study `K3`) dan antrean pembaruan Dapodik (`K1`) dibuat otomatis.
+- **Status batch:** `draf → pending → approved / revision / rejected → dieksekusi`.
 
-#### A6. Mutasi Siswa Masuk/Keluar · `[Sebagian]`
-- **Pemilik:** Staf TU. **Mengetahui:** Waka Kesiswaan dan Kepala Sekolah.
+#### A6. Mutasi Siswa Masuk/Keluar · `[Tersedia]`
+- **Pemilik:** Staf TU. **Mengetahui:** Waka Kesiswaan. **Menyetujui:** Kepala Sekolah.
 - **Langkah:**
-  1. TU mencatat permohonan beserta dokumen.
-  2. Kepala sekolah menyetujui.
-  3. Untuk mutasi keluar: enrollment ditutup (`mutasi_keluar`), tagihan berjalan ditinjau, dan akun dinonaktifkan. Untuk mutasi masuk: siswa dibuat dan dimasukkan ke rombel.
-- **Kini:** `student_mutations` mencatat in/out tanpa persetujuan dan tanpa mengubah riwayat rombel.
+  1. Staf TU mencatat permohonan mutasi masuk atau keluar beserta berkas pendukung privat (`local` disk); Waka Kesiswaan diberi tahu dan pengajuan masuk ke Kepala Sekolah lewat `WorkflowService` (`mutation_approval`) pada Kotak Masuk Terpadu.
+  2. Kepala Sekolah menyetujui atau menolak permohonan (penyusun tidak dapat menyetujui pengajuannya sendiri).
+  3. Untuk **mutasi keluar**: `ClassEnrollment` aktif ditutup dengan status `mutasi_keluar`, status siswa menjadi `mutated`, tagihan berjalan (`unpaid`/`partial`) ditinjau otomatis (`billing_review_status`: `cleared` / `needs_settlement` dengan opsi pembatalan tagihan masa depan belum terbayar oleh TU/Bendahara), akun siswa dinonaktifkan (serta akun orang tua apabila tidak ada anak aktif lain dan tidak ada tunggakan), dan item sinkronisasi Dapodik (`K1`) dicatat.
+  4. Untuk **mutasi masuk**: profil `Student` serta akun siswa dan orang tua dibuat otomatis (`AccountProvisioningService`) apabila belum terdaftar, siswa ditempatkan ke rombel tujuan melalui `EnrollmentService::enroll` (`ClassEnrollment` berstatus `aktif`), dan item sinkronisasi Dapodik (`K1`) dicatat.
+- **Status mutasi:** `pending → approved / rejected` (hanya mutasi berstatus `approved` yang tercetak pada Buku Induk `K2`).
 
 ### B. Penerimaan Siswa Baru
 
@@ -258,15 +259,14 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Status presensi:** `hadir · telat · sakit · izin · alpha`.
 - **Koreksi:** admin atau waka, tercatat di audit log.
 
-#### C3. Izin / Sakit Siswa dari Orang Tua · `[Terjadwal]`
+#### C3. Izin / Sakit Siswa dari Orang Tua · `[Tersedia]`
 - **Pemilik:** Wali Kelas.
 - **Langkah:**
-  1. Orang tua mengajukan izin atau sakit di Android: tanggal, alasan, dan foto surat dokter bila sakit lebih dari 2 hari.
-  2. Wali kelas menyetujui atau menolak.
-  3. Bila disetujui, presensi semua sesi pada tanggal itu otomatis menjadi `izin`/`sakit`, bukan alpha.
-  4. Guru mapel melihat keterangan itu di daftar sesinya.
-- **Status:** `diajukan → disetujui / ditolak` (dibatalkan oleh orang tua sebelum diputuskan).
-- **Mengapa penting:** sekarang izin lewat WA pribadi ke wali kelas dan tidak tercatat, sehingga rekap presensi di rapor salah.
+  1. Orang tua mengajukan izin atau sakit di Android/Web: tanggal, alasan, dan lampiran surat dokter pada penyimpanan privat bila sakit melampaui batas hari tanpa surat.
+  2. Izin sakit singkat (sesuai batas pengaturan sekolah, bawaan 1 hari) tercatat otomatis dan wali kelas tetap diberi tahu serta dapat membatalkan; izin lainnya disetujui/ditolak wali kelas dan dieskalasi ke Waka Kesiswaan bila melewati tenggat.
+  3. Bila disetujui, presensi semua sesi kelas pada rentang tanggal itu otomatis disinkronkan menjadi `izin`/`sakit` dan terintegrasi langsung ke rekap ketidakhadiran harian rapor (`D5`).
+  4. Guru mapel melihat keterangan izin/sakit pada daftar sesinya.
+- **Status:** `diajukan → disetujui / ditolak / dibatalkan`.
 
 #### C4. Jurnal Mengajar · `[Tersedia]`
 - **Pemilik:** Guru mapel. **Peninjau:** Waka Kurikulum.
@@ -352,12 +352,12 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ### E. Kesiswaan, BK & Layanan Siswa
 
-#### E1. Poin Pelanggaran & Surat Peringatan · `[Sebagian]`
-- **Pemilik:** Waka Kesiswaan. **Pencatat:** guru dan BK.
+#### E1. Poin Pelanggaran & Surat Peringatan · `[Tersedia]`
+- **Pemilik:** Waka Kesiswaan. **Pencatat:** guru, wali kelas, dan BK.
 - **Langkah:**
-  1. Guru atau BK mencatat pelanggaran beserta kategori dan poin.
-  2. Bila akumulasi poin melewati ambang, surat peringatan diterbitkan (`warning_letters`), sesi konseling wajib dibuat (E2), dan orang tua diberi tahu.
-- **Perlu dicek:** ambang dan tahapan SP1/SP2/SP3 ditetapkan di pengaturan, bukan di kode.
+  1. Guru, wali kelas, atau BK mencatat pelanggaran maupun penghargaan beserta kategori dan poin (`StudentPointLog`); perhitungan saldo bersih menjamin poin penghargaan selalu mengurangi akumulasi pelanggaran.
+  2. Ambang peringatan dini (`discipline_attention_threshold`), tahapan `SP1`/`SP2`/`SP3` (`discipline_sp1_threshold`, `discipline_sp2_threshold`, `discipline_sp3_threshold` atau `discipline_warning_stages`), serta ambang pemicu konseling BK wajib (`discipline_mandatory_counseling_threshold`) dibaca dan dikelola secara dinamis melalui pengaturan sekolah (`Setting` grup `discipline`), bukan ditanam di kode.
+  3. Bila akumulasi poin melewati ambang, Surat Peringatan (`warning_letters`) diterbitkan otomatis (atau manual oleh Waka Kesiswaan/BK) beserta cetak PDF resmi, sesi konseling wajib (`E2`) otomatis dijadwalkan dan ditautkan (`counseling_session_id`), serta orang tua diberi tahu melalui aplikasi dan WhatsApp (`WarningLetterIssuedNotification`) untuk tanda tangan digital.
 
 #### E2. Konseling · `[Tersedia]`
 - **Pemilik:** Guru BK.
@@ -584,15 +584,16 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 
 ## 5. Prioritas Penyempurnaan Alur
 
-| # | Alur | Catatan Kebutuhan |
-|---|---|---|
-| 1 | L1–L2 Jenis akun & jabatan, serta A0–A6 kalender akademik, rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi seluruh data akademik tahunan dan riwayat rombel |
-| 2 | C3 Izin/sakit siswa dari orang tua | Integrasi otomatis ke rekap presensi harian dan rapor |
-| 3 | D5 Ekspor nilai ke e-Rapor & penerbitan PDF rapor resmi | Menghindari input nilai ganda antara SISTA dan e-Rapor |
-| 4 | K1 Impor awal Dapodik, K4 pengajuan perubahan data, K5 akun massal | Otomasi onboarding data siswa dan orang tua |
-| 5 | J1 Persetujuan surat keluar + J2 surat masuk & disposisi | Integrasi penuh dengan alur persetujuan kepala sekolah |
-| 6 | Kotak masuk terpadu "Menunggu Persetujuan Saya" | Sentralisasi antrean persetujuan lintas modul |
-| 7 | K2 Buku Induk Siswa | Pencetakan buku induk sesuai format dinas berdasarkan riwayat tahun ajaran |
+| # | Alur | Catatan Kebutuhan | Status |
+|---|---|---|---|
+| 1 | L1–L2 Jenis akun & jabatan, serta A0–A6 kalender akademik, rombel, survei peminatan & plotting XI, kenaikan, kelulusan, mutasi | Fondasi seluruh data akademik tahunan dan riwayat rombel | `[Tersedia]` |
+| 2 | C3 Izin/sakit siswa dari orang tua | Integrasi otomatis ke rekap presensi harian dan rapor | `[Tersedia]` |
+| 3 | D5 Ekspor nilai ke e-Rapor & penerbitan PDF rapor resmi | Menghindari input nilai ganda antara SISTA dan e-Rapor | `[Tersedia]` |
+| 4 | K1 Impor awal Dapodik, K4 pengajuan perubahan data, K5 akun massal | Otomasi onboarding data siswa dan orang tua | `[Tersedia]` |
+| 5 | J1 Persetujuan surat keluar + J2 surat masuk & disposisi | Integrasi penuh dengan alur persetujuan kepala sekolah | `[Tersedia]` |
+| 6 | Kotak masuk terpadu "Menunggu Persetujuan Saya" | Sentralisasi antrean persetujuan lintas modul | `[Tersedia]` |
+| 7 | K2 Buku Induk Siswa | Pencetakan buku induk sesuai format dinas berdasarkan riwayat tahun ajaran | `[Tersedia]` |
+| 8 | E1 Poin pelanggaran & tahapan Surat Peringatan dinamis | Ambang SP1/SP2/SP3 & konseling BK wajib diatur di pengaturan sekolah | `[Tersedia]` |
 
 ## 6. Cara Memakai Dokumen Ini
 

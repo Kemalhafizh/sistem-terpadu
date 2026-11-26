@@ -40,6 +40,7 @@ class StudentLedgerService
             ->get();
 
         $mutations = StudentMutation::where('student_id', $student->id)
+            ->where('status', StudentMutation::STATUS_APPROVED)
             ->orderBy('mutation_date')
             ->orderBy('id')
             ->get();

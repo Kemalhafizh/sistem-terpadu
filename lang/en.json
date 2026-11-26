@@ -79,7 +79,6 @@
     "Sebelumnya": "Previous",
     "Selanjutnya": "Next",
     "Tidak ada data ditemukan.": "No records found.",
-
     "SMA Islam Sultan Agung 1 Semarang": "SMA Islam Sultan Agung 1 Semarang",
     "Yayasan Badan Wakaf Sultan Agung": "Sultan Agung Waqf Foundation (YBWSA)",
     "Sistem Terpadu": "Integrated System (SISTA)",
@@ -152,13 +151,9 @@
     "Snapshot Database": "Database Snapshot",
     "Otentikasi 2FA": "2FA Authentication",
     "Pengaturan Sistem": "System Settings",
-
     "Pendidikan Inklusif & IEP": "Inclusive Education & IEP",
-
-
     "Hak Cipta Dilindungi": "All Rights Reserved",
     "Versi Sistem": "System Version",
-
     "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.": "Invalid credentials. Please check your email/student number and password.",
     "Login berhasil": "Signed in successfully",
     "Logout berhasil": "Signed out successfully",
@@ -172,7 +167,6 @@
     "SP1 (Waspada)": "Warning Letter 1 (Caution)",
     "SP2 (Kritis)": "Warning Letter 2 (Critical)",
     "SP3 (Sangat Kritis)": "Warning Letter 3 (Very Critical)",
-
     "Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.": "You do not teach this subject in this class in the active academic year.",
     "Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.": "The principal's name has not been filled in under School Settings, so the certificate cannot be signed yet.",
     "Dokumen tidak ditemukan dalam arsip resmi :school.": "The document was not found in the official records of :school.",
@@ -182,7 +176,6 @@
     ":count belum dijalankan": ":count not carried out",
     "Aksi belum memiliki pelaksana": "Actions have no executor yet",
     "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "Document [:type] saved. No OCR engine is installed, so fill in its data manually from the scan and then verify it.",
-
     "Sukses disinkronkan ke database server.": "Synced to the server database.",
     "Aksi gagal diproses di server.": "The action could not be processed on the server.",
     "Jenis aksi :type belum didukung untuk sinkronisasi.": "Action type :type is not supported for sync yet.",
@@ -557,5 +550,20 @@
     "Penilaian terkirim.": "Rating submitted.",
     "Komentar Penilai": "Raters' Comments",
     "Belum ada komentar dari penilai.": "No comments from raters yet.",
-    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "You can only rate teachers who teach your class this year."
+    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "You can only rate teachers who teach your class this year.",
+    "Kelulusan Kelas XII & SK Kepala Sekolah": "Grade XII Graduation & Principal Decree",
+    "Riwayat & Persetujuan Mutasi Siswa": "Student Transfer History & Approvals",
+    "Catat Permohonan Mutasi Siswa": "Record Student Transfer Request",
+    "Draf batch kelulusan kelas XII berhasil disiapkan.": "Grade XII graduation batch draft prepared.",
+    "Keputusan kelulusan siswa berhasil diperbarui.": "Student graduation decision updated.",
+    "Keputusan kelulusan massal angkatan berhasil disimpan.": "Cohort bulk graduation decisions saved.",
+    "Draf kelulusan kelas XII berhasil diajukan ke Kepala Sekolah untuk pengesahan SK.": "Grade XII graduation draft submitted to the Principal for decree approval.",
+    "SK kelulusan angkatan kelas XII berhasil disahkan oleh Kepala Sekolah.": "Grade XII graduation decree approved by the Principal.",
+    "Kelulusan kelas XII berhasil diumumkan, riwayat rombel ditutup, dan data alumni telah dibuat.": "Grade XII graduation announced, class enrollments closed, and alumni records created.",
+    "Permohonan mutasi berhasil dicatat dan diajukan ke Kepala Sekolah.": "Transfer request recorded and submitted to the Principal.",
+    "Permohonan mutasi siswa berhasil disetujui dan dieksekusi ke riwayat rombel.": "Student transfer request approved and applied to class enrollment history.",
+    "Permohonan mutasi siswa ditolak.": "Student transfer request rejected.",
+    "Tinjauan tagihan berjalan untuk mutasi keluar berhasil diperbarui.": "Ongoing billing review for outward transfer updated.",
+    "Pengaturan ambang poin dan tahapan Surat Peringatan berhasil disimpan.": "Discipline point thresholds and Warning Letter stages saved.",
+    "Surat Peringatan :level berhasil diterbitkan dan orang tua telah diberi tahu.": "Warning Letter :level issued and parents notified."
 }

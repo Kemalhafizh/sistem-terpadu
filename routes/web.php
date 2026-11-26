@@ -636,14 +636,18 @@ Route::middleware('auth')->group(function () {
         Route::get('daily-assessments/{daily_assessment}/export-pdf', [DailyAssessmentController::class, 'exportPdf'])->name('daily-assessments.pdf');
     });
 
-    // =========================================================
-    // KESISWAAN â€” BK & Poin Kedisiplinan
-    // =========================================================
-    Route::middleware('role:bk,waka_kesiswaan,guru,admin,superadmin')->group(function () {
+    // KESISWAAN - BK & Poin Kedisiplinan (E1)
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'bk', 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))->group(function () {
         Route::get('points', [PointController::class, 'index'])->name('points.index');
         Route::get('points/{student}', [PointController::class, 'show'])->name('points.show');
         Route::post('points', [PointController::class, 'store'])->name('points.store');
         Route::delete('points/{log}', [PointController::class, 'destroy'])->name('points.destroy');
+        Route::get('points/warning-letters/{warningLetter}/pdf', [PointController::class, 'exportWarningLetterPdf'])->name('points.warning-letters.pdf');
+    });
+
+    Route::middleware(Roles::only('bk', 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))->group(function () {
+        Route::put('points/thresholds', [PointController::class, 'updateThresholds'])->name('points.thresholds.update');
+        Route::post('points/{student}/warning-letters', [PointController::class, 'issueWarningLetter'])->name('points.warning-letters.store');
 
         // Kategori Pelanggaran / Prestasi (Master Data)
         Route::get('point-categories', [PointCategoryController::class, 'index'])->name('point-categories.index');
@@ -854,9 +858,26 @@ Route::middleware('auth')->group(function () {
         Route::post('schedules', [ScheduleController::class, 'store'])->name('schedules.store');
         Route::delete('schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 
-        // Mutasi & Alumni
-        Route::resource('mutations', MutationController::class)->only(['index', 'create', 'store']);
+    });
+
+    // A6: Mutasi Siswa Masuk / Keluar (TU mencatat, Waka Kesiswaan mengetahui, Kepala Sekolah menyetujui)
+    Route::middleware(Roles::only('staf_tu', 'waka_kurikulum', 'admin'))->group(function () {
+        Route::get('mutations/create', [MutationController::class, 'create'])->name('mutations.create');
+        Route::post('mutations', [MutationController::class, 'store'])->name('mutations.store');
+    });
+
+    Route::middleware(Roles::only('staf_tu', 'waka_kesiswaan', 'waka_kurikulum', 'bendahara', Roles::PRINCIPAL, 'admin'))->group(function () {
+        Route::get('mutations', [MutationController::class, 'index'])->name('mutations.index');
         Route::get('mutations/{mutation}/document', [MutationController::class, 'downloadDocument'])->name('mutations.document');
+    });
+
+    Route::middleware('can:pimpinan.mengesahkan')->group(function () {
+        Route::post('mutations/{mutation}/approve', [MutationController::class, 'approve'])->name('mutations.approve');
+        Route::post('mutations/{mutation}/reject', [MutationController::class, 'reject'])->name('mutations.reject');
+    });
+
+    Route::middleware(Roles::only('staf_tu', 'bendahara', 'admin'))->group(function () {
+        Route::post('mutations/{mutation}/review-billings', [MutationController::class, 'reviewBillings'])->name('mutations.review-billings');
     });
 
     // K2: Buku Induk Siswa (Visibilitas diperiksa via Student::isVisibleTo di StudentController)
@@ -1543,10 +1564,10 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('assignments/{assignment}', [PositionCatalogController::class, 'destroyAssignment'])->name('assignments.destroy');
     });
 
-    // Siklus Tahun Ajaran, Kalender Akademik, Survei Peminatan & Kenaikan Kelas (A0–A4)
+    // Siklus Tahun Ajaran, Kalender Akademik, Survei Peminatan, Kenaikan Kelas & Kelulusan XII (A0-A5)
     Route::prefix('academic/cycle')->name('academic.cycle.')->group(function () {
         Route::get('/', [AcademicCycleController::class, 'index'])
-            ->middleware('role:waka_kurikulum,kepala_sekolah,guru,teacher,wali_kelas,admin,superadmin')
+            ->middleware(Roles::only('waka_kurikulum', Roles::PRINCIPAL, StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'admin'))
             ->name('index');
 
         Route::middleware('can:akademik.kelola_struktur')->group(function () {
@@ -1558,16 +1579,27 @@ Route::middleware(['auth'])->group(function () {
             Route::post('promotion-batches', [AcademicCycleController::class, 'createPromotionBatch'])->name('promotion-batches.store');
             Route::post('promotion-batches/{batch}/decide', [AcademicCycleController::class, 'decideBatch'])->name('promotion-batches.decide');
             Route::post('promotion-batches/{batch}/execute', [AcademicCycleController::class, 'executeBatch'])->name('promotion-batches.execute');
+
+            // A5: Kelulusan Kelas XII -> Alumni
+            Route::post('graduation-batches', [AcademicCycleController::class, 'createGraduationBatch'])->name('graduation-batches.store');
+            Route::post('graduation-batches/{graduationBatch}/bulk-decisions', [AcademicCycleController::class, 'bulkGraduationDecisions'])->name('graduation-batches.bulk-decisions');
+            Route::post('graduation-batches/{graduationBatch}/submit', [AcademicCycleController::class, 'submitGraduationBatch'])->name('graduation-batches.submit');
         });
+
+        Route::post('graduation-batches/{graduationBatch}/execute', [AcademicCycleController::class, 'executeGraduationBatch'])
+            ->middleware(Roles::only('waka_kurikulum', Roles::PRINCIPAL, 'admin'))
+            ->name('graduation-batches.execute');
 
         Route::middleware('can:pimpinan.mengesahkan')->group(function () {
             Route::post('calendars/{calendar}/approve', [AcademicCycleController::class, 'approveCalendar'])->name('calendars.approve');
             Route::post('promotion-batches/{batch}/hold', [AcademicCycleController::class, 'holdBatch'])->name('promotion-batches.hold');
+            Route::post('graduation-batches/{graduationBatch}/approve', [AcademicCycleController::class, 'approveGraduationBatch'])->name('graduation-batches.approve');
         });
 
-        Route::post('promotion-decisions/{decision}/review', [AcademicCycleController::class, 'reviewDecision'])
-            ->middleware('role:guru,teacher,wali_kelas,waka_kurikulum,admin,superadmin')
-            ->name('promotion-decisions.review');
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'waka_kurikulum', 'admin'))->group(function () {
+            Route::post('promotion-decisions/{decision}/review', [AcademicCycleController::class, 'reviewDecision'])->name('promotion-decisions.review');
+            Route::post('graduation-decisions/{graduationDecision}/review', [AcademicCycleController::class, 'reviewGraduationDecision'])->name('graduation-decisions.review');
+        });
     });
 });
 

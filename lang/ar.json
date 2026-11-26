@@ -79,7 +79,6 @@
     "Sebelumnya": "السابق",
     "Selanjutnya": "التالي",
     "Tidak ada data ditemukan.": "لم يتم العثور على أي نتائج مطابقة.",
-
     "SMA Islam Sultan Agung 1 Semarang": "مدرسة سلطان أجونج ١ الإسلامية الثانوية بسيمارانج",
     "Yayasan Badan Wakaf Sultan Agung": "هيئة أوقاف سلطان أجونج (YBWSA)",
     "Sistem Terpadu": "النظام المدرسي المتكامل (SISTA)",
@@ -152,13 +151,9 @@
     "Snapshot Database": "لقطة قاعدة البيانات",
     "Otentikasi 2FA": "المصادقة الثنائية 2FA",
     "Pengaturan Sistem": "إعدادات النظام العامة",
-
     "Pendidikan Inklusif & IEP": "التعليم الشامل والبرامج الفردية",
-
-
     "Hak Cipta Dilindungi": "جميع الحقوق محفوظة",
     "Versi Sistem": "إصدار النظام",
-
     "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.": "بيانات الدخول غير صحيحة. يرجى التحقق من البريد الإلكتروني/رقم الطالب وكلمة المرور.",
     "Login berhasil": "تم تسجيل الدخول بنجاح",
     "Logout berhasil": "تم تسجيل الخروج بنجاح",
@@ -172,7 +167,6 @@
     "SP1 (Waspada)": "الإنذار الأول (تنبيه)",
     "SP2 (Kritis)": "الإنذار الثاني (حرج)",
     "SP3 (Sangat Kritis)": "الإنذار الثالث (حرج جدًا)",
-
     "Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.": "أنت لا تدرّس هذه المادة في هذا الفصل خلال العام الدراسي الحالي.",
     "Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.": "لم يُدخل اسم مدير المدرسة في إعدادات المدرسة بعد، لذا لا يمكن توقيع الشهادة حاليًا.",
     "Dokumen tidak ditemukan dalam arsip resmi :school.": "لم يُعثر على المستند في السجلات الرسمية لـ :school.",
@@ -182,7 +176,6 @@
     ":count belum dijalankan": ":count لم تُنفّذ",
     "Aksi belum memiliki pelaksana": "لا يوجد منفّذ للإجراءات بعد",
     "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "تم حفظ المستند [:type]. لا يوجد محرك OCR مثبت، لذا أدخل بياناته يدويًا من الملف الممسوح ثم تحقق منها.",
-
     "Sukses disinkronkan ke database server.": "تمت المزامنة مع قاعدة بيانات الخادم.",
     "Aksi gagal diproses di server.": "تعذّرت معالجة الإجراء على الخادم.",
     "Jenis aksi :type belum didukung untuk sinkronisasi.": "نوع الإجراء :type غير مدعوم للمزامنة بعد.",
@@ -557,5 +550,20 @@
     "Penilaian terkirim.": "تم إرسال التقييم.",
     "Komentar Penilai": "تعليقات المقيّمين",
     "Belum ada komentar dari penilai.": "لا توجد تعليقات من المقيّمين بعد.",
-    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "يمكنك تقييم المعلمين الذين يدرّسون فصلك هذا العام فقط."
+    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "يمكنك تقييم المعلمين الذين يدرّسون فصلك هذا العام فقط.",
+    "Kelulusan Kelas XII & SK Kepala Sekolah": "تخرج الصف الثاني عشر وقرار مدير المدرسة",
+    "Riwayat & Persetujuan Mutasi Siswa": "سجل وموافقات انتقال الطلاب",
+    "Catat Permohonan Mutasi Siswa": "تسجيل طلب انتقال طالب",
+    "Draf batch kelulusan kelas XII berhasil disiapkan.": "تم إعداد مسودة دفعة تخرج الصف الثاني عشر.",
+    "Keputusan kelulusan siswa berhasil diperbarui.": "تم تحديث قرار تخرج الطالب.",
+    "Keputusan kelulusan massal angkatan berhasil disimpan.": "تم حفظ قرارات التخرج الجماعية للدفعة.",
+    "Draf kelulusan kelas XII berhasil diajukan ke Kepala Sekolah untuk pengesahan SK.": "تم تقديم مسودة تخرج الصف الثاني عشر إلى مدير المدرسة لاعتماد القرار.",
+    "SK kelulusan angkatan kelas XII berhasil disahkan oleh Kepala Sekolah.": "تم اعتماد قرار تخرج الصف الثاني عشر من قبل مدير المدرسة.",
+    "Kelulusan kelas XII berhasil diumumkan, riwayat rombel ditutup, dan data alumni telah dibuat.": "تم إعلان تخرج الصف الثاني عشر وإغلاق سجلات الفصول وإنشاء بيانات الخريجين.",
+    "Permohonan mutasi berhasil dicatat dan diajukan ke Kepala Sekolah.": "تم تسجيل طلب الانتقال وتقديمه إلى مدير المدرسة.",
+    "Permohonan mutasi siswa berhasil disetujui dan dieksekusi ke riwayat rombel.": "تمت الموافقة على طلب انتقال الطالب وتنفيذه في سجل الفصول.",
+    "Permohonan mutasi siswa ditolak.": "تم رفض طلب انتقال الطالب.",
+    "Tinjauan tagihan berjalan untuk mutasi keluar berhasil diperbarui.": "تم تحديث مراجعة الفواتير الجارية للانتقال الخارجي.",
+    "Pengaturan ambang poin dan tahapan Surat Peringatan berhasil disimpan.": "تم حفظ حدود النقاط ومراحل خطابات الإنذار.",
+    "Surat Peringatan :level berhasil diterbitkan dan orang tua telah diberi tahu.": "تم إصدار خطاب الإنذار :level وإبلاغ ولي الأمر."
 }

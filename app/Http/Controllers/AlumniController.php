@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlumniData;
+use App\Models\ClassEnrollment;
 use App\Models\Classroom;
 use App\Models\Student;
 use App\Services\AlumniEnhancedService;
@@ -141,6 +142,15 @@ class AlumniController extends Controller
 
         DB::transaction(function () use ($validated) {
             AlumniData::create($validated);
+            ClassEnrollment::query()
+                ->where('student_id', $validated['student_id'])
+                ->where('status', ClassEnrollment::STATUS_ACTIVE)
+                ->update([
+                    'status' => ClassEnrollment::STATUS_GRADUATED,
+                    'ended_on' => now()->toDateString(),
+                    'ended_reason' => 'Kelulusan angkatan '.$validated['graduation_year'],
+                    'decided_by' => auth()->id(),
+                ]);
             Student::find($validated['student_id'])->update(['status' => 'alumni']);
         });
 

@@ -174,13 +174,27 @@ class Student extends Model
         return $this->hasOne(AlumniData::class);
     }
 
-    public function getTotalPointsAttribute()
+    /** @return HasMany<WarningLetter, $this> */
+    public function warningLetters(): HasMany
+    {
+        return $this->hasMany(WarningLetter::class);
+    }
+
+    public function getTotalPointsAttribute(): int
     {
         if ($this->relationLoaded('pointLogs')) {
-            return $this->pointLogs->sum('points');
+            return (int) $this->pointLogs->sum(function (StudentPointLog $log): int {
+                return match ($log->type) {
+                    'reward' => -abs((int) $log->points),
+                    'penalty' => abs((int) $log->points),
+                    default => (int) $log->points,
+                };
+            });
         }
 
-        return (int) $this->pointLogs()->sum('points');
+        return (int) $this->pointLogs()
+            ->selectRaw("COALESCE(SUM(CASE WHEN type = 'reward' THEN -ABS(points) WHEN type = 'penalty' THEN ABS(points) ELSE points END), 0) as net_points")
+            ->value('net_points');
     }
 
     /** @return HasMany<Billing, $this> */

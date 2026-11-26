@@ -229,18 +229,6 @@ parameters:
 			path: app/Http/Controllers/AttendanceController.php
 
 		-
-			message: '#^Relation ''category'' is not found in App\\Models\\StudentPointLog model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/CounselingController.php
-
-		-
-			message: '#^Relation ''creator'' is not found in App\\Models\\StudentPointLog model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/CounselingController.php
-
-		-
 			message: '#^Relation ''academicYear'' is not found in App\\Models\\LessonPlan model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -540,12 +528,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/MutabaahController.php
-
-		-
-			message: '#^Relation ''student'' is not found in App\\Models\\StudentMutation model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/MutationController.php
 
 		-
 			message: '#^Relation ''candidates'' is not found in App\\Models\\OsisElection model\.$#'
@@ -870,18 +852,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Services/Communication/MessagingService.php
-
-		-
-			message: '#^Relation ''category'' is not found in App\\Models\\StudentPointLog model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/DisciplineService.php
-
-		-
-			message: '#^Relation ''creator'' is not found in App\\Models\\StudentPointLog model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Services/DisciplineService.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\ReportCardPdf model\.$#'

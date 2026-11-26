@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AlumniData;
+use App\Models\ClassEnrollment;
 use App\Models\Student;
 use App\Models\TracerResponse;
 use Illuminate\Support\Collection;
@@ -55,26 +56,36 @@ class AlumniEnhancedService
     ];
 
     /**
-     * Graduate multiple students in bulk.
+     * Graduate multiple students in bulk (also closing active ClassEnrollment as `lulus`).
      */
-    public function bulkGraduateStudents(array $studentIds, int $graduationYear): int
+    public function bulkGraduateStudents(array $studentIds, int $graduationYear, ?string $skNumber = null): int
     {
-        return DB::transaction(function () use ($studentIds, $graduationYear) {
+        return DB::transaction(function () use ($studentIds, $graduationYear, $skNumber) {
             $count = 0;
             foreach ($studentIds as $studentId) {
                 $student = Student::with('user')->find($studentId);
                 if ($student && $student->status !== 'alumni') {
-                    // Update student status
+                    ClassEnrollment::query()
+                        ->where('student_id', $student->id)
+                        ->where('status', ClassEnrollment::STATUS_ACTIVE)
+                        ->update([
+                            'status' => ClassEnrollment::STATUS_GRADUATED,
+                            'ended_on' => now()->toDateString(),
+                            'ended_reason' => $skNumber ? "Lulus berdasarkan SK {$skNumber}" : "Kelulusan angkatan {$graduationYear}",
+                            'decided_by' => auth()->id(),
+                        ]);
+
                     $student->update(['status' => 'alumni']);
 
-                    // Create alumni data
                     AlumniData::updateOrCreate(
                         ['student_id' => $student->id],
                         [
                             'graduation_year' => $graduationYear,
+                            'sk_number' => $skNumber,
+                            'graduation_date' => now()->toDateString(),
                             'current_activity' => 'other',
                             'email' => $student->user?->email,
-                            'phone_number' => $student->user?->phone ?? null,
+                            'phone_number' => $student->user?->phone_number ?? null,
                         ]
                     );
 
