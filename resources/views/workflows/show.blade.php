@@ -7,9 +7,8 @@
             <span>&larr; Kembali</span>
           </a>
         </div>
-        <h2 class="font-black text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight flex items-center space-x-2 mt-1">
-          <span class="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl"></span>
-          <span>Detail Pelacakan & Audit Trail</span>
+        <h2 class="font-bold text-2xl text-gray-900 dark:text-gray-100 leading-tight tracking-tight mt-1">
+          <span>Detail Pelacakan &amp; Audit Trail</span>
         </h2>
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 font-medium">
           UUID: {{ $request->uuid }} • Diajukan oleh {{ $request->requester->name }}
@@ -18,23 +17,23 @@
       
       <div class="flex items-center gap-2">
         @if($request->status === 'approved')
-          <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+          <span class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
              Disetujui Penuh
           </span>
         @elseif($request->status === 'rejected')
-          <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+          <span class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
              Ditolak
           </span>
         @elseif($request->status === 'revision')
-          <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+          <span class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
              Perlu Revisi
           </span>
         @elseif($request->status === 'cancelled')
-          <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <span class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
             Batal
           </span>
         @else
-          <span class="px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-widest bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800 animate-pulse">
+          <span class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
              Sedang Ditinjau
           </span>
         @endif
@@ -46,7 +45,7 @@
     
     {{-- Success & Error Alerts --}}
     @if(session('success'))
-      <div class="mb-6 p-4 bg-emerald-50/80 dark:bg-emerald-950/30 backdrop-blur-sm border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center space-x-3">
+      <div class="mb-6 p-4 bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center space-x-3">
         <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
@@ -55,7 +54,7 @@
     @endif
 
     @if($errors->any())
-      <div class="mb-6 p-4 bg-rose-50/80 dark:bg-rose-950/30 backdrop-blur-sm border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 rounded-2xl flex flex-col space-y-1">
+      <div class="mb-6 p-4 bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 rounded-2xl flex flex-col space-y-1">
         @foreach($errors->all() as $error)
           <div class="flex items-center space-x-2 text-sm font-bold">
             <svg class="w-4 h-4 flex-shrink-0 text-rose-500" fill="currentColor" viewBox="0 0 20 20">
@@ -71,79 +70,218 @@
       
       {{-- Column 1 & 2: Polymorphic Document Details --}}
       <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-gray-100 dark:border-slate-800/80 rounded-3xl p-6 md:p-8 shadow-sm">
+        <div class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 shadow-xs">
           <div class="border-b border-gray-100 dark:border-slate-800 pb-5 mb-6 flex items-center justify-between">
             <div>
-              <span class="text-[9px] font-black text-indigo-500 uppercase tracking-widest block">Dokumen Pengajuan</span>
-              <h3 class="text-xl font-black text-gray-900 dark:text-gray-100 mt-1">
+              <span class="text-xs font-medium text-indigo-600 dark:text-indigo-400 block">Dokumen Pengajuan</span>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-1">
                 {{ $request->definition->name }}
               </h3>
             </div>
-            <span class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-[10px] font-black text-gray-400 uppercase tracking-wider rounded-xl border border-gray-100 dark:border-slate-800">
+            <span class="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-xs font-medium text-gray-500 dark:text-gray-400 rounded-lg border border-gray-200 dark:border-slate-700">
               Tipe: {{ class_basename($request->requestable_type) }}
             </span>
           </div>
 
           {{-- Dinamis Polymorphic Fields View --}}
           @if(class_basename($request->requestable_type) === 'LeaveRequest')
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">
-              <div class="sm:col-span-2 p-4 bg-indigo-50/30 dark:bg-indigo-950/10 rounded-2xl border border-indigo-100/50 dark:border-indigo-950/30 flex items-center space-x-3">
-                <span class="text-2xl"></span>
-                <div>
-                  <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Pengaju / Guru</span>
-                  <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requester->name }}</span>
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">
+              <div class="sm:col-span-2 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Pengaju / Guru</span>
+                <span class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $request->requester->name }}</span>
               </div>
               <div>
-                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Tipe / Alasan Cuti</span>
-                <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requestable?->type_label ?? '–' }}</span>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Tipe / Alasan Cuti</span>
+                <span class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $request->requestable?->type_label ?? '–' }}</span>
               </div>
               <div>
-                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Durasi Tanggal</span>
-                <span class="text-base font-black text-slate-800 dark:text-slate-100">
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Durasi Tanggal</span>
+                <span class="text-base font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
                   {{ $request->requestable->start_date ? \Carbon\Carbon::parse($request->requestable->start_date)->format('d M Y') : '-' }} s/d 
                   {{ $request->requestable->end_date ? \Carbon\Carbon::parse($request->requestable->end_date)->format('d M Y') : '-' }}
                 </span>
               </div>
               <div class="sm:col-span-2">
-                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Alasan & Keperluan Lengkap</span>
-                <p class="text-xs text-slate-600 dark:text-slate-400 bg-gray-50 dark:bg-slate-800 p-4 rounded-2xl border border-gray-100 dark:border-slate-800 mt-1 font-medium italic leading-relaxed">
-                  "{{ $request->requestable->reason ?? '-' }}"
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Alasan &amp; Keperluan Lengkap</span>
+                <p class="text-sm text-slate-700 dark:text-slate-300 bg-gray-50 dark:bg-slate-800 p-4 rounded-xl border border-gray-200 dark:border-slate-700 mt-1 leading-relaxed">
+                  {{ $request->requestable->reason ?? '-' }}
                 </p>
               </div>
               @if($request->requestable?->attachment)
                 <div class="sm:col-span-2">
-                  <a href="{{ Storage::disk('public')->url($request->requestable->attachment) }}" target="_blank" rel="noopener" class="text-xs font-bold text-indigo-600 hover:underline">{{ __('Lihat lampiran (surat dokter, undangan, dll.)') }}</a>
+                  <a href="{{ Storage::disk('public')->url($request->requestable->attachment) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">{{ __('Lihat lampiran (surat dokter, undangan, dll.)') }}</a>
                 </div>
               @endif
             </div>
           @elseif(class_basename($request->requestable_type) === 'Letter')
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">
-              <div class="sm:col-span-2 p-4 bg-indigo-50/30 dark:bg-indigo-950/10 rounded-2xl border border-indigo-100/50 dark:border-indigo-950/30 flex items-center space-x-3">
-                <span class="text-2xl"></span>
-                <div>
-                  <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Perihal Surat</span>
-                  <span class="text-base font-black text-slate-800 dark:text-slate-100">{{ $request->requestable->subject ?? '-' }}</span>
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">
+              <div class="sm:col-span-2 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Perihal Surat</span>
+                <span class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ $request->requestable->subject ?? '-' }}</span>
               </div>
               <div>
-                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Nomor Surat</span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $request->requestable->letter_number ?? 'Belum Diatur' }}</span>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nomor Surat</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100 tabular-nums">{{ $request->requestable->letter_number ?? 'Belum Diatur' }}</span>
               </div>
               <div>
-                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Penerima / Tujuan</span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $request->requestable->recipient ?? '-' }}</span>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Penerima / Tujuan</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $request->requestable->recipient ?? '-' }}</span>
               </div>
               <div class="sm:col-span-2">
-                <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400">Uploader Surat</span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $request->requester->name }}</span>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Penyusun Surat</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $request->requester->name }}</span>
+              </div>
+            </div>
+          @elseif(class_basename($request->requestable_type) === 'GraduationBatch' && $request->requestable)
+            @php
+              $gBatch = $request->requestable;
+            @endphp
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              <div class="sm:col-span-2 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Batch Kelulusan Kelas XII</span>
+                  <span class="text-base font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
+                    Angkatan {{ $gBatch->graduation_year }}
+                    @if($gBatch->relationLoaded('schoolYear') && $gBatch->schoolYear)
+                      · TA {{ $gBatch->schoolYear->name }}
+                    @endif
+                  </span>
+                </div>
+                <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+                  Status: {{ ucfirst((string) $gBatch->status) }}
+                </span>
+              </div>
+              <div>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nomor SK Kelulusan</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
+                  {{ $gBatch->sk_number ?: 'Belum ditetapkan' }}
+                </span>
+              </div>
+              <div>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Tanggal Pengumuman Kelulusan</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
+                  {{ $gBatch->graduation_date ? $gBatch->graduation_date->format('d M Y') : 'Belum dijadwalkan' }}
+                </span>
+              </div>
+              @if($gBatch->relationLoaded('meetingNote') && $gBatch->meetingNote)
+                <div class="sm:col-span-2">
+                  <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Notulen Rapat Pleno Dewan Guru</span>
+                  <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $gBatch->meetingNote->title }}</span>
+                </div>
+              @endif
+              @if($gBatch->relationLoaded('decisions'))
+                <div class="sm:col-span-2 flex flex-wrap gap-2 text-xs tabular-nums">
+                  <span class="px-3 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium">
+                    {{ $gBatch->decisions->where('decision', 'lulus')->count() }} lulus
+                  </span>
+                  <span class="px-3 py-1 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-medium">
+                    {{ $gBatch->decisions->where('decision', 'tidak_lulus')->count() }} belum lulus
+                  </span>
+                  <span class="px-3 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                    {{ $gBatch->decisions->count() }} total peserta
+                  </span>
+                </div>
+              @endif
+              @if($gBatch->notes)
+                <div class="sm:col-span-2">
+                  <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Catatan Pleno Kelulusan</span>
+                  <p class="text-sm text-slate-700 dark:text-slate-300 bg-gray-50 dark:bg-slate-800 p-4 rounded-xl border border-gray-200 dark:border-slate-700 mt-1">
+                    {{ $gBatch->notes }}
+                  </p>
+                </div>
+              @endif
+              @canVisit('academic.cycle.index')
+                <div class="sm:col-span-2">
+                  <a href="{{ route('academic.cycle.index') }}" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                    {{ __('Buka rincian keputusan siswa di Siklus Akademik') }} &rarr;
+                  </a>
+                </div>
+              @endcanVisit
+            </div>
+          @elseif(class_basename($request->requestable_type) === 'StudentMutation' && $request->requestable)
+            @php
+              $mutation = $request->requestable;
+              $mutationStudentName = $mutation->relationLoaded('student')
+                  ? $mutation->student_display_name
+                  : (is_array($mutation->candidate_data) && filled($mutation->candidate_data['name'] ?? null)
+                      ? (string) $mutation->candidate_data['name']
+                      : ($mutation->type === 'in' ? 'Calon Siswa Pindahan' : 'Siswa Mutasi Keluar'));
+              $billingStatusLabel = match ($mutation->billing_review_status) {
+                  'cleared' => 'Bebas tunggakan',
+                  'settled' => 'Tagihan telah diselesaikan',
+                  'needs_settlement' => 'Perlu penyelesaian tagihan berjalan',
+                  default => $mutation->billing_review_status ?: 'Belum ditinjau',
+              };
+            @endphp
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              <div class="sm:col-span-2 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">
+                    {{ $mutation->type === 'in' ? 'Mutasi Masuk (Siswa Pindahan)' : 'Mutasi Keluar Siswa' }}
+                  </span>
+                  <span class="text-base font-semibold text-slate-900 dark:text-slate-100">
+                    {{ $mutationStudentName }}
+                    @if($mutation->relationLoaded('classroom') && $mutation->classroom)
+                      ({{ $mutation->classroom->name }})
+                    @endif
+                  </span>
+                </div>
+                <span class="px-2.5 py-1 rounded-md text-xs font-medium {{ $mutation->type === 'in' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300' : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' }}">
+                  {{ $mutation->type === 'in' ? 'Mutasi Masuk' : 'Mutasi Keluar' }}
+                </span>
+              </div>
+              <div>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">
+                  {{ $mutation->type === 'in' ? 'Sekolah Asal' : 'Sekolah Tujuan' }}
+                </span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  {{ $mutation->target_school ?: '–' }}
+                </span>
+              </div>
+              <div>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Tanggal Efektif Mutasi</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
+                  {{ $mutation->mutation_date ? \Carbon\Carbon::parse($mutation->mutation_date)->format('d M Y') : '–' }}
+                </span>
+              </div>
+              <div>
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nomor Surat Mutasi</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
+                  {{ $mutation->letter_number ?: 'Belum diatur' }}
+                </span>
+              </div>
+              @if($mutation->type === 'out' || $mutation->billing_review_status)
+                <div>
+                  <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Status Tinjauan Tagihan</span>
+                  <span class="text-sm font-semibold {{ $mutation->billing_review_status === 'needs_settlement' ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400' }}">
+                    {{ $billingStatusLabel }}
+                  </span>
+                </div>
+              @endif
+              <div class="sm:col-span-2">
+                <span class="block text-xs font-medium text-gray-500 dark:text-gray-400">Alasan Permohonan Mutasi</span>
+                <p class="text-sm text-slate-700 dark:text-slate-300 bg-gray-50 dark:bg-slate-800 p-4 rounded-xl border border-gray-200 dark:border-slate-700 mt-1">
+                  {{ $mutation->reason ?: '–' }}
+                </p>
+              </div>
+              <div class="sm:col-span-2 flex flex-wrap items-center gap-4">
+                @if($mutation->document_path && \App\Support\Access\RouteAccess::allowsRoute(auth()->user(), 'mutations.document'))
+                  <a href="{{ route('mutations.document', $mutation) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
+                    {{ __('Unduh berkas surat mutasi') }}
+                  </a>
+                @endif
+                @canVisit('mutations.index')
+                  <a href="{{ route('mutations.index') }}" class="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:underline">
+                    {{ __('Buka daftar mutasi siswa') }} &rarr;
+                  </a>
+                @endcanVisit
               </div>
             </div>
           @else
             {{-- Generic view if no specific class matched --}}
-            <div class="p-4 bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-800 text-xs font-semibold text-gray-600 dark:text-gray-400 leading-relaxed">
-              <span class="block text-[8px] font-black uppercase tracking-widest text-gray-400 mb-2">Atribut Model Induk</span>
-              <pre class="bg-gray-100 dark:bg-slate-900 p-4 rounded-xl font-mono text-[10px] overflow-auto max-h-96">
+            <div class="p-4 bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 text-xs font-medium text-gray-600 dark:text-gray-400 leading-relaxed">
+              <span class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Atribut Model Induk</span>
+              <pre class="bg-gray-100 dark:bg-slate-900 p-4 rounded-lg font-mono text-xs overflow-auto max-h-96">
 {{ json_encode($request->requestable ? $request->requestable->toArray() : [], JSON_PRETTY_PRINT) }}
               </pre>
             </div>
