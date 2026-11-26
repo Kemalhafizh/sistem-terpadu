@@ -74,13 +74,33 @@ jobs:
         curl -sf --retry 30 --retry-connrefused --retry-delay 1 http://127.0.0.1:8000/up > /dev/null
 
     - name: OWASP ZAP Baseline Scan
-      # >= v0.14.0: v0.12.0 used the retired artifact API and failed with
-      # "Create Artifact Container failed: The artifact name zap_scan is not valid".
-      uses: zaproxy/action-baseline@v0.15.0
+      run: |
+        chmod a+w "${GITHUB_WORKSPACE}"
+        docker pull ghcr.io/zaproxy/zaproxy:stable -q
+        docker run --rm \
+          --network="host" \
+          -v "${GITHUB_WORKSPACE}:/zap/wrk/:rw" \
+          -t ghcr.io/zaproxy/zaproxy:stable \
+          zap-baseline.py \
+            -t http://127.0.0.1:8000 \
+            -c .zap/rules.tsv \
+            -a -I \
+            -J report_json.json \
+            -w report_md.md \
+            -r report_html.html
+        if [ -f report_md.md ]; then
+          tail -n 60 report_md.md >> "$GITHUB_STEP_SUMMARY" || true
+        fi
+
+    - name: Upload OWASP ZAP Report
+      if: always()
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
       with:
-        target: 'http://127.0.0.1:8000'
-        rules_file_name: '.zap/rules.tsv'
-        cmd_options: '-a'
-        # Findings go to the zap_scan artifact; opening issues needs write
-        # permissions this workflow doesn't grant.
-        allow_issue_writing: false
+        name: zap_scan
+        path: |
+          report_html.html
+          report_json.json
+          report_md.md
+        retention-days: 3
+        if-no-files-found: ignore
