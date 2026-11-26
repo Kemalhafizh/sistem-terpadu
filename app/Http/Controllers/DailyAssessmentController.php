@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Classroom;
 use App\Models\DailyAssessment;
 use App\Models\DailyAssessmentScore;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Services\DailyAssessmentService;
+use App\Support\Access\Roles;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +35,7 @@ class DailyAssessmentController extends Controller
 
         $query = DailyAssessment::with(['subject', 'classroom', 'academicYear', 'scores']);
 
-        if ($user->role === 'guru') {
+        if ($user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_kurikulum', ...Roles::PRINCIPAL])) {
             $query->where('teacher_id', $user->id);
         }
 
@@ -172,7 +174,7 @@ class DailyAssessmentController extends Controller
             ->where('remedial_status', '!=', 'completed')
             ->with(['student.user', 'dailyAssessment.subject', 'dailyAssessment.classroom']);
 
-        if ($user->role === 'guru') {
+        if ($user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_kurikulum', ...Roles::PRINCIPAL])) {
             $query->whereHas('dailyAssessment', function ($q) use ($user) {
                 $q->where('teacher_id', $user->id);
             });

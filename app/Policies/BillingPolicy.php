@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Billing;
 use App\Models\User;
+use App\Support\Access\Roles;
 
 class BillingPolicy
 {
@@ -13,8 +15,8 @@ class BillingPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah', 'staf_tu',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'staf_tu',
         ]);
     }
 
@@ -25,18 +27,18 @@ class BillingPolicy
      */
     public function view(User $user, Billing $billing): bool
     {
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             $student = $user->student;
 
             return $student && $billing->student_id === $student->id;
         }
 
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             return $billing->student && $billing->student->parent_id === $user->id;
         }
 
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah', 'staf_tu',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'staf_tu',
         ]);
     }
 
@@ -45,7 +47,7 @@ class BillingPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'superadmin', 'staf_tu']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'staf_tu']);
     }
 
     /**
@@ -53,7 +55,7 @@ class BillingPolicy
      */
     public function update(User $user, Billing $billing): bool
     {
-        return in_array($user->role, ['admin', 'superadmin', 'staf_tu']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'staf_tu']);
     }
 
     /**
@@ -61,6 +63,6 @@ class BillingPolicy
      */
     public function delete(User $user, Billing $billing): bool
     {
-        return in_array($user->role, ['admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin']);
     }
 }

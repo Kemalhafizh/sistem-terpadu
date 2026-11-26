@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Asset;
 use App\Models\User;
+use App\Support\Access\Roles;
 
 class AssetPolicy
 {
@@ -12,8 +14,8 @@ class AssetPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah', 'waka_sarpras',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'waka_sarpras',
         ]);
     }
 
@@ -22,8 +24,8 @@ class AssetPolicy
      */
     public function view(User $user, Asset $asset): bool
     {
-        return in_array($user->role, [
-            'admin', 'superadmin', 'kepala_sekolah', 'waka_sarpras',
+        return RoleMiddleware::allowsUser($user, [
+            'admin', 'superadmin', ...Roles::PRINCIPAL, 'waka_sarpras',
         ]);
     }
 
@@ -32,7 +34,7 @@ class AssetPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'superadmin', 'waka_sarpras']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_sarpras']);
     }
 
     /**
@@ -40,7 +42,7 @@ class AssetPolicy
      */
     public function update(User $user, Asset $asset): bool
     {
-        return in_array($user->role, ['admin', 'superadmin', 'waka_sarpras']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_sarpras']);
     }
 
     /**
@@ -48,6 +50,6 @@ class AssetPolicy
      */
     public function delete(User $user, Asset $asset): bool
     {
-        return in_array($user->role, ['admin', 'superadmin']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin']);
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Classroom;
 use App\Models\MutabaahLog;
 use App\Models\MutabaahWeeklySummary;
 use App\Models\Student;
 use App\Services\MutabaahService;
+use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -77,7 +79,10 @@ class MutabaahController extends Controller
         $user = auth()->user();
         $student = Student::find($validated['student_id']);
 
-        if ($user->role === 'student' && $student->user_id !== $user->id) {
+        if ($user->hasRole('student') && $student?->user_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
+        if ($user->hasRole('parent') && $student?->parent_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -104,7 +109,7 @@ class MutabaahController extends Controller
             return back()->with('error', 'Siswa tidak ditemukan.');
         }
 
-        if (auth()->user()->role !== 'student') {
+        if (! auth()->user()->hasRole('student')) {
             abort(403, 'Hanya siswa yang dapat menginput amalan harian.');
         }
 
@@ -143,7 +148,7 @@ class MutabaahController extends Controller
         $classroom = Classroom::findOrFail($classroomId);
 
         // Authorization check: Homeroom teacher or Admin
-        if (! in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
+        if (! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
             abort(403, 'Anda bukan wali kelas dari kelas ini.');
         }
 
@@ -174,7 +179,7 @@ class MutabaahController extends Controller
         $classroom = $summary->student->classroom;
 
         $user = auth()->user();
-        if (! in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
+        if (! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'kepala_sekolah']) && $classroom->teacher_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -193,7 +198,7 @@ class MutabaahController extends Controller
         $user = auth()->user();
         $summary = MutabaahWeeklySummary::findOrFail($summaryId);
 
-        if ($user->role !== 'parent' || $summary->student->parent_id !== $user->id) {
+        if (! $user->hasRole('parent') || $summary->student->parent_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -212,7 +217,7 @@ class MutabaahController extends Controller
         $user = auth()->user();
         $student = Student::findOrFail($studentId);
 
-        if ($user->role !== 'parent' || $student->parent_id !== $user->id) {
+        if (! $user->hasRole('parent') || $student->parent_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -234,12 +239,12 @@ class MutabaahController extends Controller
         $classroomId = $request->get('classroom_id');
         $classrooms = [];
 
-        if (in_array($user->role, ['admin', 'superadmin', 'kepala_sekolah', 'waka_kesiswaan'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'kepala_sekolah', 'waka_kesiswaan'])) {
             $classrooms = Classroom::all();
             if (! $classroomId) {
                 $classroomId = $classrooms->first()?->id;
             }
-        } elseif ($user->role === 'guru') {
+        } elseif ($user->hasRole('guru')) {
             $classrooms = Classroom::where('teacher_id', $user->id)->get();
             if (! $classroomId) {
                 $classroomId = $classrooms->first()?->id;
@@ -296,6 +301,11 @@ class MutabaahController extends Controller
      */
     public function exportPdf(Request $request, $classroomId)
     {
+        $user = auth()->user();
+        if (! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'kepala_sekolah', 'waka_kesiswaan', ...StudentDataAccess::TEACHER_ROLES])) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $classroom = Classroom::findOrFail($classroomId);
         $weekStart = $request->get('week_start', now()->startOfWeek()->format('Y-m-d'));
         $weekEnd = Carbon::parse($weekStart)->endOfWeek()->format('Y-m-d');
@@ -319,7 +329,11 @@ class MutabaahController extends Controller
         $date = $request->date;
         $user = auth()->user();
 
-        if ($user->role === 'parent' && $student->parent_id !== $user->id) {
+        if ($user->hasRole('student')) {
+            abort(403, 'Siswa tidak dapat memverifikasi log mutabaah.');
+        }
+
+        if ($user->hasRole('parent') && $student->parent_id !== $user->id) {
             abort(403);
         }
 
@@ -341,6 +355,15 @@ class MutabaahController extends Controller
             'date' => 'required|date',
             'status' => 'required|boolean',
         ]);
+
+        $user = auth()->user();
+        $student = Student::findOrFail($validated['student_id']);
+        if ($user->hasRole('student') && $student->user_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
+        if ($user->hasRole('parent') && $student->parent_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $log = MutabaahLog::updateOrCreate(
             [
@@ -365,18 +388,18 @@ class MutabaahController extends Controller
     private function getStudentFromRequest(Request $request)
     {
         $user = auth()->user();
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             return Student::where('user_id', $user->id)->first();
         }
         if ($request->has('student_id')) {
             $student = Student::find($request->student_id);
-            if ($user->role === 'parent' && $student?->parent_id !== $user->id) {
+            if ($user->hasRole('parent') && $student?->parent_id !== $user->id) {
                 abort(403);
             }
 
             return $student;
         }
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             return Student::where('parent_id', $user->id)->first();
         }
 

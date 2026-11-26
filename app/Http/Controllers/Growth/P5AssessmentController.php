@@ -7,6 +7,7 @@ use App\Models\CharacterDimension;
 use App\Models\MeritPoint;
 use App\Models\User;
 use App\Services\Growth\P5AssessmentService;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 
 class P5AssessmentController extends Controller
@@ -20,7 +21,7 @@ class P5AssessmentController extends Controller
 
     public function assessForm(P5AssessmentService $service)
     {
-        $students = User::where('role', 'student')->get();
+        $students = User::whereIn('role', StudentDataAccess::STUDENT_ROLES)->get();
         $dimensions = CharacterDimension::where('is_active', true)->orderBy('display_order')->get();
 
         return view('character.assess', compact('students', 'dimensions'));
@@ -47,7 +48,9 @@ class P5AssessmentController extends Controller
 
     public function studentReport(int $studentId, P5AssessmentService $service)
     {
-        $student = User::where('role', 'student')->findOrFail($studentId);
+        StudentDataAccess::authorizeStudentUser(auth()->user(), $studentId);
+
+        $student = User::whereIn('role', StudentDataAccess::STUDENT_ROLES)->findOrFail($studentId);
         $radar = $service->getStudentCharacterRadar($studentId);
 
         return view('character.student-report', compact('student', 'radar'));

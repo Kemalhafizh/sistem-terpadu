@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\LessonPlan;
 use App\Models\Subject;
 use App\Models\Syllabus;
 use App\Models\User;
+use App\Support\Access\Roles;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +31,7 @@ class CurriculumController extends Controller
         }
 
         $rppQuery = LessonPlan::where('academic_year_id', $activeYear->id);
-        if ($user->role === 'guru') {
+        if ($user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['waka_kurikulum', ...Roles::PRINCIPAL, 'admin', 'superadmin'])) {
             $rppQuery->where('user_id', $user->id);
         }
 
@@ -243,7 +245,7 @@ class CurriculumController extends Controller
         $query = LessonPlan::with(['subject', 'classroom', 'user'])
             ->where('academic_year_id', $activeYear->id);
 
-        if ($user->role === 'guru') {
+        if ($user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['waka_kurikulum', ...Roles::PRINCIPAL, 'admin', 'superadmin'])) {
             $query->where('user_id', $user->id);
         }
 

@@ -179,59 +179,93 @@ Route::middleware('auth')->group(function () {
     });
 
     // Rute Kalender Universal & Endpoint JSON FullCalendar API
-    Route::get('calendar', [AcademicEventController::class, 'index'])->name('calendar.index');
-    Route::get('api/academic-events', [AcademicEventController::class, 'apiEvents'])->name('api.academic-events');
+    Route::middleware(Roles::only(Roles::MEMBERS, 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+        Route::get('calendar', [AcademicEventController::class, 'index'])->name('calendar.index');
+        Route::get('api/academic-events', [AcademicEventController::class, 'apiEvents'])->name('api.academic-events');
+    });
 
-    // Library (read-only catalog untuk semua)
-    Route::get('library', [LibraryController::class, 'index'])->name('library.index');
-    Route::get('library/{libraryBook}/download', [LibraryController::class, 'download'])->name('library.download');
-    Route::get('library/{libraryBook}/read', [LibraryController::class, 'readBook'])->name('library.read');
-    Route::get('library/student-card/{student}', [LibraryController::class, 'studentCard'])->name('library.student-card');
-    Route::get('library/reading-history', [LibraryController::class, 'studentReadingHistory'])->name('library.reading-history');
-    Route::get('library/recommendations', [LibraryController::class, 'recommendations'])->name('library.recommendations');
+    // Library (read-only catalog untuk warga sekolah)
+    Route::middleware(Roles::only(Roles::MEMBERS, 'pustakawan', 'bendahara', 'petugas_uks'))->group(function () {
+        Route::get('library', [LibraryController::class, 'index'])->name('library.index');
+        Route::get('library/{libraryBook}/download', [LibraryController::class, 'download'])->name('library.download');
+        Route::get('library/{libraryBook}/read', [LibraryController::class, 'readBook'])->name('library.read');
+    });
+    Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin', 'pustakawan'))->group(function () {
+        Route::get('library/student-card/{student}', [LibraryController::class, 'studentCard'])->name('library.student-card');
+        Route::get('library/reading-history', [LibraryController::class, 'studentReadingHistory'])->name('library.reading-history');
+    });
+    Route::get('library/recommendations', [LibraryController::class, 'recommendations'])
+        ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))
+        ->name('library.recommendations');
 
-    // Alumni Directory & Network Map (read-only untuk semua)
-    Route::get('alumni/directory', [AlumniController::class, 'directory'])->name('alumni.directory');
-    Route::get('alumni/network-map', [AlumniController::class, 'alumniNetworkMap'])->name('alumni.network-map');
-    Route::get('alumni/profile/{alumni}', [AlumniController::class, 'show'])->name('alumni.show');
+    // Alumni Directory & Network Map (read-only untuk warga sekolah & alumni)
+    Route::middleware(Roles::only(Roles::MEMBERS, 'alumni', 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+        Route::get('alumni/directory', [AlumniController::class, 'directory'])->name('alumni.directory');
+        Route::get('alumni/network-map', [AlumniController::class, 'alumniNetworkMap'])->name('alumni.network-map');
+        Route::get('alumni/profile/{alumni}', [AlumniController::class, 'show'])->name('alumni.show');
+    });
 
-    // Keislaman â€” baca data tahfidz & mutaba'ah (semua user)
+    // Keislaman — tahfidz & mutaba'ah
     Route::prefix('tahfidz')->name('tahfidz.')->group(function () {
-        Route::get('/dashboard', [TahfidzController::class, 'dashboard'])->name('dashboard');
-        Route::get('/leaderboard', [TahfidzController::class, 'leaderboard'])->name('leaderboard');
-        Route::get('/bulk-input', [TahfidzController::class, 'bulkInputForm'])->name('bulk-input');
-        Route::post('/bulk-input', [TahfidzController::class, 'storeBulk'])->name('store-bulk');
-        Route::get('/target-setting', [TahfidzController::class, 'targetSettingForm'])->name('target-setting');
-        Route::post('/target-setting', [TahfidzController::class, 'storeTargets'])->name('store-targets');
-        Route::get('/export-pdf/{student}', [TahfidzController::class, 'exportPdf'])->name('export-pdf');
-        Route::get('/{student}', [TahfidzController::class, 'show'])->name('show');
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'bk', 'staf_tu', 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/dashboard', [TahfidzController::class, 'dashboard'])->name('dashboard');
+            Route::get('/leaderboard', [TahfidzController::class, 'leaderboard'])->name('leaderboard');
+        });
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/bulk-input', [TahfidzController::class, 'bulkInputForm'])->name('bulk-input');
+            Route::post('/bulk-input', [TahfidzController::class, 'storeBulk'])->name('store-bulk');
+            Route::get('/target-setting', [TahfidzController::class, 'targetSettingForm'])->name('target-setting');
+            Route::post('/target-setting', [TahfidzController::class, 'storeTargets'])->name('store-targets');
+        });
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'bk', 'staf_tu', 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/export-pdf/{student}', [TahfidzController::class, 'exportPdf'])->name('export-pdf');
+            Route::get('/{student}', [TahfidzController::class, 'show'])->name('show');
+        });
     });
 
     Route::prefix('mutabaah')->name('mutabaah.')->group(function () {
-        Route::get('/', [MutabaahController::class, 'index'])->name('index');
-        Route::get('/input-harian', [MutabaahController::class, 'inputHarian'])->name('input-harian');
-        Route::post('/daily-log', [MutabaahController::class, 'storeDailyLog'])->name('store-daily-log');
-        Route::get('/rekap-mingguan', [MutabaahController::class, 'rekapMingguan'])->name('rekap-mingguan');
-        Route::get('/rekap-kelas/{classroom}', [MutabaahController::class, 'rekapKelas'])->name('rekap-kelas');
-        Route::post('/weekly-comment/{summary}', [MutabaahController::class, 'storeWaliKelasComment'])->name('wali-kelas-comment');
-        Route::post('/weekly-acknowledge/{summary}', [MutabaahController::class, 'parentAcknowledge'])->name('parent-acknowledge');
-        Route::get('/parent-view/{student}', [MutabaahController::class, 'parentView'])->name('parent-view');
-        Route::get('/statistik', [MutabaahController::class, 'statistik'])->name('statistik');
-        Route::get('/export-pdf/{classroom}', [MutabaahController::class, 'exportPdf'])->name('export-pdf');
-        Route::post('/{student}/verify', [MutabaahController::class, 'verify'])->name('verify');
-        Route::post('/toggle', [MutabaahController::class, 'toggle'])->name('toggle');
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'bk', 'staf_tu', 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/', [MutabaahController::class, 'index'])->name('index');
+            Route::post('/daily-log', [MutabaahController::class, 'storeDailyLog'])->name('store-daily-log');
+            Route::get('/rekap-mingguan', [MutabaahController::class, 'rekapMingguan'])->name('rekap-mingguan');
+            Route::get('/statistik', [MutabaahController::class, 'statistik'])->name('statistik');
+            Route::post('/toggle', [MutabaahController::class, 'toggle'])->name('toggle');
+        });
+        Route::get('/input-harian', [MutabaahController::class, 'inputHarian'])
+            ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))
+            ->name('input-harian');
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/rekap-kelas/{classroom}', [MutabaahController::class, 'rekapKelas'])->name('rekap-kelas');
+            Route::post('/weekly-comment/{summary}', [MutabaahController::class, 'storeWaliKelasComment'])->name('wali-kelas-comment');
+            Route::get('/export-pdf/{classroom}', [MutabaahController::class, 'exportPdf'])->name('export-pdf');
+        });
+        Route::middleware(Roles::only(StudentDataAccess::PARENT_ROLES))->group(function () {
+            Route::post('/weekly-acknowledge/{summary}', [MutabaahController::class, 'parentAcknowledge'])->name('parent-acknowledge');
+            Route::get('/parent-view/{student}', [MutabaahController::class, 'parentView'])->name('parent-view');
+        });
+        Route::post('/{student}/verify', [MutabaahController::class, 'verify'])
+            ->middleware(Roles::only(StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'admin', Roles::LEADERSHIP))
+            ->name('verify');
     });
 
     // Presensi Kegiatan Sekolah
     Route::prefix('event-attendance')->name('event-attendance.')->group(function () {
-        Route::get('/', [EventAttendanceController::class, 'index'])->name('index');
-        Route::get('/create', [EventAttendanceController::class, 'create'])->name('create');
-        Route::post('/', [EventAttendanceController::class, 'store'])->name('store');
-        Route::get('/rekap', [EventAttendanceController::class, 'rekap'])->name('rekap');
-        Route::get('/{event}', [EventAttendanceController::class, 'show'])->name('show');
-        Route::get('/{event}/input', [EventAttendanceController::class, 'inputAttendance'])->name('input');
-        Route::post('/{event}/input', [EventAttendanceController::class, 'storeAttendance'])->name('store-attendance');
-        Route::get('/{event}/export-pdf', [EventAttendanceController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/', [EventAttendanceController::class, 'index'])
+            ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'bk', 'staf_tu', 'admin', Roles::LEADERSHIP))
+            ->name('index');
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/create', [EventAttendanceController::class, 'create'])->name('create');
+            Route::post('/', [EventAttendanceController::class, 'store'])->name('store');
+        });
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'bk', 'staf_tu', 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/rekap', [EventAttendanceController::class, 'rekap'])->name('rekap');
+            Route::get('/{event}', [EventAttendanceController::class, 'show'])->name('show');
+        });
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'admin', Roles::LEADERSHIP))->group(function () {
+            Route::get('/{event}/input', [EventAttendanceController::class, 'inputAttendance'])->name('input');
+            Route::post('/{event}/input', [EventAttendanceController::class, 'storeAttendance'])->name('store-attendance');
+            Route::get('/{event}/export-pdf', [EventAttendanceController::class, 'exportPdf'])->name('export-pdf');
+        });
     });
 
     // Impersonate Leave (Accessible by any auth user who is currently impersonating)
@@ -244,7 +278,9 @@ Route::middleware('auth')->group(function () {
     Route::post('notifications/read-all', [NotificationCenterController::class, 'markAllAsRead'])->name('notifications.read_all');
     Route::post('notifications/mark-all-read', [NotificationCenterController::class, 'markAllAsRead'])->name('notifications.markAllRead');
     Route::post('notifications/{id}/read', [NotificationCenterController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('notifications/test-dispatch', [NotificationCenterController::class, 'testDispatch'])->name('notifications.test_dispatch');
+    Route::post('notifications/test-dispatch', [NotificationCenterController::class, 'testDispatch'])
+        ->middleware(Roles::only('admin'))
+        ->name('notifications.test_dispatch');
     Route::get('notifications/unread-count', [NotificationCenterController::class, 'unreadCount'])->name('notifications.unread_count');
     // Internal Messaging & Threaded Discussion System
     Route::get('messages', [MessagingController::class, 'index'])->name('messages.index');
@@ -301,12 +337,16 @@ Route::middleware('auth')->group(function () {
     Route::get('financial/scholarships/report', [ScholarshipController::class, 'report'])->name('financial.scholarships.report')->middleware($scholarshipReaders);
 
     // 34.2: Positive Behavior & Character Report Card (P5)
-    Route::get('growth/character/dimensions', [P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
-    Route::get('growth/character/assess', [P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
-    Route::post('growth/character/assess', [P5AssessmentController::class, 'storeAssessment'])->name('growth.character.store_assessment');
-    Route::get('growth/character/student/{studentId}', [P5AssessmentController::class, 'studentReport'])->name('growth.character.student_report');
-    Route::get('growth/character/leaderboard', [P5AssessmentController::class, 'leaderboard'])->name('growth.character.leaderboard');
-    Route::post('growth/character/merit', [P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
+    Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin'))->group(function () {
+        Route::get('growth/character/dimensions', [P5AssessmentController::class, 'dimensions'])->name('growth.character.dimensions');
+        Route::get('growth/character/student/{studentId}', [P5AssessmentController::class, 'studentReport'])->name('growth.character.student_report');
+        Route::get('growth/character/leaderboard', [P5AssessmentController::class, 'leaderboard'])->name('growth.character.leaderboard');
+    });
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin'))->group(function () {
+        Route::get('growth/character/assess', [P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
+        Route::post('growth/character/assess', [P5AssessmentController::class, 'storeAssessment'])->name('growth.character.store_assessment');
+        Route::post('growth/character/merit', [P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
+    });
 
     // 34.3: Parent-Teacher Conference (PTC) Scheduler
     // Parent–teacher conferences (119.9): staff open sessions, parents book for their own
@@ -342,13 +382,19 @@ Route::middleware('auth')->group(function () {
 
     // Advanced Student Experience Platform
     // 40.1: Student Self-Service Portal
-    Route::get('student/portal/dashboard', [StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
-    Route::get('student/portal/request', [StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
-    Route::post('student/portal/request', [StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
+    Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))->group(function () {
+        Route::get('student/portal/dashboard', [StudentPortalController::class, 'dashboard'])->name('student.portal.dashboard');
+        Route::get('student/portal/request', [StudentPortalController::class, 'createRequest'])->name('student.portal.create_request');
+        Route::post('student/portal/request', [StudentPortalController::class, 'storeRequest'])->name('student.portal.store_request');
+    });
 
     // Student Achievement Certificate Generator
-    Route::get('certificates/templates', [CertificateController::class, 'index'])->name('certificates.templates');
-    Route::get('certificates/verify/{code}', [CertificateController::class, 'verifyPage'])->name('certificates.verify');
+    Route::get('certificates/templates', [CertificateController::class, 'index'])
+        ->middleware(Roles::only(Roles::MEMBERS))
+        ->name('certificates.templates');
+    Route::get('certificates/verify/{code}', [CertificateController::class, 'verifyPage'])
+        ->middleware(Roles::only(Roles::MEMBERS, 'alumni', 'bendahara', 'pustakawan', 'petugas_uks'))
+        ->name('certificates.verify');
 
     // Multi-Format Export Engine & Data Interoperability
     Route::middleware('role:staf_tu,waka_kurikulum,waka_sarpras,kepala_sekolah,admin,superadmin')->group(function () {
@@ -359,12 +405,16 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // EKSTRAKURIKULER & OSIS â€” Pengembangan Non-Akademik
+    // EKSTRAKURIKULER & OSIS — Pengembangan Non-Akademik
     // =========================================================
-    Route::get('extracurriculars', [ExtracurricularController::class, 'index'])->name('ekskul.index');
-    Route::get('extracurriculars/schedule', [ExtracurricularController::class, 'schedule'])->name('ekskul.schedule');
-    Route::get('extracurriculars/{extracurricular}', [ExtracurricularController::class, 'show'])->name('ekskul.show');
-    Route::post('extracurriculars/{extracurricular}/register', [ExtracurricularController::class, 'register'])->name('ekskul.register');
+    Route::middleware(Roles::only(Roles::MEMBERS, 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+        Route::get('extracurriculars', [ExtracurricularController::class, 'index'])->name('ekskul.index');
+        Route::get('extracurriculars/schedule', [ExtracurricularController::class, 'schedule'])->name('ekskul.schedule');
+        Route::get('extracurriculars/{extracurricular}', [ExtracurricularController::class, 'show'])->name('ekskul.show');
+    });
+    Route::post('extracurriculars/{extracurricular}/register', [ExtracurricularController::class, 'register'])
+        ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES))
+        ->name('ekskul.register');
 
     Route::middleware(['role:guru,bk,waka_kesiswaan,admin,superadmin'])->prefix('admin/extracurriculars')->name('ekskul.')->group(function () {
         // CRUD Ekskul
@@ -435,25 +485,35 @@ Route::middleware('auth')->group(function () {
     // LEMBAGA LEGISLATIF MPK (MAJELIS PERWAKILAN KELAS)
     // =========================================================
     Route::prefix('admin/mpk')->name('mpk.')->group(function () {
-        Route::get('/', [MpkController::class, 'index'])->name('index');
-        Route::post('audit', [MpkController::class, 'storeAudit'])->name('audit.store');
-
-        Route::get('lpj', [MpkController::class, 'lpjIndex'])->name('lpj.index');
-        Route::post('lpj', [MpkController::class, 'storeLpj'])->name('lpj.store');
-        Route::post('lpj/{lpj}/review', [MpkController::class, 'reviewLpj'])->name('lpj.review');
-
-        Route::get('aspirations', [MpkController::class, 'aspirationsIndex'])->name('aspirations.index');
-        Route::post('aspirations', [MpkController::class, 'storeAspiration'])->name('aspirations.store');
-        Route::post('aspirations/{aspiration}/resolve', [MpkController::class, 'resolveAspiration'])->name('aspirations.resolve');
+        Route::get('/', [MpkController::class, 'index'])
+            ->middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))
+            ->name('index');
+        Route::middleware(Roles::only('waka_kesiswaan', Roles::PRINCIPAL, 'admin'))->group(function () {
+            Route::post('audit', [MpkController::class, 'storeAudit'])->name('audit.store');
+            Route::post('lpj/{lpj}/review', [MpkController::class, 'reviewLpj'])->name('lpj.review');
+            Route::post('aspirations/{aspiration}/resolve', [MpkController::class, 'resolveAspiration'])->name('aspirations.resolve');
+        });
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))->group(function () {
+            Route::get('lpj', [MpkController::class, 'lpjIndex'])->name('lpj.index');
+            Route::post('lpj', [MpkController::class, 'storeLpj'])->name('lpj.store');
+            Route::get('aspirations', [MpkController::class, 'aspirationsIndex'])->name('aspirations.index');
+            Route::post('aspirations', [MpkController::class, 'storeAspiration'])->name('aspirations.store');
+        });
     });
 
     // =========================================================
     // JURNAL HARIAN GURU (TEACHING JOURNAL / CLASS DIARY)
     // =========================================================
-    Route::get('teaching-journals/export/pdf', [TeachingJournalController::class, 'exportPdf'])->name('teaching-journals.export-pdf');
-    Route::post('teaching-journals/{teaching_journal}/review', [TeachingJournalController::class, 'review'])->name('teaching-journals.review');
-    Route::resource('teaching-journals', TeachingJournalController::class)
-        ->middlewareFor('index', 'can:viewAny,'.TeachingJournal::class);
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->group(function () {
+        Route::get('teaching-journals/export/pdf', [TeachingJournalController::class, 'exportPdf'])
+            ->middleware(Roles::only('waka_kurikulum', Roles::PRINCIPAL, 'admin'))
+            ->name('teaching-journals.export-pdf');
+        Route::post('teaching-journals/{teaching_journal}/review', [TeachingJournalController::class, 'review'])
+            ->middleware(Roles::only('waka_kurikulum', Roles::PRINCIPAL, 'admin'))
+            ->name('teaching-journals.review');
+        Route::resource('teaching-journals', TeachingJournalController::class)
+            ->middlewareFor('index', 'can:viewAny,'.TeachingJournal::class);
+    });
 
     // =========================================================
     // STUDENT SELF-SERVICE
@@ -682,11 +742,13 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // KESISWAAN â€” Unit Kesehatan Sekolah (UKS) Digital
+    // KESISWAAN - Unit Kesehatan Sekolah (UKS) Digital
     // =========================================================
     Route::prefix('uks')->name('uks.')->group(function () {
-        // Akses Terbuka (Policy Guard di Controller)
-        Route::get('student/{student}/history', [UksController::class, 'studentHistory'])->name('student-history');
+        // Akses siswa/wali sendiri, Petugas UKS, Guru, BK, Staf TU, Waka, Pimpinan, Admin (Policy Guard di Controller)
+        Route::get('student/{student}/history', [UksController::class, 'studentHistory'])
+            ->middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'petugas_uks', 'bk', 'staf_tu', 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))
+            ->name('student-history');
 
         // Khusus Guru, BK, Staf TU, Waka, Admin
         Route::middleware('role:guru,bk,staf_tu,waka_kesiswaan,admin,superadmin')->group(function () {
@@ -731,21 +793,21 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // KESISWAAN â€” Bimbingan & Konseling (BK Online)
+    // KESISWAAN - Bimbingan & Konseling (BK Online)
     // =========================================================
     Route::prefix('counseling')->name('counseling.')->group(function () {
-        // Akses Terbuka (Policy Guard di Controller)
-        Route::get('student/{student}/profile', [CounselingController::class, 'studentProfile'])->name('student-profile');
+        // Akses siswa/wali terkait, BK, Waka Kesiswaan, Pimpinan, Admin (Policy Guard di Controller)
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, 'bk', 'waka_kesiswaan', Roles::PRINCIPAL, 'admin'))->group(function () {
+            Route::get('student/{student}/profile', [CounselingController::class, 'studentProfile'])->name('student-profile');
+            Route::post('sessions/{session}/cancel', [CounselingController::class, 'cancelSession'])->name('cancel');
+            Route::get('sessions/{session}/report', [CounselingController::class, 'exportSessionReport'])->name('student-report');
+        });
 
-        // Permohonan Konseling untuk Siswa/Orang Tua/BK
-        Route::get('request', [CounselingController::class, 'requestForm'])->name('request-form');
-        Route::post('request', [CounselingController::class, 'requestSession'])->name('request');
-
-        // Batalkan Sesi Konseling (Akses Terbuka untuk BK, dan Terbatas untuk Siswa/Orang Tua di Controller)
-        Route::post('sessions/{session}/cancel', [CounselingController::class, 'cancelSession'])->name('cancel');
-
-        // Unduh Berita Acara Konseling PDF Resmi (Policy Guard di Controller)
-        Route::get('sessions/{session}/report', [CounselingController::class, 'exportSessionReport'])->name('student-report');
+        // Permohonan Konseling untuk Siswa/Orang Tua/BK/Admin
+        Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::PARENT_ROLES, 'bk', 'admin'))->group(function () {
+            Route::get('request', [CounselingController::class, 'requestForm'])->name('request-form');
+            Route::post('request', [CounselingController::class, 'requestSession'])->name('request');
+        });
 
         // Khusus Guru BK, Waka, Admin
         Route::middleware('role:bk,waka_kesiswaan,admin,superadmin')->group(function () {
@@ -817,12 +879,14 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // INVENTARIS & PEMINJAMAN ASET LANJUTAN (MODUL 3)
     // =========================================================
-    Route::middleware(['auth'])->prefix('assets')->name('assets.')->group(function () {
-        // Peminjaman (Umum - Guru/Staf & Admin)
-        Route::get('loans', [AssetLoanController::class, 'index'])->name('loans.index');
-        Route::get('loans/create', [AssetLoanController::class, 'create'])->name('loans.create');
-        Route::post('loans', [AssetLoanController::class, 'store'])->name('loans.store');
-        Route::get('loans/{loan}', [AssetLoanController::class, 'show'])->name('loans.show');
+    Route::prefix('assets')->name('assets.')->group(function () {
+        // Peminjaman (Pegawai Sekolah: Guru/Staf/Pimpinan/Admin)
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin', 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+            Route::get('loans', [AssetLoanController::class, 'index'])->name('loans.index');
+            Route::get('loans/create', [AssetLoanController::class, 'create'])->name('loans.create');
+            Route::post('loans', [AssetLoanController::class, 'store'])->name('loans.store');
+            Route::get('loans/{loan}', [AssetLoanController::class, 'show'])->name('loans.show');
+        });
 
         // Khusus Waka Sarpras, Staf TU, Kepala Sekolah, & Admin/Superadmin
         Route::middleware(['role:waka_sarpras,staf_tu,admin,superadmin,kepala_sekolah'])->group(function () {
@@ -966,7 +1030,7 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // SELF-SERVICE HRD (Semua Pegawai/Staf/Guru)
     // =========================================================
-    Route::middleware('auth')->prefix('my-hrd')->name('my-hrd.')->group(function () {
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin', 'bendahara', 'pustakawan', 'petugas_uks'))->prefix('my-hrd')->name('my-hrd.')->group(function () {
         Route::get('portal', [MyHRDController::class, 'index'])->name('portal');
         Route::post('leaves', [MyHRDController::class, 'storeLeaveRequest'])->name('leaves');
 
@@ -1106,12 +1170,14 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // E-LEARNING PORTAL & PWA
     // =========================================================
-    Route::get('elearning/install', [ElearningController::class, 'install'])->name('elearning.install');
-    Route::get('elearning', [ElearningController::class, 'index'])->name('elearning.index');
-    Route::get('elearning/class/{elearningClass}', [ElearningController::class, 'showClass'])->name('elearning.class.show');
-    Route::get('elearning/class/{elearningClass}/material/{material}', [ElearningController::class, 'showMaterial'])->name('elearning.material.show');
-    Route::post('elearning/material/{material}/comment', [ElearningController::class, 'storeComment'])->name('elearning.comment.store');
-    Route::delete('elearning/material/{material}/comment/{comment}', [ElearningController::class, 'deleteComment'])->name('elearning.comment.destroy');
+    Route::middleware(Roles::only(StudentDataAccess::STUDENT_ROLES, StudentDataAccess::TEACHER_ROLES, 'bk', 'staf_tu', 'admin', Roles::LEADERSHIP))->group(function () {
+        Route::get('elearning/install', [ElearningController::class, 'install'])->name('elearning.install');
+        Route::get('elearning', [ElearningController::class, 'index'])->name('elearning.index');
+        Route::get('elearning/class/{elearningClass}', [ElearningController::class, 'showClass'])->name('elearning.class.show');
+        Route::get('elearning/class/{elearningClass}/material/{material}', [ElearningController::class, 'showMaterial'])->name('elearning.material.show');
+        Route::post('elearning/material/{material}/comment', [ElearningController::class, 'storeComment'])->name('elearning.comment.store');
+        Route::delete('elearning/material/{material}/comment/{comment}', [ElearningController::class, 'deleteComment'])->name('elearning.comment.destroy');
+    });
 
     // Student Actions
     Route::middleware('role:student,siswa')->group(function () {
@@ -1146,9 +1212,11 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     // SURVEI & KUESIONER DIGITAL (MODUL 2)
     // =========================================================
-    Route::get('surveys', [SurveyController::class, 'index'])->name('surveys.index');
-    Route::get('surveys/fill/{survey}', [SurveyController::class, 'show'])->name('surveys.show');
-    Route::post('surveys/fill/{survey}/respond', [SurveyController::class, 'respond'])->name('surveys.respond');
+    Route::middleware(Roles::only(Roles::MEMBERS, 'bendahara', 'pustakawan', 'petugas_uks', 'alumni'))->group(function () {
+        Route::get('surveys', [SurveyController::class, 'index'])->name('surveys.index');
+        Route::get('surveys/fill/{survey}', [SurveyController::class, 'show'])->name('surveys.show');
+        Route::post('surveys/fill/{survey}/respond', [SurveyController::class, 'respond'])->name('surveys.respond');
+    });
 
     Route::middleware('role:waka_kurikulum,waka_kesiswaan,waka_humas,waka_sarpras,admin,superadmin,kepala_sekolah')->group(function () {
         Route::get('surveys/create', [SurveyController::class, 'create'])->name('surveys.create');
@@ -1162,17 +1230,21 @@ Route::middleware('auth')->group(function () {
     });
 
     // =========================================================
-    // ðŸ“š MANAJEMEN KURIKULUM & SILABUS DIGITAL
+    // MANAJEMEN KURIKULUM & SILABUS DIGITAL
     // =========================================================
-    Route::prefix('curriculum')->name('curriculum.')->group(function () {
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->prefix('curriculum')->name('curriculum.')->group(function () {
         // Dashboard & PDF Report
         Route::get('/', [CurriculumController::class, 'index'])->name('index');
-        Route::get('/report', [CurriculumController::class, 'completionReport'])->name('report');
+        Route::get('/report', [CurriculumController::class, 'completionReport'])
+            ->middleware(Roles::only('waka_kurikulum', Roles::PRINCIPAL, 'admin'))
+            ->name('report');
 
         // Bank Silabus
         Route::get('/syllabi', [CurriculumController::class, 'syllabiIndex'])->name('syllabi.index');
         Route::post('/syllabi', [CurriculumController::class, 'syllabusStore'])->name('syllabi.store');
-        Route::post('/syllabi/{syllabus}/review', [CurriculumController::class, 'syllabusReview'])->name('syllabi.review');
+        Route::post('/syllabi/{syllabus}/review', [CurriculumController::class, 'syllabusReview'])
+            ->middleware(Roles::only('waka_kurikulum', 'admin'))
+            ->name('syllabi.review');
         Route::get('/syllabi/{syllabus}/download', [CurriculumController::class, 'syllabusDownload'])->name('syllabi.download');
         Route::delete('/syllabi/{syllabus}', [CurriculumController::class, 'syllabusDestroy'])->name('syllabi.destroy');
 
@@ -1185,17 +1257,21 @@ Route::middleware('auth')->group(function () {
         Route::put('/lesson-plans/{lessonPlan}', [CurriculumController::class, 'lessonPlanUpdate'])->name('lesson-plans.update');
         Route::delete('/lesson-plans/{lessonPlan}', [CurriculumController::class, 'lessonPlanDestroy'])->name('lesson-plans.destroy');
         Route::post('/lesson-plans/{lessonPlan}/submit', [CurriculumController::class, 'lessonPlanSubmit'])->name('lesson-plans.submit');
-        Route::post('/lesson-plans/{lessonPlan}/review', [CurriculumController::class, 'lessonPlanReview'])->name('lesson-plans.review');
+        Route::post('/lesson-plans/{lessonPlan}/review', [CurriculumController::class, 'lessonPlanReview'])
+            ->middleware(Roles::only('waka_kurikulum', 'admin'))
+            ->name('lesson-plans.review');
         Route::get('/lesson-plans/{lessonPlan}/pdf', [CurriculumController::class, 'lessonPlanPdf'])->name('lesson-plans.pdf');
     });
 
     // =========================================================
-    // ðŸŽ« SISTEM HELPDESK INTERNAL
+    // SISTEM HELPDESK INTERNAL
     // =========================================================
     Route::prefix('helpdesk')->name('helpdesk.')->group(function () {
         // Universal support ticket routes
-        Route::resource('tickets', TicketController::class)->only(['index', 'create', 'store', 'show']);
-        Route::post('tickets/{ticket}/comment', [TicketController::class, 'comment'])->name('tickets.comment');
+        Route::middleware(Roles::only(Roles::MEMBERS, 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+            Route::resource('tickets', TicketController::class)->only(['index', 'create', 'store', 'show']);
+            Route::post('tickets/{ticket}/comment', [TicketController::class, 'comment'])->name('tickets.comment');
+        });
 
         // Administrative support handling routes
         Route::middleware('role:staf_tu,waka_sarpras,admin,superadmin')->group(function () {
@@ -1445,8 +1521,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('history', [SyncController::class, 'syncHistory'])->name('history');
     });
 
-    Route::get('assets/maintenance/scan/{uuid}', [AssetMaintenanceTicketController::class, 'scanQr'])->name('admin.assets.maintenance.scan');
-    Route::post('assets/maintenance/ticket', [AssetMaintenanceTicketController::class, 'storeTicket'])->name('admin.assets.maintenance.store');
+    Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, StudentDataAccess::STAFF_ROLES, Roles::LEADERSHIP, 'admin', 'bendahara', 'pustakawan', 'petugas_uks'))->group(function () {
+        Route::get('assets/maintenance/scan/{uuid}', [AssetMaintenanceTicketController::class, 'scanQr'])->name('admin.assets.maintenance.scan');
+        Route::post('assets/maintenance/ticket', [AssetMaintenanceTicketController::class, 'storeTicket'])->name('admin.assets.maintenance.store');
+    });
 
     Route::middleware('role:staf_tu,admin,superadmin')->prefix('admin/assets/maintenance')->name('admin.assets.maintenance.')->group(function () {
         Route::get('/', [AssetMaintenanceTicketController::class, 'index'])->name('index');

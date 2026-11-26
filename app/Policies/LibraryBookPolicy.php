@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\LibraryBook;
 use App\Models\User;
+use App\Support\Access\StudentDataAccess;
 
 class LibraryBookPolicy
 {
@@ -29,7 +31,7 @@ class LibraryBookPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'superadmin', 'guru', 'staf_tu']);
+        return RoleMiddleware::allowsUser($user, ['admin', 'superadmin', ...StudentDataAccess::TEACHER_ROLES, 'staf_tu', 'pustakawan']);
     }
 
     /**
@@ -37,7 +39,7 @@ class LibraryBookPolicy
      */
     public function update(User $user, LibraryBook $libraryBook): bool
     {
-        if (in_array($user->role, ['admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin'])) {
             return true;
         }
 
@@ -51,7 +53,7 @@ class LibraryBookPolicy
      */
     public function delete(User $user, LibraryBook $libraryBook): bool
     {
-        if (in_array($user->role, ['admin', 'superadmin'])) {
+        if (RoleMiddleware::allowsUser($user, ['admin', 'superadmin'])) {
             return true;
         }
 
