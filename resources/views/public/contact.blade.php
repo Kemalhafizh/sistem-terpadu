@@ -22,9 +22,7 @@
         <p class="text-slate-500 text-lg font-medium">Kami siap membantu Anda. Silakan hubungi kami melalui informasi di bawah ini atau kirimkan pesan melalui formulir kontak.</p>
     </div>
 
-    {{-- ═══════════════════════════════════════════════════════
-         CONTACT INFO CARDS
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- CONTACT INFO CARDS --}}
     <div class="grid md:grid-cols-3 gap-6 mb-16 animate-fade-in-up" style="animation-delay: .1s">
         {{-- Alamat --}}
         <div class="glass rounded-[2rem] p-8 border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group text-center">
@@ -54,9 +52,7 @@
         </div>
     </div>
 
-    {{-- ═══════════════════════════════════════════════════════
-         GOOGLE MAPS & CONTACT FORM
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- GOOGLE MAPS & CONTACT FORM --}}
     <div class="grid lg:grid-cols-5 gap-8 mb-12">
 
         {{-- Google Maps --}}
@@ -88,8 +84,6 @@
         {{-- Contact Form --}}
         <div class="lg:col-span-2 animate-fade-in-up" style="animation-delay: .3s">
             <div class="glass rounded-[2rem] p-8 border border-slate-200/80 shadow-sm relative overflow-hidden h-full">
-                {{-- Decorative gradient --}}
-                <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="relative">
                     <p class="text-primary-600 font-black tracking-[0.25em] uppercase text-[10px] mb-2 flex items-center">

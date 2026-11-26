@@ -1,4 +1,4 @@
-{{-- Premium Empty State Component --}}
+{{-- Empty State Component --}}
 @props([
     'icon' => 'box', // box, search, task, document, calendar, lock
     'message' => 'Belum ada data',

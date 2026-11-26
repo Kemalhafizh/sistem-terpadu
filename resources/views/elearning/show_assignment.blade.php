@@ -15,7 +15,6 @@
             
             <!-- Main Detail Card -->
             <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 sm:p-10 shadow-sm border border-gray-100 dark:border-slate-700 space-y-6 relative overflow-hidden group">
-                <div class="absolute -right-24 -top-24 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl"></div>
                 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="space-y-1">
@@ -145,8 +144,6 @@
                         @if($elearningAssignment->is_secure_mode)
                             <!-- SECURE MODE INSTRUCTIONS -->
                             <div class="bg-slate-900 text-white rounded-[2.5rem] p-6 sm:p-10 shadow-xl space-y-6 relative overflow-hidden">
-                                <div class="absolute -right-20 -bottom-20 w-48 h-48 bg-red-500/10 rounded-full blur-3xl"></div>
-                                <div class="absolute -left-20 -top-20 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
 
                                 <div class="space-y-2 text-center">
                                     <div class="w-16 h-16 bg-red-600 rounded-3xl mx-auto flex items-center justify-center text-white shadow-lg shadow-red-950/50">

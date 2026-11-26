@@ -1,4 +1,4 @@
-# Dokumentasi Teknis SISTA — SMA Islam Sultan Agung 1 Semarang
+# Dokumentasi Teknis SISTA - SMA Islam Sultan Agung 1 Semarang
 
 Dokumen ini merupakan indeks panduan teknis bagi pengembang dan administrator sistem **SISTA (Sistem Terpadu SMA Islam Sultan Agung 1 Semarang)**.
 

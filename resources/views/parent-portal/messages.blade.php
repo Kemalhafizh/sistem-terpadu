@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h2 class="font-black text-3xl text-gray-900 leading-tight tracking-tight">
-                    Obrolan & <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Konsultasi Wali Kelas</span>
+                <h2 class="font-black text-3xl text-gray-900 dark:text-white leading-tight tracking-tight">
+                    Obrolan & <span class="text-primary-600 dark:text-primary-400">Konsultasi Wali Kelas</span>
                 </h2>
                 <p class="text-sm font-semibold text-gray-500 mt-1">{{ school_name() }}</p>
             </div>
@@ -42,36 +42,34 @@
                 
                 <!-- 1. Left Panel: Teacher Card info -->
                 <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200/60 relative overflow-hidden group hover:shadow-md transition-all duration-300">
-                        <div class="absolute -right-16 -top-16 w-36 h-36 bg-indigo-50/50 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
-                        
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-200/60 dark:border-slate-700">
                         <h4 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Wali Kelas Terkait</h4>
                         
                         @if($teacher)
                             <div class="text-center relative z-10">
-                                <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-primary-600 rounded-3xl flex items-center justify-center font-black text-3xl text-white shadow-xl shadow-indigo-900/20 mx-auto mb-4">
+                                <div class="w-20 h-20 bg-primary-600 rounded-3xl flex items-center justify-center font-black text-3xl text-white shadow-md mx-auto mb-4">
                                     {{ substr($teacher->name, 0, 1) }}
                                 </div>
-                                <h3 class="font-black text-gray-900 text-lg leading-tight tracking-tight">{{ $teacher->name }}</h3>
+                                <h3 class="font-black text-gray-900 dark:text-white text-lg leading-tight tracking-tight">{{ $teacher->name }}</h3>
                                 <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mt-1.5">{{ $student->classroom->name }}</p>
                                 
-                                <div class="mt-6 pt-6 border-t border-gray-100 text-left space-y-4 text-xs font-semibold text-gray-600">
+                                <div class="mt-6 pt-6 border-t border-gray-100 dark:border-slate-700 text-start space-y-4 text-xs font-semibold text-gray-600 dark:text-slate-300">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                                            
+                                        <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                         </div>
                                         <div>
                                             <span class="text-[9px] text-gray-400 font-black block uppercase tracking-wider">Email</span>
-                                            <strong class="text-gray-800">{{ $teacher->email }}</strong>
+                                            <strong class="text-gray-800 dark:text-slate-100">{{ $teacher->email }}</strong>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-                                            
+                                        <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                                         </div>
                                         <div>
                                             <span class="text-[9px] text-gray-400 font-black block uppercase tracking-wider">Nomor Telepon</span>
-                                            <strong class="text-gray-800">{{ $teacher->phone ?? 'Belum Ada' }}</strong>
+                                            <strong class="text-gray-800 dark:text-slate-100">{{ $teacher->phone ?? 'Belum Ada' }}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -84,11 +82,10 @@
                     </div>
 
                     <!-- Guidance Info -->
-                    <div class="bg-gradient-to-br from-gray-900 via-indigo-950 to-slate-900 rounded-[2rem] p-6 shadow-xl text-white relative overflow-hidden">
-                        <div class="absolute -right-12 -bottom-12 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl"></div>
+                    <div class="bg-slate-900 rounded-3xl p-6 shadow-md text-white">
                         <h4 class="text-xs font-black text-indigo-300 uppercase tracking-widest mb-3">Panduan Obrolan</h4>
                         <p class="text-[11px] text-gray-300 leading-relaxed font-semibold">
-                            Parent Portal memfasilitasi komunikasi dua arah asinkron yang aman dengan Wali Kelas. Anda dapat berkonsultasi mengenai hasil belajar akademik, kehadiran siswa, perilaku bimbingan konseling, atau dispensasi izin sakit.
+                            Portal Wali Murid memfasilitasi komunikasi asinkron dengan Wali Kelas untuk konsultasi hasil belajar, kehadiran siswa, bimbingan konseling, dan pengajuan izin.
                         </p>
                     </div>
                 </div>

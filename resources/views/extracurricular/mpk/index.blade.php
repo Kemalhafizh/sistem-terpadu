@@ -41,7 +41,6 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Saldo Card -->
             <div class="bg-white border border-slate-100 dark:bg-gray-800 dark:border-gray-700 p-6 rounded-3xl shadow-xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-600/5 rounded-full blur-2xl"></div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Saldo Kas OSIS Terkini</p>
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-none">
                     Rp {{ number_format($currentBalance, 0, ',', '.') }}
@@ -53,7 +52,6 @@
 
             <!-- Total Audit Card -->
             <div class="bg-white border border-slate-100 dark:bg-gray-800 dark:border-gray-700 p-6 rounded-3xl shadow-xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-600/5 rounded-full blur-2xl"></div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Status Audit Kas</p>
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-none">
                     {{ $verifiedCount + $flaggedCount }} / {{ $totalTransactions }}
@@ -66,7 +64,6 @@
 
             <!-- Pending Card -->
             <div class="bg-white border border-slate-100 dark:bg-gray-800 dark:border-gray-700 p-6 rounded-3xl shadow-xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-amber-600/5 rounded-full blur-2xl"></div>
                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Belum Diaudit (Pending)</p>
                 <h3 class="text-3xl font-black text-slate-900 dark:text-white leading-none">
                     {{ $pendingAuditCount }}

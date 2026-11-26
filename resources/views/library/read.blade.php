@@ -62,7 +62,7 @@
         &copy; {{ date('Y') }} {{ school_short_name() }}. Hak Cipta Dilindungi. Dilarang menggandakan atau menyebarluaskan dokumen ini.
     </footer>
 
-    <!-- JavaScript Proteksi Keamanan Premium -->
+    <!-- JavaScript Proteksi Keamanan -->
     <x-vendor.script lib="sweetalert2" />
     <script>
         // Mencegah Klik Kanan di seluruh halaman

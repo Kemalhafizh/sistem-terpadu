@@ -6,7 +6,7 @@
                     Sistem Tabungan Wadiah
                 </span>
                 <h2 class="font-black text-3xl text-gray-900 dark:text-white leading-tight tracking-tight mt-2">
-                    Dompet Digital <span class="bg-gradient-to-r from-primary-600 to-emerald-600 bg-clip-text text-transparent">Wadiah</span>
+                    Dompet Digital <span class="text-primary-600 dark:text-primary-400">Wadiah</span>
                 </h2>
                 <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">Layanan transaksi cashless siswa {{ school_name() }}</p>
             </div>
@@ -35,7 +35,7 @@
                 
                 <!-- Left Grid: Wallet Card (lg:col-span-7) -->
                 <div class="lg:col-span-7 space-y-8">
-                    <!-- Premium Physical Card Design -->
+                    <!-- Card Design -->
                     <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 rounded-[2.5rem] p-8 md:p-10 shadow-2xl text-white relative overflow-hidden group border border-white/10">
                         <div class="relative z-10 flex flex-col justify-between h-full min-h-[300px]">
                             <!-- Card Header -->

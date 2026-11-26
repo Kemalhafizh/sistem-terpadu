@@ -29,7 +29,6 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Recap Card & Target -->
                 <div class="lg:col-span-1 bg-primary-900 rounded-[2.5rem] p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl flex flex-col justify-between min-h-[320px]">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
                     
                     <div>
                         <h3 class="text-xs font-black uppercase tracking-[0.3em] mb-4 opacity-60">Statistik Hafalan</h3>

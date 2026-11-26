@@ -1,4 +1,4 @@
-{{-- Premium DataTable Wrapper Component --}}
+{{-- DataTable Wrapper Component --}}
 @props([
     'headers' => [],
     'items' => null, // Paginated items collection for pagination links and empty state checks

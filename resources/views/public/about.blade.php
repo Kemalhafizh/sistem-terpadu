@@ -15,15 +15,11 @@
         <span class="text-primary-600">Tentang Kami</span>
     </nav>
 
-    {{-- ═══════════════════════════════════════════════════════
-         HERO SECTION
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- HERO SECTION --}}
     <section class="relative mb-24 animate-fade-in-up">
         <div class="relative glass rounded-[2.5rem] overflow-hidden border border-slate-200/80 shadow-xl">
             {{-- Decorative gradient overlay --}}
             <div class="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-emerald-500/10 pointer-events-none"></div>
-            <div class="absolute -top-20 -right-20 w-72 h-72 bg-primary-400/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-16 -left-16 w-56 h-56 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative px-8 py-16 md:px-16 md:py-24 text-center">
                 {{-- School icon --}}
@@ -34,7 +30,7 @@
                 <p class="text-primary-600 font-black tracking-[0.25em] uppercase text-[10px] mb-4">{{ school_name() }}</p>
                 <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6 leading-tight">
                     Membentuk Generasi<br>
-                    <span class="bg-gradient-to-r from-primary-600 to-emerald-500 bg-clip-text text-transparent">Berilmu, Beriman</span><br>
+                    <span class="text-primary-600 dark:text-primary-400">Berilmu, Beriman</span><br>
                     & Berakhlak Mulia
                 </h1>
                 <p class="text-slate-500 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
@@ -44,9 +40,7 @@
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════════
-         SEJARAH SINGKAT
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- SEJARAH SINGKAT --}}
     <section class="mb-24 animate-fade-in-up" style="animation-delay: .1s">
         <div class="grid lg:grid-cols-5 gap-12 items-start">
             {{-- Section label --}}
@@ -75,15 +69,15 @@
                 {{-- Stats row --}}
                 <div class="grid grid-cols-3 gap-4">
                     <div class="glass rounded-[1.5rem] p-6 text-center border border-slate-200/80 hover:shadow-md transition-shadow">
-                        <p class="text-3xl md:text-4xl font-black bg-gradient-to-br from-primary-600 to-emerald-500 bg-clip-text text-transparent">60+</p>
+                        <p class="text-3xl md:text-4xl font-black text-primary-600 dark:text-primary-400">60+</p>
                         <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Tahun Berdiri</p>
                     </div>
                     <div class="glass rounded-[1.5rem] p-6 text-center border border-slate-200/80 hover:shadow-md transition-shadow">
-                        <p class="text-3xl md:text-4xl font-black bg-gradient-to-br from-primary-600 to-emerald-500 bg-clip-text text-transparent">1000+</p>
+                        <p class="text-3xl md:text-4xl font-black text-primary-600 dark:text-primary-400">1000+</p>
                         <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Siswa Aktif</p>
                     </div>
                     <div class="glass rounded-[1.5rem] p-6 text-center border border-slate-200/80 hover:shadow-md transition-shadow">
-                        <p class="text-3xl md:text-4xl font-black bg-gradient-to-br from-primary-600 to-emerald-500 bg-clip-text text-transparent">100+</p>
+                        <p class="text-3xl md:text-4xl font-black text-primary-600 dark:text-primary-400">100+</p>
                         <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Tenaga Pendidik</p>
                     </div>
                 </div>
@@ -91,9 +85,7 @@
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════════
-         VISI & MISI
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- VISI & MISI --}}
     <section class="mb-24 animate-fade-in-up" style="animation-delay: .2s">
         <div class="text-center max-w-3xl mx-auto mb-12">
             <p class="text-primary-600 font-black tracking-[0.25em] uppercase text-[10px] mb-4">Arah & Tujuan</p>
@@ -161,9 +153,7 @@
         </div>
     </section>
 
-    {{-- ═══════════════════════════════════════════════════════
-         SAMBUTAN KEPALA SEKOLAH
-    ═══════════════════════════════════════════════════════ --}}
+    {{-- SAMBUTAN KEPALA SEKOLAH --}}
     <section class="mb-12 animate-fade-in-up" style="animation-delay: .3s">
         <div class="glass rounded-[2.5rem] p-8 md:p-14 border border-slate-200/80 shadow-sm relative overflow-hidden">
             {{-- Decorative SVG pattern --}}

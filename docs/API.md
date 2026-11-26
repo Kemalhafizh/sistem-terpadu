@@ -69,43 +69,43 @@ Catatan konvensi data:
 ## 3. Ringkasan Kelompok Endpoint (`/api/v1`)
 
 ### A. Autentikasi, Profil & Konfigurasi Sesi
-- `POST /api/v1/login` — Autentikasi pengguna dan penerbitan token Sanctum.
-- `POST /api/v1/logout` — Pencabutan token sesi aktif.
-- `GET /api/v1/me` — Ringkasan profil pengguna yang sedang login.
-- `PUT /api/v1/me/locale` — Pembaruan bahasa pilihan pengguna (`id`, `en`, `ar`).
-- `GET /api/v1/mobile/config` — Konfigurasi aplikasi dan daftar kapabilitas fitur (`capabilities`) sesuai peran pengguna.
+- `POST /api/v1/login`: Autentikasi pengguna dan penerbitan token Sanctum.
+- `POST /api/v1/logout`: Pencabutan token sesi aktif.
+- `GET /api/v1/me`: Ringkasan profil pengguna yang sedang login.
+- `PUT /api/v1/me/locale`: Pembaruan bahasa pilihan pengguna (`id`, `en`, `ar`).
+- `GET /api/v1/mobile/config`: Konfigurasi aplikasi dan daftar kapabilitas fitur (`capabilities`) sesuai peran pengguna.
 
 ### B. Sesi Kelas & Presensi QR per Mata Pelajaran
 Kontrak lengkap tersedia di [`docs/modules/class_sessions.md`](modules/class_sessions.md).
-- `GET /api/v1/teacher/class-sessions/today` — Daftar sesi mengajar guru hari ini.
-- `POST /api/v1/teacher/class-sessions/{scheduleId}/start` & `POST .../end` — Memulai dan mengakhiri sesi kelas.
-- `GET /api/v1/teacher/class-sessions/{sessionId}/qr` — Token QR berputar setiap 30 detik.
-- `GET /api/v1/teacher/class-sessions/{sessionId}/students` & `POST .../attendance/manual` — Daftar hadir dan koreksi manual guru.
-- `POST /api/v1/student/class-session/scan-qr` & `GET /api/v1/student/class-session/active` — Pemindaian QR oleh siswa dan sesi aktif.
-- `GET /api/v1/student/class-session/attendance` & `GET /api/v1/parent/child/{uuid}/class-session-attendance` — Ringkasan kehadiran per mata pelajaran hari ini untuk siswa, orang tua, dan widget Android.
+- `GET /api/v1/teacher/class-sessions/today`: Daftar sesi mengajar guru hari ini.
+- `POST /api/v1/teacher/class-sessions/{scheduleId}/start` & `POST .../end`: Memulai dan mengakhiri sesi kelas.
+- `GET /api/v1/teacher/class-sessions/{sessionId}/qr`: Token QR berputar setiap 30 detik.
+- `GET /api/v1/teacher/class-sessions/{sessionId}/students` & `POST .../attendance/manual`: Daftar hadir dan koreksi manual guru.
+- `POST /api/v1/student/class-session/scan-qr` & `GET /api/v1/student/class-session/active`: Pemindaian QR oleh siswa dan sesi aktif.
+- `GET /api/v1/student/class-session/attendance` & `GET /api/v1/parent/child/{uuid}/class-session-attendance`: Ringkasan kehadiran per mata pelajaran hari ini untuk siswa, orang tua, dan widget Android.
 
 ### C. Fitur Siswa (`/api/v1/student/*`)
-- `GET /api/v1/student/profile` — Profil akademik siswa.
-- `GET /api/v1/student/schedule` — Jadwal pelajaran pada tahun ajaran aktif.
-- `GET /api/v1/student/grades` — Daftar nilai akademik.
-- `GET /api/v1/student/remedials` — Daftar jadwal dan nilai remedial siswa.
-- `GET /api/v1/student/billings` — Daftar tagihan SPP/biaya pendidikan dan riwayat pembayaran.
-- `GET /api/v1/student/points` — Catatan poin kedisiplinan dan prestasi.
+- `GET /api/v1/student/profile`: Profil akademik siswa.
+- `GET /api/v1/student/schedule`: Jadwal pelajaran pada tahun ajaran aktif.
+- `GET /api/v1/student/grades`: Daftar nilai akademik.
+- `GET /api/v1/student/remedials`: Daftar jadwal dan nilai remedial siswa.
+- `GET /api/v1/student/billings`: Daftar tagihan SPP/biaya pendidikan dan riwayat pembayaran.
+- `GET /api/v1/student/points`: Catatan poin kedisiplinan dan prestasi.
 
 ### D. Fitur Orang Tua (`/api/v1/parent/*`)
-Seluruh endpoint memvalidasi kepemilikan relasi orang tua–anak (`StudentDataAccess`):
-- `GET /api/v1/parent/children` — Daftar anak yang terhubung dengan akun orang tua.
-- `GET /api/v1/parent/child/{studentUuid}/summary` — Ringkasan perkembangan akademik, kehadiran, dan tagihan anak.
-- `GET /api/v1/parent/messages` & `POST /api/v1/parent/messages` — Obrolan dengan wali kelas.
+Seluruh endpoint memvalidasi kepemilikan relasi orang tua-anak (`StudentDataAccess`):
+- `GET /api/v1/parent/children`: Daftar anak yang terhubung dengan akun orang tua.
+- `GET /api/v1/parent/child/{studentUuid}/summary`: Ringkasan perkembangan akademik, kehadiran, dan tagihan anak.
+- `GET /api/v1/parent/messages` & `POST /api/v1/parent/messages`: Obrolan dengan wali kelas.
 
 ### E. Fitur Guru (`/api/v1/teacher/*`)
-- `GET /api/v1/teacher/schedule` & `GET /api/v1/teacher/classes` — Jadwal mengajar dan daftar kelas yang diampu.
-- `GET /api/v1/teacher/journals` & `POST /api/v1/teacher/journals` — Jurnal mengajar harian.
-- `GET /api/v1/teacher/daily-assessments` & `POST .../scores` — Penilaian harian dan input nilai.
-- `GET /api/v1/teacher/cbt/exams` — Pengawasan ujian CBT dan pembukaan kunci peserta.
+- `GET /api/v1/teacher/schedule` & `GET /api/v1/teacher/classes`: Jadwal mengajar dan daftar kelas yang diampu.
+- `GET /api/v1/teacher/journals` & `POST /api/v1/teacher/journals`: Jurnal mengajar harian.
+- `GET /api/v1/teacher/daily-assessments` & `POST .../scores`: Penilaian harian dan input nilai.
+- `GET /api/v1/teacher/cbt/exams`: Pengawasan ujian CBT dan pembukaan kunci peserta.
 
 ### F. Bimbingan Konseling, UKS & Keislaman
-- `POST /api/v1/counseling/bullying-reports` — Pelaporan perundungan (termasuk opsi anonim).
-- `GET /api/v1/counseling/sessions` & `POST /api/v1/counseling/sessions` — Sesi konseling BK.
-- `GET /api/v1/uks/visits` & `POST /api/v1/uks/visits` — Riwayat dan pencatatan kunjungan UKS.
-- `GET /api/v1/mutabaah/*` & `GET /api/v1/tahsin/*` — Pencatatan ibadah harian dan setoran Tahsin.
+- `POST /api/v1/counseling/bullying-reports`: Pelaporan perundungan (termasuk opsi anonim).
+- `GET /api/v1/counseling/sessions` & `POST /api/v1/counseling/sessions`: Sesi konseling BK.
+- `GET /api/v1/uks/visits` & `POST /api/v1/uks/visits`: Riwayat dan pencatatan kunjungan UKS.
+- `GET /api/v1/mutabaah/*` & `GET /api/v1/tahsin/*`: Pencatatan ibadah harian dan setoran Tahsin.

@@ -155,7 +155,7 @@
             </form>
         </div>
 
-        <!-- Tabel Jurnal Mengajar (Glassmorphism layout) -->
+        <!-- Tabel Jurnal Mengajar -->
         <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-3xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
