@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Student;
 use App\Models\TahfidzLog;
 use App\Models\TahfidzTarget;
 use App\Services\TahfidzService;
+use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -28,7 +30,7 @@ class TahfidzController extends Controller
         $user = auth()->user();
         $academicYear = AcademicYear::current();
 
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             $student = Student::where('user_id', $user->id)->firstOrFail();
             $progress = $this->tahfidzService->getStudentProgress($student, $academicYear);
             $surahs = $this->getSurahs();
@@ -36,7 +38,7 @@ class TahfidzController extends Controller
             return view('tahfidz.dashboard', compact('student', 'progress', 'surahs', 'academicYear'));
         }
 
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             $students = Student::where('parent_id', $user->id)->get();
             if ($students->isEmpty()) {
                 return view('tahfidz.dashboard', [
@@ -58,7 +60,7 @@ class TahfidzController extends Controller
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id');
         if (! $classroomId) {
-            if ($user->role === 'guru') {
+            if ($user->hasRole('guru')) {
                 $myClassroom = Classroom::where('teacher_id', $user->id)->first();
                 $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
             } else {
@@ -97,11 +99,11 @@ class TahfidzController extends Controller
         $academicYear = AcademicYear::current();
 
         // Ownership Check
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             if ($student->user_id !== $user->id) {
                 abort(403, 'Anda tidak memiliki akses ke data hafalan ini.');
             }
-        } elseif ($user->role === 'parent') {
+        } elseif ($user->hasRole('parent')) {
             if ($student->parent_id !== $user->id) {
                 abort(403, 'Anda tidak memiliki akses ke data hafalan anak ini.');
             }
@@ -120,14 +122,14 @@ class TahfidzController extends Controller
     public function bulkInputForm(Request $request)
     {
         $user = auth()->user();
-        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! RoleMiddleware::allowsUser($user, [...StudentDataAccess::TEACHER_ROLES, 'admin', 'superadmin', ...RoleMiddleware::LEADERSHIP_ROLES])) {
             abort(403, 'Akses ditolak.');
         }
 
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id');
         if (! $classroomId) {
-            if ($user->role === 'guru') {
+            if ($user->hasRole('guru')) {
                 $myClassroom = Classroom::where('teacher_id', $user->id)->first();
                 $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
             } else {
@@ -148,7 +150,7 @@ class TahfidzController extends Controller
     public function storeBulk(Request $request)
     {
         $user = auth()->user();
-        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! RoleMiddleware::allowsUser($user, [...StudentDataAccess::TEACHER_ROLES, 'admin', 'superadmin', ...RoleMiddleware::LEADERSHIP_ROLES])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -193,7 +195,7 @@ class TahfidzController extends Controller
     public function targetSettingForm(Request $request)
     {
         $user = auth()->user();
-        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! RoleMiddleware::allowsUser($user, [...StudentDataAccess::TEACHER_ROLES, 'admin', 'superadmin', ...RoleMiddleware::LEADERSHIP_ROLES])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -205,7 +207,7 @@ class TahfidzController extends Controller
         $classrooms = Classroom::all();
         $classroomId = $request->get('classroom_id');
         if (! $classroomId) {
-            if ($user->role === 'guru') {
+            if ($user->hasRole('guru')) {
                 $myClassroom = Classroom::where('teacher_id', $user->id)->first();
                 $classroomId = $myClassroom ? $myClassroom->id : $classrooms->first()?->id;
             } else {
@@ -229,7 +231,7 @@ class TahfidzController extends Controller
     public function storeTargets(Request $request)
     {
         $user = auth()->user();
-        if (! in_array($user->role, ['guru', 'admin', 'superadmin'])) {
+        if (! RoleMiddleware::allowsUser($user, [...StudentDataAccess::TEACHER_ROLES, 'admin', 'superadmin', ...RoleMiddleware::LEADERSHIP_ROLES])) {
             abort(403, 'Akses ditolak.');
         }
 
@@ -274,6 +276,10 @@ class TahfidzController extends Controller
      */
     public function store(Request $request)
     {
+        if (! RoleMiddleware::allowsUser(auth()->user(), [...StudentDataAccess::TEACHER_ROLES, 'admin', 'superadmin', ...RoleMiddleware::LEADERSHIP_ROLES])) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $validated = $request->validate([
             'student_id' => 'required|exists:students,id',
             'surah_number' => 'required|integer|min:1|max:114',
@@ -317,10 +323,10 @@ class TahfidzController extends Controller
         $user = auth()->user();
         $academicYear = AcademicYear::current();
 
-        if ($user->role === 'student' && $student->user_id !== $user->id) {
+        if ($user->hasRole('student') && $student->user_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
-        if ($user->role === 'parent' && $student->parent_id !== $user->id) {
+        if ($user->hasRole('parent') && $student->parent_id !== $user->id) {
             abort(403, 'Akses ditolak.');
         }
 

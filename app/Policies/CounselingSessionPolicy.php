@@ -2,15 +2,17 @@
 
 namespace App\Policies;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\CounselingSession;
 use App\Models\Student;
 use App\Models\User;
+use App\Support\Access\Roles;
 
 class CounselingSessionPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if (in_array($user->role, ['superadmin', 'admin'])) {
+        if (RoleMiddleware::allowsUser($user, ['superadmin', 'admin'])) {
             return true;
         }
 
@@ -23,12 +25,12 @@ class CounselingSessionPolicy
     public function viewAny(User $user): bool
     {
         // Pihak manajemen sekolah & konselor
-        if (in_array($user->role, ['bk', 'waka_kesiswaan', 'kepala_sekolah'])) {
+        if (RoleMiddleware::allowsUser($user, ['bk', 'waka_kesiswaan', ...Roles::PRINCIPAL])) {
             return true;
         }
 
         // Siswa dan orang tua memiliki hak akses terbatas
-        return in_array($user->role, ['student', 'parent']);
+        return $user->hasRole('student') || $user->hasRole('parent');
     }
 
     /**
@@ -37,19 +39,19 @@ class CounselingSessionPolicy
     public function view(User $user, CounselingSession $session): bool
     {
         // 1. Konselor BK, Waka Kesiswaan, Kepala Sekolah
-        if (in_array($user->role, ['bk', 'waka_kesiswaan', 'kepala_sekolah'])) {
+        if (RoleMiddleware::allowsUser($user, ['bk', 'waka_kesiswaan', ...Roles::PRINCIPAL])) {
             return true;
         }
 
         // 2. Siswa yang bersangkutan
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             $student = $user->student;
 
             return $student && $session->student_id === $student->id;
         }
 
         // 3. Orang Tua dari siswa yang bersangkutan
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             return $session->student && $session->student->parent_id === $user->id;
         }
 
@@ -61,7 +63,7 @@ class CounselingSessionPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, ['bk', 'student', 'parent']);
+        return RoleMiddleware::allowsUser($user, ['bk']) || $user->hasRole('student') || $user->hasRole('parent');
     }
 
     /**
@@ -70,7 +72,7 @@ class CounselingSessionPolicy
     public function update(User $user, CounselingSession $session): bool
     {
         // Hanya Guru BK yang bisa mengubah
-        return $user->role === 'bk';
+        return RoleMiddleware::allowsUser($user, ['bk']);
     }
 
     /**
@@ -79,7 +81,7 @@ class CounselingSessionPolicy
     public function delete(User $user, CounselingSession $session): bool
     {
         // Hanya Guru BK yang bisa menghapus
-        return $user->role === 'bk';
+        return RoleMiddleware::allowsUser($user, ['bk']);
     }
 
     /**
@@ -87,7 +89,7 @@ class CounselingSessionPolicy
      */
     public function manage(User $user): bool
     {
-        return $user->role === 'bk';
+        return RoleMiddleware::allowsUser($user, ['bk']);
     }
 
     /**
@@ -96,17 +98,17 @@ class CounselingSessionPolicy
     public function viewStudentProfile(User $user, Student $student): bool
     {
         // Guru BK, Waka Kesiswaan, Kepala Sekolah boleh melihat profil lengkap bimbingan
-        if (in_array($user->role, ['bk', 'waka_kesiswaan', 'kepala_sekolah'])) {
+        if (RoleMiddleware::allowsUser($user, ['bk', 'waka_kesiswaan', ...Roles::PRINCIPAL])) {
             return true;
         }
 
         // Siswa boleh melihat miliknya sendiri
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             return $student->user_id === $user->id;
         }
 
         // Orang tua boleh melihat milik anaknya sendiri
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             return $student->parent_id === $user->id;
         }
 
@@ -119,16 +121,16 @@ class CounselingSessionPolicy
     public function downloadReport(User $user, CounselingSession $session): bool
     {
         // Guru BK, Waka Kesiswaan, Kepala Sekolah boleh mengunduh laporan resmi
-        if (in_array($user->role, ['bk', 'waka_kesiswaan', 'kepala_sekolah'])) {
+        if (RoleMiddleware::allowsUser($user, ['bk', 'waka_kesiswaan', ...Roles::PRINCIPAL])) {
             return true;
         }
 
         // Siswa boleh mengunduh laporan mereka jika tidak dikategorikan super rahasia (opsional, tapi untuk kepatuhan policy)
-        if ($user->role === 'student') {
+        if ($user->hasRole('student')) {
             return $session->student_id === $user->student?->id;
         }
 
-        if ($user->role === 'parent') {
+        if ($user->hasRole('parent')) {
             return $session->student && $session->student->parent_id === $user->id;
         }
 

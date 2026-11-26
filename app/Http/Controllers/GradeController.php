@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Grade;
@@ -9,6 +10,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
 use App\Services\GradeService;
+use App\Support\Access\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,8 @@ class GradeController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $subjects = ($user && $user->role === 'guru') ? $user->subjects : Subject::orderBy('name')->get();
+        $isTeacher = $user && $user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin', 'waka_kurikulum', ...Roles::PRINCIPAL]);
+        $subjects = $isTeacher ? $user->subjects : Subject::orderBy('name')->get();
         $classrooms = Classroom::all();
 
         $selectedClassroomId = $request->input('classroom_id');

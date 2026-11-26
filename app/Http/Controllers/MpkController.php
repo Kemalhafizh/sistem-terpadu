@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\MpkAudit;
 use App\Models\MpkLpj;
 use App\Models\OsisTransaction;
 use App\Models\StudentAspiration;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Illuminate\Http\Request;
 
 class MpkController extends Controller
@@ -151,7 +154,7 @@ class MpkController extends Controller
         $user = auth()->user();
 
         // Non-students can see all aspirations
-        if ($user->isAdmin() || in_array($user->role, ['guru', 'waka_kesiswaan', 'kepala_sekolah'])) {
+        if ($user->isAdmin() || RoleMiddleware::allowsUser($user, [...StudentDataAccess::TEACHER_ROLES, 'waka_kesiswaan', ...Roles::PRINCIPAL])) {
             $aspirations = StudentAspiration::with(['student.user', 'resolver'])
                 ->orderBy('created_at', 'desc')
                 ->paginate(15);

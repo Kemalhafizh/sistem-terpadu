@@ -183,7 +183,7 @@ class SurveyController extends Controller
 
         // Classroom verification for students
         if ($survey->target_classroom_id) {
-            if ($user->role !== 'student' || ! $user->student || $user->student->classroom_id != $survey->target_classroom_id) {
+            if (! $user->hasRole('student') || ! $user->student || $user->student->classroom_id != $survey->target_classroom_id) {
                 abort(403, 'Survei ini hanya untuk kelas tertentu.');
             }
         }
@@ -219,7 +219,7 @@ class SurveyController extends Controller
             abort(403);
         }
         if ($survey->target_classroom_id) {
-            if ($user->role !== 'student' || ! $user->student || $user->student->classroom_id != $survey->target_classroom_id) {
+            if (! $user->hasRole('student') || ! $user->student || $user->student->classroom_id != $survey->target_classroom_id) {
                 abort(403);
             }
         }

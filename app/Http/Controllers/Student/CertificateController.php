@@ -3,13 +3,39 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\IssuedCertificate;
+use App\Models\Student;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 
 class CertificateController extends Controller
 {
     public function index()
     {
-        $certificates = IssuedCertificate::with(['student', 'template'])->latest()->get();
+        $user = auth()->user();
+        $isStaffReader = $user !== null && RoleMiddleware::allowsUser($user, [
+            ...StudentDataAccess::TEACHER_ROLES,
+            'wali_kelas',
+            'bk',
+            'staf_tu',
+            ...Roles::LEADERSHIP,
+            'admin',
+            'superadmin',
+        ]);
+
+        $query = IssuedCertificate::with(['student', 'template'])->latest();
+
+        if (! $isStaffReader && $user !== null) {
+            if ($user->hasRole('parent')) {
+                $childUserIds = Student::where('parent_id', $user->id)->pluck('user_id');
+                $query->whereIn('student_id', $childUserIds);
+            } else {
+                $query->where('student_id', $user->id);
+            }
+        }
+
+        $certificates = $query->get();
 
         return view('certificates.templates', compact('certificates'));
     }

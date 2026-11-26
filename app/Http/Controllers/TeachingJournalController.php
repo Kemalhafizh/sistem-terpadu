@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\AcademicYear;
 use App\Models\Classroom;
 use App\Models\Schedule;
 use App\Models\Subject;
 use App\Models\TeachingJournal;
 use App\Models\User;
+use App\Support\Access\Roles;
+use App\Support\Access\StudentDataAccess;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +26,7 @@ class TeachingJournalController extends Controller
         $query = TeachingJournal::with(['teacher', 'subject', 'classroom']);
 
         // Filter Hak Akses
-        if ($user->role === 'guru') {
+        if ($user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['waka_kurikulum', ...Roles::PRINCIPAL, 'admin', 'superadmin'])) {
             $query->forTeacher($user->id);
         } else {
             // Admin/Wakakur/Kepsek bisa filter per guru
@@ -45,7 +48,7 @@ class TeachingJournalController extends Controller
 
         $journals = $query->orderBy('teaching_date', 'desc')->paginate(15);
         $classrooms = Classroom::all();
-        $teachers = User::where('role', 'guru')->get();
+        $teachers = User::whereIn('role', StudentDataAccess::TEACHER_ROLES)->get();
 
         return view('teaching-journals.index', compact('journals', 'classrooms', 'teachers'));
     }
@@ -56,11 +59,12 @@ class TeachingJournalController extends Controller
 
         $user = Auth::user();
         $classrooms = Classroom::all();
-        $subjects = $user->role === 'guru' ? $user->subjects : Subject::all();
+        $isTeacher = $user->hasRole('guru') && ! RoleMiddleware::allowsUser($user, ['admin', 'superadmin']);
+        $subjects = $isTeacher ? $user->subjects : Subject::all();
 
         // LOGIKA AUTO-FILL JADWAL GURU
         $suggestedSchedule = null;
-        if ($user->role === 'guru') {
+        if ($isTeacher) {
             $daysMap = [
                 'Monday' => 'Senin',
                 'Tuesday' => 'Selasa',
