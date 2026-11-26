@@ -266,6 +266,12 @@
                     <div class="mt-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 text-xs space-y-1">
                         <div class="font-bold text-emerald-800 dark:text-emerald-300">Data Kelulusan / Alumni</div>
                         <div>Tahun Lulus: <span class="font-bold">{{ $alumni->graduation_year }}</span></div>
+                        @if($alumni->sk_number)
+                            <div>Nomor SK Kelulusan: <span class="font-semibold">{{ $alumni->sk_number }}</span></div>
+                        @endif
+                        @if($alumni->graduation_date)
+                            <div>Tanggal Kelulusan: {{ $alumni->graduation_date->format('d/m/Y') }}</div>
+                        @endif
                         <div>Aktivitas Lanjutan: {{ $alumni->current_activity ?: '-' }} @if($alumni->institution_name) ({{ $alumni->institution_name }}) @endif</div>
                     </div>
                 @endif

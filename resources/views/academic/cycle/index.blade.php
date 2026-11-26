@@ -99,5 +99,32 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">
+                {{ __('Kelulusan Kelas XII & SK Kepala Sekolah') }}
+            </h3>
+            <div class="space-y-3">
+                @forelse ($graduationBatches ?? [] as $gBatch)
+                    <div class="border dark:border-gray-700 rounded-lg p-4 text-sm flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <div class="font-semibold text-gray-900 dark:text-gray-100">
+                                Angkatan {{ $gBatch->graduation_year }} (TA {{ $gBatch->schoolYear?->name ?? '-' }})
+                            </div>
+                            <div class="text-xs text-gray-500 mt-0.5">
+                                SK: {{ $gBatch->sk_number ?: 'Belum ditetapkan' }}
+                                · Notulen Pleno: {{ $gBatch->meetingNote?->title ?? 'Belum ditautkan' }}
+                                · Peserta: {{ $gBatch->decisions->count() }} siswa
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs rounded bg-gray-100 dark:bg-gray-700 font-medium uppercase">
+                            {{ $gBatch->status }}
+                        </span>
+                    </div>
+                @empty
+                    <p class="text-sm text-gray-500">Belum ada draf kelulusan kelas XII.</p>
+                @endforelse
+            </div>
+        </div>
     </div>
 </x-app-layout>

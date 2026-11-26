@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\CounselingSession;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\WarningLetter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -109,36 +110,50 @@ class CounselingService
     }
 
     /**
-     * Membuat sesi konseling wajib otomatis ketika poin pelanggaran >= 50
+     * Membuat sesi konseling wajib otomatis ketika poin pelanggaran melewati ambang konseling
      */
-    public function createMandatorySession(Student $student): ?CounselingSession
+    public function createMandatorySession(Student $student, ?int $triggeredByUserId = null): ?CounselingSession
     {
-        // Pengecekan apakah sudah ada sesi BK aktif yang berstatus requested/scheduled/in_progress untuk kasus poin ini
-        $exists = CounselingSession::where('student_id', $student->id)
+        $existing = CounselingSession::where('student_id', $student->id)
             ->where('category', 'pribadi')
             ->whereIn('status', ['requested', 'scheduled', 'in_progress'])
-            ->exists();
+            ->latest('id')
+            ->first();
 
-        if ($exists) {
+        if ($existing) {
+            return $existing;
+        }
+
+        $counselor = User::query()
+            ->where('role', 'bk')
+            ->orWhereHas('positionAssignments', function ($q) {
+                $q->activeOn()->whereHas('position', fn ($pq) => $pq->where('code', 'bk'));
+            })
+            ->first();
+
+        $requesterId = $triggeredByUserId
+            ?? $counselor?->id
+            ?? User::whereIn('role', ['admin', 'superadmin', 'waka_kesiswaan'])->value('id')
+            ?? $student->user_id;
+
+        if (! $requesterId) {
             return null;
         }
 
-        // Cari guru BK default
-        $counselor = User::where('role', 'bk')->first();
+        $threshold = WarningLetter::mandatoryCounselingThreshold();
 
-        return DB::transaction(function () use ($student, $counselor) {
+        return DB::transaction(function () use ($student, $counselor, $requesterId, $threshold) {
             $session = CounselingSession::create([
                 'student_id' => $student->id,
                 'counselor_id' => $counselor?->id,
-                'requested_by' => User::where('role', 'admin')->first()?->id ?: 1, // sistem / admin
-                'scheduled_at' => now()->addDays(1)->setHour(9)->setMinute(0), // Besok jam 09:00 pagi
+                'requested_by' => $requesterId,
+                'scheduled_at' => now()->addDays(1)->setHour(9)->setMinute(0),
                 'status' => 'requested',
                 'type' => 'individual',
                 'category' => 'pribadi',
-                'reason' => 'Sesi Konseling Wajib Otomatis dipicu karena akumulasi poin pelanggaran siswa telah mencapai batas kritis ('.$student->total_points.' Poin).',
+                'reason' => 'Sesi Konseling Wajib Otomatis dipicu karena akumulasi poin pelanggaran siswa telah mencapai batas kritis ('.$student->total_points.' Poin, ambang >= '.$threshold.' Poin).',
             ]);
 
-            // Kirim notifikasi darurat ke orang tua & siswa via WhatsApp
             $this->sendWhatsappNotification($session, 'mandatory_triggered');
 
             return $session;
@@ -248,11 +263,11 @@ class CounselingService
                 }
             }
         } elseif ($actionType === 'mandatory_triggered') {
-            // Notifikasi Peringatan Darurat Konseling Wajib karena akumulasi poin >= 50
+            $counselingThreshold = WarningLetter::mandatoryCounselingThreshold();
             if ($parentPhone) {
                 $msg = " *PEMBERITAHUAN DARURAT: KONSELING BK WAJIB*\n\n"
                      ."Assalamu'alaikum Bapak/Ibu Wali Murid dari *{$studentName}*,\n\n"
-                     .'Menginfokan dari Unit Bimbingan Konseling (BK) '.school_short_name()." bahwa ananda saat ini telah mengumpulkan akumulasi poin pelanggaran sebesar *{$student->total_points} Poin* (Batas kritis >= 50).\n\n"
+                     .'Menginfokan dari Unit Bimbingan Konseling (BK) '.school_short_name()." bahwa ananda saat ini telah mengumpulkan akumulasi poin pelanggaran sebesar *{$student->total_points} Poin* (Batas kritis >= {$counselingThreshold}).\n\n"
                      ."Sesuai dengan peraturan tata tertib sekolah, sistem secara otomatis menjadwalkan:\n"
                      ." *Sesi Konseling Wajib Individual*\n"
                      ."Hari/Tanggal: *Bilah Jadwal Antrean BK*\n"

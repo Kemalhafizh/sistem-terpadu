@@ -26,16 +26,44 @@
                         </p>
                     </div>
                 </div>
+                @php($sp1Threshold = $thresholds['SP1'] ?? 50)
                 <div class="flex items-center space-x-6">
                     <div class="bg-white/10 backdrop-blur-xl rounded-[2rem] px-8 py-5 border border-white/20 text-center min-w-[150px]">
                         <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-1">Total Poin</p>
-                        <p class="text-4xl font-black {{ $student->total_points > 50 ? 'text-red-300' : 'text-white' }} tracking-tighter">{{ $student->total_points }}</p>
+                        <p class="text-4xl font-black {{ $student->total_points >= $sp1Threshold ? 'text-red-300' : 'text-white' }} tracking-tighter">{{ $student->total_points }}</p>
                     </div>
                     <button onclick="openPointModal()" class="px-8 py-6 bg-white text-primary-700 rounded-[2rem] font-black text-sm shadow-2xl shadow-primary-900/40 hover:scale-105 transition-all">
                         + INPUT POIN
                     </button>
                 </div>
             </div>
+
+            @if(($warningLetters ?? collect())->isNotEmpty())
+                <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 mb-8">
+                    <h4 class="text-lg font-bold text-gray-800 mb-4">Riwayat Surat Peringatan (SP)</h4>
+                    <div class="divide-y divide-gray-100">
+                        @foreach($warningLetters as $wl)
+                            <div class="py-3 flex flex-wrap items-center justify-between gap-4 text-sm">
+                                <div>
+                                    <span class="font-bold text-red-600">{{ $wl->level }}</span>
+                                    <span class="text-gray-500 ml-2">Ambang {{ $wl->point_threshold }} Poin · Terbit {{ $wl->issued_at?->format('d/m/Y') }}</span>
+                                    @if($wl->signed_at)
+                                        <span class="ml-2 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-xs font-semibold">Ditandatangani Orang Tua</span>
+                                    @else
+                                        <span class="ml-2 px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-xs font-semibold">Menunggu Tanda Tangan Orang Tua</span>
+                                    @endif
+                                    @if($wl->counselingSession)
+                                        <span class="ml-2 px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-xs font-semibold">Konseling Wajib Terjadwal</span>
+                                    @endif
+                                </div>
+                                <a href="{{ route('points.warning-letters.pdf', $wl) }}" target="_blank" class="text-primary-600 hover:underline text-xs font-bold">
+                                    Cetak PDF SP
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <!-- Timeline of Logs -->
             <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">

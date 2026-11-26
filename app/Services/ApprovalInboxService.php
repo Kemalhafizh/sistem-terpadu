@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\AssetLoan;
 use App\Models\BudgetPlan;
+use App\Models\GraduationBatch;
+use App\Models\GraduationDecision;
 use App\Models\LeaveRequest;
 use App\Models\LessonPlan;
 use App\Models\Letter;
@@ -13,6 +15,7 @@ use App\Models\PettyCashTransaction;
 use App\Models\ProfileChangeRequest;
 use App\Models\ResourceBooking;
 use App\Models\StudentLeaveRequest;
+use App\Models\StudentMutation;
 use App\Models\Syllabus;
 use App\Models\TeachingJournal;
 use App\Models\User;
@@ -117,9 +120,14 @@ class ApprovalInboxService
             $requestable = $wr->requestable;
             if ($requestable instanceof Letter) {
                 $requestable->loadMissing(['template', 'student.user', 'employee.user']);
+            } elseif ($requestable instanceof GraduationBatch) {
+                $requestable->loadMissing(['schoolYear', 'decisions']);
+            } elseif ($requestable instanceof StudentMutation) {
+                $requestable->loadMissing(['student.user', 'classroom']);
             }
 
             $subtitle = $wr->notes ?: '';
+            $isHighPriority = false;
             if ($requestable instanceof Letter) {
                 $recipient = $requestable->student?->user?->name
                     ?? $requestable->employee?->user?->name
@@ -127,6 +135,18 @@ class ApprovalInboxService
                 $subtitle = ($requestable->template?->name ?? 'Surat Resmi').' • Penerima: '.$recipient;
             } elseif ($requestable instanceof LeaveRequest) {
                 $subtitle = ($requestable->type_label ?? 'Cuti').' — '.($requestable->reason ?? '');
+            } elseif ($requestable instanceof GraduationBatch) {
+                $lulusCount = $requestable->decisions->where('decision', GraduationDecision::DECISION_GRADUATED)->count();
+                $tidakLulusCount = $requestable->decisions->where('decision', GraduationDecision::DECISION_NOT_GRADUATED)->count();
+                $taLabel = $requestable->schoolYear?->name ?? (string) $requestable->graduation_year;
+                $skPart = $requestable->sk_number ? ' • SK: '.$requestable->sk_number : '';
+                $subtitle = "TA {$taLabel} • {$lulusCount} lulus, {$tidakLulusCount} belum lulus{$skPart}";
+                $isHighPriority = true;
+            } elseif ($requestable instanceof StudentMutation) {
+                $typeLabel = $requestable->type === StudentMutation::TYPE_IN ? 'Mutasi Masuk' : 'Mutasi Keluar';
+                $classPart = $requestable->classroom?->name ? ' ('.$requestable->classroom->name.')' : '';
+                $schoolPart = $requestable->target_school ? ' • '.$requestable->target_school : '';
+                $subtitle = "{$typeLabel} — {$requestable->student_display_name}{$classPart}{$schoolPart}";
             }
 
             $isOverdue = $wr->due_at !== null && $wr->due_at->isPast();
@@ -141,7 +161,7 @@ class ApprovalInboxService
                 'submitted_at' => $wr->created_at,
                 'due_at' => $wr->due_at,
                 'is_overdue' => $isOverdue,
-                'urgency' => $isOverdue ? 'high' : 'normal',
+                'urgency' => ($isOverdue || $isHighPriority) ? 'high' : 'normal',
                 'url' => route('workflows.show', $wr),
                 'model_type' => 'WorkflowRequest',
                 'model_id' => $wr->id,

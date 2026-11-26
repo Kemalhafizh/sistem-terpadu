@@ -79,7 +79,6 @@
     "Sebelumnya": "Sebelumnya",
     "Selanjutnya": "Selanjutnya",
     "Tidak ada data ditemukan.": "Tidak ada data ditemukan.",
-
     "SMA Islam Sultan Agung 1 Semarang": "SMA Islam Sultan Agung 1 Semarang",
     "Yayasan Badan Wakaf Sultan Agung": "Yayasan Badan Wakaf Sultan Agung (YBWSA)",
     "Sistem Terpadu": "Sistem Terpadu",
@@ -152,13 +151,9 @@
     "Snapshot Database": "Snapshot Database",
     "Otentikasi 2FA": "Otentikasi 2FA",
     "Pengaturan Sistem": "Pengaturan Sistem",
-
     "Pendidikan Inklusif & IEP": "Pendidikan Inklusif & IEP",
-
-
     "Hak Cipta Dilindungi": "Hak Cipta Dilindungi",
     "Versi Sistem": "Versi Sistem",
-
     "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.": "Kredensial tidak valid. Silakan periksa kembali email/NIS dan password Anda.",
     "Login berhasil": "Login berhasil",
     "Logout berhasil": "Logout berhasil",
@@ -172,7 +167,6 @@
     "SP1 (Waspada)": "SP1 (Waspada)",
     "SP2 (Kritis)": "SP2 (Kritis)",
     "SP3 (Sangat Kritis)": "SP3 (Sangat Kritis)",
-
     "Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.": "Anda tidak mengajar mata pelajaran ini di kelas tersebut pada tahun ajaran aktif.",
     "Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.": "Nama kepala sekolah belum diisi di Pengaturan Sekolah, sehingga sertifikat belum bisa ditandatangani.",
     "Dokumen tidak ditemukan dalam arsip resmi :school.": "Dokumen tidak ditemukan dalam arsip resmi :school.",
@@ -182,7 +176,6 @@
     ":count belum dijalankan": ":count belum dijalankan",
     "Aksi belum memiliki pelaksana": "Aksi belum memiliki pelaksana",
     "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.": "Dokumen [:type] tersimpan. Mesin OCR belum terpasang, jadi isi datanya secara manual dari berkas scan lalu verifikasi.",
-
     "Sukses disinkronkan ke database server.": "Sukses disinkronkan ke database server.",
     "Aksi gagal diproses di server.": "Aksi gagal diproses di server.",
     "Jenis aksi :type belum didukung untuk sinkronisasi.": "Jenis aksi :type belum didukung untuk sinkronisasi.",
@@ -557,5 +550,20 @@
     "Penilaian terkirim.": "Penilaian terkirim.",
     "Komentar Penilai": "Komentar Penilai",
     "Belum ada komentar dari penilai.": "Belum ada komentar dari penilai.",
-    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini."
+    "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.": "Anda hanya dapat menilai guru yang mengajar di kelas Anda tahun ini.",
+    "Kelulusan Kelas XII & SK Kepala Sekolah": "Kelulusan Kelas XII & SK Kepala Sekolah",
+    "Riwayat & Persetujuan Mutasi Siswa": "Riwayat & Persetujuan Mutasi Siswa",
+    "Catat Permohonan Mutasi Siswa": "Catat Permohonan Mutasi Siswa",
+    "Draf batch kelulusan kelas XII berhasil disiapkan.": "Draf batch kelulusan kelas XII berhasil disiapkan.",
+    "Keputusan kelulusan siswa berhasil diperbarui.": "Keputusan kelulusan siswa berhasil diperbarui.",
+    "Keputusan kelulusan massal angkatan berhasil disimpan.": "Keputusan kelulusan massal angkatan berhasil disimpan.",
+    "Draf kelulusan kelas XII berhasil diajukan ke Kepala Sekolah untuk pengesahan SK.": "Draf kelulusan kelas XII berhasil diajukan ke Kepala Sekolah untuk pengesahan SK.",
+    "SK kelulusan angkatan kelas XII berhasil disahkan oleh Kepala Sekolah.": "SK kelulusan angkatan kelas XII berhasil disahkan oleh Kepala Sekolah.",
+    "Kelulusan kelas XII berhasil diumumkan, riwayat rombel ditutup, dan data alumni telah dibuat.": "Kelulusan kelas XII berhasil diumumkan, riwayat rombel ditutup, dan data alumni telah dibuat.",
+    "Permohonan mutasi berhasil dicatat dan diajukan ke Kepala Sekolah.": "Permohonan mutasi berhasil dicatat dan diajukan ke Kepala Sekolah.",
+    "Permohonan mutasi siswa berhasil disetujui dan dieksekusi ke riwayat rombel.": "Permohonan mutasi siswa berhasil disetujui dan dieksekusi ke riwayat rombel.",
+    "Permohonan mutasi siswa ditolak.": "Permohonan mutasi siswa ditolak.",
+    "Tinjauan tagihan berjalan untuk mutasi keluar berhasil diperbarui.": "Tinjauan tagihan berjalan untuk mutasi keluar berhasil diperbarui.",
+    "Pengaturan ambang poin dan tahapan Surat Peringatan berhasil disimpan.": "Pengaturan ambang poin dan tahapan Surat Peringatan berhasil disimpan.",
+    "Surat Peringatan :level berhasil diterbitkan dan orang tua telah diberi tahu.": "Surat Peringatan :level berhasil diterbitkan dan orang tua telah diberi tahu."
 }

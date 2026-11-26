@@ -158,7 +158,7 @@
     @endif
 
     @if($alumni)
-        <p><strong>Status Kelulusan / Alumni:</strong> Lulus Tahun {{ $alumni->graduation_year }} &mdash; {{ $alumni->current_activity ?: '-' }} @if($alumni->institution_name) ({{ $alumni->institution_name }}) @endif</p>
+        <p><strong>Status Kelulusan / Alumni:</strong> Lulus Tahun {{ $alumni->graduation_year }}@if($alumni->sk_number) (SK: {{ $alumni->sk_number }})@endif &mdash; {{ $alumni->current_activity ?: '-' }} @if($alumni->institution_name) ({{ $alumni->institution_name }}) @endif</p>
     @endif
 
     <div class="sign-wrapper">

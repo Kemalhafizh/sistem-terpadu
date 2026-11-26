@@ -25,13 +25,52 @@
                         </div>
                     </div>
                 </form>
+                <div class="text-xs font-bold text-gray-500">
+                    Ambang SP1: {{ $thresholds['SP1'] ?? 50 }} · SP2: {{ $thresholds['SP2'] ?? 75 }} · SP3: {{ $thresholds['SP3'] ?? 100 }} · Konseling Wajib: {{ $mandatoryCounselingThreshold ?? 50 }}
+                </div>
                 <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">
                     Menampilkan {{ $students->total() }} Siswa
                 </div>
             </div>
 
+            @if(!empty($canManageThresholds))
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3">Pengaturan Ambang Poin &amp; Tahapan Surat Peringatan</h3>
+                    <form action="{{ route('points.thresholds.update') }}" method="POST" class="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
+                        @csrf
+                        @method('PUT')
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Perlu Perhatian</label>
+                            <input type="number" name="attention_threshold" value="{{ $attentionThreshold ?? 30 }}" min="1" required class="w-full rounded-xl border-gray-200 text-sm px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Ambang SP1</label>
+                            <input type="number" name="sp1_threshold" value="{{ $thresholds['SP1'] ?? 50 }}" min="2" required class="w-full rounded-xl border-gray-200 text-sm px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Ambang SP2</label>
+                            <input type="number" name="sp2_threshold" value="{{ $thresholds['SP2'] ?? 75 }}" min="3" required class="w-full rounded-xl border-gray-200 text-sm px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Ambang SP3</label>
+                            <input type="number" name="sp3_threshold" value="{{ $thresholds['SP3'] ?? 100 }}" min="4" required class="w-full rounded-xl border-gray-200 text-sm px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">Konseling BK Wajib</label>
+                            <input type="number" name="mandatory_counseling_threshold" value="{{ $mandatoryCounselingThreshold ?? ($thresholds['SP1'] ?? 50) }}" min="1" required class="w-full rounded-xl border-gray-200 text-sm px-3 py-2">
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full py-2 px-4 bg-primary-600 text-white rounded-xl text-xs font-bold hover:bg-primary-700 transition-colors">
+                                Simpan Ambang
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @endif
+
             <!-- Student Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @php($sp1Threshold = $thresholds['SP1'] ?? 50)
                 @forelse($students ?? [] as $student)
                     <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 hover:shadow-xl transition-all group">
                         <div class="flex items-start justify-between mb-4">
@@ -45,7 +84,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl font-black {{ $student->total_points > 50 ? 'text-red-500' : 'text-primary-600' }}">
+                                <div class="text-2xl font-black {{ $student->total_points >= $sp1Threshold ? 'text-red-500' : 'text-primary-600' }}">
                                     {{ $student->total_points }}
                                 </div>
                                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Poin</span>

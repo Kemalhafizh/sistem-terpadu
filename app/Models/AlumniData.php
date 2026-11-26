@@ -13,7 +13,10 @@ class AlumniData extends Model
 
     protected $fillable = [
         'student_id',
+        'graduation_batch_id',
         'graduation_year',
+        'sk_number',
+        'graduation_date',
         'current_activity',
         'institution_name',
         'contact_info',
@@ -27,10 +30,24 @@ class AlumniData extends Model
         'current_position',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'graduation_year' => 'integer',
+            'graduation_date' => 'date',
+        ];
+    }
+
     /** @return BelongsTo<Student, $this> */
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
+    }
+
+    /** @return BelongsTo<GraduationBatch, $this> */
+    public function graduationBatch(): BelongsTo
+    {
+        return $this->belongsTo(GraduationBatch::class, 'graduation_batch_id');
     }
 
     /** @return HasOne<TracerResponse, $this> */

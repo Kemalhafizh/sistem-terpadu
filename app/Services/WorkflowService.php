@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Events\NewNotificationEvent;
+use App\Models\GraduationBatch;
 use App\Models\Letter;
+use App\Models\StudentMutation;
 use App\Models\User;
 use App\Models\WorkflowApproval;
 use App\Models\WorkflowDefinition;
 use App\Models\WorkflowRequest;
+use App\Services\Academic\GraduationService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -94,15 +97,20 @@ class WorkflowService
                 // Semua langkah disetujui -> Persetujuan Selesai!
                 $request->update(['status' => 'approved']);
 
-                // Perbarui status model induk menjadi approved
-                $requestableUpdates = [
-                    'status' => 'approved',
-                    'approved_by' => $approver->id,
-                ];
-                if ($request->requestable instanceof Letter) {
-                    $requestableUpdates['approved_at'] = now();
+                if ($request->requestable instanceof GraduationBatch) {
+                    app(GraduationService::class)->onWorkflowApproved($request->requestable, $approver);
+                } elseif ($request->requestable instanceof StudentMutation) {
+                    app(StudentMutationService::class)->applyApprovedMutation($request->requestable, $approver);
+                } else {
+                    $requestableUpdates = [
+                        'status' => 'approved',
+                        'approved_by' => $approver->id,
+                    ];
+                    if ($request->requestable instanceof Letter) {
+                        $requestableUpdates['approved_at'] = now();
+                    }
+                    $request->requestable->update($requestableUpdates);
                 }
-                $request->requestable->update($requestableUpdates);
 
                 // Beri notifikasi sukses ke pengaju
                 $this->notifyRequester($request, 'disetujui');
@@ -139,7 +147,11 @@ class WorkflowService
             $request->update(['status' => 'rejected']);
 
             // Perbarui status model induk menjadi ditolak
-            $request->requestable->update(['status' => 'rejected']);
+            $rejectUpdates = ['status' => 'rejected'];
+            if ($request->requestable instanceof StudentMutation) {
+                $rejectUpdates['rejection_notes'] = $remarks;
+            }
+            $request->requestable->update($rejectUpdates);
 
             // Beri notifikasi penolakan ke pengaju
             $this->notifyRequester($request, 'ditolak', $remarks);

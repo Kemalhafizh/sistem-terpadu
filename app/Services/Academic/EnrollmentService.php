@@ -105,14 +105,23 @@ class EnrollmentService
             }
 
             if (in_array($status, [ClassEnrollment::STATUS_GRADUATED, ClassEnrollment::STATUS_MUTATED_OUT, ClassEnrollment::STATUS_LEFT], true)) {
-                $studentStatus = $status === ClassEnrollment::STATUS_GRADUATED ? 'graduated' : 'inactive';
+                $studentStatus = match ($status) {
+                    ClassEnrollment::STATUS_GRADUATED => 'alumni',
+                    ClassEnrollment::STATUS_MUTATED_OUT => 'mutated',
+                    default => 'dropped_out',
+                };
                 $student->update(['status' => $studentStatus]);
 
-                if ($student->user !== null) {
-                    $student->user->update([
-                        'account_status' => 'nonaktif',
-                        'deactivated_reason' => $status,
-                    ]);
+                // Graduated alumni retain active account access for K3 Tracer Study;
+                // outward-mutated and exited students have their accounts deactivated.
+                if ($status !== ClassEnrollment::STATUS_GRADUATED) {
+                    $student->loadMissing('user');
+                    if ($student->user !== null) {
+                        $student->user->forceFill([
+                            'account_status' => 'nonaktif',
+                            'deactivated_reason' => $status,
+                        ])->save();
+                    }
                 }
             }
 
