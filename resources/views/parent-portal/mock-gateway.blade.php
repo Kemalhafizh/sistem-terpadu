@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-black text-2xl text-gray-900 leading-tight">
-             Gerbang Simulasi <span class="bg-gradient-to-r from-indigo-600 to-primary-600 bg-clip-text text-transparent">Pembayaran (Mock Gateway)</span>
+             Gerbang Simulasi <span class="text-primary-600 dark:text-primary-400">Pembayaran (Mock Gateway)</span>
         </h2>
     </x-slot>
 

@@ -66,15 +66,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Health Check — public, no auth required
+// Health Check - public, no auth required
 Route::get('/health', HealthCheckController::class)->name('health');
 
 // Midtrans Webhook Callback (Public Sandbox / Simulator)
 Route::post('/midtrans/webhook', [MidtransWebhookController::class, 'handleWebhook'])->name('api.midtrans.webhook');
 
-// =========================================================================
 // MOBILE REST API v1 (COMPREHENSIVE IMPLEMENTATION)
-// =========================================================================
 Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(function () {
 
     // === PUBLIC AUTH & APP CONFIG ===
@@ -130,7 +128,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::get('mobile/devices', [MobileAuthController::class, 'getActiveDevices']);
         Route::delete('mobile/devices/{deviceId}', [MobileAuthController::class, 'revokeDevice']);
 
-        // Mobile multi-mode scanner (event ticket / visitor pass) — real EventTicketingService/VisitorService, gate & front-desk staff only.
+        // Mobile multi-mode scanner (event ticket / visitor pass) - real EventTicketingService/VisitorService, gate & front-desk staff only.
         Route::post('mobile/scanner/event-ticket', [ScannerMobileApiController::class, 'scanEventTicket'])->middleware('role:admin,superadmin,staf_tu,guru,teacher,kepala_sekolah');
         Route::post('mobile/scanner/visitor-pass', [ScannerMobileApiController::class, 'scanVisitorPass'])->middleware('role:admin,superadmin,staf_tu,guru,teacher,kepala_sekolah');
 
@@ -374,9 +372,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('medicines', [SchoolOperationsApiController::class, 'uksMedicines'])->middleware('role:admin,superadmin,petugas_uks,staf_tu,guru,teacher');
         });
 
-        // =====================================================================
         // PERPUSTAKAAN DIGITAL MOBILE API
-        // =====================================================================
         Route::prefix('library')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
             Route::get('books', [LibraryMobileApiController::class, 'index']);
             Route::get('books/{id}', [LibraryMobileApiController::class, 'show']);
@@ -384,9 +380,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('my-loans', [LibraryMobileApiController::class, 'myLoans']);
         });
 
-        // =====================================================================
         // EKSTRAKURIKULER & OSIS MOBILE API
-        // =====================================================================
         Route::prefix('extracurricular')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
             Route::get('list', [ExtracurricularMobileApiController::class, 'index']);
             Route::post('{id}/register', [ExtracurricularMobileApiController::class, 'register']);
@@ -394,9 +388,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('osis-feed', [ExtracurricularMobileApiController::class, 'osisFeed']);
         });
 
-        // =====================================================================
         // PRESTASI & PORTOFOLIO MOBILE API
-        // =====================================================================
         Route::prefix('achievements')->middleware('role:student,siswa,guru,teacher,admin,superadmin')->group(function () {
             Route::get('list', [AchievementMobileApiController::class, 'index']);
             Route::post('upload', [AchievementMobileApiController::class, 'upload']);
@@ -405,9 +397,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('{id}/verify', [AchievementMobileApiController::class, 'verify']);
         });
 
-        // =====================================================================
         // PEREKAM TAHSIN/TAHFIDZ & EVALUASI GURU MOBILE API
-        // =====================================================================
         Route::prefix('tahsin')->middleware('role:student,siswa,guru,teacher,bk,admin,superadmin')->group(function () {
             Route::post('submissions', [TahsinSubmissionApiController::class, 'store']);
             Route::get('submissions', [TahsinSubmissionApiController::class, 'myIndex']);
@@ -455,9 +445,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('/certificates', [DocumentMobileApiController::class, 'certificateList'])->middleware('role:student,siswa');
         });
 
-        // =====================================================================
         // CONTEXTUAL & PREDICTIVE HOME API
-        // =====================================================================
         Route::prefix('home')->group(function () {
             Route::get('contextual', [ContextualHomeController::class, 'index']);
             Route::get('suggestions', [ContextualHomeController::class, 'suggestions']);
@@ -465,17 +453,13 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('suggestions/{id}/dismiss', [ContextualHomeController::class, 'dismissSuggestion']);
         });
 
-        // =====================================================================
         // MICRO-INTERACTION & ANIMATION CONFIG API
-        // =====================================================================
         Route::prefix('config/animations')->group(function () {
             Route::get('/', [ConfigController::class, 'getAnimations']);
             Route::put('preferences', [ConfigController::class, 'updatePreferences']);
         });
 
-        // =====================================================================
-        // SMART NOTIFICATION SYSTEM — PRIORITY INBOX
-        // =====================================================================
+        // Notification Priority Inbox
         Route::prefix('notifications')->group(function () {
             Route::get('preferences', [SmartNotificationController::class, 'getPreferences']);
             Route::put('preferences', [SmartNotificationController::class, 'updatePreferences']);
@@ -486,9 +470,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::put('/', [SmartNotificationController::class, 'updatePreferences']);
         });
 
-        // =====================================================================
         // ADVANCED DATA VISUALIZATION WEB & API
-        // =====================================================================
         Route::prefix('viz')->group(function () {
             Route::get('heatmap/attendance', [VizController::class, 'attendanceHeatmap']);
             Route::get('distribution/grades/{examId}', [VizController::class, 'gradeDistribution']);
@@ -498,9 +480,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('counters/live', [VizController::class, 'liveCounters']);
         });
 
-        // =====================================================================
         // OFFLINE-FIRST SYNC ENGINE 2.0 API
-        // =====================================================================
         Route::prefix('sync')->group(function () {
             Route::get('delta', [SyncController::class, 'getDelta']);
             Route::post('batch', [SyncController::class, 'processBatch']);
@@ -508,9 +488,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('catch-up', [SyncController::class, 'catchUp']);
         });
 
-        // =====================================================================
         // PARENT EXPERIENCE OVERHAUL API
-        // =====================================================================
         Route::prefix('parent')->middleware('role:parent,orang_tua,orangtua,wali_murid,student,siswa')->group(function () {
             Route::get('child/{childId}/feed', [ParentPortalController::class, 'activityFeed']);
             Route::get('feed', [ParentPortalController::class, 'activityFeed']);
@@ -533,9 +511,7 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         Route::post('notifications/{id}/read', [ApiGeneralController::class, 'markNotificationRead'])->whereUuid('id');
         Route::delete('notifications/{id}', [ApiGeneralController::class, 'deleteNotification'])->whereUuid('id');
 
-        // =====================================================================
         // BACKWARD COMPATIBLE DATA ENDPOINTS (USED BY LEGACY SUITE)
-        // =====================================================================
         Route::prefix('students')->group(function () {
             Route::get('/', [MobileDataController::class, 'getStudents']);
             Route::prefix('{uuid}')->group(function () {
@@ -554,12 +530,10 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::post('whatsapp/send', [ExternalIntegrationApiController::class, 'sendWhatsapp'])->name('api.v1.whatsapp.send');
         });
 
-        // =====================================================================
         // BIG DATA PREDICTIVE ANALYTICS
-        // =====================================================================
         Route::prefix('analytics')->group(function () {
 
-            // Mobile app analytics screens (student/teacher/parent/executive dashboards) — real aggregates only.
+            // Mobile app analytics screens (student/teacher/parent/executive dashboards) - real aggregates only.
             Route::get('student/summary', [MobileAnalyticsController::class, 'studentSummary'])->middleware('role:student,siswa');
             Route::get('teacher/my-classes', [MobileAnalyticsController::class, 'teacherClasses'])->middleware('role:guru,teacher,bk,admin,superadmin,kepala_sekolah');
             Route::get('teacher/class-performance', [MobileAnalyticsController::class, 'classPerformance'])->middleware('role:guru,teacher,bk,admin,superadmin,kepala_sekolah');

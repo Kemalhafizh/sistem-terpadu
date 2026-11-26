@@ -7,9 +7,6 @@
 
     <div class="py-6 sm:py-12 max-w-4xl mx-auto px-4">
         <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 sm:p-10 shadow-xl border border-gray-100 dark:border-slate-700 relative overflow-hidden group">
-            <!-- Soft Background Accents -->
-            <div class="absolute -top-24 -end-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
-            <div class="absolute -bottom-24 -start-24 w-48 h-48 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-all duration-700"></div>
 
             <div class="relative z-10 text-center space-y-6">
                 <!-- App Icon -->

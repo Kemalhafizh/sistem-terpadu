@@ -219,9 +219,6 @@
                     
                     <!-- Payslip Summary Box -->
                     <div class="bg-gray-900 rounded-[2.5rem] text-white p-8 shadow-xl relative overflow-hidden">
-                        <!-- Abstract glow backgrounds -->
-                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-600 rounded-full blur-3xl opacity-20"></div>
-                        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-600 rounded-full blur-3xl opacity-20"></div>
                         
                         <div class="relative space-y-6">
                             <div class="flex items-center justify-between">

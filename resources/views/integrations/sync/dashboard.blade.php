@@ -43,13 +43,11 @@
 
             {{-- Audit Issues Summary Indicator Block --}}
             @if($totalIssuesCount > 0)
-                <div class="bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-rose-500/10 border-2 border-rose-500/30 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl animate-pulse"></div>
+                <div class="bg-rose-50 dark:bg-rose-950/20 border-2 border-rose-500/30 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
                     <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex items-center gap-5">
-                            <div class="w-16 h-16 bg-rose-500/20 border border-rose-500/45 rounded-3xl flex items-center justify-center text-3xl animate-bounce shrink-0 shadow-lg shadow-rose-500/20">
-                                
+                            <div class="w-14 h-14 bg-rose-500/15 border border-rose-500/30 rounded-2xl flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </div>
                             <div>
                                 <span class="text-[10px] font-black uppercase tracking-widest text-rose-600 dark:text-rose-400">Peringatan Integritas Data</span>
@@ -61,11 +59,11 @@
                         </div>
                         <div class="flex flex-wrap gap-3 shrink-0">
                             <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-rose-200 dark:border-rose-900/50 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1.5 shadow-sm">
-                                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
                                 Dapodik: {{ $dapodikStudentIssuesCount + $dapodikTeacherIssuesCount }} Masalah
                             </span>
                             <span class="px-4 py-2 bg-white dark:bg-gray-800 border border-amber-200 dark:border-amber-900/50 rounded-2xl text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5 shadow-sm">
-                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
                                 EMIS: {{ $emisStudentIssuesCount + $emisTeacherIssuesCount }} Masalah
                             </span>
                         </div>

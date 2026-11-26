@@ -10,10 +10,7 @@
                 </p>
             </div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 ring-1 ring-emerald-200 dark:ring-emerald-700/50">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
+                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                 Aktif
             </span>
         </div>
@@ -65,20 +62,17 @@
                 </div>
             @endif
 
-            {{-- ======================================================== --}}
-            {{-- KPI STAT CARDS                                            --}}
-            {{-- ======================================================== --}}
+            {{-- KPI Stat Cards --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {{-- Card 1 : Total RPP --}}
-                <div class="group relative overflow-hidden rounded-2xl border border-white/20 dark:border-gray-700/40 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-lg hover:shadow-emerald-200/40 dark:hover:shadow-emerald-900/30 transition-all duration-500 hover:-translate-y-1">
-                    <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-emerald-400/10 dark:bg-emerald-500/10 blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div class="relative p-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Total RPP</p>
                                 <p class="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white">{{ number_format($rppStats['total'] ?? 0) }}</p>
                             </div>
-                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
                             </div>
                         </div>
@@ -90,15 +84,14 @@
                 </div>
 
                 {{-- Card 2 : RPP Disetujui --}}
-                <div class="group relative overflow-hidden rounded-2xl border border-white/20 dark:border-gray-700/40 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-lg hover:shadow-green-200/40 dark:hover:shadow-green-900/30 transition-all duration-500 hover:-translate-y-1">
-                    <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-green-400/10 dark:bg-green-500/10 blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div class="relative p-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">RPP Disetujui</p>
                                 <p class="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white">{{ number_format($rppStats['approved'] ?? 0) }}</p>
                             </div>
-                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-600 text-white shadow-sm">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             </div>
                         </div>
@@ -110,15 +103,14 @@
                 </div>
 
                 {{-- Card 3 : Total Silabus --}}
-                <div class="group relative overflow-hidden rounded-2xl border border-white/20 dark:border-gray-700/40 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-lg hover:shadow-teal-200/40 dark:hover:shadow-teal-900/30 transition-all duration-500 hover:-translate-y-1">
-                    <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-teal-400/10 dark:bg-teal-500/10 blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div class="relative p-6">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Total Silabus</p>
                                 <p class="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white">{{ number_format($syllabiStats['total'] ?? 0) }}</p>
                             </div>
-                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-lg shadow-teal-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-sm">
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.331 0 4.476.884 6.084 2.34M12 6.042A8.967 8.967 0 0118 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.331 0-4.476.884-6.084 2.34" /></svg>
                             </div>
                         </div>
@@ -135,8 +127,7 @@
                         ? round((($rppStats['approved'] ?? 0) / $rppStats['total']) * 100, 1)
                         : 0;
                 @endphp
-                <div class="group relative overflow-hidden rounded-2xl border border-white/20 dark:border-gray-700/40 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-lg hover:shadow-amber-200/40 dark:hover:shadow-amber-900/30 transition-all duration-500 hover:-translate-y-1">
-                    <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-amber-400/10 dark:bg-amber-500/10 blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div class="relative p-6">
                         <div class="flex items-center justify-between">
                             <div>

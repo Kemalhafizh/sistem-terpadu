@@ -277,7 +277,7 @@
                             <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">
                                 Sesi Mendatang
                             </h4>
-                            <span class="w-2 h-2 bg-purple-500 rounded-full animate-ping"></span>
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
                         </div>
 
                         <div class="space-y-4">

@@ -86,7 +86,7 @@
         <!-- Header -->
         <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 flex justify-between items-center flex-shrink-0">
             <div class="flex items-center space-x-2">
-                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
                 <span class="text-xs font-black text-emerald-500 uppercase tracking-widest">Sistem Pengawasan Aktif</span>
             </div>
             <div class="text-right">

@@ -23,7 +23,6 @@
 
             <!-- Class Cover Banner -->
             <div class="bg-gradient-to-r {{ $elearningClass->is_archived ? 'from-slate-700 to-slate-900' : 'from-emerald-800 to-emerald-950' }} text-white rounded-[2rem] p-6 sm:p-10 shadow-lg relative overflow-hidden">
-                <div class="absolute -right-16 -top-16 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl"></div>
                 <div class="relative z-10 space-y-3">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="inline-flex px-2.5 py-1 bg-emerald-600/30 text-emerald-300 rounded text-[10px] font-black uppercase tracking-wider">
@@ -49,7 +48,7 @@
                 </div>
             </div>
 
-            <!-- Tabbed Navigation (Mobile-first, Premium Glassmorphism) -->
+            <!-- Tabbed Navigation -->
             <div class="flex p-1 bg-gray-100 dark:bg-slate-800 rounded-2xl max-w-md">
                 <button @click="activeTab = 'stream'" :class="activeTab === 'stream' ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'" class="flex-1 py-2.5 text-center text-xs font-black uppercase tracking-wider rounded-xl transition-all">
                     Aktivitas Kelas

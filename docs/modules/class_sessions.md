@@ -30,7 +30,7 @@ scheduled ──Mulai Kelas──▶ active ──Akhiri Kelas──▶ complete
 
 ## 2. Endpoint
 
-### Guru — `role: guru, bk` (admin/superadmin juga lolos)
+### Guru - `role: guru, bk` (admin/superadmin juga lolos)
 
 | Method | Path | Keterangan |
 |---|---|---|
@@ -42,7 +42,7 @@ scheduled ──Mulai Kelas──▶ active ──Akhiri Kelas──▶ complete
 | POST | `teacher/class-sessions/{sessionId}/attendance/manual` | Body `{ student_id, status, notes? }` |
 | POST | `teacher/class-sessions/{sessionId}/attendance/bulk` | Body `{ attendances: [{ student_id, status, notes? }] }`, maksimal 100 item |
 
-### Siswa — `role: student, siswa`
+### Siswa - `role: student, siswa`
 
 | Method | Path | Keterangan |
 |---|---|---|
@@ -50,13 +50,13 @@ scheduled ──Mulai Kelas──▶ active ──Akhiri Kelas──▶ complete
 | GET | `student/class-session/active` | Info untuk banner. `data: null` bila tidak ada sesi aktif. Aplikasi polling setiap 60 detik. |
 | GET | `student/class-session/attendance?date=Y-m-d` | Pelajaran siswa pada tanggal itu (bawaan hari ini) dan status presensinya per sesi. Tanggal di masa depan ditolak (422). Sumber widget presensi Android. |
 
-### Orang tua — `role: parent, orang_tua, orangtua, wali_murid`
+### Orang tua - `role: parent, orang_tua, orangtua, wali_murid`
 
 | Method | Path | Keterangan |
 |---|---|---|
 | GET | `parent/child/{uuid}/class-session-attendance?date=Y-m-d` | Bentuk sama dengan milik siswa, hanya untuk anak sendiri (403 untuk anak orang lain, 404 bila uuid tidak ada). |
 
-### Waka Kurikulum / TU / Admin — `role: admin, superadmin, waka_kurikulum, staf_tu`
+### Waka Kurikulum / TU / Admin - `role: admin, superadmin, waka_kurikulum, staf_tu`
 
 `kepala_sekolah` bisa **membaca** ketiga endpoint GET (daftar, detail, rekap), tetapi tidak bisa mengoreksi (PUT override → 403).
 

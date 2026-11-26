@@ -44,7 +44,7 @@
 
                         <div class="border-t border-gray-100 pt-6 space-y-4">
                             <p class="text-sm font-bold text-gray-500">{{ now()->translatedFormat('l, d F Y') }}</p>
-                            {{-- FASE 119: staff sign in on the fingerprint machine; TU imports its log. --}}
+                            {{-- Staff sign in on the fingerprint machine; TU imports its log. --}}
                             @if($todayAttendance)
                                 <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 space-y-1">
                                     <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">{{ __('Presensi hari ini') }}</p>

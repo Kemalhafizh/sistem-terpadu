@@ -1,28 +1,27 @@
 # ADR 001: Penerapan Service Pattern untuk Logika Bisnis Kompleks
 
-*   **Status:** Disetujui (Approved)
-*   **Tanggal:** 2026-05-18
+- **Status:** Disetujui (Approved)
+- **Tanggal:** 2026-05-18
 
 ---
 
-## 📋 Konteks & Masalah
-Di dalam sistem pengelolaan sekolah terpadu SISTA, banyak ditemui logika bisnis lintas-tabel yang sangat kompleks (misalnya: pembuatan lembar nilai rapor, kalkulasi bruto penggajian guru BK, dan penyusunan kriteria kelulusan). Menuliskan logika ini langsung di dalam Controller akan membuat file controller menjadi terlalu besar (*Fat Controller*), sulit dibaca, dan menghalangi pemanfaatan kembali kode (*code reusability*). Menuliskannya di model Eloquent juga melanggar prinsip *Single Responsibility Principle* (SRP).
+## Konteks dan Masalah
 
----
+Banyak alur bisnis di SISTA melibatkan beberapa tabel sekaligus, misalnya pembuatan lembar nilai rapor, kalkulasi gaji, dan evaluasi kelulusan. Menempatkan logika tersebut di Controller atau model Eloquent membuat file membengkak, sulit diuji terpisah, dan menyulitkan pemakaian ulang antar endpoint Web, API, dan Scheduler.
 
-## 💡 Keputusan yang Diambil
-Kami memutuskan untuk menerapkan **Service Pattern** sebagai lapisan perantara (*Service Layer*) di antara Controller dan Eloquent Model:
-1.  Semua logika bisnis kelas berat diletakkan di dalam kelas layanan khusus di folder `app/Services/`.
-2.  Controller hanya bertanggung jawab menerima request HTTP, melakukan validasi dasar, memanggil Service Class yang sesuai, dan mengembalikan respon HTML/JSON.
-3.  Setiap Service Class dirancang agar mandiri, teruji unit, dan dapat disuntikkan secara dinamis (*dependency injection*).
+## Keputusan
 
----
+Seluruh logika bisnis lintas model ditempatkan pada kelas layanan di `app/Services/`:
+1. Service class menangani perhitungan, transaksi database, dan aturan domain.
+2. Controller hanya menangani validasi input, otorisasi, pemanggilan service, serta respons HTML/JSON.
+3. Setiap service diinjeksi melalui constructor agar mudah diuji unit.
 
-## 📊 Dampak & Konsekuensi
-### Dampak Positif:
-*   **Code Reusability:** Logika yang sama (seperti pembuatan alert deteksi dini BK) dapat dipanggil dari Web Controller, API Controller, maupun Scheduler Task secara konsisten.
-*   **Ease of Testing:** Pengujian unit (*unit testing*) menjadi sangat mudah dilakukan karena logika bisnis murni diisolasi dari siklus request-response HTTP.
-*   **Maintainability:** Mempermudah developer baru memahami alur bisnis aplikasi karena terorganisasi dengan rapi.
+## Dampak dan Konsekuensi
 
-### Dampak Negatif:
-*   Meningkatkan jumlah berkas kelas PHP baru di dalam struktur aplikasi.
+### Positif
+- **Pemakaian ulang:** logika yang sama dapat dipanggil dari Web Controller, API Controller, maupun Scheduler tanpa duplikasi.
+- **Kemudahan pengujian:** alur bisnis dapat diuji terisolasi tanpa overhead siklus request HTTP penuh.
+- **Keterbacaan:** batas tanggung jawab antara lapisan HTTP dan logika domain menjadi jelas.
+
+### Negatif
+- Jumlah file kelas PHP di direktori `app/Services/` bertambah seiring penambahan modul.

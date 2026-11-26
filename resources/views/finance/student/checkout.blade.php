@@ -84,14 +84,10 @@
         </div>
 
         <!-- Webhook Simulator Panel -->
-        <div class="md:col-span-2 bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl shadow-slate-900/40 border border-slate-800 flex flex-col justify-between relative overflow-hidden">
-          <!-- Glassmorphism Glowing Circle -->
-          <div class="absolute -right-16 -top-16 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
-          <div class="absolute -left-16 -bottom-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
-          
+        <div class="md:col-span-2 bg-slate-900 text-white rounded-3xl p-8 shadow-xl border border-slate-800 flex flex-col justify-between relative overflow-hidden">
           <div class="relative z-10 space-y-6">
             <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-ping"></span>
+              <span class="w-2.5 h-2.5 bg-cyan-400 rounded-full"></span>
               <span class="text-[9px] font-black text-cyan-400 uppercase tracking-widest bg-cyan-950/50 border border-cyan-800/30 px-3 py-1 rounded-full">DEV MODE SIMULATOR</span>
             </div>
 
@@ -154,7 +150,7 @@
   @push('scripts')
   <!-- Integrasi SDK Snap JS Midtrans -->
   <x-midtrans-snap />
-  <!-- SweetAlert2 untuk Notifikasi Premium -->
+  <!-- SweetAlert2 untuk Notifikasi -->
   <x-vendor.script lib="sweetalert2" />
   <script>
     document.addEventListener('DOMContentLoaded', function () {

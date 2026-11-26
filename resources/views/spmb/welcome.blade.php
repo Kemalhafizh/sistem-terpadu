@@ -41,7 +41,7 @@
   class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white transition-colors duration-300"
 >
 
-  <!-- Premium Dynamic Frosted White Navbar -->
+  <!-- Navbar -->
   <nav 
     :class="scrolled 
       ? 'bg-white/90 border-b border-slate-200/60 shadow-lg shadow-slate-200/5 py-3' 
@@ -61,7 +61,7 @@
             <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain filter drop-shadow-[0_2px_4px_rgba(16,185,129,0.15)]">
           </div>
           <div>
-            <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">
+            <span class="font-extrabold text-xl tracking-tight text-emerald-700 dark:text-emerald-400">
               {{ school_short_name() }}
             </span>
             <p 
@@ -152,21 +152,14 @@
   <!-- Visual Light Hero Section with Ambient Glows -->
   <div class="relative pt-36 pb-28 lg:pt-52 lg:pb-40 overflow-hidden bg-gradient-to-br from-emerald-50/70 via-slate-50 to-emerald-50/30">
     <!-- Ambient Mesh Background Glows & Grid -->
-    <div class="absolute inset-0 z-0 overflow-hidden">
-      <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[130px] -mr-32 -mt-32"></div>
-      <div class="absolute bottom-0 left-0 w-[550px] h-[550px] bg-teal-500/10 rounded-full blur-[130px] -ml-24 -mb-24"></div>
-      <!-- Emerald dots watermark pattern -->
-      <div class="absolute inset-0 opacity-[0.035] bg-[radial-gradient(#059669_1.5px,transparent_1.5px)] [background-size:28px_28px]"></div>
-    </div>
-
     <div class="relative w-full px-4 sm:px-6 lg:px-8 text-center z-10">
-      <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 mb-6 shadow-inner animate-fade-in">
-        <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-ping"></span>
+      <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 mb-6 shadow-inner">
+        <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
         {{ __('spmb.hero_badge') }}
       </span>
       
       <h1 class="text-4xl sm:text-6xl lg:text-7.5xl font-black text-slate-900 tracking-tight leading-[1.08] mb-6">
-        {{ __('spmb.hero_title_1') }} <br> {{ __('spmb.hero_title_2') }} <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 bg-clip-text text-transparent text-glow">{{ __('spmb.hero_title_3', school_placeholders()) }}</span>
+        {{ __('spmb.hero_title_1') }} <br> {{ __('spmb.hero_title_2') }} <span class="text-emerald-700">{{ __('spmb.hero_title_3', school_placeholders()) }}</span>
       </h1>
       
       <p class="mt-4 text-sm sm:text-base lg:text-lg text-slate-600 font-medium max-w-2xl mx-auto mb-10 opacity-90 leading-relaxed font-inter">
@@ -176,7 +169,7 @@
       <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-md mx-auto sm:max-w-none">
         <a 
           href="{{ route('spmb.create') }}" 
-          class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-[2rem] font-bold text-base shadow-xl shadow-emerald-500/10 hover:shadow-emerald-500/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group"
+          class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-base shadow-lg shadow-emerald-600/15 transition-colors duration-200 flex items-center justify-center gap-2 group"
         >
           {{ __('spmb.btn_start_registration') }} 
           <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -185,7 +178,7 @@
         </a>
         <a 
           href="#alur-pendaftaran" 
-          class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-700 rounded-[2rem] font-bold text-base transition-all duration-300 justify-center flex items-center shadow-sm hover:border-slate-300"
+          class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-700 rounded-2xl font-bold text-base transition-colors duration-200 justify-center flex items-center shadow-sm hover:border-slate-300"
         >
           {{ __('spmb.btn_learn_flow') }}
         </a>
@@ -193,50 +186,50 @@
     </div>
   </div>
 
-  <!-- Quick Stats Section with Frosted Glass -->
+  <!-- Quick Stats Section -->
   <div class="relative -mt-12 max-w-5xl mx-auto px-4 z-20">
-    <div class="bg-white/80 backdrop-blur-xl rounded-[2.5rem] border border-slate-200/60 p-8 shadow-xl shadow-slate-200/10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 text-center">
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-lg shadow-slate-200/20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 text-center">
       <!-- Stat 1 -->
-      <div class="flex flex-col items-center justify-center p-4 group hover:scale-[1.02] transition-transform duration-300">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3 shadow-inner group-hover:bg-emerald-100 group-hover:border-emerald-200 transition-all duration-300">
+      <div class="flex flex-col items-center justify-center p-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296a3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"></path>
           </svg>
         </div>
-        <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">A</h4>
+        <h4 class="text-3xl font-black text-emerald-700">A</h4>
         <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_accreditation') }}</p>
       </div>
       
       <!-- Stat 2 -->
-      <div class="flex flex-col items-center justify-center p-4 pt-8 sm:pt-4 group hover:scale-[1.02] transition-transform duration-300">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3 shadow-inner group-hover:bg-emerald-100 group-hover:border-emerald-200 transition-all duration-300">
+      <div class="flex flex-col items-center justify-center p-4 pt-8 sm:pt-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m0 0a8.967 8.967 0 0 1-2.307-.34 3 3 0 0 1 1.983-5.244m1.984 5.584a9.052 9.052 0 0 1-1.323-2.368m3.574-9.67a3 3 0 1 1-5.714 0m5.714 0a3 3 0 1 1 5.714 0m-5.714 0a3 3 0 1 1 5.714 0M10.5 8.25a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6.5 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
           </svg>
         </div>
-        <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">30+</h4>
+        <h4 class="text-3xl font-black text-emerald-700">30+</h4>
         <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_extracurricular') }}</p>
       </div>
 
       <!-- Stat 3 -->
-      <div class="flex flex-col items-center justify-center p-4 pt-8 md:pt-4 group hover:scale-[1.02] transition-transform duration-300">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3 shadow-inner group-hover:bg-emerald-100 group-hover:border-emerald-200 transition-all duration-300">
+      <div class="flex flex-col items-center justify-center p-4 pt-8 md:pt-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.33l-7.5-5-7.5 5V21m16.5 0H3.75"></path>
           </svg>
         </div>
-        <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">100%</h4>
+        <h4 class="text-3xl font-black text-emerald-700">100%</h4>
         <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_islamic') }}</p>
       </div>
 
       <!-- Stat 4 -->
-      <div class="flex flex-col items-center justify-center p-4 pt-8 md:pt-4 group hover:scale-[1.02] transition-transform duration-300">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3 shadow-inner group-hover:bg-emerald-100 group-hover:border-emerald-200 transition-all duration-300">
+      <div class="flex flex-col items-center justify-center p-4 pt-8 md:pt-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.9c2.785 0 5.5-.233 8.15-.683a60.43 60.43 0 0 0-.49-6.347M12 10.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v8.25"></path>
           </svg>
         </div>
-        <h4 class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">500+</h4>
+        <h4 class="text-3xl font-black text-emerald-700">500+</h4>
         <p class="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">{{ __('spmb.stat_achievement') }}</p>
       </div>
     </div>
@@ -387,7 +380,7 @@
     </div>
   </div>
 
-  <!-- Premium Footer -->
+  <!-- Footer -->
   <footer class="bg-slate-50 text-slate-600 py-16 border-t border-slate-200/50">
     <div class="w-full px-4 sm:px-6 lg:px-8 text-center space-y-6">
       <div class="h-10 w-auto flex items-center justify-center filter grayscale opacity-60 mx-auto">

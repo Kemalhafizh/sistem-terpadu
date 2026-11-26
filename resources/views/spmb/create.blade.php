@@ -39,7 +39,7 @@
           <img src="{{ asset('images/logo-kotak.png') }}" alt="{{ school_short_name() }}" class="h-full object-contain">
         </div>
         <div>
-          <h1 class="font-black text-lg text-slate-900 tracking-tight leading-none bg-gradient-to-r from-emerald-600 to-teal-700 bg-clip-text text-transparent">{{ school_short_name() }}</h1>
+          <h1 class="font-black text-lg text-slate-900 tracking-tight leading-none text-emerald-700 dark:text-emerald-400">{{ school_short_name() }}</h1>
           <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase leading-none mt-1">{{ __('spmb.register_title') }}</p>
         </div>
       </div>

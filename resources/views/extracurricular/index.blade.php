@@ -51,8 +51,6 @@
             @if(auth()->user()->role === 'student')
                 <!-- Student Dashboard Summary Card -->
                 <div class="bg-gradient-to-r from-emerald-600/90 to-teal-700/90 dark:from-emerald-950/80 dark:to-teal-950/80 border border-emerald-500/20 backdrop-blur-md rounded-[2.5rem] p-6 md:p-8 text-white shadow-xl relative overflow-hidden group">
-                    <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
-                    <div class="absolute -left-10 -top-10 w-44 h-44 bg-emerald-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
                     <div class="relative z-10 space-y-4">
                         <div>
                             <span class="px-3 py-1 bg-white/20 dark:bg-emerald-900/40 rounded-full text-[10px] font-black uppercase tracking-wider">Status Keanggotaan</span>

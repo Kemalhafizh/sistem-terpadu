@@ -140,7 +140,7 @@
         </a>
         @endcanVisit
 
-        {{-- Anyone signed in may report bullying (FASE 118.1). --}}
+        {{-- Anyone signed in may report bullying. --}}
         <x-sidebar-link route="crisis.bullying.report" :label="__('navigation.report_bullying')" icon="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
 
         @if(! $isStudentOrParent)
@@ -157,7 +157,7 @@
         @endcanVisit
         @endif
 
-        {{-- One announcements menu (FASE 119); the route admits humas, leadership and admin. --}}
+        {{-- One announcements menu; the route admits humas, leadership and admin. --}}
         <x-sidebar-link route="announcements.index" :label="__('navigation.announcements')" icon="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" active="announcements.*" />
         
         {{-- Master Data: Hanya Admin & Kepsek --}}
@@ -311,7 +311,7 @@
 
         <x-sidebar-link route="admin.integrations.dapodik.sync-queue" :label="__('navigation.dapodik_sync_queue')" icon="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" active="admin.integrations.dapodik.sync-queue*" />
 
-        {{-- School identity (letterhead, NPSN, principal) and appearance are one menu with two tabs (FASE 119). --}}
+        {{-- School identity (letterhead, NPSN, principal) and appearance are one menu with two tabs . --}}
         <x-sidebar-link route="admin.school.branding.index" :label="__('navigation.school_settings')" icon="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" :active="['admin.school.branding.*', 'admin.appearance.*']" />
         @endif
         
@@ -429,7 +429,7 @@
         @endcanVisit
         @endif
 
-        {{-- Kesiswaan. FASE 119: counselling, discipline points, bullying reports and
+        {{-- Kesiswaan. counselling, discipline points, bullying reports and
              inclusive education are one "Bimbingan Konseling" menu; OSIS and MPK are one entry. --}}
         @php
             $visible = fn (string $routeName) => \App\Support\Access\RouteAccess::allowsRoute($sidebarUser, $routeName);
@@ -514,7 +514,7 @@
         @endcanVisit
         @endif
 
-        {{-- Keuangan (FASE 119): student bills, bank accounts and reconciliation, petty cash,
+        {{-- Keuangan: student bills, bank accounts and reconciliation, petty cash,
              vendor payments, scholarships and reports in one menu. --}}
         @php
             $financeStaff = collect(['finance.billings.index', 'treasury.accounts.index', 'finance.reports.executive', 'financial.budget.dashboard'])->contains($visible);

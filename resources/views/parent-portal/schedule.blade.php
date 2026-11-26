@@ -56,7 +56,7 @@
                                 @endphp
                                 <div class="bg-gray-50 hover:bg-indigo-50/30 p-4 rounded-2xl border border-gray-100 hover:border-indigo-100/50 transition-all duration-300 relative group">
                                     <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <span class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-ping"></span>
+                                        <span class="w-1.5 h-1.5 bg-primary-500 rounded-full"></span>
                                     </div>
                                     <span class="text-[9px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded block w-fit">
                                         Sesi {{ $sch->session_start }}{{ $sch->session_start != $sch->session_end ? '-' . $sch->session_end : '' }}

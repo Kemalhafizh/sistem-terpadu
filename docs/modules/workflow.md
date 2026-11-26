@@ -57,7 +57,7 @@ graph TD
 
 ### A. Dynamic Steps & Visual Steppers:
 1.  **Polymorphic MorphTo Mapping:** Memungkinkan model baru dikaitkan dengan sistem approval secara mudah tanpa mengubah struktur tabel database. Cukup implementasikan trait `HasWorkflow` pada model target.
-2.  **Visual Workflow Steppers:** Rerender visual baris progress persetujuan berdesain glassmorphic. Menampilkan ikon lingkaran centang hijau untuk langkah yang telah disetujui, loading oranye untuk langkah aktif saat ini, dan abu-abu untuk antrean langkah berikutnya, lengkap dengan catatan reviewer secara langsung.
+2.  **Visual Workflow Steppers:** Menampilkan progress persetujuan per tahap: centang hijau untuk tahap yang disetujui, indikator oranye untuk tahap aktif, dan abu-abu untuk antrean berikutnya beserta catatan reviewer.
 3.  **Final Approval Action Callbacks:** Begitu persetujuan langkah terakhir dicapai, sistem memanggil method callback model target (misal: `onWorkflowCompleted()`). Cuti guru akan otomatis disetujui, sisa kuota cuti dikurangi, atau file PDF surat digital otomatis ditandatangani secara elektronik (*e-signature*).
 
 ---

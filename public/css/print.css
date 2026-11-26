@@ -1,4 +1,4 @@
-/* FASE 37.4: Print-Optimized Stylesheet Engine */
+/* Print Stylesheet */
 @media print {
     /* Paper configuration */
     @page {

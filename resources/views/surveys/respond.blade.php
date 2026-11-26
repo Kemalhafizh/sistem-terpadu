@@ -38,8 +38,6 @@
         
         <!-- Welcome & Instructions Card -->
         <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-700/50 rounded-3xl p-6 shadow-xl relative overflow-hidden">
-            <!-- Background Accent -->
-            <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
 
             <div class="space-y-4">
                 <h2 class="text-lg font-bold text-slate-800 dark:text-white">Petunjuk Pengisian:</h2>

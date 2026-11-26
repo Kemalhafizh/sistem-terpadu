@@ -1,25 +1,24 @@
 <x-app-layout>
   <x-slot name="header">
-    <h2 class="font-black text-2xl text-gray-900 leading-tight">
-       Portal Pembayaran <span class="bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">Snap Checkout</span>
+    <h2 class="font-black text-2xl text-gray-900 dark:text-white leading-tight">
+       Portal Pembayaran <span class="text-primary-600 dark:text-primary-400">Snap Checkout</span>
     </h2>
   </x-slot>
 
-  <div class="py-12 bg-gray-50/50 min-h-[calc(100vh-4rem)]">
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8 animate-fade-in">
-      <!-- Alert Portofolio Info -->
-      <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
-        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500"></div>
-        <div class="flex items-start space-x-4 relative z-10">
-          <div class="p-3 bg-white/20 rounded-2xl text-white">
+  <div class="py-12 bg-gray-50/50 dark:bg-slate-900/50 min-h-[calc(100vh-4rem)]">
+    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8">
+      <!-- Info Gateway Pembayaran -->
+      <div class="bg-emerald-700 rounded-2xl p-6 text-white shadow-md">
+        <div class="flex items-start space-x-4">
+          <div class="p-3 bg-white/15 rounded-xl text-white shrink-0">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div>
-            <h4 class="font-black text-lg tracking-tight"> Mode Demonstrasi Pembayaran Premium</h4>
+            <h4 class="font-bold text-lg tracking-tight">Mode Simulasi Pembayaran Lokal</h4>
             <p class="text-emerald-50 font-medium text-xs mt-1.5 leading-relaxed">
-              Sebagai bagian dari premium portal, sistem terintegrasi dengan **Midtrans Snap SDK** asli (jika server key terisi & online). Untuk mode pengembangan lokal offline (localhost), sistem akan mendeteksi demo token dan secara dinamis membelokkan rute Anda ke **Mock Payment Gateway** yang elegan untuk menyelesaikan simulasi pembayaran.
+              Portal terintegrasi dengan Midtrans Snap SDK apabila server key tersedia dan aktif. Untuk pengembangan luring atau token simulasi, pembayaran diarahkan ke halaman Mock Payment Gateway.
             </p>
           </div>
         </div>
@@ -134,7 +133,7 @@
   @push('scripts')
   <!-- Integrasi SDK Snap JS Midtrans -->
   <x-midtrans-snap />
-  <!-- SweetAlert2 untuk Notifikasi Premium -->
+  <!-- SweetAlert2 untuk Notifikasi -->
   <x-vendor.script lib="sweetalert2" />
   <script>
     document.addEventListener('DOMContentLoaded', function () {

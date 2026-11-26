@@ -282,8 +282,6 @@
         <!-- Visual Real-time Mockup Live Preview (Right Panel) -->
         <div class="xl:col-span-5 sticky top-8 space-y-6">
             <div class="bg-gray-900 text-white rounded-3xl p-6 shadow-2xl border border-gray-800 flex flex-col relative overflow-hidden min-h-[500px]">
-                <div class="absolute -right-16 -top-16 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
-                <div class="absolute -left-16 -bottom-16 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
 
                 <div class="flex items-center justify-between mb-6 border-b border-gray-800 pb-3">
                     <div class="flex items-center space-x-2">
@@ -377,7 +375,7 @@
                     Informasi Penyelarasan Font
                 </h4>
                 <p class="text-[11px] leading-relaxed">
-                    Sistem akan menyinkronkan seluruh tampilan aplikasi secara instan begitu tombol simpan diklik. Font teks yang dipilih akan dimuat secara dinamis via Google Fonts API untuk performa yang optimal dan visual premium.
+                    Sistem menyinkronkan perubahan tampilan begitu disimpan. Font yang dipilih dimuat melalui Google Fonts.
                 </p>
             </div>
         </div>

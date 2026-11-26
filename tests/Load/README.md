@@ -1,10 +1,10 @@
-# 🏋️ Panduan Load Testing SMA Islam Sultan Agung 1 Semarang (k6)
+# Panduan Load Testing SMA Islam Sultan Agung 1 Semarang (k6)
 
 Direktori ini berisi berkas skenario untuk melakukan pengujian beban (*load testing*) pada **Sistem Terpadu SMA ISA 1** menggunakan **k6** dari Grafana.
 
 ---
 
-## 🛠️ Persyaratan Instalan
+## Persyaratan Instalasi
 
 Untuk menjalankan skenario pengujian ini, Anda perlu menginstal tools `k6` pada mesin lokal atau server pengujian Anda:
 
@@ -31,7 +31,7 @@ sudo apt-get install k6
 
 ---
 
-## 🚀 Cara Menjalankan Skenario
+## Cara Menjalankan Skenario
 
 Setiap skenario dapat dijalankan menggunakan perintah CLI `k6 run`. Anda dapat melewatkan variabel lingkungan `BASE_URL` untuk mengarahkan target ke alamat pengujian (default: `http://localhost`).
 
@@ -67,7 +67,7 @@ k6 run -e BASE_URL=http://your-test-domain.test scenarios/rapor_day.js
 
 ---
 
-## 📊 Target Metrik (Thresholds KPI)
+## Target Metrik (Thresholds KPI)
 
 | Skenario | Target Response Time (p95) | Target Error Rate |
 | :--- | :---: | :---: |

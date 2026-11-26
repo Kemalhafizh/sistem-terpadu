@@ -30,7 +30,7 @@
         <div class="h-1.5 w-24 bg-gradient-to-r from-primary-600 to-emerald-500 rounded-full"></div>
     </header>
 
-    <!-- Main Content Container with Glassmorphism Card -->
+    <!-- Main Content Container -->
     <div class="glass rounded-[2rem] p-8 md:p-12 shadow-sm border border-slate-200/80 animate-fade-in-up delay-100">
         <div class="prose prose-slate max-w-none prose-headings:font-black prose-headings:tracking-tight prose-a:text-primary-600 hover:prose-a:text-primary-700 prose-img:rounded-3xl leading-relaxed text-slate-600 font-medium text-base">
             {!! $page->content !!}

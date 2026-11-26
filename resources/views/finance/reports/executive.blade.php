@@ -22,7 +22,7 @@
     <div class="py-12">
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-10">
             
-            <!-- Tab Navigasi Premium -->
+            <!-- Tab Navigasi -->
             <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex flex-wrap gap-2">
                 <a href="{{ route('finance.reports.executive') }}" class="px-4 py-2.5 rounded-xl text-xs font-black transition-all bg-emerald-50 text-emerald-700 shadow-sm">
                      Ringkasan Eksekutif

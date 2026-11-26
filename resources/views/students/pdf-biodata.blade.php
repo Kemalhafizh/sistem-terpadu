@@ -16,7 +16,7 @@
         }
         .container { padding: 40px; }
         
-        /* Premium Header */
+        /* Header */
         .header { 
             position: relative;
             padding-bottom: 20px;
