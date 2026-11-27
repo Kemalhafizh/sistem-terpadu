@@ -47,7 +47,7 @@ test('user can scan asset QR code to view details', function () {
 });
 
 test('user can submit a maintenance ticket report', function () {
-    Storage::fake('public');
+    Storage::fake('local');
     $photo = UploadedFile::fake()->image('damage.jpg');
 
     $response = $this->actingAs($this->teacher)->post(route('admin.assets.maintenance.store'), [
@@ -68,7 +68,7 @@ test('user can submit a maintenance ticket report', function () {
 
     $ticket = AssetMaintenanceTicket::first();
     expect($ticket->photo_evidence)->not->toBeNull();
-    Storage::disk('public')->assertExists($ticket->photo_evidence);
+    Storage::disk('local')->assertExists($ticket->photo_evidence);
 });
 
 test('admin can view kanban board and ticket detail', function () {

@@ -32,7 +32,7 @@
                 </div>
             @endif
 
-            <!-- Glassmorphic Overview Cards -->
+            {{-- Ringkasan Perawatan & Laporan Kerusakan --}}
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <!-- Card 1 -->
                 <div class="bg-white/75 backdrop-blur-md p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center space-x-4">
@@ -51,9 +51,9 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     </div>
                     <div>
-                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Servis Aktif</div>
+                        <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tiket Kerusakan Aktif</div>
                         <div class="text-3xl font-black text-gray-900 mt-1">
-                            {{ $maintenances->whereIn('status', ['scheduled', 'in_progress'])->count() }}
+                            {{ $ticketStats['open_count'] ?? 0 }}
                         </div>
                     </div>
                 </div>
@@ -82,6 +82,59 @@
                             Rp {{ number_format($maintenances->sum('cost'), 0, ',', '.') }}
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {{-- Antrean Laporan Kerusakan Aset (Scan QR Warga Sekolah) --}}
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-900">Laporan Kerusakan Aset (Scan QR)</h3>
+                        <p class="text-xs text-gray-500">Alur penanganan: pending &rarr; investigating &rarr; repairing &rarr; resolved / scrapped</p>
+                    </div>
+                    @canVisit('assets.maintenances.qr-labels')
+                        <a href="{{ route('assets.maintenances.qr-labels') }}" class="text-xs font-semibold text-primary-600 hover:underline">
+                            Cetak Stiker QR Aset
+                        </a>
+                    @endcanVisit
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-3 text-[11px] font-bold text-gray-500 uppercase">Aset & Ruangan</th>
+                                <th class="px-6 py-3 text-[11px] font-bold text-gray-500 uppercase">Pelapor & Keluhan</th>
+                                <th class="px-6 py-3 text-[11px] font-bold text-gray-500 uppercase">Prioritas</th>
+                                <th class="px-6 py-3 text-[11px] font-bold text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-[11px] font-bold text-gray-500 uppercase text-right">Rincian</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50 text-xs">
+                            @forelse ($allTickets ?? [] as $ticket)
+                                <tr>
+                                    <td class="px-6 py-3.5">
+                                        <div class="font-bold text-gray-900">{{ $ticket->asset?->name ?? '-' }}</div>
+                                        <div class="text-gray-500">{{ $ticket->asset?->asset_code }} · {{ $ticket->asset?->room?->name ?? '-' }}</div>
+                                    </td>
+                                    <td class="px-6 py-3.5 max-w-sm">
+                                        <div class="font-medium text-gray-800">{{ $ticket->issue_description }}</div>
+                                        <div class="text-gray-400">Oleh {{ $ticket->reporter?->name ?? '-' }}</div>
+                                    </td>
+                                    <td class="px-6 py-3.5 uppercase font-bold">{{ $ticket->priority }}</td>
+                                    <td class="px-6 py-3.5 uppercase font-semibold">{{ $ticket->status }}</td>
+                                    <td class="px-6 py-3.5 text-right whitespace-nowrap">
+                                        <a href="{{ route('assets.maintenances.tickets.show', $ticket) }}" class="font-bold text-primary-600 hover:underline">
+                                            Tindak Lanjuti
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-6 text-center text-gray-400">Belum ada laporan kerusakan aset.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

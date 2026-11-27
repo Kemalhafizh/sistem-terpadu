@@ -53,7 +53,7 @@ class AcademicCycleController extends Controller
             ->get();
 
         $graduationBatches = GraduationBatch::query()
-            ->with(['schoolYear', 'meetingNote', 'decisions.student.user'])
+            ->with(['schoolYear', 'meetingNote', 'decisions.student.user', 'decisions.classroom'])
             ->latest('id')
             ->get();
 

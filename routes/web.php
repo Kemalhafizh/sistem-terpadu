@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Academic\AcademicCycleController;
+use App\Http\Controllers\Academic\P5ProjectController;
 use App\Http\Controllers\AcademicEventController;
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\AccountProvisioningController;
@@ -346,6 +347,22 @@ Route::middleware('auth')->group(function () {
         Route::get('growth/character/assess', [P5AssessmentController::class, 'assessForm'])->name('growth.character.assess_form');
         Route::post('growth/character/assess', [P5AssessmentController::class, 'storeAssessment'])->name('growth.character.store_assessment');
         Route::post('growth/character/merit', [P5AssessmentController::class, 'awardMerit'])->name('growth.character.award_merit');
+    });
+
+    // D4: Projek Penguatan Profil Pelajar Pancasila (Kurikulum Merdeka)
+    Route::prefix('p5')->name('p5.')->group(function () {
+        Route::middleware(Roles::only(StudentDataAccess::TEACHER_ROLES, 'wali_kelas', 'koordinator_p5', 'waka_kurikulum', Roles::PRINCIPAL, 'admin'))->group(function () {
+            Route::get('projects', [P5ProjectController::class, 'index'])->name('projects.index');
+            Route::post('projects', [P5ProjectController::class, 'store'])->name('projects.store');
+            Route::get('projects/{project}', [P5ProjectController::class, 'show'])->name('projects.show');
+            Route::put('projects/{project}', [P5ProjectController::class, 'update'])->name('projects.update');
+            Route::post('projects/{project}/assessments', [P5ProjectController::class, 'updateAssessments'])->name('projects.assessments.update');
+        });
+
+        Route::middleware(Roles::only(Roles::MEMBERS))->group(function () {
+            Route::get('reports/{student}', [P5ProjectController::class, 'studentReport'])->name('reports.show');
+            Route::get('reports/{student}/pdf', [P5ProjectController::class, 'studentReportPdf'])->name('reports.pdf');
+        });
     });
 
     // 34.3: Parent-Teacher Conference (PTC) Scheduler
@@ -909,20 +926,30 @@ Route::middleware('auth')->group(function () {
             Route::get('loans/{loan}', [AssetLoanController::class, 'show'])->name('loans.show');
         });
 
+        // I3: Scan QR Aset & Lapor Kerusakan Cepat (terbuka bagi seluruh warga sekolah terautentikasi)
+        Route::middleware(Roles::only(Roles::MEMBERS))->group(function () {
+            Route::get('scan/{asset}', [AssetMaintenanceController::class, 'scan'])->name('scan');
+            Route::post('scan/{asset}/report', [AssetMaintenanceController::class, 'storeDamageReport'])->name('damage-reports.store');
+            Route::get('maintenances/tickets/{ticket}/attachment', [AssetMaintenanceController::class, 'downloadTicketAttachment'])->name('maintenances.tickets.attachment');
+            Route::get('maintenances/tickets/{ticket}', [AssetMaintenanceController::class, 'showTicket'])->name('maintenances.tickets.show');
+        });
+
         // Khusus Waka Sarpras, Staf TU, Kepala Sekolah, & Admin/Superadmin
-        Route::middleware(['role:waka_sarpras,staf_tu,admin,superadmin,kepala_sekolah'])->group(function () {
+        Route::middleware(Roles::only('waka_sarpras', 'staf_tu', Roles::PRINCIPAL, 'admin'))->group(function () {
             Route::post('loans/{loan}/approve', [AssetLoanController::class, 'approve'])->name('loans.approve');
             Route::post('loans/{loan}/return', [AssetLoanController::class, 'returnAsset'])->name('loans.return');
             Route::get('reports/depreciation', [AssetLoanController::class, 'depreciationReport'])->name('depreciation');
             Route::get('print/qr-labels', [AssetLoanController::class, 'qrLabelsSheet'])->name('print.qr-labels');
 
-            // Perawatan (Maintenance)
+            // Perawatan Berkala & Penanganan Tiket Kerusakan Terpadu (I3)
             Route::resource('maintenances', AssetMaintenanceController::class)->only(['index', 'store', 'update']);
+            Route::post('maintenances/tickets/{ticket}/status', [AssetMaintenanceController::class, 'updateTicketStatus'])->name('maintenances.tickets.status');
+            Route::get('maintenances/qr-labels', [AssetMaintenanceController::class, 'qrLabels'])->name('maintenances.qr-labels');
         });
     });
 
     // =========================================================
-    // SARPRAS â€” Sarana Prasarana
+    // SARPRAS — Sarana Prasarana
     // =========================================================
     Route::middleware('role:waka_sarpras,admin,superadmin')->group(function () {
         Route::resource('assets', AssetController::class);

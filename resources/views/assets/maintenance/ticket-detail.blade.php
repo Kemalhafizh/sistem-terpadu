@@ -13,11 +13,11 @@
     <div class="py-6 w-full space-y-6">
         <!-- Back Link -->
         <div class="mb-2">
-            <a href="{{ route('admin.assets.maintenance.index') }}" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-teal-600 dark:text-gray-400 dark:hover:text-teal-400 transition-all">
+            <a href="{{ route('assets.maintenances.index') }}" class="inline-flex items-center text-xs font-bold text-gray-500 hover:text-teal-600 dark:text-gray-400 dark:hover:text-teal-400 transition-all">
                 <svg class="w-4 h-4 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Kembali ke Kanban Board
+                Kembali ke Perawatan & Laporan Kerusakan
             </a>
         </div>
 
@@ -155,45 +155,59 @@
                         </ul>
                     </div>
 
-                    <form action="{{ route('admin.assets.maintenance.update-status', $ticket->id) }}" method="POST" class="space-y-5">
-                        @csrf
-                        
-                        <!-- Status Select Dropdown -->
-                        <div>
-                            <label for="ticket-status" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">UPDATE STATUS TIKET</label>
-                            <select id="ticket-status" name="status" class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm font-bold focus:border-teal-500 focus:ring-teal-500 text-gray-800 dark:text-gray-200">
-                                <option value="pending" {{ $ticket->status === 'pending' ? 'selected' : '' }}>Baru (Pending)</option>
-                                <option value="investigating" {{ $ticket->status === 'investigating' ? 'selected' : '' }}>Investigasi (Investigating)</option>
-                                <option value="repairing" {{ $ticket->status === 'repairing' ? 'selected' : '' }}>Perbaikan (Repairing)</option>
-                                <option value="resolved" {{ $ticket->status === 'resolved' ? 'selected' : '' }}>Selesai (Resolved)</option>
-                                <option value="scrapped" {{ $ticket->status === 'scrapped' ? 'selected' : '' }}>Afkir (Scrapped)</option>
-                            </select>
-                        </div>
+                    @canVisit('assets.maintenances.tickets.status')
+                        <form action="{{ route('assets.maintenances.tickets.status', $ticket) }}" method="POST" class="space-y-5">
+                            @csrf
 
-                        <!-- Resolution Notes Textarea -->
-                        <div>
-                            <label for="resolution_notes" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">
-                                CATATAN RESOLUSI <span id="notes-required-indicator" class="text-rose-500 hidden">*</span>
-                            </label>
-                            <textarea id="resolution_notes" name="resolution_notes" rows="5"
-                                class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm focus:border-teal-500 focus:ring-teal-500 text-gray-800 dark:text-gray-200 placeholder-gray-400"
-                                placeholder="Jelaskan tindakan perbaikan yang diambil, suku cadang yang diganti, atau rincian aset yang diafkir...">{{ old('resolution_notes', $ticket->resolution_notes) }}</textarea>
-                            <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 mt-1">Wajib diisi jika status diubah menjadi "Selesai" atau "Afkir".</p>
-                            @error('resolution_notes')
-                                <span class="text-xs text-rose-500 font-bold mt-1 block">{{ $message }}</span>
-                            @enderror
-                        </div>
+                            <div>
+                                <label for="ticket-status" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">UPDATE STATUS TIKET</label>
+                                <select id="ticket-status" name="status" class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm font-bold focus:border-teal-500 focus:ring-teal-500 text-gray-800 dark:text-gray-200">
+                                    <option value="pending" {{ $ticket->status === 'pending' ? 'selected' : '' }}>Baru (Pending)</option>
+                                    <option value="investigating" {{ $ticket->status === 'investigating' ? 'selected' : '' }}>Investigasi (Investigating)</option>
+                                    <option value="repairing" {{ $ticket->status === 'repairing' ? 'selected' : '' }}>Perbaikan (Repairing)</option>
+                                    <option value="resolved" {{ $ticket->status === 'resolved' ? 'selected' : '' }}>Selesai (Resolved)</option>
+                                    <option value="scrapped" {{ $ticket->status === 'scrapped' ? 'selected' : '' }}>Afkir (Scrapped)</option>
+                                </select>
+                            </div>
 
-                        <!-- Submit Button -->
-                        <div>
-                            <button type="submit" class="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-teal-600/15 hover:shadow-teal-600/25 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2">
-                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                                </svg>
-                                <span>Simpan Perubahan Status</span>
-                            </button>
-                        </div>
-                    </form>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label for="ticket-cost" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">BIAYA PERBAIKAN (RP)</label>
+                                    <input type="number" id="ticket-cost" name="cost" min="0" value="{{ old('cost', $ticket->cost) }}"
+                                        class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm text-gray-800 dark:text-gray-200"
+                                        placeholder="0">
+                                </div>
+                                <div>
+                                    <label for="ticket-vendor" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">TEKNISI / VENDOR</label>
+                                    <input type="text" id="ticket-vendor" name="vendor" value="{{ old('vendor', $ticket->vendor) }}"
+                                        class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm text-gray-800 dark:text-gray-200"
+                                        placeholder="Nama teknisi atau vendor">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="resolution_notes" class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1.5">
+                                    CATATAN RESOLUSI <span id="notes-required-indicator" class="text-rose-500 hidden">*</span>
+                                </label>
+                                <textarea id="resolution_notes" name="resolution_notes" rows="5"
+                                    class="w-full rounded-2xl border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-sm focus:border-teal-500 focus:ring-teal-500 text-gray-800 dark:text-gray-200 placeholder-gray-400"
+                                    placeholder="Jelaskan tindakan perbaikan yang diambil, suku cadang yang diganti, atau rincian aset yang diafkir...">{{ old('resolution_notes', $ticket->resolution_notes) }}</textarea>
+                                <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 mt-1">Wajib diisi jika status diubah menjadi "Selesai" atau "Afkir".</p>
+                                @error('resolution_notes')
+                                    <span class="text-xs text-rose-500 font-bold mt-1 block">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <button type="submit" class="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-sm transition-all flex items-center justify-center space-x-2">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                                    </svg>
+                                    <span>Simpan Perubahan Status</span>
+                                </button>
+                            </div>
+                        </form>
+                    @endcanVisit
 
                     @if($ticket->resolved_by)
                         <!-- Resolver History info -->

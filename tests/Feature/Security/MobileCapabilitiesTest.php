@@ -101,29 +101,32 @@ test('each role sees its own features and nobody else\'s', function () {
     $prefixed = fn (array $keys, string $prefix) => array_values(array_filter($keys, fn ($k) => str_starts_with($k, $prefix)));
 
     $student = capabilityKeys(capabilityUser('student'));
-    expect($student)->toContain('student.schedule', 'student.grades', 'attendance.class_scan')
+    expect($student)->toContain('student.schedule', 'student.grades', 'attendance.class_scan', 'profile.change_requests')
         ->and($prefixed($student, 'teacher.'))->toBe([])
         ->and($prefixed($student, 'parent.'))->toBe([])
         ->and($prefixed($student, 'admin.'))->toBe([]);
 
     $teacher = capabilityKeys(capabilityUser('guru'));
-    expect($teacher)->toContain('teacher.sessions', 'teacher.journal', 'teacher.assessments')
+    expect($teacher)->toContain('teacher.sessions', 'teacher.journal', 'teacher.assessments', 'teacher.leave_requests', 'profile.change_requests')
         ->and($prefixed($teacher, 'student.'))->toBe([])
         ->and($prefixed($teacher, 'parent.'))->toBe([])
         ->and($prefixed($teacher, 'admin.'))->toBe([]);
 
     $parent = capabilityKeys(capabilityUser('parent'));
-    expect($parent)->toContain('parent.children', 'parent.messages')
+    expect($parent)->toContain('parent.children', 'parent.messages', 'parent.leave_requests', 'profile.change_requests')
         ->and($prefixed($parent, 'student.'))->toBe([])
         ->and($prefixed($parent, 'teacher.'))->toBe([]);
 
-    // Admin: school operator plus the leadership dashboards — none of the
-    // personal student, parent or teacher features.
+    // Waka Kesiswaan gets escalated leave request review even without regular teaching schedule.
+    expect(capabilityKeys(capabilityUser('waka_kesiswaan')))->toContain('teacher.leave_requests', 'profile.change_requests');
+
+    // Admin: school operator plus leadership-shared dashboards (including C3 escalated leave review)
+    // — none of the personal classroom student, parent or teacher features.
     $admin = capabilityKeys(capabilityUser('admin'));
-    expect($admin)->toContain('admin.dashboard', 'admin.class_sessions')
+    expect($admin)->toContain('admin.dashboard', 'admin.class_sessions', 'profile.change_requests')
         ->and($prefixed($admin, 'student.'))->toBe([])
         ->and($prefixed($admin, 'parent.'))->toBe([])
-        ->and($prefixed($admin, 'teacher.'))->toBe([]);
+        ->and($prefixed($admin, 'teacher.'))->toBe(['teacher.leave_requests']);
 
     expect(capabilityKeys(capabilityUser('kepala_sekolah')))->toContain('admin.dashboard');
 });

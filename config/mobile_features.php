@@ -73,6 +73,7 @@ return [
         'teacher.sessions' => ['title' => 'Sesi Kelas Hari Ini', 'group' => 'mengajar', 'endpoint' => 'GET teacher/class-sessions/today', 'hardware' => ['camera']],
         'teacher.schedule' => ['title' => 'Jadwal Mengajar', 'group' => 'mengajar', 'endpoint' => 'GET teacher/schedule'],
         'teacher.classes' => ['title' => 'Kelas & Presensi', 'group' => 'mengajar', 'endpoint' => 'GET teacher/classes'],
+        'teacher.leave_requests' => ['title' => 'Persetujuan Izin Siswa', 'group' => 'mengajar', 'endpoint' => 'GET teacher/leave-requests'],
         'teacher.journal' => ['title' => 'Jurnal Mengajar', 'group' => 'mengajar', 'endpoint' => 'GET teacher/journals'],
         'teacher.assessments' => ['title' => 'Penilaian Harian', 'group' => 'mengajar', 'endpoint' => 'GET assessments/teacher'],
         'teacher.elearning' => ['title' => 'Kelas Online', 'group' => 'mengajar', 'endpoint' => 'GET elearning/classes/teacher'],
@@ -87,6 +88,7 @@ return [
         // ── Anak saya (orang tua) ────────────────────────────────────────
         'parent.children' => ['title' => 'Ringkasan Anak', 'group' => 'keluarga', 'endpoint' => 'GET parent/children'],
         'parent.progress' => ['title' => 'Perkembangan Anak', 'group' => 'keluarga', 'endpoint' => 'GET analytics/parent/child-progress'],
+        'parent.leave_requests' => ['title' => 'Izin & Sakit Anak', 'group' => 'keluarga', 'endpoint' => 'GET parent/leave-requests', 'hardware' => ['camera']],
         'parent.elective_survey' => ['title' => 'Peminatan Anak', 'group' => 'keluarga', 'endpoint' => 'GET parent/child/{student}/elective-survey'],
         'activity.feed' => ['title' => 'Linimasa Aktivitas', 'group' => 'kesiswaan', 'endpoint' => 'GET parent/feed'],
         'parent.messages' => ['title' => 'Pesan Guru', 'group' => 'keluarga', 'endpoint' => 'GET parent/messages'],
@@ -100,5 +102,6 @@ return [
         // ── Layanan (semua pengguna) ─────────────────────────────────────
         'announcements' => ['title' => 'Pengumuman', 'group' => 'layanan', 'endpoint' => 'GET announcements'],
         'notifications' => ['title' => 'Notifikasi', 'group' => 'layanan', 'endpoint' => 'GET notifications'],
+        'profile.change_requests' => ['title' => 'Perubahan Data Diri', 'group' => 'layanan', 'endpoint' => 'GET profile-change-requests', 'hardware' => ['camera']],
     ],
 ];

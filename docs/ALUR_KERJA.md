@@ -302,13 +302,12 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 #### D3. Tugas E-learning · `[Tersedia]`
 - **Status:** `submitted → graded` (`locked_cheated` bila melanggar).
 
-#### D4. Projek P5 (Kurikulum Merdeka) · `[Sebagian]`
-- **Pemilik:** Koordinator P5 (di bawah Waka Kurikulum).
+#### D4. Projek P5 (Kurikulum Merdeka) · `[Tersedia]`
+- **Pemilik:** Koordinator P5 (`koordinator_p5` / `kurikulum.kelola_p5` di bawah Waka Kurikulum).
 - **Langkah:**
-  1. Tetapkan tema dan dimensi.
-  2. Fasilitator menilai per dimensi.
-  3. Nilai masuk ke rapor P5.
-- **Kini:** tabel karakter/P5 ada. Alur ujung ke ujung sampai rapor perlu diverifikasi.
+  1. Koordinator P5 atau Waka Kurikulum menetapkan projek per Tahun Ajaran dan tingkat (`X` Fase `E`, `XI`/`XII` Fase `F`), memilih tema resmi Kemendikdasmen, memetakan 6 Dimensi Profil Pelajar Pancasila beserta elemen, sub-elemen, dan capaian akhir fase (`P5Project`, `P5ProjectDimension`), serta menugaskan guru fasilitator (`P5ProjectFacilitator`).
+  2. Fasilitator atau wali kelas menilai siswa per dimensi menggunakan 4 predikat resmi (`MB`, `SB`, `BSH`, `SAB` pada `P5ProjectAssessment`) serta mencatat proses keterlibatan siswa (`P5ProjectStudentNote`) tanpa memfabrikasi nilai dimensi yang belum dinilai (`null`).
+  3. Nilai dan catatan proses otomatis terkompilasi ke **Rapor Projek P5** web & PDF resmi (`p5.reports.show`, `p5.reports.pdf`, dan API `/api/v1/p5/report`) dengan proteksi anti-IDOR.
 
 #### D5. Rapor Semester (e-Rapor resmi Kemendikdasmen) · `[Tersedia]`
 - **Prinsip integrasi:** sekolah tetap memakai **aplikasi e-Rapor resmi**. SISTA **tidak** membuat rapor resmi kedua, dan **tidak ada input nilai dua kali**.
@@ -469,11 +468,12 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 - **Pemilik:** Waka Sarpras.
 - **Status:** `pending → approved → borrowed → returned` (atau `overdue`, `lost`, `rejected`).
 
-#### I3. Laporan Kerusakan & Perawatan · `[Sebagian]` (ada 3 controller dobel)
+#### I3. Laporan Kerusakan & Perawatan · `[Tersedia]`
+- **Pemilik:** Waka Sarpras (`sarpras.kelola`). **Pelapor:** seluruh warga sekolah terautentikasi.
 - **Langkah:**
-  1. Siapa pun memindai QR aset dan melaporkan kerusakan.
-  2. Sarpras menangani.
-  3. Selesai atau aset dihapus dari daftar.
+  1. Warga sekolah memindai stiker QR aset (`assets.scan` / `/api/v1/assets/scan/{asset}`) dan mengirim laporan kerusakan cepat beserta prioritas (`low`, `medium`, `high`, `critical`) dan foto bukti privat pada disk `local` (`AssetMaintenanceService`).
+  2. Waka Sarpras / Admin Sarpras menindaklanjuti tiket terpadu di `assets.maintenances.index` (`pending → investigating → repairing`) dan kondisi/status aset otomatis berubah menjadi `repairing`.
+  3. Saat diselesaikan (`resolved`), aset kembali `available` (`good`) dan riwayat biaya/vendor tercatat otomatis sebagai perawatan korektif (`AssetMaintenance`); bila dihapusbukukan (`scrapped`), aset ditandai `broken` / `lost` dan tidak dapat dipinjam kembali.
 - **Status:** `pending → investigating → repairing → resolved / scrapped`.
 
 #### I4. Booking Ruang / Alat · `[Tersedia]`
@@ -594,6 +594,7 @@ Format setiap alur: **Pemilik** · **Pemicu** · **Langkah** · **Status** · **
 | 6 | Kotak masuk terpadu "Menunggu Persetujuan Saya" | Sentralisasi antrean persetujuan lintas modul | `[Tersedia]` |
 | 7 | K2 Buku Induk Siswa | Pencetakan buku induk sesuai format dinas berdasarkan riwayat tahun ajaran | `[Tersedia]` |
 | 8 | E1 Poin pelanggaran & tahapan Surat Peringatan dinamis | Ambang SP1/SP2/SP3 & konseling BK wajib diatur di pengaturan sekolah | `[Tersedia]` |
+| 9 | D4 Projek P5 (Kurikulum Merdeka) & I3 Laporan kerusakan serta perawatan Sarpras | Penilaian MB/SB/BSH/SAB + Rapor Projek P5 terpisah dan tiket QR Sarpras terpadu ke status aset | `[Tersedia]` |
 
 ## 6. Cara Memakai Dokumen Ini
 
