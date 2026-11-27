@@ -124,21 +124,33 @@ return new class extends Migration
 
         if (Schema::hasTable('positions')) {
             $exists = DB::table('positions')->where('code', 'koordinator_p5')->first();
+            $positionId = $exists?->id;
             if (! $exists) {
                 $positionId = DB::table('positions')->insertGetId([
                     'code' => 'koordinator_p5',
                     'name' => 'Koordinator Projek P5',
                     'description' => 'Mengelola tema, dimensi, fasilitator, dan rapor Projek Penguatan Profil Pelajar Pancasila (Kurikulum Merdeka).',
                     'allowed_account_types' => json_encode(['guru']),
-                    'is_system' => true,
+                    'is_system' => false,
                     'is_active' => true,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+            }
 
-                if (Schema::hasTable('position_permissions')) {
+            if (Schema::hasTable('position_permissions')) {
+                $targetPositionIds = DB::table('positions')
+                    ->whereIn('code', ['koordinator_p5', 'waka_kurikulum', 'kepala_sekolah'])
+                    ->pluck('id')
+                    ->all();
+
+                if ($positionId && ! in_array($positionId, $targetPositionIds, true)) {
+                    $targetPositionIds[] = $positionId;
+                }
+
+                foreach ($targetPositionIds as $targetPosId) {
                     DB::table('position_permissions')->insertOrIgnore([
-                        'position_id' => $positionId,
+                        'position_id' => $targetPosId,
                         'permission' => 'kurikulum.kelola_p5',
                         'created_at' => now(),
                         'updated_at' => now(),
@@ -150,6 +162,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (Schema::hasTable('position_permissions')) {
+            DB::table('position_permissions')->where('permission', 'kurikulum.kelola_p5')->delete();
+        }
+
         if (Schema::hasTable('positions')) {
             DB::table('positions')->where('code', 'koordinator_p5')->delete();
         }

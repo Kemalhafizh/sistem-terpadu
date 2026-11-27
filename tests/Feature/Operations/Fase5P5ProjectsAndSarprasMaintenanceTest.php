@@ -516,3 +516,93 @@ test('I3 unified Sarpras QR damage reporting stores private evidence, notifies W
         ])
         ->assertSessionHasErrors('status');
 });
+
+test('Anti-Macet WorkflowService computes step SLA due_at, sends idempotent reminders, escalates overdue subordinate steps via student-leaves:process, and counts only active open bottlenecks', function () {
+    Event::fake([NewNotificationEvent::class]);
+
+    $p5Pos = Position::where('code', 'koordinator_p5')->firstOrFail();
+    $wakaPos = Position::where('code', 'waka_kurikulum')->firstOrFail();
+    $kepsekPos = Position::where('code', 'kepala_sekolah')->firstOrFail();
+
+    expect($p5Pos->is_system)->toBeFalse()
+        ->and($p5Pos->permissionKeys())->toContain('kurikulum.kelola_p5')
+        ->and($wakaPos->permissionKeys())->toContain('kurikulum.kelola_p5')
+        ->and($kepsekPos->permissionKeys())->toContain('kurikulum.kelola_p5');
+
+    $requester = User::factory()->create(['role' => 'staf_tu', 'must_change_password' => false]);
+    $waka = User::factory()->create(['role' => 'waka_kurikulum', 'must_change_password' => false]);
+    $kepsek = User::factory()->create(['role' => 'kepala_sekolah', 'name' => 'Drs. H. Ahmad Fauzi', 'must_change_password' => false]);
+
+    WorkflowDefinition::updateOrCreate(
+        ['code' => 'two_step_sla_check'],
+        [
+            'name' => 'Verifikasi Berjenjang Dua Langkah',
+            'steps' => [
+                ['order' => 1, 'role' => 'waka_kurikulum', 'sla_hours' => 12],
+                ['order' => 2, 'role' => 'kepala_sekolah', 'sla_hours' => 24],
+            ],
+            'is_active' => true,
+        ]
+    );
+
+    $studentA = Student::factory()->create();
+    $studentB = Student::factory()->create();
+
+    $mutationA = StudentMutation::create([
+        'student_id' => $studentA->id,
+        'type' => StudentMutation::TYPE_OUT,
+        'mutation_date' => '2026-08-01',
+        'reason' => 'Pindah tugas orang tua',
+        'status' => StudentMutation::STATUS_PENDING,
+        'requested_by' => $requester->id,
+    ]);
+    $mutationRejected = StudentMutation::create([
+        'student_id' => $studentB->id,
+        'type' => StudentMutation::TYPE_OUT,
+        'mutation_date' => '2026-08-02',
+        'reason' => 'Berkas belum lengkap',
+        'status' => StudentMutation::STATUS_PENDING,
+        'requested_by' => $requester->id,
+    ]);
+
+    $workflowService = app(WorkflowService::class);
+    $reqA = $workflowService->initiate('two_step_sla_check', $requester, $mutationA, 'Mohon verifikasi langkah 1');
+    $reqRejected = $workflowService->initiate('two_step_sla_check', $requester, $mutationRejected, 'Akan ditolak di langkah 1');
+
+    // Step 1 gets SLA due_at (~12h), while unreached step 2 keeps due_at null until reached
+    expect($reqA->due_at)->not->toBeNull()
+        ->and($reqA->approvals()->where('step_order', 1)->firstOrFail()->due_at)->not->toBeNull()
+        ->and($reqA->approvals()->where('step_order', 2)->firstOrFail()->due_at)->toBeNull();
+
+    // Reject $reqRejected at step 1 -> due_at cleared, and its unreached step 2 must NOT pollute dashboard bottlenecks
+    $workflowService->reject($reqRejected, $waka, 'Dokumen pendukung belum dilegalisir.');
+    expect($reqRejected->fresh()->due_at)->toBeNull();
+
+    $dashboardResponse = $this->actingAs($kepsek)->get(route('workflows.dashboard'))->assertOk();
+    $bottlenecks = $dashboardResponse->viewData('bottlenecks');
+    expect($bottlenecks->pluck('count', 'role')->all())->toBe(['waka_kurikulum' => 1]);
+
+    // Move $reqA into the 6h pre-deadline reminder window -> sends reminder once (idempotent on second run)
+    $reqA->update(['due_at' => now()->addHours(3)]);
+    $firstRun = $workflowService->processSlaAndEscalate(6);
+    $secondRun = $workflowService->processSlaAndEscalate(6);
+    expect($firstRun['reminded'])->toBe(1)
+        ->and($secondRun['reminded'])->toBe(0);
+
+    // Move $reqA past SLA deadline -> hourly `student-leaves:process` escalates subordinate `waka_kurikulum` step to `kepala_sekolah`
+    $reqA->update(['due_at' => now()->subHour()]);
+    $this->artisan('student-leaves:process')->assertSuccessful();
+
+    $step1AfterEscalation = $reqA->approvals()->where('step_order', 1)->firstOrFail();
+    expect($step1AfterEscalation->delegated_to_id)->toBe($kepsek->id)
+        ->and($step1AfterEscalation->remarks)->toContain('Eskalasi otomatis melewati tenggat SLA');
+
+    // Escalated principal approves step 1 -> advances to step 2 with fresh 24h SLA due_at
+    $workflowService->approve($reqA->fresh(), $kepsek, 'Diambil alih karena melewati SLA langkah 1.');
+    $reqA->refresh();
+    expect($reqA->current_step)->toBe(2)
+        ->and($reqA->status)->toBe('in_review')
+        ->and($reqA->due_at)->not->toBeNull()
+        ->and($reqA->due_at->isFuture())->toBeTrue()
+        ->and($reqA->approvals()->where('step_order', 2)->firstOrFail()->due_at)->not->toBeNull();
+});
