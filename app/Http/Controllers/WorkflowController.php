@@ -57,10 +57,16 @@ class WorkflowController extends Controller
         }
         $avgResolutionTime = $resolvedCount > 0 ? round($totalHours / $resolvedCount, 1) : 0;
 
-        // 3. Bottlenecks (Roles with most pending approvals)
-        $bottlenecks = WorkflowApproval::where('decision', 'pending')
-            ->select('role', DB::raw('count(*) as count'))
-            ->groupBy('role')
+        // 3. Bottlenecks (Roles with most active pending approvals on open requests)
+        $bottlenecks = WorkflowApproval::query()
+            ->join('workflow_requests', function ($join) {
+                $join->on('workflow_approvals.request_id', '=', 'workflow_requests.id')
+                    ->whereColumn('workflow_approvals.step_order', 'workflow_requests.current_step');
+            })
+            ->whereIn('workflow_requests.status', ['pending', 'in_review'])
+            ->where('workflow_approvals.decision', 'pending')
+            ->select('workflow_approvals.role as role', DB::raw('count(*) as count'))
+            ->groupBy('workflow_approvals.role')
             ->orderByDesc('count')
             ->get();
 
