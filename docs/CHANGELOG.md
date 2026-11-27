@@ -4,6 +4,15 @@ Dokumen ini mencatat perubahan utama pada sistem **SISTA (Sistem Terpadu SMA Isl
 
 ---
 
+## [2.2.0] - 2026-11
+### Penyelesaian Penuh Peta Alur Operasional Sekolah (`ALUR_KERJA.md`)
+- **Jabatan Dinamis & Siklus Akademik Tahunan (`L1`–`L2`, `A0`–`A6`):** Katalog jabatan dan penugasan pejabat/Plt berbasis periode SK, kalender akademik berjenjang, survei peminatan kelas X dan plotting rombel XI, kenaikan kelas terintegrasi riwayat rombel (`class_enrollments`), kelulusan massal kelas XII ke buku alumni melalui pengesahan Kepala Sekolah (`graduation_approval`), serta mutasi siswa masuk/keluar (`mutation_approval`) dengan sinkronisasi status akun otomatis.
+- **Layanan Mandiri Warga Sekolah (`C3`, `K1`, `K4`, `K5`):** Pengajuan izin/sakit siswa dari orang tua (termasuk persetujuan otomatis sakit 1 hari dan eskalasi tenggat), impor awal Dapodik, pengajuan perubahan data identitas berlampiran bukti privat, serta pembuatan akun massal dan reset password bertingkat.
+- **e-Rapor Resmi, Projek P5, Persuratan & Buku Induk (`D4`, `D5`, `J1`, `J2`, `K2`):** Ekspor template nilai ke e-Rapor Kemendikdasmen dan penerbitan PDF rapor resmi per angkatan, penilaian Projek P5 (`MB`/`SB`/`BSH`/`SAB`) beserta Rapor Projek P5 terpisah, persetujuan surat keluar resmi ber-QR verifikasi, disposisi surat masuk, dan pencetakan Buku Induk Siswa lintas tahun ajaran.
+- **Kedisiplinan Dinamis, Sarpras QR Terpadu & Mesin Anti-Macet (`E1`, `I3`, Kotak Masuk Persetujuan):** Ambang batas `SP1`/`SP2`/`SP3` dinamis yang memicu konseling BK wajib secara otomatis, konsolidasi tiket kerusakan QR Sarpras dengan penyimpanan foto bukti privat dan sinkronisasi kondisi aset, serta kotak masuk persetujuan terpadu lengkap dengan tenggat SLA (`due_at`), pengingat, dan eskalasi otomatis.
+
+---
+
 ## [2.1.0] - 2026-10
 ### Perbaikan & Penyempurnaan Inti ERP Sekolah
 - **Sesi Kelas & Presensi QR per Mata Pelajaran:** Penambahan modul sesi kelas langsung dengan QR berputar setiap 30 detik, integrasi otomatis ke draf jurnal mengajar, serta endpoint kehadiran harian untuk widget dan aplikasi Android.
