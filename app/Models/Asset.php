@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Route;
 
 class Asset extends Model
 {
@@ -38,11 +41,14 @@ class Asset extends Model
     {
         parent::boot();
 
-        // Autogenerate QR Code link pointing to asset's show page on creation
+        // Autogenerate QR Code link pointing to QR scan / damage report page on creation
         static::created(function ($asset) {
             if (! $asset->qr_code) {
+                $targetRoute = Route::has('assets.scan')
+                    ? route('assets.scan', $asset->uuid)
+                    : route('assets.show', $asset->uuid);
                 $asset->update([
-                    'qr_code' => route('assets.show', $asset->uuid),
+                    'qr_code' => $targetRoute,
                 ]);
             }
         });
@@ -71,32 +77,38 @@ class Asset extends Model
         return max(0.00, round($this->purchase_price - $accumulatedDepreciation, 2));
     }
 
-    public function category()
+    /** @return BelongsTo<AssetCategory, $this> */
+    public function category(): BelongsTo
     {
         return $this->belongsTo(AssetCategory::class);
     }
 
-    public function room()
+    /** @return BelongsTo<Room, $this> */
+    public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
     }
 
-    public function creator()
+    /** @return BelongsTo<User, $this> */
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function loans()
+    /** @return HasMany<AssetLoan, $this> */
+    public function loans(): HasMany
     {
         return $this->hasMany(AssetLoan::class);
     }
 
-    public function maintenances()
+    /** @return HasMany<AssetMaintenance, $this> */
+    public function maintenances(): HasMany
     {
         return $this->hasMany(AssetMaintenance::class);
     }
 
-    public function maintenanceTickets()
+    /** @return HasMany<AssetMaintenanceTicket, $this> */
+    public function maintenanceTickets(): HasMany
     {
         return $this->hasMany(AssetMaintenanceTicket::class);
     }

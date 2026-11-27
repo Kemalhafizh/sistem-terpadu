@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\v1\ApiGeneralController;
 use App\Http\Controllers\Api\v1\ApiParentController;
 use App\Http\Controllers\Api\v1\ApiStudentController;
 use App\Http\Controllers\Api\v1\ApiTeacherController;
+use App\Http\Controllers\Api\v1\AssetDamageReportApiController;
 use App\Http\Controllers\Api\v1\BullyingReportApiController;
 use App\Http\Controllers\Api\v1\CapabilitiesController;
 use App\Http\Controllers\Api\v1\CbtAccessControlApiController;
@@ -35,6 +36,7 @@ use App\Http\Controllers\Api\v1\Mobile\MobileAuthController;
 use App\Http\Controllers\Api\v1\Mobile\MobileConfigController;
 use App\Http\Controllers\Api\v1\Mobile\MobileSyncController;
 use App\Http\Controllers\Api\v1\Mobile\ScannerMobileApiController;
+use App\Http\Controllers\Api\v1\P5ReportApiController;
 use App\Http\Controllers\Api\v1\ParentPortalController;
 use App\Http\Controllers\Api\v1\PrayerTimeApiController;
 use App\Http\Controllers\Api\v1\ProfileChangeRequestApiController;
@@ -121,6 +123,14 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
         // C3: Protected medical letter attachment download (IDOR-checked in service)
         Route::get('student-leave-requests/{leaveRequest}/attachment', [StudentLeaveApiController::class, 'downloadAttachment'])
             ->name('api.v1.student-leave-requests.attachment');
+
+        // D4: Rapor Projek P5 (Kurikulum Merdeka) & I3: Scan QR Aset / Lapor Kerusakan Sarpras
+        Route::middleware(Roles::only(Roles::MEMBERS))->group(function () {
+            Route::get('p5/report', [P5ReportApiController::class, 'show']);
+            Route::get('assets/scan/{asset}', [AssetDamageReportApiController::class, 'scan']);
+            Route::post('assets/scan/{asset}/report', [AssetDamageReportApiController::class, 'report']);
+            Route::get('assets/damage-reports/my', [AssetDamageReportApiController::class, 'myReports']);
+        });
 
         // Mobile Multi-Device & Biometrics
         Route::post('mobile/auth/biometric/register', [MobileAuthController::class, 'registerBiometric']);

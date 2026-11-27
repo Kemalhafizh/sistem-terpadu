@@ -25,30 +25,6 @@ parameters:
 			path: app/Http/Controllers/ActivityLogController.php
 
 		-
-			message: '#^Relation ''asset'' is not found in App\\Models\\AssetMaintenanceTicket model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Admin/AssetMaintenanceTicketController.php
-
-		-
-			message: '#^Relation ''reporter'' is not found in App\\Models\\AssetMaintenanceTicket model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Admin/AssetMaintenanceTicketController.php
-
-		-
-			message: '#^Relation ''resolver'' is not found in App\\Models\\AssetMaintenanceTicket model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/Admin/AssetMaintenanceTicketController.php
-
-		-
-			message: '#^Relation ''room'' is not found in App\\Models\\Asset model\.$#'
-			identifier: larastan.relationExistence
-			count: 2
-			path: app/Http/Controllers/Admin/AssetMaintenanceTicketController.php
-
-		-
 			message: '#^Relation ''config'' is not found in App\\Models\\IntegrationLog model\.$#'
 			identifier: larastan.relationExistence
 			count: 2
@@ -187,40 +163,10 @@ parameters:
 			path: app/Http/Controllers/AssetCategoryController.php
 
 		-
-			message: '#^Relation ''category'' is not found in App\\Models\\Asset model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AssetController.php
-
-		-
-			message: '#^Relation ''creator'' is not found in App\\Models\\Asset model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AssetController.php
-
-		-
-			message: '#^Relation ''room'' is not found in App\\Models\\Asset model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AssetController.php
-
-		-
 			message: '#^Relation ''approver'' is not found in App\\Models\\AssetLoan model\.$#'
 			identifier: larastan.relationExistence
 			count: 1
 			path: app/Http/Controllers/AssetLoanController.php
-
-		-
-			message: '#^Relation ''asset'' is not found in App\\Models\\AssetMaintenance model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AssetMaintenanceController.php
-
-		-
-			message: '#^Relation ''handler'' is not found in App\\Models\\AssetMaintenance model\.$#'
-			identifier: larastan.relationExistence
-			count: 1
-			path: app/Http/Controllers/AssetMaintenanceController.php
 
 		-
 			message: '#^Relation ''student'' is not found in App\\Models\\Attendance model\.$#'

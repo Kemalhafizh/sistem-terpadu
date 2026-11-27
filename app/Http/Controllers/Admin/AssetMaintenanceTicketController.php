@@ -5,76 +5,64 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\AssetMaintenanceTicket;
-use Carbon\Carbon;
-use Exception;
+use App\Services\Sarpras\AssetMaintenanceService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
+/**
+ * Thin backward-compatible route adapter delegating to `AssetMaintenanceService`.
+ * Canonical I3 routes live on `AssetMaintenanceController` (`assets.scan`, `assets.maintenances.*`).
+ */
 class AssetMaintenanceTicketController extends Controller
 {
-    /**
-     * Scan QR Code endpoint. Redirects users to report page.
-     */
-    public function scanQr($uuid)
+    public function __construct(
+        private readonly AssetMaintenanceService $maintenanceService,
+    ) {}
+
+    public function scanQr(string $uuid): View
     {
-        $asset = Asset::where('uuid', $uuid)->with('room')->firstOrFail();
+        $asset = Asset::where('uuid', $uuid)->with(['room', 'category'])->firstOrFail();
 
         return view('assets.maintenance.scan', compact('asset'));
     }
 
-    /**
-     * Submit a new maintenance ticket.
-     */
-    public function storeTicket(Request $request)
+    public function storeTicket(Request $request): RedirectResponse
     {
-        $request->validate([
-            'asset_id' => 'required|exists:assets,id',
-            'issue_description' => 'required|string|min:10',
-            'priority' => 'required|in:low,medium,high,critical',
-            'photo' => 'nullable|image|max:2048',
+        $validated = $request->validate([
+            'asset_id' => ['required', 'exists:assets,id'],
+            'issue_description' => ['required', 'string', 'min:10', 'max:2000'],
+            'priority' => ['required', Rule::in(AssetMaintenanceTicket::PRIORITIES)],
+            'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
-        $photoPath = null;
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('photo_evidences', 'public');
-        }
+        $asset = Asset::findOrFail((int) $validated['asset_id']);
 
-        try {
-            AssetMaintenanceTicket::create([
-                'asset_id' => $request->asset_id,
-                'reported_by' => auth()->id(),
-                'issue_description' => $request->issue_description,
-                'priority' => $request->priority,
-                'status' => 'pending',
-                'photo_evidence' => $photoPath,
-            ]);
+        $this->maintenanceService->submitDamageReport(
+            $asset,
+            $request->user(),
+            $validated,
+            $request->file('photo')
+        );
 
-            return back()->with('success', 'Laporan kerusakan berhasil dikirim. Terima kasih atas partisipasi Anda.');
-        } catch (Exception $e) {
-            return back()->with('error', 'Gagal mengirim laporan: '.$e->getMessage())->withInput();
-        }
+        return back()->with('success', __('Laporan kerusakan berhasil dikirim. Terima kasih atas partisipasi Anda.'));
     }
 
-    /**
-     * Kanban Board dashboard for admin sarpras.
-     */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $priorityFilter = $request->get('priority');
 
-        $ticketsQuery = AssetMaintenanceTicket::with(['asset.room', 'reporter'])
-            ->when($priorityFilter, function ($query, $priority) {
-                $query->where('priority', $priority);
-            })
-            ->latest();
+        $allTickets = AssetMaintenanceTicket::with(['asset.room', 'reporter'])
+            ->when($priorityFilter, fn ($q, $priority) => $q->where('priority', $priority))
+            ->latest()
+            ->get();
 
-        $allTickets = $ticketsQuery->get();
-
-        // Group by status for Kanban columns
-        $pending = $allTickets->where('status', 'pending');
-        $investigating = $allTickets->where('status', 'investigating');
-        $repairing = $allTickets->where('status', 'repairing');
-        $resolved = $allTickets->where('status', 'resolved');
-        $scrapped = $allTickets->where('status', 'scrapped');
+        $pending = $allTickets->where('status', AssetMaintenanceTicket::STATUS_PENDING);
+        $investigating = $allTickets->where('status', AssetMaintenanceTicket::STATUS_INVESTIGATING);
+        $repairing = $allTickets->where('status', AssetMaintenanceTicket::STATUS_REPAIRING);
+        $resolved = $allTickets->where('status', AssetMaintenanceTicket::STATUS_RESOLVED);
+        $scrapped = $allTickets->where('status', AssetMaintenanceTicket::STATUS_SCRAPPED);
 
         return view('assets.maintenance.index', compact(
             'pending',
@@ -86,63 +74,36 @@ class AssetMaintenanceTicketController extends Controller
         ));
     }
 
-    /**
-     * Display ticket details and resolution form.
-     */
-    public function showTicket($id)
+    public function showTicket(string|int $id): View
     {
-        $ticket = AssetMaintenanceTicket::with(['asset.room', 'reporter', 'resolver'])->findOrFail($id);
+        $ticket = $this->maintenanceService->findTicketByKey($id);
+        $ticket->load(['asset.room', 'reporter', 'handler', 'resolver']);
 
         return view('assets.maintenance.ticket-detail', compact('ticket'));
     }
 
-    /**
-     * Update ticket status & resolution.
-     */
-    public function updateTicketStatus($id, Request $request)
+    public function updateTicketStatus(string|int $id, Request $request): RedirectResponse
     {
-        $request->validate([
-            'status' => 'required|in:pending,investigating,repairing,resolved,scrapped',
-            'resolution_notes' => 'nullable|string',
+        $validated = $request->validate([
+            'status' => ['required', Rule::in(AssetMaintenanceTicket::STATUSES)],
+            'resolution_notes' => ['nullable', 'string', 'max:2000'],
+            'cost' => ['nullable', 'numeric', 'min:0'],
+            'vendor' => ['nullable', 'string', 'max:160'],
         ]);
 
-        try {
-            $ticket = AssetMaintenanceTicket::findOrFail($id);
-            $asset = Asset::findOrFail($ticket->asset_id);
+        $ticket = $this->maintenanceService->findTicketByKey($id);
+        $this->maintenanceService->transitionTicketStatus(
+            $ticket,
+            $request->user(),
+            $validated['status'],
+            $validated
+        );
 
-            $updateData = [
-                'status' => $request->status,
-                'resolution_notes' => $request->resolution_notes,
-            ];
-
-            if (in_array($request->status, ['resolved', 'scrapped'])) {
-                $updateData['resolved_by'] = auth()->id();
-                $updateData['resolved_at'] = Carbon::now();
-
-                // Sync parent asset condition/status
-                if ($request->status === 'resolved') {
-                    $asset->update(['condition' => 'good', 'status' => 'available']);
-                } else {
-                    $asset->update(['condition' => 'broken', 'status' => 'lost']);
-                }
-            } else {
-                // If moved back to repairing/investigating
-                $asset->update(['status' => 'repairing']);
-            }
-
-            $ticket->update($updateData);
-
-            return redirect()->route('admin.assets.maintenance.index')
-                ->with('success', 'Status tiket perbaikan aset berhasil diperbarui.');
-        } catch (Exception $e) {
-            return back()->with('error', 'Gagal memperbarui status: '.$e->getMessage());
-        }
+        return redirect()->route('admin.assets.maintenance.index')
+            ->with('success', __('Status tiket perbaikan aset berhasil diperbarui.'));
     }
 
-    /**
-     * Generate large QR labels sheet (Print A4 view).
-     */
-    public function generateQrLabels()
+    public function generateQrLabels(): View
     {
         $assets = Asset::with('room')->orderBy('asset_code')->get();
 

@@ -51,6 +51,12 @@ return [
             'sensitive' => false,
             'implies_roles' => ['waka_kurikulum'],
         ],
+        'kurikulum.kelola_p5' => [
+            'label' => 'Kelola Projek P5 & Penilaian Profil Pelajar Pancasila',
+            'module' => 'kurikulum',
+            'sensitive' => false,
+            'implies_roles' => ['waka_kurikulum'],
+        ],
         'kesiswaan.kelola' => [
             'label' => 'Kelola Kesiswaan, Ekstrakurikuler & Kedisiplinan',
             'module' => 'kesiswaan',

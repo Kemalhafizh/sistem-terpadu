@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GraduationBatch;
+use App\Models\Letter;
+use App\Models\StudentMutation;
 use App\Models\User;
 use App\Models\WorkflowApproval;
 use App\Models\WorkflowDefinition;
@@ -224,6 +227,15 @@ class WorkflowController extends Controller
         Gate::authorize('view', $workflowRequest);
 
         $workflowRequest->load(['definition', 'requester', 'approvals.approver', 'approvals.delegatedTo', 'requestable']);
+
+        $requestable = $workflowRequest->requestable;
+        if ($requestable instanceof GraduationBatch) {
+            $requestable->loadMissing(['schoolYear', 'meetingNote', 'decisions']);
+        } elseif ($requestable instanceof StudentMutation) {
+            $requestable->loadMissing(['student.user', 'classroom', 'schoolYear']);
+        } elseif ($requestable instanceof Letter) {
+            $requestable->loadMissing(['template', 'student.user', 'employee.user']);
+        }
 
         // Dapatkan semua user staff (termasuk pemegang jabatan aktif) untuk opsi delegasi
         $staffUsers = User::where(function ($q) {

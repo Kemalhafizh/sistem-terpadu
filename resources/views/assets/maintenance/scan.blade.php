@@ -77,7 +77,7 @@
                 Buat Laporan Kerusakan
             </h4>
 
-            <form action="{{ route('admin.assets.maintenance.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('assets.damage-reports.store', $asset) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 <input type="hidden" name="asset_id" value="{{ $asset->id }}">
 
