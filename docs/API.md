@@ -109,10 +109,10 @@ Seluruh endpoint memvalidasi kepemilikan relasi orang tua-anak (`StudentDataAcce
 - `GET /api/v1/student-leave-requests/{leaveRequest}/attachment`: Unduhan lampiran surat izin/dokter privat terproteksi Anti-IDOR.
 
 ### F. Rapor Resmi, Projek P5, Perubahan Identitas, Sarpras & Kotak Masuk Persetujuan
-- `GET /api/v1/rapor/official` & `GET /api/v1/rapor/official/{publication}/download`: Daftar dan unduhan PDF rapor semester resmi (`D5`) yang telah diterbitkan.
+- `GET /api/v1/rapor/current`, `GET /api/v1/rapor/child/{childId}`, `POST /api/v1/rapor/generate-pdf`, `GET /api/v1/rapor/verify/{hash}`, & `GET /api/v1/rapor/files/{pdf}`: Detail nilai rapor semester, verifikasi sertifikat SHA-256, dan unduhan PDF rapor resmi bertanda tangan (`D5`).
 - `GET /api/v1/p5/report`: Rapor Projek Penguatan Profil Pelajar Pancasila (`D4`) beserta fase (`E`/`F`), catatan proses, dan predikat dimensi (`MB`, `SB`, `BSH`, `SAB`, atau `null` bila belum dinilai).
 - `GET /api/v1/profile-change-requests`, `POST /api/v1/profile-change-requests`, `POST .../cancel`, & `GET .../evidence`: Pengajuan perubahan data identitas terverifikasi dengan bukti dokumen privat (`K4`).
-- `GET /api/v1/assets/scan/{asset}`, `POST /api/v1/assets/scan/{asset}/report`, & `GET /api/v1/assets/damage-reports/my`: Pemindaian stiker QR inventaris aset dan pelaporan foto kerusakan terpadu (`I3`).
+- `GET /api/v1/assets/scan/{asset}`, `POST /api/v1/assets/scan/{asset}/report`, `GET /api/v1/assets/damage-reports/my`, & `GET /api/v1/assets/damage-reports/{ticket}/attachment`: Pemindaian stiker QR inventaris aset, pelaporan foto kerusakan terpadu, dan pratinjau bukti privat terproteksi Anti-IDOR (`I3`).
 - `GET /api/v1/approvals/inbox` & `POST /api/v1/approvals/{module}/{id}/{action}`: Kotak masuk persetujuan terpadu lintas modul (`approve`, `reject`, `revision`) bagi pimpinan dan pejabat aktif.
 
 ### G. Bimbingan Konseling, UKS & Keislaman

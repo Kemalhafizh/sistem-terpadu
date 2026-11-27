@@ -9,6 +9,7 @@ use App\Services\Sarpras\AssetMaintenanceService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
 class AssetDamageReportApiController extends Controller
@@ -47,13 +48,16 @@ class AssetDamageReportApiController extends Controller
             'issue_description' => ['required', 'string', 'min:10', 'max:2000'],
             'priority' => ['required', Rule::in(AssetMaintenanceTicket::PRIORITIES)],
             'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'photo_evidence' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
+
+        $uploadedPhoto = $request->file('photo') ?? $request->file('photo_evidence');
 
         $ticket = $this->maintenanceService->submitDamageReport(
             $asset,
             $request->user(),
             $validated,
-            $request->file('photo')
+            $uploadedPhoto
         );
 
         return $this->successResponse($this->formatTicket($ticket->loadMissing(['asset.room'])), __('Laporan kerusakan aset berhasil dikirim.'), 201);
@@ -76,10 +80,25 @@ class AssetDamageReportApiController extends Controller
     }
 
     /**
+     * Stream private damage photo attachment (`GET /api/v1/assets/damage-reports/{ticket}/attachment`).
+     */
+    public function downloadAttachment(Request $request, string $ticket)
+    {
+        $resolvedTicket = $this->maintenanceService->findTicketByKey($ticket);
+
+        return $this->maintenanceService->streamTicketAttachment($resolvedTicket, $request->user());
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function formatTicket(AssetMaintenanceTicket $ticket): array
     {
+        $hasPhoto = ! empty($ticket->photo_evidence);
+        $photoUrl = ($hasPhoto && Route::has('api.v1.assets.damage-reports.attachment'))
+            ? route('api.v1.assets.damage-reports.attachment', $ticket->uuid)
+            : null;
+
         return [
             'uuid' => $ticket->uuid,
             'asset_uuid' => $ticket->asset?->uuid,
@@ -89,6 +108,8 @@ class AssetDamageReportApiController extends Controller
             'issue_description' => $ticket->issue_description,
             'priority' => $ticket->priority,
             'status' => $ticket->status,
+            'has_photo' => $hasPhoto,
+            'photo_url' => $photoUrl,
             'resolution_notes' => $ticket->resolution_notes,
             'resolved_at' => $ticket->resolved_at?->toIso8601String(),
             'created_at' => $ticket->created_at?->toIso8601String(),

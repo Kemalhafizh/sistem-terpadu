@@ -130,6 +130,8 @@ Route::prefix('v1')->middleware([ApiVersion::class, 'throttle:global'])->group(f
             Route::get('assets/scan/{asset}', [AssetDamageReportApiController::class, 'scan']);
             Route::post('assets/scan/{asset}/report', [AssetDamageReportApiController::class, 'report']);
             Route::get('assets/damage-reports/my', [AssetDamageReportApiController::class, 'myReports']);
+            Route::get('assets/damage-reports/{ticket}/attachment', [AssetDamageReportApiController::class, 'downloadAttachment'])
+                ->name('api.v1.assets.damage-reports.attachment');
         });
 
         // Mobile Multi-Device & Biometrics
