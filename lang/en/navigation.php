@@ -111,4 +111,5 @@ return [
     'admin_profile_changes' => 'Identity Change Verification',
     'dapodik_sync_queue' => 'Dapodik Sync Queue',
     'academic_cycle' => 'Academic Cycle',
+    'p5_projects' => 'P5 Projects',
 ];

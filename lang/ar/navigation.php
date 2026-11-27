@@ -111,4 +111,5 @@ return [
     'admin_profile_changes' => 'التحقق من تعديل البيانات',
     'dapodik_sync_queue' => 'قائمة مزامنة دابوديك',
     'academic_cycle' => 'الدورة الأكاديمية',
+    'p5_projects' => 'مشاريع P5',
 ];

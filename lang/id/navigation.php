@@ -111,4 +111,5 @@ return [
     'admin_profile_changes' => 'Verifikasi Perubahan Data',
     'dapodik_sync_queue' => 'Antrean Sinkron Dapodik',
     'academic_cycle' => 'Siklus Akademik',
+    'p5_projects' => 'Projek P5',
 ];

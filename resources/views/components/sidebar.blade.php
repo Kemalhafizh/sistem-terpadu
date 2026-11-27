@@ -117,6 +117,8 @@
 
         <x-sidebar-link route="academic.cycle.index" :label="__('navigation.academic_cycle')" icon="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" active="academic.cycle.*" />
 
+        <x-sidebar-link route="p5.projects.index" :label="__('navigation.p5_projects')" icon="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" active="p5.*" />
+
         
         @canVisit('my-hrd.portal')
         <a href="{{ route('my-hrd.portal') }}" class="{{ $linkClass }} {{ request()->routeIs('my-hrd.*') ? $activeClass : $inactiveClass }}" title="{{ __('navigation.hrd_portal') }}">
