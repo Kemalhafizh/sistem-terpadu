@@ -495,9 +495,18 @@ test('I3 unified Sarpras QR damage reporting stores private evidence, notifies W
 
     $ticketB = AssetMaintenanceTicket::where('uuid', $reportApi->json('data.uuid'))->firstOrFail();
 
-    $this->getJson('/api/v1/assets/damage-reports/my')
+    $myReportsApi = $this->getJson('/api/v1/assets/damage-reports/my')
         ->assertOk()
         ->assertJsonCount(2, 'data');
+
+    $ticketAJson = collect($myReportsApi->json('data'))->firstWhere('uuid', $ticket->uuid);
+    expect($ticketAJson['has_photo'])->toBeTrue()
+        ->and($ticketAJson['photo_url'])->toContain('/api/v1/assets/damage-reports/'.$ticket->uuid.'/attachment');
+
+    $this->get('/api/v1/assets/damage-reports/'.$ticket->uuid.'/attachment')->assertOk();
+
+    Sanctum::actingAs($otherStudent);
+    $this->get('/api/v1/assets/damage-reports/'.$ticket->uuid.'/attachment')->assertForbidden();
 
     $this->actingAs($wakaSarpras)
         ->post(route('assets.maintenances.tickets.status', $ticketB), [
