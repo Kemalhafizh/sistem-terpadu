@@ -162,6 +162,7 @@ return [
                 'pimpinan.mengesahkan',
                 'akademik.kelola_struktur',
                 'kurikulum.kelola',
+                'kurikulum.kelola_p5',
                 'kesiswaan.kelola',
                 'sarpras.kelola',
                 'humas.kelola',
@@ -180,7 +181,19 @@ return [
                 'pimpinan.dasbor',
                 'akademik.kelola_struktur',
                 'kurikulum.kelola',
+                'kurikulum.kelola_p5',
                 'kurikulum.tetapkan_kenaikan',
+            ],
+        ],
+        [
+            'code' => 'koordinator_p5',
+            'name' => 'Koordinator Projek P5',
+            'description' => 'Mengelola tema, dimensi, fasilitator, dan rapor Projek Penguatan Profil Pelajar Pancasila (Kurikulum Merdeka).',
+            'allowed_account_types' => ['guru'],
+            'is_system' => false,
+            'is_active' => true,
+            'permissions' => [
+                'kurikulum.kelola_p5',
             ],
         ],
         [

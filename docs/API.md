@@ -90,21 +90,32 @@ Kontrak lengkap tersedia di [`docs/modules/class_sessions.md`](modules/class_ses
 - `GET /api/v1/student/grades`: Daftar nilai akademik.
 - `GET /api/v1/student/remedials`: Daftar jadwal dan nilai remedial siswa.
 - `GET /api/v1/student/billings`: Daftar tagihan SPP/biaya pendidikan dan riwayat pembayaran.
-- `GET /api/v1/student/points`: Catatan poin kedisiplinan dan prestasi.
+- `GET /api/v1/student/points`: Catatan poin kedisiplinan, prestasi, surat peringatan resmi (`warning_letters`), dan ambang batas dinamis sekolah (`thresholds`).
 
 ### D. Fitur Orang Tua (`/api/v1/parent/*`)
 Seluruh endpoint memvalidasi kepemilikan relasi orang tua-anak (`StudentDataAccess`):
 - `GET /api/v1/parent/children`: Daftar anak yang terhubung dengan akun orang tua.
 - `GET /api/v1/parent/child/{studentUuid}/summary`: Ringkasan perkembangan akademik, kehadiran, dan tagihan anak.
+- `GET /api/v1/parent/child/{studentUuid}/points`: Riwayat poin kedisiplinan anak, daftar SP resmi, dan ambang dinamis sekolah (`thresholds`).
+- `GET /api/v1/parent/leave-requests` & `POST /api/v1/parent/leave-requests`: Pengajuan dan pemantauan izin/sakit anak (`C3`), termasuk persetujuan otomatis sakit 1 hari dan pembatalan (`POST .../cancel`).
 - `GET /api/v1/parent/messages` & `POST /api/v1/parent/messages`: Obrolan dengan wali kelas.
 
-### E. Fitur Guru (`/api/v1/teacher/*`)
+### E. Fitur Guru & Wali Kelas (`/api/v1/teacher/*`)
 - `GET /api/v1/teacher/schedule` & `GET /api/v1/teacher/classes`: Jadwal mengajar dan daftar kelas yang diampu.
 - `GET /api/v1/teacher/journals` & `POST /api/v1/teacher/journals`: Jurnal mengajar harian.
 - `GET /api/v1/teacher/daily-assessments` & `POST .../scores`: Penilaian harian dan input nilai.
 - `GET /api/v1/teacher/cbt/exams`: Pengawasan ujian CBT dan pembukaan kunci peserta.
+- `GET /api/v1/teacher/leave-requests` & `POST .../decide`: Tinjauan izin/sakit siswa oleh wali kelas atau eskalasi Waka Kesiswaan (`approve`, `reject`, `revoke`).
+- `GET /api/v1/student-leave-requests/{leaveRequest}/attachment`: Unduhan lampiran surat izin/dokter privat terproteksi Anti-IDOR.
 
-### F. Bimbingan Konseling, UKS & Keislaman
+### F. Rapor Resmi, Projek P5, Perubahan Identitas, Sarpras & Kotak Masuk Persetujuan
+- `GET /api/v1/rapor/official` & `GET /api/v1/rapor/official/{publication}/download`: Daftar dan unduhan PDF rapor semester resmi (`D5`) yang telah diterbitkan.
+- `GET /api/v1/p5/report`: Rapor Projek Penguatan Profil Pelajar Pancasila (`D4`) beserta fase (`E`/`F`), catatan proses, dan predikat dimensi (`MB`, `SB`, `BSH`, `SAB`, atau `null` bila belum dinilai).
+- `GET /api/v1/profile-change-requests`, `POST /api/v1/profile-change-requests`, `POST .../cancel`, & `GET .../evidence`: Pengajuan perubahan data identitas terverifikasi dengan bukti dokumen privat (`K4`).
+- `GET /api/v1/assets/scan/{asset}`, `POST /api/v1/assets/scan/{asset}/report`, & `GET /api/v1/assets/damage-reports/my`: Pemindaian stiker QR inventaris aset dan pelaporan foto kerusakan terpadu (`I3`).
+- `GET /api/v1/approvals/inbox` & `POST /api/v1/approvals/{module}/{id}/{action}`: Kotak masuk persetujuan terpadu lintas modul (`approve`, `reject`, `revision`) bagi pimpinan dan pejabat aktif.
+
+### G. Bimbingan Konseling, UKS & Keislaman
 - `POST /api/v1/counseling/bullying-reports`: Pelaporan perundungan (termasuk opsi anonim).
 - `GET /api/v1/counseling/sessions` & `POST /api/v1/counseling/sessions`: Sesi konseling BK.
 - `GET /api/v1/uks/visits` & `POST /api/v1/uks/visits`: Riwayat dan pencatatan kunjungan UKS.
